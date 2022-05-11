@@ -28,7 +28,7 @@ if [ ! -d "$dependencies" ]; then
   mkdir -p "$dependencies"
 fi
 pushd "$dependencies"
-"$directory"/setup.sh
+"$directory"/../setup.sh
 popd
 if [ "$dependencies" != "$root/Dependencies" ] && [ ! -d Dependencies ]; then
   ln -s "$dependencies" Dependencies
