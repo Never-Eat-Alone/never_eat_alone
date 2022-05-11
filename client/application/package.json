@@ -2,6 +2,7 @@
   "name": "never_eat_alone",
   "version": "0.1.0",
   "description": "Never eat alone web app.",
+  "license": "LicenseRef-LICENSE",
   "devDependencies": {
     "@types/react": "17.0.34",
     "@types/react-dom": "17.0.11",

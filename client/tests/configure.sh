@@ -14,6 +14,7 @@ if [ ! -f "configure.sh" ]; then
   ln -s "$directory/configure.sh" configure.sh
 fi
 projects+=" scratch"
+projects+=" ui_catalog"
 for i in $projects; do
   if [ ! -d "$i" ]; then
     mkdir "$i"

@@ -10,6 +10,7 @@ IF NOT EXIST build.bat (
   ECHO CALL "%~dp0build.bat" %%* >> build.bat
 )
 CALL:build scratch %*
+CALL:build ui_catalog %*
 ENDLOCAL
 EXIT /B %ERRORLEVEL%
 

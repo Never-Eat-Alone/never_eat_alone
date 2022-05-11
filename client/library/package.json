@@ -2,6 +2,7 @@
   "name": "never_eat_alone_library",
   "version": "0.1.0",
   "description": "Never eat alone client library.",
+  "license": "LicenseRef-LICENSE",
   "main": "library/index.js",
   "types": "library/index.d.ts",
   "scripts": {

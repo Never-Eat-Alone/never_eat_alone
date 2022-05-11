@@ -29,6 +29,7 @@ export directory
 export root
 
 targets+=" scratch"
+targets+=" ui_catalog"
 
 cores=`grep -c "processor" < /proc/cpuinfo`
 jobs="$(($cores))"
