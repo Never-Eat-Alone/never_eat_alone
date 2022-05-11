@@ -1,6 +1,5 @@
 @ECHO OFF
 SETLOCAL EnableDelayedExpansion
-SET ROOT=%cd%
 IF "%~1" == "" (
   ECHO "Project name missing."
   EXIT /B 0
