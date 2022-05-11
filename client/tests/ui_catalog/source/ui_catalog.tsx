@@ -4,9 +4,6 @@ import { ComponentSchema } from './data';
 import { ComponentList, Theater} from './viewer';
 
 interface Properties {
-  
-  /** The size of the viewport. */
-  viewport: NeverEatAlone.Viewport;
 
   /** The list of components. */
   componentList: ComponentSchema[];
