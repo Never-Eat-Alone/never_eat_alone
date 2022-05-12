@@ -3,27 +3,45 @@ import * as React from 'react';
 import * as Router from 'react-router-dom';
 
 interface Properties {
+  color: string;
+  imageSrc: string;
+  className: React.CSSProperties;
   style?: React.CSSProperties;
 }
 
-export class HeaderLogoWithWhiteText extends React.Component<Properties> {
+export class HeaderLogo extends React.Component<Properties> {
   public render(): JSX.Element {
     return (
       <Router.Link
           to='/'
           style={{...CONTAINER_STYLE, ...this.props.style}}
-          className={css(styles.container)}
+          className={css(this.props.className)}
           draggable={false}
       >
         <img
           style={LOGO_STYLE}
-          src='resources/guest_header/icons/logo_white.svg'
+          src={this.props.imageSrc}
           alt='NEA Logo'
           draggable={false}
         />
-        <p style={LOGO_TEXT_STYLE} >NeverEatAlone</p>
+        <p style={{...LOGO_TEXT_STYLE, color: this.props.color}} >
+          NeverEatAlone
+        </p>
       </Router.Link>);
   }
+}
+
+interface ColoredHeaderLogoProperties {
+  style?: React.CSSProperties;
+}
+
+export function WhiteTextHeaderLogo(props: ColoredHeaderLogoProperties) {
+  return (<HeaderLogo
+    color='#FFFFFF'
+    imageSrc='resources/guest_header/icons/logo_white.svg'
+    className={styles.whiteTextContainer}
+    {...props}
+  />);
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {
@@ -56,7 +74,6 @@ const LOGO_STYLE: React.CSSProperties = {
 
 const LOGO_TEXT_STYLE: React.CSSProperties = {
   transform: 'translate(64.395 35.728)',
-  color: '#FFFFFF',
   fontSize: '17px',
   lineHeight: '19px',
   fontWeight: 400,
@@ -68,7 +85,7 @@ const LOGO_TEXT_STYLE: React.CSSProperties = {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  whiteTextContainer: {
     ':focus': {
       textDecoration: 'underline solid #FFFFFF 1px',
       color: '#FFFFFF'

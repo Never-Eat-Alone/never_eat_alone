@@ -7,13 +7,8 @@ node_modules/
 
 # Ignore the package-lock.json files
 **/package-lock.json
-
-application/Dependencies
-application/application/
-library/Dependencies/
-library/library/
-tests/scratch/Dependencies
-tests/scratch/application/
-tests/ui_catalog/Dependencies
-tests/ui_catalog/application/
+**/Dependencies
 **/mod_time.txt
+tests/**/application/
+application/application/
+library/library/
