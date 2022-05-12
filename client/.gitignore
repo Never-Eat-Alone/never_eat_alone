@@ -1,0 +1,14 @@
+# Ignore Mac system files
+.DS_Store
+**/*.DS_Store
+
+# Ignore node_modules folder
+node_modules/
+
+# Ignore the package-lock.json files
+**/package-lock.json
+**/Dependencies
+**/mod_time.txt
+tests/**/application/
+application/application/
+library/library/
