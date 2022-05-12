@@ -31,6 +31,10 @@ export root
 targets+=" scratch"
 targets+=" ui_catalog"
 
-cores=`grep -c "processor" < /proc/cpuinfo`
+if [ "$(uname -s)" = "Darwin" ]; then
+  cores=`sysctl -n machdep.cpu.thread_count`
+else
+  cores=`grep -c "processor" < /proc/cpuinfo`
+fi
 jobs="$(($cores))"
 parallel -j$jobs --no-notice build_function "$@" ::: $targets
