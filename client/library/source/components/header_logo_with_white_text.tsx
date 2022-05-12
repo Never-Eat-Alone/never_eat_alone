@@ -17,7 +17,7 @@ export class HeaderLogoWithWhiteText extends React.Component<Properties> {
       >
         <img
           style={LOGO_STYLE}
-          src='/resources/guest_header/icons/logo_white.svg'
+          src='resources/guest_header/icons/logo_white.svg'
           alt='NEA Logo'
           draggable={false}
         />
@@ -32,6 +32,7 @@ const CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'space-between',
   alignItems: 'center',
   height: '30px',
+  width: '137px',
   backgroundColor: 'transparent',
   textDecoration: 'none',
   cursor: 'pointer',
