@@ -1,53 +1,24 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 
-interface Properties {
+interface Properties extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
-  backgroundColor: string;
-  width: string;
-  height: string;
-  border: string;
-  className: React.CSSProperties;
-  isDisabled?: boolean;
-  style?: React.CSSProperties;
-  onClick: () => void;
 }
 
 export class TextButton extends React.Component<Properties> {
   public render(): JSX.Element {
     return (
-      <button
-          style={{...BUTTON_STYLE,
-            backgroundColor: this.props.backgroundColor,
-            width: this.props.width,
-            height: this.props.height,
-            border: this.props.border,
-            ...this.props.style
-          }}
-          className={css(this.props.className)}
-          disabled={this.props.isDisabled}
-          onClick={this.props.onClick}
-      >
+      <button {...this.props} style={{...BUTTON_STYLE, ...this.props.style}} >
         <p style={LABEL_STYLE} >{this.props.label}</p>
       </button>);
   }
 }
 
-interface TextButtonInterface {
-  label: string;
-  isDisabled?: boolean;
-  style?: React.CSSProperties;
-  onClick: () => void;
-}
-
-export function InvertedSecondaryTextButton(props: TextButtonInterface) {
+export function InvertedSecondaryTextButton(props: Properties) {
   return (<TextButton
-    backgroundColor='transparent'
-    width='68px'
-    height='30px'
-    border='1px solid #FFFFFF'
-    className={styles.invertedSecondaryTextButton}
     {...props}
+    style={INVERTED_BUTTON_STYLE}
+    className={css(styles.invertedSecondaryTextButton)}
   />);
 }
 
@@ -75,6 +46,13 @@ const LABEL_STYLE: React.CSSProperties = {
   height: '13px',
   textTransform: 'uppercase',
   color: '#FFFFFF'
+};
+
+const INVERTED_BUTTON_STYLE: React.CSSProperties = {
+  backgroundColor: 'transparent',
+  width: '68px',
+  height: '30px',
+  border: '1px solid #FFFFFF'
 };
 
 const styles = StyleSheet.create({
