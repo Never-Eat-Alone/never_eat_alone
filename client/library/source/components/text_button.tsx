@@ -44,7 +44,7 @@ export function InvertedSecondaryTextButton(props: TextButtonInterface) {
   return (<TextButton
     backgroundColor='transparent'
     width='68px'
-    height='29px'
+    height='30px'
     border='1px solid #FFFFFF'
     className={styles.invertedSecondaryTextButton}
     {...props}
