@@ -5,8 +5,8 @@ import * as Router from 'react-router-dom';
 interface Properties {
   label: string;
   to: string;
-  style: React.CSSProperties;
-  className: string;
+  style?: React.CSSProperties;
+  className?: string;
 }
 
 export function NavLink(props: Properties) {
