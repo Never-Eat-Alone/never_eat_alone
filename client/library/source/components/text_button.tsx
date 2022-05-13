@@ -22,6 +22,14 @@ export function InvertedSecondaryTextButton(props: Properties) {
   />);
 }
 
+export function AccentTextButton(props: Properties) {
+  return (<TextButton
+    {...props}
+    style={ACCENT_BUTTON_STYLE}
+    className={css(styles.accentTextButton)}
+  />);
+}
+
 const BUTTON_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
@@ -45,14 +53,23 @@ const LABEL_STYLE: React.CSSProperties = {
   lineHeight: '13px',
   height: '13px',
   textTransform: 'uppercase',
-  color: '#FFFFFF'
+  color: 'inherit'
 };
 
 const INVERTED_BUTTON_STYLE: React.CSSProperties = {
-  backgroundColor: 'transparent',
   width: '68px',
   height: '30px',
-  border: '1px solid #FFFFFF'
+  backgroundColor: 'transparent',
+  border: '1px solid #FFFFFF',
+  color: '#FFFFFF'
+};
+
+const ACCENT_BUTTON_STYLE: React.CSSProperties = {
+  width: '75px',
+  height: '30px',
+  backgroundColor: '#FFFFFF',
+  color: '#F26B55',
+  border: 'none'
 };
 
 const styles = StyleSheet.create({
@@ -83,6 +100,30 @@ const styles = StyleSheet.create({
       boxShadow: 'none',
       border: '1px solid #F6F6F6',
       color: '#F6F6F6'
+    }
+  },
+  accentTextButton: {
+    ':hover': {
+      boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.4)',
+      color: '#F26B55'
+    },
+    ':focus': {
+      boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.4)',
+      color: '#F26B55'
+    },
+    ':focus-within': {
+      boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.4)',
+      color: '#F26B55'
+    },
+    ':active': {
+      backgroundColor: '#F6F6F6',
+      boxShadow: 'none',
+      color: '#F26B55'
+    },
+    ':disabled': {
+      backgroundColor: '#CCCCCC',
+      boxShadow: 'none',
+      color: '#FFFFFF'
     }
   }
 });
