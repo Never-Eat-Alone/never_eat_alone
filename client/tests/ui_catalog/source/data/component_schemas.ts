@@ -7,11 +7,18 @@ export function loadComponentSchemas(): ComponentSchema[] {
   const logoSchema = new ComponentSchema('WhiteTextHeaderLogo',
     [new PropertySchema('style', {}, CSSInput)], [],
     NeverEatAlone.WhiteTextHeaderLogo);
-  const InvertedSecondaryTextButton = new ComponentSchema(
+  const invertedSecondaryTextButtonSchema = new ComponentSchema(
     'InvertedSecondaryTextButton', [new PropertySchema('style', {}, CSSInput),
     new PropertySchema('label', 'login', TextInput),
     new PropertySchema('disabled', false, BooleanInput)],
     [new SignalSchema('onClick', '', [])],
     NeverEatAlone.InvertedSecondaryTextButton);
-  return [logoSchema, InvertedSecondaryTextButton];
+  const accentTextButtonSchema = new ComponentSchema(
+    'AccentTextButton', [new PropertySchema('style', {}, CSSInput),
+    new PropertySchema('label', 'join', TextInput),
+    new PropertySchema('disabled', false, BooleanInput)],
+    [new SignalSchema('onClick', '', [])],
+    NeverEatAlone.AccentTextButton);
+  return [logoSchema, invertedSecondaryTextButtonSchema,
+    accentTextButtonSchema];
 }
