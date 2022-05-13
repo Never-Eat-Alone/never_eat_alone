@@ -5,29 +5,29 @@ interface Properties extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
 }
 
-export class TextButton extends React.Component<Properties> {
-  public render(): JSX.Element {
-    return (
-      <button {...this.props} style={{...BUTTON_STYLE, ...this.props.style}} >
-        <p style={LABEL_STYLE} >{this.props.label}</p>
-      </button>);
-  }
+export function TextButton(props: Properties) {
+  return (
+    <button {...props} style={{...BUTTON_STYLE, ...props.style}} >
+      <p style={LABEL_STYLE} >{props.label}</p>
+    </button>);
 }
 
 export function InvertedSecondaryTextButton(props: Properties) {
-  return (<TextButton
-    {...props}
-    style={INVERTED_BUTTON_STYLE}
-    className={css(styles.invertedSecondaryTextButton)}
-  />);
+  return (
+    <TextButton
+      {...props}
+      style={INVERTED_BUTTON_STYLE}
+      className={css(styles.invertedSecondaryTextButton)}
+    />);
 }
 
 export function AccentTextButton(props: Properties) {
-  return (<TextButton
-    {...props}
-    style={ACCENT_BUTTON_STYLE}
-    className={css(styles.accentTextButton)}
-  />);
+  return (
+    <TextButton
+      {...props}
+      style={ACCENT_BUTTON_STYLE}
+      className={css(styles.accentTextButton)}
+    />);
 }
 
 const BUTTON_STYLE: React.CSSProperties = {
