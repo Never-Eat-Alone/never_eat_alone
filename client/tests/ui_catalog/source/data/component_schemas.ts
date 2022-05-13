@@ -19,6 +19,12 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('disabled', false, BooleanInput)],
     [new SignalSchema('onClick', '', [])],
     NeverEatAlone.AccentTextButton);
+  const whiteNavLinkSchema = new ComponentSchema(
+    'WhiteNavLink', [new PropertySchema('label', 'What is NEA?', TextInput),
+    new PropertySchema('to', '/What_is_NEA', TextInput),
+    new PropertySchema('style', {}, CSSInput),
+    new PropertySchema('className', '', TextInput)], [],
+    NeverEatAlone.WhiteNavLink);
   return [logoSchema, invertedSecondaryTextButtonSchema,
-    accentTextButtonSchema];
+    accentTextButtonSchema, whiteNavLinkSchema];
 }
