@@ -16,7 +16,6 @@ export function NavLink(props: Properties) {
         to={props.to}
         style={{...LINK_STYLE, ...props.style}}
         className={props.className}
-        draggable={false}
     >
       <p style={LABEL_STYLE} >{props.label}</p>
     </Router.Link>);
@@ -33,7 +32,6 @@ const LINK_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'row',
-  justifyContent: 'center',
   alignItems: 'center',
   borderRadius: '4px',
   margin: '0px',
@@ -46,6 +44,8 @@ const LINK_STYLE: React.CSSProperties = {
 };
 
 const LABEL_STYLE: React.CSSProperties = {
+  margin: '0px',
+  padding: '0px',
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
   fontWeight: 600,
