@@ -11,12 +11,14 @@ export function loadComponentSchemas(): ComponentSchema[] {
   const invertedSecondaryTextButtonSchema = new ComponentSchema(
     'InvertedSecondaryTextButton', [new PropertySchema('style', {}, CSSInput),
     new PropertySchema('label', 'login', TextInput),
+    new PropertySchema('labelStyle', {}, CSSInput),
     new PropertySchema('disabled', false, BooleanInput)],
     [new SignalSchema('onClick', '', [])],
     NeverEatAlone.InvertedSecondaryTextButton);
   const accentTextButtonSchema = new ComponentSchema(
     'AccentTextButton', [new PropertySchema('style', {}, CSSInput),
     new PropertySchema('label', 'join', TextInput),
+    new PropertySchema('labelStyle', {}, CSSInput),
     new PropertySchema('disabled', false, BooleanInput)],
     [new SignalSchema('onClick', '', [])],
     NeverEatAlone.AccentTextButton);
@@ -53,7 +55,11 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('backgroundColor', 'transparent', TextInput),
     new PropertySchema('isBackgroundImage', true, BooleanInput)],
     [new SignalSchema('onInviteAFoodie', '', [])], NeverEatAlone.Footer);
+  const heroSchema = new ComponentSchema('Hero', [
+    new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
+    DisplayModeInput)], [new SignalSchema('onJoinButton', '', [])],
+    NeverEatAlone.Hero);
   return [logoSchema, invertedSecondaryTextButtonSchema,
     accentTextButtonSchema, whiteNavLinkSchema, headerNotLoggedInSchema,
-    headerLoggedInSchema, footerSchema];
+    headerLoggedInSchema, footerSchema, heroSchema];
 }

@@ -9,6 +9,7 @@ export * from './footer_logo';
 export * from './hamburger_button';
 export * from './header';
 export * from './header_logo';
+export * from './hero';
 export * from './invite_a_foodie_button';
 export * from './nav_link';
 export * from './profile_menu';

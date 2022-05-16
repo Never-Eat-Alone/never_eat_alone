@@ -3,12 +3,13 @@ import * as React from 'react';
 
 interface Properties extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
+  labelStyle?: React.CSSProperties;
 }
 
 export function TextButton(props: Properties) {
   return (
     <button {...props} style={{...BUTTON_STYLE, ...props.style}} >
-      <p style={LABEL_STYLE} >{props.label}</p>
+      <p style={{...LABEL_STYLE, ...props.labelStyle}} >{props.label}</p>
     </button>);
 }
 
