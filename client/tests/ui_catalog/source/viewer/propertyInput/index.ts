@@ -10,3 +10,4 @@ export * from './optional_input';
 export * from './readonly_input';
 export * from './style_declaration_value_input';
 export * from './text_input';
+export * from './user_input';

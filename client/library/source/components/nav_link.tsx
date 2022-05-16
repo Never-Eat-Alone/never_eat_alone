@@ -23,7 +23,9 @@ export function NavLink(props: Properties) {
 
 export function WhiteNavLink(props: Properties) {
   return (
-    <NavLink {...props} style={WHITE_LINK_STYLE}
+    <NavLink
+      {...props}
+      style={{...WHITE_LINK_STYLE, ...props.style}}
       className={css(styles.whiteNavLink)}
     />);
 }

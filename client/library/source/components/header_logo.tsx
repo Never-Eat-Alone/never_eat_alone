@@ -5,8 +5,8 @@ import * as Router from 'react-router-dom';
 interface Properties {
   color: string;
   imageSrc: string;
-  className: React.CSSProperties;
   style?: React.CSSProperties;
+  className?: string;
 }
 
 export class HeaderLogo extends React.Component<Properties> {
@@ -15,14 +15,12 @@ export class HeaderLogo extends React.Component<Properties> {
       <Router.Link
           to='/'
           style={{...CONTAINER_STYLE, ...this.props.style}}
-          className={css(this.props.className)}
-          draggable={false}
+          className={this.props.className}
       >
         <img
           style={LOGO_STYLE}
           src={this.props.imageSrc}
           alt='NEA Logo'
-          draggable={false}
         />
         <p style={{...LOGO_TEXT_STYLE, color: this.props.color}} >
           NeverEatAlone
@@ -36,12 +34,23 @@ interface ColoredHeaderLogoProperties {
 }
 
 export function WhiteTextHeaderLogo(props: ColoredHeaderLogoProperties) {
-  return (<HeaderLogo
-    color='#FFFFFF'
-    imageSrc='resources/guest_header/icons/logo_white.svg'
-    className={styles.whiteTextContainer}
-    {...props}
-  />);
+  return (
+    <HeaderLogo
+      {...props}
+      color='#FFFFFF'
+      imageSrc='resources/header/icons/logo_white.svg'
+      className={css(styles.whiteTextContainer)}
+    />);
+}
+
+export function OrangeTextHeaderLogo(props: ColoredHeaderLogoProperties) {
+  return (
+    <HeaderLogo
+      {...props}
+      color='#F24D3D'
+      imageSrc='resources/header/icons/logo_orange.svg'
+      className={css(styles.orangeTextContainer)}
+    />);
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {
@@ -93,6 +102,16 @@ const styles = StyleSheet.create({
     ':focus-within': {
       textDecoration: 'underline solid #FFFFFF 1px',
       color: '#FFFFFF'
+    }
+  },
+  orangeTextContainer: {
+    ':focus': {
+      textDecoration: 'underline solid #F24D3D 1px',
+      color: '#F24D3D'
+    },
+    ':focus-within': {
+      textDecoration: 'underline solid #F24D3D 1px',
+      color: '#F24D3D'
     }
   }
 });
