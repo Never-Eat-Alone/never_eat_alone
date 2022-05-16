@@ -47,8 +47,7 @@ export class Header extends React.Component<Properties> {
       }
       return (
         <BurgerMenuLeft
-          onLogIn={this.props.onLogInButton}
-          onSignUp={this.props.onJoinButton}
+          account={this.props.account}
           onMenuClick={this.props.onMenuClick}
         />);
     })();
@@ -66,7 +65,12 @@ export class Header extends React.Component<Properties> {
           style={PROFILE_MENU_STYLE}
         />);
       rightSideButtons.push(
-        <p style={USER_DISPLAYNAME_STYLE} >{this.props.account.name}</p>);
+        <WhiteNavLink
+          key='DisplayName'
+          label={this.props.account.name}
+          to='/user_profile/:id'
+          style={USER_DISPLAYNAME_STYLE}
+        />);
     } else {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         rightSideButtons.push(
@@ -196,15 +200,7 @@ const PROFILE_MENU_STYLE: React.CSSProperties = {
 };
 
 const USER_DISPLAYNAME_STYLE: React.CSSProperties = {
-  fontFamily: 'Source Sans Pro',
-  fontStyle: 'normal',
-  fontWeight: 600,
-  fontSize: '14px',
-  lineHeight: '14px',
-  height: '17px',
-  color: '#FFFFFF',
   margin: '0px 0px 0px 20px',
-  padding: '0px',
   overflow: 'hidden',
   textOverflow: 'ellipsis'
 };

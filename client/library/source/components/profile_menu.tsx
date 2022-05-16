@@ -44,11 +44,7 @@ export class ProfileMenu extends React.Component<Properties,
         const marginLeft = (this.props.displayMode ===
           DisplayMode.MOBILE) && 30 || 15;
         return (
-          <div
-              style={{...MENU_CONTAINER_STYLE,
-                width: (this.props.displayMode === DisplayMode.MOBILE) &&
-                '375px' || '212px'}}
-          >
+          <div style={MENU_CONTAINER_STYLE} >
             <div
               style={{...ARROW_UP_BACKGROUND_STYLE,
                 marginLeft: `-${marginLeft}px`}}
@@ -163,6 +159,7 @@ const MENU_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
+  width: '350px',
   border: '1px solid #969696',
   borderRadius: '4px',
   backgroundColor: '#F6F6F6',

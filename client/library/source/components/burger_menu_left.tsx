@@ -1,22 +1,17 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
+import { User } from '../definitions';
 import { CloseBurgerButton } from './close_burger_button';
 import { HamburgerButton } from './hamburger_button';
 import { OrangeTextHeaderLogo } from './header_logo';
 
 /** Describes the drop down menu properties. */
 interface Properties {
-  userId?: number;
+  account: User;
   style?: React.CSSProperties;
 
   /** Indicates the dropdown menu item is clicked. */
   onMenuClick: (path: string) => void;
-
-  /** Indicates the login option is clicked. */
-  onLogIn?: () => void;
-
-  /** Indicates the signup option is clicked. */
-  onSignUp?: () => void;
 }
 
 interface State {
@@ -36,39 +31,30 @@ export class BurgerMenuLeft extends React.Component<Properties,
 
   public render(): JSX.Element {
     if (this.state.isClicked) {
-      const items = [];
-      if (!this.props.userId || this.props.userId === -1) {
-        items.push(
-          <div
-              key='whatisnea'
-              style={MENU_ITEM_STYLE}
-              className={css(styles.menuItem)}
-              onClick={(event: any) => this.handleMenuClick(
-                '/what_is_nea', event)}
-          >
-            What is NEA?
-          </div>);
-        items.push(
-          <div
-              key='help'
-              style={MENU_ITEM_STYLE}
-              className={css(styles.menuItem)}
-              onClick={(event: any) => this.handleMenuClick('/help', event)}
-          >
-            Help
-          </div>);
-      } else {
-        items.push(
+      const item = (() => {
+        if (!this.props.account || this.props.account.id === -1) {
+          return (
+            <div
+                key='whatisnea'
+                style={MENU_ITEM_STYLE}
+                className={css(styles.menuItem)}
+                onClick={(event: any) => this.handleMenuClick(
+                  '/what_is_nea', event)}
+            >
+              What is NEA?
+            </div>);
+        }
+        return(
           <div
               key='yourevents'
               style={MENU_ITEM_STYLE}
               className={css(styles.menuItem)}
               onClick={(event: any) => this.handleMenuClick(
-                `/your_events/${this.props.userId}`, event)}
+                `/your_events/${this.props.account.id}`, event)}
           >
             Your Events
           </div>);
-      }
+      })();
       const marginRight = 15;
       return (
         <div
@@ -84,27 +70,16 @@ export class BurgerMenuLeft extends React.Component<Properties,
             <div
               style={{...ARROW_UP_STYLE, marginRight: `-${marginRight}px`}}
             />
-            <OrangeTextHeaderLogo
-              style={{padding: '0px 15px 0px 15px',
-                margin: '20px 0px 20px 0px'}}
-            />
+            <OrangeTextHeaderLogo style={LOGO_STYLE} />
+            {item}
             <div
+                key='help'
                 style={MENU_ITEM_STYLE}
                 className={css(styles.menuItem)}
-                onClick={(event: any) => this.handleMenuClick(
-                  '/explore_events', event)}
+                onClick={(event: any) => this.handleMenuClick('/help', event)}
             >
-              Explore Events
+              Help
             </div>
-            <div
-                style={MENU_ITEM_STYLE}
-                className={css(styles.menuItem)}
-                onClick={(event: any) => this.handleMenuClick(
-                  '/explore_restaurants', event)}
-            >
-              Explore Restaurants
-            </div>
-            {items}
           </div>
         </div>);
     }
@@ -178,7 +153,7 @@ const MENU_CONTAINER_STYLE: React.CSSProperties = {
   backgroundColor: '#F6F6F6',
   top: '37px',
   left: '2px',
-  width: '375px'
+  width: '350px'
 };
 
 const ARROW_UP_BACKGROUND_STYLE: React.CSSProperties = {
@@ -226,6 +201,11 @@ const MENU_ITEM_STYLE: React.CSSProperties = {
   padding: '0px 15px 0px 15px',
   margin: '0px 0px 20px 0px',
   textTransform: 'capitalize'
+};
+
+const LOGO_STYLE: React.CSSProperties = {
+  padding: '0px 15px 0px 15px',
+  margin: '20px 0px 20px 0px'
 };
 
 const styles = StyleSheet.create({
