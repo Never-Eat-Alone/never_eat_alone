@@ -13,7 +13,6 @@ export class FacebookButton extends React.Component<Properties> {
           className={css(styles.link)}
           href='https://www.facebook.com/neverEatAloneToronto'
           target='_blank'
-          draggable={false}
       >
         <svg
             style={SOCIAL_MEDIA_ICON_STYLE}

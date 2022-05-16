@@ -13,13 +13,11 @@ export class FooterLogo extends React.Component<Properties> {
           to='/'
           style={{...CONTAINER_STYLE, ...this.props.style}}
           className={css(styles.container)}
-          draggable={false}
       >
         <img
           style={LOGO_STYLE}
-          src='/resources/footer/icons/logo.svg'
+          src='resources/footer/icons/logo.svg'
           alt='NEA Logo'
-          draggable={false}
         />
         <p style={LOGO_TEXT_STYLE} >NeverEatAlone</p>
       </Router.Link>);

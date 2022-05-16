@@ -13,7 +13,6 @@ export class TwitterButton extends React.Component<Properties> {
           className={css(styles.link)}
           href='https://twitter.com/NEA_Toronto'
           target='_blank'
-          draggable={false}
       >
         <svg
             style={SOCIAL_MEDIA_ICON_STYLE}

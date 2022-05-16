@@ -13,7 +13,6 @@ export class InviteAFoodieButton extends React.Component<Properties> {
           style={{...INVITE_TEXT_STYLE, ...this.props.style}}
           className={css(styles.link)}
           onClick={this.props.onInviteAFoodie}
-          draggable={false}
       >
         Invite a foodie
       </button>);

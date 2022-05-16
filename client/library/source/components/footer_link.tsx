@@ -19,7 +19,6 @@ export class FooterLink extends React.Component<Properties> {
           to={this.props.to}
           style={{...LINK_STYLE, ...this.props.style}}
           className={css(styles.link)}
-          draggable={false}
       >
         <p style={{...LABEL_STYLE, lineHeight: lineHeight}} >
           {this.props.label}
