@@ -16,7 +16,7 @@ export function InvertedSecondaryTextButton(props: Properties) {
   return (
     <TextButton
       {...props}
-      style={INVERTED_BUTTON_STYLE}
+      style={{...INVERTED_BUTTON_STYLE, ...props.style}}
       className={css(styles.invertedSecondaryTextButton)}
     />);
 }
@@ -25,7 +25,7 @@ export function AccentTextButton(props: Properties) {
   return (
     <TextButton
       {...props}
-      style={ACCENT_BUTTON_STYLE}
+      style={{...ACCENT_BUTTON_STYLE, ...props.style}}
       className={css(styles.accentTextButton)}
     />);
 }
