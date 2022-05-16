@@ -11,12 +11,14 @@ export function loadComponentSchemas(): ComponentSchema[] {
   const invertedSecondaryTextButtonSchema = new ComponentSchema(
     'InvertedSecondaryTextButton', [new PropertySchema('style', {}, CSSInput),
     new PropertySchema('label', 'login', TextInput),
+    new PropertySchema('labelStyle', {}, CSSInput),
     new PropertySchema('disabled', false, BooleanInput)],
     [new SignalSchema('onClick', '', [])],
     NeverEatAlone.InvertedSecondaryTextButton);
   const accentTextButtonSchema = new ComponentSchema(
     'AccentTextButton', [new PropertySchema('style', {}, CSSInput),
     new PropertySchema('label', 'join', TextInput),
+    new PropertySchema('labelStyle', {}, CSSInput),
     new PropertySchema('disabled', false, BooleanInput)],
     [new SignalSchema('onClick', '', [])],
     NeverEatAlone.AccentTextButton);
