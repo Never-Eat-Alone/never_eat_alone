@@ -53,7 +53,11 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('backgroundColor', 'transparent', TextInput),
     new PropertySchema('isBackgroundImage', true, BooleanInput)],
     [new SignalSchema('onInviteAFoodie', '', [])], NeverEatAlone.Footer);
+  const heroSchema = new ComponentSchema('Hero', [
+    new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
+    DisplayModeInput)], [new SignalSchema('onJoinButton', '', [])],
+    NeverEatAlone.Hero);
   return [logoSchema, invertedSecondaryTextButtonSchema,
     accentTextButtonSchema, whiteNavLinkSchema, headerNotLoggedInSchema,
-    headerLoggedInSchema, footerSchema];
+    headerLoggedInSchema, footerSchema, heroSchema];
 }
