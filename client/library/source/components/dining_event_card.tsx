@@ -83,13 +83,6 @@ export class DiningEventCard extends React.Component<Properties> {
       }
       return (
         <div style={{...ROW_STYLE, ...CUISINE_ROW_STYLE}} >
-          <div style={ICON_CONTAINER_STYLE} >
-            <img
-              style={{...ICON_STYLE, ...NO_SELECTION_STYLE, height: '15px'}}
-              src='resources/home_page/icons/cuisine.svg'
-              alt='Cuisine'
-            />
-          </div>
           <div style={{...TEXT_ROW_STYLE, ...NO_SELECTION_STYLE}} >
             {result}
           </div>
@@ -103,7 +96,7 @@ export class DiningEventCard extends React.Component<Properties> {
           <div style={ATTENDING_ICON_CONTAINER_STYLE} >
             <img
               style={ATTENDING_ICON_STYLE}
-              src='resources/home_page/icons/attending.svg'
+              src='resources/dining_event_card/icons/check_mark.svg'
               alt='Attending'
             />
           </div>
@@ -171,7 +164,7 @@ export class DiningEventCard extends React.Component<Properties> {
               <div style={ICON_CONTAINER_STYLE} >
                 <img
                   style={{...ICON_STYLE, ...NO_SELECTION_STYLE, height: '15px'}}
-                  src='resources/guest_home_page/icons/calendar.svg'
+                  src='resources/dining_event_card/icons/event_date.svg'
                   alt='Calendar'
                   draggable={false}
                   />
@@ -187,7 +180,7 @@ export class DiningEventCard extends React.Component<Properties> {
               <div style={ICON_CONTAINER_STYLE} >
                 <img
                   style={{...ICON_STYLE, ...NO_SELECTION_STYLE, height: '14px'}}
-                  src='resources/guest_home_page/icons/seat.svg'
+                  src='resources/dining_event_card/icons/seats.svg'
                   alt='Seat'
                   draggable={false}
                   />
