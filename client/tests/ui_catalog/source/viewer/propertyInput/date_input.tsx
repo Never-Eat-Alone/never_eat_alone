@@ -30,7 +30,7 @@ export class DateInput extends React.Component<Properties, State> {
   public render(): JSX.Element {
     return <input type='date'
       value={format(this.state.localValue, 'yyyy-MM-dd')}
-      onChange={this.onChange}/>;
+      onChange={this.onChange} />;
   }
 
   public componentDidUpdate(prevProps: Properties) {

@@ -1,5 +1,6 @@
 export * from './burger_menu_left';
 export * from './close_burger_button';
+export * from './dining_event_card';
 export * from './display_mode_renderer';
 export * from './facebook_button';
 export * from './footer';

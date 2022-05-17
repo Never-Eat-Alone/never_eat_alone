@@ -2,6 +2,7 @@ export * from './array_input';
 export * from './boolean_input';
 export * from './color_input';
 export * from './css_input';
+export * from './cuisine_input';
 export * from './date_input';
 export * from './display_mode_input';
 export * from './enum_input';

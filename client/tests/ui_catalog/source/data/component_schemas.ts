@@ -1,5 +1,5 @@
 import * as NeverEatAlone from 'never_eat_alone';
-import { BooleanInput, CSSInput, DisplayModeInput, TextInput, UserInput
+import { BooleanInput, CSSInput, DisplayModeInput, TextInput, UserInput, NumberInput, DateInput, CuisineInput
 } from '../viewer/propertyInput';
 import { ComponentSchema, PropertySchema, SignalSchema } from './schemas';
 
@@ -59,7 +59,24 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
     DisplayModeInput)], [new SignalSchema('onJoinButton', '', [])],
     NeverEatAlone.Hero);
+  const diningEventCardSchema = new ComponentSchema('Dining Event Card',
+    [new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
+    DisplayModeInput), new PropertySchema('id', -1, NumberInput),
+    new PropertySchema('imageSrc', '', TextInput),
+    new PropertySchema('title',
+    'Must try! Best french restaurant in the city.', TextInput),
+    new PropertySchema('restaurantName', 'Le Banane', TextInput),
+    new PropertySchema('priceRange', NeverEatAlone.PriceRange.EXPENSIVE,
+    TextInput), new PropertySchema('startTime', new Date(), DateInput),
+    new PropertySchema('cuisines', [new NeverEatAlone.Cuisine(
+    1, 'French', 'yellow')], CuisineInput), new PropertySchema(
+    'numberOfAttendees', 12, NumberInput), new PropertySchema('numberOfSeats',
+    15, NumberInput), new PropertySchema('isAttending', false, BooleanInput),
+    new PropertySchema('isLoggedIn', false, BooleanInput),
+    new PropertySchema('color', 'blue', TextInput), new PropertySchema(
+    'style', {}, CSSInput), new PropertySchema('className', '', TextInput)],
+    [], NeverEatAlone.DiningEventCard);
   return [logoSchema, invertedSecondaryTextButtonSchema,
     accentTextButtonSchema, whiteNavLinkSchema, headerNotLoggedInSchema,
-    headerLoggedInSchema, footerSchema, heroSchema];
+    headerLoggedInSchema, footerSchema, heroSchema, diningEventCardSchema];
 }
