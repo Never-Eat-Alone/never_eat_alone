@@ -7,7 +7,7 @@ import { Cuisine, DisplayMode, PriceRange, toDollarSigns
 interface Properties {
 
   displayMode: DisplayMode;
-  
+
   /** The id of the dining event. */
   id: number;
 
@@ -48,7 +48,7 @@ interface Properties {
   style?: any;
 }
 
-/** Displays the dining event summary card. */
+/** Displays the dining event card. */
 export class DiningEventCard extends React.Component<Properties> {
   public render(): JSX.Element {
     const title = (() => {
