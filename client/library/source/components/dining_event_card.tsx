@@ -46,9 +46,6 @@ interface Properties {
 
   /** Indicates the style. */
   style?: any;
-
-  /** Indicated the classname. */
-  className?: any;
 }
 
 /** Displays the dining event summary card. */
@@ -83,7 +80,7 @@ export class DiningEventCard extends React.Component<Properties> {
       }
       return (
         <div style={{...ROW_STYLE, ...CUISINE_ROW_STYLE}} >
-          <div style={{...TEXT_ROW_STYLE, ...NO_SELECTION_STYLE}} >
+          <div style={TEXT_ROW_STYLE} >
             {result}
           </div>
         </div>
@@ -103,58 +100,67 @@ export class DiningEventCard extends React.Component<Properties> {
           <div style={ATTENDING_TEXT_STYLE} >I'm Going</div>
         </div>) || null);
     })();
-    const containerStyle = (() => {
-      if (this.props.style) {
-        return {...CONTAINER_STYLE, ...this.props.style}
+    const { containerStyle, eventColorStyle, imageContainerStyle,
+        imageStyle } = (() => {
+      if (this.props.displayMode === DisplayMode.DESKTOP) {
+        return {
+          containerStyle: DESKTOP_CONTAINER_STYLE,
+          eventColorStyle: DESKTOP_EVENT_COLOR_STYLE,
+          imageContainerStyle: DESKTOP_IMAGE_CONTAINER_STYLE,
+          imageStyle: DESKTOP_IMAGE_STYLE
+        };
       }
-      return CONTAINER_STYLE;
-    })();
-    const containerClass = (() => {
-      if (this.props.className) {
-        return css(styles.container, this.props.className, styles.linkText);
+      if (this.props.displayMode === DisplayMode.TABLET) {
+        return {
+          containerStyle: TABLET_CONTAINER_STYLE,
+          eventColorStyle: TABLET_EVENT_COLOR_STYLE,
+          imageContainerStyle: TABLET_IMAGE_CONTAINER_STYLE,
+          imageStyle: TABLET_IMAGE_STYLE
+        };
       }
-      return css(styles.container, styles.linkText);
+      return {
+        containerStyle: MOBILE_CONTAINER_STYLE,
+        eventColorStyle: MOBILE_EVENT_COLOR_STYLE,
+        imageContainerStyle: MOBILE_IMAGE_CONTAINER_STYLE,
+        imageStyle: MOBILE_IMAGE_STYLE
+      };
     })();
     return (
       <Router.Link
-          style={containerStyle}
-          className={containerClass}
+          style={{...CONTAINER_STYLE, ...containerStyle, ...this.props.style}}
+          className={css(styles.container)}
           to={`/dining_events/${this.props.id}`}
-          draggable={false}
       >
-        {isAttending}
-        <div style={IMAGE_CONTAINER_STYLE} >
+        <div style={{...IMAGE_CONTAINER_STYLE, ...imageContainerStyle}} >
           <img
-            style={{...IMAGE_STYLE, ...NO_SELECTION_STYLE}}
+            style={{...IMAGE_STYLE, ...imageStyle}}
             alt='Dining Event Image'
             src={imageSrc}
           />
         </div>
         <div style={TEXT_CONTAINER_STYLE} >
-          <div style={EVENT_COLOR_STYLE} >
+          <div style={{...EVENT_COLOR_STYLE, ...eventColorStyle}} >
             <svg
                 width='12' height='20' viewBox='0 0 12 20'
                 fill={this.props.color} xmlns='http://www.w3.org/2000/svg'
             >
               <path d='M12 19.5468H0V0H12L8 9.7734L12 19.5468Z'
-                fill={this.props.color} />
+                fill={this.props.color}
+              />
             </svg>
           </div>
           <div style={SECTION_CONTAINER_STYLE} >
-            <div
-                style={{...TITLE_STYLE, ...NO_SELECTION_STYLE}}
-                draggable={false}
-            >
+            <div style={TITLE_STYLE} >
               {title}
             </div>
             <div style={{...ROW_STYLE, ...PRICE_ROW_STYLE}} >
               <div style={RESTAURANT_NAME_STYLE} >
                 {restaurantName}
               </div>
-              <div style={NO_SELECTION_STYLE} >
+              <div>
                 &nbsp;.&nbsp;
               </div>
-              <div style={NO_SELECTION_STYLE} >
+              <div>
                 {toDollarSigns(this.props.priceRange)}
               </div>
             </div>
@@ -163,32 +169,25 @@ export class DiningEventCard extends React.Component<Properties> {
             <div style={{...ROW_STYLE, ...MIDDLE_ROW_STYLE}} >
               <div style={ICON_CONTAINER_STYLE} >
                 <img
-                  style={{...ICON_STYLE, ...NO_SELECTION_STYLE, height: '15px'}}
+                  style={{...ICON_STYLE, height: '15px'}}
                   src='resources/dining_event_card/icons/event_date.svg'
                   alt='Calendar'
                   draggable={false}
                   />
               </div>
-              <div
-                  style={{...TEXT_ROW_STYLE, ...NO_SELECTION_STYLE}}
-                  draggable={false}
-                  >
+              <div style={TEXT_ROW_STYLE} >
                 {this.formatDate(this.props.startTime)}
               </div>
             </div>
             <div style={{...ROW_STYLE, ...MIDDLE_ROW_STYLE}} >
               <div style={ICON_CONTAINER_STYLE} >
                 <img
-                  style={{...ICON_STYLE, ...NO_SELECTION_STYLE, height: '14px'}}
+                  style={{...ICON_STYLE, height: '14px'}}
                   src='resources/dining_event_card/icons/seats.svg'
                   alt='Seat'
-                  draggable={false}
                   />
               </div>
-              <div
-                  style={{...TEXT_ROW_STYLE, ...NO_SELECTION_STYLE}}
-                  draggable={false}
-                  >
+              <div style={TEXT_ROW_STYLE} >
                 {seats}
               </div>
             </div>
@@ -228,22 +227,53 @@ export namespace DiningEventCard {
 const CONTAINER_STYLE: React.CSSProperties = {
   position: 'relative',
   display: 'flex',
+  borderRadius: '4px',
+  backgroundColor: '#FFFFFF',
+  overflow: 'hidden',
+  textDecoration: 'none',
+  outline: 'none',
+  filter: 'drop-shadow(0px 1px 4px rgba(86, 70, 40, 0.25))'
+};
+
+const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
   width: '244px',
-  height: '348px',
-  boxShadow: '0px 2px 3px rgba(0, 0, 0, .25)',
-  borderRadius: '4px',
-  overflow: 'hidden',
-  textDecoration: 'none',
-  backgroundColor: '#FFFFFF'
+  height: '348px'
+};
+
+const TABLET_CONTAINER_STYLE: React.CSSProperties = {
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  width: '214px',
+  height: '348px'
+};
+
+const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  width: '335px',
+  height: '216px'
 };
 
 const EVENT_COLOR_STYLE: React.CSSProperties = {
   position: 'absolute',
-  left: '0',
+  left: '0'
+};
+
+const DESKTOP_EVENT_COLOR_STYLE: React.CSSProperties = {
   top: '24px'
+};
+
+const TABLET_EVENT_COLOR_STYLE: React.CSSProperties = {
+  top: '24px'
+};
+
+const MOBILE_EVENT_COLOR_STYLE: React.CSSProperties = {
+  top: '20px'
 };
 
 const ATTENDING_CONTAINER_STYLE: React.CSSProperties = {
@@ -293,14 +323,43 @@ const IMAGE_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
-  alignItems: 'center',
+  alignItems: 'center'
+};
+
+const DESKTOP_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
   width: '100%',
-  height: '100px'
+  height: '78px'
+};
+
+const TABLET_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  width: '100%',
+  height: '78px'
+};
+
+const MOBILE_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  width: '78px',
+  height: '100%'
 };
 
 const IMAGE_STYLE: React.CSSProperties = {
   width: '100%',
-  height: '100%'
+  height: '100%',
+  objectFit: 'cover'
+};
+
+const DESKTOP_IMAGE_STYLE: React.CSSProperties = {
+  minWidth: '244px',
+  minHeight: '78px'
+};
+
+const TABLET_IMAGE_STYLE: React.CSSProperties = {
+  minWidth: '214px',
+  minHeight: '78px'
+};
+
+const MOBILE_IMAGE_STYLE: React.CSSProperties = {
+  minWidth: '78px',
+  minHeight: '216px'
 };
 
 const RESTAURANT_NAME_STYLE: React.CSSProperties = {
@@ -401,31 +460,16 @@ const ICON_STYLE: React.CSSProperties = {
   backgroundColor: 'transparent'
 };
 
-const NO_SELECTION_STYLE: React.CSSProperties = {
-  WebkitTouchCallout: 'none',
-  MozUserSelect: 'none',
-  WebkitUserSelect: 'none',
-  KhtmlUserSelect: 'none',
-  userSelect: 'none'
-};
-
 const styles = StyleSheet.create({
   container: {
     ':hover': {
-      boxShadow: '0px 2px 5px rgba(0, 0, 0, .25)'
+      filter: 'drop-shadow(0px 1px 5px rgba(86, 70, 40, 0.4))'
     },
     ':focus': {
-      boxShadow: '0px 2px 5px rgba(0, 0, 0, .25)'
+      filter: 'drop-shadow(0px 1px 5px rgba(86, 70, 40, 0.4))'
     },
     ':active': {
-      boxShadow: '0px 2px 5px rgba(0, 0, 0, .25)'
-    }
-  },
-  linkText: {
-    textDecoration: 'none',
-    color: '#FFFFFF',
-    ':focus': {
-      outline: 'none'
+      filter: 'drop-shadow(0px 1px 5px rgba(86, 70, 40, 0.4))'
     }
   }
 });
