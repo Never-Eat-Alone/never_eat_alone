@@ -83,8 +83,10 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('id', 1, NumberInput), new PropertySchema('src',
     'resources/images/1.jpg', TextInput)], [new SignalSchema('onClick', '', [])
     ], NeverEatAlone.AlbumCard);
+  const exploreEventsSummarySchema = new ComponentSchema('ExploreEventsSummary',
+    [], [], NeverEatAlone.ExploreEventsSummary);
   return [logoSchema, invertedSecondaryTextButtonSchema,
     accentTextButtonSchema, whiteNavLinkSchema, headerNotLoggedInSchema,
     headerLoggedInSchema, footerSchema, heroSchema, diningEventCardSchema,
-    albumCardSchema];
+    albumCardSchema, exploreEventsSummarySchema];
 }
