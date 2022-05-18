@@ -26,6 +26,9 @@ interface Properties {
   /** The start date of the event. */
   startTime: Date;
 
+  /** The end date of the event. */
+  endTime: Date;
+
   /** The cuisine labels associated with the restaurant. */
   cuisines: Cuisine[];
 
@@ -51,6 +54,8 @@ interface Properties {
 /** Displays the dining event card. */
 export class DiningEventCard extends React.Component<Properties> {
   public render(): JSX.Element {
+    const imageSrc = this.props.imageSrc ||
+      'resources/dining_event_card/default_image.svg';
     const title = (() => {
       if (this.props.title.length > 60) {
         return this.props.restaurantName.substring(0, 57) + '...';
@@ -63,51 +68,46 @@ export class DiningEventCard extends React.Component<Properties> {
       }
       return this.props.restaurantName;
     })();
+    const cuisines = [];
+    for (let i = 0; i < Math.min(this.props.cuisines.length, 3); ++i) {
+      cuisines.push(
+        <div
+            key={this.props.cuisines[i].id}
+            style={{...CUISINE_TEXT_STYLE,
+              backgroundColor: this.props.cuisines[i].colorCode}}
+        >
+          {this.props.cuisines[i].label}
+        </div>);
+    }
     const seats = `${this.props.numberOfAttendees}/${this.props.numberOfSeats} \
       Attendees`;
-    const imageSrc = this.props.imageSrc ||
-      'resources/dining_event_card/default_image.svg';
-    const cuisines = (() => {
-      if (this.props.cuisines.length == 0) {
-        return null;
-      }
-      let result = this.props.cuisines[0].label;
-      for (let i = 1; i < Math.min(this.props.cuisines.length, 3); ++i) {
-        const newLabel = ', ' + this.props.cuisines[i].label;
-        if ((result + newLabel).length < 33) {
-          result += newLabel;
-        }
-      }
-      return (
-        <div style={{...ROW_STYLE, ...CUISINE_ROW_STYLE}} >
-          <div style={TEXT_ROW_STYLE} >
-            {result}
-          </div>
-        </div>
-      );
-    })();
     const isAttending = (() => {
-      return (
-        (this.props.isAttending &&
-        <div style={ATTENDING_CONTAINER_STYLE} >
-          <div style={ATTENDING_ICON_CONTAINER_STYLE} >
-            <img
-              style={ATTENDING_ICON_STYLE}
-              src='resources/dining_event_card/icons/check_mark.svg'
-              alt='Attending'
-            />
-          </div>
-          <div style={ATTENDING_TEXT_STYLE} >I'm Going</div>
-        </div>) || null);
+      if (this.props.isAttending) {
+        const text = (this.props.startTime > new Date() && 'going' ||
+          'attended');
+        return (
+          <div style={ATTENDING_CONTAINER_STYLE} >
+            <div style={ATTENDING_ICON_CONTAINER_STYLE} >
+              <img
+                style={ATTENDING_ICON_STYLE}
+                src='resources/dining_event_card/icons/check_mark.svg'
+                alt='Attending'
+              />
+            </div>
+            <div style={ATTENDING_TEXT_STYLE} >{text}</div>
+          </div>);
+      }
+      return null;
     })();
     const { containerStyle, eventColorStyle, imageContainerStyle,
-        imageStyle } = (() => {
+        imageStyle, textContainerStyle } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
           containerStyle: DESKTOP_CONTAINER_STYLE,
           eventColorStyle: DESKTOP_EVENT_COLOR_STYLE,
           imageContainerStyle: DESKTOP_IMAGE_CONTAINER_STYLE,
-          imageStyle: DESKTOP_IMAGE_STYLE
+          imageStyle: DESKTOP_IMAGE_STYLE,
+          textContainerStyle: DESKTOP_TEXT_CONTAINER_STYLE
         };
       }
       if (this.props.displayMode === DisplayMode.TABLET) {
@@ -115,14 +115,16 @@ export class DiningEventCard extends React.Component<Properties> {
           containerStyle: TABLET_CONTAINER_STYLE,
           eventColorStyle: TABLET_EVENT_COLOR_STYLE,
           imageContainerStyle: TABLET_IMAGE_CONTAINER_STYLE,
-          imageStyle: TABLET_IMAGE_STYLE
+          imageStyle: TABLET_IMAGE_STYLE,
+          textContainerStyle: TABLET_TEXT_CONTAINER_STYLE
         };
       }
       return {
         containerStyle: MOBILE_CONTAINER_STYLE,
         eventColorStyle: MOBILE_EVENT_COLOR_STYLE,
         imageContainerStyle: MOBILE_IMAGE_CONTAINER_STYLE,
-        imageStyle: MOBILE_IMAGE_STYLE
+        imageStyle: MOBILE_IMAGE_STYLE,
+        textContainerStyle: MOBILE_TEXT_CONTAINER_STYLE
       };
     })();
     return (
@@ -138,7 +140,7 @@ export class DiningEventCard extends React.Component<Properties> {
             src={imageSrc}
           />
         </div>
-        <div style={TEXT_CONTAINER_STYLE} >
+        <div style={{...TEXT_CONTAINER_STYLE, ...textContainerStyle}} >
           <div style={{...EVENT_COLOR_STYLE, ...eventColorStyle}} >
             <svg
                 width='12' height='20' viewBox='0 0 12 20'
@@ -164,6 +166,7 @@ export class DiningEventCard extends React.Component<Properties> {
                 {toDollarSigns(this.props.priceRange)}
               </div>
             </div>
+            <div style={CUISINE_ROW_STYLE} >{cuisines}</div>
           </div>
           <div style={SECTION_CONTAINER_STYLE} >
             <div style={{...ROW_STYLE, ...MIDDLE_ROW_STYLE}} >
@@ -171,9 +174,8 @@ export class DiningEventCard extends React.Component<Properties> {
                 <img
                   style={{...ICON_STYLE, height: '15px'}}
                   src='resources/dining_event_card/icons/event_date.svg'
-                  alt='Calendar'
-                  draggable={false}
-                  />
+                  alt='Date'
+                />
               </div>
               <div style={TEXT_ROW_STYLE} >
                 {this.formatDate(this.props.startTime)}
@@ -182,17 +184,29 @@ export class DiningEventCard extends React.Component<Properties> {
             <div style={{...ROW_STYLE, ...MIDDLE_ROW_STYLE}} >
               <div style={ICON_CONTAINER_STYLE} >
                 <img
+                  style={{...ICON_STYLE, height: '15px'}}
+                  src='resources/dining_event_card/icons/clock.svg'
+                  alt='Time'
+                />
+              </div>
+              <div style={TEXT_ROW_STYLE} >
+                {this.formatTime(this.props.startTime, this.props.endTime)}
+              </div>
+            </div>
+            <div style={{...ROW_STYLE, ...MIDDLE_ROW_STYLE}} >
+              <div style={ICON_CONTAINER_STYLE} >
+                <img
                   style={{...ICON_STYLE, height: '14px'}}
                   src='resources/dining_event_card/icons/seats.svg'
-                  alt='Seat'
-                  />
+                  alt='Seats'
+                />
               </div>
               <div style={TEXT_ROW_STYLE} >
                 {seats}
               </div>
             </div>
-            {cuisines}
           </div>
+          {isAttending}
         </div>
       </Router.Link>);
   }
@@ -214,6 +228,23 @@ export class DiningEventCard extends React.Component<Properties> {
       return `${weekday} ${month} ${day}rd, ${year}`;
     }
     return `${weekday} ${month} ${day}th, ${year}`;
+  }
+
+  private formatTime = (startTime: Date, endTime: Date): string => {
+    function convert24To12HourClock(hour: number, minute: number): string {
+      if (hour === 0) {
+        return `12:${minute}am`;
+      } else if (hour === 12) {
+        return `12:${minute}pm`;
+      } else if (hour > 12) {
+        return `${hour - 12}:${minute}pm`;
+      } else {
+        return `${hour}:${minute}am`;
+      }
+    }
+    return (`${convert24To12HourClock(startTime.getHours(),
+      startTime.getMinutes())} - ${convert24To12HourClock(endTime.getHours(),
+      endTime.getMinutes())}`);
   }
 }
 
@@ -276,49 +307,6 @@ const MOBILE_EVENT_COLOR_STYLE: React.CSSProperties = {
   top: '20px'
 };
 
-const ATTENDING_CONTAINER_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
-  padding: '3px 4px',
-  position: 'absolute',
-  height: '24px',
-  right: '10px',
-  top: '10px',
-  backgroundColor: 'rgba(0, 0, 0, 0.4)',
-  borderRadius: '4px'
-};
-
-const ATTENDING_ICON_CONTAINER_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  width: '14px',
-  height: '15px',
-  backgroundColor: 'transparent',
-  marginRight: '4px'
-};
-
-const ATTENDING_ICON_STYLE: React.CSSProperties = {
-  width: '100%',
-  height: '100%',
-  minWidth: '14px',
-  minHeight: '15px'
-};
-
-const ATTENDING_TEXT_STYLE: React.CSSProperties = {
-  fontFamily: 'Oswald',
-  fontStyle: 'normal',
-  fontWeight: 'normal',
-  fontSize: '12px',
-  lineHeight: '18px',
-  color: '#FFFFFF',
-  height: '100%',
-  minWidth: '42px'
-};
-
 const IMAGE_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
@@ -374,10 +362,25 @@ const TEXT_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
-  alignItems: 'flex-start',
+  alignItems: 'flex-start'
+};
+
+const DESKTOP_TEXT_CONTAINER_STYLE: React.CSSProperties = {
   width: '100%',
-  height: 'calc(100% - 100px)',
-  padding: '20px'
+  height: 'calc(100% - 78px)',
+  padding: '20px 20px 30px 20px'
+};
+
+const TABLET_TEXT_CONTAINER_STYLE: React.CSSProperties = {
+  width: '100%',
+  height: 'calc(100% - 78px)',
+  padding: '20px 20px 30px 20px'
+};
+
+const MOBILE_TEXT_CONTAINER_STYLE: React.CSSProperties = {
+  width: 'calc(100% - 78px)',
+  height: '100%',
+  padding: '15px 20px 20px 20px'
 };
 
 const SECTION_CONTAINER_STYLE: React.CSSProperties = {
@@ -390,17 +393,24 @@ const SECTION_CONTAINER_STYLE: React.CSSProperties = {
 
 const TITLE_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  flexWrap: 'wrap',
   width: '100%',
+  minHeight: '24px',
+  maxHeight: '48px',
   fontFamily: 'Oswald',
   fontStyle: 'normal',
   fontWeight: 400,
   fontSize: '16px',
   lineHeight: '24px',
-  minHeight: '24px',
-  maxHeight: '48px',
   color: '#000000',
   overflow: 'hidden',
-  whiteSpace: 'pre-wrap'
+  whiteSpace: 'pre-wrap',
+  textOverflow: 'ellipsis',
+  marginBottom: '5px'
 };
 
 const ROW_STYLE: React.CSSProperties = {
@@ -409,7 +419,9 @@ const ROW_STYLE: React.CSSProperties = {
   flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'center',
-  width: '100%'
+  width: '100%',
+  height: '18px',
+  marginBottom: '10px'
 };
 
 const PRICE_ROW_STYLE: React.CSSProperties = {
@@ -429,7 +441,28 @@ const MIDDLE_ROW_STYLE: React.CSSProperties = {
 };
 
 const CUISINE_ROW_STYLE: React.CSSProperties = {
-  height: '18px'
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  flexWrap: 'wrap',
+  minHeight: '19px',
+  maxHeight: '38px',
+  width: '100%'
+};
+
+const CUISINE_TEXT_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '12px',
+  lineHeight: '15px',
+  color: '#000000',
+  borderRadius: '4px'
 };
 
 const ICON_CONTAINER_STYLE: React.CSSProperties = {
@@ -458,6 +491,45 @@ const ICON_STYLE: React.CSSProperties = {
   width: '100%',
   height: '100%',
   backgroundColor: 'transparent'
+};
+
+const ATTENDING_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  height: '30px',
+  width: '100%',
+  backgroundColor: 'transparent'
+};
+
+const ATTENDING_ICON_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '10px',
+  height: '8px',
+  backgroundColor: 'transparent',
+  marginRight: '5px'
+};
+
+const ATTENDING_ICON_STYLE: React.CSSProperties = {
+  width: '100%',
+  height: '100%',
+  minWidth: '10px',
+  minHeight: '8px',
+  objectFit: 'cover'
+};
+
+const ATTENDING_TEXT_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '12px',
+  lineHeight: '15px',
+  textTransform: 'uppercase',
+  color: '#000000'
 };
 
 const styles = StyleSheet.create({

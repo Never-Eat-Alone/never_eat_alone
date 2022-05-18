@@ -67,8 +67,9 @@ export function loadComponentSchemas(): ComponentSchema[] {
     'Must try! Best french restaurant in the city.', TextInput),
     new PropertySchema('restaurantName', 'Le Banane', TextInput),
     new PropertySchema('priceRange', NeverEatAlone.PriceRange.EXPENSIVE,
-    TextInput), new PropertySchema('startTime', new Date(), DateInput),
-    new PropertySchema('cuisines', [new NeverEatAlone.Cuisine(
+    TextInput), new PropertySchema('startTime', new Date(2022, 6, 17, 18, 30),
+    DateInput), new PropertySchema('endTime', new Date(2022, 6, 18, 0, 30),
+    DateInput), new PropertySchema('cuisines', [new NeverEatAlone.Cuisine(
     1, 'French', 'yellow')], CuisineInput), new PropertySchema(
     'numberOfAttendees', 12, NumberInput), new PropertySchema('numberOfSeats',
     15, NumberInput), new PropertySchema('isAttending', false, BooleanInput),
