@@ -1,6 +1,6 @@
 import * as NeverEatAlone from 'never_eat_alone';
-import { BooleanInput, CSSInput, DisplayModeInput, TextInput, UserInput, NumberInput, DateInput, CuisineInput
-} from '../viewer/propertyInput';
+import { BooleanInput, CSSInput, CuisineInput, DateInput, DisplayModeInput,
+  NumberInput, TextInput, UserInput } from '../viewer/propertyInput';
 import { ComponentSchema, PropertySchema, SignalSchema } from './schemas';
 
 /** Loads the complete list of schemas available to test. */
