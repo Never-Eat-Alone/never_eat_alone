@@ -70,10 +70,11 @@ export class DiningEventCard extends React.Component<Properties> {
     })();
     const cuisines = [];
     for (let i = 0; i < Math.min(this.props.cuisines.length, 3); ++i) {
+      const style = (i > 0 && CUISINE_MARGIN_STYLE || null);
       cuisines.push(
         <div
             key={this.props.cuisines[i].id}
-            style={{...CUISINE_TEXT_STYLE,
+            style={{...style, ...CUISINE_TEXT_STYLE,
               backgroundColor: this.props.cuisines[i].colorCode}}
         >
           {this.props.cuisines[i].label}
@@ -100,14 +101,15 @@ export class DiningEventCard extends React.Component<Properties> {
       return null;
     })();
     const { containerStyle, eventColorStyle, imageContainerStyle,
-        imageStyle, textContainerStyle } = (() => {
+        imageStyle, textContainerStyle, restaurantNameRowStyle } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
           containerStyle: DESKTOP_CONTAINER_STYLE,
           eventColorStyle: DESKTOP_EVENT_COLOR_STYLE,
           imageContainerStyle: DESKTOP_IMAGE_CONTAINER_STYLE,
           imageStyle: DESKTOP_IMAGE_STYLE,
-          textContainerStyle: DESKTOP_TEXT_CONTAINER_STYLE
+          textContainerStyle: DESKTOP_TEXT_CONTAINER_STYLE,
+          restaurantNameRowStyle: DESKTOP_RESTAURANT_NAME_ROW_STYLE
         };
       }
       if (this.props.displayMode === DisplayMode.TABLET) {
@@ -116,7 +118,8 @@ export class DiningEventCard extends React.Component<Properties> {
           eventColorStyle: TABLET_EVENT_COLOR_STYLE,
           imageContainerStyle: TABLET_IMAGE_CONTAINER_STYLE,
           imageStyle: TABLET_IMAGE_STYLE,
-          textContainerStyle: TABLET_TEXT_CONTAINER_STYLE
+          textContainerStyle: TABLET_TEXT_CONTAINER_STYLE,
+          restaurantNameRowStyle: TABLET_RESTAURANT_NAME_ROW_STYLE
         };
       }
       return {
@@ -124,8 +127,35 @@ export class DiningEventCard extends React.Component<Properties> {
         eventColorStyle: MOBILE_EVENT_COLOR_STYLE,
         imageContainerStyle: MOBILE_IMAGE_CONTAINER_STYLE,
         imageStyle: MOBILE_IMAGE_STYLE,
-        textContainerStyle: MOBILE_TEXT_CONTAINER_STYLE
+        textContainerStyle: MOBILE_TEXT_CONTAINER_STYLE,
+        restaurantNameRowStyle: MOBILE_RESTAURANT_NAME_ROW_STYLE
       };
+    })();
+    const namePriceCuisineSection = (() => {
+      if (this.props.displayMode === DisplayMode.MOBILE) {
+        return (
+          <div style={{...RESTAURANT_NAME_ROW_STYLE, ...restaurantNameRowStyle}}
+          >
+            <div style={RESTAURANT_NAME_STYLE} >{restaurantName}</div>
+            <div style={PRICE_TEXT_STYLE} >&nbsp;.&nbsp;</div>
+            <div style={{...PRICE_TEXT_STYLE, ...MOBILE_PRICE_MARGIN}} >
+              {toDollarSigns(this.props.priceRange)}
+            </div>
+            <div style={CUISINE_ROW_STYLE} >{cuisines}</div>
+          </div>);
+      }
+      return (
+        <>
+          <div style={{...RESTAURANT_NAME_ROW_STYLE, ...restaurantNameRowStyle}}
+          >
+            <div style={RESTAURANT_NAME_STYLE} >{restaurantName}</div>
+            <div style={PRICE_TEXT_STYLE} >&nbsp;.&nbsp;</div>
+            <div style={PRICE_TEXT_STYLE} >
+              {toDollarSigns(this.props.priceRange)}
+            </div>
+          </div>
+          <div style={CUISINE_ROW_STYLE} >{cuisines}</div>
+        </>);
     })();
     return (
       <Router.Link
@@ -143,10 +173,10 @@ export class DiningEventCard extends React.Component<Properties> {
         <div style={{...TEXT_CONTAINER_STYLE, ...textContainerStyle}} >
           <div style={{...EVENT_COLOR_STYLE, ...eventColorStyle}} >
             <svg
-                width='12' height='20' viewBox='0 0 12 20'
+                width='12' height='18' viewBox='0 0 12 18'
                 fill={this.props.color} xmlns='http://www.w3.org/2000/svg'
             >
-              <path d='M12 19.5468H0V0H12L8 9.7734L12 19.5468Z'
+              <path d='M12 18H0V0H12L8 9L12 18Z'
                 fill={this.props.color}
               />
             </svg>
@@ -155,24 +185,13 @@ export class DiningEventCard extends React.Component<Properties> {
             <div style={TITLE_STYLE} >
               {title}
             </div>
-            <div style={{...ROW_STYLE, ...PRICE_ROW_STYLE}} >
-              <div style={RESTAURANT_NAME_STYLE} >
-                {restaurantName}
-              </div>
-              <div>
-                &nbsp;.&nbsp;
-              </div>
-              <div>
-                {toDollarSigns(this.props.priceRange)}
-              </div>
-            </div>
-            <div style={CUISINE_ROW_STYLE} >{cuisines}</div>
+            {namePriceCuisineSection}
           </div>
           <div style={SECTION_CONTAINER_STYLE} >
-            <div style={{...ROW_STYLE, ...MIDDLE_ROW_STYLE}} >
+            <div style={{...ROW_STYLE, ...ROW_MARGIN_STYLE}} >
               <div style={ICON_CONTAINER_STYLE} >
                 <img
-                  style={{...ICON_STYLE, height: '15px'}}
+                  style={ICON_STYLE}
                   src='resources/dining_event_card/icons/event_date.svg'
                   alt='Date'
                 />
@@ -181,10 +200,10 @@ export class DiningEventCard extends React.Component<Properties> {
                 {this.formatDate(this.props.startTime)}
               </div>
             </div>
-            <div style={{...ROW_STYLE, ...MIDDLE_ROW_STYLE}} >
+            <div style={{...ROW_STYLE, ...ROW_MARGIN_STYLE}} >
               <div style={ICON_CONTAINER_STYLE} >
                 <img
-                  style={{...ICON_STYLE, height: '15px'}}
+                  style={ICON_STYLE}
                   src='resources/dining_event_card/icons/clock.svg'
                   alt='Time'
                 />
@@ -193,10 +212,10 @@ export class DiningEventCard extends React.Component<Properties> {
                 {this.formatTime(this.props.startTime, this.props.endTime)}
               </div>
             </div>
-            <div style={{...ROW_STYLE, ...MIDDLE_ROW_STYLE}} >
+            <div style={ROW_STYLE} >
               <div style={ICON_CONTAINER_STYLE} >
                 <img
-                  style={{...ICON_STYLE, height: '14px'}}
+                  style={ICON_STYLE}
                   src='resources/dining_event_card/icons/seats.svg'
                   alt='Seats'
                 />
@@ -350,12 +369,6 @@ const MOBILE_IMAGE_STYLE: React.CSSProperties = {
   minHeight: '216px'
 };
 
-const RESTAURANT_NAME_STYLE: React.CSSProperties = {
-  overflow: 'hidden',
-  whiteSpace: 'nowrap',
-  textOverflow: 'ellipsis'
-};
-
 const TEXT_CONTAINER_STYLE: React.CSSProperties = {
   position: 'relative',
   boxSizing: 'border-box',
@@ -413,6 +426,50 @@ const TITLE_STYLE: React.CSSProperties = {
   marginBottom: '5px'
 };
 
+const RESTAURANT_NAME_ROW_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  width: '100%',
+  marginBottom: '5px'
+};
+
+const DESKTOP_RESTAURANT_NAME_ROW_STYLE: React.CSSProperties = {
+  height: '15px'
+};
+
+const TABLET_RESTAURANT_NAME_ROW_STYLE: React.CSSProperties = {
+  height: '15px'
+};
+
+const MOBILE_RESTAURANT_NAME_ROW_STYLE: React.CSSProperties = {
+  height: '19px'
+};
+
+const RESTAURANT_NAME_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '12px',
+  lineHeight: '15px',
+  color: '#000000',
+  height: '100%',
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis'
+};
+
+const PRICE_TEXT_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '12px',
+  lineHeight: '15px',
+  height: '100%',
+  color: '#000000'
+};
+
 const ROW_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
@@ -420,24 +477,11 @@ const ROW_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'center',
   width: '100%',
-  height: '18px',
+  height: '18px'
+};
+
+const ROW_MARGIN_STYLE: React.CSSProperties = {
   marginBottom: '10px'
-};
-
-const PRICE_ROW_STYLE: React.CSSProperties = {
-  fontFamily: 'Source Sans Pro',
-  fontStyle: 'normal',
-  fontWeight: 300,
-  fontSize: '12px',
-  lineHeight: '15px',
-  height: '15px',
-  color: '#000000',
-  marginTop: '5px',
-  overflow: 'hidden'
-};
-
-const MIDDLE_ROW_STYLE: React.CSSProperties = {
-  paddingBottom: '15px'
 };
 
 const CUISINE_ROW_STYLE: React.CSSProperties = {
@@ -448,10 +492,12 @@ const CUISINE_ROW_STYLE: React.CSSProperties = {
   flexWrap: 'wrap',
   minHeight: '19px',
   maxHeight: '38px',
-  width: '100%'
+  maxWidth: '100%',
+  overflow: 'hidden'
 };
 
 const CUISINE_TEXT_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'center',
@@ -462,41 +508,53 @@ const CUISINE_TEXT_STYLE: React.CSSProperties = {
   fontSize: '12px',
   lineHeight: '15px',
   color: '#000000',
-  borderRadius: '4px'
+  borderRadius: '4px',
+  padding: '2px 4px'
+};
+
+const CUISINE_MARGIN_STYLE: React.CSSProperties = {
+  marginLeft: '2px'
+};
+
+const MOBILE_PRICE_MARGIN: React.CSSProperties = {
+  marginRight: '10px'
 };
 
 const ICON_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
-  flexDirection: 'row',
+  flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
   width: '15px',
-  height: '18px',
-  marginRight: '10px'
+  height: '15px',
+  marginRight: '15px'
+};
+
+const ICON_STYLE: React.CSSProperties = {
+  minWidth: '15px',
+  minHeight: '15px',
+  width: '100%',
+  height: '100%',
+  backgroundColor: 'transparent',
+  objectFit: 'cover'
 };
 
 const TEXT_ROW_STYLE: React.CSSProperties = {
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
-  fontWeight: 300,
+  fontWeight: 400,
   fontSize: '14px',
+  lineHeight: '18px',
   height: '18px',
   color: '#000000',
   width: '100%',
   overflow: 'hidden'
 };
 
-const ICON_STYLE: React.CSSProperties = {
-  minWidth: '15px',
-  width: '100%',
-  height: '100%',
-  backgroundColor: 'transparent'
-};
-
 const ATTENDING_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
-  justifyContent: 'flex-start',
+  justifyContent: 'center',
   alignItems: 'center',
   height: '30px',
   width: '100%',

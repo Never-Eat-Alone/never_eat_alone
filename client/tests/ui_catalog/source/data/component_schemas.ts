@@ -70,7 +70,8 @@ export function loadComponentSchemas(): ComponentSchema[] {
     TextInput), new PropertySchema('startTime', new Date(2022, 6, 17, 18, 30),
     DateInput), new PropertySchema('endTime', new Date(2022, 6, 18, 0, 30),
     DateInput), new PropertySchema('cuisines', [new NeverEatAlone.Cuisine(
-    1, 'French', 'yellow')], CuisineInput), new PropertySchema(
+    1, 'French', 'yellow'), new NeverEatAlone.Cuisine(2, 'Modern',
+    '#33FFFC')], CuisineInput), new PropertySchema(
     'numberOfAttendees', 12, NumberInput), new PropertySchema('numberOfSeats',
     15, NumberInput), new PropertySchema('isAttending', false, BooleanInput),
     new PropertySchema('isLoggedIn', false, BooleanInput),
