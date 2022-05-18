@@ -11,23 +11,25 @@ interface Properties {
 /** Displays the Album Card in photo album. */
 export class AlbumCard extends React.Component<Properties> {
   public render(): JSX.Element {
-    const containerWidth = (() => {
+    const containerStyle = (() => {
       if (this.props.displayMode === DisplayMode.MOBILE) {
-        return '155px';
+        return MOBILE_CONTAINER_STYLE;
       }
-      return '243px';
+      if (this.props.displayMode === DisplayMode.TABLET) {
+        return TABLET_CONTAINER_STYLE;
+      }
+      return DESKTOP_CONTAINER_STYLE;
     })();
     return (
-      <div style={{...CARD_CONTAINER_STYLE, width: containerWidth}} >
+      <div style={{...CONTAINER_STYLE, ...containerStyle}} >
         <div
-            style={{...IMAGE_CONTAINER, height: containerWidth,
-            backgroundImage: `url(${this.props.src})`
-            }}
+            style={{...IMAGE_CONTAINER,
+              backgroundImage: `url(${this.props.src})`}}
             className={css(styles.imageContainer)}
         >
           <div style={ICON_CONTAINER_STYLE} >
             <img
-              style={{...ICON_STYLE, ...NO_SELECTION_STYLE}}
+              style={ICON_STYLE}
               src='resources/album_card/icons/instagram.svg'
               alt='Instagram'
             />
@@ -37,11 +39,26 @@ export class AlbumCard extends React.Component<Properties> {
   }
 }
 
-const CARD_CONTAINER_STYLE: React.CSSProperties = {
+const CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'flex-start'
+};
+
+const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
+  width: '243px',
+  height: '243px'
+};
+
+const TABLET_CONTAINER_STYLE: React.CSSProperties = {
+  width: '214px',
+  height: '214px'
+};
+
+const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
+  width: '155px',
+  height: '155px'
 };
 
 const IMAGE_CONTAINER: React.CSSProperties = {
@@ -49,9 +66,10 @@ const IMAGE_CONTAINER: React.CSSProperties = {
   flexDirection: 'row',
   justifyContent: 'flex-end',
   alignItems: 'flex-start',
-  width: '100%',
   backgroundSize: 'cover',
-  borderRadius: '4px'
+  borderRadius: '4px',
+  width: '100%',
+  height: '100%'
 };
 
 const ICON_CONTAINER_STYLE: React.CSSProperties = {
@@ -59,8 +77,8 @@ const ICON_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
-  width: '28px',
-  height: '28px',
+  width: '20px',
+  height: '20px',
   color: '#FFFFFF',
   marginTop: '10px',
   marginRight: '10px',
@@ -68,17 +86,11 @@ const ICON_CONTAINER_STYLE: React.CSSProperties = {
 };
 
 const ICON_STYLE: React.CSSProperties = {
-  minWidth: '28px',
+  minWidth: '20px',
+  minHeight: '20px',
   width: '100%',
-  height: '100%'
-};
-
-const NO_SELECTION_STYLE: React.CSSProperties = {
-  WebkitTouchCallout: 'none',
-  MozUserSelect: 'none',
-  WebkitUserSelect: 'none',
-  KhtmlUserSelect: 'none',
-  userSelect: 'none'
+  height: '100%',
+  objectFit: 'cover'
 };
 
 const styles = StyleSheet.create({
