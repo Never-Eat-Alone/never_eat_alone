@@ -78,7 +78,12 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('color', 'blue', TextInput), new PropertySchema(
     'style', {}, CSSInput), new PropertySchema('className', '', TextInput)],
     [], NeverEatAlone.DiningEventCard);
+  const albumCardSchema = new ComponentSchema('AlbumCard', [new PropertySchema(
+    'displayMode', NeverEatAlone.DisplayMode.DESKTOP, DisplayModeInput),
+    new PropertySchema('id', 1, NumberInput), new PropertySchema('src',
+    'resources/images/food1.jpeg', TextInput)], [], NeverEatAlone.AlbumCard);
   return [logoSchema, invertedSecondaryTextButtonSchema,
     accentTextButtonSchema, whiteNavLinkSchema, headerNotLoggedInSchema,
-    headerLoggedInSchema, footerSchema, heroSchema, diningEventCardSchema];
+    headerLoggedInSchema, footerSchema, heroSchema, diningEventCardSchema,
+    albumCardSchema];
 }
