@@ -157,6 +157,11 @@ export class DiningEventCard extends React.Component<Properties> {
           <div style={CUISINE_ROW_STYLE} >{cuisines}</div>
         </>);
     })();
+    const dateInfo = (this.props.isLoggedIn &&
+      this.formatDate(this.props.startTime) || 'Log in to see date');
+    const timeInfo = (this.props.isLoggedIn &&
+      this.formatTime(this.props.startTime, this.props.endTime) ||
+      'Log in to see time');
     return (
       <Router.Link
           style={{...CONTAINER_STYLE, ...containerStyle, ...this.props.style}}
@@ -182,9 +187,7 @@ export class DiningEventCard extends React.Component<Properties> {
             </svg>
           </div>
           <div style={SECTION_CONTAINER_STYLE} >
-            <div style={TITLE_STYLE} >
-              {title}
-            </div>
+            <div style={TITLE_STYLE} >{title}</div>
             {namePriceCuisineSection}
           </div>
           <div style={SECTION_CONTAINER_STYLE} >
@@ -196,9 +199,7 @@ export class DiningEventCard extends React.Component<Properties> {
                   alt='Date'
                 />
               </div>
-              <div style={TEXT_ROW_STYLE} >
-                {this.formatDate(this.props.startTime)}
-              </div>
+              <div style={TEXT_ROW_STYLE} >{dateInfo}</div>
             </div>
             <div style={{...ROW_STYLE, ...ROW_MARGIN_STYLE}} >
               <div style={ICON_CONTAINER_STYLE} >
@@ -208,9 +209,7 @@ export class DiningEventCard extends React.Component<Properties> {
                   alt='Time'
                 />
               </div>
-              <div style={TEXT_ROW_STYLE} >
-                {this.formatTime(this.props.startTime, this.props.endTime)}
-              </div>
+              <div style={TEXT_ROW_STYLE} >{timeInfo}</div>
             </div>
             <div style={ROW_STYLE} >
               <div style={ICON_CONTAINER_STYLE} >
@@ -220,9 +219,7 @@ export class DiningEventCard extends React.Component<Properties> {
                   alt='Seats'
                 />
               </div>
-              <div style={TEXT_ROW_STYLE} >
-                {seats}
-              </div>
+              <div style={TEXT_ROW_STYLE} >{seats}</div>
             </div>
           </div>
           {isAttending}
