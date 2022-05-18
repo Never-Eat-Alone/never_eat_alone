@@ -13,7 +13,7 @@ interface Properties {
 /** A user input. */
 export class UserInput extends React.Component<Properties> {
   public render(): JSX.Element {
-    return <input value={this.props.value.name} onChange={this.onChange}/>;
+    return <input value={this.props.value.name} onChange={this.onChange} />;
   }
 
   private onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
