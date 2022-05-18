@@ -6,6 +6,7 @@ interface Properties {
   displayMode: DisplayMode;
   id: number;
   src: string;
+  onClick?: () => void;
 }
 
 /** Displays the Album Card in photo album. */
@@ -21,7 +22,9 @@ export class AlbumCard extends React.Component<Properties> {
       return DESKTOP_CONTAINER_STYLE;
     })();
     return (
-      <div style={{...CONTAINER_STYLE, ...containerStyle}} >
+      <div style={{...CONTAINER_STYLE, ...containerStyle}}
+          onClick={this.props.onClick}
+      >
         <div
             style={{...IMAGE_CONTAINER,
               backgroundImage: `url(${this.props.src})`}}
@@ -43,7 +46,9 @@ const CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
-  alignItems: 'flex-start'
+  alignItems: 'flex-start',
+  borderRadius: '4px',
+  overflow: 'hidden'
 };
 
 const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
@@ -67,7 +72,6 @@ const IMAGE_CONTAINER: React.CSSProperties = {
   justifyContent: 'flex-end',
   alignItems: 'flex-start',
   backgroundSize: 'cover',
-  borderRadius: '4px',
   width: '100%',
   height: '100%'
 };

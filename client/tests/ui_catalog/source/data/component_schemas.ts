@@ -81,7 +81,8 @@ export function loadComponentSchemas(): ComponentSchema[] {
   const albumCardSchema = new ComponentSchema('AlbumCard', [new PropertySchema(
     'displayMode', NeverEatAlone.DisplayMode.DESKTOP, DisplayModeInput),
     new PropertySchema('id', 1, NumberInput), new PropertySchema('src',
-    'resources/images/food1.jpeg', TextInput)], [], NeverEatAlone.AlbumCard);
+    'resources/images/1.jpg', TextInput)], [new SignalSchema('onClick', '', [])
+    ], NeverEatAlone.AlbumCard);
   return [logoSchema, invertedSecondaryTextButtonSchema,
     accentTextButtonSchema, whiteNavLinkSchema, headerNotLoggedInSchema,
     headerLoggedInSchema, footerSchema, heroSchema, diningEventCardSchema,
