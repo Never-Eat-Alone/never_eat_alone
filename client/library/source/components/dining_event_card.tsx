@@ -268,13 +268,6 @@ export class DiningEventCard extends React.Component<Properties> {
   }
 }
 
-export namespace DiningEventCard {
-  export enum ErrorCode {
-    NONE,
-    NO_CONNECTION
-  }
-}
-
 const CONTAINER_STYLE: React.CSSProperties = {
   position: 'relative',
   boxSizing: 'border-box',
