@@ -27,7 +27,7 @@ export class EventCardSummaryInput extends React.Component<Properties> {
           'Japanese', 'yellow')], 'resources/images/3.jpg',
           14, 20, true, 'blue');
       }
-      return new NeverEatAlone.EventCardSummary(1, this.props.value,
+      return new NeverEatAlone.EventCardSummary(1, this.props.value.eventTitle,
         new Date(2022, 6, 23, 18, 30), new Date(2022, 6, 23, 23, 30), 'Miku',
         NeverEatAlone.PriceRange.EXPENSIVE, [new NeverEatAlone.Cuisine(1,
         'Japanese', 'yellow')], 'resources/images/3.jpg',
