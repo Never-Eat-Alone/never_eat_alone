@@ -101,7 +101,8 @@ export class DiningEventCard extends React.Component<Properties> {
       return null;
     })();
     const { containerStyle, eventColorStyle, imageContainerStyle,
-        imageStyle, textContainerStyle, restaurantNameRowStyle } = (() => {
+        imageStyle, textContainerStyle, restaurantNameRowStyle, titleStyle
+    } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
           containerStyle: DESKTOP_CONTAINER_STYLE,
@@ -109,7 +110,8 @@ export class DiningEventCard extends React.Component<Properties> {
           imageContainerStyle: DESKTOP_IMAGE_CONTAINER_STYLE,
           imageStyle: DESKTOP_IMAGE_STYLE,
           textContainerStyle: DESKTOP_TEXT_CONTAINER_STYLE,
-          restaurantNameRowStyle: DESKTOP_RESTAURANT_NAME_ROW_STYLE
+          restaurantNameRowStyle: DESKTOP_RESTAURANT_NAME_ROW_STYLE,
+          titleStyle: DESKTOP_TITLE_STYLE
         };
       }
       if (this.props.displayMode === DisplayMode.TABLET) {
@@ -119,7 +121,8 @@ export class DiningEventCard extends React.Component<Properties> {
           imageContainerStyle: TABLET_IMAGE_CONTAINER_STYLE,
           imageStyle: TABLET_IMAGE_STYLE,
           textContainerStyle: TABLET_TEXT_CONTAINER_STYLE,
-          restaurantNameRowStyle: TABLET_RESTAURANT_NAME_ROW_STYLE
+          restaurantNameRowStyle: TABLET_RESTAURANT_NAME_ROW_STYLE,
+          titleStyle: TABLET_TITLE_STYLE
         };
       }
       return {
@@ -128,7 +131,8 @@ export class DiningEventCard extends React.Component<Properties> {
         imageContainerStyle: MOBILE_IMAGE_CONTAINER_STYLE,
         imageStyle: MOBILE_IMAGE_STYLE,
         textContainerStyle: MOBILE_TEXT_CONTAINER_STYLE,
-        restaurantNameRowStyle: MOBILE_RESTAURANT_NAME_ROW_STYLE
+        restaurantNameRowStyle: MOBILE_RESTAURANT_NAME_ROW_STYLE,
+        titleStyle: MOBILE_TITLE_STYLE
       };
     })();
     const namePriceCuisineSection = (() => {
@@ -187,7 +191,7 @@ export class DiningEventCard extends React.Component<Properties> {
             </svg>
           </div>
           <div style={SECTION_CONTAINER_STYLE} >
-            <div style={TITLE_STYLE} >{title}</div>
+            <div style={{...TITLE_STYLE, ...titleStyle}} >{title}</div>
             {namePriceCuisineSection}
           </div>
           <div style={SECTION_CONTAINER_STYLE} >
@@ -273,6 +277,7 @@ export namespace DiningEventCard {
 
 const CONTAINER_STYLE: React.CSSProperties = {
   position: 'relative',
+  boxSizing: 'border-box',
   display: 'flex',
   borderRadius: '4px',
   backgroundColor: '#FFFFFF',
@@ -287,6 +292,7 @@ const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
   width: '244px',
+  minHeight: '348px',
   height: '348px'
 };
 
@@ -295,6 +301,7 @@ const TABLET_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
   width: '214px',
+  minHeight: '348px',
   height: '348px'
 };
 
@@ -302,6 +309,7 @@ const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
+  minWidth: '335px',
   width: '335px',
   height: '216px'
 };
@@ -410,7 +418,6 @@ const TITLE_STYLE: React.CSSProperties = {
   flexWrap: 'wrap',
   width: '100%',
   minHeight: '24px',
-  maxHeight: '48px',
   fontFamily: 'Oswald',
   fontStyle: 'normal',
   fontWeight: 400,
@@ -421,6 +428,26 @@ const TITLE_STYLE: React.CSSProperties = {
   whiteSpace: 'pre-wrap',
   textOverflow: 'ellipsis',
   marginBottom: '5px'
+};
+
+const DESKTOP_TITLE_STYLE: React.CSSProperties = {
+  display: '-webkit-box',
+  WebkitLineClamp: 2,
+  WebkitBoxOrient: 'vertical',
+  maxHeight: '48px'
+};
+
+const TABLET_TITLE_STYLE: React.CSSProperties = {
+  display: '-webkit-box',
+  WebkitLineClamp: 2,
+  WebkitBoxOrient: 'vertical',
+  maxHeight: '48px'
+};
+
+const MOBILE_TITLE_STYLE: React.CSSProperties = {
+  display: 'block',
+  whiteSpace: 'nowrap',
+  maxHeight: '24px'
 };
 
 const RESTAURANT_NAME_ROW_STYLE: React.CSSProperties = {
@@ -486,19 +513,14 @@ const CUISINE_ROW_STYLE: React.CSSProperties = {
   flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'center',
-  flexWrap: 'wrap',
   minHeight: '19px',
-  maxHeight: '38px',
-  maxWidth: '100%',
+  height: '19px',
+  width: '100%',
   overflow: 'hidden'
 };
 
 const CUISINE_TEXT_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'center',
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
   fontWeight: 600,
@@ -506,11 +528,15 @@ const CUISINE_TEXT_STYLE: React.CSSProperties = {
   lineHeight: '15px',
   color: '#000000',
   borderRadius: '4px',
-  padding: '2px 4px'
+  padding: '2px 4px',
+  maxWidth: '100%',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap'
 };
 
 const CUISINE_MARGIN_STYLE: React.CSSProperties = {
-  marginLeft: '2px'
+  marginLeft: '5px'
 };
 
 const MOBILE_PRICE_MARGIN: React.CSSProperties = {

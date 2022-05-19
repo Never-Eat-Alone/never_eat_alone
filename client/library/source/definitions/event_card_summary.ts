@@ -10,30 +10,33 @@ export class EventCardSummary {
       value.eventId,
       value.eventTitle,
       new Date(Date.parse(value.eventStartTime)),
+      new Date(Date.parse(value.eventEndTime)),
       value.restaurantName,
       value.restaurantPriceRange as PriceRange,
       arrayFromJson(Cuisine, value.cuisines),
       value.imageSrc,
+      value.numberOfAttendees,
       value.numberOfSeats,
-      value.isFollowing,
       value.isAttending,
       value.eventColor
     );
   }
 
   constructor(eventId: number, eventTitle: string, eventStartTime: Date,
-      restaurantName: string, restaurantPriceRange: PriceRange,
-      cuisines: Cuisine[], imageSrc: string, numberOfSeats: number,
-      isFollowing: boolean, isAttending: boolean, eventColor: string) {
+      eventEndTime: Date, restaurantName: string,
+      restaurantPriceRange: PriceRange, cuisines: Cuisine[], imageSrc: string,
+      numberOfAttendees: number, numberOfSeats: number, isAttending: boolean,
+      eventColor: string) {
     this._eventId = eventId;
     this._eventTitle = eventTitle;
     this._eventStartTime = eventStartTime;
+    this._eventEndTime = eventEndTime;
     this._restaurantName = restaurantName;
     this._restaurantPriceRange = restaurantPriceRange;
     this._cuisines = [...cuisines];
     this._imageSrc = imageSrc;
+    this._numberOfAttendees = numberOfAttendees;
     this._numberOfSeats = numberOfSeats;
-    this._isFollowing = isFollowing;
     this._isAttending = isAttending;
     this._eventColor = eventColor;
   }
@@ -51,6 +54,11 @@ export class EventCardSummary {
   /** Returns the event start time. */
   public get eventStartTime(): Date {
     return this._eventStartTime;
+  }
+
+  /** Returns the event end time. */
+  public get eventEndTime(): Date {
+    return this._eventEndTime;
   }
 
   /** Returns the restaurant name. */
@@ -73,14 +81,14 @@ export class EventCardSummary {
     return this._imageSrc;
   }
 
-  /** Returns the number of seats available. */
-  public get numberOfSeats(): number {
-    return this._numberOfSeats;
+  /** Returns the number of attendees. */
+  public get numberOfAttendees(): number {
+    return this._numberOfAttendees;
   }
 
-  /** Indicates whether the uset is following this event or not. */
-  public get isFollowing(): boolean {
-    return this._isFollowing;
+  /** Returns the number of seats. */
+  public get numberOfSeats(): number {
+    return this._numberOfSeats;
   }
 
   /** Indicates whether the user is attending this event or not. */
@@ -99,10 +107,12 @@ export class EventCardSummary {
       eventId: this._eventId,
       eventTitle: this._eventTitle,
       eventStartTime: this._eventStartTime.toJSON(),
+      eventEndTime: this._eventEndTime.toJSON(),
       restaurantName: this._restaurantName,
       restaurantPriceRange: this._restaurantPriceRange,
       cuisines: arrayToJson(this._cuisines),
       imageSrc: this._imageSrc,
+      numberOfAttendees: this._numberOfAttendees,
       numberOfSeats: this._numberOfSeats,
       isFollowing: this._isFollowing,
       isAttending: this._isAttending,
@@ -113,10 +123,12 @@ export class EventCardSummary {
   private _eventId: number;
   private _eventTitle: string;
   private _eventStartTime: Date;
+  private _eventEndTime: Date;
   private _restaurantName: string;
   private _restaurantPriceRange: PriceRange;
   private _cuisines: Cuisine[];
   private _imageSrc: string;
+  private _numberOfAttendees: number;
   private _numberOfSeats: number;
   private _isFollowing: boolean;
   private _isAttending: boolean;
