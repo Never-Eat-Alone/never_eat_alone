@@ -1,6 +1,7 @@
 import * as NeverEatAlone from 'never_eat_alone';
 import { BooleanInput, CSSInput, CuisineInput, DateInput, DisplayModeInput,
-  EventCardSummaryInput, NumberInput, TextInput, UserInput
+  EventCardSummaryInput, NumberInput, SocialMediaImageInput, TextInput,
+  UserInput, ArrayInput
 } from '../viewer/propertyInput';
 import { ComponentSchema, PropertySchema, SignalSchema } from './schemas';
 
@@ -70,11 +71,16 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('priceRange', NeverEatAlone.PriceRange.EXPENSIVE,
     TextInput), new PropertySchema('startTime', new Date(2022, 6, 17, 18, 30),
     DateInput), new PropertySchema('endTime', new Date(2022, 6, 18, 0, 30),
-    DateInput), new PropertySchema('cuisines', [new NeverEatAlone.Cuisine(
-    1, 'French', 'yellow'), new NeverEatAlone.Cuisine(2, 'Modern',
-    '#33FFFC')], CuisineInput), new PropertySchema(
-    'numberOfAttendees', 12, NumberInput), new PropertySchema('numberOfSeats',
-    15, NumberInput), new PropertySchema('isAttending', false, BooleanInput),
+    DateInput), new PropertySchema('cuisines', [
+      new NeverEatAlone.Cuisine(1, 'Steakhouse', 'grey'),
+      new NeverEatAlone.Cuisine(2, 'Japanese', 'green'),
+      new NeverEatAlone.Cuisine(3, 'Modern', 'yellow')
+    ],
+      ArrayInput(new PropertySchema(
+      'cuisine', new NeverEatAlone.Cuisine(1, 'French', 'yellow'),
+      CuisineInput))), new PropertySchema('numberOfAttendees', 12, NumberInput),
+    new PropertySchema('numberOfSeats', 15, NumberInput),
+    new PropertySchema('isAttending', false, BooleanInput),
     new PropertySchema('isLoggedIn', false, BooleanInput),
     new PropertySchema('color', 'blue', TextInput), new PropertySchema(
     'style', {}, CSSInput), new PropertySchema('className', '', TextInput)],
@@ -172,8 +178,29 @@ export function loadComponentSchemas(): ComponentSchema[] {
       6, 6, false, 'black')], EventCardSummaryInput),
     new PropertySchema('isLoggedIn', false, BooleanInput)], [],
     NeverEatAlone.ExploreEventsSummary);
+  const albumSummarySchema = new ComponentSchema('Live Album', [
+    new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
+    DisplayModeInput),
+    new PropertySchema('imageList', [
+      new NeverEatAlone.SocialMediaImage(1, 'resources/images/2.jpg'),
+      new NeverEatAlone.SocialMediaImage(2, 'resources/images/3.jpg'),
+      new NeverEatAlone.SocialMediaImage(3, 'resources/images/4.jpg'),
+      new NeverEatAlone.SocialMediaImage(4, 'resources/images/5.jpg'),
+      new NeverEatAlone.SocialMediaImage(5, 'resources/images/6.jpg'),
+      new NeverEatAlone.SocialMediaImage(6, 'resources/images/7.jpg'),
+      new NeverEatAlone.SocialMediaImage(7, 'resources/images/8.jpg'),
+      new NeverEatAlone.SocialMediaImage(8, 'resources/images/9.jpg'),
+      new NeverEatAlone.SocialMediaImage(9, 'resources/images/10.jpg'),
+      new NeverEatAlone.SocialMediaImage(10, 'resources/images/11.jpg'),
+      new NeverEatAlone.SocialMediaImage(11, 'resources/images/12.jpg'),
+      new NeverEatAlone.SocialMediaImage(12, 'resources/images/13.jpg'),
+    ],
+      ArrayInput(new PropertySchema(
+      'socialMediaImage', new NeverEatAlone.SocialMediaImage(1,
+      'resources/images/2.jpg'), SocialMediaImageInput)))
+    ], [], NeverEatAlone.AlbumSummary);
   return [logoSchema, invertedSecondaryTextButtonSchema,
     accentTextButtonSchema, whiteNavLinkSchema, headerNotLoggedInSchema,
     headerLoggedInSchema, footerSchema, heroSchema, diningEventCardSchema,
-    albumCardSchema, exploreEventsSummarySchema];
+    albumCardSchema, exploreEventsSummarySchema, albumSummarySchema];
 }
