@@ -39,7 +39,7 @@ export class Hero extends React.Component<Properties> {
           <p style={PARAGRAPH_STYLE} >{paragraph}</p>
           <AccentTextButton
             style={JOIN_BUTTON_STYLE}
-            label='join the fun'
+            label='join us'
             labelStyle={JOIN_BUTTON_LABEL_STYLE}
             onClick={this.props.onJoinButton}
           />
