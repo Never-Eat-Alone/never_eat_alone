@@ -68,18 +68,14 @@ export class DiningEventCard extends React.Component<Properties> {
       }
       return this.props.restaurantName;
     })();
-    const cuisines = [];
-    for (let i = 0; i < Math.min(this.props.cuisines.length, 3); ++i) {
-      const style = (i > 0 && CUISINE_MARGIN_STYLE || null);
-      cuisines.push(
-        <div
-            key={this.props.cuisines[i].id}
-            style={{...style, ...CUISINE_TEXT_STYLE,
-              backgroundColor: this.props.cuisines[i].colorCode}}
-        >
-          {this.props.cuisines[i].label}
-        </div>);
-    }
+    const cuisine = (
+      <div
+          key={this.props.cuisines[0].id}
+          style={{...CUISINE_TEXT_STYLE,
+            backgroundColor: this.props.cuisines[0].colorCode}}
+      >
+        {this.props.cuisines[0].label}
+      </div>);
     const seats = `${this.props.numberOfAttendees}/${this.props.numberOfSeats} \
       Attendees`;
     const isAttending = (() => {
@@ -145,7 +141,7 @@ export class DiningEventCard extends React.Component<Properties> {
             <div style={{...PRICE_TEXT_STYLE, ...MOBILE_PRICE_MARGIN}} >
               {toDollarSigns(this.props.priceRange)}
             </div>
-            <div style={CUISINE_ROW_STYLE} >{cuisines}</div>
+            <div style={CUISINE_ROW_STYLE} >{cuisine}</div>
           </div>);
       }
       return (
@@ -158,7 +154,7 @@ export class DiningEventCard extends React.Component<Properties> {
               {toDollarSigns(this.props.priceRange)}
             </div>
           </div>
-          <div style={CUISINE_ROW_STYLE} >{cuisines}</div>
+          <div style={CUISINE_ROW_STYLE} >{cuisine}</div>
         </>);
     })();
     const dateInfo = (this.props.isLoggedIn &&

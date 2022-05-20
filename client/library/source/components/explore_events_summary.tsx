@@ -25,18 +25,48 @@ export class ExploreEventsSummary extends React.Component<Properties, State> {
     this.state = {
       isShowAllClicked: false
     };
-    this._initialNumberOfDisplayedCards = 8;
+    this._initialNumberOfDisplayedCards = (() => {
+      if (this.props.displayMode === DisplayMode.DESKTOP) {
+        return 8;
+      }
+      if (this.props.displayMode === DisplayMode.TABLET) {
+        return 6;
+      }
+      return 5;
+    })();
   }
 
   public render(): JSX.Element {
-    const contentContainerStyle = (() => {
+    this._initialNumberOfDisplayedCards = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
-        return DESKTOP_CONTENT_CONTAINER_STYLE;
+        return 8;
       }
       if (this.props.displayMode === DisplayMode.TABLET) {
-        return TABLET_CONTENT_CONTAINER_STYLE;
+        return 6;
       }
-      return MOBILE_CONTENT_CONTAINER_STYLE;
+      return 5;
+    })();
+    const { containerStyle, contentContainerStyle, cardContainerStyle } = (
+        () => {
+      if (this.props.displayMode === DisplayMode.DESKTOP) {
+        return {
+          containerStyle: DESKTOP_CONTAINER_STYLE,
+          contentContainerStyle: DESKTOP_CONTENT_CONTAINER_STYLE,
+          cardContainerStyle: DESKTOP_CARD_CONTAINER_STYLE
+        };
+      }
+      if (this.props.displayMode === DisplayMode.TABLET) {
+        return {
+          containerStyle: TABLET_CONTAINER_STYLE,
+          contentContainerStyle: TABLET_CONTENT_CONTAINER_STYLE,
+          cardContainerStyle: TABLET_CARD_CONTAINER_STYLE
+        };
+      }
+      return {
+        containerStyle: MOBILE_CONTAINER_STYLE,
+        contentContainerStyle: MOBILE_CONTENT_CONTAINER_STYLE,
+        cardContainerStyle: MOBILE_CARD_CONTAINER_STYLE
+      };
     })();
     const cards = (() => {
       if (!this.props.events || this.props.events.length === 0) {
@@ -91,53 +121,88 @@ export class ExploreEventsSummary extends React.Component<Properties, State> {
       }
       return temp;
     })();
-    const showAllButton = (!this.state.isShowAllClicked && (
-      <button onClick={this.handleShowAllClick} >
-        <div>Show All Events({this.props.events.length})</div>
-        <div style={ICON_CONTAINER_STYLE} >
-          <img
-            style={ICON_STYLE}
-            src='resources/explore_events/icons/arrow_down.svg'
-            alt='Down Arrow Icon'
-          />
-        </div>
-      </button>) || null);
+    const button = (() => {
+      if (!this.state.isShowAllClicked) {
+        return (
+          <button style={BUTTON_STYLE} onClick={this.handleShowAllClick} >
+            <div style={BUTTON_TEXT_STYLE} >
+              Show All Events ({this.props.events.length})
+            </div>
+            <div style={ICON_CONTAINER_STYLE} >
+              <img
+                style={ICON_STYLE}
+                src='resources/explore_events/icons/arrow_down.svg'
+                alt='Down Arrow Icon'
+              />
+            </div>
+          </button>);
+      }
+      return (
+        <button style={BUTTON_STYLE} onClick={this.handleShowAllClick} >
+          <div style={BUTTON_TEXT_STYLE} >Show Less</div>
+          <div style={{...ICON_CONTAINER_STYLE, ...SHOW_LESS_STYLE}} >
+            <img
+              style={ICON_STYLE}
+              src='resources/explore_events/icons/arrow_up.svg'
+              alt='Up Arrow Icon'
+            />
+          </div>
+        </button>);
+    })();
     return (
-      <div style={CONTAINER_STYLE} >
+      <div style={{...CONTAINER_STYLE, ...containerStyle}} >
         <div style={{...CONTENT_CONTAINER_STYLE, ...contentContainerStyle}} >
           <div style={TITLE_STYLE} >
             Explore Events
           </div>
-          <div style={CARD_CONTAINER_STYLE} >
+          <div style={{...CARD_CONTAINER_STYLE, ...cardContainerStyle}} >
             {cards}
           </div>
-          {showAllButton}
+          {button}
         </div>
       </div>);
   }
 
   private handleShowAllClick = (event: React.MouseEvent) => {
-    this.setState({ isShowAllClicked: true });
+    this.setState({ isShowAllClicked: !this.state.isShowAllClicked });
   }
 
   private _initialNumberOfDisplayedCards: number;
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
   position: 'relative',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
-  alignItems: 'flex-start',
+  alignItems: 'center',
   width: '100%',
-  overflow: 'hidden'
+  backgroundImage: 'url(resources/explore_events/background.jpg)',
+  backgroundSize: 'cover',
+  backgroundColor: 'transparent',
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'left center',
+  overflow: 'auto'
+};
+
+const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
+  paddingBottom: '70px'
+};
+
+const TABLET_CONTAINER_STYLE: React.CSSProperties = {
+  paddingBottom: '50px'
+};
+
+const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
+  paddingBottom: '40px'
 };
 
 const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
-  alignItems: 'center'
+  alignItems: 'flex-start'
 };
 
 const DESKTOP_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
@@ -161,10 +226,10 @@ const TITLE_STYLE: React.CSSProperties = {
   fontWeight: 400,
   fontSize: '23px',
   lineHeight: '34px',
-  height: '24px',
+  height: '34px',
   textTransform: 'capitalize',
   color: '#000000',
-  overflow: 'hidden'
+  marginBottom: '20px'
 };
 
 const CARD_CONTAINER_STYLE: React.CSSProperties = {
@@ -172,8 +237,45 @@ const CARD_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'space-between',
-  marginTop: '20px',
+  flexWrap: 'wrap',
   width: '100%'
+};
+
+const DESKTOP_CARD_CONTAINER_STYLE: React.CSSProperties = {
+  gap: '20px 17px'
+};
+
+const TABLET_CARD_CONTAINER_STYLE: React.CSSProperties = {
+  gap: '20px 30px'
+};
+
+const MOBILE_CARD_CONTAINER_STYLE: React.CSSProperties = {
+  gap: '20px'
+};
+
+const BUTTON_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '18px',
+  backgroundColor: 'transparent',
+  outline: 'none',
+  border: 'none',
+  margin: '40px 0px 0px 0px',
+  cursor: 'pointer',
+  width: '100%',
+  padding: '0px'
+};
+
+const BUTTON_TEXT_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '14px',
+  lineHeight: '18px',
+  textAlign: 'center',
+  color: '#000000'
 };
 
 const ICON_CONTAINER_STYLE: React.CSSProperties = {
@@ -182,7 +284,12 @@ const ICON_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'center',
   alignItems: 'center',
   width: '4px',
-  height: '8px'
+  height: '8px',
+  marginLeft: '7px'
+};
+
+const SHOW_LESS_STYLE: React.CSSProperties = {
+  marginTop: '5px'
 };
 
 const ICON_STYLE: React.CSSProperties = {
