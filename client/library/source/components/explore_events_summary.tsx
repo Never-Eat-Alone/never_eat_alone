@@ -182,8 +182,7 @@ const CONTAINER_STYLE: React.CSSProperties = {
   backgroundSize: 'cover',
   backgroundColor: 'transparent',
   backgroundRepeat: 'no-repeat',
-  backgroundPosition: 'left center',
-  overflow: 'auto'
+  backgroundPosition: 'left center'
 };
 
 const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
