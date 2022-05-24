@@ -13,6 +13,20 @@ export function TextButton(props: Properties) {
     </button>);
 }
 
+export function TextButtonWithArrow(props: Properties) {
+  return (
+    <button {...props} style={{...BUTTON_STYLE, ...props.style}} >
+      <p style={{...LABEL_STYLE, ...props.labelStyle}} >{props.label}</p>
+      <div style={ARROW_ICON_CONTAINER_STYLE} >
+        <img
+          style={ARROW_ICON_STYLE}
+          src='resources/icons/arrow.svg'
+          alt='Arrow Icon'
+        />
+      </div>
+    </button>);
+}
+
 export function InvertedSecondaryTextButton(props: Properties) {
   return (
     <TextButton
@@ -94,6 +108,14 @@ const PRIMARY_BUTTON_STYLE: React.CSSProperties = {
 const PRIMARY_LABEL_STYLE: React.CSSProperties = {
   fontSize: '12px',
   lineHeight: '15px'
+};
+
+const ARROW_ICON_CONTAINER_STYLE: React.CSSProperties = {
+
+};
+
+const ARROW_ICON_STYLE: React.CSSProperties = {
+  
 };
 
 const styles = StyleSheet.create({
