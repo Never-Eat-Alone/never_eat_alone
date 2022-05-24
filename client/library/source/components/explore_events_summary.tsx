@@ -46,26 +46,26 @@ export class ExploreEventsSummary extends React.Component<Properties, State> {
       }
       return 5;
     })();
-    const { containerStyle, contentContainerStyle, cardContainerStyle } = (
+    const { containerStyle, contentContainerStyle, cardsContainerStyle } = (
         () => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
           containerStyle: DESKTOP_CONTAINER_STYLE,
           contentContainerStyle: DESKTOP_CONTENT_CONTAINER_STYLE,
-          cardContainerStyle: DESKTOP_CARD_CONTAINER_STYLE
+          cardsContainerStyle: DESKTOP_CARD_CONTAINER_STYLE
         };
       }
       if (this.props.displayMode === DisplayMode.TABLET) {
         return {
           containerStyle: TABLET_CONTAINER_STYLE,
           contentContainerStyle: TABLET_CONTENT_CONTAINER_STYLE,
-          cardContainerStyle: TABLET_CARD_CONTAINER_STYLE
+          cardsContainerStyle: TABLET_CARD_CONTAINER_STYLE
         };
       }
       return {
         containerStyle: MOBILE_CONTAINER_STYLE,
         contentContainerStyle: MOBILE_CONTENT_CONTAINER_STYLE,
-        cardContainerStyle: MOBILE_CARD_CONTAINER_STYLE
+        cardsContainerStyle: MOBILE_CARD_CONTAINER_STYLE
       };
     })();
     const cards = (() => {
@@ -155,7 +155,7 @@ export class ExploreEventsSummary extends React.Component<Properties, State> {
           <div style={TITLE_STYLE} >
             Explore Events
           </div>
-          <div style={{...CARD_CONTAINER_STYLE, ...cardContainerStyle}} >
+          <div style={{...CARDS_CONTAINER_STYLE, ...cardsContainerStyle}} >
             {cards}
           </div>
           {button}
@@ -231,7 +231,7 @@ const TITLE_STYLE: React.CSSProperties = {
   marginBottom: '20px'
 };
 
-const CARD_CONTAINER_STYLE: React.CSSProperties = {
+const CARDS_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'flex-start',
