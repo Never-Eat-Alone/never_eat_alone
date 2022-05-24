@@ -205,17 +205,17 @@ const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
 };
 
 const DESKTOP_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
-  width :'1027px',
+  width: '1027px',
   marginTop: '70px'
 };
 
 const TABLET_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
-  width :'702px',
+  width: '702px',
   marginTop: '50px'
 };
 
 const MOBILE_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
-  width :'335px',
+  width: '335px',
   marginTop: '40px'
 };
 

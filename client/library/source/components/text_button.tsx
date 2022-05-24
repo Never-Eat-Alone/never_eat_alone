@@ -31,6 +31,16 @@ export function AccentTextButton(props: Properties) {
     />);
 }
 
+export function PrimaryTextButton(props: Properties) {
+  return (
+    <TextButton
+      {...props}
+      style={{...PRIMARY_BUTTON_STYLE, ...props.style}}
+      labelStyle={{...PRIMARY_LABEL_STYLE, ...props.labelStyle}}
+      className={css(styles.primaryTextButton)}
+    />);
+}
+
 const BUTTON_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
@@ -73,58 +83,108 @@ const ACCENT_BUTTON_STYLE: React.CSSProperties = {
   border: 'none'
 };
 
+const PRIMARY_BUTTON_STYLE: React.CSSProperties = {
+  width: '116px',
+  height: '35px',
+  backgroundColor: '#F26B55',
+  border: 'none',
+  color: '#FFFFFF'
+};
+
+const PRIMARY_LABEL_STYLE: React.CSSProperties = {
+  fontSize: '12px',
+  lineHeight: '15px'
+};
+
 const styles = StyleSheet.create({
   invertedSecondaryTextButton: {
     ':hover': {
       backgroundColor: '#F26B55',
       boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.4)',
-      color: '#FFFFFF'
+      color: '#FFFFFF',
+      cursor: 'pointer'
     },
     ':focus': {
       backgroundColor: '#F26B55',
       boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.4)',
-      color: '#FFFFFF'
+      color: '#FFFFFF',
+      cursor: 'pointer'
     },
     ':focus-within': {
       backgroundColor: '#F26B55',
       boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.4)',
-      color: '#FFFFFF'
+      color: '#FFFFFF',
+      cursor: 'pointer'
     },
     ':active': {
       backgroundColor: 'transparent',
       boxShadow: 'none',
       border: '2px solid #FFFFFF',
-      color: '#FFFFFF'
+      color: '#FFFFFF',
+      cursor: 'pointer'
     },
     ':disabled': {
       backgroundColor: 'transparent',
       boxShadow: 'none',
       border: '1px solid #F6F6F6',
-      color: '#F6F6F6'
+      color: '#F6F6F6',
+      cursor: 'default'
     }
   },
   accentTextButton: {
     ':hover': {
       boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.4)',
-      color: '#F26B55'
+      color: '#F26B55',
+      cursor: 'pointer'
     },
     ':focus': {
       boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.4)',
-      color: '#F26B55'
+      color: '#F26B55',
+      cursor: 'pointer'
     },
     ':focus-within': {
       boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.4)',
-      color: '#F26B55'
+      color: '#F26B55',
+      cursor: 'pointer'
     },
     ':active': {
       backgroundColor: '#F6F6F6',
       boxShadow: 'none',
-      color: '#F26B55'
+      color: '#F26B55',
+      cursor: 'pointer'
     },
     ':disabled': {
       backgroundColor: '#CCCCCC',
       boxShadow: 'none',
-      color: '#FFFFFF'
+      color: '#FFFFFF',
+      cursor: 'default'
+    }
+  },
+  primaryTextButton: {
+    ':hover': {
+      boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.4)',
+      backgroundColor: '#F26B55',
+      cursor: 'pointer'
+    },
+    ':focus': {
+      boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.4)',
+      backgroundColor: '#F26B55',
+      cursor: 'pointer'
+    },
+    ':focus-within': {
+      boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.4)',
+      backgroundColor: '#F26B55',
+      cursor: 'pointer'
+    },
+    ':active': {
+      backgroundColor: '#AA2F19',
+      boxShadow: 'none',
+      cursor: 'pointer'
+    },
+    ':disabled': {
+      backgroundColor: '#CCCCCC',
+      boxShadow: 'none',
+      cursor: 'default'
     }
   }
 });

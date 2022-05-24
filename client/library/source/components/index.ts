@@ -16,6 +16,7 @@ export * from './header_logo';
 export * from './hero';
 export * from './invite_a_foodie_button';
 export * from './nav_link';
+export * from './partner_with_us_summary';
 export * from './profile_menu';
 export * from './profile_round_button';
 export * from './text_button';
