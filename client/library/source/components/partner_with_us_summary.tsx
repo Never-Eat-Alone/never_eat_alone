@@ -1,7 +1,7 @@
-import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { DisplayMode } from '../definitions';
+import { PrimaryTextButtonWithArrow } from './text_button';
 
 interface Properties {
 
@@ -33,11 +33,7 @@ export class PartnerWithUsSummary extends React.Component<Properties> {
     })();
     return (
       <div style={CONTAINER_STYLE} >
-        <Router.Link
-            to='/partner_with_us'
-            style={{...CARD_CONTAINER_STYLE, ...cardContainerStyle}}
-            className={css(styles.card)}
-        >
+        <div style={{...CARD_CONTAINER_STYLE, ...cardContainerStyle}} >
           <div style={{...IMAGE_CONTAINER_STYLE, ...imageContainerStyle}} >
             <img
               style={IMAGE_STYLE}
@@ -53,18 +49,11 @@ export class PartnerWithUsSummary extends React.Component<Properties> {
               Have a venue or restaurant?<br/>
               We can help you host events directly for your customers.
             </div>
-            <button style={BUTTON_STYLE} >
-              <div style={BUTTON_TEXT_STYLE} >Get in touch</div>
-              <div style={ICON_CONTAINER_STYLE} >
-                <img
-                  style={ICON_STYLE}
-                  src='resources/partner_with_us_summary/icons/arrow.svg'
-                  alt='Get in touch'
-                />
-              </div>
-            </button>
+            <Router.Link to='/partner_with_us' style={LINK_STYLE} >
+              <PrimaryTextButtonWithArrow label='Get in touch' />
+            </Router.Link>
           </div>
-        </Router.Link>
+        </div>
       </div>);
   }
 }
@@ -88,7 +77,6 @@ const CARD_CONTAINER_STYLE: React.CSSProperties = {
   alignItems: 'flex-start',
   filter: 'drop-shadow(0px 1px 30px rgba(86, 70, 40, 0.15))',
   borderRadius: '4px',
-  textDecoration: 'none',
   overflow: 'hidden'
 };
 
@@ -168,63 +156,6 @@ const TEXT_BOX_STYLE: React.CSSProperties = {
   marginBottom: '20px'
 };
 
-const BUTTON_STYLE: React.CSSProperties = {
-  boxSizing: 'border-box',
-  border: 'none',
-  outline: 'none',
-  backgroundColor: '#F26B55',
-  borderRadius: '4px',
-  height: '35px',
-  width: '161px',
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'center'
+const LINK_STYLE: React.CSSProperties = {
+  textDecoration: 'none'
 };
-
-const BUTTON_TEXT_STYLE: React.CSSProperties = {
-  fontFamily: 'Source Sans Pro',
-  fontStyle: 'normal',
-  fontWeight: 600,
-  fontSize: '12px',
-  lineHeight: '15px',
-  textTransform: 'uppercase',
-  color: '#FFFFFF'
-};
-
-const ICON_CONTAINER_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  width: '10px',
-  height: '10px',
-  marginLeft: '5px'
-};
-
-const ICON_STYLE: React.CSSProperties = {
-  width: '100%',
-  height: '100%',
-  minWidth: '10px',
-  minHeight: '10px',
-  objectFit: 'cover',
-  backgroundColor: 'transparent',
-  color: '#FFFFFF'
-};
-
-const styles = StyleSheet.create({
-  card: {
-    ':hover': {
-      filter: 'drop-shadow(0px 1px 30px rgba(86, 70, 40, 0.4))'
-    },
-    ':focus': {
-      filter: 'drop-shadow(0px 1px 30px rgba(86, 70, 40, 0.4))'
-    },
-    ':focus-within': {
-      filter: 'drop-shadow(0px 1px 30px rgba(86, 70, 40, 0.4))'
-    },
-    ':active': {
-      filter: 'drop-shadow(0px 1px 30px rgba(86, 70, 40, 0.4))'
-    }
-  }
-});
