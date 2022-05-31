@@ -180,8 +180,7 @@ const ICON_STYLE: React.CSSProperties = {
   width: '100%',
   height: '100%',
   color: '#ED1E79',
-  objectFit: 'cover',
-  opacity: 0.16
+  objectFit: 'cover'
 };
 
 const CARDS_CONTAINER_STYLE: React.CSSProperties = {
