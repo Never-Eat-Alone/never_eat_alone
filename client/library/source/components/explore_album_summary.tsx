@@ -62,7 +62,6 @@ export class AlbumSummary extends React.Component<Properties> {
                   alt='Instagram'
                 />
               </div>
-              See more on our Instagram
               <a
                   target='_blank'
                   href='https://www.instagram.com/nevereatalonetoronto/'

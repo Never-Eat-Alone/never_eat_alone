@@ -1,4 +1,5 @@
 export * from './album_card';
+export * from './attendance_record';
 export * from './burger_menu_left';
 export * from './close_burger_button';
 export * from './dining_event_card';

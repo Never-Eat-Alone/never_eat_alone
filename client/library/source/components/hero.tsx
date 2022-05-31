@@ -9,8 +9,9 @@ interface Properties {
 
 export class Hero extends React.Component<Properties> {
   public render(): JSX.Element {
-    const paragraph = 'Are you feeling adventurous and want to try something \
-      entirely new, but know no one to recommend you? We’re here for you.';
+    const paragraph = 'We’re here to pair the experiences you love with the \
+      people who love them. Want to go out but don’t know when and where? \
+      There’s an event for that.';
     const { containerStyle, detailsContainerStyle } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
@@ -33,13 +34,12 @@ export class Hero extends React.Component<Properties> {
       <div style={{...CONTAINER_STYLE, ...containerStyle}} >
         <div style={{...DETAILS_CONTAINER_STYLE, ...detailsContainerStyle}} >
           <h1 style={HEADLINE_STYLE} >
-            FIND YOUR FAVOURITE EVENTS
-            WITH YOUR FAVOURITE PEOPLE.
+            FIND YOUR FAVOURITE EVENTS.
           </h1>
           <p style={PARAGRAPH_STYLE} >{paragraph}</p>
           <AccentTextButton
             style={JOIN_BUTTON_STYLE}
-            label='join us'
+            label='Become a member'
             labelStyle={JOIN_BUTTON_LABEL_STYLE}
             onClick={this.props.onJoinButton}
           />
@@ -59,8 +59,7 @@ const CONTAINER_STYLE: React.CSSProperties = {
   backgroundSize: 'cover',
   backgroundColor: '#F24D3D',
   backgroundRepeat: 'no-repeat',
-  backgroundPosition: 'left center',
-  paddingBottom: '72px'
+  backgroundPosition: 'left center'
 };
 
 const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
@@ -72,7 +71,7 @@ const TABLET_CONTAINER_STYLE: React.CSSProperties = {
 };
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
-  height: 'auto'
+  height: '575px'
 };
 
 const DETAILS_CONTAINER_STYLE: React.CSSProperties = {
@@ -81,27 +80,32 @@ const DETAILS_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  marginTop: '258px',
   backgroundColor: 'transparent',
   color: '#FFFFFF'
 };
 
 const DESKTOP_DETAILS_CONTAINER_STYLE: React.CSSProperties = {
-  width: '1200px',
-  paddingLeft: '20px',
-  paddingRight: '20px'
+  width: '1032px',
+  marginLeft: '20px',
+  marginRight: '20px',
+  marginTop: '271px',
+  gap: '20px'
 };
 
 const TABLET_DETAILS_CONTAINER_STYLE: React.CSSProperties = {
-  width: '100%',
-  paddingLeft: '30px',
-  paddingRight: '30px'
+  width: '702px',
+  marginLeft: '33px',
+  marginRight: '33px',
+  marginTop: '302px',
+  gap: '23px'
 };
 
 const MOBILE_DETAILS_CONTAINER_STYLE: React.CSSProperties = {
-  width: '100%',
-  paddingLeft: '15px',
-  paddingRight: '15px'
+  width: '335px',
+  marginLeft: '20px',
+  marginRight: '20px',
+  marginTop: '299px',
+  gap: '15px'
 };
 
 const HEADLINE_STYLE: React.CSSProperties = {
@@ -125,18 +129,14 @@ const PARAGRAPH_STYLE: React.CSSProperties = {
   fontSize: '20px',
   lineHeight: '25px',
   overflowWrap: 'break-word',
-  marginTop: '23px',
-  marginBottom: '0',
-  marginRight: '0',
-  marginLeft: '0',
-  padding: '0',
+  margin: '0px',
+  padding: '0px',
   textShadow: '0px 1px 4px rgba(0, 0, 0, 0.25)'
 };
 
 const JOIN_BUTTON_STYLE: React.CSSProperties = {
-  width: '145px',
-  height: '35px',
-  marginTop: '23px'
+  width: '173px',
+  height: '35px'
 };
 
 const JOIN_BUTTON_LABEL_STYLE: React.CSSProperties = {
