@@ -9,7 +9,7 @@ interface Properties {
   displayMode: DisplayMode;
 
   /** The event summaries. */
-  events: EventCardSummary[];
+  eventList: EventCardSummary[];
 
   isLoggedIn: boolean;
 }
@@ -69,14 +69,14 @@ export class ExploreEventsSummary extends React.Component<Properties, State> {
       };
     })();
     const cards = (() => {
-      if (!this.props.events || this.props.events.length === 0) {
+      if (!this.props.eventList || this.props.eventList.length === 0) {
         return null;
       }
       const temp = [];
       if (!this.state.isShowAllClicked) {
-        for (let i = 0; i < Math.min(this.props.events.length,
+        for (let i = 0; i < Math.min(this.props.eventList.length,
             this._initialNumberOfDisplayedCards); ++i) {
-          const event = this.props.events[i];
+          const event = this.props.eventList[i];
           temp.push(
             <DiningEventCard
               key={i}
@@ -97,8 +97,8 @@ export class ExploreEventsSummary extends React.Component<Properties, State> {
             />);
         }
       } else {
-        for (let i = 0; i < this.props.events.length; ++i) {
-          const event = this.props.events[i];
+        for (let i = 0; i < this.props.eventList.length; ++i) {
+          const event = this.props.eventList[i];
           temp.push(
             <DiningEventCard
               key={i}
@@ -126,7 +126,7 @@ export class ExploreEventsSummary extends React.Component<Properties, State> {
         return (
           <button style={BUTTON_STYLE} onClick={this.handleShowAllClick} >
             <div style={BUTTON_TEXT_STYLE} >
-              Show All Events ({this.props.events.length})
+              Show All Events ({this.props.eventList.length})
             </div>
             <div style={ICON_CONTAINER_STYLE} >
               <img
