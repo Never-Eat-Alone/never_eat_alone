@@ -196,7 +196,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     Summary', [new PropertySchema('displayMode',
     NeverEatAlone.DisplayMode.DESKTOP, DisplayModeInput)], [],
     NeverEatAlone.PartnerWithUsSummary);
-  const homePageSchema = new ComponentSchema('HomePage', [
+  const homePageSchema = new ComponentSchema('HomePage Not Loggedin', [
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
       DisplayModeInput),
     new PropertySchema('account', new NeverEatAlone.User(2, 'Arthur2345',
