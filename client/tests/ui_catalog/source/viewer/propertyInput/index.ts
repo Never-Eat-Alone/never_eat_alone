@@ -7,6 +7,7 @@ export * from './date_input';
 export * from './display_mode_input';
 export * from './enum_input';
 export * from './event_card_summary_input';
+export * from './home_page_error_code_input';
 export * from './number_input';
 export * from './optional_input';
 export * from './readonly_input';
