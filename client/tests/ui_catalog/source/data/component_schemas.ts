@@ -1,7 +1,8 @@
 import * as NeverEatAlone from 'never_eat_alone';
 import { ArrayInput, BooleanInput, CSSInput, CuisineInput, DateInput,
-  DisplayModeInput, EventCardSummaryInput, HomePageErrorCodeInput, NumberInput,
-  SocialMediaImageInput, TextInput, UserInput } from '../viewer/propertyInput';
+  DisplayModeInput, EventCardSummaryInput, EventTagInput,
+  HomePageErrorCodeInput, NumberInput, SocialMediaImageInput, TextInput,
+  UserInput } from '../viewer/propertyInput';
 import { ComponentSchema, PropertySchema, SignalSchema } from './schemas';
 
 /** Loads the complete list of schemas available to test. */
@@ -62,9 +63,13 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('backgroundColor', 'transparent', TextInput),
     new PropertySchema('isBackgroundImage', true, BooleanInput)],
     [new SignalSchema('onInviteAFoodie', '', [])], NeverEatAlone.Footer);
-  const heroSchema = new ComponentSchema('Hero', [
+  const heroNotLoggedInSchema = new ComponentSchema('Hero Not Loggedin', [
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
-    DisplayModeInput)], [new SignalSchema('onJoinButton', '', [])],
+    DisplayModeInput), new PropertySchema('account',
+    NeverEatAlone.User.makeGuest(), UserInput), new PropertySchema(
+      'eventTagList', [], ArrayInput(new PropertySchema('eventTag',
+      new NeverEatAlone.EventTag(1, 'Join us for dinner', 'yellow'),
+      EventTagInput)))], [new SignalSchema('onJoinButton', '', [])],
     NeverEatAlone.Hero);
   const diningEventCardSchema = new ComponentSchema('Dining Event Card',
     [new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
@@ -298,7 +303,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, headerNotLoggedInSchema, headerLoggedInSchema,
-    footerSchema, heroSchema, diningEventCardSchema, albumCardSchema,
+    footerSchema, heroNotLoggedInSchema, diningEventCardSchema, albumCardSchema,
     exploreEventsSummarySchema, albumSummarySchema, partnerWithUsSummarySchema,
     homePageSchema];
 }

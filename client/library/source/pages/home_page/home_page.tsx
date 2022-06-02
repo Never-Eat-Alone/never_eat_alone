@@ -29,6 +29,7 @@ export class HomePage extends React.Component<Properties> {
     return (
       <div style={CONTAINER_STYLE} >
         <Hero
+          account={this.props.account}
           displayMode={this.props.displayMode}
           onJoinButton={this.props.onJoinButton}
         />
