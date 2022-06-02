@@ -1,53 +1,164 @@
 import * as React from 'react';
-import { DisplayMode } from '../definitions';
+import { DisplayMode, EventTag, User } from '../definitions';
+import { AttendanceRecord } from './attendance_record';
 import { AccentTextButton } from './text_button';
 
 interface Properties {
+  account: User;
   displayMode: DisplayMode;
+  eventTagList?: EventTag[];
   onJoinButton: () => void;
 }
 
 export class Hero extends React.Component<Properties> {
   public render(): JSX.Element {
-    const paragraph = 'We’re here to pair the experiences you love with the \
-      people who love them. Want to go out but don’t know when and where? \
-      There’s an event for that.';
-    const { containerStyle, detailsContainerStyle } = (() => {
-      if (this.props.displayMode === DisplayMode.DESKTOP) {
+    if (!this.props.account || this.props.account.id === -1) {
+      const paragraph = 'We’re here to pair the experiences you love with the \
+        people who love them. Want to go out but don’t know when and where? \
+        There’s an event for that.';
+      const { containerStyle, detailsContainerStyle } = (() => {
+        if (this.props.displayMode === DisplayMode.DESKTOP) {
+          return {
+            containerStyle: DESKTOP_CONTAINER_STYLE,
+            detailsContainerStyle: DESKTOP_DETAILS_CONTAINER_STYLE
+          };
+        }
+        if (this.props.displayMode === DisplayMode.TABLET) {
+          return {
+            containerStyle: TABLET_CONTAINER_STYLE,
+            detailsContainerStyle: TABLET_DETAILS_CONTAINER_STYLE
+          };
+        }
         return {
-          containerStyle: DESKTOP_CONTAINER_STYLE,
-          detailsContainerStyle: DESKTOP_DETAILS_CONTAINER_STYLE
+          containerStyle: MOBILE_CONTAINER_STYLE,
+          detailsContainerStyle: MOBILE_DETAILS_CONTAINER_STYLE
         };
-      }
-      if (this.props.displayMode === DisplayMode.TABLET) {
+      })();
+      return (
+        <div style={{...CONTAINER_STYLE, ...containerStyle}} >
+          <div style={{...DETAILS_CONTAINER_STYLE, ...detailsContainerStyle}} >
+            <h1 style={HEADLINE_STYLE} >
+              FIND YOUR FAVOURITE EVENTS.
+            </h1>
+            <p style={PARAGRAPH_STYLE} >{paragraph}</p>
+            <AccentTextButton
+              style={JOIN_BUTTON_STYLE}
+              label='Become a member'
+              labelStyle={JOIN_BUTTON_LABEL_STYLE}
+              onClick={this.props.onJoinButton}
+            />
+          </div>
+        </div>);
+    } else {
+      const { loggedContainerStyle, detailsNoEventsContainerStyle } = (() => {
+        if (this.props.displayMode === DisplayMode.DESKTOP) {
+          return {
+            loggedContainerStyle: DESKTOP_LOGGED_CONTAINER_STYLE,
+            detailsNoEventsContainerStyle: DESKTOP_DETAILS_NO_EVENTS_CONTAINER_STYLE
+          };
+        }
+        if (this.props.displayMode === DisplayMode.TABLET) {
+          return {
+            loggedContainerStyle: TABLET_LOGGED_CONTAINER_STYLE,
+            detailsNoEventsContainerStyle: TABLET_DETAILS_NO_EVENTS_CONTAINER_STYLE
+          };
+        }
         return {
-          containerStyle: TABLET_CONTAINER_STYLE,
-          detailsContainerStyle: TABLET_DETAILS_CONTAINER_STYLE
+          loggedContainerStyle: MOBILE_LOGGED_CONTAINER_STYLE,
+          detailsNoEventsContainerStyle: MOBILE_DETAILS_NO_EVENTS_CONTAINER_STYLE
         };
+      })();
+      if (!this.props.eventTagList || this.props.eventTagList.length === 0) {
+        return (
+          <div style={{...LOGGED_CONTAINER_STYLE, ...CONTAINER_NO_EVENTS}} >
+            <div
+                style={{...DETAILS_NO_EVENTS_CONTAINER_STYLE,
+                  ...detailsNoEventsContainerStyle}}
+            >
+              Welcome Back, {this.props.account.userName}
+            </div>
+          </div>);
       }
-      return {
-        containerStyle: MOBILE_CONTAINER_STYLE,
-        detailsContainerStyle: MOBILE_DETAILS_CONTAINER_STYLE
-      };
-    })();
-    return (
-      <div style={{...CONTAINER_STYLE, ...containerStyle}} >
-        <div style={{...DETAILS_CONTAINER_STYLE, ...detailsContainerStyle}} >
-          <h1 style={HEADLINE_STYLE} >
-            FIND YOUR FAVOURITE EVENTS.
-          </h1>
-          <p style={PARAGRAPH_STYLE} >{paragraph}</p>
-          <AccentTextButton
-            style={JOIN_BUTTON_STYLE}
-            label='Become a member'
-            labelStyle={JOIN_BUTTON_LABEL_STYLE}
-            onClick={this.props.onJoinButton}
+      return (
+        <div style={{...LOGGED_CONTAINER_STYLE, ...loggedContainerStyle}} >
+          <AttendanceRecord
+            account={this.props.account}
+            displayMode={this.props.displayMode}
+            pastEventList={this.props.eventTagList}
           />
-        </div>
-      </div>);
+        </div>);
+    }
   }
 }
 
+// Loggedin related styles
+const LOGGED_CONTAINER_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  width: '100%',
+  backgroundImage: 'url(resources/home_page/illustrations/background-hero-wave.jpg)',
+  backgroundSize: 'cover',
+  backgroundColor: '#F26B55',
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'left center'
+};
+
+const DESKTOP_LOGGED_CONTAINER_STYLE: React.CSSProperties = {
+  height: '367px'
+};
+
+const TABLET_LOGGED_CONTAINER_STYLE: React.CSSProperties = {
+  height: '367px'
+};
+
+const MOBILE_LOGGED_CONTAINER_STYLE: React.CSSProperties = {
+  height: '400px'
+};
+
+// Logged in but no events styles
+const CONTAINER_NO_EVENTS: React.CSSProperties = {
+  height: '151px'
+};
+
+const DETAILS_NO_EVENTS_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  backgroundColor: 'transparent',
+  fontFamily: 'Oswald',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '32px',
+  lineHeight: '47px',
+  textAlign: 'center',
+  color: '#FFFFFF',
+  height: '47px',
+  marginTop: '74px'
+};
+
+const DESKTOP_DETAILS_NO_EVENTS_CONTAINER_STYLE: React.CSSProperties = {
+  width: '1030px',
+  marginLeft: '20px',
+  marginRight: '20px'
+};
+
+const TABLET_DETAILS_NO_EVENTS_CONTAINER_STYLE: React.CSSProperties = {
+  width: '702px',
+  marginLeft: '33px',
+  marginRight: '33px'
+};
+
+const MOBILE_DETAILS_NO_EVENTS_CONTAINER_STYLE: React.CSSProperties = {
+  width: '335px',
+  marginLeft: '20px',
+  marginRight: '20px'
+};
+
+// Not Loggedin related styles
 const CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',

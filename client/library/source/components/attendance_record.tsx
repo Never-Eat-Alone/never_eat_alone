@@ -5,7 +5,7 @@ import { DisplayMode, EventTag, User } from '../definitions';
 
 interface Properties {
 
-  account?: User;
+  account: User;
 
   displayMode: DisplayMode;
 
@@ -50,7 +50,8 @@ const CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'center',
   backgroundColor: 'transparent',
-  marginTop: '83px'
+  marginTop: '83px',
+  boxSizing: 'border-box'
 };
 
 const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
