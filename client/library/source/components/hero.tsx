@@ -75,7 +75,7 @@ export class Hero extends React.Component<Properties> {
                 style={{...DETAILS_NO_EVENTS_CONTAINER_STYLE,
                   ...detailsNoEventsContainerStyle}}
             >
-              Welcome Back, {this.props.account.userName}
+              Welcome Back, {this.props.account.userName}!
             </div>
           </div>);
       }
@@ -99,7 +99,7 @@ const LOGGED_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'center',
   width: '100%',
-  backgroundImage: 'url(resources/home_page/illustrations/background-hero-wave.jpg)',
+  backgroundImage: 'url(resources/home_page/illustrations/background-hero-wave.svg)',
   backgroundSize: 'cover',
   backgroundColor: '#F26B55',
   backgroundRepeat: 'no-repeat',

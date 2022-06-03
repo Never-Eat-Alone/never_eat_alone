@@ -71,6 +71,29 @@ export function loadComponentSchemas(): ComponentSchema[] {
       new NeverEatAlone.EventTag(1, 'Join us for dinner', 'yellow'),
       EventTagInput)))], [new SignalSchema('onJoinButton', '', [])],
     NeverEatAlone.Hero);
+  const heroLoggedInNoEventSchema = new ComponentSchema('Hero Loggedin No Event'
+    , [new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
+    DisplayModeInput), new PropertySchema('account', new NeverEatAlone.User(2,
+    'Arthur2345', 'info+arthur@nevereatalone.net', 'arthur2345',
+    NeverEatAlone.UserStatus.ACTIVE, new Date()), UserInput),
+    new PropertySchema('eventTagList', [], ArrayInput(new PropertySchema(
+    'eventTag', new NeverEatAlone.EventTag(1, 'Join us for dinner', 'yellow'),
+    EventTagInput)))], [new SignalSchema('onJoinButton', '', [])],
+    NeverEatAlone.Hero);
+  const heroLoggedInWithEventSchema = new ComponentSchema('Hero Loggedin With \
+    Event', [new PropertySchema('displayMode',
+    NeverEatAlone.DisplayMode.DESKTOP, DisplayModeInput), new PropertySchema(
+    'account', new NeverEatAlone.User(2, 'Arthur2345',
+    'info+arthur@nevereatalone.net', 'arthur2345',
+    NeverEatAlone.UserStatus.ACTIVE, new Date()), UserInput),
+    new PropertySchema('eventTagList', [new NeverEatAlone.EventTag(1,
+    'Join us for dinner', 'yellow'), new NeverEatAlone.EventTag(2,
+    'Brunch with a show!', 'orange'), new NeverEatAlone.EventTag(3,
+    'dinner and live music', 'blue'), new NeverEatAlone.EventTag(4,
+    'Best new restaurants serries', 'red')], ArrayInput(new PropertySchema(
+    'eventTag', new NeverEatAlone.EventTag(1, 'Join us for dinner', 'yellow'),
+    EventTagInput)))], [new SignalSchema('onJoinButton', '', [])],
+    NeverEatAlone.Hero);
   const diningEventCardSchema = new ComponentSchema('Dining Event Card',
     [new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
     DisplayModeInput), new PropertySchema('id', -1, NumberInput),
@@ -201,12 +224,10 @@ export function loadComponentSchemas(): ComponentSchema[] {
     Summary', [new PropertySchema('displayMode',
     NeverEatAlone.DisplayMode.DESKTOP, DisplayModeInput)], [],
     NeverEatAlone.PartnerWithUsSummary);
-  const homePageSchema = new ComponentSchema('HomePage Not Loggedin', [
+  const homePageNotLoggedSchema = new ComponentSchema('HomePage Not Loggedin', [
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
       DisplayModeInput),
-    new PropertySchema('account', new NeverEatAlone.User(2, 'Arthur2345',
-      'info+arthur@nevereatalone.net', 'arthur2345',
-      NeverEatAlone.UserStatus.ACTIVE, new Date()), UserInput),
+    new PropertySchema('account', NeverEatAlone.User.makeGuest(), UserInput),
     new PropertySchema('errorCode', NeverEatAlone.HomePage.ErrorCode.NONE,
       HomePageErrorCodeInput),
     new PropertySchema('imageList', [
@@ -303,7 +324,8 @@ export function loadComponentSchemas(): ComponentSchema[] {
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, headerNotLoggedInSchema, headerLoggedInSchema,
-    footerSchema, heroNotLoggedInSchema, diningEventCardSchema, albumCardSchema,
+    footerSchema, heroNotLoggedInSchema, heroLoggedInNoEventSchema,
+    heroLoggedInWithEventSchema, diningEventCardSchema, albumCardSchema,
     exploreEventsSummarySchema, albumSummarySchema, partnerWithUsSummarySchema,
-    homePageSchema];
+    homePageNotLoggedSchema];
 }
