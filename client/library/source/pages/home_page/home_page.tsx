@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { AlbumSummary, ExploreEventsSummary, Hero, PartnerWithUsSummary
 } from '../../components';
-import { DisplayMode, EventCardSummary, SocialMediaImage, User
+import { DisplayMode, EventCardSummary, SocialMediaImage, User, EventTag
 } from '../../definitions';
 
 interface Properties {
@@ -13,8 +13,18 @@ interface Properties {
 
   /** The page error code. */
   errorCode: HomePage.ErrorCode;
+
+  /** List of NEA images on social media. */
   imageList: SocialMediaImage[];
+
+  /** List of all upcoming events. */
   eventList: EventCardSummary[];
+
+  /** The list of Event Tags that user has attended in the current month.  */
+  eventTagList: EventTag[];
+
+  /** List of user's upcoming events. */
+  userFutureEventList: EventCardSummary[];
 
   /** Indicates the join button is clicked. */
   onJoinButton: () => void;
@@ -26,13 +36,29 @@ export class HomePage extends React.Component<Properties> {
     if (this.props.errorCode !== HomePage.ErrorCode.NONE) {
       return <div />;
     }
+    const { userUpcomingEventsSection, partnershipSection } = (() => {
+      if (!this.props.account || this.props.account.id === -1) {
+        return {
+          userUpcomingEventsSection: null,
+          partnershipSection: null
+        };
+      }
+      return {
+        userUpcomingEventsSection: (<UserUpcomingEvents
+          displayMode={this.props.displayMode} >),
+        partnershipSection: (<PartnerWithUsSummary
+          displayMode={this.props.displayMode} />)
+      };
+    })();
     return (
       <div style={CONTAINER_STYLE} >
         <Hero
           account={this.props.account}
           displayMode={this.props.displayMode}
           onJoinButton={this.props.onJoinButton}
+          eventTagList={this.props.eventTagList}
         />
+        {userUpcomingEventsSection}
         <ExploreEventsSummary
           displayMode={this.props.displayMode}
           eventList={this.props.eventList}
@@ -42,7 +68,7 @@ export class HomePage extends React.Component<Properties> {
           displayMode={this.props.displayMode}
           imageList={this.props.imageList}
         />
-        <PartnerWithUsSummary displayMode={this.props.displayMode} />
+        {partnershipSection}
       </div>);
   }
 }

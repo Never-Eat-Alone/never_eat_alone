@@ -22,3 +22,4 @@ export * from './profile_menu';
 export * from './profile_round_button';
 export * from './text_button';
 export * from './twitter_button';
+export * from './user_upcoming_events';

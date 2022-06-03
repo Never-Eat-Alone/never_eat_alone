@@ -16,7 +16,7 @@ interface Properties {
   style?: any;
 }
 
-/** Displays the dining event card. */
+/** Displays the Attendance record of the user in the current month. */
 export class AttendanceRecord extends React.Component<Properties> {
   public render(): JSX.Element {
     const { containerStyle } = (() => {
