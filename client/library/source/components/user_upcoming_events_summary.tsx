@@ -1,4 +1,3 @@
-import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 import * as tinyColor from 'tinycolor2';
 import { DisplayMode, EventCardSummary } from '../definitions';
@@ -18,8 +17,9 @@ interface State {
   isShowAllClicked: boolean;
 }
 
-/** Displays the User's upcoming events. */
-export class UserUpcomingEvents extends React.Component<Properties, State> {
+/** Displays the User's upcoming events summary. */
+export class UserUpcomingEventsSummary extends React.Component<Properties,
+    State> {
   constructor(props: Properties) {
     super(props);
     this.state = {
@@ -172,15 +172,11 @@ const CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'center',
   width: '100%',
-  backgroundImage: 'url(resources/explore_events/background.jpg)',
-  backgroundSize: 'cover',
-  backgroundColor: 'transparent',
-  backgroundRepeat: 'no-repeat',
-  backgroundPosition: 'left center'
+  backgroundColor: '#FFFFFF'
 };
 
 const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
-  paddingBottom: '70px'
+  paddingBottom: '60px'
 };
 
 const TABLET_CONTAINER_STYLE: React.CSSProperties = {
@@ -199,8 +195,8 @@ const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
 };
 
 const DESKTOP_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
-  width: '1027px',
-  marginTop: '70px'
+  width: '1032px',
+  marginTop: '40px'
 };
 
 const TABLET_CONTENT_CONTAINER_STYLE: React.CSSProperties = {

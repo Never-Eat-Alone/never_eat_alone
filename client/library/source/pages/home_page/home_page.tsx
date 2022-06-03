@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { AlbumSummary, ExploreEventsSummary, Hero, PartnerWithUsSummary
-} from '../../components';
-import { DisplayMode, EventCardSummary, SocialMediaImage, User, EventTag
+import { AlbumSummary, ExploreEventsSummary, Hero, PartnerWithUsSummary,
+  UserUpcomingEventsSummary } from '../../components';
+import { DisplayMode, EventCardSummary, EventTag, SocialMediaImage, User
 } from '../../definitions';
 
 interface Properties {
@@ -36,19 +36,21 @@ export class HomePage extends React.Component<Properties> {
     if (this.props.errorCode !== HomePage.ErrorCode.NONE) {
       return <div />;
     }
-    const { userUpcomingEventsSection, partnershipSection } = (() => {
+    const userUpcomingEventsSection = (() => {
       if (!this.props.account || this.props.account.id === -1) {
-        return {
-          userUpcomingEventsSection: null,
-          partnershipSection: null
-        };
+        return null;
       }
-      return {
-        userUpcomingEventsSection: (<UserUpcomingEvents
-          displayMode={this.props.displayMode} >),
-        partnershipSection: (<PartnerWithUsSummary
-          displayMode={this.props.displayMode} />)
-      };
+      return (
+        <UserUpcomingEventsSummary
+          displayMode={this.props.displayMode}
+          upcomingEventList={this.props.userFutureEventList}
+        />);
+    })();
+    const partnershipSection = (() => {
+      if (!this.props.account || this.props.account.id === -1) {
+        return null;
+      }
+      return <PartnerWithUsSummary displayMode={this.props.displayMode} />;
     })();
     return (
       <div style={CONTAINER_STYLE} >
