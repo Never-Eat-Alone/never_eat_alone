@@ -1,6 +1,4 @@
-import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
-import * as Router from 'react-router-dom';
 import { DisplayMode, EventTag, User } from '../definitions';
 
 interface Properties {
@@ -13,7 +11,7 @@ interface Properties {
   pastEventList: EventTag[];
 
   /** Indicates the style. */
-  style?: any;
+  style?: React.CSSProperties;
 }
 
 /** Displays the Attendance record of the user in the current month. */

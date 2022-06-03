@@ -10,7 +10,7 @@ interface Properties {
   upcomingEventList: EventCardSummary[];
 
   /** Indicates the style. */
-  style?: any;
+  style?: React.CSSProperties;
 }
 
 interface State {
