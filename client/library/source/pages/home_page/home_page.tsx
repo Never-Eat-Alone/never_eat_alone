@@ -20,7 +20,7 @@ interface Properties {
   /** List of all upcoming events. */
   eventList: EventCardSummary[];
 
-  /** The list of Event Tags that user has attended in the current month.  */
+  /** The list of Event Tags that user has attended in the current month. */
   eventTagList: EventTag[];
 
   /** List of user's upcoming events. */
