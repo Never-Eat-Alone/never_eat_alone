@@ -6,7 +6,8 @@ import { AccentTextButton } from './text_button';
 interface Properties {
   account: User;
   displayMode: DisplayMode;
-  eventTagList?: EventTag[];
+  eventTagList: EventTag[];
+  numberOfTotalEventsInMonth: number;
   onJoinButton: () => void;
 }
 
@@ -85,6 +86,7 @@ export class Hero extends React.Component<Properties> {
             account={this.props.account}
             displayMode={this.props.displayMode}
             pastEventList={this.props.eventTagList}
+            totalNumberOfEvents={this.props.numberOfTotalEventsInMonth}
           />
         </div>);
     }

@@ -77,6 +77,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
       new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
       DisplayModeInput),
       new PropertySchema('account', NeverEatAlone.User.makeGuest(), UserInput),
+      new PropertySchema('numberOfTotalEventsInMonth', 10, NumberInput),
       new PropertySchema('eventTagList', [], ArrayInput(new PropertySchema(
       'eventTag', new NeverEatAlone.EventTag(1, 'Join us for dinner', 'yellow'),
       EventTagInput)))],
@@ -88,6 +89,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
       new PropertySchema('account', new NeverEatAlone.User(2, 'Arthur2345',
       'info+arthur@nevereatalone.net', 'arthur2345',
       NeverEatAlone.UserStatus.ACTIVE, new Date()), UserInput),
+      new PropertySchema('numberOfTotalEventsInMonth', 10, NumberInput),
       new PropertySchema('eventTagList', [], ArrayInput(new PropertySchema(
       'eventTag', new NeverEatAlone.EventTag(1, 'Join us for dinner', 'yellow'),
       EventTagInput)))],
@@ -99,6 +101,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
       new PropertySchema('account', new NeverEatAlone.User(2, 'Arthur2345',
       'info+arthur@nevereatalone.net', 'arthur2345',
       NeverEatAlone.UserStatus.ACTIVE, new Date()), UserInput),
+      new PropertySchema('numberOfTotalEventsInMonth', 10, NumberInput),
       new PropertySchema('eventTagList', [new NeverEatAlone.EventTag(1,
       'Join us for dinner', 'yellow'), new NeverEatAlone.EventTag(2,
       'Brunch with a show!', 'orange'), new NeverEatAlone.EventTag(3,
@@ -340,6 +343,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
       new PropertySchema('account', NeverEatAlone.User.makeGuest(), UserInput),
       new PropertySchema('errorCode', NeverEatAlone.HomePage.ErrorCode.NONE,
       HomePageErrorCodeInput),
+      new PropertySchema('numberOfTotalEventsInMonth', 6, NumberInput),
       new PropertySchema('imageList', [
       new NeverEatAlone.SocialMediaImage(1, 'resources/images/2.jpg'),
       new NeverEatAlone.SocialMediaImage(2, 'resources/images/3.jpg'),
