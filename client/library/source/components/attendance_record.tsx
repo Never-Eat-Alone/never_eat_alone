@@ -153,20 +153,29 @@ const CONTAINER_STYLE: React.CSSProperties = {
 
 const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
   marginTop: '83px',
-  height: '215px',
-  maxWidth: '100%'
+  minHeight: '215px',
+  maxWidth: '100%',
+  marginLeft: '30px',
+  marginRight: '30px',
+  marginBottom: '69px'
 };
 
 const TABLET_CONTAINER_STYLE: React.CSSProperties = {
   marginTop: '84px',
-  height: '215px',
-  maxWidth: '100%'
+  minHeight: '215px',
+  maxWidth: '100%',
+  marginLeft: '30px',
+  marginRight: '30px',
+  marginBottom: '68px'
 };
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
   marginTop: '84px',
   width: '330px',
-  maxHeight: '100%'
+  maxHeight: '100%',
+  marginLeft: '20px',
+  marginRight: '20px',
+  marginBottom: '30px'
 };
 
 const WELCOME_ROW_STYLE: React.CSSProperties = {
@@ -209,7 +218,7 @@ const WELCOME_TEXT_STYLE: React.CSSProperties = {
 
 const TAGS_DETAIL_CONTAINER_STYLE: React.CSSProperties = {
   backgroundColor: '#FFFFFF',
-  height: '127px',
+  minHeight: '127px',
   width: '100%',
   boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
   borderRadius: '4px'
@@ -254,19 +263,16 @@ const DETAIL_FIRST_SECTION_CONTAINER_STYLE: React.CSSProperties = {
 
 const DESKTOP_DETAIL_FIRST_SECTION_CONTAINER_STYLE: React.CSSProperties = {
   marginRight: '40px',
-  width: '266px',
   height: '100%'
 };
 
 const TABLET_DETAIL_FIRST_SECTION_CONTAINER_STYLE: React.CSSProperties = {
   marginRight: '40px',
-  width: '266px',
   height: '100%'
 };
 
 const MOBILE_DETAIL_FIRST_SECTION_CONTAINER_STYLE: React.CSSProperties = {
-  marginBottom: '30px',
-  width: '266px'
+  marginBottom: '30px'
 };
 
 const BIG_TAG_ICON_CONTAINER_STYLE: React.CSSProperties = {
@@ -330,7 +336,7 @@ const TEXT_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'flex-start',
-  width: '100%'
+  width: '206px'
 };
 
 const TITLE_STYLE: React.CSSProperties = {
@@ -349,13 +355,13 @@ const TEXT_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'center',
   flexWrap: 'wrap',
-  width: '100%',
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
   fontWeight: 400,
   fontSize: '14px',
   lineHeight: '18px',
-  color: '#000000'
+  color: '#000000',
+  width: '100%'
 };
 
 const LINK_STYLE: React.CSSProperties = {

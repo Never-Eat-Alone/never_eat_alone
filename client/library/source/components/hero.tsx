@@ -109,15 +109,15 @@ const LOGGED_CONTAINER_STYLE: React.CSSProperties = {
 };
 
 const DESKTOP_LOGGED_CONTAINER_STYLE: React.CSSProperties = {
-  height: '367px'
+  minHeight: '367px'
 };
 
 const TABLET_LOGGED_CONTAINER_STYLE: React.CSSProperties = {
-  height: '367px'
+  minHeight: '367px'
 };
 
 const MOBILE_LOGGED_CONTAINER_STYLE: React.CSSProperties = {
-  height: '400px'
+  minHeight: '400px'
 };
 
 // Logged in but no events styles
