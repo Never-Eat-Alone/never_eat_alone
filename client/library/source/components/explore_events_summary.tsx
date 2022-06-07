@@ -46,31 +46,62 @@ export class ExploreEventsSummary extends React.Component<Properties, State> {
       }
       return 5;
     })();
-    const { containerStyle, contentContainerStyle, cardsContainerStyle } = (
-        () => {
+    const { containerStyle, contentContainerStyle, cardsContainerStyle,
+        noEventsContainerStyle, noEventsContentContainerStyle } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
           containerStyle: DESKTOP_CONTAINER_STYLE,
           contentContainerStyle: DESKTOP_CONTENT_CONTAINER_STYLE,
-          cardsContainerStyle: DESKTOP_CARD_CONTAINER_STYLE
+          cardsContainerStyle: DESKTOP_CARD_CONTAINER_STYLE,
+          noEventsContainerStyle: DESKTOP_NO_EVENTS_CONTAINER_STYLE,
+          noEventsContentContainerStyle: DESKTOP_NO_EVENTS_CONTENT_CONTAINER_STYLE
         };
       }
       if (this.props.displayMode === DisplayMode.TABLET) {
         return {
           containerStyle: TABLET_CONTAINER_STYLE,
           contentContainerStyle: TABLET_CONTENT_CONTAINER_STYLE,
-          cardsContainerStyle: TABLET_CARD_CONTAINER_STYLE
+          cardsContainerStyle: TABLET_CARD_CONTAINER_STYLE,
+          noEventsContainerStyle: TABLET_NO_EVENTS_CONTAINER_STYLE,
+          noEventsContentContainerStyle: TABLET_NO_EVENTS_CONTENT_CONTAINER_STYLE
         };
       }
       return {
         containerStyle: MOBILE_CONTAINER_STYLE,
         contentContainerStyle: MOBILE_CONTENT_CONTAINER_STYLE,
-        cardsContainerStyle: MOBILE_CARD_CONTAINER_STYLE
+        cardsContainerStyle: MOBILE_CARD_CONTAINER_STYLE,
+        noEventsContainerStyle: MOBILE_NO_EVENTS_CONTAINER_STYLE,
+        noEventsContentContainerStyle: MOBILE_NO_EVENTS_CONTENT_CONTAINER_STYLE
       };
     })();
     const cards = (() => {
       if (!this.props.eventList || this.props.eventList.length === 0) {
-        return null;
+        return (
+          <div
+              style={{...NO_EVENTS_CONTAINER_STYLE, ...noEventsContainerStyle}}
+          >
+            <div
+                style={{...NO_EVENTS_CONTENT_CONTAINER_STYLE,
+                  ...noEventsContentContainerStyle}}
+            >
+              <div style={DOG_IMAGE_CONTAINER_STYLE} >
+                <img
+                  style={DOG_IMAGE_STYLE}
+                  src='resources/explore_events/icons/dog.svg'
+                  alt='Dog Icon'
+                />
+              </div>
+              <div style={TEXT_CONTAINER_STYLE} >
+                <div style={HEADING_STYLE} >
+                  Oops! The dog ate all our events...
+                </div>
+                <div style={TEXT_STYLE} >
+                  You’ve either joined everything, or we’re fresh out of{" "}
+                  events. Check back in a day or two to see what’s new!
+                </div>
+              </div>
+            </div>
+          </div>);
       }
       const temp = [];
       if (!this.state.isShowAllClicked) {
@@ -122,6 +153,9 @@ export class ExploreEventsSummary extends React.Component<Properties, State> {
       return temp;
     })();
     const button = (() => {
+      if (!this.props.eventList || this.props.eventList.length === 0) {
+        return null;
+      }
       if (!this.state.isShowAllClicked) {
         return (
           <button style={BUTTON_STYLE} onClick={this.handleShowAllClick} >
@@ -250,6 +284,105 @@ const TABLET_CARD_CONTAINER_STYLE: React.CSSProperties = {
 
 const MOBILE_CARD_CONTAINER_STYLE: React.CSSProperties = {
   gap: '20px'
+};
+
+const NO_EVENTS_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  gap: '40px',
+  width: '100%',
+  backgroundColor: '#FFFFFF',
+  boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
+  borderRadius: '4px'
+};
+
+const DESKTOP_NO_EVENTS_CONTAINER_STYLE: React.CSSProperties = {
+  padding: '50px 40px'
+};
+
+const TABLET_NO_EVENTS_CONTAINER_STYLE: React.CSSProperties = {
+  padding: '50px 40px'
+};
+
+const MOBILE_NO_EVENTS_CONTAINER_STYLE: React.CSSProperties = {
+  padding: '40px 20px'
+};
+
+const NO_EVENTS_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  gap: '25px'
+};
+
+const DESKTOP_NO_EVENTS_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+  width: '839px',
+  height: '80px'
+};
+
+const TABLET_NO_EVENTS_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+  width: '622px',
+  height: '84px'
+};
+
+const MOBILE_NO_EVENTS_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  width: '295px',
+  height: '209px'
+};
+
+const DOG_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '110px',
+  height: '80px'
+};
+
+const DOG_IMAGE_STYLE: React.CSSProperties = {
+  width: '100%',
+  height: '100%',
+  minWidth: '110px',
+  minHeight: '80px',
+  objectFit: 'cover'
+};
+
+const TEXT_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'space-between',
+  width: '100%',
+  gap: '10px'
+};
+
+const HEADING_STYLE: React.CSSProperties = {
+  fontFamily: 'Oswald',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '23px',
+  lineHeight: '34px',
+  height: '34px',
+  textAlign: 'center',
+  textTransform: 'capitalize',
+  color: '#000000'
+};
+
+const TEXT_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '16px',
+  lineHeight: '20px',
+  textAlign: 'center',
+  color: '#000000'
 };
 
 const BUTTON_STYLE: React.CSSProperties = {
