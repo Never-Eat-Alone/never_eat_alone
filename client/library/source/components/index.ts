@@ -1,4 +1,5 @@
 export * from './album_card';
+export * from './attendance_record';
 export * from './burger_menu_left';
 export * from './close_burger_button';
 export * from './dining_event_card';
@@ -21,3 +22,4 @@ export * from './profile_menu';
 export * from './profile_round_button';
 export * from './text_button';
 export * from './twitter_button';
+export * from './user_upcoming_events_summary';

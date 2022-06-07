@@ -19,7 +19,7 @@ export class UserInput extends React.Component<Properties> {
   private onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = (() => {
       if (!event.target.value.trim()) {
-        return  NeverEatAlone.User.makeGuest();
+        return NeverEatAlone.User.makeGuest();
       }
       return new NeverEatAlone.User(1, event.target.value,
         'user@nevereatalone.net', 'jojo', NeverEatAlone.UserStatus.ACTIVE,

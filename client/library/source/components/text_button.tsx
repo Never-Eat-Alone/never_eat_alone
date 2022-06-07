@@ -7,9 +7,10 @@ interface Properties extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export function TextButton(props: Properties) {
+  const { label, labelStyle, ...rest } = props;
   return (
-    <button {...props} style={{...BUTTON_STYLE, ...props.style}} >
-      <p style={{...LABEL_STYLE, ...props.labelStyle}} >{props.label}</p>
+    <button {...rest} style={{...BUTTON_STYLE, ...props.style}} >
+      <p style={{...LABEL_STYLE, ...labelStyle}} >{label}</p>
     </button>);
 }
 
@@ -32,11 +33,12 @@ export function AccentTextButton(props: Properties) {
 }
 
 export function PrimaryTextButton(props: Properties) {
+  const { labelStyle, ...rest } = props;
   return (
     <TextButton
-      {...props}
+      {...rest}
       style={{...PRIMARY_BUTTON_STYLE, ...props.style}}
-      labelStyle={{...PRIMARY_LABEL_STYLE, ...props.labelStyle}}
+      labelStyle={{...PRIMARY_LABEL_STYLE, ...labelStyle}}
       className={css(styles.primaryTextButton)}
     />);
 }
@@ -49,16 +51,18 @@ interface WithIconProperties extends Properties {
 }
 
 export function TextButtonWithArrow(props: WithIconProperties) {
+  const { label, labelStyle, iconContainerStyle, iconStyle, iconSrc, iconAlt,
+    ...rest } = props;
   return (
-    <button {...props} style={{...BUTTON_STYLE, ...props.style}} >
-      <p style={{...LABEL_STYLE, ...props.labelStyle}} >{props.label}</p>
+    <button {...rest} style={{...BUTTON_STYLE, ...props.style}} >
+      <p style={{...LABEL_STYLE, ...labelStyle}} >{label}</p>
       <div
-          style={{...ARROW_ICON_CONTAINER_STYLE, ...props.iconContainerStyle}}
+          style={{...ARROW_ICON_CONTAINER_STYLE, ...iconContainerStyle}}
       >
         <img
-          style={{...ARROW_ICON_STYLE, ...props.iconStyle}}
-          src={props.iconSrc}
-          alt={props.iconAlt}
+          style={{...ARROW_ICON_STYLE, ...iconStyle}}
+          src={iconSrc}
+          alt={iconAlt}
         />
       </div>
     </button>);

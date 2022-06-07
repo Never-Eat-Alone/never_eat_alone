@@ -42,6 +42,7 @@ export class AlbumSummary extends React.Component<Properties> {
       const image = this.props.imageList[i];
       cardList.push(
         <AlbumCard
+          key={i}
           id={image.id}
           src={image.src}
           displayMode={this.props.displayMode}
@@ -62,7 +63,6 @@ export class AlbumSummary extends React.Component<Properties> {
                   alt='Instagram'
                 />
               </div>
-              See more on our Instagram
               <a
                   target='_blank'
                   href='https://www.instagram.com/nevereatalonetoronto/'

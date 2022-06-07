@@ -48,7 +48,7 @@ interface Properties {
   color: string;
 
   /** Indicates the style. */
-  style?: any;
+  style?: React.CSSProperties;
 }
 
 /** Displays the dining event card. */
