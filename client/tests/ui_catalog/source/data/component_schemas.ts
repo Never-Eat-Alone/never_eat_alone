@@ -311,6 +311,19 @@ export function loadComponentSchemas(): ComponentSchema[] {
         'yellow'), EventCardSummaryInput))),
       new PropertySchema('isLoggedIn', false, BooleanInput)
     ], [], NeverEatAlone.ExploreEventsSummary);
+    const exploreEventsSummaryEmptySchema = new ComponentSchema(
+      'ExploreEventsSummary Empty', [
+      new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
+      DisplayModeInput),
+      new PropertySchema('eventList', [],
+      ArrayInput(
+        new PropertySchema('EventCardSummary',
+        new NeverEatAlone.EventCardSummary(1, 'best french restaurant',
+        new Date(2022, 6, 12, 19, 0, 0), new Date(2022, 6, 12, 23, 0, 0),
+        'Le Select', NeverEatAlone.PriceRange.EXPENSIVE, [], '', 12, 12, true,
+        'yellow'), EventCardSummaryInput))),
+      new PropertySchema('isLoggedIn', false, BooleanInput)
+    ], [], NeverEatAlone.ExploreEventsSummary);
   const albumSummarySchema = new ComponentSchema('Live Album', [
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
     DisplayModeInput),
@@ -647,7 +660,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     whiteNavLinkSchema, headerNotLoggedInSchema, headerLoggedInSchema,
     footerSchema, heroNotLoggedInSchema, heroLoggedInNoEventSchema,
     heroLoggedInWithEventSchema, diningEventCardSchema, albumCardSchema,
-    userUpcomingEventsSummarySchema, exploreEventsSummarySchema,
-    albumSummarySchema, partnerWithUsSummarySchema, homePageNotLoggedSchema,
-    homePageLoggedInSchema];
+    userUpcomingEventsSummarySchema, exploreEventsSummaryEmptySchema,
+    exploreEventsSummarySchema, albumSummarySchema, partnerWithUsSummarySchema,
+    homePageNotLoggedSchema, homePageLoggedInSchema];
 }
