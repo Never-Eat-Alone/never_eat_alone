@@ -51,9 +51,9 @@ export class HomePage extends React.Component<Properties> {
     })();
     const partnershipSection = (() => {
       if (!this.props.account || this.props.account.id === -1) {
-        return null;
+        return <PartnerWithUsSummary displayMode={this.props.displayMode} />;
       }
-      return <PartnerWithUsSummary displayMode={this.props.displayMode} />;
+      return null;
     })();
     return (
       <div style={CONTAINER_STYLE} >
