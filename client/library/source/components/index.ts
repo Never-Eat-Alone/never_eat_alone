@@ -15,6 +15,7 @@ export * from './hamburger_button';
 export * from './header';
 export * from './header_logo';
 export * from './hero';
+export * from './input_field';
 export * from './invite_a_foodie_button';
 export * from './modal';
 export * from './nav_link';
