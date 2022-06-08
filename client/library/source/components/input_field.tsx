@@ -4,21 +4,32 @@ import * as React from 'react';
 interface InputFieldProperties extends React.InputHTMLAttributes<
     HTMLInputElement> {
   hasError: boolean;
-  disabled: boolean;
+}
+
+export function InputField(props: InputFieldProperties) {
+  const { hasError, style, ...rest } = props;
+  return (
+    <input
+      style={{...INPUT_STYLE, ...CONTAINER_STYLE, ...CONTAINER_NO_ICON_STYLE,
+        ...style}}
+      className={rest.disabled && css(styles.disabled) ||
+        hasError && css(styles.hasError) || css(styles.container, styles.input)}
+      {...rest}
+    />);
+}
+
+interface InputFieldWithIconProperties extends InputFieldProperties {
   iconSrc: string;
   iconAlt: string;
 }
 
-export function InputField(props: InputFieldProperties) {
+export function InputFieldWithIcon(props: InputFieldWithIconProperties) {
   const { hasError, iconSrc, iconAlt, style, ...rest } = props;
   return (
     <div
-        style={{...CONTAINER_STYLE,
-          borderColor: props.hasError && '#FF2C79' || '#CCCCCC',
-          backgroundColor: rest.disabled && '#EFEFEF' || '#FFFFFF',
-          ...style}}
+        style={{...CONTAINER_STYLE, ...CONTAINER_WITH_ICON_STYLE, ...style}}
         className={rest.disabled && css(styles.disabled) ||
-          css(styles.inputContainer)}
+          hasError && css(styles.hasError) || css(styles.container)}
     >
       <div style={ICON_CONTAINER_STYLE} >
         <img
@@ -31,9 +42,9 @@ export function InputField(props: InputFieldProperties) {
     </div>);
 }
 
-export function EmailInputField(props: InputFieldProperties) {
+export function EmailInputField(props: InputFieldWithIconProperties) {
   return (
-    <InputField
+    <InputFieldWithIcon
       {...props}
       type='email'
       name='email'
@@ -42,9 +53,9 @@ export function EmailInputField(props: InputFieldProperties) {
     />);
 }
 
-export function NameInputField(props: InputFieldProperties) {
+export function NameInputField(props: InputFieldWithIconProperties) {
   return (
-    <InputField
+    <InputFieldWithIcon
       {...props}
       type='text'
       name='name'
@@ -62,10 +73,17 @@ const CONTAINER_STYLE: React.CSSProperties = {
   backgroundColor: '#FFFFFF',
   borderRadius: '4px',
   border: '1px solid #CCCCCC',
-  padding: '0px 10px 0px 0px',
   width: '310px',
   height: '38px',
   color: '#969696'
+};
+
+const CONTAINER_NO_ICON_STYLE: React.CSSProperties = {
+  padding: '0px 10px 0px 10px'
+};
+
+const CONTAINER_WITH_ICON_STYLE: React.CSSProperties = {
+  padding: '0px 10px 0px 0px'
 };
 
 const INPUT_STYLE: React.CSSProperties = {
@@ -104,7 +122,7 @@ const ICON_STYLE: React.CSSProperties = {
 };
 
 const styles = StyleSheet.create({
-  inputContainer: {
+  container: {
     ':hover': {
       border: '1px solid #969696',
       color: '#000000',
@@ -127,7 +145,11 @@ const styles = StyleSheet.create({
   },
   disabled: {
     border: '1px solid #CCCCCC',
-    boxShadow: 'none'
+    boxShadow: 'none',
+    backgroundColor: '#EFEFEF'
+  },
+  hasError: {
+    borderColor: '#FF2C79'
   },
   input: {
     ':placeholder': {

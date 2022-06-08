@@ -55,6 +55,10 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('iconStyle', {}, CSSInput),
     new PropertySchema('iconContainerStyle', {}, CSSInput)
   ], [], NeverEatAlone.NameInputField);
+  const inputFieldSchema = new ComponentSchema('Inputfield', [
+    new PropertySchema('hasError', false, BooleanInput),
+    new PropertySchema('disabled', false, BooleanInput)
+  ], [], NeverEatAlone.InputField);
   const headerNotLoggedInSchema = new ComponentSchema(
     'Header Not Logged in', [
       new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
@@ -674,8 +678,8 @@ export function loadComponentSchemas(): ComponentSchema[] {
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
-    headerNotLoggedInSchema, headerLoggedInSchema, footerSchema,
-    heroNotLoggedInSchema, heroLoggedInNoEventSchema,
+    inputFieldSchema, headerNotLoggedInSchema, headerLoggedInSchema,
+    footerSchema, heroNotLoggedInSchema, heroLoggedInNoEventSchema,
     heroLoggedInWithEventSchema, diningEventCardSchema, albumCardSchema,
     userUpcomingEventsSummarySchema, exploreEventsSummaryEmptySchema,
     exploreEventsSummarySchema, albumSummarySchema, partnerWithUsSummarySchema,
