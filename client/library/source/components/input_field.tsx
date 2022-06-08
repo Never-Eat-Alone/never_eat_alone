@@ -3,7 +3,7 @@ import * as React from 'react';
 
 interface InputFieldProperties extends React.InputHTMLAttributes<
     HTMLInputElement> {
-  hasError: boolean;
+  hasError?: boolean;
 }
 
 export function InputField(props: InputFieldProperties) {
@@ -19,8 +19,8 @@ export function InputField(props: InputFieldProperties) {
 }
 
 interface InputFieldWithIconProperties extends InputFieldProperties {
-  iconSrc: string;
-  iconAlt: string;
+  iconSrc?: string;
+  iconAlt?: string;
 }
 
 export function InputFieldWithIcon(props: InputFieldWithIconProperties) {

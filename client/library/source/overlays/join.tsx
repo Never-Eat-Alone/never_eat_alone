@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CloseButton } from '../components';
+import { CloseButton, EmailInputField, NameInputField, InputField } from '../components';
 import { DisplayMode } from '../definitions';
 
 interface Properties {
@@ -10,7 +10,7 @@ interface Properties {
   onClose: () => void;
 }
 
-/** Displays the Join Overlay. */
+/** Displays the Join Modal. */
 export class Join extends React.Component<Properties> {
   public render(): JSX.Element {
     const containerStyle = (this.props.displayMode === DisplayMode.MOBILE &&
@@ -30,7 +30,13 @@ export class Join extends React.Component<Properties> {
           </div>
         </div>
         <div style={FORM_CONTAINER_STYLE} >
-          Fill the form
+          <div style={HEADING_STYLE} > Join NeverEatAlone!</div>
+          <div style={TEXT_STYLE} >
+            Fill in the form below to request your account.
+          </div>
+          <NameInputField style={NAME_FIELD_STYLE} />
+          <EmailInputField style={EMAIL_FIELD_STYLE} />
+          <InputField style={REFERRAL_FIELD_STYLE} />
         </div>
       </div>);
   }
@@ -108,4 +114,37 @@ const FORM_CONTAINER_STYLE: React.CSSProperties = {
   height: '100%',
   width: 'calc(100% - 277px)',
   backgroundColor: '#FFFFFF'
+};
+
+const HEADING_STYLE: React.CSSProperties = {
+  marginTop: '70px',
+  fontFamily: 'Oswald',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '30px',
+  lineHeight: '44px',
+  height: '44px',
+  color: '#000000'
+};
+
+const TEXT_STYLE: React.CSSProperties = {
+  marginTop: '5px',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#000000'
+};
+
+const NAME_FIELD_STYLE: React.CSSProperties = {
+  marginTop: '40px'
+};
+
+const EMAIL_FIELD_STYLE: React.CSSProperties = {
+  marginTop: '30px'
+};
+
+const REFERRAL_FIELD_STYLE: React.CSSProperties = {
+  marginTop: '30px'
 };
