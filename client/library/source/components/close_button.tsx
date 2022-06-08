@@ -17,11 +17,11 @@ export class CloseButton extends React.Component<Properties> {
           >
             <circle opacity='inherit' cx='12' cy='12' r='12' fill='currentColor'
             />
-            <path d='M6 6L18 18' stroke='white' stroke-width='2'
-              stroke-miterlimit='10' stroke-linecap='round'
+            <path d='M6 6L18 18' stroke='white' strokeWidth='2'
+              strokeMiterlimit='10' strokeLinecap='round'
             />
-            <path d='M18 6L6 18' stroke='white' stroke-width='2'
-              stroke-miterlimit='10' stroke-linecap='round'
+            <path d='M18 6L6 18' stroke='white' strokeWidth='2'
+              strokeMiterlimit='10' strokeLinecap='round'
             />
           </svg>
         </button>);
@@ -32,12 +32,12 @@ export class CloseButton extends React.Component<Properties> {
             className={css(styles.icon)}
         >
           <path d='M1.6001 1.59998L14.4001 14.4' stroke='currentColor'
-            stroke-width='2' stroke-miterlimit='10' stroke-linecap='round'
-            stroke-linejoin='round'
+            strokeWidth='2' strokeMiterlimit='10' strokeLinecap='round'
+            strokeLinejoin='round'
           />
           <path d='M14.4001 1.59998L1.6001 14.4' stroke='currentColor'
-            stroke-width='2' stroke-miterlimit='10' stroke-linecap='round'
-            stroke-linejoin='round'
+            strokeWidth='2' strokeMiterlimit='10' strokeLinecap='round'
+            strokeLinejoin='round'
           />
         </svg>
       </button>);

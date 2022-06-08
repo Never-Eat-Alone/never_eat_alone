@@ -681,7 +681,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('name', '', TextInput),
     new PropertySchema('email', '', TextInput),
     new PropertySchema('referral code', '', TextInput),
-    ], [], NeverEatAlone.Join);
+    ], [new SignalSchema('onClose', '', [])], NeverEatAlone.Join);
   const closeButtonSchema = new ComponentSchema('Close Button', [
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
       DisplayModeInput)
