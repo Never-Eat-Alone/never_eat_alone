@@ -681,7 +681,12 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('name', '', TextInput),
     new PropertySchema('email', '', TextInput),
     new PropertySchema('referral code', '', TextInput),
-  ], [], NeverEatAlone.Join);
+    ], [], NeverEatAlone.Join);
+  const closeButtonSchema = new ComponentSchema('Close Button', [
+    new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
+      DisplayModeInput)
+  ], [] ,
+    NeverEatAlone.CloseButton);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
@@ -690,5 +695,6 @@ export function loadComponentSchemas(): ComponentSchema[] {
     heroLoggedInWithEventSchema, diningEventCardSchema, albumCardSchema,
     userUpcomingEventsSummarySchema, exploreEventsSummaryEmptySchema,
     exploreEventsSummarySchema, albumSummarySchema, partnerWithUsSummarySchema,
-    homePageNotLoggedSchema, homePageLoggedInSchema, joinModalSchema];
+    homePageNotLoggedSchema, homePageLoggedInSchema, joinModalSchema,
+    closeButtonSchema];
 }
