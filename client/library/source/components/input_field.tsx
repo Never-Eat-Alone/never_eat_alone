@@ -7,13 +7,10 @@ interface InputFieldProperties extends React.InputHTMLAttributes<
   disabled: boolean;
   iconSrc: string;
   iconAlt: string;
-  iconStyle: React.CSSProperties;
-  iconContainerStyle: React.CSSProperties;
 }
 
 export function InputField(props: InputFieldProperties) {
-  const { hasError, iconSrc, iconAlt, iconStyle, iconContainerStyle, style,
-    ...rest } = props;
+  const { hasError, iconSrc, iconAlt, style, ...rest } = props;
   return (
     <div
         style={{...CONTAINER_STYLE,
@@ -23,9 +20,9 @@ export function InputField(props: InputFieldProperties) {
         className={rest.disabled && css(styles.disabled) ||
           css(styles.inputContainer)}
     >
-      <div style={{...ICON_CONTAINER_STYLE, ...iconContainerStyle}} >
+      <div style={ICON_CONTAINER_STYLE} >
         <img
-          style={iconStyle}
+          style={ICON_STYLE}
           src={iconSrc}
           alt={iconAlt}
         />
@@ -42,8 +39,6 @@ export function EmailInputField(props: InputFieldProperties) {
       name='email'
       iconSrc='resources/input_field/icons/email.svg'
       iconAlt='Email Icon'
-      iconStyle={EMAIL_ICON_STYLE}
-      iconContainerStyle={EMAIL_ICON_CONTAINER_STYLE}
     />);
 }
 
@@ -55,17 +50,15 @@ export function NameInputField(props: InputFieldProperties) {
       name='name'
       iconSrc='resources/input_field/icons/name.svg'
       iconAlt='Name Icon'
-      iconStyle={NAME_ICON_STYLE}
-      iconContainerStyle={NAME_ICON_CONTAINER_STYLE}
     />);
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'center',
-  boxSizing: 'border-box',
   backgroundColor: '#FFFFFF',
   borderRadius: '4px',
   border: '1px solid #CCCCCC',
@@ -76,6 +69,7 @@ const CONTAINER_STYLE: React.CSSProperties = {
 };
 
 const INPUT_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
   fontWeight: 400,
@@ -94,34 +88,19 @@ const INPUT_STYLE: React.CSSProperties = {
 
 const ICON_CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
-  display: 'felx',
+  display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
-  width: '40px',
-  height: '100%'
+  height: '100%',
+  minWidth: '39px'
 };
 
-const EMAIL_ICON_CONTAINER_STYLE: React.CSSProperties = {
-  padding: '8px 10px'
-};
-
-const EMAIL_ICON_STYLE: React.CSSProperties = {
+const ICON_STYLE: React.CSSProperties = {
   width: '20px',
   height: '20px',
-  minWidth: '20px',
-  backgroundColor: 'transparent'
-};
-
-const NAME_ICON_CONTAINER_STYLE: React.CSSProperties = {
-  padding: '9px 10px'
-};
-
-const NAME_ICON_STYLE: React.CSSProperties = {
-  width: '20px',
-  height: '20px',
-  minWidth: '20px',
-  backgroundColor: 'transparent'
+  backgroundColor: 'transparent',
+  overflow: 'hidden'
 };
 
 const styles = StyleSheet.create({

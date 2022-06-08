@@ -47,6 +47,14 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('iconStyle', {}, CSSInput),
     new PropertySchema('iconContainerStyle', {}, CSSInput)
   ], [], NeverEatAlone.EmailInputField);
+  const nameInputFieldSchema = new ComponentSchema('Name Inputfield', [
+    new PropertySchema('iconSrc', '', TextInput),
+    new PropertySchema('iconAlt', '', TextInput),
+    new PropertySchema('hasError', false, BooleanInput),
+    new PropertySchema('disabled', false, BooleanInput),
+    new PropertySchema('iconStyle', {}, CSSInput),
+    new PropertySchema('iconContainerStyle', {}, CSSInput)
+  ], [], NeverEatAlone.NameInputField);
   const headerNotLoggedInSchema = new ComponentSchema(
     'Header Not Logged in', [
       new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
@@ -665,11 +673,11 @@ export function loadComponentSchemas(): ComponentSchema[] {
     [new SignalSchema('onJoinButton', '', [])], NeverEatAlone.HomePage);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
-    whiteNavLinkSchema, emailInputFieldSchema, headerNotLoggedInSchema,
-    headerLoggedInSchema, footerSchema, heroNotLoggedInSchema,
-    heroLoggedInNoEventSchema, heroLoggedInWithEventSchema,
-    diningEventCardSchema, albumCardSchema, userUpcomingEventsSummarySchema,
-    exploreEventsSummaryEmptySchema, exploreEventsSummarySchema,
-    albumSummarySchema, partnerWithUsSummarySchema, homePageNotLoggedSchema,
-    homePageLoggedInSchema];
+    whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
+    headerNotLoggedInSchema, headerLoggedInSchema, footerSchema,
+    heroNotLoggedInSchema, heroLoggedInNoEventSchema,
+    heroLoggedInWithEventSchema, diningEventCardSchema, albumCardSchema,
+    userUpcomingEventsSummarySchema, exploreEventsSummaryEmptySchema,
+    exploreEventsSummarySchema, albumSummarySchema, partnerWithUsSummarySchema,
+    homePageNotLoggedSchema, homePageLoggedInSchema];
 }
