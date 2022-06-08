@@ -12,8 +12,8 @@ interface InputFieldProperties extends React.InputHTMLAttributes<
 }
 
 export function InputField(props: InputFieldProperties) {
-  const { hasError, iconSrc, iconAlt, iconStyle,
-    iconContainerStyle, style, ...rest } = props;
+  const { hasError, iconSrc, iconAlt, iconStyle, iconContainerStyle, style,
+    ...rest } = props;
   return (
     <div
         style={{...CONTAINER_STYLE,
@@ -44,6 +44,19 @@ export function EmailInputField(props: InputFieldProperties) {
       iconAlt='Email Icon'
       iconStyle={EMAIL_ICON_STYLE}
       iconContainerStyle={EMAIL_ICON_CONTAINER_STYLE}
+    />);
+}
+
+export function NameInputField(props: InputFieldProperties) {
+  return (
+    <InputField
+      {...props}
+      type='text'
+      name='name'
+      iconSrc='resources/input_field/icons/name.svg'
+      iconAlt='Name Icon'
+      iconStyle={NAME_ICON_STYLE}
+      iconContainerStyle={NAME_ICON_CONTAINER_STYLE}
     />);
 }
 
@@ -94,6 +107,17 @@ const EMAIL_ICON_CONTAINER_STYLE: React.CSSProperties = {
 };
 
 const EMAIL_ICON_STYLE: React.CSSProperties = {
+  width: '20px',
+  height: '20px',
+  minWidth: '20px',
+  backgroundColor: 'transparent'
+};
+
+const NAME_ICON_CONTAINER_STYLE: React.CSSProperties = {
+  padding: '9px 10px'
+};
+
+const NAME_ICON_STYLE: React.CSSProperties = {
   width: '20px',
   height: '20px',
   minWidth: '20px',
