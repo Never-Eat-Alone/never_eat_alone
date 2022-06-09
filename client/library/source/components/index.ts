@@ -23,6 +23,7 @@ export * from './nav_link';
 export * from './partner_with_us_summary';
 export * from './profile_menu';
 export * from './profile_round_button';
+export * from './sign_up_page';
 export * from './text_button';
 export * from './twitter_button';
 export * from './user_upcoming_events_summary';
