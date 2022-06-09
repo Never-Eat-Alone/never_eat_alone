@@ -5,14 +5,32 @@ import { DisplayMode } from '../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
+
+  /** Represents the name inputfield value. */
   name?: string;
+
+  /** Represents the email input field value. */
   email?: string;
+
+  /** Represents a member's name, username or referral link. */
   referralCode?: string;
+
+  /** represents the name inputfield error message. */
   nameErrorMessage?: string;
+
+  /** represents the email inputfield error message. */
   emailErrorMessage?: string;
+
+  /** Indicates whether the name inputfield has an error or not. */
   nameHasError: boolean;
+
+  /** Indicates whether the email inputfield has an error or not. */
   emailHasError: boolean;
+
+  /** Indicates the close button is clicked. */
   onClose: () => void;
+
+  /** Indicates the Request Join button is clicked. */
   onRequestJoin: () => void;
 }
 
