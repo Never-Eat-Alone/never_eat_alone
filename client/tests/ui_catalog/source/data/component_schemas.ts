@@ -675,7 +675,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
         'yellow'), EventCardSummaryInput)))
     ],
     [new SignalSchema('onJoinButton', '', [])], NeverEatAlone.HomePage);
-  const joinModalSchema = new ComponentSchema('Join Overlay' , [
+  const joinModalSchema = new ComponentSchema('JoinModal' , [
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
       DisplayModeInput),
     new PropertySchema('name', '', TextInput),
@@ -690,6 +690,10 @@ export function loadComponentSchemas(): ComponentSchema[] {
   const closeButtonSchema = new ComponentSchema('Close Button', [
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
       DisplayModeInput)], [] , NeverEatAlone.CloseButton);
+  const JoinRequestSentModalSchema = new ComponentSchema('JoinRequestSentModal',
+    [new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
+    DisplayModeInput), new PropertySchema('email', 'foo@gmail.com', TextInput)],
+    [new SignalSchema('onClose', '', [])], NeverEatAlone.JoinRequestSentModal);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
@@ -699,5 +703,5 @@ export function loadComponentSchemas(): ComponentSchema[] {
     userUpcomingEventsSummarySchema, exploreEventsSummaryEmptySchema,
     exploreEventsSummarySchema, albumSummarySchema, partnerWithUsSummarySchema,
     homePageNotLoggedSchema, homePageLoggedInSchema, joinModalSchema,
-    closeButtonSchema];
+    closeButtonSchema, JoinRequestSentModalSchema];
 }
