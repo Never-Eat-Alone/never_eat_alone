@@ -680,13 +680,16 @@ export function loadComponentSchemas(): ComponentSchema[] {
       DisplayModeInput),
     new PropertySchema('name', '', TextInput),
     new PropertySchema('email', '', TextInput),
-    new PropertySchema('referral code', '', TextInput),
-    ], [new SignalSchema('onClose', '', [])], NeverEatAlone.Join);
+    new PropertySchema('referralCode', '', TextInput),
+    new PropertySchema('nameHasError', false, BooleanInput),
+    new PropertySchema('emailHasError', false, BooleanInput),
+    new PropertySchema('nameErrorMessage', '', TextInput),
+    new PropertySchema('emailErrorMessage', '', TextInput),
+    ], [new SignalSchema('onClose', '', []), new SignalSchema('onRequestJoin',
+    '', [])], NeverEatAlone.JoinModal);
   const closeButtonSchema = new ComponentSchema('Close Button', [
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
-      DisplayModeInput)
-  ], [] ,
-    NeverEatAlone.CloseButton);
+      DisplayModeInput)], [] , NeverEatAlone.CloseButton);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
