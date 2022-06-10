@@ -3,6 +3,9 @@ import { DisplayMode } from '../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
+
+  /** The email user requested an account for. */
+  email: string;
 }
 
 export class SignUpPage extends React.Component<Properties> {
@@ -19,6 +22,13 @@ export class SignUpPage extends React.Component<Properties> {
               />
             </div>
             <div style={TITLE_STYLE} >Welcome to NEA!</div>
+            <div style={DESCRIPTION_TEXT} >
+              Your email for login is: {this.props.email}<br /><br />
+              You’re almost done! Just set a password to create your account.
+            </div>
+            <div style={PASSWORD_TITLE_STYLE} >Your Password:</div>
+            <div>Password input field</div>
+            <div style={CONFIRM_TITLE_STYLE} >Confirm Password:</div>
           </div>
         </div>
       </div>);
@@ -56,7 +66,8 @@ const CONTENT_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
-  alignItems: 'center'
+  alignItems: 'center',
+  width: '370px'
 };
 
 const ICON_CONTAINER_STYLE: React.CSSProperties = {
@@ -82,6 +93,25 @@ const TITLE_STYLE: React.CSSProperties = {
   fontSize: '26px',
   lineHeight: '39px',
   height: '39px',
-  color: '#000000'
+  color: '#000000',
+  textTransform: 'capitalize'
 };
 
+const DESCRIPTION_TEXT: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  textAlign: 'center',
+  color: '#000000',
+  marginTop: '15px'
+};
+
+const PASSWORD_TITLE_STYLE: React.CSSProperties = {
+  marginTop: '20px'
+};
+
+const CONFIRM_TITLE_STYLE: React.CSSProperties = {
+  marginTop: '30px'
+};
