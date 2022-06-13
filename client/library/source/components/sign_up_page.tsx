@@ -1,19 +1,30 @@
 import * as React from 'react';
+import { PrimaryTextButton } from '../components';
 import { DisplayMode } from '../definitions';
+import { RedNavLink } from './nav_link';
+import { PasswordInputField } from './input_field';
 
 interface Properties {
   displayMode: DisplayMode;
 
   /** The email user requested an account for. */
   email: string;
+
+  /** Indicates the sign up button is clicked. */
+  onSignUp: () => void;
 }
 
 export class SignUpPage extends React.Component<Properties> {
   public render(): JSX.Element {
-    return (
-      <div style={CONTAINER_STYLE} >
-        <div style={CONTENT_CONTAINER_STYLE} >
-          <div style={CONTENT_STYLE} >
+    const containerStyle = (this.props.displayMode === DisplayMode.MOBILE &&
+      MOBILE_CONTENT_CONTAINER_STYLE || CONTENT_CONTAINER_STYLE);
+    const contentStyle = (this.props.displayMode === DisplayMode.MOBILE &&
+      MOBILE_CONTENT_STYLE || CONTENT_STYLE);
+    const content = ((containerStyle: React.CSSProperties,
+        contentStyle: React.CSSProperties) => {
+      return (
+        <div style={containerStyle} >
+          <div style={contentStyle} >
             <div style={ICON_CONTAINER_STYLE} >
               <img
                 style={EMAIL_ICON_STYLE}
@@ -26,11 +37,35 @@ export class SignUpPage extends React.Component<Properties> {
               Your email for login is: {this.props.email}<br /><br />
               You’re almost done! Just set a password to create your account.
             </div>
-            <div style={PASSWORD_TITLE_STYLE} >Your Password:</div>
-            <div>Password input field</div>
-            <div style={CONFIRM_TITLE_STYLE} >Confirm Password:</div>
+            <div style={PASSWORD_CONTAINER_STYLE} >
+              <div style={PASSWORD_TITLE_STYLE} >Your Password:</div>
+              <PasswordInputField
+                placeholder='Your Password (8 characters min.)' />
+              <div style={CONFIRM_TITLE_STYLE} >Confirm Password:</div>
+              <PasswordInputField placeholder='Confirm Password' />
+            </div>
+            <PrimaryTextButton
+              style={SIGN_UP_BUTTON_STYLE}
+              label='Sign Up'
+              onClick={this.props.onSignUp}
+            />
+            <div style={TERMS_CONTAINER_STYLE} >
+              By clicking “Sign Up,” you agree to NeverEatAlone’s&nbsp;
+              <RedNavLink style={LINK_STYLE} to='/terms_of_service'
+                label='Terms of Service' />
+              &nbsp;and&nbsp;
+              <RedNavLink style={LINK_STYLE} to='/privacy_policy'
+                label='Privacy Policy' />.
+            </div>
           </div>
-        </div>
+        </div>);
+    })(containerStyle, contentStyle);
+    if (this.props.displayMode === DisplayMode.MOBILE) {
+      return content;
+    }
+    return (
+      <div style={CONTAINER_STYLE} >
+        {content}
       </div>);
   }
 }
@@ -55,11 +90,24 @@ const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
-  width: '100%',
-  height: '100%',
   backgroundColor: '#FFFFFF',
   boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
-  borderRadius: '4px'
+  borderRadius: '4px',
+  padding: '50px 100px'
+};
+
+const MOBILE_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: '#FFFFFF',
+  boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
+  borderRadius: '4px',
+  width: '100%',
+  height: '100%',
+  padding: '50px 30px'
 };
 
 const CONTENT_STYLE: React.CSSProperties = {
@@ -67,7 +115,15 @@ const CONTENT_STYLE: React.CSSProperties = {
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'center',
-  width: '370px'
+  width: '310px'
+};
+
+const MOBILE_CONTENT_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  width: '100%'
 };
 
 const ICON_CONTAINER_STYLE: React.CSSProperties = {
@@ -94,7 +150,7 @@ const TITLE_STYLE: React.CSSProperties = {
   lineHeight: '39px',
   height: '39px',
   color: '#000000',
-  textTransform: 'capitalize'
+  textTransform: 'uppercase'
 };
 
 const DESCRIPTION_TEXT: React.CSSProperties = {
@@ -108,10 +164,69 @@ const DESCRIPTION_TEXT: React.CSSProperties = {
   marginTop: '15px'
 };
 
+const PASSWORD_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  width: '100%'
+};
+
 const PASSWORD_TITLE_STYLE: React.CSSProperties = {
-  marginTop: '20px'
+  marginTop: '20px',
+  height: '18px',
+  width: '100%',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#000000',
+  marginBottom: '5px'
 };
 
 const CONFIRM_TITLE_STYLE: React.CSSProperties = {
-  marginTop: '30px'
+  marginTop: '30px',
+  height: '18px',
+  width: '100%',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#000000',
+  marginBottom: '5px'
+};
+
+const SIGN_UP_BUTTON_STYLE: React.CSSProperties = {
+  width: '100%',
+  height: '35px',
+  marginTop: '20px'
+};
+
+const TERMS_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  flexWrap: 'wrap',
+  width: '100%',
+  height: '26px',
+  marginTop: '20px',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '10px',
+  lineHeight: '13px',
+  textAlign: 'center',
+  color: '#000000',
+  whiteSpace: 'pre-wrap'
+};
+
+const LINK_STYLE: React.CSSProperties = {
+  height: '13px',
+  lineHeight: '13px',
+  fontWeight: 400,
+  width: 'auto',
+  fontSize: '10px'
 };

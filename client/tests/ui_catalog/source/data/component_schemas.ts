@@ -40,12 +40,8 @@ export function loadComponentSchemas(): ComponentSchema[] {
       new PropertySchema('className', '', TextInput)], [],
     NeverEatAlone.WhiteNavLink);
   const emailInputFieldSchema = new ComponentSchema('Email Inputfield', [
-    new PropertySchema('iconSrc', '', TextInput),
-    new PropertySchema('iconAlt', '', TextInput),
     new PropertySchema('hasError', false, BooleanInput),
-    new PropertySchema('disabled', false, BooleanInput),
-    new PropertySchema('iconStyle', {}, CSSInput),
-    new PropertySchema('iconContainerStyle', {}, CSSInput)
+    new PropertySchema('disabled', false, BooleanInput)
   ], [], NeverEatAlone.EmailInputField);
   const nameInputFieldSchema = new ComponentSchema('Name Inputfield', [
     new PropertySchema('iconSrc', '', TextInput),
@@ -696,7 +692,8 @@ export function loadComponentSchemas(): ComponentSchema[] {
     [new SignalSchema('onClose', '', [])], NeverEatAlone.JoinRequestSentModal);
   const signUpPageSchema = new ComponentSchema('SignUpPage', [
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
-    DisplayModeInput)], [], NeverEatAlone.SignUpPage);
+    DisplayModeInput), new PropertySchema('email', 'sh@gmail.com', TextInput)],
+    [], NeverEatAlone.SignUpPage);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
