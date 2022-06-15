@@ -1,24 +1,30 @@
 import * as React from 'react';
 
 interface Properties {
-  /** The entered password by the user. */
-  password: string;
+  /** The score of the password strength. */
+  score: number;
+
+  /** Indicates the password has at least one uppercase character. */
+  hasUpperCase: boolean;
+
+  /** Indicates the password has at least one lowercase character. */
+  hasLowerCase: boolean;
+
+  /** Indicates the password has at least a number. */
+  hasNumber: boolean;
+
+  /** Indicates the password has at least one special character. */
+  hasSpecialCharacter: boolean;
+
+  /** Indicates the password is at least 8 characters long. */
+  hasMin8Character: boolean;
 
   style?: React.CSSProperties;
 }
 
 export class PasswordAnalyzer extends React.Component<Properties> {
-  constructor(props: Properties) {
-    super(props);
-    this._hasLowerCase = false;
-    this._hasUpperCase = false;
-    this._hasMin8Character = false;
-    this._hasNumber = false;
-    this._hasSpecialCharacter = false;
-  }
-
   public render(): JSX.Element {
-    const score = this.getScore(this.props.password);
+    const score = this.props.score;
     const { bars, message } = (() => {
       if (score === 0) {
         return ({
@@ -108,16 +114,18 @@ export class PasswordAnalyzer extends React.Component<Properties> {
         });
       }
     })();
-    const min8ImageSrc = (this._hasMin8Character &&
+    const min8ImageSrc = (this.props.hasMin8Character &&
       'resources/password_analyzer/icons/check.svg' ||
       'resources/password_analyzer/icons/cross.svg');
-    const lettersAndNumbersImageSrc = (this._hasNumber && (this._hasLowerCase
-      || this._hasUpperCase) && 'resources/password_analyzer/icons/check.svg' ||
-      'resources/password_analyzer/icons/cross.svg');
-    const specialCharacterImageSrc = (this._hasSpecialCharacter &&
+    const lettersAndNumbersImageSrc = (this.props.hasNumber && (
+      this.props.hasLowerCase || this.props.hasUpperCase) &&
       'resources/password_analyzer/icons/check.svg' ||
       'resources/password_analyzer/icons/cross.svg');
-    const upperAndLowerImageSrc = (this._hasLowerCase && this._hasUpperCase &&
+    const specialCharacterImageSrc = (this.props.hasSpecialCharacter &&
+      'resources/password_analyzer/icons/check.svg' ||
+      'resources/password_analyzer/icons/cross.svg');
+    const upperAndLowerImageSrc = (this.props.hasLowerCase &&
+      this.props.hasUpperCase &&
       'resources/password_analyzer/icons/check.svg' ||
       'resources/password_analyzer/icons/cross.svg');
     return (
@@ -169,37 +177,6 @@ export class PasswordAnalyzer extends React.Component<Properties> {
         </div>
       </div>);
   }
-
-  private getScore = (text: string) => {
-    let score = 0;
-    if (/\d/.test(text)) {
-      score += 1;
-      this._hasNumber = true;
-    }
-    if (/[A-Z]/.test(text)) {
-      score += 1;
-      this._hasUpperCase = true;
-    }
-    if (/[^\w]|_/.test(text)) {
-      score += 1;
-      this._hasSpecialCharacter = true;
-    }
-    if (/[a-z]/.test(text)) {
-      score += 1;
-      this._hasLowerCase = true;
-    }
-    if (text.length >= 8) {
-      score += 1;
-      this._hasMin8Character = true;
-    }
-    return score;
-  };
-
-  private _hasUpperCase: boolean;
-  private _hasNumber: boolean;
-  private _hasLowerCase: boolean;
-  private _hasMin8Character: boolean;
-  private _hasSpecialCharacter: boolean;
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {
