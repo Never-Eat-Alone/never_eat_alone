@@ -692,8 +692,9 @@ export function loadComponentSchemas(): ComponentSchema[] {
     [new SignalSchema('onClose', '', [])], NeverEatAlone.JoinRequestSentModal);
   const signUpPageSchema = new ComponentSchema('SignUpPage', [
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
-    DisplayModeInput), new PropertySchema('email', 'sh@gmail.com', TextInput)],
-    [], NeverEatAlone.SignUpPage);
+    DisplayModeInput), new PropertySchema('email', 'sh@gmail.com', TextInput),
+    new PropertySchema('password', '', TextInput), new PropertySchema('style',
+    {}, CSSInput)], [], NeverEatAlone.SignUpPage);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,

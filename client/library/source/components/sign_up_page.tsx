@@ -3,6 +3,7 @@ import { PrimaryTextButton } from '../components';
 import { DisplayMode } from '../definitions';
 import { RedNavLink } from './nav_link';
 import { PasswordInputField } from './input_field';
+import { PasswordAnalyzer } from './password_analyzer';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -10,11 +11,25 @@ interface Properties {
   /** The email user requested an account for. */
   email: string;
 
+  /** The password user entered. */
+  password: string;
+
   /** Indicates the sign up button is clicked. */
   onSignUp: () => void;
 }
 
-export class SignUpPage extends React.Component<Properties> {
+interface State {
+  password: string;
+}
+
+export class SignUpPage extends React.Component<Properties, State> {
+  constructor(props: Properties) {
+    super(props);
+    this.state = {
+      password: this.props.password || ''
+    };
+  }
+
   public render(): JSX.Element {
     const containerStyle = (this.props.displayMode === DisplayMode.MOBILE &&
       MOBILE_CONTENT_CONTAINER_STYLE || CONTENT_CONTAINER_STYLE);
@@ -40,7 +55,12 @@ export class SignUpPage extends React.Component<Properties> {
             <div style={PASSWORD_CONTAINER_STYLE} >
               <div style={PASSWORD_TITLE_STYLE} >Your Password:</div>
               <PasswordInputField
-                placeholder='Your Password (8 characters min.)' />
+                placeholder='Your Password (8 characters min.)'
+                onChange={this.handlePasswordChange}
+              />
+              <PasswordAnalyzer password={this.state.password}
+                style={PASSWORD_ANALYZER_STYLE}
+              />
               <div style={CONFIRM_TITLE_STYLE} >Confirm Password:</div>
               <PasswordInputField placeholder='Confirm Password' />
             </div>
@@ -67,6 +87,11 @@ export class SignUpPage extends React.Component<Properties> {
       <div style={CONTAINER_STYLE} >
         {content}
       </div>);
+  }
+
+  private handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>
+      ) => {
+    this.setState({ password: event.target.value });
   }
 }
 
@@ -229,4 +254,9 @@ const LINK_STYLE: React.CSSProperties = {
   fontWeight: 400,
   width: 'auto',
   fontSize: '10px'
+};
+
+const PASSWORD_ANALYZER_STYLE: React.CSSProperties = {
+  marginTop: '7px',
+  marginBottom: '30px'
 };
