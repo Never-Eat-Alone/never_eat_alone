@@ -30,6 +30,15 @@ export function WhiteNavLink(props: Properties) {
     />);
 }
 
+export function RedNavLink(props: Properties) {
+  return (
+    <NavLink
+      {...props}
+      style={{...RED_LINK_STYLE, ...props.style}}
+      className={css(styles.redNavLink)}
+    />);
+}
+
 const LINK_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
@@ -65,6 +74,15 @@ const WHITE_LINK_STYLE: React.CSSProperties = {
   height: '17px'
 };
 
+const RED_LINK_STYLE: React.CSSProperties = {
+  width: '74px',
+  height: '15px',
+  fontWeight: 400,
+  fontSize: '12px',
+  lineHeight: '15px',
+  color: '#F26B55'
+};
+
 const styles = StyleSheet.create({
   whiteNavLink: {
     ':hover': {
@@ -82,6 +100,24 @@ const styles = StyleSheet.create({
     ':active': {
       textDecoration: 'underline solid #EFEFEF 1px',
       color: '#EFEFEF'
+    }
+  },
+  redNavLink: {
+    ':hover': {
+      textDecoration: 'underline solid #F26B55 1px',
+      color: '#F26B55'
+    },
+    ':focus': {
+      textDecoration: 'underline solid #F26B55 1px',
+      color: '#F26B55'
+    },
+    ':focus-within': {
+      textDecoration: 'underline solid #F26B55 1px',
+      color: '#F26B55'
+    },
+    ':active': {
+      textDecoration: 'underline solid #AA2F19 1px',
+      color: '#AA2F19'
     }
   }
 });

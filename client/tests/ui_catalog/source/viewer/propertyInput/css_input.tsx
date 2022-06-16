@@ -41,7 +41,7 @@ export class CSSInput extends React.Component<Properties, State> {
 
   private onBlur = () => {
     try {
-      const css = JSON.parse(this.state.localValue);
+      const css = JSON.parse(this.state.localValue) as React.CSSProperties;
       this.props.update(css);
     } catch (error) {
       this.setState({localValue: JSON.stringify(this.props.value)});

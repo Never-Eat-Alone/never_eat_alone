@@ -1,8 +1,8 @@
 import * as NeverEatAlone from 'never_eat_alone';
 import { ArrayInput, BooleanInput, CSSInput, CuisineInput, DateInput,
   DisplayModeInput, EventCardSummaryInput, EventTagInput,
-  HomePageErrorCodeInput, NumberInput, SocialMediaImageInput, TextInput,
-  UserInput } from '../viewer/propertyInput';
+  HomePageErrorCodeInput, NumberInput, SignUpPageErrorCodeInput,
+  SocialMediaImageInput, TextInput, UserInput } from '../viewer/propertyInput';
 import { ComponentSchema, PropertySchema, SignalSchema } from './schemas';
 
 /** Loads the complete list of schemas available to test. */
@@ -40,12 +40,8 @@ export function loadComponentSchemas(): ComponentSchema[] {
       new PropertySchema('className', '', TextInput)], [],
     NeverEatAlone.WhiteNavLink);
   const emailInputFieldSchema = new ComponentSchema('Email Inputfield', [
-    new PropertySchema('iconSrc', '', TextInput),
-    new PropertySchema('iconAlt', '', TextInput),
     new PropertySchema('hasError', false, BooleanInput),
-    new PropertySchema('disabled', false, BooleanInput),
-    new PropertySchema('iconStyle', {}, CSSInput),
-    new PropertySchema('iconContainerStyle', {}, CSSInput)
+    new PropertySchema('disabled', false, BooleanInput)
   ], [], NeverEatAlone.EmailInputField);
   const nameInputFieldSchema = new ComponentSchema('Name Inputfield', [
     new PropertySchema('iconSrc', '', TextInput),
@@ -694,6 +690,16 @@ export function loadComponentSchemas(): ComponentSchema[] {
     [new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
     DisplayModeInput), new PropertySchema('email', 'foo@gmail.com', TextInput)],
     [new SignalSchema('onClose', '', [])], NeverEatAlone.JoinRequestSentModal);
+  const signUpPageSchema = new ComponentSchema('SignUpPage', [
+    new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
+    DisplayModeInput),
+    new PropertySchema('email', 'sh@gmail.com', TextInput),
+    new PropertySchema('password', '', TextInput),
+    new PropertySchema('confirmPassword', '', TextInput),
+    new PropertySchema('errorCode', NeverEatAlone.SignUpPage.ErrorCode.NONE,
+    SignUpPageErrorCodeInput), new PropertySchema('style', {}, CSSInput)], [
+    new SignalSchema('onSignUp', '', [])],
+    NeverEatAlone.SignUpPage);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
@@ -703,5 +709,5 @@ export function loadComponentSchemas(): ComponentSchema[] {
     userUpcomingEventsSummarySchema, exploreEventsSummaryEmptySchema,
     exploreEventsSummarySchema, albumSummarySchema, partnerWithUsSummarySchema,
     homePageNotLoggedSchema, homePageLoggedInSchema, joinModalSchema,
-    closeButtonSchema, JoinRequestSentModalSchema];
+    closeButtonSchema, JoinRequestSentModalSchema, signUpPageSchema];
 }

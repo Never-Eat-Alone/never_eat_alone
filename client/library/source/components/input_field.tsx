@@ -64,6 +64,94 @@ export function NameInputField(props: InputFieldWithIconProperties) {
     />);
 }
 
+interface PasswordState {
+  isPasswordHidden: boolean;
+  isCapsOn: boolean;
+}
+
+export class PasswordInputField extends React.Component<InputFieldProperties,
+    PasswordState> {
+  public constructor(props: InputFieldProperties) {
+    super(props);
+    this.state = {
+      isPasswordHidden: true,
+      isCapsOn: false
+    };
+  }
+
+  public render(): JSX.Element {
+    const { hasError, style, ...rest } = this.props;
+    const type = this.state.isPasswordHidden && 'password' || 'text';
+    const eyeIconSrc = (this.state.isPasswordHidden &&
+      'resources/input_field/icons/hide.svg' ||
+      'resources/input_field/icons/show.svg');
+    const icons = (() => {
+      if (this.state.isCapsOn) {
+        return (
+          <div style={TWO_ICON_CONTAINER_STYLE} >
+            <img
+              style={ICON_STYLE}
+              src='resources/input_field/icons/caps_lock.svg'
+              alt='Capslock Icon'
+            />
+            <img
+              style={ICON_STYLE}
+              src={eyeIconSrc}
+              alt='Hide Icon'
+              onClick={this.handleEyeIconClick}
+            />
+          </div>);
+      }
+      return (
+        <div style={ICON_CONTAINER_STYLE} onClick={this.handleEyeIconClick} >
+          <img
+            style={ICON_STYLE}
+            src={eyeIconSrc}
+            alt='Hide Icon'
+          />
+        </div>);
+    })();
+    return (
+      <div
+          style={{...CONTAINER_STYLE, ...CONTAINER_WITH_ICON_STYLE, ...style}}
+          className={rest.disabled && css(styles.disabled) ||
+            hasError && css(styles.hasError) || css(styles.container)}
+      >
+        <div style={ICON_CONTAINER_STYLE} >
+          <img
+            style={ICON_STYLE}
+            src='resources/input_field/icons/password.svg'
+            alt='Password Icon'
+          />
+        </div>
+        <input name='password' type={type} style={INPUT_STYLE}
+          className={css(styles.input)} {...rest} onKeyUp={this.handleKeyUp}
+          onKeyDown={this.handleKeyDown}
+        />
+        {icons}
+      </div>);
+  }
+
+  private handleEyeIconClick = () => {
+    this.setState({
+      isPasswordHidden: !this.state.isPasswordHidden
+    });
+  }
+
+  private handleKeyUp = (event: React.KeyboardEvent) => {
+    if (event.nativeEvent.code === 'CapsLock') {
+      this.setState({ isCapsOn: false });
+    }
+  }
+
+  private handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.nativeEvent.code === 'CapsLock' ||
+        event.getModifierState('CapsLock')) {
+      this.setState({ isCapsOn: true });
+    }
+  }
+}
+
 const CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
@@ -119,6 +207,17 @@ const ICON_STYLE: React.CSSProperties = {
   height: '20px',
   backgroundColor: 'transparent',
   overflow: 'hidden'
+};
+
+const TWO_ICON_CONTAINER_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '100%',
+  minWidth: '69px',
+  gap: '10px'
 };
 
 const styles = StyleSheet.create({
