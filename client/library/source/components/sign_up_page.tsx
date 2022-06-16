@@ -119,6 +119,7 @@ export class SignUpPage extends React.Component<Properties, State> {
             <div style={PASSWORD_CONTAINER_STYLE} >
               <div style={PASSWORD_TITLE_STYLE} >Your Password:</div>
               <PasswordInputField
+                style={INPUT_FIELD_STYLE}
                 placeholder='Your Password (8 characters min.)'
                 onChange={this.handlePasswordChange}
                 hasError={this.state.password.length === 0 &&
@@ -135,6 +136,7 @@ export class SignUpPage extends React.Component<Properties, State> {
               />
               <div style={CONFIRM_TITLE_STYLE} >Confirm Password:</div>
               <PasswordInputField
+                style={INPUT_FIELD_STYLE}
                 placeholder='Confirm Password'
                 onChange={this.handleConfirmChange}
                 hasError={(this.state.confirmPassword.length === 0 ||
@@ -306,6 +308,10 @@ const PASSWORD_TITLE_STYLE: React.CSSProperties = {
   lineHeight: '18px',
   color: '#000000',
   marginBottom: '5px'
+};
+
+const INPUT_FIELD_STYLE: React.CSSProperties = {
+  width: '100%'
 };
 
 const PASSWORD_ANALYZER_STYLE: React.CSSProperties = {
