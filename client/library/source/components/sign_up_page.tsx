@@ -76,8 +76,8 @@ export class SignUpPage extends React.Component<Properties, State> {
   }
 
   public render(): JSX.Element {
-    const containerStyle = (this.props.displayMode === DisplayMode.MOBILE &&
-      MOBILE_CONTENT_CONTAINER_STYLE || CONTENT_CONTAINER_STYLE);
+    const contentContainerStyle = (this.props.displayMode ===
+      DisplayMode.MOBILE && MOBILE_CONTAINER_STYLE || CONTENT_CONTAINER_STYLE);
     const contentStyle = (this.props.displayMode === DisplayMode.MOBILE &&
       MOBILE_CONTENT_STYLE || CONTENT_STYLE);
     const checks = getPasswordChecks(this.state.password,
@@ -99,10 +99,10 @@ export class SignUpPage extends React.Component<Properties, State> {
       }
       return '';
     })();
-    const content = ((containerStyle: React.CSSProperties,
+    const content = ((contentContainerStyle: React.CSSProperties,
         contentStyle: React.CSSProperties) => {
       return (
-        <div style={containerStyle} >
+        <div style={contentContainerStyle} >
           <div style={contentStyle} >
             <div style={ICON_CONTAINER_STYLE} >
               <img
@@ -156,15 +156,21 @@ export class SignUpPage extends React.Component<Properties, State> {
             />
             <div style={TERMS_CONTAINER_STYLE} >
               By clicking “Sign Up,” you agree to NeverEatAlone’s&nbsp;
-              <RedNavLink style={LINK_STYLE} to='/terms_of_service'
-                label='Terms of Service' />
+              <RedNavLink
+                style={LINK_STYLE}
+                to='/terms_of_service'
+                label='Terms of Service'
+              />
               &nbsp;and&nbsp;
-              <RedNavLink style={LINK_STYLE} to='/privacy_policy'
-                label='Privacy Policy' />.
+              <RedNavLink
+                style={LINK_STYLE}
+                to='/privacy_policy'
+                label='Privacy Policy'
+              />.
             </div>
           </div>
         </div>);
-    })(containerStyle, contentStyle);
+    })(contentContainerStyle, contentStyle);
     if (this.props.displayMode === DisplayMode.MOBILE) {
       return content;
     }
@@ -193,17 +199,19 @@ export namespace SignUpPage {
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
   height: '100%',
-  backgroundImage: 'url(resources/sign_up_page/illustrations/wave.svg)',
+  backgroundImage: 'url(resources/illustrations/wave.svg)',
   backgroundSize: 'cover',
   backgroundColor: '#F6F6F6',
   backgroundRepeat: 'no-repeat',
-  backgroundPosition: 'left center'
+  backgroundPosition: 'left center',
+  padding: '50px 100px'
 };
 
 const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
@@ -218,7 +226,7 @@ const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
   padding: '50px 100px'
 };
 
-const MOBILE_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
