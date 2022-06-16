@@ -129,7 +129,6 @@ const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
   boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
   borderRadius: '4px',
   width: '100%',
-  height: '100%',
   padding: '50px 30px'
 };
 
