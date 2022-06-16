@@ -703,7 +703,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
     DisplayModeInput),
     new PropertySchema('imageSrc',
-      'resources/profile_set_up_page/images/profile-image.svg', TextInput),
+      'resources/profile_set_up_page/icons/profile-image-0.svg', TextInput),
     new PropertySchema('displayName', '', TextInput)
     ], [new SignalSchema('onLetsGoClick', '', [])],
     NeverEatAlone.ProfileSetUpPage);

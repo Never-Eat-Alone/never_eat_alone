@@ -1,8 +1,15 @@
 import * as React from 'react';
 import { DisplayMode } from '../definitions';
+import { AccentTextButton, PrimaryTextButton } from './text_button';
 
 interface Properties {
   displayMode: DisplayMode;
+
+  /** The user display name entered when they requested an account. */
+  displayName: string;
+
+  /** Indicates the upload image button is clicked. */
+  onUploadImageClick: () => void;
 
   /** Indicates the let's go button is clicked. */
   onLetsGoClick: () => void;
@@ -17,15 +24,29 @@ export class ProfileSetUpPage extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props);
     this.state = {
-      imageSrc: 'resources/profile_set_up_page/images/profile-image.svg',
-      displayName: ''
+      imageSrc: 'resources/profile_set_up_page/icons/profile-image-0.svg',
+      displayName: this.props.displayName || ''
     };
   }
+
   public render(): JSX.Element {
     const contentContainerStyle = (this.props.displayMode ===
       DisplayMode.MOBILE && MOBILE_CONTAINER_STYLE || CONTENT_CONTAINER_STYLE);
     const contentStyle = (this.props.displayMode === DisplayMode.MOBILE &&
       MOBILE_CONTENT_STYLE || CONTENT_STYLE);
+    const avatars = [];
+    for (let i = 0; i < 20; ++i) {
+      const src = `resources/profile_set_up_page/icons/profile-image-${i}.svg`;
+      avatars.push(
+        <div key={`avatar-${i}`} style={ICON_CONTAINER_STYLE} >
+          <img
+            style={ICON_STYLE}
+            src={src}
+            alt='Avatar'
+            onClick={() => this.handleAvatarImageClick(src)}
+          />
+        </div>);
+    }
     const content = ((contentContainerStyle: React.CSSProperties,
         contentStyle: React.CSSProperties) => {
       return (
@@ -40,6 +61,18 @@ export class ProfileSetUpPage extends React.Component<Properties, State> {
               />
             </div>
             <div style={DISPLAY_NAME_STYLE} >{this.state.displayName}</div>
+            <div style={YOUR_NAME_TITLE_STYLE} >Your Display Name:</div>
+            <div>input field with counter {this.state.displayName} </div>
+            <div style={YOUR_PICTURE_TITLE_STYLE} >Your profile picture:</div>
+            <div style={AVATARS_CONTAINER_STYLE} >
+              {avatars}
+              <AccentTextButton
+                label='Upload an Image'
+                style={UPLOAD_IMAGE_BUTTON_STYLE}
+                onClick={this.props.onUploadImageClick}
+              />
+            </div>
+            <PrimaryTextButton label="Let’s go!" style={LETS_GO_BUTTON_STYLE} />
           </div>
         </div>);
     })(contentContainerStyle, contentStyle);
@@ -50,6 +83,11 @@ export class ProfileSetUpPage extends React.Component<Properties, State> {
       <div style={CONTAINER_STYLE} >
         {content}
       </div>);
+  }
+
+  /** Handles the click on the avatar images. */
+  private handleAvatarImageClick = (src: string) => {
+    this.setState({ imageSrc: src });
   }
 }
 
@@ -155,4 +193,64 @@ const DISPLAY_NAME_STYLE: React.CSSProperties = {
   lineHeight: '23px',
   textAlign: 'center',
   color: '#000000'
+};
+
+const YOUR_NAME_TITLE_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  height: '18px',
+  width: '100%',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#000000',
+  marginBottom: '5px'
+};
+
+const YOUR_PICTURE_TITLE_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  height: '18px',
+  width: '100%',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#000000',
+  marginTop: '30px',
+  marginBottom: '15px'
+};
+
+const AVATARS_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'flex-start',
+  flexWrap: 'wrap',
+  width: '100%',
+  gap: '30px'
+};
+
+const UPLOAD_IMAGE_BUTTON_STYLE: React.CSSProperties = {
+  height: '18px',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '14px',
+  lineHeight: '18px',
+  textAlign: 'center',
+  color: '#F26B55'
+};
+
+const LETS_GO_BUTTON_STYLE: React.CSSProperties = {
+  marginTop: '30px',
+  width: '123px',
+  height: '35px'
 };
