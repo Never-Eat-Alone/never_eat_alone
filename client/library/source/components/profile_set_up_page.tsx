@@ -239,7 +239,10 @@ const AVATARS_CONTAINER_STYLE: React.CSSProperties = {
 };
 
 const UPLOAD_IMAGE_BUTTON_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
   height: '18px',
+  width: 'auto',
+  padding: '10px 20px',
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
   fontWeight: 600,
