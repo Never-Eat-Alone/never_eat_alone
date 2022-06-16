@@ -152,7 +152,7 @@ export class PasswordAnalyzer extends React.Component<Properties> {
                 alt='Checkmark Icon'
               />
             </div>
-            <div>Letters and Numbers</div>
+            <div>Numbers</div>
           </div>
           <div style={DETAILS_ROW_STYLE} >
             <div style={ICON_CONTAINER_STYLE} >

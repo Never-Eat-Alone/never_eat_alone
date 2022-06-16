@@ -694,8 +694,6 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
     DisplayModeInput),
     new PropertySchema('email', 'sh@gmail.com', TextInput),
-    new PropertySchema('password', '', TextInput),
-    new PropertySchema('confirmPassword', '', TextInput),
     new PropertySchema('errorCode', NeverEatAlone.SignUpPage.ErrorCode.NONE,
     SignUpPageErrorCodeInput), new PropertySchema('style', {}, CSSInput)], [
     new SignalSchema('onSignUp', '', [])],

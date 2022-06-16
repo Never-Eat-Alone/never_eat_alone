@@ -15,7 +15,7 @@ interface Properties {
   errorCode: SignUpPage.ErrorCode;
 
   /** Indicates the sign up button is clicked. */
-  onSignUp: (password: string) => void;
+  onSignUp: () => void;
 }
 
 interface State {
@@ -147,9 +147,11 @@ export class SignUpPage extends React.Component<Properties, State> {
             <PrimaryTextButton
               style={SIGN_UP_BUTTON_STYLE}
               label='Sign Up'
-              onClick={this.handleSignUp}
-              disabled={this.state.password.length === 0 ||
-                this.state.confirmPassword.length === 0 || score !== 5 ||
+              onClick={this.props.onSignUp}
+              disabled={this.props.errorCode ===
+                SignUpPage.ErrorCode.NO_CONNECTION ||
+                this.state.password.length < 9 ||
+                this.state.confirmPassword.length === 0 ||
                 !checks.doesConfirmationMatch}
             />
             <div style={TERMS_CONTAINER_STYLE} >
@@ -170,10 +172,6 @@ export class SignUpPage extends React.Component<Properties, State> {
       <div style={CONTAINER_STYLE} >
         {content}
       </div>);
-  }
-
-  private handleSignUp = () => {
-    this.props.onSignUp(this.state.password);
   }
 
   private handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>
