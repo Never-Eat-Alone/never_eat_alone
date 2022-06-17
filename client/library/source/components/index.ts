@@ -1,5 +1,6 @@
 export * from './album_card';
 export * from './attendance_record';
+export * from './avatar_with_check_mark'; 
 export * from './burger_menu_left';
 export * from './close_burger_button';
 export * from './close_button';

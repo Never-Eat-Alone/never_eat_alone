@@ -2,6 +2,7 @@ import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { DisplayMode } from '../definitions';
+import { AvatarWithCheckMark } from './avatar_with_check_mark';
 import { NameInputFieldWithCounterInside } from './input_field';
 import { PrimaryTextButton } from './text_button';
 
@@ -24,6 +25,7 @@ interface RouterProps extends Router.RouteComponentProps {
 interface State {
   imageSrc: string;
   displayName: string;
+  markIndex: number;
 }
 
 export class ProfileSetUpPage extends React.Component<Properties & RouterProps,
@@ -32,7 +34,8 @@ export class ProfileSetUpPage extends React.Component<Properties & RouterProps,
     super(props);
     this.state = {
       imageSrc: 'resources/profile_set_up_page/icons/profile-image-0.svg',
-      displayName: this.props.displayName || ''
+      displayName: this.props.displayName || '',
+      markIndex: -1
     };
   }
 
@@ -44,15 +47,9 @@ export class ProfileSetUpPage extends React.Component<Properties & RouterProps,
     const avatars = [];
     for (let i = 0; i < 20; ++i) {
       const src = `resources/profile_set_up_page/icons/profile-image-${i}.svg`;
-      avatars.push(
-        <div key={`avatar-${i}`} style={ICON_CONTAINER_STYLE} >
-          <img
-            style={ICON_STYLE}
-            src={src}
-            alt='Avatar'
-            onClick={() => this.handleAvatarImageClick(src)}
-          />
-        </div>);
+      avatars.push(<AvatarWithCheckMark key={`avatar-${i}`} imageSrc={src}
+        isMarked={i === this.state.markIndex}
+        onClick={() => this.handleAvatarImageClick(src, i)} />);
     }
     const nameErrorMessage = (this.state.displayName.length === 0 &&
       'Please enter a display name.' || '');
@@ -116,8 +113,8 @@ export class ProfileSetUpPage extends React.Component<Properties & RouterProps,
   }
 
   /** Handles the click on the avatar images. */
-  private handleAvatarImageClick = (src: string) => {
-    this.setState({ imageSrc: src });
+  private handleAvatarImageClick = (src: string, i: number) => {
+    this.setState({ imageSrc: src, markIndex: i });
   }
 
   /** Handles the change in display name inputfield. */
@@ -200,12 +197,15 @@ const TITLE_STYLE: React.CSSProperties = {
 };
 
 const ICON_CONTAINER_STYLE: React.CSSProperties = {
+  position: 'relative',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
   height: '68px',
-  width: '68px'
+  width: '68px',
+  borderRadius: '50%',
+  overflow: 'hidden'
 };
 
 const ICON_STYLE: React.CSSProperties = {

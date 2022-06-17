@@ -32,8 +32,8 @@ export class CircularCounterWithCounterInside extends React.Component<
     ctx.clearRect(0, 0, 40, 40);
     if (this.props.value !== 0) {
       ctx.strokeStyle = (() => {
-        for(const color of CircularCounterWithCounterInside.COLOR_TABLE) {
-          if(100 * percentage < color[0]) {
+        for (const color of CircularCounterWithCounterInside.COLOR_TABLE) {
+          if (100 * percentage < color[0]) {
             return color[1];
           }
         }
