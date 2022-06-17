@@ -713,6 +713,15 @@ export function loadComponentSchemas(): ComponentSchema[] {
     'resources/profile_set_up_page/icons/profile-image-0.svg', TextInput),
     new PropertySchema('isMarked', true, BooleanInput)], [new SignalSchema(
     'onClick', '', [])], NeverEatAlone.AvatarWithCheckMark);
+  const logInModalSchema = new ComponentSchema('LogInModal', [
+    new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
+    DisplayModeInput),
+    new PropertySchema('email', 'Riley@gmail.com', TextInput),
+    new PropertySchema('formErrorMessage', '', TextInput),
+    new PropertySchema('inputFieldHasError', false, BooleanInput)
+    ], [new SignalSchema('onLogIn', '', []), new SignalSchema('onClose', '',
+    []), new SignalSchema('onForgotPassword', '', [])],
+    NeverEatAlone.LogInModal);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
@@ -723,5 +732,5 @@ export function loadComponentSchemas(): ComponentSchema[] {
     exploreEventsSummarySchema, albumSummarySchema, partnerWithUsSummarySchema,
     homePageNotLoggedSchema, homePageLoggedInSchema, joinModalSchema,
     closeButtonSchema, JoinRequestSentModalSchema, signUpPageSchema,
-    profileSetUpPageSchema, avatarWithCheckMarkSchema];
+    profileSetUpPageSchema, avatarWithCheckMarkSchema, logInModalSchema];
 }
