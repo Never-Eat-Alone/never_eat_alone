@@ -3,6 +3,7 @@ export * from './attendance_record';
 export * from './burger_menu_left';
 export * from './close_burger_button';
 export * from './close_button';
+export * from './circular_counter_with_counter_inside';
 export * from './dining_event_card';
 export * from './display_mode_renderer';
 export * from './explore_album_summary';

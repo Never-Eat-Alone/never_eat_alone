@@ -1,5 +1,7 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
+import { CircularCounterWithCounterInside } from
+'./circular_counter_with_counter_inside';
 
 interface InputFieldProperties extends React.InputHTMLAttributes<
     HTMLInputElement> {
@@ -62,6 +64,33 @@ export function NameInputField(props: InputFieldWithIconProperties) {
       iconSrc='resources/input_field/icons/name.svg'
       iconAlt='Name Icon'
     />);
+}
+
+interface InputFieldWithCounter extends InputFieldWithIconProperties {
+  value: number;
+  maxValue: number;
+}
+
+export function NameInputFieldWithCounterInside(props: InputFieldWithCounter) {
+  const { hasError, style, value, maxValue, ...rest } = props;
+  return (
+    <div
+        style={{...CONTAINER_STYLE, ...CONTAINER_WITH_ICON_STYLE, ...style}}
+        className={rest.disabled && css(styles.disabled) ||
+          hasError && css(styles.hasError) || css(styles.container)}
+    >
+      <div style={ICON_CONTAINER_STYLE} >
+        <img
+          style={ICON_STYLE}
+          src='resources/input_field/icons/name.svg'
+          alt='Name Icon'
+        />
+      </div>
+      <input style={INPUT_STYLE} className={css(styles.input)}
+        name='name' type='text' {...rest}
+      />
+      <CircularCounterWithCounterInside value={value} maxValue={maxValue} />
+    </div>);
 }
 
 interface PasswordState {
