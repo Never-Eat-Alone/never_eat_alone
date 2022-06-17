@@ -4,6 +4,7 @@
   "description": "Never eat alone web app.",
   "license": "LicenseRef-LICENSE",
   "devDependencies": {
+    "@types/node": "^18.0.0",
     "@types/react": "17.0.34",
     "@types/react-dom": "17.0.11",
     "@types/react-router-dom": "5.3.3",

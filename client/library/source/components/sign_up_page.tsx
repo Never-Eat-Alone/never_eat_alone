@@ -212,7 +212,6 @@ const CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
-  height: '100%',
   backgroundImage: 'url(resources/illustrations/wave.svg)',
   backgroundSize: 'cover',
   backgroundColor: '#F6F6F6',

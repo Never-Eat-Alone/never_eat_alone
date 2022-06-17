@@ -2,6 +2,7 @@ import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { DisplayMode } from '../definitions';
+import { NameInputFieldWithCounterInside } from './input_field';
 import { PrimaryTextButton } from './text_button';
 
 interface Properties {
@@ -53,38 +54,55 @@ export class ProfileSetUpPage extends React.Component<Properties & RouterProps,
           />
         </div>);
     }
+    const nameErrorMessage = (this.state.displayName.length === 0 &&
+      'Please enter a display name.' || '');
     const content = ((contentContainerStyle: React.CSSProperties,
         contentStyle: React.CSSProperties) => {
       return (
         <div style={contentContainerStyle} >
           <div style={contentStyle} >
             <div style={TITLE_STYLE} >SUCCESS! LET’S SET UP YOUR PROFILE.</div>
-            <div style={ICON_CONTAINER_STYLE} >
-              <img
-                style={ICON_STYLE}
-                src={this.state.imageSrc}
-                alt='Profile Picture'
-              />
+            <div style={ROW_CONTAINER_STYLE} >
+              <div style={ICON_CONTAINER_STYLE} >
+                <img
+                  style={ICON_STYLE}
+                  src={this.state.imageSrc}
+                  alt='Profile Picture'
+                />
+              </div>
             </div>
-            <div style={DISPLAY_NAME_STYLE} >{this.state.displayName}</div>
+            <div style={ROW_CONTAINER_STYLE} >
+              <div style={DISPLAY_NAME_STYLE} >{this.state.displayName}</div>
+            </div>
             <div style={YOUR_NAME_TITLE_STYLE} >Your Display Name:</div>
-            <div>input field with counter {this.state.displayName} </div>
+            <NameInputFieldWithCounterInside
+              style={NAME_FIELD_STYLE}
+              counterValue={this.state.displayName.length}
+              maxValue={20}
+              placeholder='Display Name (20 characters max.)'
+              value={this.state.displayName}
+              onChange={this.handleNameChange}
+              hasError={this.state.displayName.length === 0}
+            />
+            <div style={ERROR_MESSAGE_STYLE} >{nameErrorMessage}</div>
             <div style={YOUR_PICTURE_TITLE_STYLE} >Your profile picture:</div>
             <div style={AVATARS_CONTAINER_STYLE} >
               {avatars}
-              <div
+              <button
                 style={UPLOAD_IMAGE_BUTTON_STYLE}
                 className={css(styles.uploadImageButton)}
                 onClick={this.props.onUploadImageClick}
               >
                 Upload an Image
-              </div>
+              </button>
             </div>
-            <PrimaryTextButton
-              label="Let’s go!"
-              style={LETS_GO_BUTTON_STYLE}
-              onClick={this.props.onLetsGoClick}
-            />
+            <div style={ROW_CONTAINER_STYLE} >
+              <PrimaryTextButton
+                label="Let’s go!"
+                style={LETS_GO_BUTTON_STYLE}
+                onClick={this.props.onLetsGoClick}
+              />
+            </div>
           </div>
         </div>);
     })(contentContainerStyle, contentStyle);
@@ -101,6 +119,11 @@ export class ProfileSetUpPage extends React.Component<Properties & RouterProps,
   private handleAvatarImageClick = (src: string) => {
     this.setState({ imageSrc: src });
   }
+
+  /** Handles the change in display name inputfield. */
+  private handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ displayName: event.target.value });
+  }
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {
@@ -110,7 +133,6 @@ const CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
-  height: '100%',
   backgroundImage: 'url(resources/illustrations/wave.svg)',
   backgroundSize: 'cover',
   backgroundColor: '#F6F6F6',
@@ -148,7 +170,7 @@ const CONTENT_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   width: '460px'
 };
 
@@ -156,7 +178,7 @@ const MOBILE_CONTENT_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   width: '100%'
 };
 
@@ -222,6 +244,19 @@ const YOUR_NAME_TITLE_STYLE: React.CSSProperties = {
   marginBottom: '5px'
 };
 
+const ERROR_MESSAGE_STYLE: React.CSSProperties = {
+  marginTop: '2px',
+  width: '264px',
+  height: '18px',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  textAlign: 'right',
+  color: '#FF2C79'
+};
+
 const YOUR_PICTURE_TITLE_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
@@ -235,8 +270,16 @@ const YOUR_PICTURE_TITLE_STYLE: React.CSSProperties = {
   fontSize: '14px',
   lineHeight: '18px',
   color: '#000000',
-  marginTop: '30px',
+  marginTop: '10px',
   marginBottom: '15px'
+};
+
+const ROW_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'flex-start',
+  width: '100%'
 };
 
 const AVATARS_CONTAINER_STYLE: React.CSSProperties = {
@@ -260,15 +303,24 @@ const UPLOAD_IMAGE_BUTTON_STYLE: React.CSSProperties = {
   lineHeight: '18px',
   textAlign: 'center',
   color: '#F26B55',
-  textDecoration: 'none',
   transition: 'all 0.60s ease-in',
-  cursor: 'pointer'
+  cursor: 'pointer',
+  border: 'none',
+  outline: 'none',
+  textDecoration: 'none',
+  margin: '0px',
+  padding: '0px',
+  backgroundColor: 'transparent'
 };
 
 const LETS_GO_BUTTON_STYLE: React.CSSProperties = {
   marginTop: '30px',
   width: '123px',
   height: '35px'
+};
+
+const NAME_FIELD_STYLE: React.CSSProperties = {
+  width: '264px'
 };
 
 const styles = StyleSheet.create({

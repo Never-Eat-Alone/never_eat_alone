@@ -16,6 +16,7 @@ export function InputField(props: InputFieldProperties) {
         ...style}}
       className={rest.disabled && css(styles.disabled) ||
         hasError && css(styles.hasError) || css(styles.container, styles.input)}
+      placeholder={rest.placeholder}
       {...rest}
     />);
 }
@@ -67,12 +68,12 @@ export function NameInputField(props: InputFieldWithIconProperties) {
 }
 
 interface InputFieldWithCounter extends InputFieldWithIconProperties {
-  value: number;
+  counterValue: number;
   maxValue: number;
 }
 
 export function NameInputFieldWithCounterInside(props: InputFieldWithCounter) {
-  const { hasError, style, value, maxValue, ...rest } = props;
+  const { hasError, style, counterValue, maxValue, ...rest } = props;
   return (
     <div
         style={{...CONTAINER_STYLE, ...CONTAINER_WITH_ICON_STYLE, ...style}}
@@ -89,7 +90,12 @@ export function NameInputFieldWithCounterInside(props: InputFieldWithCounter) {
       <input style={INPUT_STYLE} className={css(styles.input)}
         name='name' type='text' {...rest}
       />
-      <CircularCounterWithCounterInside value={value} maxValue={maxValue} />
+      <div style={COUNTER_CONTAINER_STYLE} >
+        <CircularCounterWithCounterInside
+          value={counterValue}
+          maxValue={maxValue}
+        />
+      </div>
     </div>);
 }
 
@@ -247,6 +253,10 @@ const TWO_ICON_CONTAINER_STYLE: React.CSSProperties = {
   height: '100%',
   minWidth: '69px',
   gap: '10px'
+};
+
+const COUNTER_CONTAINER_STYLE: React.CSSProperties = {
+  marginLeft: '5px'
 };
 
 const styles = StyleSheet.create({

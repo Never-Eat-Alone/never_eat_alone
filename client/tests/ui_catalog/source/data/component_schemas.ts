@@ -704,7 +704,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     DisplayModeInput),
     new PropertySchema('imageSrc',
       'resources/profile_set_up_page/icons/profile-image-0.svg', TextInput),
-    new PropertySchema('displayName', '', TextInput)
+    new PropertySchema('displayName', 'Riley Spire', TextInput)
     ], [new SignalSchema('onLetsGoClick', '', []),
     new SignalSchema('onUploadImageClick', '', [])],
     NeverEatAlone.ProfileSetUpPage);
