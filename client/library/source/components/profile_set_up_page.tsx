@@ -51,8 +51,9 @@ export class ProfileSetUpPage extends React.Component<Properties & RouterProps,
         isMarked={i === this.state.markIndex}
         onClick={() => this.handleAvatarImageClick(src, i)} />);
     }
-    const nameErrorMessage = (this.state.displayName.length === 0 &&
-      'Please enter a display name.' || '');
+    const isDisplayName = this.state.displayName.length !== 0;
+    const nameErrorMessage = (!isDisplayName && 'Please enter a display name.'
+      || '');
     const content = ((contentContainerStyle: React.CSSProperties,
         contentStyle: React.CSSProperties) => {
       return (
@@ -79,7 +80,7 @@ export class ProfileSetUpPage extends React.Component<Properties & RouterProps,
               placeholder='Display Name (20 characters max.)'
               value={this.state.displayName}
               onChange={this.handleNameChange}
-              hasError={this.state.displayName.length === 0}
+              hasError={!isDisplayName}
             />
             <div style={ERROR_MESSAGE_STYLE} >{nameErrorMessage}</div>
             <div style={YOUR_PICTURE_TITLE_STYLE} >Your profile picture:</div>
@@ -98,6 +99,7 @@ export class ProfileSetUpPage extends React.Component<Properties & RouterProps,
                 label="Let’s go!"
                 style={LETS_GO_BUTTON_STYLE}
                 onClick={this.props.onLetsGoClick}
+                disabled={!isDisplayName}
               />
             </div>
           </div>
