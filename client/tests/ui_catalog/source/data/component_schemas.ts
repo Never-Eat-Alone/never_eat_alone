@@ -694,12 +694,25 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
     DisplayModeInput),
     new PropertySchema('email', 'sh@gmail.com', TextInput),
-    new PropertySchema('password', '', TextInput),
-    new PropertySchema('confirmPassword', '', TextInput),
     new PropertySchema('errorCode', NeverEatAlone.SignUpPage.ErrorCode.NONE,
-    SignUpPageErrorCodeInput), new PropertySchema('style', {}, CSSInput)], [
+    SignUpPageErrorCodeInput),
+    new PropertySchema('style', {}, CSSInput)], [
     new SignalSchema('onSignUp', '', [])],
     NeverEatAlone.SignUpPage);
+  const profileSetUpPageSchema = new ComponentSchema('ProfileSetUpPage', [
+    new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
+    DisplayModeInput),
+    new PropertySchema('imageSrc',
+      'resources/profile_set_up_page/icons/profile-image-0.svg', TextInput),
+    new PropertySchema('displayName', 'Riley Spire', TextInput)
+    ], [new SignalSchema('onLetsGoClick', '', []),
+    new SignalSchema('onUploadImageClick', '', [])],
+    NeverEatAlone.ProfileSetUpPage);
+  const avatarWithCheckMarkSchema = new ComponentSchema('AvatarWithCheckMark',
+    [new PropertySchema('imageSrc',
+    'resources/profile_set_up_page/icons/profile-image-0.svg', TextInput),
+    new PropertySchema('isMarked', true, BooleanInput)], [new SignalSchema(
+    'onClick', '', [])], NeverEatAlone.AvatarWithCheckMark);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
@@ -709,5 +722,6 @@ export function loadComponentSchemas(): ComponentSchema[] {
     userUpcomingEventsSummarySchema, exploreEventsSummaryEmptySchema,
     exploreEventsSummarySchema, albumSummarySchema, partnerWithUsSummarySchema,
     homePageNotLoggedSchema, homePageLoggedInSchema, joinModalSchema,
-    closeButtonSchema, JoinRequestSentModalSchema, signUpPageSchema];
+    closeButtonSchema, JoinRequestSentModalSchema, signUpPageSchema,
+    profileSetUpPageSchema, avatarWithCheckMarkSchema];
 }

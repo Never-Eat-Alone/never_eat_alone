@@ -41,7 +41,7 @@ interface State {
 }
 
 /** Displays the Join Modal. */
-export class JoinModal extends React.Component<Properties, State> {
+export class JoinModal extends React.Component<Properties , State> {
   constructor(props: Properties) {
     super(props);
     this.state = {

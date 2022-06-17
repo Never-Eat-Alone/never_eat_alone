@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as Router from 'react-router-dom';
 import { PrimaryTextButton } from '../components';
 import { DisplayMode } from '../definitions';
 import { PasswordInputField } from './input_field';
@@ -15,7 +16,10 @@ interface Properties {
   errorCode: SignUpPage.ErrorCode;
 
   /** Indicates the sign up button is clicked. */
-  onSignUp: (password: string) => void;
+  onSignUp: () => void;
+}
+
+interface RouterProps extends Router.RouteComponentProps {
 }
 
 interface State {
@@ -65,8 +69,9 @@ function getPasswordChecksScore(checks: PasswordChecks): number {
   return score;
 }
 
-export class SignUpPage extends React.Component<Properties, State> {
-  constructor(props: Properties) {
+export class SignUpPage extends React.Component<Properties & RouterProps,
+    State> {
+  constructor(props: Properties & RouterProps) {
     super(props);
     this.state = {
       password: '',
@@ -76,8 +81,8 @@ export class SignUpPage extends React.Component<Properties, State> {
   }
 
   public render(): JSX.Element {
-    const containerStyle = (this.props.displayMode === DisplayMode.MOBILE &&
-      MOBILE_CONTENT_CONTAINER_STYLE || CONTENT_CONTAINER_STYLE);
+    const contentContainerStyle = (this.props.displayMode ===
+      DisplayMode.MOBILE && MOBILE_CONTAINER_STYLE || CONTENT_CONTAINER_STYLE);
     const contentStyle = (this.props.displayMode === DisplayMode.MOBILE &&
       MOBILE_CONTENT_STYLE || CONTENT_STYLE);
     const checks = getPasswordChecks(this.state.password,
@@ -99,10 +104,10 @@ export class SignUpPage extends React.Component<Properties, State> {
       }
       return '';
     })();
-    const content = ((containerStyle: React.CSSProperties,
+    const content = ((contentContainerStyle: React.CSSProperties,
         contentStyle: React.CSSProperties) => {
       return (
-        <div style={containerStyle} >
+        <div style={contentContainerStyle} >
           <div style={contentStyle} >
             <div style={ICON_CONTAINER_STYLE} >
               <img
@@ -119,6 +124,7 @@ export class SignUpPage extends React.Component<Properties, State> {
             <div style={PASSWORD_CONTAINER_STYLE} >
               <div style={PASSWORD_TITLE_STYLE} >Your Password:</div>
               <PasswordInputField
+                style={INPUT_FIELD_STYLE}
                 placeholder='Your Password (8 characters min.)'
                 onChange={this.handlePasswordChange}
                 hasError={this.state.password.length === 0 &&
@@ -135,6 +141,7 @@ export class SignUpPage extends React.Component<Properties, State> {
               />
               <div style={CONFIRM_TITLE_STYLE} >Confirm Password:</div>
               <PasswordInputField
+                style={INPUT_FIELD_STYLE}
                 placeholder='Confirm Password'
                 onChange={this.handleConfirmChange}
                 hasError={(this.state.confirmPassword.length === 0 ||
@@ -145,22 +152,32 @@ export class SignUpPage extends React.Component<Properties, State> {
             <PrimaryTextButton
               style={SIGN_UP_BUTTON_STYLE}
               label='Sign Up'
-              onClick={this.handleSignUp}
-              disabled={this.state.password.length === 0 ||
-                this.state.confirmPassword.length === 0 || score !== 5 ||
+              onClick={this.props.onSignUp}
+              disabled={this.props.errorCode ===
+                SignUpPage.ErrorCode.NO_CONNECTION ||
+                this.state.password.length < 9 ||
+                this.state.confirmPassword.length === 0 ||
                 !checks.doesConfirmationMatch}
             />
             <div style={TERMS_CONTAINER_STYLE} >
               By clicking “Sign Up,” you agree to NeverEatAlone’s&nbsp;
-              <RedNavLink style={LINK_STYLE} to='/terms_of_service'
-                label='Terms of Service' />
+              <RedNavLink
+                {...this.props}
+                style={LINK_STYLE}
+                to='/terms_of_service'
+                label='Terms of Service'
+              />
               &nbsp;and&nbsp;
-              <RedNavLink style={LINK_STYLE} to='/privacy_policy'
-                label='Privacy Policy' />.
+              <RedNavLink
+                {...this.props}
+                style={LINK_STYLE}
+                to='/privacy_policy'
+                label='Privacy Policy'
+              />.
             </div>
           </div>
         </div>);
-    })(containerStyle, contentStyle);
+    })(contentContainerStyle, contentStyle);
     if (this.props.displayMode === DisplayMode.MOBILE) {
       return content;
     }
@@ -168,10 +185,6 @@ export class SignUpPage extends React.Component<Properties, State> {
       <div style={CONTAINER_STYLE} >
         {content}
       </div>);
-  }
-
-  private handleSignUp = () => {
-    this.props.onSignUp(this.state.password);
   }
 
   private handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>
@@ -193,17 +206,18 @@ export namespace SignUpPage {
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
-  height: '100%',
-  backgroundImage: 'url(resources/sign_up_page/illustrations/wave.svg)',
+  backgroundImage: 'url(resources/illustrations/wave.svg)',
   backgroundSize: 'cover',
   backgroundColor: '#F6F6F6',
   backgroundRepeat: 'no-repeat',
-  backgroundPosition: 'left center'
+  backgroundPosition: 'left center',
+  padding: '50px 100px'
 };
 
 const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
@@ -218,7 +232,7 @@ const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
   padding: '50px 100px'
 };
 
-const MOBILE_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
@@ -228,7 +242,6 @@ const MOBILE_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
   boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
   borderRadius: '4px',
   width: '100%',
-  height: '100%',
   padding: '50px 30px'
 };
 
@@ -306,6 +319,10 @@ const PASSWORD_TITLE_STYLE: React.CSSProperties = {
   lineHeight: '18px',
   color: '#000000',
   marginBottom: '5px'
+};
+
+const INPUT_FIELD_STYLE: React.CSSProperties = {
+  width: '100%'
 };
 
 const PASSWORD_ANALYZER_STYLE: React.CSSProperties = {
