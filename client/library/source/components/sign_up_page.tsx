@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as Router from 'react-router-dom';
 import { PrimaryTextButton } from '../components';
 import { DisplayMode } from '../definitions';
 import { PasswordInputField } from './input_field';
@@ -16,6 +17,9 @@ interface Properties {
 
   /** Indicates the sign up button is clicked. */
   onSignUp: () => void;
+}
+
+interface RouterProps extends Router.RouteComponentProps {
 }
 
 interface State {
@@ -65,8 +69,9 @@ function getPasswordChecksScore(checks: PasswordChecks): number {
   return score;
 }
 
-export class SignUpPage extends React.Component<Properties, State> {
-  constructor(props: Properties) {
+export class SignUpPage extends React.Component<Properties & RouterProps,
+    State> {
+  constructor(props: Properties & RouterProps) {
     super(props);
     this.state = {
       password: '',
@@ -157,12 +162,14 @@ export class SignUpPage extends React.Component<Properties, State> {
             <div style={TERMS_CONTAINER_STYLE} >
               By clicking “Sign Up,” you agree to NeverEatAlone’s&nbsp;
               <RedNavLink
+                {...this.props}
                 style={LINK_STYLE}
                 to='/terms_of_service'
                 label='Terms of Service'
               />
               &nbsp;and&nbsp;
               <RedNavLink
+                {...this.props}
                 style={LINK_STYLE}
                 to='/privacy_policy'
                 label='Privacy Policy'

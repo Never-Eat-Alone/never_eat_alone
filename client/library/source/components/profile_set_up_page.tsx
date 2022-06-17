@@ -1,6 +1,8 @@
+import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
+import * as Router from 'react-router-dom';
 import { DisplayMode } from '../definitions';
-import { AccentTextButton, PrimaryTextButton } from './text_button';
+import { PrimaryTextButton } from './text_button';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -15,13 +17,17 @@ interface Properties {
   onLetsGoClick: () => void;
 }
 
+interface RouterProps extends Router.RouteComponentProps {
+}
+
 interface State {
   imageSrc: string;
   displayName: string;
 }
 
-export class ProfileSetUpPage extends React.Component<Properties, State> {
-  constructor(props: Properties) {
+export class ProfileSetUpPage extends React.Component<Properties & RouterProps,
+    State> {
+  constructor(props: Properties & RouterProps) {
     super(props);
     this.state = {
       imageSrc: 'resources/profile_set_up_page/icons/profile-image-0.svg',
@@ -66,13 +72,19 @@ export class ProfileSetUpPage extends React.Component<Properties, State> {
             <div style={YOUR_PICTURE_TITLE_STYLE} >Your profile picture:</div>
             <div style={AVATARS_CONTAINER_STYLE} >
               {avatars}
-              <AccentTextButton
-                label='Upload an Image'
+              <div
                 style={UPLOAD_IMAGE_BUTTON_STYLE}
+                className={css(styles.uploadImageButton)}
                 onClick={this.props.onUploadImageClick}
-              />
+              >
+                Upload an Image
+              </div>
             </div>
-            <PrimaryTextButton label="Let’s go!" style={LETS_GO_BUTTON_STYLE} />
+            <PrimaryTextButton
+              label="Let’s go!"
+              style={LETS_GO_BUTTON_STYLE}
+              onClick={this.props.onLetsGoClick}
+            />
           </div>
         </div>);
     })(contentContainerStyle, contentStyle);
@@ -240,15 +252,17 @@ const AVATARS_CONTAINER_STYLE: React.CSSProperties = {
 const UPLOAD_IMAGE_BUTTON_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   height: '18px',
-  width: 'auto',
-  padding: '10px 20px',
+  width: '100%',
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
   fontWeight: 600,
   fontSize: '14px',
   lineHeight: '18px',
   textAlign: 'center',
-  color: '#F26B55'
+  color: '#F26B55',
+  textDecoration: 'none',
+  transition: 'all 0.60s ease-in',
+  cursor: 'pointer'
 };
 
 const LETS_GO_BUTTON_STYLE: React.CSSProperties = {
@@ -256,3 +270,24 @@ const LETS_GO_BUTTON_STYLE: React.CSSProperties = {
   width: '123px',
   height: '35px'
 };
+
+const styles = StyleSheet.create({
+  uploadImageButton: {
+    ':hover': {
+      textDecoration: 'underline solid #F26B55 1px',
+      color: '#F26B55'
+    },
+    ':focus': {
+      textDecoration: 'underline solid #F26B55 1px',
+      color: '#F26B55'
+    },
+    ':focus-within': {
+      textDecoration: 'underline solid #F26B55 1px',
+      color: '#F26B55'
+    },
+    ':active': {
+      textDecoration: 'underline solid #AA2F19 1px',
+      color: '#AA2F19'
+    }
+  }
+});

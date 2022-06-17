@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as Router from 'react-router-dom';
 import { DisplayMode, User } from '../definitions';
 import { BurgerMenuLeft } from './burger_menu_left';
 import { WhiteTextHeaderLogo } from './header_logo';
@@ -29,7 +30,10 @@ interface Properties {
   onLogOut: () => void;
 }
 
-export class Header extends React.Component<Properties> {
+interface RouterProps extends Router.RouteComponentProps {
+}
+
+export class Header extends React.Component<Properties & RouterProps> {
   public render(): JSX.Element {
     const headerMode = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
@@ -66,6 +70,7 @@ export class Header extends React.Component<Properties> {
         />);
       rightSideButtons.push(
         <WhiteNavLink
+          {...this.props}
           key='DisplayName'
           label={this.props.account.name}
           to='/user_profile/:id'
@@ -91,6 +96,7 @@ export class Header extends React.Component<Properties> {
           />);
         rightSideButtons.push(
           <WhiteNavLink
+            {...this.props}
             key='What is NEA?'
             label='What is NEA?'
             to='/what_is_nea'
@@ -115,6 +121,7 @@ export class Header extends React.Component<Properties> {
           />);
         rightSideButtons.push(
           <WhiteNavLink
+            {...this.props}
             key='What is NEA?'
             label='What is NEA?'
             to='/what_is_nea'
