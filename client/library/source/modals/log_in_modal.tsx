@@ -52,26 +52,21 @@ export class LogInModal extends React.Component<Properties , State> {
     const imageSection = (() => {
       if (this.props.displayMode === DisplayMode.MOBILE) {
         return (
-          <div style={MOBILE_IMAGE_SECTION_STYLE} >
-            <div style={MOBILE_LOGO_CONTAINER_STYLE} >
-              <img
-                style={MOBILE_LOGO_STYLE}
-                src='resources/log_in_modal/icons/mobile_logo.svg'
-                alt='NEA Logo'
-              />
-            </div>
-            <div style={MOBILE_LOGO_TEXT_STYLE} >LOG IN</div>
+          <div style={MOBILE_LOGO_CONTAINER_STYLE} >
+            <img
+              style={MOBILE_LOGO_STYLE}
+              src='resources/log_in_modal/icons/mobile_logo.svg'
+              alt='NEA Logo'
+            />
           </div>);
       }
       return (
-        <div style={IMAGE_SECTION_STYLE} >
-          <div style={LOGO_CONTAINER_STYLE} >
-            <img
-              style={LOGO_STYLE}
-              src='resources/log_in_modal/icons/logo.svg'
-              alt='NEA Logo'
-            />
-          </div>
+        <div style={LOGO_CONTAINER_STYLE} >
+          <img
+            style={LOGO_STYLE}
+            src='resources/log_in_modal/icons/logo.svg'
+            alt='NEA Logo'
+          />
         </div>);
     })();
     const heading = (this.props.displayMode !== DisplayMode.MOBILE && (
@@ -127,14 +122,16 @@ export class LogInModal extends React.Component<Properties , State> {
 const CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
-  flexDirection: 'row',
+  flexDirection: 'column',
   justifyContent: 'flex-start',
-  alignItems: 'flex-start',
+  alignItems: 'center',
   position: 'relative',
-  height: '486px',
-  width: '687px',
+  height: '490px',
+  width: '622px',
+  padding: '60px 90px',
   boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
   borderRadius: '4px',
+  backgroundColor: '#FFFFFF',
   overflow: 'hidden'
 };
 
@@ -145,9 +142,10 @@ const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
   position: 'relative',
-  width: '335px',
-  height: '482px',
+  width: '375px',
+  height: '622px',
   boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
+  backgroundColor: '#FFFFFF',
   borderRadius: '4px',
   overflow: 'hidden'
 };
@@ -158,42 +156,21 @@ const CLOSE_BUTTON_STYLE: React.CSSProperties = {
   right: '20px'
 };
 
-const IMAGE_SECTION_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
-  height: '100%',
-  width: '277px',
-  backgroundSize: 'cover',
-  backgroundColor: '#F26B55',
-  minHeight: '486px'
-};
-
-const MOBILE_IMAGE_SECTION_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
-  width: '100%',
-  height: '145px',
-  backgroundColor: '#F26B55',
-  minWidth: '335px'
-};
-
 const LOGO_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'flex-start',
-  alignItems: 'flex-start',
-  width: '174px',
-  height: '100px',
-  marginLeft: '51px'
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '50px',
+  height: '43px'
 };
 
 const LOGO_STYLE: React.CSSProperties = {
   backgroundColor: 'transparent',
-  color: '#FFFFFF',
+  minWidth: '50px',
+  minHeight: '43px',
+  width: '100%',
+  height: '100%',
   objectFit: 'cover'
 };
 
