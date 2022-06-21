@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { CloseButton, EmailInputField, PrimaryTextButton, PasswordInputField } from '../components';
+import { CheckBox, CloseButton, EmailInputField, PasswordInputField,
+  PrimaryTextButton } from '../components';
 import { DisplayMode } from '../definitions';
 
 interface Properties {
@@ -79,6 +80,10 @@ export class LogInModal extends React.Component<Properties , State> {
           value={this.state.password}
           onChange={this.handlePasswordChange}
         />
+        <div style={ROW_CONTAINER_STYLE} >
+          <CheckBox label='Remember Me' />
+          <div>Forgot Password</div>
+        </div>
         <div style={ERROR_CONTAINER_STYLE} >{emailErrorMessage}</div>
         <PrimaryTextButton
           style={LOG_IN_BUTTON_STYLE}
@@ -192,5 +197,15 @@ const ERROR_MESSAGE_STYLE: React.CSSProperties = {
 };
 
 const INPUT_FIELD_STYLE: React.CSSProperties = {
+  marginTop: '20px'
+};
+
+const ROW_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  width: '100%',
+  height: '20px',
   marginTop: '20px'
 };
