@@ -722,6 +722,11 @@ export function loadComponentSchemas(): ComponentSchema[] {
     ], [new SignalSchema('onLogIn', '', []), new SignalSchema('onClose', '',
     []), new SignalSchema('onForgotPassword', '', [])],
     NeverEatAlone.LogInModal);
+  const checkBoxSchema = new ComponentSchema('CheckBox', [
+    new PropertySchema('label', 'Remember me', TextInput),
+    new PropertySchema('disabled', true, BooleanInput),
+    new PropertySchema('hasError', false, BooleanInput)
+    ], [], NeverEatAlone.CheckBox);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
@@ -732,5 +737,6 @@ export function loadComponentSchemas(): ComponentSchema[] {
     exploreEventsSummarySchema, albumSummarySchema, partnerWithUsSummarySchema,
     homePageNotLoggedSchema, homePageLoggedInSchema, joinModalSchema,
     closeButtonSchema, JoinRequestSentModalSchema, signUpPageSchema,
-    profileSetUpPageSchema, avatarWithCheckMarkSchema, logInModalSchema];
+    profileSetUpPageSchema, avatarWithCheckMarkSchema, logInModalSchema,
+    checkBoxSchema];
 }
