@@ -1,6 +1,7 @@
 import * as React from 'react';
+import * as Router from 'react-router-dom';
 import { CheckBox, CloseButton, EmailInputField, PasswordInputField,
-  PrimaryTextButton } from '../components';
+  PrimaryTextButton, RedNavLink} from '../components';
 import { DisplayMode } from '../definitions';
 
 interface Properties {
@@ -25,14 +26,18 @@ interface Properties {
   onForgotPassword: () => void;
 }
 
+interface RouterProps extends Router.RouteComponentProps {
+}
+
 interface State {
   email: string;
   password: string;
 }
 
 /** Displays the Log In Modal. */
-export class LogInModal extends React.Component<Properties , State> {
-  constructor(props: Properties) {
+export class LogInModal extends React.Component<Properties & RouterProps,
+    State> {
+  constructor(props: Properties & RouterProps) {
     super(props);
     this.state = {
       email: this.props.email || '',
@@ -82,7 +87,12 @@ export class LogInModal extends React.Component<Properties , State> {
         />
         <div style={ROW_CONTAINER_STYLE} >
           <CheckBox label='Remember Me' />
-          <div>Forgot Password</div>
+          <RedNavLink
+            {...this.props}
+            label='Forgot password?'
+            to='/forgot_password'
+            style={FORGOT_LINK_STYLE}
+          />
         </div>
         <div style={ERROR_CONTAINER_STYLE} >{emailErrorMessage}</div>
         <PrimaryTextButton
@@ -170,7 +180,6 @@ const TITLE_STYLE: React.CSSProperties = {
 };
 
 const LOG_IN_BUTTON_STYLE: React.CSSProperties = {
-  marginTop: '40px',
   width: '100%',
   height: '35px'
 };
@@ -208,4 +217,14 @@ const ROW_CONTAINER_STYLE: React.CSSProperties = {
   width: '100%',
   height: '20px',
   marginTop: '20px'
+};
+
+const FORGOT_LINK_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  width: 'fit-content',
+  height: '18px'
 };
