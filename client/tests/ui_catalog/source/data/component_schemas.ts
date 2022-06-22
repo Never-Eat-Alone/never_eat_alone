@@ -713,6 +713,11 @@ export function loadComponentSchemas(): ComponentSchema[] {
     'resources/profile_set_up_page/icons/profile-image-0.svg', TextInput),
     new PropertySchema('isMarked', true, BooleanInput)], [new SignalSchema(
     'onClick', '', [])], NeverEatAlone.AvatarWithCheckMark);
+  const checkBoxSchema = new ComponentSchema('CheckBox', [
+    new PropertySchema('label', 'Remember me', TextInput),
+    new PropertySchema('disabled', true, BooleanInput),
+    new PropertySchema('hasError', false, BooleanInput)
+    ], [], NeverEatAlone.CheckBox);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
@@ -723,5 +728,5 @@ export function loadComponentSchemas(): ComponentSchema[] {
     exploreEventsSummarySchema, albumSummarySchema, partnerWithUsSummarySchema,
     homePageNotLoggedSchema, homePageLoggedInSchema, joinModalSchema,
     closeButtonSchema, JoinRequestSentModalSchema, signUpPageSchema,
-    profileSetUpPageSchema, avatarWithCheckMarkSchema];
+    profileSetUpPageSchema, avatarWithCheckMarkSchema, checkBoxSchema];
 }
