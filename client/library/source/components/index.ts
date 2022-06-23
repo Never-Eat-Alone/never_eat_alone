@@ -15,6 +15,7 @@ export * from './footer';
 export * from './footer_instagram_button';
 export * from './footer_link';
 export * from './footer_logo';
+export * from './google_log_in_button';
 export * from './hamburger_button';
 export * from './header';
 export * from './header_logo';
