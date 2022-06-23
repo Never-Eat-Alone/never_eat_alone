@@ -21,7 +21,7 @@ export class FacebookLogInButton extends React.Component<Properties> {
           src='resources/facebook_log_in_button/icons/facebook.svg'
           alt='Facebook Icon'
         />
-        <span>label</span>
+        <span>{label}</span>
       </button>);
   }
 }
