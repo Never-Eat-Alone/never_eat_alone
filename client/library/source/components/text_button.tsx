@@ -56,9 +56,7 @@ export function TextButtonWithArrow(props: WithIconProperties) {
   return (
     <button {...rest} style={{...BUTTON_STYLE, ...props.style}} >
       <p style={{...LABEL_STYLE, ...labelStyle}} >{label}</p>
-      <div
-          style={{...ARROW_ICON_CONTAINER_STYLE, ...iconContainerStyle}}
-      >
+      <div style={{...ARROW_ICON_CONTAINER_STYLE, ...iconContainerStyle}} >
         <img
           style={{...ARROW_ICON_STYLE, ...iconStyle}}
           src={iconSrc}

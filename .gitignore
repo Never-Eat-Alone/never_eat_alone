@@ -1,7 +1,6 @@
 # Ignore Mac system files
 .DS_Store
-**/*.DS_Store
-**/.DS_Store
+
 # Ignore node_modules folder
 node_modules/
 
@@ -9,7 +8,7 @@ node_modules/
 **/package-lock.json
 **/Dependencies
 **/mod_time.txt
-tests/**/application/
-application/application/
-library/library/
+client/tests/**/application/
+client/application/application/
+client/library/library/
 images/

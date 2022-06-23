@@ -713,6 +713,21 @@ export function loadComponentSchemas(): ComponentSchema[] {
     'resources/profile_set_up_page/icons/profile-image-0.svg', TextInput),
     new PropertySchema('isMarked', true, BooleanInput)], [new SignalSchema(
     'onClick', '', [])], NeverEatAlone.AvatarWithCheckMark);
+  const checkBoxSchema = new ComponentSchema('CheckBox', [
+    new PropertySchema('label', 'Remember me', TextInput),
+    new PropertySchema('disabled', true, BooleanInput),
+    new PropertySchema('hasError', false, BooleanInput)
+    ], [], NeverEatAlone.CheckBox);
+  const googleLogInButtonSchema = new ComponentSchema('GoogleLogInButton', [
+    new PropertySchema('label', 'Log in with Google', TextInput),
+    new PropertySchema('style', {} , CSSInput),
+    new PropertySchema('disabled', false, BooleanInput)], [
+    new SignalSchema('onClick', '' , [])], NeverEatAlone.GoogleLogInButton);
+  const facebookLogInButtonSchema = new ComponentSchema('FacebookLogInButton', [
+    new PropertySchema('label', 'Log in with Facebook', TextInput),
+    new PropertySchema('style', {}, CSSInput),
+    new PropertySchema('disabled', false, BooleanInput)], [
+    new SignalSchema('onClick', '' , [])], NeverEatAlone.FacebookLogInButton);
   const logInModalSchema = new ComponentSchema('LogInModal', [
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
     DisplayModeInput),
@@ -722,11 +737,6 @@ export function loadComponentSchemas(): ComponentSchema[] {
     ], [new SignalSchema('onLogIn', '', []), new SignalSchema('onClose', '',
     []), new SignalSchema('onForgotPassword', '', [])],
     NeverEatAlone.LogInModal);
-  const checkBoxSchema = new ComponentSchema('CheckBox', [
-    new PropertySchema('label', 'Remember me', TextInput),
-    new PropertySchema('disabled', true, BooleanInput),
-    new PropertySchema('hasError', false, BooleanInput)
-    ], [], NeverEatAlone.CheckBox);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
@@ -737,6 +747,6 @@ export function loadComponentSchemas(): ComponentSchema[] {
     exploreEventsSummarySchema, albumSummarySchema, partnerWithUsSummarySchema,
     homePageNotLoggedSchema, homePageLoggedInSchema, joinModalSchema,
     closeButtonSchema, JoinRequestSentModalSchema, signUpPageSchema,
-    profileSetUpPageSchema, avatarWithCheckMarkSchema, logInModalSchema,
-    checkBoxSchema];
+    profileSetUpPageSchema, avatarWithCheckMarkSchema, checkBoxSchema,
+    googleLogInButtonSchema, facebookLogInButtonSchema, logInModalSchema];
 }
