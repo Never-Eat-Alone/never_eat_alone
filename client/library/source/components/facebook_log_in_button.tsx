@@ -7,23 +7,21 @@ interface Properties extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   onClick: () => void;
 }
 
-export class FacebookLogInButton extends React.Component<Properties> {
-  public render(): JSX.Element {
-    const { label, style, ...rest } = this.props;
-    return (
-      <button
-          {...rest}
-          style={{...BUTTON_STYLE, ...style}}
-          className={css(styles.button)}
-      >
-        <img
-          style={FACEBOOK_ICON_STYLE}
-          src='resources/facebook_log_in_button/icons/facebook.svg'
-          alt='Facebook Icon'
-        />
-        <span>{label}</span>
-      </button>);
-  }
+export function FacebookLogInButton(props: Properties) {
+  const { label, style, ...rest } = props;
+  return (
+    <button
+        {...rest}
+        style={{...BUTTON_STYLE, ...style}}
+        className={css(styles.button)}
+    >
+      <img
+        style={FACEBOOK_ICON_STYLE}
+        src='resources/facebook_log_in_button/icons/facebook.svg'
+        alt='Facebook Icon'
+      />
+      <span>{label}</span>
+    </button>);
 }
 
 const BUTTON_STYLE: React.CSSProperties = {
