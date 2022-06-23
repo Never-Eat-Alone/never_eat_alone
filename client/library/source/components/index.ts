@@ -11,6 +11,7 @@ export * from './display_mode_renderer';
 export * from './explore_album_summary';
 export * from './explore_events_summary';
 export * from './facebook_button';
+export * from './facebook_log_in_button';
 export * from './footer';
 export * from './footer_instagram_button';
 export * from './footer_link';
