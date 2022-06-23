@@ -731,11 +731,14 @@ export function loadComponentSchemas(): ComponentSchema[] {
   const logInModalSchema = new ComponentSchema('LogInModal', [
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
     DisplayModeInput),
-    new PropertySchema('email', 'Riley@gmail.com', TextInput),
     new PropertySchema('formErrorMessage', '', TextInput),
-    new PropertySchema('inputFieldHasError', false, BooleanInput)
-    ], [new SignalSchema('onLogIn', '', []), new SignalSchema('onClose', '',
-    []), new SignalSchema('onForgotPassword', '', [])],
+    new PropertySchema('googleErrorMessage', '', TextInput),
+    new PropertySchema('facebookErrorMessage', '', TextInput),
+    ], [new SignalSchema('onLogIn', '', []),
+    new SignalSchema('onClose', '', []),
+    new SignalSchema('onForgotPassword', '', []),
+    new SignalSchema('onGoogleLogInClick', '', []),
+    new SignalSchema('onFacebookLogInClick', '', [])],
     NeverEatAlone.LogInModal);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
