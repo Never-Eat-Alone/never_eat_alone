@@ -723,6 +723,11 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('label', 'Google Account', TextInput),
     new PropertySchema('disabled', false, BooleanInput)], [
     new SignalSchema('onSuccess', '' , [])], NeverEatAlone.GoogleLogInButton);
+  const facebookLogInButtonSchema = new ComponentSchema('FacebookLogInButton', [
+    new PropertySchema('style', {}, CSSInput),
+    new PropertySchema('appId', '', TextInput),
+    new PropertySchema('nonce', '', TextInput)], [],
+    NeverEatAlone.FacebookLogInButton);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
@@ -734,5 +739,5 @@ export function loadComponentSchemas(): ComponentSchema[] {
     homePageNotLoggedSchema, homePageLoggedInSchema, joinModalSchema,
     closeButtonSchema, JoinRequestSentModalSchema, signUpPageSchema,
     profileSetUpPageSchema, avatarWithCheckMarkSchema, checkBoxSchema,
-    googleLogInButtonSchema];
+    googleLogInButtonSchema, facebookLogInButtonSchema];
 }
