@@ -13,7 +13,6 @@ export class GoogleLogInButton extends React.Component<Properties> {
     return (
       <button
           {...rest}
-          id='gSignInWrapper'
           style={{...BUTTON_STYLE, ...style}}
           className={css(styles.button)}
           onClick={this.props.onClick}
