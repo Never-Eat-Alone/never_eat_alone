@@ -719,15 +719,15 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('hasError', false, BooleanInput)
     ], [], NeverEatAlone.CheckBox);
   const googleLogInButtonSchema = new ComponentSchema('GoogleLogInButton', [
-    new PropertySchema('clientId', '', TextInput),
-    new PropertySchema('label', 'Google Account', TextInput),
+    new PropertySchema('label', 'Log in with Google', TextInput),
+    new PropertySchema('style', {} , CSSInput),
     new PropertySchema('disabled', false, BooleanInput)], [
-    new SignalSchema('onSuccess', '' , [])], NeverEatAlone.GoogleLogInButton);
+    new SignalSchema('onClick', '' , [])], NeverEatAlone.GoogleLogInButton);
   const facebookLogInButtonSchema = new ComponentSchema('FacebookLogInButton', [
+    new PropertySchema('label', 'Log in with Facebook', TextInput),
     new PropertySchema('style', {}, CSSInput),
-    new PropertySchema('appId', '', TextInput),
-    new PropertySchema('nonce', '', TextInput)], [],
-    NeverEatAlone.FacebookLogInButton);
+    new PropertySchema('disabled', false, BooleanInput)], [
+    new SignalSchema('onClick', '' , [])], NeverEatAlone.FacebookLogInButton);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,

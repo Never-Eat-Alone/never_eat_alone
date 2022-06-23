@@ -2,49 +2,24 @@ import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 
 interface Properties extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  clientId: string;
   label: string;
-  onSuccess: (email: string, token: any) => void;
+  onClick: () => void;
   style?: React.CSSProperties;
 }
 
 export class GoogleLogInButton extends React.Component<Properties> {
-  constructor(props: Properties) {
-    super(props);
-    const scripts = document.getElementsByTagName(
-      'head')[0].getElementsByTagName('script');
-    let isPlatform = false;
-    for (let i =0; i< scripts.length; i++) {
-      const script = scripts[i];
-      if (script.src === 'https://apis.google.com/js/platform.js' ||
-          script.src === 'http://apis.google.com/js/platform.js') {
-        isPlatform = true;
-        break;
-      }
-    }
-    if (!isPlatform) {
-      const googlePlatformScript = document.createElement('script');
-      googlePlatformScript.type = 'text/javascript';
-      googlePlatformScript.src = 'https://apis.google.com/js/platform.js';
-      googlePlatformScript.defer = true;
-      googlePlatformScript.onload = this.onPlatformLoaded;
-      document.getElementsByTagName('head')[0].appendChild(
-        googlePlatformScript);
-    }
-  }
-
   public render(): JSX.Element {
-    const { label, clientId, onSuccess, style, ...rest} = this.props;
+    const { label, style, ...rest} = this.props;
     return (
       <button
           {...rest}
           id='gSignInWrapper'
-          style={BUTTON_STYLE}
+          style={{...BUTTON_STYLE, ...style}}
           className={css(styles.button)}
-          onClick={this.onGoogleSignIn}
+          onClick={this.props.onClick}
       >
-        <div className='customGPlusSignIn' >
-          <div style={{...SOCIAL_MEDIA_BUTTON_STYLE, ...style}} >
+        <div className='customGPlusSignIn' style={CUSTOM_DIV_STYLE} >
+          <div style={SOCIAL_MEDIA_BUTTON_STYLE} >
             <img
               style={SOCIAL_MEDIA_ICON_STYLE}
               alt='Google'
@@ -55,65 +30,44 @@ export class GoogleLogInButton extends React.Component<Properties> {
         </div>
       </button>);
   }
-
-  private onGoogleSignIn = () => {
-    this._gapiAuth.signIn().then((googleUser: any) => {
-      const includeAuthorizationData = true;
-      this.props.onSuccess(googleUser.getBasicProfile().getEmail(),
-        googleUser.getAuthResponse(includeAuthorizationData));
-    }, (error: any) => {
-      console.log(error);
-    });
-  }
-
-  private onPlatformLoaded = () => {
-    const gapi = (window as any).gapi;
-    gapi.load('auth2', () => {
-      gapi.auth2.init({
-        client_id: this.props.clientId
-      }).then(() => {
-        this._gapiAuth = gapi.auth2.getAuthInstance();
-      });
-    });
-  }
-
-  private _gapiAuth: any;
 }
 
 const BUTTON_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
   outline: 'none',
-  border: 'none',
   backgroundColor: '#FFFFFF',
   padding: '0px',
   cursor: 'pointer',
   boxShadow: 'none',
-  width: 'fit-content',
-  height: 'fit-content',
   borderRadius: '4px',
-  overflow: 'hidden'
+  overflow: 'hidden',
+  width: '310px',
+  height: '28px',
+  color: '#969696',
+  border: '1px solid #969696',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '12px',
+  lineHeight: '15px',
+  textAlign: 'center',
+  textTransform: 'uppercase',
+};
+
+const CUSTOM_DIV_STYLE: React.CSSProperties = {
+  width: 'inherit',
+  height: 'inherit'
 };
 
 const SOCIAL_MEDIA_BUTTON_STYLE: React.CSSProperties = {
-  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'center',
   position: 'relative',
-  width: '310px',
-  height: '28px',
-  color: '#969696',
-  backgroundColor: 'transparent',
-  border: '1px solid #969696',
-  fontFamily: 'Roboto',
-  fontStyle: 'normal',
-  fontWeight: 400,
-  fontSize: '10px',
-  lineHeight: '12px',
-  textAlign: 'center',
-  textTransform: 'uppercase',
-  borderRadius: '4px',
-  outline: 'none'
+  width: 'inherit',
+  height: 'inherit',
+  backgroundColor: 'transparent'
 };
 
 const SOCIAL_MEDIA_ICON_STYLE: React.CSSProperties = {
@@ -142,7 +96,8 @@ const styles = StyleSheet.create({
     },
     ':active': {
       boxShadow: 'none',
-      cursor: 'pointer'
+      cursor: 'pointer',
+      backgroundColor: '#F6F6F6'
     },
     ':disabled': {
       backgroundColor: '#CCCCCC',

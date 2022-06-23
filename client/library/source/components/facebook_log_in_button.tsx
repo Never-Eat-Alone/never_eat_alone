@@ -1,63 +1,91 @@
+import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 
-interface Properties extends React.HtmlHTMLAttributes<HTMLDivElement> {
-  appId: string;
-  nonce: string;
+interface Properties extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  label: string;
+  style?: React.CSSProperties;
+  onClick: () => void;
 }
 
 export class FacebookLogInButton extends React.Component<Properties> {
-  constructor(props: Properties) {
-    super(props);
-    const scripts = document.getElementsByTagName(
-      'body')[0].getElementsByTagName('script');
-    let isPlatform = false;
-    for (let i =0; i< scripts.length; i++) {
-      const script = scripts[i];
-      const scriptSrc: string = script.src;
-      if (scriptSrc.indexOf('https://connect.facebook.net') !== -1) {
-        isPlatform = true;
-        break;
-      }
-    }
-    if (!isPlatform) {
-      const facebookPlatformScript = document.createElement('script');
-      facebookPlatformScript.type = 'text/javascript';
-      facebookPlatformScript.src = `https://connect.facebook.net/en_US/sdk.js`;
-      facebookPlatformScript.defer = true;
-      facebookPlatformScript.nonce = this.props.nonce;
-      facebookPlatformScript.onload = this.onPlatformLoaded;
-      document.getElementsByTagName('body')[0].appendChild(
-        facebookPlatformScript);
-    }
-  }
-
   public render(): JSX.Element {
-    const { appId, nonce, style, ...rest} = this.props;
+    const { label, style, ...rest } = this.props;
     return (
-      <div
-        {...rest}
-        className='fb-login-button' style={{...BUTTON_STYLE,
-        ...this.props.style}}
-        data-size='medium' data-button-type='login_with' data-layout='default'
-        data-auto-logout-link='true' data-use-continue-as='false'
-      />);
-  }
-
-  private onPlatformLoaded = () => {
-    const FBapi = (window as any).FB;
-    FBapi.init({
-      appId: this.props.appId,
-      cookie: true,
-      status: true,
-      xfbml: true,
-      version: 'v14.0',
-      autoLogAppEvents: true
-    })();
+      <button
+          {...rest}
+          style={{...BUTTON_STYLE, ...style}}
+          className={css(styles.button)}
+      >
+        <img
+          style={FACEBOOK_ICON_STYLE}
+          src='resources/facebook_log_in_button/icons/facebook.svg'
+          alt='Facebook Icon'
+        />
+        <span>label</span>
+      </button>);
   }
 }
 
 const BUTTON_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  position: 'relative',
   display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
   width: '310px',
-  height: '28px'
+  height: '28px',
+  textDecoration: 'none',
+  outline: 'none',
+  boxShadow: 'none',
+  border: '1px solid #969696',
+  backgroundColor: '#FFFFFF',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '12px',
+  lineHeight: '15px',
+  color: '#969696',
+  borderRadius: '4px',
+  overflow: 'hidden',
+  textAlign: 'center',
+  textTransform: 'uppercase',
+  cursor: 'pointer',
+  padding: '0px',
+  margin: '0px'
 };
+
+const FACEBOOK_ICON_STYLE: React.CSSProperties = {
+  position: 'absolute',
+  top: '4px',
+  left: '8px',
+  width: '9px',
+  height: '18px',
+  backgroundColor: 'transparent'
+};
+
+const styles = StyleSheet.create({
+  button: {
+    ':hover': {
+      boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.4)',
+      cursor: 'pointer'
+    },
+    ':focus': {
+      boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.4)',
+      cursor: 'pointer'
+    },
+    ':focus-within': {
+      boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.4)',
+      cursor: 'pointer'
+    },
+    ':active': {
+      boxShadow: 'none',
+      cursor: 'pointer',
+      backgroundColor: '#F6F6F6'
+    },
+    ':disabled': {
+      backgroundColor: '#CCCCCC',
+      cursor: 'default'
+    }
+  }
+});
