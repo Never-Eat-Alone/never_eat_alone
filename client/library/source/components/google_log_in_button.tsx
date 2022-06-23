@@ -14,12 +14,12 @@ export class GoogleLogInButton extends React.Component<Properties> {
       <button
           {...rest}
           id='gSignInWrapper'
-          style={BUTTON_STYLE}
+          style={{...BUTTON_STYLE, ...style}}
           className={css(styles.button)}
           onClick={this.props.onClick}
       >
-        <div className='customGPlusSignIn' >
-          <div style={{...SOCIAL_MEDIA_BUTTON_STYLE, ...style}} >
+        <div className='customGPlusSignIn' style={CUSTOM_DIV_STYLE} >
+          <div style={SOCIAL_MEDIA_BUTTON_STYLE} >
             <img
               style={SOCIAL_MEDIA_ICON_STYLE}
               alt='Google'
@@ -33,29 +33,17 @@ export class GoogleLogInButton extends React.Component<Properties> {
 }
 
 const BUTTON_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
   outline: 'none',
-  border: 'none',
   backgroundColor: '#FFFFFF',
   padding: '0px',
   cursor: 'pointer',
   boxShadow: 'none',
-  width: 'fit-content',
-  height: 'fit-content',
   borderRadius: '4px',
-  overflow: 'hidden'
-};
-
-const SOCIAL_MEDIA_BUTTON_STYLE: React.CSSProperties = {
-  boxSizing: 'border-box',
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'center',
-  position: 'relative',
+  overflow: 'hidden',
   width: '310px',
   height: '28px',
   color: '#969696',
-  backgroundColor: 'transparent',
   border: '1px solid #969696',
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
@@ -64,8 +52,22 @@ const SOCIAL_MEDIA_BUTTON_STYLE: React.CSSProperties = {
   lineHeight: '15px',
   textAlign: 'center',
   textTransform: 'uppercase',
-  borderRadius: '4px',
-  outline: 'none'
+};
+
+const CUSTOM_DIV_STYLE: React.CSSProperties = {
+  width: 'inherit',
+  height: 'inherit'
+};
+
+const SOCIAL_MEDIA_BUTTON_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  position: 'relative',
+  width: 'inherit',
+  height: 'inherit',
+  backgroundColor: 'transparent'
 };
 
 const SOCIAL_MEDIA_ICON_STYLE: React.CSSProperties = {
