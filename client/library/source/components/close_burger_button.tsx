@@ -1,29 +1,26 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 
-interface Properties {
-  onClick: () => void;
+interface Properties extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
-export class CloseBurgerButton extends React.Component<Properties> {
-  public render(): JSX.Element {
-    return (
-      <button
-          style={BUTTON_STYLE}
-          className={css(styles.button)}
-          onClick={this.props.onClick}
-      >
-        <svg style={IMAGE_STYLE} xmlns='http://www.w3.org/2000/svg' >
-          <circle cx='15' cy='15' r='15' fill='inherit' />
-          <rect x='9.85742' y='9.1427' width='16' height='1.45455'
-            rx='0.727273' transform='rotate(45 9.85742 9.1427)' fill='white'
-          />
-          <rect x='21.1714' y='10.1711' width='16' height='1.45455'
-            rx='0.727273' transform='rotate(135 21.1714 10.1711)' fill='white'
-          />
-        </svg>
-      </button>);
-  }
+export function CloseBurgerButton(props: Properties) {
+  return (
+    <button
+        {...props}
+        style={BUTTON_STYLE}
+        className={css(styles.button)}
+    >
+      <svg style={IMAGE_STYLE} xmlns='http://www.w3.org/2000/svg' >
+        <circle cx='15' cy='15' r='15' fill='inherit' />
+        <rect x='9.85742' y='9.1427' width='16' height='1.45455'
+          rx='0.727273' transform='rotate(45 9.85742 9.1427)' fill='white'
+        />
+        <rect x='21.1714' y='10.1711' width='16' height='1.45455'
+          rx='0.727273' transform='rotate(135 21.1714 10.1711)' fill='white'
+        />
+      </svg>
+    </button>);
 }
 
 const BUTTON_STYLE: React.CSSProperties = {

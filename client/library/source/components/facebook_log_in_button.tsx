@@ -3,16 +3,13 @@ import * as React from 'react';
 
 interface Properties extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
-  style?: React.CSSProperties;
-  onClick: () => void;
 }
 
 export function FacebookLogInButton(props: Properties) {
-  const { label, style, ...rest } = props;
   return (
     <button
-        {...rest}
-        style={{...BUTTON_STYLE, ...style}}
+        {...props}
+        style={{...BUTTON_STYLE, ...props.style}}
         className={css(styles.button)}
     >
       <img
@@ -20,7 +17,7 @@ export function FacebookLogInButton(props: Properties) {
         src='resources/facebook_log_in_button/icons/facebook.svg'
         alt='Facebook Icon'
       />
-      <span>{label}</span>
+      <span>{props.label}</span>
     </button>);
 }
 

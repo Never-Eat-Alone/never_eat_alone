@@ -6,42 +6,39 @@ interface Properties extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   displayMode: DisplayMode;
 }
 
-export class CloseButton extends React.Component<Properties> {
-  public render(): JSX.Element {
-    const { displayMode, style, ...rest } = this.props;
-    if (displayMode === DisplayMode.MOBILE) {
-      return (
-        <button style={{...MOBILE_BUTTON_STYLE, ...style}} {...rest} >
-          <svg style={MOBILE_ICON_STYLE} className={css(styles.mobileIcon)}
-              xmlns='http://www.w3.org/2000/svg'
-          >
-            <circle opacity='inherit' cx='12' cy='12' r='12' fill='currentColor'
-            />
-            <path d='M6 6L18 18' stroke='white' strokeWidth='2'
-              strokeMiterlimit='10' strokeLinecap='round'
-            />
-            <path d='M18 6L6 18' stroke='white' strokeWidth='2'
-              strokeMiterlimit='10' strokeLinecap='round'
-            />
-          </svg>
-        </button>);
-    }
+export function CloseButton(props: Properties) {
+  if (props.displayMode === DisplayMode.MOBILE) {
     return (
-      <button style={{...BUTTON_STYLE, ...style}} {...rest} >
-        <svg style={ICON_STYLE} xmlns='http://www.w3.org/2000/svg'
-            className={css(styles.icon)}
+      <button {...props} style={{...MOBILE_BUTTON_STYLE, ...props.style}} >
+        <svg style={MOBILE_ICON_STYLE} className={css(styles.mobileIcon)}
+            xmlns='http://www.w3.org/2000/svg'
         >
-          <path d='M1.6001 1.59998L14.4001 14.4' stroke='currentColor'
-            strokeWidth='2' strokeMiterlimit='10' strokeLinecap='round'
-            strokeLinejoin='round'
+          <circle opacity='inherit' cx='12' cy='12' r='12' fill='currentColor'
           />
-          <path d='M14.4001 1.59998L1.6001 14.4' stroke='currentColor'
-            strokeWidth='2' strokeMiterlimit='10' strokeLinecap='round'
-            strokeLinejoin='round'
+          <path d='M6 6L18 18' stroke='white' strokeWidth='2'
+            strokeMiterlimit='10' strokeLinecap='round'
+          />
+          <path d='M18 6L6 18' stroke='white' strokeWidth='2'
+            strokeMiterlimit='10' strokeLinecap='round'
           />
         </svg>
       </button>);
   }
+  return (
+    <button {...props} style={{...BUTTON_STYLE, ...props.style}} >
+      <svg style={ICON_STYLE} xmlns='http://www.w3.org/2000/svg'
+          className={css(styles.icon)}
+      >
+        <path d='M1.6001 1.59998L14.4001 14.4' stroke='currentColor'
+          strokeWidth='2' strokeMiterlimit='10' strokeLinecap='round'
+          strokeLinejoin='round'
+        />
+        <path d='M14.4001 1.59998L1.6001 14.4' stroke='currentColor'
+          strokeWidth='2' strokeMiterlimit='10' strokeLinecap='round'
+          strokeLinejoin='round'
+        />
+      </svg>
+    </button>);
 }
 
 const BUTTON_STYLE: React.CSSProperties = {

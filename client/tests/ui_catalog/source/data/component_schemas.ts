@@ -7,9 +7,10 @@ import { ComponentSchema, PropertySchema, SignalSchema } from './schemas';
 
 /** Loads the complete list of schemas available to test. */
 export function loadComponentSchemas(): ComponentSchema[] {
-  const logoSchema = new ComponentSchema('WhiteTextHeaderLogo',
-    [new PropertySchema('style', {}, CSSInput)], [],
-    NeverEatAlone.WhiteTextHeaderLogo);
+  const logoSchema = new ComponentSchema('HeaderLogo',
+    [new PropertySchema('style', {}, CSSInput),
+    new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
+    DisplayModeInput)], [], NeverEatAlone.HeaderLogo);
   const primaryTextButtonSchema = new ComponentSchema('Primary Text Button', [
     new PropertySchema('label', 'Get in touch', TextInput),
     new PropertySchema('labelStyle', {}, CSSInput),

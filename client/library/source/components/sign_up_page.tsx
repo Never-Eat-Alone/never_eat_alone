@@ -6,7 +6,7 @@ import { PasswordInputField } from './input_field';
 import { RedNavLink } from './nav_link';
 import { PasswordAnalyzer } from './password_analyzer';
 
-interface Properties {
+interface Properties extends Router.LinkProps {
   displayMode: DisplayMode;
 
   /** The email user requested an account for. */
@@ -17,9 +17,6 @@ interface Properties {
 
   /** Indicates the sign up button is clicked. */
   onSignUp: () => void;
-}
-
-interface RouterProps extends Router.RouteComponentProps {
 }
 
 interface State {
@@ -69,9 +66,8 @@ function getPasswordChecksScore(checks: PasswordChecks): number {
   return score;
 }
 
-export class SignUpPage extends React.Component<Properties & RouterProps,
-    State> {
-  constructor(props: Properties & RouterProps) {
+export class SignUpPage extends React.Component<Properties, State> {
+  constructor(props: Properties) {
     super(props);
     this.state = {
       password: '',

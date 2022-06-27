@@ -1,48 +1,49 @@
 import * as React from 'react';
 
-interface Properties {
+interface Properties extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /** Indicates whether the avatar has a checkmark on it or not. */
   isMarked: boolean;
 
   /** The src address of the avatar image. */
   imageSrc: string;
-
-  /** Indicates the avatar is clicked. */
-  onClick: () => void;
 }
 
-export class AvatarWithCheckMark extends React.Component<Properties> {
-  public render(): JSX.Element {
-    return (
-      <div style={ICON_CONTAINER_STYLE} onClick={this.props.onClick} >
-        <img
-          style={ICON_STYLE}
-          src={this.props.imageSrc}
-          alt='Avatar'
-        />
-        <div style={{ display: this.props.isMarked && 'block' || 'none',
-            ...RING_STYLE}}
-        >
-          <div style={CHECKMARK_CONTAINER_STYLE} >
-            <img
-              style={CHECKMARK_ICON_STYLE}
-              src='resources/profile_set_up_page/icons/check.svg'
-              alt='Checkmark Icon'
-            />
-          </div>
+export function AvatarWithCheckMark(props: Properties) {
+  return (
+    <button {...props} style={CONTAINER_STYLE} >
+      <img
+        style={ICON_STYLE}
+        src={props.imageSrc}
+        alt='Avatar'
+      />
+      <div
+          style={{ display: props.isMarked && 'block' || 'none', ...RING_STYLE}}
+      >
+        <div style={CHECKMARK_CONTAINER_STYLE} >
+          <img
+            style={CHECKMARK_ICON_STYLE}
+            src='resources/profile_set_up_page/icons/check.svg'
+            alt='Checkmark Icon'
+          />
         </div>
-      </div>);
-  }
+      </div>
+    </button>);
 }
 
-const ICON_CONTAINER_STYLE: React.CSSProperties = {
+const CONTAINER_STYLE: React.CSSProperties = {
   position: 'relative',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
   height: '68px',
-  width: '68px'
+  width: '68px',
+  padding: '0px',
+  margin: '0px',
+  outline: 'none',
+  border: 'none',
+  boxShadow: 'none',
+  backgroundColor: 'transparent'
 };
 
 const ICON_STYLE: React.CSSProperties = {
