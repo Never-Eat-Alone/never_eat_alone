@@ -5,7 +5,7 @@ import { CheckBox, CloseButton, EmailInputField, FacebookLogInButton,
 } from '../components';
 import { DisplayMode } from '../definitions';
 
-interface Properties {
+interface Properties extends Router.RouteComponentProps {
   displayMode: DisplayMode;
 
   /** represents the form error message. */
@@ -33,18 +33,14 @@ interface Properties {
   onFacebookLogInClick: () => void;
 }
 
-interface RouterProps extends Router.RouteComponentProps {
-}
-
 interface State {
   email: string;
   password: string;
 }
 
 /** Displays the Log In Modal. */
-export class LogInModal extends React.Component<Properties & RouterProps,
-    State> {
-  constructor(props: Properties & RouterProps) {
+export class LogInModal extends React.Component<Properties, State> {
+  constructor(props: Properties) {
     super(props);
     this.state = {
       email: '',
