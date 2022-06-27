@@ -305,14 +305,14 @@ const UPLOAD_IMAGE_BUTTON_STYLE: React.CSSProperties = {
   lineHeight: '18px',
   textAlign: 'center',
   color: '#F26B55',
-  transition: 'all 0.60s ease-in',
   cursor: 'pointer',
   border: 'none',
   outline: 'none',
   textDecoration: 'none',
   margin: '0px',
   padding: '0px',
-  backgroundColor: 'transparent'
+  backgroundColor: 'transparent',
+  transition: 'all 0.08s ease-in 0s'
 };
 
 const LETS_GO_BUTTON_STYLE: React.CSSProperties = {
