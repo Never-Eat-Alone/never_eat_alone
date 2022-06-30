@@ -1,10 +1,8 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 
-interface Properties extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-}
-
-export function CloseBurgerButton(props: Properties) {
+export function CloseBurgerButton(props: React.ButtonHTMLAttributes<
+    HTMLButtonElement>) {
   return (
     <button
         {...props}

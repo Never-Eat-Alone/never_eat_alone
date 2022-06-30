@@ -2,10 +2,7 @@ import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 
-interface Properties extends Router.LinkProps {
-}
-
-export function FooterLogo(props: Properties) {
+export function FooterLogo(props: Router.LinkProps) {
   return (
     <Router.Link
         {...props}

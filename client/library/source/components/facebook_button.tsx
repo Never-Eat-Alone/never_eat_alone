@@ -1,10 +1,8 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 
-interface Properties extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
-}
-
-export function FacebookButton(props: Properties) {
+export function FacebookButton(props: React.AnchorHTMLAttributes<
+    HTMLAnchorElement>) {
   return (
     <a
         style={{...SOCIAL_MEDIA_ICON_CONTAINER_STYLE, ...props.style}}
