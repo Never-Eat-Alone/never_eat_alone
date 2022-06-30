@@ -8,6 +8,7 @@ export * from './display_mode_input';
 export * from './enum_input';
 export * from './event_card_summary_input';
 export * from './event_tag_input';
+export * from './forgot_password_page_error_code_input';
 export * from './home_page_error_code_input';
 export * from './number_input';
 export * from './optional_input';

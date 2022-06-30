@@ -1,8 +1,9 @@
 import * as NeverEatAlone from 'never_eat_alone';
 import { ArrayInput, BooleanInput, CSSInput, CuisineInput, DateInput,
   DisplayModeInput, EventCardSummaryInput, EventTagInput,
-  HomePageErrorCodeInput, NumberInput, SignUpPageErrorCodeInput,
-  SocialMediaImageInput, TextInput, UserInput } from '../viewer/propertyInput';
+  ForgotPasswordPageErrorCodeInput, HomePageErrorCodeInput, NumberInput,
+  SignUpPageErrorCodeInput, SocialMediaImageInput, TextInput, UserInput
+} from '../viewer/propertyInput';
 import { ComponentSchema, PropertySchema, SignalSchema } from './schemas';
 
 /** Loads the complete list of schemas available to test. */
@@ -741,6 +742,14 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new SignalSchema('onGoogleLogInClick', '', []),
     new SignalSchema('onFacebookLogInClick', '', [])],
     NeverEatAlone.LogInModal);
+  const forgotPasswordPageSchema = new ComponentSchema('forgotPasswordPage',
+    [new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
+    DisplayModeInput),
+    new PropertySchema('errorCode',
+    NeverEatAlone.ForgotPasswordPage.ErrorCode.NONE,
+    ForgotPasswordPageErrorCodeInput)],
+    [new SignalSchema('onSendLinkClick', '', [])],
+    NeverEatAlone.ForgotPasswordPage);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
@@ -752,5 +761,6 @@ export function loadComponentSchemas(): ComponentSchema[] {
     homePageNotLoggedSchema, homePageLoggedInSchema, joinModalSchema,
     closeButtonSchema, JoinRequestSentModalSchema, signUpPageSchema,
     profileSetUpPageSchema, avatarWithCheckMarkSchema, checkBoxSchema,
-    googleLogInButtonSchema, facebookLogInButtonSchema, logInModalSchema];
+    googleLogInButtonSchema, facebookLogInButtonSchema, logInModalSchema,
+    forgotPasswordPageSchema];
 }
