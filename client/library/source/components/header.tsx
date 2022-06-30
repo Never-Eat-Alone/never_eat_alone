@@ -1,13 +1,12 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { DisplayMode, User } from '../definitions';
-import { BurgerMenuLeft } from './burger_menu_left';
-import { WhiteTextHeaderLogo } from './header_logo';
+import { HeaderLogo } from './header_logo';
 import { WhiteNavLink } from './nav_link';
 import { ProfileMenu } from './profile_menu';
 import { AccentTextButton, InvertedSecondaryTextButton } from './text_button';
 
-interface Properties {
+interface Properties extends Router.LinkProps {
   /** The display mode based on the user's display dimensions. */
   displayMode: DisplayMode;
 
@@ -30,10 +29,7 @@ interface Properties {
   onLogOut: () => void;
 }
 
-interface RouterProps extends Router.RouteComponentProps {
-}
-
-export class Header extends React.Component<Properties & RouterProps> {
+export class Header extends React.Component<Properties> {
   public render(): JSX.Element {
     const headerMode = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
@@ -43,17 +39,6 @@ export class Header extends React.Component<Properties & RouterProps> {
         return HEADER_TABLET_STYLE;
       }
       return HEADER_MOBILE_STYLE;
-    })();
-    const leftSide = (() => {
-      if (this.props.displayMode === DisplayMode.DESKTOP ||
-          this.props.displayMode === DisplayMode.TABLET) {
-        return <WhiteTextHeaderLogo />;
-      }
-      return (
-        <BurgerMenuLeft
-          account={this.props.account}
-          onMenuClick={this.props.onMenuClick}
-        />);
     })();
     const rightSideButtons = [];
     if (this.props.account && this.props.account.id !== -1) {
@@ -148,7 +133,7 @@ export class Header extends React.Component<Properties & RouterProps> {
     }
     return (
       <div style={{...HEADER_CONTAINER_STYLE, ...headerMode}} >
-        {leftSide}
+        <HeaderLogo {...this.props} />
         <div style={RIGHT_CONTAINER_STYLE} >{rightSideButtons}</div>
       </div>);
   }

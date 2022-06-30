@@ -1,6 +1,5 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
-import * as Router from 'react-router-dom';
 import { DisplayMode } from '../definitions';
 import { AvatarWithCheckMark } from './avatar_with_check_mark';
 import { NameInputFieldWithCounterInside } from './input_field';
@@ -19,18 +18,14 @@ interface Properties {
   onLetsGoClick: () => void;
 }
 
-interface RouterProps extends Router.RouteComponentProps {
-}
-
 interface State {
   imageSrc: string;
   displayName: string;
   markIndex: number;
 }
 
-export class ProfileSetUpPage extends React.Component<Properties & RouterProps,
-    State> {
-  constructor(props: Properties & RouterProps) {
+export class ProfileSetUpPage extends React.Component<Properties, State> {
+  constructor(props: Properties) {
     super(props);
     this.state = {
       imageSrc: 'resources/profile_set_up_page/icons/profile-image-0.svg',

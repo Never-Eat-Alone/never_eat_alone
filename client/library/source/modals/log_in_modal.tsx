@@ -5,7 +5,7 @@ import { CheckBox, CloseButton, EmailInputField, FacebookLogInButton,
 } from '../components';
 import { DisplayMode } from '../definitions';
 
-interface Properties extends Router.RouteComponentProps {
+interface Properties extends Router.LinkProps {
   displayMode: DisplayMode;
 
   /** represents the form error message. */

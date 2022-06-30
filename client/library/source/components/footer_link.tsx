@@ -3,28 +3,22 @@ import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { DisplayMode } from '../definitions';
 
-interface Properties {
+interface Properties extends Router.LinkProps {
   displayMode: DisplayMode;
   label: string;
-  to: string;
-  style?: React.CSSProperties;
 }
 
-export class FooterLink extends React.Component<Properties> {
-  public render(): JSX.Element {
-    const lineHeight = (this.props.displayMode === DisplayMode.MOBILE &&
-      '22px') || '15px';
-    return (
-      <Router.Link
-          to={this.props.to}
-          style={{...LINK_STYLE, ...this.props.style}}
-          className={css(styles.link)}
-      >
-        <p style={{...LABEL_STYLE, lineHeight: lineHeight}} >
-          {this.props.label}
-        </p>
-      </Router.Link>);
-  }
+export function FooterLink(props: Properties) {
+  const lineHeight = (props.displayMode === DisplayMode.MOBILE &&
+    '22px') || '15px';
+  return (
+    <Router.Link
+        {...props}
+        style={{...LINK_STYLE, ...props.style}}
+        className={css(styles.link)}
+    >
+      <p style={{...LABEL_STYLE, lineHeight: lineHeight}} >{props.label}</p>
+    </Router.Link>);
 }
 
 const LINK_STYLE: React.CSSProperties = {

@@ -3,32 +3,26 @@ import * as React from 'react';
 
 interface Properties extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
-  onClick: () => void;
-  style?: React.CSSProperties;
 }
 
-export class GoogleLogInButton extends React.Component<Properties> {
-  public render(): JSX.Element {
-    const { label, style, ...rest} = this.props;
-    return (
-      <button
-          {...rest}
-          style={{...BUTTON_STYLE, ...style}}
-          className={css(styles.button)}
-          onClick={this.props.onClick}
-      >
-        <div className='customGPlusSignIn' style={CUSTOM_DIV_STYLE} >
-          <div style={SOCIAL_MEDIA_BUTTON_STYLE} >
-            <img
-              style={SOCIAL_MEDIA_ICON_STYLE}
-              alt='Google'
-              src='resources/google_log_in_button/icons/google.svg'
-            />
-            <span>{label}</span>
-          </div>
+export function GoogleLogInButton(props: Properties) {
+  return (
+    <button
+        {...props}
+        style={{...BUTTON_STYLE, ...props.style}}
+        className={css(styles.button)}
+    >
+      <div className='customGPlusSignIn' style={CUSTOM_DIV_STYLE} >
+        <div style={SOCIAL_MEDIA_BUTTON_STYLE} >
+          <img
+            style={SOCIAL_MEDIA_ICON_STYLE}
+            alt='Google'
+            src='resources/google_log_in_button/icons/google.svg'
+          />
+          <span>{props.label}</span>
         </div>
-      </button>);
-  }
+      </div>
+    </button>);
 }
 
 const BUTTON_STYLE: React.CSSProperties = {

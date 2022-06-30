@@ -2,23 +2,20 @@ import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 
-interface Properties extends Router.RouteComponentProps {
+interface Properties extends Router.LinkProps {
   label: string;
-  to: string;
   style?: React.CSSProperties;
   className?: string;
 }
 
 export function NavLink(props: Properties) {
-  const { style, className, label, to, ...rest } = props;
   return (
     <Router.Link
-        {...rest}
-        to={to}
-        style={{...LINK_STYLE, ...style}}
-        className={className}
+        {...props}
+        style={{...LINK_STYLE, ...props.style}}
+        className={props.className}
     >
-      <p style={LABEL_STYLE} >{label}</p>
+      <p style={LABEL_STYLE} >{props.label}</p>
     </Router.Link>);
 }
 

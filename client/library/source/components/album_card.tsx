@@ -10,36 +10,35 @@ interface Properties {
 }
 
 /** Displays the Album Card in photo album. */
-export class AlbumCard extends React.Component<Properties> {
-  public render(): JSX.Element {
-    const containerStyle = (() => {
-      if (this.props.displayMode === DisplayMode.MOBILE) {
-        return MOBILE_CONTAINER_STYLE;
-      }
-      if (this.props.displayMode === DisplayMode.TABLET) {
-        return TABLET_CONTAINER_STYLE;
-      }
-      return DESKTOP_CONTAINER_STYLE;
-    })();
-    return (
-      <div style={{...CONTAINER_STYLE, ...containerStyle}}
-          onClick={this.props.onClick}
+export function AlbumCard(props: Properties) {
+  const containerStyle = (() => {
+    if (props.displayMode === DisplayMode.MOBILE) {
+      return MOBILE_CONTAINER_STYLE;
+    }
+    if (props.displayMode === DisplayMode.TABLET) {
+      return TABLET_CONTAINER_STYLE;
+    }
+    return DESKTOP_CONTAINER_STYLE;
+  })();
+  return (
+    <div
+        style={{...CONTAINER_STYLE, ...containerStyle}}
+        onClick={props.onClick}
+    >
+      <div
+          style={{...IMAGE_CONTAINER,
+            backgroundImage: `url(${props.src})`}}
+          className={css(styles.imageContainer)}
       >
-        <div
-            style={{...IMAGE_CONTAINER,
-              backgroundImage: `url(${this.props.src})`}}
-            className={css(styles.imageContainer)}
-        >
-          <div style={ICON_CONTAINER_STYLE} >
-            <img
-              style={ICON_STYLE}
-              src='resources/album_card/icons/instagram.svg'
-              alt='Instagram'
-            />
-          </div>
+        <div style={ICON_CONTAINER_STYLE} >
+          <img
+            style={ICON_STYLE}
+            src='resources/album_card/icons/instagram.svg'
+            alt='Instagram'
+          />
         </div>
-      </div>);
-  }
+      </div>
+    </div>);
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {

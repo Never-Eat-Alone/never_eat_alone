@@ -1,84 +1,57 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 import * as Router from 'react-router-dom';
+import { DisplayMode } from '../definitions';
 
-interface Properties {
-  color: string;
-  imageSrc: string;
-  style?: React.CSSProperties;
-  className?: string;
+interface Properties extends Router.LinkProps {
+  displayMode: DisplayMode;
 }
 
-export class HeaderLogo extends React.Component<Properties> {
-  public render(): JSX.Element {
-    return (
-      <Router.Link
-          to='/'
-          style={{...CONTAINER_STYLE, ...this.props.style}}
-          className={this.props.className}
-      >
-        <img
-          style={LOGO_STYLE}
-          src={this.props.imageSrc}
-          alt='NEA Logo'
-        />
-        <p style={{...LOGO_TEXT_STYLE, color: this.props.color}} >
-          NeverEatAlone
-        </p>
-      </Router.Link>);
-  }
-}
-
-interface ColoredHeaderLogoProperties {
-  style?: React.CSSProperties;
-}
-
-export function WhiteTextHeaderLogo(props: ColoredHeaderLogoProperties) {
+export function HeaderLogo(props: Properties) {
+  const text = (() => {
+    if (props.displayMode === DisplayMode.MOBILE) {
+      return null;
+    }
+    return <p style={LOGO_TEXT_STYLE} >NeverEatAlone</p>;
+  })();
   return (
-    <HeaderLogo
-      {...props}
-      color='#FFFFFF'
-      imageSrc='resources/header/icons/logo_white.svg'
-      className={css(styles.whiteTextContainer)}
-    />);
-}
-
-export function OrangeTextHeaderLogo(props: ColoredHeaderLogoProperties) {
-  return (
-    <HeaderLogo
-      {...props}
-      color='#F24D3D'
-      imageSrc='resources/header/icons/logo_orange.svg'
-      className={css(styles.orangeTextContainer)}
-    />);
+    <Router.Link
+        {...props}
+        to='/'
+        style={{...CONTAINER_STYLE, ...props.style}}
+        className={css(styles.whiteTextContainer)}
+    >
+      <img
+        style={LOGO_STYLE}
+        src='resources/header/icons/logo_white.svg'
+        alt='NEA Logo'
+      />
+      {text}
+    </Router.Link>);
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
-  justifyContent: 'space-between',
+  justifyContent: 'flex-start',
   alignItems: 'center',
-  height: '30px',
-  width: '137px',
   backgroundColor: 'transparent',
   textDecoration: 'none',
   cursor: 'pointer',
-  outline: 'none'
+  outline: 'none',
+  height: '30px',
+  width: 'fit-content'
 };
 
 const LOGO_STYLE: React.CSSProperties = {
   height: '100%',
   width: '35px',
   backgroundColor: 'transparent',
-  WebkitTouchCallout: 'none',
-  MozUserSelect: 'none',
-  WebkitUserSelect: 'none',
-  KhtmlUserSelect: 'none',
-  userSelect: 'none',
   outline: 'none',
   border: 'none',
   overflow: 'hidden',
-  marginRight: '10px'
+  marginRight: '10px',
+  color: '#FFFFFF'
 };
 
 const LOGO_TEXT_STYLE: React.CSSProperties = {
@@ -90,7 +63,9 @@ const LOGO_TEXT_STYLE: React.CSSProperties = {
   verticalAlign: 'center',
   margin: '0',
   padding: '0',
-  textRendering: 'optimizeLegibility'
+  textRendering: 'optimizeLegibility',
+  width: '92px',
+  color: '#FFFFFF'
 };
 
 const styles = StyleSheet.create({
@@ -102,16 +77,6 @@ const styles = StyleSheet.create({
     ':focus-within': {
       textDecoration: 'underline solid #FFFFFF 1px',
       color: '#FFFFFF'
-    }
-  },
-  orangeTextContainer: {
-    ':focus': {
-      textDecoration: 'underline solid #F24D3D 1px',
-      color: '#F24D3D'
-    },
-    ':focus-within': {
-      textDecoration: 'underline solid #F24D3D 1px',
-      color: '#F24D3D'
     }
   }
 });

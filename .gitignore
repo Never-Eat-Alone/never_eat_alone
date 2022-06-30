@@ -12,3 +12,4 @@ client/tests/**/application/
 client/application/application/
 client/library/library/
 images/
+client/tests/ui_catalog/library
