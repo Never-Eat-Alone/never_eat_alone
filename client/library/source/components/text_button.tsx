@@ -13,6 +13,16 @@ export function TextButton(props: Properties) {
     </button>);
 }
 
+export function SecondaryTextLinkButton(props: Properties) {
+  return (
+    <TextButton
+      {...props}
+      labelStyle={{...SECONDARY_LINK_LABEL_STYLE, ...props.labelStyle}}
+      style={{...SECONDARY_LINK_BUTTON_STYLE, ...props.style}}
+      className={css(styles.secondaryTextLinkButton)}
+    />);
+}
+
 export function InvertedSecondaryTextButton(props: Properties) {
   return (
     <TextButton
@@ -137,6 +147,14 @@ const LABEL_STYLE: React.CSSProperties = {
   color: 'inherit'
 };
 
+const SECONDARY_LINK_BUTTON_STYLE: React.CSSProperties = {
+  width: 'fit-content',
+  height: '18px',
+  backgroundColor: 'transparent',
+  color: '#F26B55',
+  border: 'none'
+};
+
 const INVERTED_BUTTON_STYLE: React.CSSProperties = {
   width: '68px',
   height: '30px',
@@ -159,6 +177,14 @@ const PRIMARY_BUTTON_STYLE: React.CSSProperties = {
   backgroundColor: '#F26B55',
   border: 'none',
   color: '#FFFFFF'
+};
+
+const SECONDARY_LINK_LABEL_STYLE: React.CSSProperties = {
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '14px',
+  lineHeight: '18px',
+  textTransform: 'capitalize'
 };
 
 const PRIMARY_LABEL_STYLE: React.CSSProperties = {
@@ -279,6 +305,24 @@ const styles = StyleSheet.create({
       backgroundColor: '#CCCCCC',
       boxShadow: 'none',
       cursor: 'default'
+    }
+  },
+  secondaryTextLinkButton: {
+    ':hover': {
+      textDecoration: 'underline solid #F26B55 1px',
+      color: '#F26B55'
+    },
+    ':focus': {
+      textDecoration: 'underline solid #F26B55 1px',
+      color: '#F26B55'
+    },
+    ':focus-within': {
+      textDecoration: 'underline solid #F26B55 1px',
+      color: '#F26B55'
+    },
+    ':active': {
+      textDecoration: 'underline solid #AA2F19 1px',
+      color: '#AA2F19'
     }
   }
 });
