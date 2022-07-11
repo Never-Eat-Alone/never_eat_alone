@@ -37,12 +37,12 @@ export function RedNavLink(props: Properties) {
     />);
 }
 
-export function RedNavLinkAsSecondaryButton(props: Properties) {
+export function SecondaryButtonNavLink(props: Properties) {
   return (
     <NavLink
       {...props}
-      style={{...RED_LINK_AS_SECONDARY_BUTTON_STYLE, ...props.style}}
-      className={css(styles.redNavLinkAsSecondaryButton)}
+      style={{...SECONDARY_BUTTON_STYLE, ...props.style}}
+      className={css(styles.secondaryButton)}
     />);
 }
 
@@ -58,7 +58,8 @@ const LINK_STYLE: React.CSSProperties = {
   overflow: 'hidden',
   border: 'none',
   outline: 'none',
-  textDecoration: 'none'
+  textDecoration: 'none',
+  textTransform: 'capitalize'
 };
 
 const LABEL_STYLE: React.CSSProperties = {
@@ -67,7 +68,7 @@ const LABEL_STYLE: React.CSSProperties = {
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
   fontWeight: 600,
-  textTransform: 'capitalize',
+  textTransform: 'inherit',
   fontSize: 'inherit',
   lineHeight: 'inherit',
   color: 'inherit'
@@ -90,16 +91,22 @@ const RED_LINK_STYLE: React.CSSProperties = {
   color: '#F26B55'
 };
 
-const RED_LINK_AS_SECONDARY_BUTTON_STYLE: React.CSSProperties = {
+const SECONDARY_BUTTON_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
   border: '1px solid #F26B55',
-  width: '74px',
-  height: '15px',
-  fontWeight: 400,
+  width: '116px',
+  height: '35px',
   fontSize: '12px',
   lineHeight: '15px',
   backgroundColor: 'transparent',
-  borderRadius: '4px'
+  borderRadius: '4px',
+  textTransform: 'uppercase',
+  color: '#F26B55',
+  cursor: 'pointer'
 };
 
 const styles = StyleSheet.create({
@@ -139,22 +146,38 @@ const styles = StyleSheet.create({
       color: '#AA2F19'
     }
   },
-  redNavLinkAsSecondaryButton: {
+  secondaryButton: {
     ':hover': {
-      textDecoration: 'underline solid #F26B55 1px',
-      color: '#F26B55'
+      backgroundColor: '#FFFFFF',
+      boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.4)',
+      color: '#F26B55',
+      cursor: 'pointer'
     },
     ':focus': {
-      textDecoration: 'underline solid #F26B55 1px',
-      color: '#F26B55'
+      backgroundColor: '#FFFFFF',
+      boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.4)',
+      color: '#F26B55',
+      cursor: 'pointer'
     },
     ':focus-within': {
-      textDecoration: 'underline solid #F26B55 1px',
-      color: '#F26B55'
+      backgroundColor: '#FFFFFF',
+      boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.4)',
+      color: '#F26B55',
+      cursor: 'pointer'
     },
     ':active': {
-      textDecoration: 'underline solid #AA2F19 1px',
-      color: '#AA2F19'
+      backgroundColor: 'transparent',
+      boxShadow: 'none',
+      border: '2px solid #AA2F19',
+      color: '#AA2F19',
+      cursor: 'pointer'
+    },
+    ':disabled': {
+      backgroundColor: 'transparent',
+      boxShadow: 'none',
+      border: '1px solid #969696',
+      color: '#969696',
+      cursor: 'default'
     }
   }
 });

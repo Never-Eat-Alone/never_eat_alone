@@ -760,6 +760,11 @@ export function loadComponentSchemas(): ComponentSchema[] {
     [new PropertySchema('label', 'Resend Link', TextInput),
     new PropertySchema('labelStyle', { fontSize: '14px' } , CSSInput)], [],
     NeverEatAlone.SecondaryTextLinkButton);
+  const secondaryButtonNavLink = new ComponentSchema('secondaryButtonNavLink',
+    [new PropertySchema('label', 'Back to HomePage', TextInput),
+    new PropertySchema('style', { width: '178px' } , CSSInput),
+    new PropertySchema('className', JSON.stringify({ fontSize: '14px' }) ,
+    TextInput)], [], NeverEatAlone.SecondaryButtonNavLink);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
@@ -773,5 +778,5 @@ export function loadComponentSchemas(): ComponentSchema[] {
     profileSetUpPageSchema, avatarWithCheckMarkSchema, checkBoxSchema,
     googleLogInButtonSchema, facebookLogInButtonSchema, logInModalSchema,
     forgotPasswordPageSchema, forgotPasswordLinkSentPageSchema,
-    secondaryTextLinkButton];
+    secondaryTextLinkButton, secondaryButtonNavLink];
 }
