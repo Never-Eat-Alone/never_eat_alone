@@ -98,7 +98,7 @@ const SECONDARY_BUTTON_STYLE: React.CSSProperties = {
   justifyContent: 'center',
   alignItems: 'center',
   border: '1px solid #F26B55',
-  width: '116px',
+  width: '178px',
   height: '35px',
   fontSize: '12px',
   lineHeight: '15px',
