@@ -1,9 +1,11 @@
 import * as React from 'react';
+import { SecondaryButtonNavLink, SecondaryTextLinkButton
+} from '../../components';
 import { DisplayMode } from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
-  onResendLinkClick: (email: string) => void;
+  onResendLinkClick: () => void;
 }
 
 export class ForgotPasswordLinkSentPage extends React.Component<Properties> {
@@ -24,7 +26,12 @@ export class ForgotPasswordLinkSentPage extends React.Component<Properties> {
           <p style={P_STYLE} >
             Follow the link we sent to your email to reset your password.
           </p>
-          <div>Back to homepage</div>
+          <SecondaryTextLinkButton
+            label='resend link'
+            style={RESEND_LINK_STYLE}
+            onClick={this.props.onResendLinkClick}
+          />
+          <SecondaryButtonNavLink to='/' label='back to homepage' />
         </div>
       </div>);
   }
@@ -108,9 +115,6 @@ const P_STYLE: React.CSSProperties = {
   margin: '30px 0px 0px 0px'
 };
 
-const BUTTON_STYLE: React.CSSProperties = {
-  width: '100%',
-  height: '35px',
-  minHeight: '35px',
-  margin: '30px 0px 0px 0px'
+const RESEND_LINK_STYLE: React.CSSProperties = {
+  margin: '30px 0px 30px 0px'
 };
