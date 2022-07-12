@@ -765,6 +765,12 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('style', { width: '178px' } , CSSInput),
     new PropertySchema('className', JSON.stringify({ fontSize: '14px' }) ,
     TextInput)], [], NeverEatAlone.SecondaryButtonNavLink);
+  const resetPasswordPage = new ComponentSchema('resetPasswordPage',
+    [new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
+    DisplayModeInput), new PropertySchema('displayName', 'Arthur', TextInput),
+    new PropertySchema('profileImageSrc', 'resources/images/profile3.jpeg',
+    TextInput)], [new SignalSchema('onSaveClick', '', [])],
+    NeverEatAlone.ResetPasswordPage);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
@@ -778,5 +784,5 @@ export function loadComponentSchemas(): ComponentSchema[] {
     profileSetUpPageSchema, avatarWithCheckMarkSchema, checkBoxSchema,
     googleLogInButtonSchema, facebookLogInButtonSchema, logInModalSchema,
     forgotPasswordPageSchema, forgotPasswordLinkSentPageSchema,
-    secondaryTextLinkButton, secondaryButtonNavLink];
+    secondaryTextLinkButton, secondaryButtonNavLink, resetPasswordPage];
 }
