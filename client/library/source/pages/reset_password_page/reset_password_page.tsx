@@ -42,7 +42,7 @@ const CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'center',
-  margin: '60px 10px 60px 10px'
+  padding: '60px 10px 60px 10px'
 };
 
 const CONTENT_STYLE: React.CSSProperties = {
@@ -90,7 +90,10 @@ const PROFILE_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
 const PROFILE_IMAGE_STYLE: React.CSSProperties = {
   width: '68px',
   height: '100%',
-  backgroundColor: 'transparent'
+  minHeight: '68px',
+  backgroundColor: 'transparent',
+  borderRadius: '50%',
+  overflow: 'hidden'
 };
 
 const DISPLAY_NAME_STYLE: React.CSSProperties = {

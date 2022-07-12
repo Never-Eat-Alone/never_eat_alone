@@ -767,7 +767,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     TextInput)], [], NeverEatAlone.SecondaryButtonNavLink);
   const resetPasswordPage = new ComponentSchema('resetPasswordPage',
     [new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
-    DisplayModeInput), new PropertySchema('displayName', 'Arthur', TextInput),
+    DisplayModeInput), new PropertySchema('displayName', 'Ella', TextInput),
     new PropertySchema('profileImageSrc', 'resources/images/profile3.jpeg',
     TextInput)], [new SignalSchema('onSaveClick', '', [])],
     NeverEatAlone.ResetPasswordPage);
