@@ -147,7 +147,9 @@ const CONTENT_STYLE: React.CSSProperties = {
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  backgroundColor: '#F6F6F6'
+  backgroundColor: '#F6F6F6',
+  boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
+  borderRadius: '4px'
 };
 
 const CONTENT_SIZE_STYLE: React.CSSProperties = {
@@ -161,9 +163,14 @@ const MOBILE_CONTENT_SIZE_STYLE: React.CSSProperties = {
 };
 
 const HEADING_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
   padding: '0px',
   margin: '0px',
   height: '53px',
+  width: '100%',
   fontFamily: 'Oswald',
   fontStyle: 'normal',
   fontWeight: 400,
@@ -218,7 +225,8 @@ const DESCRIPTION_STYLE: React.CSSProperties = {
   height: '18px',
   color: '#000000',
   width: '100%',
-  marginTop: '30px'
+  marginTop: '30px',
+  marginBottom: '30px'
 };
 
 const INPUT_FIELD_STYLE: React.CSSProperties = {
