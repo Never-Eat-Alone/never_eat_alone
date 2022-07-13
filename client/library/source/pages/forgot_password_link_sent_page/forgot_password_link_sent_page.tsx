@@ -31,7 +31,11 @@ export class ForgotPasswordLinkSentPage extends React.Component<Properties> {
             style={RESEND_LINK_STYLE}
             onClick={this.props.onResendLinkClick}
           />
-          <SecondaryButtonNavLink to='/' label='back to homepage' />
+          <SecondaryButtonNavLink
+            style={BACK_TO_HOMEPAGE_BUTTON_STYLE}
+            to='/'
+            label='back to homepage'
+          />
         </div>
       </div>);
   }
@@ -117,4 +121,8 @@ const P_STYLE: React.CSSProperties = {
 
 const RESEND_LINK_STYLE: React.CSSProperties = {
   margin: '30px 0px 30px 0px'
+};
+
+const BACK_TO_HOMEPAGE_BUTTON_STYLE: React.CSSProperties = {
+  width: '100%'
 };
