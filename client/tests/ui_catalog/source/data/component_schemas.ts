@@ -1,6 +1,6 @@
 import * as NeverEatAlone from 'never_eat_alone';
-import { ArrayInput, BooleanInput, CSSInput, CuisineInput, DateInput,
-  DisplayModeInput, EventCardSummaryInput, EventTagInput,
+import { ArrayInput, BooleanInput, CityProvinceInput, CSSInput, CuisineInput,
+  DateInput, DisplayModeInput, EventCardSummaryInput, EventTagInput,
   ForgotPasswordPageErrorCodeInput, HomePageErrorCodeInput, NumberInput,
   SignUpPageErrorCodeInput, SocialMediaImageInput, TextInput, UserInput
 } from '../viewer/propertyInput';
@@ -772,7 +772,21 @@ export function loadComponentSchemas(): ComponentSchema[] {
     TextInput)], [new SignalSchema('onSaveClick', '', [])],
     NeverEatAlone.ResetPasswordPage);
   const profileBoxSchema = new ComponentSchema('profileBox',
-    [new PropertySchema()], [], NeverEatAlone.ProfileBox);
+    [new PropertySchema('profileImageSrc', 'resources/images/profile2.jpeg',
+      TextInput),
+    new PropertySchema('displayName', 'Julia', TextInput),
+    new PropertySchema('userName', 'julia453', TextInput),
+    new PropertySchema('description', 'Hello everyone! My name is julia and I \
+      would love to meet you all and try new foods.', TextInput),
+    new PropertySchema('facebookLink', 'https://facebook.com', TextInput),
+    new PropertySchema('twitterLink', 'https://twitter.com', TextInput),
+    new PropertySchema('instagramLink', 'https://instagram.com', TextInput),
+    new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
+      DisplayModeInput),
+    new PropertySchema('memberSince', new Date(2022, 1, 1), DateInput),
+    new PropertySchema('location', new NeverEatAlone.CityProvince('Toronto',
+      'ON'), CityProvinceInput)
+    ], [new SignalSchema('onEditClick', '', [])], NeverEatAlone.ProfileBox);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
