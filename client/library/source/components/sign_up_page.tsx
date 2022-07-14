@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { PrimaryTextButton } from '../components';
 import { DisplayMode } from '../definitions';
+import { getPasswordChecks, getPasswordChecksScore } from '../utilities';
 import { PasswordInputField } from './input_field';
 import { RedNavLink } from './nav_link';
 import { PasswordAnalyzer } from './password_analyzer';
@@ -23,47 +24,6 @@ interface State {
   password: string;
   confirmPassword: string;
   hasChanged: boolean;
-}
-
-interface PasswordChecks {
-  hasMinCharacters: boolean;
-  hasNumbers: boolean;
-  hasLowerCase: boolean;
-  isMixedCase: boolean;
-  hasSpecialCharacter: boolean;
-  doesConfirmationMatch: boolean;
-}
-
-function getPasswordChecks(password: string, confirmation: string):
-    PasswordChecks {
-  return {
-    hasMinCharacters: password.length >= 8,
-    hasNumbers:/\d/.test(password),
-    hasLowerCase: /[a-z]/.test(password),
-    isMixedCase: /[A-Z]/.test(password) && /[a-z]/.test(password),
-    hasSpecialCharacter: /[^\w]|_/.test(password),
-    doesConfirmationMatch: password === confirmation
-  } as PasswordChecks;
-}
-
-function getPasswordChecksScore(checks: PasswordChecks): number {
-  let score = 0;
-  if (checks.hasMinCharacters) {
-    score += 1;
-  }
-  if (checks.hasNumbers) {
-    score += 1;
-  }
-  if (checks.hasLowerCase) {
-    score += 1;
-  }
-  if (checks.isMixedCase) {
-    score += 1;
-  }
-  if (checks.hasSpecialCharacter) {
-    score += 1;
-  }
-  return score;
 }
 
 export class SignUpPage extends React.Component<Properties, State> {
