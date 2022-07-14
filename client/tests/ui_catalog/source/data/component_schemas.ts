@@ -750,6 +750,21 @@ export function loadComponentSchemas(): ComponentSchema[] {
     ForgotPasswordPageErrorCodeInput)],
     [new SignalSchema('onSendLinkClick', '', [])],
     NeverEatAlone.ForgotPasswordPage);
+  const forgotPasswordLinkSentPageSchema = new ComponentSchema(
+    'forgotPasswordLinkSentPage',
+    [new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
+    DisplayModeInput)],
+    [new SignalSchema('onResendLinkClick', '', [])],
+    NeverEatAlone.ForgotPasswordLinkSentPage);
+  const secondaryTextLinkButton = new ComponentSchema('secondaryTextLinkButton',
+    [new PropertySchema('label', 'Resend Link', TextInput),
+    new PropertySchema('labelStyle', { fontSize: '14px' } , CSSInput)], [],
+    NeverEatAlone.SecondaryTextLinkButton);
+  const secondaryButtonNavLink = new ComponentSchema('secondaryButtonNavLink',
+    [new PropertySchema('label', 'Back to HomePage', TextInput),
+    new PropertySchema('style', { width: '178px' } , CSSInput),
+    new PropertySchema('className', JSON.stringify({ fontSize: '14px' }) ,
+    TextInput)], [], NeverEatAlone.SecondaryButtonNavLink);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
@@ -762,5 +777,6 @@ export function loadComponentSchemas(): ComponentSchema[] {
     closeButtonSchema, JoinRequestSentModalSchema, signUpPageSchema,
     profileSetUpPageSchema, avatarWithCheckMarkSchema, checkBoxSchema,
     googleLogInButtonSchema, facebookLogInButtonSchema, logInModalSchema,
-    forgotPasswordPageSchema];
+    forgotPasswordPageSchema, forgotPasswordLinkSentPageSchema,
+    secondaryTextLinkButton, secondaryButtonNavLink];
 }

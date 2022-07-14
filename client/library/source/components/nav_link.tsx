@@ -37,6 +37,15 @@ export function RedNavLink(props: Properties) {
     />);
 }
 
+export function SecondaryButtonNavLink(props: Properties) {
+  return (
+    <NavLink
+      {...props}
+      style={{...SECONDARY_BUTTON_STYLE, ...props.style}}
+      className={css(styles.secondaryButton)}
+    />);
+}
+
 const LINK_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
@@ -49,7 +58,8 @@ const LINK_STYLE: React.CSSProperties = {
   overflow: 'hidden',
   border: 'none',
   outline: 'none',
-  textDecoration: 'none'
+  textDecoration: 'none',
+  textTransform: 'capitalize'
 };
 
 const LABEL_STYLE: React.CSSProperties = {
@@ -58,7 +68,7 @@ const LABEL_STYLE: React.CSSProperties = {
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
   fontWeight: 600,
-  textTransform: 'capitalize',
+  textTransform: 'inherit',
   fontSize: 'inherit',
   lineHeight: 'inherit',
   color: 'inherit'
@@ -79,6 +89,24 @@ const RED_LINK_STYLE: React.CSSProperties = {
   fontSize: '12px',
   lineHeight: '15px',
   color: '#F26B55'
+};
+
+const SECONDARY_BUTTON_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  border: '1px solid #F26B55',
+  width: '178px',
+  height: '35px',
+  fontSize: '12px',
+  lineHeight: '15px',
+  backgroundColor: 'transparent',
+  borderRadius: '4px',
+  textTransform: 'uppercase',
+  color: '#F26B55',
+  cursor: 'pointer'
 };
 
 const styles = StyleSheet.create({
@@ -116,6 +144,40 @@ const styles = StyleSheet.create({
     ':active': {
       textDecoration: 'underline solid #AA2F19 1px',
       color: '#AA2F19'
+    }
+  },
+  secondaryButton: {
+    ':hover': {
+      backgroundColor: '#FFFFFF',
+      boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.4)',
+      color: '#F26B55',
+      cursor: 'pointer'
+    },
+    ':focus': {
+      backgroundColor: '#FFFFFF',
+      boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.4)',
+      color: '#F26B55',
+      cursor: 'pointer'
+    },
+    ':focus-within': {
+      backgroundColor: '#FFFFFF',
+      boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.4)',
+      color: '#F26B55',
+      cursor: 'pointer'
+    },
+    ':active': {
+      backgroundColor: 'transparent',
+      boxShadow: 'none',
+      border: '2px solid #AA2F19',
+      color: '#AA2F19',
+      cursor: 'pointer'
+    },
+    ':disabled': {
+      backgroundColor: 'transparent',
+      boxShadow: 'none',
+      border: '1px solid #969696',
+      color: '#969696',
+      cursor: 'default'
     }
   }
 });
