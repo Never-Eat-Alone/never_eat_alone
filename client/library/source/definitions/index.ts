@@ -1,4 +1,5 @@
 export * from './array_json';
+export * from './city_province';
 export * from './cuisine';
 export * from './display_mode';
 export * from './event_card_summary';

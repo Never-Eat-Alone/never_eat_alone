@@ -771,6 +771,8 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('profileImageSrc', 'resources/images/profile3.jpeg',
     TextInput)], [new SignalSchema('onSaveClick', '', [])],
     NeverEatAlone.ResetPasswordPage);
+  const profileBoxSchema = new ComponentSchema('profileBox',
+    [new PropertySchema()], [], NeverEatAlone.ProfileBox);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
@@ -784,5 +786,6 @@ export function loadComponentSchemas(): ComponentSchema[] {
     profileSetUpPageSchema, avatarWithCheckMarkSchema, checkBoxSchema,
     googleLogInButtonSchema, facebookLogInButtonSchema, logInModalSchema,
     forgotPasswordPageSchema, forgotPasswordLinkSentPageSchema,
-    secondaryTextLinkButton, secondaryButtonNavLink, resetPasswordPage];
+    secondaryTextLinkButton, secondaryButtonNavLink, resetPasswordPage,
+    profileBoxSchema];
 }
