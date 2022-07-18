@@ -33,16 +33,16 @@ export function OptionalInput<T>(PropertyInput: typeof React.Component) {
 
     public render(): JSX.Element {
       return (
-        <div style={this.STYLE.container}>
-          <div style={this.STYLE.row}>
+        <div style={this.STYLE.container} >
+          <div style={this.STYLE.row} >
             <div>Is undefined?</div>
             <input type='checkbox'
               checked={this.state.isUndefined}
-              onChange={this.toggleUndefined}/>
+              onChange={this.toggleUndefined} />
           </div>
           <PropertyInput
             value={this.state.localValue}
-            update={this.updateLocal}/>
+            update={this.updateLocal} />
         </div>);
     }
 
@@ -62,7 +62,7 @@ export function OptionalInput<T>(PropertyInput: typeof React.Component) {
     private toggleUndefined = (event: React.ChangeEvent<HTMLInputElement>) => {
       const isUndefined = event.target.checked;
       this.setState({isUndefined});
-      if(isUndefined) {
+      if (isUndefined) {
         this.props.update(undefined);
       } else {
         this.props.update(this.state.localValue);

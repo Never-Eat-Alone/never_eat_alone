@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { FacebookButton, InstagramButton, TwitterButton
+} from '../../components';
 import { CityProvince, Cuisine, DisplayMode } from '../../definitions';
 
 interface Properties {
@@ -61,13 +63,38 @@ export class ProfileBox extends React.Component<Properties> {
         <p style={DESCRIPTION_STYLE} >{this.props.description}</p>
         <div style={LOCATION_ROW_STYLE} >
           <img
-            style={LOCATION_ICON_STYLE}
+            style={ICON_STYLE}
             src='resources/profile_box/icons/location.svg'
             alt='Location Icon'
           />
-          <p style={LOCATION_TEXT_STYLE} >
+          <p style={TEXT_STYLE} >
             {this.props.location.city}, {this.props.location.province}
           </p>
+        </div>
+        <div style={LOCATION_ROW_STYLE} >
+          <img
+            style={ICON_STYLE}
+            src='resources/profile_box/icons/location.svg'
+            alt='Location Icon'
+          />
+          <p style={TEXT_STYLE} >
+            {this.props.location.city}, {this.props.location.province}
+          </p>
+        </div>
+        <div style={LANGUAGE_ROW_STYLE} >
+          <img
+            style={ICON_STYLE}
+            src='resources/profile_box/icons/language.svg'
+            alt='Language Icon'
+          />
+          <p style={TEXT_STYLE} >
+            {this.props.languageList.join(', ')}
+          </p>
+        </div>
+        <div style={SOCIAL_ICONS_ROW_STYLE} >
+          <FacebookButton />
+          <TwitterButton />
+          <InstagramButton />
         </div>
       </div>);
   }
@@ -91,22 +118,32 @@ const CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'center',
   padding: '20px',
-  gap: '25px',
   width: '300px',
   backgroundColor: '#F6F6F6',
   borderRadius: '4px'
 };
 
 const PROFILE_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
-
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '68px',
+  height: '68px',
+  borderRadius: '50%',
+  overflow: 'hidden'
 };
 
 const PROFILE_IMAGE_STYLE: React.CSSProperties = {
-
+  width: '100%',
+  height: '100%',
+  minWidth: '68px',
+  objectFit: 'cover',
+  backgroundColor: 'transparent'
 };
 
 const DISPLAY_NAME_STYLE: React.CSSProperties = {
-  margin: '0px',
+  margin: '10px 0px 0px 0px',
   padding: '0px'
 };
 
@@ -141,7 +178,7 @@ const MEMBER_SINCE_STYLE: React.CSSProperties = {
   color: '#000000',
   height: '15px',
   width: '100%',
-  margin: '0px',
+  margin: '10px 0px 0px 0px',
   padding: '0px'
 };
 
@@ -155,21 +192,7 @@ const DESCRIPTION_STYLE: React.CSSProperties = {
   color: '#000000',
   maxWidth: '100%',
   whiteSpace: 'pre-line',
-  margin: '0px',
-  padding: '0px'
-};
-
-const LOCATION_TEXT_STYLE: React.CSSProperties = {
-  width: 'fit-content',
-  maxWidth: '100%',
-  fontFamily: 'Source Sans Pro',
-  fontStyle: 'normal',
-  fontWeight: 400,
-  fontSize: '14px',
-  lineHeight: '18px',
-  textAlign: 'center',
-  color: '#000000',
-  margin: '0px',
+  margin: '10px 0px 0px 0px',
   padding: '0px'
 };
 
@@ -177,15 +200,49 @@ const LOCATION_ROW_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'center',
-  alignItems: 'center',
-  height: '20px',
+  alignItems: 'flex-start',
+  flexWrap: 'wrap',
   width: '100%',
-  overflow: 'hidden'
+  margin: '25px 0px 0px 0px',
 };
 
-const LOCATION_ICON_STYLE: React.CSSProperties = {
+const ICON_STYLE: React.CSSProperties = {
   width: '20px',
   height: '20px',
-  objectFit: 'cover',
-  backgroundColor: 'transparent'
+  backgroundColor: 'transparent',
+  marginRight: '5px'
+};
+
+const TEXT_STYLE: React.CSSProperties = {
+  width: 'fit-content',
+  maxWidth: '100%',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '20px',
+  textAlign: 'center',
+  color: '#000000',
+  margin: '0px',
+  padding: '0px',
+  whiteSpace: 'pre-line'
+};
+
+const LANGUAGE_ROW_STYLE: React.CSSProperties = {
+  ...LOCATION_ROW_STYLE,
+  margin: '10px 0px 0px 0px',
+};
+
+const SOCIAL_ICONS_ROW_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'flex-start',
+  gap: '20px'
+};
+
+const SOCIAL_ICON_STYLE: React.CSSProperties = {
+  backgroundColor: 'transparent',
+  width: '21px',
+  height: '21px'
 };

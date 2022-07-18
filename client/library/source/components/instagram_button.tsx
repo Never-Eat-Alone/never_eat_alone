@@ -5,7 +5,7 @@ interface Properties {
   style?: React.CSSProperties;
 }
 
-export class FooterInstagramButton extends React.Component<Properties> {
+export class InstagramButton extends React.Component<Properties> {
   public render(): JSX.Element {
     return (
       <a

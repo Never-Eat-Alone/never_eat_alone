@@ -783,9 +783,18 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('instagramLink', 'https://instagram.com', TextInput),
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
       DisplayModeInput),
-    new PropertySchema('memberSince', new Date(2022, 1, 1), DateInput),
+    new PropertySchema('memberSince', new Date(2022, 0, 1), DateInput),
     new PropertySchema('location', new NeverEatAlone.CityProvince('Toronto',
-      'ON'), CityProvinceInput)
+      'ON'), CityProvinceInput),
+    new PropertySchema('favoriteCuisineList', [
+      new NeverEatAlone.Cuisine(1, 'Steakhouse', 'grey'),
+      new NeverEatAlone.Cuisine(2, 'Japanese', 'green'),
+      new NeverEatAlone.Cuisine(3, 'Modern', 'yellow')],
+      ArrayInput(new PropertySchema(
+      'cuisine', new NeverEatAlone.Cuisine(1, 'French', 'yellow'),
+      CuisineInput))),
+    new PropertySchema('languageList', ['English', 'French', 'Chinese'],
+      ArrayInput(new PropertySchema('language', 'English', TextInput))),
     ], [new SignalSchema('onEditClick', '', [])], NeverEatAlone.ProfileBox);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,

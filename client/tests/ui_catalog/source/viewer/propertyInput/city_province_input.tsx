@@ -13,13 +13,13 @@ interface Properties {
 /** A CityProvince input. */
 export class CityProvinceInput extends React.Component<Properties> {
   public render(): JSX.Element {
-    return <input value={this.props.value.label} onChange={this.onChange} />;
+    return <input value={this.props.value.city} onChange={this.onChange} />;
   }
 
   private onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = (() => {
       if (!event.target.value.trim()) {
-        return  new NeverEatAlone.CityProvince('Toronto', 'ON');
+        return new NeverEatAlone.CityProvince('Toronto', 'ON');
       }
       return new NeverEatAlone.CityProvince(event.target.value, 'ON');
     })();

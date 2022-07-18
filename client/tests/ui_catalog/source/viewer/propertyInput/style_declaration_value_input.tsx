@@ -30,11 +30,12 @@ export class StyleDeclarationValueInput extends
     return <textarea
       value={this.state.localValue}
       onChange={this.onChange}
-      onBlur={this.onBlur}/>;
+      onBlur={this.onBlur}
+    />;
   }
 
   public componentDidUpdate(prevProps: Properties) {
-    if(this.props.value !== prevProps.value) {
+    if (this.props.value !== prevProps.value) {
       this.setState({
         localValue: StyleDeclarationValueInput.getString(this.props.value)
       });
@@ -42,7 +43,7 @@ export class StyleDeclarationValueInput extends
   }
 
   private onChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    this.setState({localValue: event.target.value});
+    this.setState({ localValue: event.target.value });
   }
 
   private onBlur = () => {

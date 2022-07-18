@@ -7,12 +7,10 @@ export function FacebookButton(props: React.AnchorHTMLAttributes<
     <a
         style={{...SOCIAL_MEDIA_ICON_CONTAINER_STYLE, ...props.style}}
         className={css(styles.link)}
-        href='https://www.facebook.com/neverEatAloneToronto'
         target='_blank'
     >
       <svg
           style={SOCIAL_MEDIA_ICON_STYLE}
-          viewBox='0 0 28 28'
           xmlns='http://www.w3.org/2000/svg'
       >
         <path

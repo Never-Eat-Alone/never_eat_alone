@@ -12,8 +12,8 @@ interface Properties {
 /** A number input field for positive numbers. */
 export class NumberInput extends React.Component<Properties> {
   public render(): JSX.Element {
-    return <input type="number" value={this.props.value}
-      onChange={this.onChange}/>;
+    return <input type='number' value={this.props.value}
+      onChange={this.onChange} />;
   }
 
   private onChange = (event: React.ChangeEvent<HTMLInputElement>) => {

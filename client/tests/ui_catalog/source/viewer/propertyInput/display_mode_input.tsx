@@ -41,9 +41,9 @@ export class DisplayModeInput extends React.Component<Properties> {
 
   private onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const mode = event.target.value;
-    if(mode === 'mobile') {
+    if (mode === 'mobile') {
       this.props.update(DisplayMode.MOBILE);
-    } else if(mode === 'tablet') {
+    } else if (mode === 'tablet') {
       this.props.update(DisplayMode.TABLET);
     } else {
       this.props.update(DisplayMode.DESKTOP);

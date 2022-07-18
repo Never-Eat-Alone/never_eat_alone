@@ -13,7 +13,7 @@ interface Properties {
 export class BooleanInput extends React.Component<Properties> {
   public render(): JSX.Element {
     return <input type='checkbox' checked={this.props.value}
-      onChange={this.onChange}/>;
+      onChange={this.onChange} />;
   }
 
   private onChange = (event: React.ChangeEvent<HTMLInputElement>) => {

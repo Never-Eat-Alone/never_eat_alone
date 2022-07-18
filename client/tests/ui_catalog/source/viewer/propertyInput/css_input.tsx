@@ -26,17 +26,17 @@ export class CSSInput extends React.Component<Properties, State> {
     return <textarea
       value={this.state.localValue}
       onChange={this.onChange}
-      onBlur={this.onBlur}/>;
+      onBlur={this.onBlur} />;
   }
 
   public componentDidUpdate(prevProps: Properties) {
-    if(this.props.value !== prevProps.value) {
-      this.setState({localValue: JSON.stringify(this.props.value)});
+    if (this.props.value !== prevProps.value) {
+      this.setState({ localValue: JSON.stringify(this.props.value) });
     }
   }
 
   private onChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    this.setState({localValue: event.target.value});
+    this.setState({ localValue: event.target.value });
   }
 
   private onBlur = () => {
@@ -44,7 +44,7 @@ export class CSSInput extends React.Component<Properties, State> {
       const css = JSON.parse(this.state.localValue) as React.CSSProperties;
       this.props.update(css);
     } catch (error) {
-      this.setState({localValue: JSON.stringify(this.props.value)});
+      this.setState({ localValue: JSON.stringify(this.props.value) });
     }
   }
 }

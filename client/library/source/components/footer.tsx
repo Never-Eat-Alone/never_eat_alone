@@ -2,9 +2,9 @@ import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { DisplayMode } from '../definitions';
 import { FacebookButton } from './facebook_button';
-import { FooterInstagramButton } from './footer_instagram_button';
 import { FooterLink } from './footer_link';
 import { FooterLogo } from './footer_logo';
+import { InstagramButton } from './instagram_button';
 import { InviteAFoodieButton } from './invite_a_foodie_button';
 import { TwitterButton } from './twitter_button';
 
@@ -178,7 +178,7 @@ export class Footer extends React.Component<Properties> {
               >
                 <TwitterButton style={TWITTER_ICON_STYLE} />
                 <FacebookButton style={FB_ICON_STYLE} />
-                <FooterInstagramButton style={INSTA_ICON_STYLE} />
+                <InstagramButton style={INSTA_ICON_STYLE} />
                 <InviteAFoodieButton
                   onInviteAFoodie={this.props.onInviteAFoodie}
                 />
@@ -213,7 +213,7 @@ export class Footer extends React.Component<Properties> {
           >
             <TwitterButton style={TWITTER_ICON_STYLE} />
             <FacebookButton style={FB_ICON_STYLE} />
-            <FooterInstagramButton />
+            <InstagramButton />
           </div>
           <div style={LINK_ROW_STYLE} >
             <FooterLink
