@@ -524,10 +524,6 @@ const CUISINE_TEXT_STYLE: React.CSSProperties = {
   whiteSpace: 'nowrap'
 };
 
-const CUISINE_MARGIN_STYLE: React.CSSProperties = {
-  marginLeft: '5px'
-};
-
 const MOBILE_PRICE_MARGIN: React.CSSProperties = {
   marginRight: '10px'
 };

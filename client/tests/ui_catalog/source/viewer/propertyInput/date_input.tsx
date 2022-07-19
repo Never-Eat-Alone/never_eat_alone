@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {format} from 'date-fns'
+import { format } from 'date-fns'
 
 interface Properties {
 
@@ -34,8 +34,8 @@ export class DateInput extends React.Component<Properties, State> {
   }
 
   public componentDidUpdate(prevProps: Properties) {
-    if(this.props.value !== prevProps.value) {
-      this.setState({localValue: this.props?.value});
+    if (this.props.value !== prevProps.value) {
+      this.setState({ localValue: this.props?.value });
     }
   }
 

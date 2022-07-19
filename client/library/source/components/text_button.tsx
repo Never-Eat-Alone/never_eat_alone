@@ -23,6 +23,16 @@ export function SecondaryTextLinkButton(props: Properties) {
     />);
 }
 
+export function SecondaryTextButton(props: Properties) {
+  return (
+    <TextButton
+      {...props}
+      labelStyle={props.labelStyle}
+      style={{...SECONDARY_BUTTON_STYLE, ...props.style}}
+      className={css(styles.secondaryTextButton)}
+    />);
+}
+
 export function InvertedSecondaryTextButton(props: Properties) {
   return (
     <TextButton
@@ -153,6 +163,11 @@ const SECONDARY_LINK_BUTTON_STYLE: React.CSSProperties = {
   backgroundColor: 'transparent',
   color: '#F26B55',
   border: 'none'
+};
+
+const SECONDARY_BUTTON_STYLE: React.CSSProperties = {
+  ...SECONDARY_LINK_BUTTON_STYLE,
+  border: '1px solid #F26B55'
 };
 
 const INVERTED_BUTTON_STYLE: React.CSSProperties = {
@@ -323,6 +338,38 @@ const styles = StyleSheet.create({
     ':active': {
       textDecoration: 'underline solid #AA2F19 1px',
       color: '#AA2F19'
+    }
+  },
+  secondaryTextButton: {
+    ':hover': {
+      backgroundColor: '#FFFFFF',
+      color: '#F26B55',
+      border: '1px solid #F26B55',
+      boxShadow: '0px 1px 5px rgba(86, 70, 40, 0.4)'
+    },
+    ':focus': {
+      backgroundColor: '#FFFFFF',
+      color: '#F26B55',
+      border: '1px solid #F26B55',
+      boxShadow: '0px 1px 5px rgba(86, 70, 40, 0.4)'
+    },
+    ':focus-within': {
+      backgroundColor: '#FFFFFF',
+      color: '#F26B55',
+      border: '1px solid #F26B55',
+      boxShadow: '0px 1px 5px rgba(86, 70, 40, 0.4)'
+    },
+    ':active': {
+      backgroundColor: 'transparent',
+      color: '#AA2F19',
+      border: '2px solid #AA2F19',
+      boxShadow: 'none'
+    },
+    ':disabled': {
+      backgroundColor: 'transparent',
+      color: '#969696',
+      border: '1px solid #969696',
+      boxShadow: 'none'
     }
   }
 });

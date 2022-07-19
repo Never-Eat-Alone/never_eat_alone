@@ -2,9 +2,9 @@ import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { DisplayMode } from '../definitions';
 import { FacebookButton } from './facebook_button';
-import { FooterInstagramButton } from './footer_instagram_button';
 import { FooterLink } from './footer_link';
 import { FooterLogo } from './footer_logo';
+import { InstagramButton } from './instagram_button';
 import { InviteAFoodieButton } from './invite_a_foodie_button';
 import { TwitterButton } from './twitter_button';
 
@@ -176,9 +176,18 @@ export class Footer extends React.Component<Properties> {
                   style={{...SOCIAL_MEDIA_ROW_STYLE,
                     ...DESKTOP_SOCIAL_ROW_MARGIN_STYLE}}
               >
-                <TwitterButton style={TWITTER_ICON_STYLE} />
-                <FacebookButton style={FB_ICON_STYLE} />
-                <FooterInstagramButton style={INSTA_ICON_STYLE} />
+                <TwitterButton
+                  style={TWITTER_ICON_STYLE}
+                  href='https://twitter.com/NEA_Toronto'
+                />
+                <FacebookButton
+                  style={FB_ICON_STYLE}
+                  href='https://www.facebook.com/neverEatAloneToronto'
+                />
+                <InstagramButton
+                  style={INSTA_ICON_STYLE}
+                  href='https://www.instagram.com/nevereatalonetoronto/'
+                />
                 <InviteAFoodieButton
                   onInviteAFoodie={this.props.onInviteAFoodie}
                 />
@@ -213,7 +222,7 @@ export class Footer extends React.Component<Properties> {
           >
             <TwitterButton style={TWITTER_ICON_STYLE} />
             <FacebookButton style={FB_ICON_STYLE} />
-            <FooterInstagramButton />
+            <InstagramButton />
           </div>
           <div style={LINK_ROW_STYLE} >
             <FooterLink

@@ -12,7 +12,7 @@ interface Properties {
 /** A text input field. */
 export class TextInput extends React.Component<Properties> {
   public render(): JSX.Element {
-    return <input value={this.props.value} onChange={this.onChange}/>;
+    return <input value={this.props.value} onChange={this.onChange} />;
   }
 
   private onChange = (event: React.ChangeEvent<HTMLInputElement>) => {

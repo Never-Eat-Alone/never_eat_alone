@@ -24,31 +24,34 @@ export class ColorInput extends React.Component<Properties, State> {
 
   public render(): JSX.Element {
     return (
-      <div style={ColorInput.STYLE.container}>
+      <div style={ColorInput.STYLE.container} >
         <input
           value={this.state.localValue}
           onChange={this.onChange}
-          onBlur={this.onBlur}/>
-        <div style={{backgroundColor: this.props.value,
-          ...ColorInput.STYLE.colorPreview}}/>
+          onBlur={this.onBlur}
+        />
+        <div
+          style={{backgroundColor: this.props.value,
+            ...ColorInput.STYLE.colorPreview}}
+        />
       </div>);
   }
 
   public componentDidUpdate(prevProps: Properties) {
-    if(this.props.value !== prevProps.value) {
-      this.setState({localValue: this.props.value});
+    if (this.props.value !== prevProps.value) {
+      this.setState({ localValue: this.props.value });
     }
   }
 
   private onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({localValue: event.target.value});
-    if(ColorInput.validate(event.target.value)) {
+    this.setState({ localValue: event.target.value });
+    if (ColorInput.validate(event.target.value)) {
       this.props.update(event.target.value);
     }
   }
 
   private onBlur = () => {
-    if(ColorInput.validate(this.state.localValue)) {
+    if (ColorInput.validate(this.state.localValue)) {
       this.props.update(this.state.localValue);
     } else {
       this.setState({localValue: this.props.value});

@@ -1,13 +1,13 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 
-export function FacebookButton(props: React.AnchorHTMLAttributes<
-    HTMLAnchorElement>) {
+export function FacebookButton(props: React.DetailedHTMLProps<
+    React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>) {
   return (
     <a
+        {...props}
         style={{...SOCIAL_MEDIA_ICON_CONTAINER_STYLE, ...props.style}}
         className={css(styles.link)}
-        href='https://www.facebook.com/neverEatAloneToronto'
         target='_blank'
     >
       <svg
@@ -31,25 +31,30 @@ export function FacebookButton(props: React.AnchorHTMLAttributes<
 }
 
 const SOCIAL_MEDIA_ICON_CONTAINER_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
-  width: '28px',
-  height: '28px',
   backgroundColor: 'transparent',
   border: 'none',
   outline: 'none',
   padding: '0px',
   cursor: 'pointer',
   textDecoration: 'none',
+  boxShadow: 'none',
+  width: '28px',
+  height: '28px',
   fill: '#F26B55',
-  boxShadow: 'none'
+  borderRadius: '4px'
 };
 
 const SOCIAL_MEDIA_ICON_STYLE: React.CSSProperties = {
   width: '100%',
-  height: '100%'
+  height: '100%',
+  objectFit: 'cover',
+  backgroundColor: 'transparent',
+  fill: 'inherit'
 };
 
 const styles = StyleSheet.create({
@@ -59,6 +64,10 @@ const styles = StyleSheet.create({
       boxShadow: '0px 1px 4px rgba(0, 0, 0, 0.25)'
     },
     ':focus': {
+      fill: '#F26B55',
+      boxShadow: '0px 1px 4px rgba(0, 0, 0, 0.25)'
+    },
+    ':focus-within': {
       fill: '#F26B55',
       boxShadow: '0px 1px 4px rgba(0, 0, 0, 0.25)'
     },
