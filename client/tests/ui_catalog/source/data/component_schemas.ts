@@ -776,7 +776,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
       TextInput),
     new PropertySchema('displayName', 'Julia', TextInput),
     new PropertySchema('userName', 'julia453', TextInput),
-    new PropertySchema('description', 'Hello everyone! My name is julia and I \
+    new PropertySchema('biography', 'Hello everyone! My name is julia and I \
       would love to meet you all and try new foods.', TextInput),
     new PropertySchema('facebookLink', 'https://facebook.com', TextInput),
     new PropertySchema('twitterLink', 'https://twitter.com', TextInput),
@@ -786,6 +786,15 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('memberSince', new Date(2022, 0, 1), DateInput),
     new PropertySchema('location', new NeverEatAlone.CityProvince('Toronto',
       'ON'), CityProvinceInput),
+    new PropertySchema('isBiographyDisplayed', true, BooleanInput),
+    new PropertySchema('isLocationDisplayed', true, BooleanInput),
+    new PropertySchema('isLanguageDisplayed', true, BooleanInput),
+    new PropertySchema('isFacebookLinkDisplayed', true, BooleanInput),
+    new PropertySchema('isTwitterLinkDisplayed', true, BooleanInput),
+    new PropertySchema('isInstagramLinkDisplayed', true, BooleanInput),
+    new PropertySchema('isCuisineDisplayed', true, BooleanInput),
+    new PropertySchema('isEditButton', true, BooleanInput),
+    new PropertySchema('isActionButton', true, BooleanInput),
     new PropertySchema('favoriteCuisineList', [
       new NeverEatAlone.Cuisine(1, 'Steakhouse', 'grey'),
       new NeverEatAlone.Cuisine(2, 'Japanese', 'green'),
