@@ -176,9 +176,18 @@ export class Footer extends React.Component<Properties> {
                   style={{...SOCIAL_MEDIA_ROW_STYLE,
                     ...DESKTOP_SOCIAL_ROW_MARGIN_STYLE}}
               >
-                <TwitterButton style={TWITTER_ICON_STYLE} />
-                <FacebookButton style={FB_ICON_STYLE} />
-                <InstagramButton style={INSTA_ICON_STYLE} />
+                <TwitterButton
+                  style={TWITTER_ICON_STYLE}
+                  href='https://twitter.com/NEA_Toronto'
+                />
+                <FacebookButton
+                  style={FB_ICON_STYLE}
+                  href='https://www.facebook.com/neverEatAloneToronto'
+                />
+                <InstagramButton
+                  style={INSTA_ICON_STYLE}
+                  href='https://www.instagram.com/nevereatalonetoronto/'
+                />
                 <InviteAFoodieButton
                   onInviteAFoodie={this.props.onInviteAFoodie}
                 />

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { FacebookButton, InstagramButton, TwitterButton
 } from '../../components';
-import { CityProvince, Cuisine, DisplayMode } from '../../definitions';
+import { CityProvince, Cuisine, DisplayMode, SocialMediaImage } from '../../definitions';
 
 interface Properties {
   /** The address of the user's profile image. */
@@ -92,9 +92,18 @@ export class ProfileBox extends React.Component<Properties> {
           </p>
         </div>
         <div style={SOCIAL_ICONS_ROW_STYLE} >
-          <FacebookButton />
-          <TwitterButton />
-          <InstagramButton />
+          <FacebookButton
+            href={this.props.facebookLink}
+            style={SOCIAL_ICON_STYLE}
+          />
+          <TwitterButton
+            href={this.props.twitterLink}
+            style={SOCIAL_ICON_STYLE}
+          />
+          <InstagramButton
+            href={this.props.instagramLink}
+            style={SOCIAL_ICON_STYLE}
+          />
         </div>
       </div>);
   }
@@ -230,7 +239,7 @@ const TEXT_STYLE: React.CSSProperties = {
 
 const LANGUAGE_ROW_STYLE: React.CSSProperties = {
   ...LOCATION_ROW_STYLE,
-  margin: '10px 0px 0px 0px',
+  margin: '10px 0px 0px 0px'
 };
 
 const SOCIAL_ICONS_ROW_STYLE: React.CSSProperties = {
@@ -238,11 +247,11 @@ const SOCIAL_ICONS_ROW_STYLE: React.CSSProperties = {
   flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'flex-start',
-  gap: '20px'
+  gap: '20px',
+  margin: '25px 0px 0px 0px'
 };
 
 const SOCIAL_ICON_STYLE: React.CSSProperties = {
-  backgroundColor: 'transparent',
   width: '21px',
   height: '21px'
 };
