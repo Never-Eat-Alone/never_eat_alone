@@ -36,6 +36,8 @@ const BUTTON_STYLE: React.CSSProperties = {
   overflow: 'hidden',
   width: '310px',
   height: '28px',
+  minHeight: '28px',
+  minWidth: '310px',
   color: '#969696',
   border: '1px solid #969696',
   fontFamily: 'Source Sans Pro',
@@ -69,6 +71,8 @@ const SOCIAL_MEDIA_ICON_STYLE: React.CSSProperties = {
   left: '6px',
   width: '16px',
   height: '16px',
+  minWidth: '16px',
+  minHeight: '16px',
   outline: 'none',
   backgroundColor: 'transparent'
 };

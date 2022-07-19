@@ -30,6 +30,8 @@ const BUTTON_STYLE: React.CSSProperties = {
   alignItems: 'center',
   width: '310px',
   height: '28px',
+  minWidth: '310px',
+  minHeight: '28px',
   textDecoration: 'none',
   outline: 'none',
   boxShadow: 'none',
@@ -56,6 +58,8 @@ const FACEBOOK_ICON_STYLE: React.CSSProperties = {
   left: '8px',
   width: '9px',
   height: '18px',
+  minWidth: '9px',
+  minHeight: '18px',
   backgroundColor: 'transparent'
 };
 
