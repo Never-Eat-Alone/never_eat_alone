@@ -198,6 +198,7 @@ const CONTAINER_STYLE: React.CSSProperties = {
   border: '1px solid #CCCCCC',
   width: '310px',
   height: '38px',
+  minHeight: '38px',
   color: '#969696'
 };
 
@@ -240,6 +241,8 @@ const ICON_CONTAINER_STYLE: React.CSSProperties = {
 const ICON_STYLE: React.CSSProperties = {
   width: '20px',
   height: '20px',
+  minWidth: '20px',
+  minHeight: '20px',
   backgroundColor: 'transparent',
   overflow: 'hidden'
 };

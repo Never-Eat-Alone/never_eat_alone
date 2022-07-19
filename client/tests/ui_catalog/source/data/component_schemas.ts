@@ -142,9 +142,9 @@ export function loadComponentSchemas(): ComponentSchema[] {
       new PropertySchema('startTime', new Date(2022, 6, 17, 18, 30), DateInput),
       new PropertySchema('endTime', new Date(2022, 6, 18, 0, 30), DateInput),
       new PropertySchema('cuisines', [
-      new NeverEatAlone.Cuisine(1, 'Steakhouse', 'grey'),
-      new NeverEatAlone.Cuisine(2, 'Japanese', 'green'),
-      new NeverEatAlone.Cuisine(3, 'Modern', 'yellow')],
+      new NeverEatAlone.Cuisine(1, 'Steakhouse', '#FFE1D8'),
+      new NeverEatAlone.Cuisine(2, 'Japanese', '#DBFFFB'),
+      new NeverEatAlone.Cuisine(3, 'Modern', '#FFF2FE')],
       ArrayInput(new PropertySchema(
       'cuisine', new NeverEatAlone.Cuisine(1, 'French', 'yellow'),
       CuisineInput))),
@@ -734,6 +734,8 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
     DisplayModeInput),
     new PropertySchema('formErrorMessage', '', TextInput),
+    new PropertySchema('modalErrorMessage', 'Looks like our server is offline. \
+      Please try again later.', TextInput),
     new PropertySchema('googleErrorMessage', '', TextInput),
     new PropertySchema('facebookErrorMessage', '', TextInput),
     ], [new SignalSchema('onLogIn', '', []),
@@ -796,9 +798,9 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('isEditButton', true, BooleanInput),
     new PropertySchema('isActionButton', true, BooleanInput),
     new PropertySchema('favoriteCuisineList', [
-      new NeverEatAlone.Cuisine(1, 'Steakhouse', 'grey'),
-      new NeverEatAlone.Cuisine(2, 'Japanese', 'green'),
-      new NeverEatAlone.Cuisine(3, 'Modern', 'yellow')],
+      new NeverEatAlone.Cuisine(1, 'Steakhouse', '#E5FFD8'),
+      new NeverEatAlone.Cuisine(2, 'Japanese', '#FFFDD8'),
+      new NeverEatAlone.Cuisine(3, 'Modern', '#FFE1D8')],
       ArrayInput(new PropertySchema(
       'cuisine', new NeverEatAlone.Cuisine(1, 'French', 'yellow'),
       CuisineInput))),

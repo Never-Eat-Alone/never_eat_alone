@@ -227,7 +227,8 @@ const ACTION_BUTTON_STYLE: React.CSSProperties = {
   color: '#F24D3D',
   fontSize: '25px',
   width: '20px',
-  height: '20px'
+  height: '20px',
+  cursor: 'pointer'
 };
 
 const PROFILE_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
@@ -237,6 +238,8 @@ const PROFILE_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
   alignItems: 'center',
   width: '68px',
   height: '68px',
+  minWidth: '68px',
+  minHeight: '68px',
   borderRadius: '50%',
   overflow: 'hidden'
 };
@@ -244,7 +247,6 @@ const PROFILE_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
 const PROFILE_IMAGE_STYLE: React.CSSProperties = {
   width: '100%',
   height: '100%',
-  minWidth: '68px',
   objectFit: 'cover',
   backgroundColor: 'transparent'
 };
@@ -383,5 +385,7 @@ const CUISINE_TEXT_STYLE: React.CSSProperties = {
 const EDIT_BUTTON_STYLE: React.CSSProperties = {
   width: '99px',
   height: '30px',
+  minHeight: '30px',
+  minWidth: '99px',
   margin: '25px 0px 0px 0px'
 };

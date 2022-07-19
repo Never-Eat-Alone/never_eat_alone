@@ -8,7 +8,7 @@ import { DisplayMode } from '../definitions';
 interface Properties extends Router.LinkProps {
   displayMode: DisplayMode;
 
-  /** represents the form error message. */
+  /** represents the form error message regarding the inputfields. */
   formErrorMessage?: string;
 
   /** Represents the google login error message. */
@@ -16,6 +16,9 @@ interface Properties extends Router.LinkProps {
 
   /** Represents the facebook login error message. */
   facebookErrorMessage?: string;
+
+  /** Represents the error message regarding the modal as a whole. */
+  modalErrorMessage?: string;
 
   /** Indicates the close button is clicked. */
   onClose: () => void;
@@ -57,6 +60,15 @@ export class LogInModal extends React.Component<Properties, State> {
         <div style={ERROR_MESSAGE_STYLE} >
           {this.props.formErrorMessage}
         </div>);
+    })();
+    const modalErrorMessage = (() => {
+      if (!this.props.modalErrorMessage) {
+        return null;
+      }
+      return (
+        <p style={MODAL_ERROR_MESSAGE_STYLE} >
+          {this.props.modalErrorMessage}
+        </p>);
     })();
     const googleErrorMessage = (() => {
       if (!this.props.googleErrorMessage) {
@@ -120,6 +132,14 @@ export class LogInModal extends React.Component<Properties, State> {
           label='LOG IN'
           onClick={this.props.onLogIn}
         />
+        <div style={MODAL_ERROR_MESSAGE_CONTAINER_STYLE} >
+          {modalErrorMessage}
+        </div>
+        <div style={OR_LINE_CONTAINER_STYLE} >
+          <div style={OR_LINE_STYLE} >
+            <span style={OR_SPAN_STYLE} >or</span>
+          </div>
+        </div>
         <GoogleLogInButton
           label='Log in with Google'
           onClick={this.props.onGoogleLogInClick}
@@ -160,8 +180,7 @@ const CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'center',
   width: '490px',
-  height: '622px',
-  padding: '60px 90px',
+  padding: '60px 90px 70px 90px',
   borderRadius: '4px',
   backgroundColor: '#FFFFFF',
   boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
@@ -176,8 +195,7 @@ const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'center',
   width: '375px',
-  height: '622px',
-  padding: '60px 32px',
+  padding: '50px 33px 60px 32px',
   backgroundColor: '#FFFFFF',
   borderRadius: '4px',
   boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
@@ -221,6 +239,7 @@ const TITLE_STYLE: React.CSSProperties = {
 const LOG_IN_BUTTON_STYLE: React.CSSProperties = {
   width: '100%',
   height: '35px',
+  minHeight: '35px',
   marginBottom: '20px'
 };
 
@@ -230,19 +249,33 @@ const ERROR_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-end',
   alignItems: 'center',
   width: '100%',
-  height: '40px'
+  height: '40px',
+  minHeight: '40px'
+};
+
+const MODAL_ERROR_MESSAGE_CONTAINER_STYLE: React.CSSProperties = {
+  ...ERROR_CONTAINER_STYLE,
+  height: '18px',
+  minHeight: '18px',
+  margin: '0px 0px 20px 0px'
 };
 
 const ERROR_MESSAGE_STYLE: React.CSSProperties = {
-  height: '18px',
-  marginTop: '17px',
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
   fontWeight: 400,
   fontSize: '14px',
   lineHeight: '18px',
+  height: '18px',
   color: '#FF2C79',
-  textAlign: 'center'
+  textAlign: 'center',
+  padding: '0px',
+  margin: '17px 0px 0px 0px'
+};
+
+const MODAL_ERROR_MESSAGE_STYLE: React.CSSProperties = {
+  ...ERROR_MESSAGE_STYLE,
+  margin: '0px'
 };
 
 const INPUT_FIELD_STYLE: React.CSSProperties = {
@@ -256,6 +289,7 @@ const ROW_CONTAINER_STYLE: React.CSSProperties = {
   alignItems: 'center',
   width: '100%',
   height: '20px',
+  minHeight: '20px',
   marginTop: '20px'
 };
 
@@ -297,11 +331,13 @@ const SOCIAL_ERROR_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-end',
   alignItems: 'center',
   width: '100%',
-  height: '20px'
+  height: '20px',
+  minHeight: '20px'
 };
 
 const MEDIA_ERROR_MESSAGE_STYLE: React.CSSProperties = {
   height: '18px',
+  minHeight: '18px',
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
   fontWeight: 400,
@@ -309,4 +345,40 @@ const MEDIA_ERROR_MESSAGE_STYLE: React.CSSProperties = {
   lineHeight: '18px',
   color: '#FF2C79',
   textAlign: 'center'
+};
+
+const OR_LINE_CONTAINER_STYLE: React.CSSProperties = {
+  width: '100%',
+  height: '6px',
+  minHeight: '6px',
+  marginBottom: '26px'
+};
+
+const OR_LINE_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  position: 'relative',
+  width: '100%',
+  height: '100%',
+  borderBottom: '1px solid #CCCCCC',
+  textAlign: 'center',
+  fontFamily: 'Roboto',
+  fontSize: '11px',
+  lineHeight: '13px',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  color: '#000000',
+  marginLeft: '0px',
+  marginRight: '0px'
+};
+
+const OR_SPAN_STYLE: React.CSSProperties = {
+  position: 'absolute',
+  color: '#000000',
+  padding: '0px 4px',
+  top: '0px',
+  backgroundColor: '#FFFFFF',
+  cursor: 'default'
 };
