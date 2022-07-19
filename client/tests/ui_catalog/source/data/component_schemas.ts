@@ -734,8 +734,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
     DisplayModeInput),
     new PropertySchema('formErrorMessage', '', TextInput),
-    new PropertySchema('modalErrorMessage', 'Looks like our server is offline. \
-      Please try again later.', TextInput),
+    new PropertySchema('modalErrorMessage', '', TextInput),
     new PropertySchema('googleErrorMessage', '', TextInput),
     new PropertySchema('facebookErrorMessage', '', TextInput),
     ], [new SignalSchema('onLogIn', '', []),

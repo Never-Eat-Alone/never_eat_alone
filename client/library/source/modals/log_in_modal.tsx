@@ -132,9 +132,7 @@ export class LogInModal extends React.Component<Properties, State> {
           label='LOG IN'
           onClick={this.props.onLogIn}
         />
-        <div style={MODAL_ERROR_MESSAGE_CONTAINER_STYLE} >
-          {modalErrorMessage}
-        </div>
+        {modalErrorMessage}
         <div style={OR_LINE_CONTAINER_STYLE} >
           <div style={OR_LINE_STYLE} >
             <span style={OR_SPAN_STYLE} >or</span>
@@ -150,7 +148,7 @@ export class LogInModal extends React.Component<Properties, State> {
           onClick={this.props.onFacebookLogInClick}
         />
         <div style={SOCIAL_ERROR_CONTAINER_STYLE} >{facebookErrorMessage}</div>
-        <div style={TEXT_STYLE} >
+        <div style={REQUEST_ACCOUNT_ROW_STYLE} >
           Haven’t joined yet? Let’s fix this and&nbsp;
           <RedNavLink
             {...this.props}
@@ -248,16 +246,9 @@ const ERROR_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'row',
   justifyContent: 'flex-end',
   alignItems: 'center',
+  flexWrap: 'wrap',
   width: '100%',
-  height: '40px',
   minHeight: '40px'
-};
-
-const MODAL_ERROR_MESSAGE_CONTAINER_STYLE: React.CSSProperties = {
-  ...ERROR_CONTAINER_STYLE,
-  height: '18px',
-  minHeight: '18px',
-  margin: '0px 0px 20px 0px'
 };
 
 const ERROR_MESSAGE_STYLE: React.CSSProperties = {
@@ -266,7 +257,6 @@ const ERROR_MESSAGE_STYLE: React.CSSProperties = {
   fontWeight: 400,
   fontSize: '14px',
   lineHeight: '18px',
-  height: '18px',
   color: '#FF2C79',
   textAlign: 'center',
   padding: '0px',
@@ -274,8 +264,10 @@ const ERROR_MESSAGE_STYLE: React.CSSProperties = {
 };
 
 const MODAL_ERROR_MESSAGE_STYLE: React.CSSProperties = {
+  ...ERROR_CONTAINER_STYLE,
   ...ERROR_MESSAGE_STYLE,
-  margin: '0px'
+  margin: '0px 0px 20px 0px',
+  minHeight: '18px'
 };
 
 const INPUT_FIELD_STYLE: React.CSSProperties = {
@@ -320,6 +312,11 @@ const TEXT_STYLE: React.CSSProperties = {
   marginTop: '20px'
 };
 
+const REQUEST_ACCOUNT_ROW_STYLE: React.CSSProperties = {
+  ...TEXT_STYLE,
+  margin: '0px'
+};
+
 const JOIN_LINK_STYLE: React.CSSProperties = {
   height: '100%',
   width: 'fit-content'
@@ -330,13 +327,12 @@ const SOCIAL_ERROR_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'row',
   justifyContent: 'flex-end',
   alignItems: 'center',
+  flexWrap: 'wrap',
   width: '100%',
-  height: '20px',
   minHeight: '20px'
 };
 
 const MEDIA_ERROR_MESSAGE_STYLE: React.CSSProperties = {
-  height: '18px',
   minHeight: '18px',
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
@@ -344,6 +340,7 @@ const MEDIA_ERROR_MESSAGE_STYLE: React.CSSProperties = {
   fontSize: '14px',
   lineHeight: '18px',
   color: '#FF2C79',
+  width: '100%',
   textAlign: 'center'
 };
 
@@ -351,7 +348,7 @@ const OR_LINE_CONTAINER_STYLE: React.CSSProperties = {
   width: '100%',
   height: '6px',
   minHeight: '6px',
-  marginBottom: '26px'
+  margin: '0px 0px 27px 0px'
 };
 
 const OR_LINE_STYLE: React.CSSProperties = {
