@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { FacebookButton, InstagramButton, TwitterButton, SecondaryTextButton
-} from '../../components';
-import { CityProvince, Cuisine, DisplayMode } from '../../definitions';
+import { EllipsisDropdownMenu, FacebookButton, InstagramButton, TwitterButton,
+  SecondaryTextButton } from '../../components';
+import { CityProvince, Cuisine } from '../../definitions';
 
 interface Properties {
   /** The address of the user's profile image. */
@@ -17,42 +17,39 @@ interface Properties {
   memberSince: Date;
 
   /** The biography on user's profile written by the user. */
-  biography: string;
+  biography?: string;
 
-  isBiographyDisplayed: boolean;
+  isBiographyDisplayed?: boolean;
 
   /** The user's location. */
-  location: CityProvince;
+  location?: CityProvince;
 
-  isLocationDisplayed: boolean;
+  isLocationDisplayed?: boolean;
 
   /** List of the languages the user can speak. */
-  languageList: string[];
+  languageList?: string[];
 
-  isLanguageDisplayed: boolean;
+  isLanguageDisplayed?: boolean;
 
   /** The url to user's profile on Facebook social platform. */
-  facebookLink: string;
+  facebookLink?: string;
 
-  isFacebookLinkDisplayed: boolean;
+  isFacebookLinkDisplayed?: boolean;
 
   /** The url to user's profile on Twitter social platform. */
-  twitterLink: string;
+  twitterLink?: string;
 
-  isTwitterLinkDisplayed: boolean;
+  isTwitterLinkDisplayed?: boolean;
 
   /** The url to user's profile on Instagram social platform. */
-  instagramLink: string;
+  instagramLink?: string;
 
-  isInstagramLinkDisplayed: boolean;
+  isInstagramLinkDisplayed?: boolean;
 
   /** The list of the user's favorite cuisines. */
-  favoriteCuisineList: Cuisine[];
+  favoriteCuisineList?: Cuisine[];
 
-  isCuisineDisplayed: boolean;
-
-  /** The displayMode based on the screen size. */
-  displayMode: DisplayMode;
+  isCuisineDisplayed?: boolean;
 
   /** Whether the edit button is displayed on user profile or not. */
   isEditButton?: boolean;
@@ -60,8 +57,8 @@ interface Properties {
   /** Whether Action button is displayed on the user profile or not. */
   isActionButton?: boolean;
 
-  /** Indicates the profile action button was clicked. */
-  onProfileActionClick?: () => void;
+  /** Indicates the report option was clicked. */
+  onReportClick?: () => void;
 
   /** Indicates the Edit button is clicked. */
   onEditClick?: () => void;
@@ -74,8 +71,8 @@ export class ProfileBox extends React.Component<Properties> {
       if (!this.props.isActionButton) {
         return null;
       }
-      return <div style={ACTION_BUTTON_STYLE}
-        onClick={this.props.onProfileActionClick} >...</div>;
+      return <EllipsisDropdownMenu style={ACTION_BUTTON_STYLE}
+        onReportClick={this.props.onReportClick} />;
     })();
     const biography = (() => {
       if (this.props.biography && this.props.isBiographyDisplayed) {
@@ -84,20 +81,20 @@ export class ProfileBox extends React.Component<Properties> {
       return null;
     })();
     const locationSection = (() => {
-      if (!this.props.isLocationDisplayed) {
-        return null;
+      if (this.props.isLocationDisplayed && this.props.location) {
+        return (
+          <div style={LOCATION_ROW_STYLE} >
+            <img
+              style={ICON_STYLE}
+              src='resources/profile_box/icons/location.svg'
+              alt='Location Icon'
+            />
+            <p style={TEXT_STYLE} >
+              {this.props.location.city}, {this.props.location.province}
+            </p>
+          </div>);
       }
-      return (
-        <div style={LOCATION_ROW_STYLE} >
-          <img
-            style={ICON_STYLE}
-            src='resources/profile_box/icons/location.svg'
-            alt='Location Icon'
-          />
-          <p style={TEXT_STYLE} >
-            {this.props.location.city}, {this.props.location.province}
-          </p>
-        </div>);
+      return null;
     })();
     const languageSection = (() => {
       if (this.props.languageList && this.props.languageList.length !== 0 &&
@@ -120,6 +117,7 @@ export class ProfileBox extends React.Component<Properties> {
     if (this.props.facebookLink && this.props.isFacebookLinkDisplayed) {
       socialMediaLinks.push(
         <FacebookButton
+          key={this.props.facebookLink}
           href={this.props.facebookLink}
           style={SOCIAL_ICON_STYLE}
         />);
@@ -127,6 +125,7 @@ export class ProfileBox extends React.Component<Properties> {
     if (this.props.twitterLink && this.props.isTwitterLinkDisplayed) {
       socialMediaLinks.push(
         <TwitterButton
+          key={this.props.twitterLink}
           href={this.props.twitterLink}
           style={SOCIAL_ICON_STYLE}
         />);
@@ -134,6 +133,7 @@ export class ProfileBox extends React.Component<Properties> {
     if (this.props.instagramLink && this.props.isInstagramLinkDisplayed) {
       socialMediaLinks.push(
         <InstagramButton
+          key={this.props.instagramLink}
           href={this.props.instagramLink}
           style={SOCIAL_ICON_STYLE}
         />);
@@ -218,17 +218,8 @@ const CONTAINER_STYLE: React.CSSProperties = {
 
 const ACTION_BUTTON_STYLE: React.CSSProperties = {
   position: 'absolute',
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'center',
   top: '20px',
-  right: '20px',
-  color: '#F24D3D',
-  fontSize: '25px',
-  width: '20px',
-  height: '20px',
-  cursor: 'pointer'
+  right: '20px'
 };
 
 const PROFILE_IMAGE_CONTAINER_STYLE: React.CSSProperties = {

@@ -15,7 +15,7 @@ export function ProfileRoundButton(props: Properties) {
     >
       <img
         style={IMAGE_STYLE}
-        src={this.props.imageSrc}
+        src={props.imageSrc}
         alt='Profile Image'
       />
     </button>);
@@ -34,11 +34,6 @@ const BUTTON_STYLE: React.CSSProperties = {
   border: 'none',
   outline: 'none',
   boxShadow: 'none',
-  WebkitTouchCallout: 'none',
-  MozUserSelect: 'none',
-  WebkitUserSelect: 'none',
-  KhtmlUserSelect: 'none',
-  userSelect: 'none',
   fill: 'transparent',
   width: '34px',
   height: '34px',

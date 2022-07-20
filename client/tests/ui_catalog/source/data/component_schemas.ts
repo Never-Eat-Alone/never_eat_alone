@@ -805,7 +805,8 @@ export function loadComponentSchemas(): ComponentSchema[] {
       CuisineInput))),
     new PropertySchema('languageList', ['English', 'French', 'Chinese'],
       ArrayInput(new PropertySchema('language', 'English', TextInput))),
-    ], [new SignalSchema('onEditClick', '', [])], NeverEatAlone.ProfileBox);
+    ], [new SignalSchema('onEditClick', '', []),
+    new SignalSchema('onReportClick', '', [])], NeverEatAlone.ProfileBox);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,

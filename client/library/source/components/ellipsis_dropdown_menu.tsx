@@ -1,10 +1,9 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
+import { EllipsisButton } from './ellipsis_button';
 
 /** Describes the drop down menu properties. */
 interface Properties {
-
-  /** Style that is applied to the container. */
   style?: React.CSSProperties;
 
   /** Indicates the report menu item is clicked. */
@@ -113,12 +112,12 @@ const MENU_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  width: '60px',
+  width: '80px',
   border: '1px solid #969696',
   borderRadius: '4px',
   backgroundColor: '#F6F6F6',
   top: '37px',
-  right: '2px'
+  right: '-4px'
 };
 
 const ARROW_UP_BACKGROUND_STYLE: React.CSSProperties = {
@@ -163,8 +162,8 @@ const MENU_ITEM_STYLE: React.CSSProperties = {
   fontSize: '14px',
   lineHeight: '18px',
   fontStyle: 'normal',
-  padding: '0px 5px 0px 5px',
-  margin: '10px 0px 10px 0px',
+  padding: '0px 15px 0px 15px',
+  margin: '20px 0px 20px 0px',
   textTransform: 'capitalize'
 };
 
