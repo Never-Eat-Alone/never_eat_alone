@@ -7,6 +7,8 @@ export * from './close_burger_button';
 export * from './close_button';
 export * from './dining_event_card';
 export * from './display_mode_renderer';
+export * from './ellipsis_button';
+export * from './ellipsis_dropdown_menu';
 export * from './explore_album_summary';
 export * from './explore_events_summary';
 export * from './facebook_button';

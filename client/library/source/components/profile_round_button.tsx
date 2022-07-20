@@ -1,27 +1,24 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 
-interface Properties {
+interface Properties extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   imageSrc: string;
-  style?: React.CSSProperties;
-  onClick: () => void;
 }
 
-export class ProfileRoundButton extends React.Component<Properties> {
-  public render(): JSX.Element {
-    return (
-      <button
-          style={{...BUTTON_STYLE, ...this.props.style}}
-          className={css(styles.button)}
-          onClick={this.props.onClick}
-      >
-        <img
-          style={IMAGE_STYLE}
-          src={this.props.imageSrc}
-          alt='Profile Image'
-        />
-      </button>);
-  }
+export function ProfileRoundButton(props: Properties) {
+  return (
+    <button
+        {...props}
+        style={{...BUTTON_STYLE, ...props.style}}
+        className={css(styles.button)}
+        onClick={props.onClick}
+    >
+      <img
+        style={IMAGE_STYLE}
+        src={props.imageSrc}
+        alt='Profile Image'
+      />
+    </button>);
 }
 
 const BUTTON_STYLE: React.CSSProperties = {
@@ -37,11 +34,6 @@ const BUTTON_STYLE: React.CSSProperties = {
   border: 'none',
   outline: 'none',
   boxShadow: 'none',
-  WebkitTouchCallout: 'none',
-  MozUserSelect: 'none',
-  WebkitUserSelect: 'none',
-  KhtmlUserSelect: 'none',
-  userSelect: 'none',
   fill: 'transparent',
   width: '34px',
   height: '34px',
