@@ -807,6 +807,11 @@ export function loadComponentSchemas(): ComponentSchema[] {
       ArrayInput(new PropertySchema('language', 'English', TextInput))),
     ], [new SignalSchema('onEditClick', '', []),
     new SignalSchema('onReportClick', '', [])], NeverEatAlone.ProfileBox);
+  const showAllButtonSchema = new ComponentSchema('ShowAllButton',
+    [new PropertySchema('label', 'Show All Events (21)', TextInput)],
+    [new SignalSchema('onClick', '', [])], NeverEatAlone.ShowAllButton);
+  const showLessButtonSchema = new ComponentSchema('ShowLessButton',
+    [], [new SignalSchema('onClick', '', [])], NeverEatAlone.ShowLessButton);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
@@ -821,5 +826,5 @@ export function loadComponentSchemas(): ComponentSchema[] {
     googleLogInButtonSchema, facebookLogInButtonSchema, logInModalSchema,
     forgotPasswordPageSchema, forgotPasswordLinkSentPageSchema,
     secondaryTextLinkButton, secondaryButtonNavLink, resetPasswordPage,
-    profileBoxSchema];
+    profileBoxSchema, showAllButtonSchema, showLessButtonSchema];
 }

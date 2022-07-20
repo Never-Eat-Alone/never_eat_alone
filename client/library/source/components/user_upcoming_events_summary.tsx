@@ -2,6 +2,8 @@ import * as React from 'react';
 import * as tinyColor from 'tinycolor2';
 import { DisplayMode, EventCardSummary } from '../definitions';
 import { DiningEventCard } from './dining_event_card';
+import { ShowAllButton } from './show_all_button';
+import { ShowLessButton } from './show_less_button';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -27,6 +29,7 @@ export class UserUpcomingEventsSummary extends React.Component<Properties,
     };
     this._initialNumberOfDisplayedCards = this.getNumberOfCardsDisplayed();
   }
+
   public render(): JSX.Element {
     this._initialNumberOfDisplayedCards = this.getNumberOfCardsDisplayed();
     const { containerStyle, contentContainerStyle, cardsContainerStyle } = (
@@ -108,30 +111,12 @@ export class UserUpcomingEventsSummary extends React.Component<Properties,
     const button = (() => {
       if (!this.state.isShowAllClicked) {
         return (
-          <button style={BUTTON_STYLE} onClick={this.handleShowAllClick} >
-            <div style={BUTTON_TEXT_STYLE} >
-              Show All Events ({this.props.upcomingEventList.length})
-            </div>
-            <div style={ICON_CONTAINER_STYLE} >
-              <img
-                style={ICON_STYLE}
-                src='resources/explore_events/icons/arrow_down.svg'
-                alt='Down Arrow Icon'
-              />
-            </div>
-          </button>);
+          <ShowAllButton
+            label={`Show All Events (${this.props.upcomingEventList.length})`}
+            onClick={this.handleShowAllClick}
+          />);
       }
-      return (
-        <button style={BUTTON_STYLE} onClick={this.handleShowAllClick} >
-          <div style={BUTTON_TEXT_STYLE} >Show Less</div>
-          <div style={{...ICON_CONTAINER_STYLE, ...SHOW_LESS_STYLE}} >
-            <img
-              style={ICON_STYLE}
-              src='resources/explore_events/icons/arrow_up.svg'
-              alt='Up Arrow Icon'
-            />
-          </div>
-        </button>);
+      return <ShowLessButton onClick={this.handleShowAllClick} />;
     })();
     return (
       <div style={{...CONTAINER_STYLE, ...containerStyle}} >
@@ -142,7 +127,7 @@ export class UserUpcomingEventsSummary extends React.Component<Properties,
           <div style={{...CARDS_CONTAINER_STYLE, ...cardsContainerStyle}} >
             {cards}
           </div>
-          {button}
+          <div style={SHOW_BUTTON_CONTAINER_STYLE} >{button}</div>
         </div>
       </div>);
   }
@@ -242,50 +227,11 @@ const MOBILE_CARD_CONTAINER_STYLE: React.CSSProperties = {
   gap: '20px'
 };
 
-const BUTTON_STYLE: React.CSSProperties = {
+const SHOW_BUTTON_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'center',
-  height: '18px',
-  backgroundColor: 'transparent',
-  outline: 'none',
-  border: 'none',
-  margin: '40px 0px 0px 0px',
-  cursor: 'pointer',
   width: '100%',
-  padding: '0px'
-};
-
-const BUTTON_TEXT_STYLE: React.CSSProperties = {
-  fontFamily: 'Source Sans Pro',
-  fontStyle: 'normal',
-  fontWeight: 600,
-  fontSize: '14px',
-  lineHeight: '18px',
-  textAlign: 'center',
-  color: '#000000'
-};
-
-const ICON_CONTAINER_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  width: '4px',
-  height: '8px',
-  marginLeft: '7px'
-};
-
-const SHOW_LESS_STYLE: React.CSSProperties = {
-  marginTop: '5px'
-};
-
-const ICON_STYLE: React.CSSProperties = {
-  width: '100%',
-  height: '100%',
-  minWidth: '4px',
-  minHeight: '8px',
-  backgroundColor: 'transparent',
-  objectFit: 'cover'
+  marginTop: '40px'
 };

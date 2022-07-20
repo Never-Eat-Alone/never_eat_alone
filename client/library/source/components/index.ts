@@ -30,6 +30,8 @@ export * from './password_analyzer';
 export * from './profile_menu';
 export * from './profile_round_button';
 export * from './profile_set_up_page';
+export * from './show_all_button';
+export * from './show_less_button';
 export * from './sign_up_page';
 export * from './text_button';
 export * from './twitter_button';
