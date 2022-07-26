@@ -998,7 +998,10 @@ export function loadComponentSchemas(): ComponentSchema[] {
       'yellow'), EventCardSummaryInput)))
     ], [], NeverEatAlone.ProfilePastEvents);
   const profilePageSchema = new ComponentSchema('profilePage', [
-    new PropertySchema('coverImageSrc', '', TextInput),
+    new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
+      DisplayModeInput),
+    new PropertySchema('coverImageSrc',
+      'resources/profile_page/images/default_banner_1.jpg', TextInput),
     new PropertySchema('profileImageSrc', 'resources/images/profile2.jpeg',
       TextInput),
     new PropertySchema('displayName', 'Julia', TextInput),
@@ -1008,8 +1011,6 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('facebookLink', 'https://facebook.com', TextInput),
     new PropertySchema('twitterLink', 'https://twitter.com', TextInput),
     new PropertySchema('instagramLink', 'https://instagram.com', TextInput),
-    new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
-      DisplayModeInput),
     new PropertySchema('memberSince', new Date(2022, 0, 1), DateInput),
     new PropertySchema('location', new NeverEatAlone.CityProvince('Toronto',
       'ON'), CityProvinceInput),

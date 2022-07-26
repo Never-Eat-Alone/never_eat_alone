@@ -106,18 +106,16 @@ export class ProfilePage extends React.Component<Properties> {
         <div style={profileBoxStyle} >
           <ProfileBox {...this.props} />
         </div>
-        <div style={EVENTS_CONTAINER_STYLE} >
-          <ProfileUpcomingEvents
-            displayMode={this.props.displayMode}
-            eventList={this.props.upcomingEventList}
-            isLoggedIn={this.props.isLoggedIn}
-          />
-          <ProfilePastEvents
-            displayMode={this.props.displayMode}
-            eventList={this.props.pastEventList}
-            isLoggedIn={this.props.isLoggedIn}
-          />
-        </div>
+        <ProfileUpcomingEvents
+          displayMode={this.props.displayMode}
+          eventList={this.props.upcomingEventList}
+          isLoggedIn={this.props.isLoggedIn}
+        />
+        <ProfilePastEvents
+          displayMode={this.props.displayMode}
+          eventList={this.props.pastEventList}
+          isLoggedIn={this.props.isLoggedIn}
+        />
       </div>);
   }
 }
@@ -128,7 +126,8 @@ const CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'center',
   width: '100%',
-  backgroundColor: '#FFFFFF'
+  backgroundColor: '#FFFFFF',
+  gap: '60px'
 };
 
 const COVER_IMAGE_STYLE: React.CSSProperties = {
@@ -153,8 +152,4 @@ const DESKTOP_PROFILE_BOX_STYLE: React.CSSProperties = {
 
 const MOBILE_TABLET_PROFILE_BOX_STYLE: React.CSSProperties = {
   marginTop: '-180px'
-};
-
-const EVENTS_CONTAINER_STYLE: React.CSSProperties = {
-  marginTop: '60px'
 };
