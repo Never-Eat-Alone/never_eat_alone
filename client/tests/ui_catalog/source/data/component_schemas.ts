@@ -1001,7 +1001,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
       DisplayModeInput),
     new PropertySchema('coverImageSrc',
-      'resources/profile_page/images/default_banner_1.jpg', TextInput),
+      'resources/profile_page/images/default_banner_1.png', TextInput),
     new PropertySchema('profileImageSrc', 'resources/images/profile2.jpeg',
       TextInput),
     new PropertySchema('displayName', 'Julia', TextInput),
@@ -1031,8 +1031,183 @@ export function loadComponentSchemas(): ComponentSchema[] {
       'cuisine', new NeverEatAlone.Cuisine(1, 'French', 'yellow'),
       CuisineInput))),
     new PropertySchema('languageList', ['English', 'French', 'Chinese'],
-      ArrayInput(new PropertySchema('language', 'English', TextInput)))
+      ArrayInput(new PropertySchema('language', 'English', TextInput))),
+    new PropertySchema('upcomingEventList', [
+      new NeverEatAlone.EventCardSummary(1, 'A night to remmeber at the best \
+      sushi restaurant in town!', new Date(2022, 6, 12, 19, 0, 0), new Date(
+      2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [new NeverEatAlone.Cuisine(1,
+      'Japanese', 'yellow'), new NeverEatAlone.Cuisine(2, 'Omakase', 'orange')],
+      'resources/images/3.jpg', 6, 6, false, 'yellow'),
+      new NeverEatAlone.EventCardSummary(2, 'A night to remmeber at the best \
+      italian restaurant in town!', new Date(2022, 5, 22, 19, 30, 0),
+      new Date(2022, 6, 13, 0, 30, 0), 'Piano Piano Restaurant',
+      NeverEatAlone.PriceRange.EXPENSIVE, [new NeverEatAlone.Cuisine(1,
+      'Italian', 'blue')], 'resources/images/4.jpg', 4, 6, false, 'red'),
+      new NeverEatAlone.EventCardSummary(3, 'A night to remmeber at the best \
+      sushi restaurant in town!', new Date(2022, 6, 12, 19, 0, 0),
+      new Date(2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [new NeverEatAlone.Cuisine(1,
+      'Japanese', 'yellow'), new NeverEatAlone.Cuisine(2, 'Omakase', 'orange')
+      ], 'resources/images/3.jpg', 6, 6, false, 'yellow'),
+      new NeverEatAlone.EventCardSummary(4, 'A night to remmeber at the best \
+      sushi restaurant in town!', new Date(2022, 6, 12, 19, 0, 0),
+      new Date(2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [new NeverEatAlone.Cuisine(1,
+      'Japanese', 'yellow'), new NeverEatAlone.Cuisine(2, 'Omakase', 'orange')
+      ], 'resources/images/4.jpg', 6, 6, false, 'yellow'),
+      new NeverEatAlone.EventCardSummary(5, 'A night to remmeber at the best \
+      sushi restaurant in town!', new Date(2022, 6, 12, 19, 0, 0),
+      new Date(2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [new NeverEatAlone.Cuisine(1,
+      'Japanese', 'yellow'), new NeverEatAlone.Cuisine(2, 'Omakase', 'orange')
+      ], 'resources/images/5.jpg', 6, 6, false, 'yellow'),
+      new NeverEatAlone.EventCardSummary(6, 'A night to remmeber at the best \
+      sushi restaurant in town!', new Date(2022, 6, 12, 19, 0, 0),
+      new Date(2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [new NeverEatAlone.Cuisine(1,
+      'Japanese', 'yellow'), new NeverEatAlone.Cuisine(2, 'Omakase', 'orange')
+      ], 'resources/images/6.jpg', 6, 6, false, 'yellow'),
+      new NeverEatAlone.EventCardSummary(7, 'A night to remmeber at the best \
+      sushi restaurant in town!', new Date(2022, 6, 12, 19, 0, 0),
+      new Date(2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [new NeverEatAlone.Cuisine(1,
+      'Japanese', 'yellow'), new NeverEatAlone.Cuisine(2, 'Omakase', 'orange')
+      ], 'resources/images/7.jpg', 6, 6, false, 'yellow'),
+      new NeverEatAlone.EventCardSummary(8, 'A night to remmeber at the best \
+      sushi restaurant in town!', new Date(2022, 6, 12, 19, 0, 0),
+      new Date(2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [new NeverEatAlone.Cuisine(1,
+      'Japanese', 'yellow'), new NeverEatAlone.Cuisine(2, 'Omakase', 'orange')
+      ], 'resources/images/8.jpg', 6, 6, false, 'yellow'),
+      new NeverEatAlone.EventCardSummary(9, 'A night to remmeber at the best \
+      sushi restaurant in town!', new Date(2022, 6, 12, 19, 0, 0),
+      new Date(2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [new NeverEatAlone.Cuisine(1,
+      'Japanese', 'yellow'), new NeverEatAlone.Cuisine(2, 'Omakase', 'orange')
+      ], 'resources/images/9.jpg', 6, 6, false, 'yellow'),
+      new NeverEatAlone.EventCardSummary(10, 'A night to remmeber at the best \
+      sushi restaurant in town!', new Date(2022, 6, 12, 19, 0, 0),
+      new Date(2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [new NeverEatAlone.Cuisine(1,
+      'Japanese', 'yellow'), new NeverEatAlone.Cuisine(2, 'Omakase', 'orange')
+      ], 'resources/images/10.jpg', 6, 6, false, 'yellow'),
+      new NeverEatAlone.EventCardSummary(11, 'A night to remmeber at the best \
+      sushi restaurant in town!', new Date(2022, 6, 12, 19, 0, 0),
+      new Date(2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [new NeverEatAlone.Cuisine(1,
+      'Japanese', 'yellow'), new NeverEatAlone.Cuisine(2, 'Omakase', 'orange')
+      ], 'resources/images/11.jpg', 6, 6, false, 'green'),
+      new NeverEatAlone.EventCardSummary(12, 'A night to remmeber at the best \
+      sushi restaurant in town!', new Date(2022, 6, 12, 19, 0, 0),
+      new Date(2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [new NeverEatAlone.Cuisine(1,
+      'Japanese', 'yellow'), new NeverEatAlone.Cuisine(2, 'Omakase', 'orange')
+      ], 'resources/images/12.jpg', 6, 6, false, 'black')],
+      ArrayInput(
+        new PropertySchema('EventCardSummary',
+        new NeverEatAlone.EventCardSummary(1, 'best french restaurant',
+        new Date(2022, 6, 12, 19, 0, 0), new Date(2022, 6, 12, 23, 0, 0),
+        'Le Select', NeverEatAlone.PriceRange.EXPENSIVE, [], '', 12, 12, true,
+        'yellow'), EventCardSummaryInput))),
+    new PropertySchema('pastEventList', [
+      new NeverEatAlone.EventCardSummary(1, 'A night to remmeber at the best \
+      sushi restaurant in town!', new Date(2021, 6, 12, 19, 0, 0), new Date(
+      2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [new NeverEatAlone.Cuisine(1,
+      'Japanese', 'yellow'), new NeverEatAlone.Cuisine(2, 'Omakase', 'orange')],
+      'resources/images/3.jpg', 6, 6, false, 'yellow'),
+      new NeverEatAlone.EventCardSummary(2, 'A night to remmeber at the best \
+      italian restaurant in town!', new Date(2021, 5, 22, 19, 30, 0),
+      new Date(2022, 6, 13, 0, 30, 0), 'Piano Piano Restaurant',
+      NeverEatAlone.PriceRange.EXPENSIVE, [new NeverEatAlone.Cuisine(1,
+      'Italian', 'blue')], 'resources/images/4.jpg', 4, 6, false, 'red'),
+      new NeverEatAlone.EventCardSummary(3, 'A night to remmeber at the best \
+      sushi restaurant in town!', new Date(2021, 6, 12, 19, 0, 0),
+      new Date(2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [new NeverEatAlone.Cuisine(1,
+      'Japanese', 'yellow'), new NeverEatAlone.Cuisine(2, 'Omakase', 'orange')
+      ], 'resources/images/3.jpg', 6, 6, false, 'yellow'),
+      new NeverEatAlone.EventCardSummary(4, 'A night to remmeber at the best \
+      sushi restaurant in town!', new Date(2021, 6, 12, 19, 0, 0),
+      new Date(2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [new NeverEatAlone.Cuisine(1,
+      'Japanese', 'yellow'), new NeverEatAlone.Cuisine(2, 'Omakase', 'orange')
+      ], 'resources/images/4.jpg', 6, 6, false, 'yellow'),
+      new NeverEatAlone.EventCardSummary(5, 'A night to remmeber at the best \
+      sushi restaurant in town!', new Date(2021, 6, 12, 19, 0, 0),
+      new Date(2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [new NeverEatAlone.Cuisine(1,
+      'Japanese', 'yellow'), new NeverEatAlone.Cuisine(2, 'Omakase', 'orange')
+      ], 'resources/images/5.jpg', 6, 6, false, 'yellow'),
+      new NeverEatAlone.EventCardSummary(6, 'A night to remmeber at the best \
+      sushi restaurant in town!', new Date(2021, 6, 12, 19, 0, 0),
+      new Date(2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [new NeverEatAlone.Cuisine(1,
+      'Japanese', 'yellow'), new NeverEatAlone.Cuisine(2, 'Omakase', 'orange')
+      ], 'resources/images/6.jpg', 6, 6, false, 'yellow'),
+      new NeverEatAlone.EventCardSummary(7, 'A night to remmeber at the best \
+      sushi restaurant in town!', new Date(2021, 6, 12, 19, 0, 0),
+      new Date(2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [new NeverEatAlone.Cuisine(1,
+      'Japanese', 'yellow'), new NeverEatAlone.Cuisine(2, 'Omakase', 'orange')
+      ], 'resources/images/7.jpg', 6, 6, false, 'yellow'),
+      new NeverEatAlone.EventCardSummary(8, 'A night to remmeber at the best \
+      sushi restaurant in town!', new Date(2021, 6, 12, 19, 0, 0),
+      new Date(2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [new NeverEatAlone.Cuisine(1,
+      'Japanese', 'yellow'), new NeverEatAlone.Cuisine(2, 'Omakase', 'orange')
+      ], 'resources/images/8.jpg', 6, 6, false, 'yellow'),
+      new NeverEatAlone.EventCardSummary(9, 'A night to remmeber at the best \
+      sushi restaurant in town!', new Date(2021, 6, 12, 19, 0, 0),
+      new Date(2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [new NeverEatAlone.Cuisine(1,
+      'Japanese', 'yellow'), new NeverEatAlone.Cuisine(2, 'Omakase', 'orange')
+      ], 'resources/images/9.jpg', 6, 6, false, 'yellow'),
+      new NeverEatAlone.EventCardSummary(10, 'A night to remmeber at the best \
+      sushi restaurant in town!', new Date(2021, 6, 12, 19, 0, 0),
+      new Date(2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [new NeverEatAlone.Cuisine(1,
+      'Japanese', 'yellow'), new NeverEatAlone.Cuisine(2, 'Omakase', 'orange')
+      ], 'resources/images/10.jpg', 6, 6, false, 'yellow'),
+      new NeverEatAlone.EventCardSummary(11, 'A night to remmeber at the best \
+      sushi restaurant in town!', new Date(2021, 6, 12, 19, 0, 0),
+      new Date(2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [new NeverEatAlone.Cuisine(1,
+      'Japanese', 'yellow'), new NeverEatAlone.Cuisine(2, 'Omakase', 'orange')
+      ], 'resources/images/11.jpg', 6, 6, false, 'green'),
+      new NeverEatAlone.EventCardSummary(12, 'A night to remmeber at the best \
+      sushi restaurant in town!', new Date(2021, 6, 12, 19, 0, 0),
+      new Date(2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [new NeverEatAlone.Cuisine(1,
+      'Japanese', 'yellow'), new NeverEatAlone.Cuisine(2, 'Omakase', 'orange')
+      ], 'resources/images/12.jpg', 6, 6, false, 'black'),
+      new NeverEatAlone.EventCardSummary(4, 'A night to remmeber at the best \
+      sushi restaurant in town!', new Date(2021, 6, 12, 19, 0, 0),
+      new Date(2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [new NeverEatAlone.Cuisine(1,
+      'Japanese', 'yellow'), new NeverEatAlone.Cuisine(2, 'Omakase', 'orange')
+      ], 'resources/images/4.jpg', 6, 6, false, 'yellow'),
+      new NeverEatAlone.EventCardSummary(5, 'A night to remmeber at the best \
+      sushi restaurant in town!', new Date(2021, 6, 12, 19, 0, 0),
+      new Date(2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [new NeverEatAlone.Cuisine(1,
+      'Japanese', 'yellow'), new NeverEatAlone.Cuisine(2, 'Omakase', 'orange')
+      ], 'resources/images/5.jpg', 6, 6, false, 'yellow'),
+      new NeverEatAlone.EventCardSummary(6, 'A night to remmeber at the best \
+      sushi restaurant in town!', new Date(2021, 6, 12, 19, 0, 0),
+      new Date(2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [new NeverEatAlone.Cuisine(1,
+      'Japanese', 'yellow'), new NeverEatAlone.Cuisine(2, 'Omakase', 'orange')
+      ], 'resources/images/6.jpg', 6, 6, false, 'yellow')
+    ], ArrayInput(
+      new PropertySchema('EventCardSummary',
+      new NeverEatAlone.EventCardSummary(1, 'best french restaurant',
+      new Date(2022, 6, 12, 19, 0, 0), new Date(2021, 6, 12, 23, 0, 0),
+      'Le Select', NeverEatAlone.PriceRange.EXPENSIVE, [], '', 12, 12, true,
+      'yellow'), EventCardSummaryInput)))
     ], [new SignalSchema('onEditClick', '', []),
+    new SignalSchema('onEditBannerClick', '', []),
     new SignalSchema('onReportClick', '', [])], NeverEatAlone.ProfilePage);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,

@@ -73,6 +73,12 @@ interface Properties {
   /** List of the user attended events. */
   pastEventList: EventCardSummary[];
 
+  /** Whether Edit Banner button is displayed on the user profile or not. */
+  isEditBannerButton?: boolean;
+
+  /** Indicates the edit banner button is clicked. */
+  onEditBannerClick?: () => void;
+
   /** Indicates the report option was clicked. */
   onReportClick?: () => void;
 
@@ -83,20 +89,47 @@ interface Properties {
 /** Displays the user's profile page. */
 export class ProfilePage extends React.Component<Properties> {
   public render(): JSX.Element {
-    const { coverImageStyle, profileBoxStyle } = (() => {
+    const pastEvents = (this.props.pastEventList &&
+      this.props.pastEventList.length !== 0 &&
+      <ProfilePastEvents
+        displayMode={this.props.displayMode}
+        eventList={this.props.pastEventList}
+        isLoggedIn={this.props.isLoggedIn}
+      /> || null);
+    const upcomingEvents = (this.props.upcomingEventList &&
+      this.props.upcomingEventList.length !== 0 &&
+      <ProfileUpcomingEvents
+        displayMode={this.props.displayMode}
+        eventList={this.props.upcomingEventList}
+        isLoggedIn={this.props.isLoggedIn}
+      /> || null);
+    const { containerStyle, coverImageStyle, profileBoxStyle,
+        eventsContainerStyle } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
+          containerStyle: DESKTOP_CONTAINER_STYLE,
           coverImageStyle: DESKTOP_COVER_IMAGE_STYLE,
-          profileBoxStyle: DESKTOP_PROFILE_BOX_STYLE
+          profileBoxStyle: DESKTOP_PROFILE_BOX_STYLE,
+          eventsContainerStyle: DESKTOP_EVENTS_CONTAINER_STYLE
+        };
+      }
+      if (this.props.displayMode === DisplayMode.TABLET) {
+        return {
+          containerStyle: TABLET_CONTAINER_STYLE,
+          coverImageStyle: MOBILE_TABLET_COVER_IMAGE_STYLE,
+          profileBoxStyle: MOBILE_TABLET_PROFILE_BOX_STYLE,
+          eventsContainerStyle: TABLET_EVENTS_CONTAINER_STYLE
         };
       }
       return {
+        containerStyle: MOBILE_CONTAINER_STYLE,
         coverImageStyle: MOBILE_TABLET_COVER_IMAGE_STYLE,
-        profileBoxStyle: MOBILE_TABLET_PROFILE_BOX_STYLE
+        profileBoxStyle: MOBILE_TABLET_PROFILE_BOX_STYLE,
+        eventsContainerStyle: MOBILE_EVENTS_CONTAINER_STYLE
       };
     })();
     return (
-      <div style={CONTAINER_STYLE} >
+      <div style={containerStyle} >
         <div
           style={{...COVER_IMAGE_STYLE,
             backgroundImage: `url(${this.props.coverImageSrc})`,
@@ -106,28 +139,46 @@ export class ProfilePage extends React.Component<Properties> {
         <div style={profileBoxStyle} >
           <ProfileBox {...this.props} />
         </div>
-        <ProfileUpcomingEvents
-          displayMode={this.props.displayMode}
-          eventList={this.props.upcomingEventList}
-          isLoggedIn={this.props.isLoggedIn}
-        />
-        <ProfilePastEvents
-          displayMode={this.props.displayMode}
-          eventList={this.props.pastEventList}
-          isLoggedIn={this.props.isLoggedIn}
-        />
+        <div style={eventsContainerStyle} >
+          {upcomingEvents}
+          {pastEvents}
+        </div>
       </div>);
   }
 }
 
-const CONTAINER_STYLE: React.CSSProperties = {
+const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
+  position: 'relative',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'flex-start',
+  width: '100%',
+  backgroundColor: '#FFFFFF',
+  gap: '58px',
+  paddingBottom: '81px'
+};
+
+const TABLET_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'center',
   width: '100%',
   backgroundColor: '#FFFFFF',
-  gap: '60px'
+  gap: '60px',
+  paddingBottom: '75px'
+};
+
+const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  width: '100%',
+  backgroundColor: '#FFFFFF',
+  gap: '60px',
+  paddingBottom: '55px'
 };
 
 const COVER_IMAGE_STYLE: React.CSSProperties = {
@@ -139,6 +190,8 @@ const COVER_IMAGE_STYLE: React.CSSProperties = {
 };
 
 const DESKTOP_COVER_IMAGE_STYLE: React.CSSProperties = {
+  position: 'absolute',
+  top: 0,
   height: '120px'
 };
 
@@ -147,9 +200,42 @@ const MOBILE_TABLET_COVER_IMAGE_STYLE: React.CSSProperties = {
 };
 
 const DESKTOP_PROFILE_BOX_STYLE: React.CSSProperties = {
-  marginTop: '-100px'
+  marginTop: '20px'
 };
 
 const MOBILE_TABLET_PROFILE_BOX_STYLE: React.CSSProperties = {
   marginTop: '-180px'
+};
+
+const DESKTOP_EVENTS_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  width: '768px',
+  gap: '60px',
+  marginRight: '20px',
+  marginTop: '150px'
+};
+
+const TABLET_EVENTS_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  width: '684px',
+  gap: '60px',
+  marginRight: '10px',
+  marginLeft: '10px'
+};
+
+const MOBILE_EVENTS_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  width: '335px',
+  gap: '60px',
+  marginRight: '10px',
+  marginLeft: '10px'
 };
