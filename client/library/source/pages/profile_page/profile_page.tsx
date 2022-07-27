@@ -26,43 +26,23 @@ interface Properties {
   /** The biography on user's profile written by the user. */
   biography?: string;
 
-  isBiographyDisplayed?: boolean;
-
   /** The user's location. */
   location?: CityProvince;
-
-  isLocationDisplayed?: boolean;
 
   /** List of the languages the user can speak. */
   languageList?: string[];
 
-  isLanguageDisplayed?: boolean;
-
   /** The url to user's profile on Facebook social platform. */
   facebookLink?: string;
-
-  isFacebookLinkDisplayed?: boolean;
 
   /** The url to user's profile on Twitter social platform. */
   twitterLink?: string;
 
-  isTwitterLinkDisplayed?: boolean;
-
   /** The url to user's profile on Instagram social platform. */
   instagramLink?: string;
 
-  isInstagramLinkDisplayed?: boolean;
-
   /** The list of the user's favorite cuisines. */
   favoriteCuisineList?: Cuisine[];
-
-  isCuisineDisplayed?: boolean;
-
-  /** Whether the edit button is displayed on user profile or not. */
-  isEditButton?: boolean;
-
-  /** Whether Action button is displayed on the user profile or not. */
-  isActionButton?: boolean;
 
   /** Whether the user is logged in or not. */
   isLoggedIn: boolean;
