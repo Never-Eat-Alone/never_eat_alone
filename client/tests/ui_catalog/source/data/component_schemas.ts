@@ -1207,7 +1207,6 @@ export function loadComponentSchemas(): ComponentSchema[] {
       'Le Select', NeverEatAlone.PriceRange.EXPENSIVE, [], '', 12, 12, true,
       'yellow'), EventCardSummaryInput)))
     ], [new SignalSchema('onEditClick', '', []),
-    new SignalSchema('onEditBannerClick', '', []),
     new SignalSchema('onReportClick', '', [])], NeverEatAlone.ProfilePage);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
