@@ -73,12 +73,6 @@ interface Properties {
   /** List of the user attended events. */
   pastEventList: EventCardSummary[];
 
-  /** Whether Edit Banner button is displayed on the user profile or not. */
-  isEditBannerButton?: boolean;
-
-  /** Indicates the edit banner button is clicked. */
-  onEditBannerClick?: () => void;
-
   /** Indicates the report option was clicked. */
   onReportClick?: () => void;
 
