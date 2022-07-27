@@ -19,43 +19,23 @@ interface Properties {
   /** The biography on user's profile written by the user. */
   biography?: string;
 
-  isBiographyDisplayed?: boolean;
-
   /** The user's location. */
   location?: CityProvince;
-
-  isLocationDisplayed?: boolean;
 
   /** List of the languages the user can speak. */
   languageList?: string[];
 
-  isLanguageDisplayed?: boolean;
-
   /** The url to user's profile on Facebook social platform. */
   facebookLink?: string;
-
-  isFacebookLinkDisplayed?: boolean;
 
   /** The url to user's profile on Twitter social platform. */
   twitterLink?: string;
 
-  isTwitterLinkDisplayed?: boolean;
-
   /** The url to user's profile on Instagram social platform. */
   instagramLink?: string;
 
-  isInstagramLinkDisplayed?: boolean;
-
   /** The list of the user's favorite cuisines. */
   favoriteCuisineList?: Cuisine[];
-
-  isCuisineDisplayed?: boolean;
-
-  /** Whether the edit button is displayed on user profile or not. */
-  isEditButton?: boolean;
-
-  /** Whether Action button is displayed on the user profile or not. */
-  isActionButton?: boolean;
 
   /** Indicates the report option was clicked. */
   onReportClick?: () => void;
@@ -68,20 +48,20 @@ interface Properties {
 export class ProfileBox extends React.Component<Properties> {
   public render(): JSX.Element {
     const profileActionButton = (() => {
-      if (!this.props.isActionButton) {
+      if (!this.props.onReportClick) {
         return null;
       }
       return <EllipsisDropdownMenu style={ACTION_BUTTON_STYLE}
         onReportClick={this.props.onReportClick} />;
     })();
     const biography = (() => {
-      if (this.props.biography && this.props.isBiographyDisplayed) {
+      if (this.props.biography) {
         return <p style={BIOGRAPHY_STYLE} >{this.props.biography}</p>;
       }
       return null;
     })();
     const locationSection = (() => {
-      if (this.props.isLocationDisplayed && this.props.location) {
+      if (this.props.location) {
         return (
           <div style={LOCATION_ROW_STYLE} >
             <img
@@ -97,8 +77,7 @@ export class ProfileBox extends React.Component<Properties> {
       return null;
     })();
     const languageSection = (() => {
-      if (this.props.languageList && this.props.languageList.length !== 0 &&
-          this.props.isLanguageDisplayed) {
+      if (this.props.languageList && this.props.languageList.length !== 0) {
         return (
           <div style={LANGUAGE_ROW_STYLE} >
             <img
@@ -114,7 +93,7 @@ export class ProfileBox extends React.Component<Properties> {
       return null;
     })();
     const socialMediaLinks = [];
-    if (this.props.facebookLink && this.props.isFacebookLinkDisplayed) {
+    if (this.props.facebookLink) {
       socialMediaLinks.push(
         <FacebookButton
           key={this.props.facebookLink}
@@ -122,7 +101,7 @@ export class ProfileBox extends React.Component<Properties> {
           style={SOCIAL_ICON_STYLE}
         />);
     }
-    if (this.props.twitterLink && this.props.isTwitterLinkDisplayed) {
+    if (this.props.twitterLink) {
       socialMediaLinks.push(
         <TwitterButton
           key={this.props.twitterLink}
@@ -130,7 +109,7 @@ export class ProfileBox extends React.Component<Properties> {
           style={SOCIAL_ICON_STYLE}
         />);
     }
-    if (this.props.instagramLink && this.props.isInstagramLinkDisplayed) {
+    if (this.props.instagramLink) {
       socialMediaLinks.push(
         <InstagramButton
           key={this.props.instagramLink}
@@ -143,7 +122,8 @@ export class ProfileBox extends React.Component<Properties> {
       return <div style={SOCIAL_ICONS_ROW_STYLE} >{socialMediaLinks}</div>;
     })();
     const cuisineList = [];
-    if (this.props.isCuisineDisplayed) {
+    if (this.props.favoriteCuisineList &&
+        this.props.favoriteCuisineList.length !== 0) {
       for (const cuisine of this.props.favoriteCuisineList) {
         cuisineList.push(
           <div
@@ -160,7 +140,7 @@ export class ProfileBox extends React.Component<Properties> {
       return <div style={CUISINE_ROW_STYLE} >{cuisineList}</div>;
     })();
     const editProfileButton = (() => {
-      if (this.props.isEditButton) {
+      if (this.props.onEditClick) {
         return <SecondaryTextButton style={EDIT_BUTTON_STYLE}
           label='Edit Profile' onClick={this.props.onEditClick} />;
       }
