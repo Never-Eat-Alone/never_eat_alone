@@ -86,21 +86,21 @@ export class ProfilePage extends React.Component<Properties> {
           profileBoxStyle: DESKTOP_PROFILE_BOX_STYLE,
           eventsContainerStyle: DESKTOP_EVENTS_CONTAINER_STYLE
         };
-      }
-      if (this.props.displayMode === DisplayMode.TABLET) {
+      } else if (this.props.displayMode === DisplayMode.TABLET) {
         return {
           containerStyle: TABLET_CONTAINER_STYLE,
           coverImageStyle: MOBILE_TABLET_COVER_IMAGE_STYLE,
           profileBoxStyle: MOBILE_TABLET_PROFILE_BOX_STYLE,
           eventsContainerStyle: TABLET_EVENTS_CONTAINER_STYLE
         };
+      } else {
+        return {
+          containerStyle: MOBILE_CONTAINER_STYLE,
+          coverImageStyle: MOBILE_TABLET_COVER_IMAGE_STYLE,
+          profileBoxStyle: MOBILE_TABLET_PROFILE_BOX_STYLE,
+          eventsContainerStyle: MOBILE_EVENTS_CONTAINER_STYLE
+        };
       }
-      return {
-        containerStyle: MOBILE_CONTAINER_STYLE,
-        coverImageStyle: MOBILE_TABLET_COVER_IMAGE_STYLE,
-        profileBoxStyle: MOBILE_TABLET_PROFILE_BOX_STYLE,
-        eventsContainerStyle: MOBILE_EVENTS_CONTAINER_STYLE
-      };
     })();
     return (
       <div style={containerStyle} >

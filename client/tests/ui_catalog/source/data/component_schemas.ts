@@ -1190,6 +1190,12 @@ export function loadComponentSchemas(): ComponentSchema[] {
       'yellow'), EventCardSummaryInput)))
     ], [new SignalSchema('onEditClick', '', []),
     new SignalSchema('onReportClick', '', [])], NeverEatAlone.ProfilePage);
+  const editProfilePageSchema = new ComponentSchema('editProfilePage',
+    [new PropertySchema('DisplayMode', NeverEatAlone.DisplayMode.MOBILE,
+      DisplayModeInput),
+    new PropertySchema('coverImageSrc',
+      'resources/profile_page/images/default_banner_2.jpg', TextInput)],
+    [], NeverEatAlone.EditProfilePage);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
@@ -1205,5 +1211,6 @@ export function loadComponentSchemas(): ComponentSchema[] {
     forgotPasswordPageSchema, forgotPasswordLinkSentPageSchema,
     secondaryTextLinkButton, secondaryButtonNavLink, resetPasswordPage,
     profileBoxSchema, showAllButtonSchema, showLessButtonSchema,
-    profileUpcomingEventsSchema, profilePastEventsSchema, profilePageSchema];
+    profileUpcomingEventsSchema, profilePastEventsSchema, profilePageSchema,
+    editProfilePageSchema];
 }
