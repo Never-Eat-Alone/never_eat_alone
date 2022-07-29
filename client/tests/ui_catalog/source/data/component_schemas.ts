@@ -776,7 +776,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     [new PropertySchema('profileImageSrc', 'resources/images/profile2.jpeg',
       TextInput),
     new PropertySchema('displayName', 'Julia', TextInput),
-    new PropertySchema('userName', 'julia453', TextInput),
+    new PropertySchema('userName', '@julia453', TextInput),
     new PropertySchema('biography', 'Hello everyone! My name is julia and I \
       would love to meet you all and try new foods.', TextInput),
     new PropertySchema('facebookLink', 'https://facebook.com', TextInput),
@@ -996,7 +996,8 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('profileImageSrc', 'resources/images/profile2.jpeg',
       TextInput),
     new PropertySchema('displayName', 'Julia', TextInput),
-    new PropertySchema('userName', 'julia453', TextInput),
+    new PropertySchema('userName', '@julia453', TextInput),
+    new PropertySchema('isLoggedIn', true, BooleanInput),
     new PropertySchema('biography', 'Hello everyone! My name is julia and I \
       would love to meet you all and try new foods.', TextInput),
     new PropertySchema('facebookLink', 'https://facebook.com', TextInput),
@@ -1190,6 +1191,17 @@ export function loadComponentSchemas(): ComponentSchema[] {
       'yellow'), EventCardSummaryInput)))
     ], [new SignalSchema('onEditClick', '', []),
     new SignalSchema('onReportClick', '', [])], NeverEatAlone.ProfilePage);
+  const editProfilePageSchema = new ComponentSchema('editProfilePage', [
+    new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
+      DisplayModeInput),
+    new PropertySchema('coverImageSrc',
+      'resources/profile_page/images/default_banner_2.jpg', TextInput),
+    new PropertySchema('profileImageSrc', 'resources/images/profileguy5.jpeg',
+      TextInput),
+    new PropertySchema('displayName', 'Casper Host', TextInput),
+    new PropertySchema('userName', '@120498509', TextInput),
+    ], [new SignalSchema('onChangeProfileImageClick', '', [])],
+    NeverEatAlone.EditProfilePage);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
@@ -1205,5 +1217,6 @@ export function loadComponentSchemas(): ComponentSchema[] {
     forgotPasswordPageSchema, forgotPasswordLinkSentPageSchema,
     secondaryTextLinkButton, secondaryButtonNavLink, resetPasswordPage,
     profileBoxSchema, showAllButtonSchema, showLessButtonSchema,
-    profileUpcomingEventsSchema, profilePastEventsSchema, profilePageSchema];
+    profileUpcomingEventsSchema, profilePastEventsSchema, profilePageSchema,
+    editProfilePageSchema];
 }
