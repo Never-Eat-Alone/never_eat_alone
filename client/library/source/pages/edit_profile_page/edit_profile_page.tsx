@@ -67,6 +67,13 @@ export class EditProfilePage extends React.Component<Properties> {
                 src={this.props.profileImageSrc}
                 alt='Profile Image'
               />
+              <button style={CHANGE_IMAGE_BUTTON_STYLE} >
+                <img
+                  style={CHANGE_IMAGE_ICON_STYLE}
+                  src='resources/edit_profile_page/icons/change_image.svg'
+                  alt='Change Image Icon'
+                />
+              </button>
             </div>
             <div style={PUBLIC_HIDDEN_CONTAINER_STYLE} >
               <div style={PUBLIC_HIDDEN_ICON_ROW_STYLE} >
@@ -102,7 +109,7 @@ const CONTAINER_STYLE: React.CSSProperties = {
   position: 'relative',
   display: 'flex',
   flexDirection: 'column',
-  justifyItems: 'flex-start',
+  justifyContent: 'flex-start',
   alignItems: 'center',
   width: '100%',
   backgroundColor: '#FFFFFF'
@@ -170,15 +177,16 @@ const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
 const IMAGE_PRIVACY_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
-  justifyItems: 'flex-start',
+  justifyContent: 'flex-start',
   alignItems: 'flex-start',
   width: '100%'
 };
 
 const IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  position: 'relative',
   display: 'flex',
   flexDirection: 'column',
-  justifyItems: 'center',
+  justifyContent: 'center',
   alignItems: 'center',
   width: '68px',
   height: '68px',
@@ -195,17 +203,41 @@ const PROFILE_IMAGE_STYLE: React.CSSProperties = {
   borderRadius: '50%'
 };
 
+const CHANGE_IMAGE_BUTTON_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  position: 'absolute',
+  bottom: 0,
+  right: 0,
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: '#969696',
+  width: '26px',
+  height: '26px',
+  borderRadius: '4px',
+  border: '1px solid #FFFFFF',
+  padding: '0px',
+  margin: '0px'
+};
+
+const CHANGE_IMAGE_ICON_STYLE: React.CSSProperties = {
+  height: '16px',
+  width: '16px',
+  backgroundColor: 'transparent'
+};
+
 const PUBLIC_HIDDEN_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
-  justifyItems: 'flex-start',
+  justifyContent: 'flex-start',
   alignItems: 'flex-start'
 };
 
 const PUBLIC_HIDDEN_ICON_ROW_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
-  justifyItems: 'flex-start',
+  justifyContent: 'flex-start',
   alignItems: 'center',
   height: '20px',
   marginBottom: '2px'
@@ -214,7 +246,7 @@ const PUBLIC_HIDDEN_ICON_ROW_STYLE: React.CSSProperties = {
 const PRIVACY_ICON_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
-  justifyItems: 'center',
+  justifyContent: 'center',
   alignItems: 'center',
   width: '20px',
   height: '20px',
@@ -242,7 +274,7 @@ const PRIVACY_TEXT_STYLE: React.CSSProperties = {
 const GUIDE_TEXT_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
-  justifyItems: 'flex-start',
+  justifyContent: 'flex-start',
   alignItems: 'flex-start',
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
@@ -255,7 +287,7 @@ const GUIDE_TEXT_STYLE: React.CSSProperties = {
 const DISPLAY_NAME_TITLE_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
-  justifyItems: 'flex-start',
+  justifyContent: 'flex-start',
   alignItems: 'center',
   marginTop: '30px',
   height: '23px',
