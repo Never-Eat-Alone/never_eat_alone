@@ -1200,8 +1200,15 @@ export function loadComponentSchemas(): ComponentSchema[] {
       TextInput),
     new PropertySchema('displayName', 'Casper Host', TextInput),
     new PropertySchema('userName', '@120498509', TextInput),
-    ], [new SignalSchema('onChangeProfileImageClick', '', [])],
+    ], [
+    new SignalSchema('onChangeProfileImageClick', '', []),
+    new SignalSchema('onChangeBanner', '', [])
+    ],
     NeverEatAlone.EditProfilePage);
+  const publicButtonSchema = new ComponentSchema('publicButton', [], [
+    new SignalSchema('onClick', '', [])], NeverEatAlone.PublicButton);
+  const privateButtonSchema = new ComponentSchema('privateButton', [], [
+    new SignalSchema('onClick', '', [])], NeverEatAlone.PrivateButton);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
@@ -1218,5 +1225,5 @@ export function loadComponentSchemas(): ComponentSchema[] {
     secondaryTextLinkButton, secondaryButtonNavLink, resetPasswordPage,
     profileBoxSchema, showAllButtonSchema, showLessButtonSchema,
     profileUpcomingEventsSchema, profilePastEventsSchema, profilePageSchema,
-    editProfilePageSchema];
+    editProfilePageSchema, publicButtonSchema, privateButtonSchema];
 }

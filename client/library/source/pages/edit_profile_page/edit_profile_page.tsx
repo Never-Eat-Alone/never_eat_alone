@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { InvertedSecondaryTextButton } from '../../components';
+import { InvertedSecondaryTextButton, RedNavLink } from '../../components';
 import { DisplayMode } from '../../definitions';
 
 interface Properties {
@@ -19,6 +19,11 @@ interface Properties {
 
   /** Indicates the change profile image button is clicked. */
   onChangeProfileImageClick: () => void;
+
+  /** Indicates the change banner button is clicked. */
+  onChangeBanner: () => void;
+
+  onUpcomingEventPrivacyClick: () => void;
 }
 
 /** Displays the edit profile page. */
@@ -58,6 +63,7 @@ export class EditProfilePage extends React.Component<Properties> {
           style={changeBannerButtonStyle}
           label='Change Banner'
           labelStyle={CHANGE_BANNER_LABEL_STYLE}
+          onClick={this.props.onChangeBanner}
         />
         <div style={CONTENT_CONTAINER_STYLE} >
           <div style={IMAGE_PRIVACY_CONTAINER_STYLE} >
@@ -67,7 +73,10 @@ export class EditProfilePage extends React.Component<Properties> {
                 src={this.props.profileImageSrc}
                 alt='Profile Image'
               />
-              <button style={CHANGE_IMAGE_BUTTON_STYLE} >
+              <button
+                  style={CHANGE_IMAGE_BUTTON_STYLE}
+                  onClick={this.props.onChangeBanner}
+              >
                 <img
                   style={CHANGE_IMAGE_ICON_STYLE}
                   src='resources/edit_profile_page/icons/change_image.svg'
@@ -99,7 +108,31 @@ export class EditProfilePage extends React.Component<Properties> {
               </div>
             </div>
           </div>
-          <div style={DISPLAY_NAME_TITLE_STYLE} >Your Display Name</div>
+          <div style={TITLE_STYLE} >Your Display Name</div>
+          <div style={DISPLAY_NAME_TEXT_STYLE} >{this.props.displayName}</div>
+          <div style={USERNAME_STYLE} >{this.props.userName}</div>
+          <div style={GUIDE_TEXT_STYLE} >
+            To change your display name or handle, go to&nbsp;
+            <RedNavLink
+              label='Account Information'
+              to='/settings/account_information'
+              style={LINK_STYLE}
+            />
+            &nbsp;in your settings.
+          </div>
+          <div style={EVENTS_TITLE_STYLE} >Events</div>
+          <div style={GUIDE_TEXT_STYLE} >
+            If you choose to hide any of the following sections, they will be
+            &nbsp;visible only to you.
+          </div>
+          <div style={SUB_TITLE_CONTAINER_STYLE} >
+            <div>UPCOMING EVENTS</div>
+
+          </div>
+          <div style={SUB_TITLE_CONTAINER_STYLE} >
+            <div>PAST EVENTS</div>
+
+          </div>
         </div>
       </div>);
   }
@@ -179,7 +212,8 @@ const IMAGE_PRIVACY_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  width: '100%'
+  width: '100%',
+  marginBottom: '30px'
 };
 
 const IMAGE_CONTAINER_STYLE: React.CSSProperties = {
@@ -281,15 +315,15 @@ const GUIDE_TEXT_STYLE: React.CSSProperties = {
   fontWeight: 400,
   fontSize: '12px',
   lineHeight: '15px',
-  color: '#969696'
+  color: '#969696',
+  width: '100%'
 };
 
-const DISPLAY_NAME_TITLE_STYLE: React.CSSProperties = {
+const TITLE_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'center',
-  marginTop: '30px',
   height: '23px',
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
@@ -297,5 +331,62 @@ const DISPLAY_NAME_TITLE_STYLE: React.CSSProperties = {
   fontSize: '18px',
   lineHeight: '23px',
   textTransform: 'capitalize',
+  color: '#000000'
+};
+
+const DISPLAY_NAME_TEXT_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '12px',
+  lineHeight: '15px',
+  color: '#000000',
+  width: '100%',
+  marginTop: '20px'
+};
+
+const USERNAME_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '12px',
+  lineHeight: '15px',
+  color: '#969696',
+  marginBottom: '20px',
+  width: '100%'
+};
+
+const LINK_STYLE: React.CSSProperties = {
+  width: 'fit-content',
+  height: '15px'
+};
+
+const EVENTS_TITLE_STYLE: React.CSSProperties = {
+  ...TITLE_STYLE,
+  marginTop: '30px'
+};
+
+const SUB_TITLE_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  gap: '10px',
+  marginTop: '10px',
+  marginBottom: '4px',
+  textTransform: 'uppercase',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '14px',
+  lineHeight: '18px',
   color: '#000000'
 };
