@@ -68,29 +68,15 @@ export class EditProfilePage extends React.Component<Properties> {
         };
       }
     })();
-    const upcomingEventsPrivacyButton = (() => {
-      if (this.props.isUpcomingEventsPrivate) {
-        return (
-          <PrivateButton
-            style={PRIVACY_BUTTON_STYLE}
-            onClick={this.handleUpcomingEventsPrivacyClick}
-          />);
-      }
-      return (
-        <PublicButton
-          style={PRIVACY_BUTTON_STYLE}
-          onClick={this.handleUpcomingEventsPrivacyClick}
-        />);
-    })();
+    const upcomingEventsPrivacyButton = (this.props.isUpcomingEventsPrivate &&
+      <PrivateButton onClick={this.handleUpcomingEventsPrivacyClick} /> ||
+      <PublicButton onClick={this.handleUpcomingEventsPrivacyClick} />);
     const pastEventsPrivacyButton = (this.props.isPastEventsPrivate &&
-      <PrivateButton
-        style={PRIVACY_BUTTON_STYLE}
-        onClick={this.handlePastEventsPrivacyClick}
-      /> ||
-      <PublicButton
-        style={PRIVACY_BUTTON_STYLE}
-        onClick={this.handlePastEventsPrivacyClick}
-      />);
+      <PrivateButton onClick={this.handlePastEventsPrivacyClick} /> ||
+      <PublicButton onClick={this.handlePastEventsPrivacyClick} />);
+    const locationPrivacyButton = (this.props.isLocationPrivate &&
+      <PrivateButton onClick={this.handleLocationPrivacyClick} /> ||
+      <PublicButton onClick={this.handleLocationPrivacyClick} />);
     return (
       <div style={{...CONTAINER_STYLE, ...containerStyle}} >
         <div
@@ -169,9 +155,24 @@ export class EditProfilePage extends React.Component<Properties> {
             <div>UPCOMING EVENTS</div>
             {upcomingEventsPrivacyButton}
           </div>
+          <div style={GUIDE_TEXT_STYLE} >
+            Publically display the events that you’re attending, or hide&nbsp;
+            them for only you to see.
+          </div>
           <div style={SUB_TITLE_CONTAINER_STYLE} >
             <div>PAST EVENTS</div>
             {pastEventsPrivacyButton}
+          </div>
+          <div style={GUIDE_TEXT_STYLE} >
+            Publically display the events that you attended, or hide them&nbsp;
+            for only you to see.
+          </div>
+          <div style={ROW_CONTAINER_STYLE} >
+            <div style={TITLE_STYLE} >Location</div>
+            {locationPrivacyButton}
+          </div>
+          <div style={GUIDE_TEXT_STYLE} >
+            Default location is Toronto, ON.
           </div>
         </div>
       </div>);
@@ -183,6 +184,10 @@ export class EditProfilePage extends React.Component<Properties> {
 
   private handlePastEventsPrivacyClick = (event: React.MouseEvent) => {
     this.props.onPastEventPrivacyClick();
+  }
+
+  private handleLocationPrivacyClick = (event: React.MouseEvent) => {
+    this.props.onLocationPrivacyClick();
   }
 }
 
@@ -439,6 +444,12 @@ const SUB_TITLE_CONTAINER_STYLE: React.CSSProperties = {
   color: '#000000'
 };
 
-const PRIVACY_BUTTON_STYLE: React.CSSProperties = {
-  marginLeft: '10px'
+const ROW_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  width: '100%',
+  gap: '10px',
+  marginTop: '30px'
 };
