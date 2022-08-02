@@ -1200,9 +1200,15 @@ export function loadComponentSchemas(): ComponentSchema[] {
       TextInput),
     new PropertySchema('displayName', 'Casper Host', TextInput),
     new PropertySchema('userName', '@120498509', TextInput),
+    new PropertySchema('isUpcomingEventsPrivate', false, BooleanInput),
+    new PropertySchema('isPastEventsPrivate', true, BooleanInput),
+    new PropertySchema('isLocationPrivate', false, BooleanInput)
     ], [
     new SignalSchema('onChangeProfileImageClick', '', []),
-    new SignalSchema('onChangeBanner', '', [])
+    new SignalSchema('onChangeBanner', '', []),
+    new SignalSchema('onUpcomingEventPrivacyClick', '', []),
+    new SignalSchema('onPastEventPrivacyClick', '', []),
+    new SignalSchema('onLocationPrivacyClick', '', [])
     ],
     NeverEatAlone.EditProfilePage);
   const publicButtonSchema = new ComponentSchema('publicButton', [], [

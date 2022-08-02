@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { InvertedSecondaryTextButton, RedNavLink } from '../../components';
+import { InvertedSecondaryTextButton, PublicButton, PrivateButton, RedNavLink
+} from '../../components';
 import { DisplayMode } from '../../definitions';
 
 interface Properties {
@@ -17,13 +18,29 @@ interface Properties {
   /** User's unique username. */
   userName: string;
 
+  /** Whether User's upcoming events section is private or public. */
+  isUpcomingEventsPrivate: boolean;
+
+  /** Whether User's past events section is private or public. */
+  isPastEventsPrivate: boolean;
+
+  /** Whether User's location information is private or public. */
+  isLocationPrivate: boolean;
+
   /** Indicates the change profile image button is clicked. */
   onChangeProfileImageClick: () => void;
 
-  /** Indicates the change banner button is clicked. */
+  /** Indicates the change banner's button is clicked. */
   onChangeBanner: () => void;
 
+  /** Indicates the upcoming events's privacy button is clicked. */
   onUpcomingEventPrivacyClick: () => void;
+
+  /** Indicates the past events's privacy button is clicked. */
+  onPastEventPrivacyClick: () => void;
+
+  /** Indicates the location's privacy button is clicked. */
+  onLocationPrivacyClick: () => void;
 }
 
 /** Displays the edit profile page. */
@@ -51,6 +68,29 @@ export class EditProfilePage extends React.Component<Properties> {
         };
       }
     })();
+    const upcomingEventsPrivacyButton = (() => {
+      if (this.props.isUpcomingEventsPrivate) {
+        return (
+          <PrivateButton
+            style={PRIVACY_BUTTON_STYLE}
+            onClick={this.handleUpcomingEventsPrivacyClick}
+          />);
+      }
+      return (
+        <PublicButton
+          style={PRIVACY_BUTTON_STYLE}
+          onClick={this.handleUpcomingEventsPrivacyClick}
+        />);
+    })();
+    const pastEventsPrivacyButton = (this.props.isPastEventsPrivate &&
+      <PrivateButton
+        style={PRIVACY_BUTTON_STYLE}
+        onClick={this.handlePastEventsPrivacyClick}
+      /> ||
+      <PublicButton
+        style={PRIVACY_BUTTON_STYLE}
+        onClick={this.handlePastEventsPrivacyClick}
+      />);
     return (
       <div style={{...CONTAINER_STYLE, ...containerStyle}} >
         <div
@@ -127,14 +167,22 @@ export class EditProfilePage extends React.Component<Properties> {
           </div>
           <div style={SUB_TITLE_CONTAINER_STYLE} >
             <div>UPCOMING EVENTS</div>
-
+            {upcomingEventsPrivacyButton}
           </div>
           <div style={SUB_TITLE_CONTAINER_STYLE} >
             <div>PAST EVENTS</div>
-
+            {pastEventsPrivacyButton}
           </div>
         </div>
       </div>);
+  }
+
+  private handleUpcomingEventsPrivacyClick = (event: React.MouseEvent) => {
+    this.props.onUpcomingEventPrivacyClick();
+  }
+
+  private handlePastEventsPrivacyClick = (event: React.MouseEvent) => {
+    this.props.onPastEventPrivacyClick();
   }
 }
 
@@ -389,4 +437,8 @@ const SUB_TITLE_CONTAINER_STYLE: React.CSSProperties = {
   fontSize: '14px',
   lineHeight: '18px',
   color: '#000000'
+};
+
+const PRIVACY_BUTTON_STYLE: React.CSSProperties = {
+  marginLeft: '10px'
 };
