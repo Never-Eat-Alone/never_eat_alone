@@ -1215,6 +1215,12 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new SignalSchema('onClick', '', [])], NeverEatAlone.PublicButton);
   const privateButtonSchema = new ComponentSchema('privateButton', [], [
     new SignalSchema('onClick', '', [])], NeverEatAlone.PrivateButton);
+  const locationInputFieldSchema = new ComponentSchema('locationInputField',
+    [new PropertySchema('value', '', TextInput),
+    new PropertySchema('placeholder', '', TextInput),
+    new PropertySchema('hasError', false, BooleanInput),
+    new PropertySchema('disabled', false, BooleanInput),],
+    [new SignalSchema('onClick', '', [])], NeverEatAlone.LocationInputField);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
@@ -1231,5 +1237,6 @@ export function loadComponentSchemas(): ComponentSchema[] {
     secondaryTextLinkButton, secondaryButtonNavLink, resetPasswordPage,
     profileBoxSchema, showAllButtonSchema, showLessButtonSchema,
     profileUpcomingEventsSchema, profilePastEventsSchema, profilePageSchema,
-    editProfilePageSchema, publicButtonSchema, privateButtonSchema];
+    editProfilePageSchema, publicButtonSchema, privateButtonSchema,
+    locationInputFieldSchema];
 }

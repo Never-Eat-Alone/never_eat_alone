@@ -23,6 +23,7 @@ export * from './hero';
 export * from './input_field';
 export * from './instagram_button';
 export * from './invite_a_foodie_button';
+export * from './location_input_field';
 export * from './modal';
 export * from './nav_link';
 export * from './partner_with_us_summary';

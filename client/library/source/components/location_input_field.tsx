@@ -1,12 +1,16 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 
-export function LocationInputField(props: React.InputHTMLAttributes<
-    HTMLInputElement>) {
+interface Properties extends React.InputHTMLAttributes<HTMLInputElement> {
+  hasError: boolean;
+}
+
+export function LocationInputField(props: Properties) {
+  const containerClass = (props.hasError && styles.error || styles.container);
   return (
     <div
         style={{...CONTAINER_STYLE, ...props.style}}
-        className={css(styles.container)}
+        className={css(containerClass)}
     >
       <div style={LOCATION_ICON_CONTAINER_STYLE} >
         <img
@@ -18,6 +22,7 @@ export function LocationInputField(props: React.InputHTMLAttributes<
       <input
         {...props}
         style={INPUT_STYLE}
+        className={css(styles.input)}
       />
       <div style={DROPDOWN_ICON_CONTAINER_STYLE} >
         <img
@@ -41,7 +46,9 @@ const CONTAINER_STYLE: React.CSSProperties = {
   height: '38px',
   border: '1px solid #CCCCCC',
   borderRadius: '4px',
-  padding: '8px 10px 8px 9px'
+  padding: '8px 10px 8px 9px',
+  boxShadow: 'none',
+  cursor: 'pointer'
 };
 
 const LOCATION_ICON_CONTAINER_STYLE: React.CSSProperties = {
@@ -50,7 +57,8 @@ const LOCATION_ICON_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'center',
   alignItems: 'center',
   width: '20px',
-  backgroundColor: 'transparent'
+  backgroundColor: 'transparent',
+  marginRight: '10px'
 };
 
 const LOCATION_ICON_STYLE: React.CSSProperties = {
@@ -81,25 +89,45 @@ const INPUT_STYLE: React.CSSProperties = {
   fontSize: '14px',
   lineHeight: '18px',
   height: '18px',
-  color: '#969696'
+  color: '#000000',
+  width: '100%',
+  outline: 'none',
+  border: 'none',
+  margin: '0px',
+  padding: '0px',
+  cursor: 'auto',
 };
 
 const styles = StyleSheet.create({
   container: {
     ':hover': {
-      
+      border: '1px solid #969696',
+      boxShadow: 'none'
     },
     ':focus': {
-
+      border: '1px solid #CCCCCC',
+      boxShadow: '0px 1px 5px rgba(86, 70, 40, 0.4)'
     },
     ':focus-within': {
-
+      border: '1px solid #CCCCCC',
+      boxShadow: '0px 1px 5px rgba(86, 70, 40, 0.4)'
     },
     ':active': {
-
+      border: '1px solid #969696',
+      boxShadow: 'none'
     },
     ':disabled': {
-
+      backgroundColor: '#F6F6F6',
+      border: '1px solid #F6F6F6',
+      boxShadow: 'none'
+    }
+  },
+  error: {
+    border: '1px solid #FF2C79'
+  },
+  input: {
+    ':placeholder': {
+      color: '#969696'
     }
   }
 });
