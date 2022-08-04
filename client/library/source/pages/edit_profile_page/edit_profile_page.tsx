@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { InvertedSecondaryTextButton, PublicButton, PrivateButton, RedNavLink
-} from '../../components';
-import { DisplayMode } from '../../definitions';
+import { InvertedSecondaryTextButton, LocationInputField, PublicButton,
+  PrivateButton, RedNavLink } from '../../components';
+import { DisplayMode, CityProvince } from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -26,6 +26,18 @@ interface Properties {
 
   /** Whether User's location information is private or public. */
   isLocationPrivate: boolean;
+
+  /** The value entered in the location input field. */
+  locationValue: string;
+
+  /** Whether the location inputfield has an error or not. */
+  locationHasError: boolean;
+
+  /** List of locations matched the location input field. */
+  locationList: CityProvince[];
+
+  /** Indicates the location inputfield value changed. */
+  onLocationInputChange: () => void;
 
   /** Indicates the change profile image button is clicked. */
   onChangeProfileImageClick: () => void;
@@ -77,6 +89,18 @@ export class EditProfilePage extends React.Component<Properties> {
     const locationPrivacyButton = (this.props.isLocationPrivate &&
       <PrivateButton onClick={this.handleLocationPrivacyClick} /> ||
       <PublicButton onClick={this.handleLocationPrivacyClick} />);
+    const dropdown = (() => {
+      if (this.props.locationHasError) {
+        return <div>Required</div>;
+      }
+      if (this.props.locationList && this.props.locationList.length !== 0) {
+        return (
+          <div>
+            dropdown menu
+          </div>);
+      }
+      return null;
+    })();
     return (
       <div style={{...CONTAINER_STYLE, ...containerStyle}} >
         <div
@@ -173,6 +197,15 @@ export class EditProfilePage extends React.Component<Properties> {
           </div>
           <div style={GUIDE_TEXT_STYLE} >
             Default location is Toronto, ON.
+          </div>
+          <div style={LOCATION_MENU_CONTAINER_STYLE} >
+            <LocationInputField
+              value={this.props.locationValue}
+              placeholder='Toronto, ON, CA'
+              onChange={this.props.onLocationInputChange}
+              hasError={this.props.locationHasError}
+            />
+            {dropdown}
           </div>
         </div>
       </div>);
@@ -452,4 +485,13 @@ const ROW_CONTAINER_STYLE: React.CSSProperties = {
   width: '100%',
   gap: '10px',
   marginTop: '30px'
+};
+
+const LOCATION_MENU_CONTAINER_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  width: '100%'
 };

@@ -1202,14 +1202,17 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('userName', '@120498509', TextInput),
     new PropertySchema('isUpcomingEventsPrivate', false, BooleanInput),
     new PropertySchema('isPastEventsPrivate', true, BooleanInput),
-    new PropertySchema('isLocationPrivate', false, BooleanInput)
-    ], [
-    new SignalSchema('onChangeProfileImageClick', '', []),
+    new PropertySchema('isLocationPrivate', false, BooleanInput),
+    new PropertySchema('locationValue', '', TextInput),
+    new PropertySchema('locationList', [], ArrayInput(new PropertySchema(
+      'CityProvince', new NeverEatAlone.CityProvince('Toronto', 'ON'),
+      CityProvinceInput)))],
+    [new SignalSchema('onChangeProfileImageClick', '', []),
     new SignalSchema('onChangeBanner', '', []),
     new SignalSchema('onUpcomingEventPrivacyClick', '', []),
     new SignalSchema('onPastEventPrivacyClick', '', []),
-    new SignalSchema('onLocationPrivacyClick', '', [])
-    ],
+    new SignalSchema('onLocationPrivacyClick', '', []),
+    new SignalSchema('onLocationInputChange', '', [])],
     NeverEatAlone.EditProfilePage);
   const publicButtonSchema = new ComponentSchema('publicButton', [], [
     new SignalSchema('onClick', '', [])], NeverEatAlone.PublicButton);
@@ -1219,7 +1222,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     [new PropertySchema('value', '', TextInput),
     new PropertySchema('placeholder', '', TextInput),
     new PropertySchema('hasError', false, BooleanInput),
-    new PropertySchema('disabled', false, BooleanInput),],
+    new PropertySchema('disabled', false, BooleanInput)],
     [new SignalSchema('onClick', '', [])], NeverEatAlone.LocationInputField);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
