@@ -6,7 +6,8 @@ interface Properties extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 export function LocationInputField(props: Properties) {
-  const containerClass = (props.hasError && styles.error || styles.container);
+  const containerClass = (props.disabled && styles.disabled || props.hasError
+    && styles.error || styles.container);
   return (
     <div
         style={{...CONTAINER_STYLE, ...props.style}}
@@ -95,7 +96,7 @@ const INPUT_STYLE: React.CSSProperties = {
   border: 'none',
   margin: '0px',
   padding: '0px',
-  cursor: 'auto',
+  cursor: 'auto'
 };
 
 const styles = StyleSheet.create({
@@ -115,12 +116,12 @@ const styles = StyleSheet.create({
     ':active': {
       border: '1px solid #969696',
       boxShadow: 'none'
-    },
-    ':disabled': {
-      backgroundColor: '#F6F6F6',
-      border: '1px solid #F6F6F6',
-      boxShadow: 'none'
     }
+  },
+  disabled: {
+    backgroundColor: '#F6F6F6',
+    border: '1px solid #F6F6F6',
+    boxShadow: 'none'
   },
   error: {
     border: '1px solid #FF2C79'
