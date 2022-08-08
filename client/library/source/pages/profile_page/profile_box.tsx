@@ -70,7 +70,8 @@ export class ProfileBox extends React.Component<Properties> {
               alt='Location Icon'
             />
             <p style={TEXT_STYLE} >
-              {this.props.location.city}, {this.props.location.province}
+              {this.props.location.city}, {this.props.location.province},&nbsp;
+              {this.props.location.country}
             </p>
           </div>);
       }

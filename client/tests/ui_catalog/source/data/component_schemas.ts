@@ -785,8 +785,8 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
       DisplayModeInput),
     new PropertySchema('memberSince', new Date(2022, 0, 1), DateInput),
-    new PropertySchema('location', new NeverEatAlone.CityProvince('Toronto',
-      'ON'), CityProvinceInput),
+    new PropertySchema('location', NeverEatAlone.CityProvince.defaultLocation(),
+      CityProvinceInput),
     new PropertySchema('favoriteCuisineList', [
       new NeverEatAlone.Cuisine(1, 'Steakhouse', '#E5FFD8'),
       new NeverEatAlone.Cuisine(2, 'Japanese', '#FFFDD8'),
@@ -1004,8 +1004,8 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('twitterLink', 'https://twitter.com', TextInput),
     new PropertySchema('instagramLink', 'https://instagram.com', TextInput),
     new PropertySchema('memberSince', new Date(2022, 0, 1), DateInput),
-    new PropertySchema('location', new NeverEatAlone.CityProvince('Toronto',
-      'ON'), CityProvinceInput),
+    new PropertySchema('location', NeverEatAlone.CityProvince.defaultLocation(),
+      CityProvinceInput),
     new PropertySchema('favoriteCuisineList', [
       new NeverEatAlone.Cuisine(1, 'Steakhouse', '#E5FFD8'),
       new NeverEatAlone.Cuisine(2, 'Japanese', '#FFFDD8'),
@@ -1203,16 +1203,26 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('isUpcomingEventsPrivate', false, BooleanInput),
     new PropertySchema('isPastEventsPrivate', true, BooleanInput),
     new PropertySchema('isLocationPrivate', false, BooleanInput),
+    new PropertySchema('isLanguagePrivate', false, BooleanInput),
+    new PropertySchema('languageList', [], ArrayInput(new PropertySchema(
+      'language', 'English', TextInput))),
+    new PropertySchema('languageValue', '', TextInput),
     new PropertySchema('locationValue', '', TextInput),
     new PropertySchema('locationList', [], ArrayInput(new PropertySchema(
-      'CityProvince', new NeverEatAlone.CityProvince('Toronto', 'ON'),
-      CityProvinceInput)))],
+      'CityProvince', NeverEatAlone.CityProvince.defaultLocation(),
+      CityProvinceInput))),
+    new PropertySchema('isBiographyPrivate', false, BooleanInput),
+    new PropertySchema('biographyValue', '', TextInput)],
     [new SignalSchema('onChangeProfileImageClick', '', []),
     new SignalSchema('onChangeBanner', '', []),
     new SignalSchema('onUpcomingEventPrivacyClick', '', []),
     new SignalSchema('onPastEventPrivacyClick', '', []),
     new SignalSchema('onLocationPrivacyClick', '', []),
-    new SignalSchema('onLocationInputChange', '', [])],
+    new SignalSchema('onLocationInputChange', '', []),
+    new SignalSchema('onLanguageInputChange', '', []),
+    new SignalSchema('onLanguagePrivacyClick', '', []),
+    new SignalSchema('onBiographyInputChange', '', []),
+    new SignalSchema('onBiographyPrivacyChange', '', [])],
     NeverEatAlone.EditProfilePage);
   const publicButtonSchema = new ComponentSchema('publicButton', [], [
     new SignalSchema('onClick', '', [])], NeverEatAlone.PublicButton);
@@ -1224,6 +1234,14 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('hasError', false, BooleanInput),
     new PropertySchema('disabled', false, BooleanInput)],
     [new SignalSchema('onClick', '', [])], NeverEatAlone.LocationInputField);
+  const textareaWithCounterSchema = new ComponentSchema('TextareaWithCounter',
+    [new PropertySchema('maxCount', 280, NumberInput),
+    new PropertySchema('disabled', false, BooleanInput),
+    new PropertySchema('hasError', false, BooleanInput),
+    new PropertySchema('placeholder', 'Hello everyone! My name is Casper and I \
+      would love to meet you all AND TRY NEW FOOD.', TextInput),
+    new PropertySchema('value', '', TextInput)],
+    [], NeverEatAlone.TextareaWithCounter);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
@@ -1241,5 +1259,5 @@ export function loadComponentSchemas(): ComponentSchema[] {
     profileBoxSchema, showAllButtonSchema, showLessButtonSchema,
     profileUpcomingEventsSchema, profilePastEventsSchema, profilePageSchema,
     editProfilePageSchema, publicButtonSchema, privateButtonSchema,
-    locationInputFieldSchema];
+    locationInputFieldSchema, textareaWithCounterSchema];
 }

@@ -36,5 +36,6 @@ export * from './show_all_button';
 export * from './show_less_button';
 export * from './sign_up_page';
 export * from './text_button';
+export * from './textarea_with_counter';
 export * from './twitter_button';
 export * from './user_upcoming_events_summary';

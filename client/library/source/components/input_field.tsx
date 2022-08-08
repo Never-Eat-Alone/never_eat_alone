@@ -9,15 +9,14 @@ interface InputFieldProperties extends React.InputHTMLAttributes<
 }
 
 export function InputField(props: InputFieldProperties) {
-  const { hasError, style, ...rest } = props;
   return (
     <input
+      {...props}
       style={{...INPUT_STYLE, ...CONTAINER_STYLE, ...CONTAINER_NO_ICON_STYLE,
-        ...style}}
-      className={rest.disabled && css(styles.disabled) ||
-        hasError && css(styles.hasError) || css(styles.container, styles.input)}
-      placeholder={rest.placeholder}
-      {...rest}
+        ...props.style}}
+      className={props.disabled && css(styles.disabled) ||
+        props.hasError && css(styles.hasError) ||
+        css(styles.container, styles.input)}
     />);
 }
 
@@ -41,7 +40,7 @@ export function InputFieldWithIcon(props: InputFieldWithIconProperties) {
           alt={iconAlt}
         />
       </div>
-      <input style={INPUT_STYLE} className={css(styles.input)} {...rest} />
+      <input {...rest} style={INPUT_STYLE} className={css(styles.input)} />
     </div>);
 }
 
@@ -87,8 +86,8 @@ export function NameInputFieldWithCounterInside(props: InputFieldWithCounter) {
           alt='Name Icon'
         />
       </div>
-      <input style={INPUT_STYLE} className={css(styles.input)}
-        name='name' type='text' {...rest}
+      <input {...rest} style={INPUT_STYLE} className={css(styles.input)}
+        name='name' type='text'
       />
       <div style={COUNTER_CONTAINER_STYLE} >
         <CircularCounterWithCounterInside
