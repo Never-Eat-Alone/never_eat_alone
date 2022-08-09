@@ -247,7 +247,7 @@ export class EditProfilePage extends React.Component<Properties> {
               />
               <button
                   style={CHANGE_IMAGE_BUTTON_STYLE}
-                  onClick={this.props.onChangeBanner}
+                  onClick={this.props.onChangeProfileImageClick}
               >
                 <img
                   style={CHANGE_IMAGE_ICON_STYLE}
@@ -321,12 +321,12 @@ export class EditProfilePage extends React.Component<Properties> {
             <div style={TITLE_STYLE} >Location</div>
           </div>
           <div style={GUIDE_TEXT_STYLE} >
-            Default location is Toronto, ON.
+            Enter your city here.
           </div>
           <div style={MENU_CONTAINER_STYLE} >
             <LocationInputField
               value={this.props.locationValue}
-              placeholder='Toronto, ON, CA'
+              placeholder='City, Province'
               onChange={this.handleLocationInputChange}
               hasError={this.props.locationValue.trim().length === 0}
             />
@@ -359,33 +359,36 @@ export class EditProfilePage extends React.Component<Properties> {
             style={TEXTAREA_STYLE}
             maxCount={280}
             value={this.props.biographyValue}
-            onChange={this.handleBiographyInputChange}
+            onValueChange={this.props.onBiographyInputChange}
           />
           <div style={TITLE_MARGIN_STYLE} >Social Media</div>
-          <div>
+          <div style={SOCIAL_LINK_ROW_CONTAINER_STYLE} >
             {facebookPrivacyButton}
             <InputFieldWithIcon
-              iconSrc=''
+              style={INPUT_FIELD_STYLE}
+              iconSrc='resources/edit_profile_page/icons/facebook.svg'
               iconAlt='Facebook Icon'
               value={this.props.facebookLink}
               placeholder='Enter your Facebook profile URL'
               onChange={this.handleFacebookInputChange}
             />
           </div>
-          <div>
+          <div style={SOCIAL_LINK_ROW_CONTAINER_STYLE} >
             {twitterPrivacyButton}
             <InputFieldWithIcon
-              iconSrc=''
+              style={INPUT_FIELD_STYLE}
+              iconSrc='resources/edit_profile_page/icons/twitter.svg'
               iconAlt='Twitter Icon'
               value={this.props.twitterLink}
               placeholder='Enter your Twitter profile URL'
               onChange={this.handleTwitterInputChange}
             />
           </div>
-          <div>
+          <div style={SOCIAL_LINK_ROW_CONTAINER_STYLE} >
             {instagramPrivacyButton}
             <InputFieldWithIcon
-              iconSrc=''
+              style={INPUT_FIELD_STYLE}
+              iconSrc='resources/edit_profile_page/icons/instagram.svg'
               iconAlt='Instagram Icon'
               value={this.props.instagramLink}
               placeholder='Enter your Instagram profile URL'
@@ -420,11 +423,6 @@ export class EditProfilePage extends React.Component<Properties> {
   private handleLanguageInputChange = (event: React.ChangeEvent<
       HTMLInputElement>) => {
     this.props.onLanguageInputChange(event.target.value);
-  }
-
-  private handleBiographyInputChange = (event: React.ChangeEvent<
-      HTMLTextAreaElement>) => {
-    this.props.onBiographyInputChange(event.target.value);
   }
 
   private handleFacebookInputChange = (event: React.ChangeEvent<
@@ -739,5 +737,15 @@ const INPUT_FIELD_STYLE: React.CSSProperties = {
 };
 
 const TEXTAREA_STYLE: React.CSSProperties = {
+  marginTop: '10px'
+};
+
+const SOCIAL_LINK_ROW_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  width: '100%',
+  gap: '20px',
   marginTop: '10px'
 };
