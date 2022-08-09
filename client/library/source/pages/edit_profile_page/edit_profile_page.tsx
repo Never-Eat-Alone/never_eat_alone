@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { InputField, InvertedSecondaryTextButton, LocationInputField,
-  PublicButton, PrivateButton, RedNavLink, TextareaWithCounter
-} from '../../components';
-import { CityProvince, DisplayMode } from '../../definitions';
+import { InputField, InputFieldWithIcon, InvertedSecondaryTextButton,
+  LocationInputField, PublicButton, PrivateButton, RedNavLink,
+  TextareaWithCounter } from '../../components';
+import { CityProvince, Cuisine, DisplayMode, Language
+} from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -19,41 +20,71 @@ interface Properties {
   /** User's unique username. */
   userName: string;
 
-  /** Whether User's upcoming events section is private or public. */
+  /** Whether user's upcoming events section is private or public. */
   isUpcomingEventsPrivate: boolean;
 
-  /** Whether User's past events section is private or public. */
+  /** Whether user's past events section is private or public. */
   isPastEventsPrivate: boolean;
 
-  /** Whether User's location information is private or public. */
+  /** Whether user's location information is private or public. */
   isLocationPrivate: boolean;
 
   /** The value entered in the location input field. */
   locationValue: string;
 
-  /** Whether the location inputfield has an error or not. */
-  locationHasError: boolean;
-
   /** List of locations matched the location input field. */
-  locationList: CityProvince[];
+  suggestedLocationList: CityProvince[];
 
-  /** Whether User's location information is private or public. */
+  /** Whether user's location information is private or public. */
   isLanguagePrivate: boolean;
 
   /** The value entered in the language input field. */
   languageValue: string;
 
-  /** List of languages matched the language input field. */
-  languageList: string[];
+  /** List of languages matched the language input value. */
+  suggestedLanguageList: Language[];
+
+  /** The list of languages that user selected. */
+  selectedLanguageList: Language[];
 
   /** The value entered in the biography textarea. */
   biographyValue: string;
 
-  /** Whether User's biography is private or public. */
+  /** Whether user's biography is private or public. */
   isBiographyPrivate: boolean;
 
+  /** The value entered in the cuisine inputfield. */
+  cuisineValue: string;
+
+  /** The list of cuisines matched the cuisine input value. */
+  suggestedCuisineList: Cuisine[];
+
+  /** The list of cuisines that user selected. */
+  selectedCuisineList: Cuisine[];
+
+  /** Whether user's favorite cuisines are private or public. */
+  isCuisinePrivate: boolean;
+
+  /** Whether user's facebook profile link is private or public. */
+  isFacebookPrivate: boolean;
+
+  /** Whether user's twitter profile link is private or public. */
+  isTwitterPrivate: boolean;
+
+  /** Whether user's instagram profile link is private or public. */
+  isInstagramPrivate: boolean;
+
+  /** The value entered in the facebook link inputfield. */
+  facebookLink: string;
+
+  /** The value entered in the twitter link inputfield. */
+  twitterLink: string;
+
+  /** The value entered in the instagram link inputfield. */
+  instagramLink: string;
+
   /** Indicates the location inputfield value changed. */
-  onLocationInputChange: () => void;
+  onLocationInputChange: (newValue: string) => void;
 
   /** Indicates the location's privacy button is clicked. */
   onLocationPrivacyClick: () => void;
@@ -74,13 +105,37 @@ interface Properties {
   onLanguagePrivacyClick: () => void;
 
   /** Indicates the language inputfield value changed. */
-  onLanguageInputChange: () => void;
+  onLanguageInputChange: (newValue: string) => void;
 
   /** Indicates the biography's privacy button is clicked. */
-  onBiographyPrivacyChange: () => void;
+  onBiographyPrivacyClick: () => void;
 
   /** Indicates the biography textarea value changed. */
-  onBiographyInputChange: () => void;
+  onBiographyInputChange: (newValue: string) => void;
+
+  /** Indicates the cuisine's privacy button is clicked. */
+  onCuisinePrivacyClick: () => void;
+
+  /** Indicates the cuisine input value changed. */
+  onCuisineInputChange: (newValue: string) => void;
+
+  /** Indicates the facebook's privacy button is clicked. */
+  onFacebookPrivacyClick: () => void;
+
+  /** Indicates the facebook link input value changed. */
+  onFacebookInputChange: (newValue: string) => void;
+
+  /** Indicates the twitter's privacy button is clicked. */
+  onTwitterPrivacyClick: () => void;
+
+  /** Indicates the twitter link input value changed. */
+  onTwitterInputChange: (newValue: string) => void;
+
+  /** Indicates the instagram's privacy button is clicked. */
+  onInstagramPrivacyClick: () => void;
+
+  /** Indicates the instagram link input value changed. */
+  onInstagramInputChange: (newValue: string) => void;
 }
 
 /** Displays the edit profile page. */
@@ -121,13 +176,26 @@ export class EditProfilePage extends React.Component<Properties> {
       <PrivateButton onClick={this.props.onLanguagePrivacyClick} /> ||
       <PublicButton onClick={this.props.onLanguagePrivacyClick} />);
     const biographyPrivacyButton = (this.props.isBiographyPrivate &&
-      <PrivateButton onClick={this.props.onBiographyPrivacyChange} /> ||
-      <PublicButton onClick={this.props.onBiographyPrivacyChange} />);
+      <PrivateButton onClick={this.props.onBiographyPrivacyClick} /> ||
+      <PublicButton onClick={this.props.onBiographyPrivacyClick} />);
+    const cuisinesPrivacyButton = (this.props.isCuisinePrivate &&
+      <PrivateButton onClick={this.props.onCuisinePrivacyClick} /> ||
+      <PublicButton onClick={this.props.onCuisinePrivacyClick} />);
+    const facebookPrivacyButton = (this.props.isFacebookPrivate &&
+      <PrivateButton onClick={this.props.onFacebookPrivacyClick} /> ||
+      <PublicButton onClick={this.props.onFacebookPrivacyClick} />);
+    const twitterPrivacyButton = (this.props.isTwitterPrivate &&
+      <PrivateButton onClick={this.props.onTwitterPrivacyClick} /> ||
+      <PublicButton onClick={this.props.onTwitterPrivacyClick} />);
+    const instagramPrivacyButton = (this.props.isInstagramPrivate &&
+      <PrivateButton onClick={this.props.onInstagramPrivacyClick} /> ||
+      <PublicButton onClick={this.props.onInstagramPrivacyClick} />);
     const locationDropdown = (() => {
-      if (this.props.locationHasError) {
+      if (this.props.locationValue.trim().length === 0) {
         return <div>Required</div>;
       }
-      if (this.props.locationList && this.props.locationList.length !== 0) {
+      if (this.props.suggestedLocationList &&
+          this.props.suggestedLocationList.length !== 0) {
         return (
           <div style={DROPDOWN_STYLE} >
             dropdown menu
@@ -136,7 +204,18 @@ export class EditProfilePage extends React.Component<Properties> {
       return null;
     })();
     const languageDropdown = (() => {
-      if (this.props.languageList && this.props.languageList.length !== 0) {
+      if (this.props.suggestedLanguageList &&
+          this.props.suggestedLanguageList.length !== 0) {
+        return (
+          <div style={DROPDOWN_STYLE} >
+            dropdown menu
+          </div>);
+      }
+      return null;
+    })();
+    const cuisineDropdown = (() => {
+      if (this.props.suggestedCuisineList &&
+          this.props.suggestedCuisineList.length !== 0) {
         return (
           <div style={DROPDOWN_STYLE} >
             dropdown menu
@@ -216,7 +295,7 @@ export class EditProfilePage extends React.Component<Properties> {
               You can hide sections of your profile by clicking the eye icon.
             </div>
           </div>
-          <div style={EVENTS_TITLE_STYLE} >Events</div>
+          <div style={TITLE_MARGIN_STYLE} >Events</div>
           <div style={GUIDE_TEXT_STYLE} >
             If you choose to hide any of the following sections, they will be
             &nbsp;visible only to you.
@@ -248,8 +327,8 @@ export class EditProfilePage extends React.Component<Properties> {
             <LocationInputField
               value={this.props.locationValue}
               placeholder='Toronto, ON, CA'
-              onChange={this.props.onLocationInputChange}
-              hasError={this.props.locationHasError}
+              onChange={this.handleLocationInputChange}
+              hasError={this.props.locationValue.trim().length === 0}
             />
             {locationDropdown}
           </div>
@@ -265,7 +344,7 @@ export class EditProfilePage extends React.Component<Properties> {
               style={INPUT_FIELD_STYLE}
               value={this.props.languageValue}
               placeholder='Start typing to add a language...'
-              onChange={this.props.onLanguageInputChange}
+              onChange={this.handleLanguageInputChange}
             />
             {languageDropdown}
           </div>
@@ -280,10 +359,92 @@ export class EditProfilePage extends React.Component<Properties> {
             style={TEXTAREA_STYLE}
             maxCount={280}
             value={this.props.biographyValue}
-            onChange={this.props.onBiographyInputChange}
+            onChange={this.handleBiographyInputChange}
           />
+          <div style={TITLE_MARGIN_STYLE} >Social Media</div>
+          <div>
+            {facebookPrivacyButton}
+            <InputFieldWithIcon
+              iconSrc=''
+              iconAlt='Facebook Icon'
+              value={this.props.facebookLink}
+              placeholder='Enter your Facebook profile URL'
+              onChange={this.handleFacebookInputChange}
+            />
+          </div>
+          <div>
+            {twitterPrivacyButton}
+            <InputFieldWithIcon
+              iconSrc=''
+              iconAlt='Twitter Icon'
+              value={this.props.twitterLink}
+              placeholder='Enter your Twitter profile URL'
+              onChange={this.handleTwitterInputChange}
+            />
+          </div>
+          <div>
+            {instagramPrivacyButton}
+            <InputFieldWithIcon
+              iconSrc=''
+              iconAlt='Instagram Icon'
+              value={this.props.instagramLink}
+              placeholder='Enter your Instagram profile URL'
+              onChange={this.handleInstagramInputChange}
+            />
+          </div>
+          <div style={ROW_CONTAINER_STYLE} >
+            {cuisinesPrivacyButton}
+            <div style={TITLE_STYLE} >Favorite Cuisines</div>
+          </div>
+          <div style={GUIDE_TEXT_STYLE} >
+            Pick up to 5 of your favourite cuisines.
+          </div>
+          <div style={MENU_CONTAINER_STYLE} >
+            <InputField
+              style={INPUT_FIELD_STYLE}
+              value={this.props.cuisineValue}
+              placeholder='Start typing to add a cuisine...'
+              onChange={this.handleCuisineInputChange}
+            />
+            {cuisineDropdown}
+          </div>
         </div>
       </div>);
+  }
+
+  private handleLocationInputChange = (event: React.ChangeEvent<
+      HTMLInputElement>) => {
+    this.props.onLocationInputChange(event.target.value);
+  }
+
+  private handleLanguageInputChange = (event: React.ChangeEvent<
+      HTMLInputElement>) => {
+    this.props.onLanguageInputChange(event.target.value);
+  }
+
+  private handleBiographyInputChange = (event: React.ChangeEvent<
+      HTMLTextAreaElement>) => {
+    this.props.onBiographyInputChange(event.target.value);
+  }
+
+  private handleFacebookInputChange = (event: React.ChangeEvent<
+      HTMLInputElement>) => {
+    this.props.onFacebookInputChange(event.target.value.trim());
+  }
+
+  private handleTwitterInputChange = (event: React.ChangeEvent<
+      HTMLInputElement>) => {
+    this.props.onTwitterInputChange(event.target.value.trim());
+  }
+
+  private handleInstagramInputChange = (event: React.ChangeEvent<
+      HTMLInputElement>) => {
+    this.props.onInstagramInputChange(event.target.value.trim());
+  }
+
+  private handleCuisineInputChange = (event: React.ChangeEvent<
+      HTMLInputElement>) => {
+    this.props.onCuisineInputChange(event.target.value);
   }
 }
 
@@ -526,7 +687,7 @@ const LINK_STYLE: React.CSSProperties = {
   height: '15px'
 };
 
-const EVENTS_TITLE_STYLE: React.CSSProperties = {
+const TITLE_MARGIN_STYLE: React.CSSProperties = {
   ...TITLE_STYLE,
   marginTop: '30px'
 };
