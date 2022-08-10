@@ -1,3 +1,4 @@
+import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 import { InputField, InputFieldWithIcon, InvertedSecondaryTextButton,
   LocationInputField, PublicButton, PrivateButton, RedNavLink,
@@ -196,9 +197,19 @@ export class EditProfilePage extends React.Component<Properties> {
       }
       if (this.props.suggestedLocationList &&
           this.props.suggestedLocationList.length !== 0) {
+        const rows = this.props.suggestedLocationList.map(location => {
+          return (
+            <div
+                key={location.id}
+                style={DROPDOWN_ROW_STYLE}
+                className={css(styles.dropdownRow)}
+            >
+              {location.city}, {location.province}, {location.country}
+            </div>);
+        });
         return (
-          <div style={DROPDOWN_STYLE} >
-            dropdown menu
+          <div style={DROPDOWN_CONTAINER_STYLE} >
+            {rows}
           </div>);
       }
       return null;
@@ -206,9 +217,19 @@ export class EditProfilePage extends React.Component<Properties> {
     const languageDropdown = (() => {
       if (this.props.suggestedLanguageList &&
           this.props.suggestedLanguageList.length !== 0) {
+        const rows = this.props.suggestedLanguageList.map(language => {
+          return (
+            <div
+                key={language.id}
+                style={DROPDOWN_ROW_STYLE}
+                className={css(styles.dropdownRow)}
+            >
+              {language.name}
+            </div>);
+        });
         return (
-          <div style={DROPDOWN_STYLE} >
-            dropdown menu
+          <div style={DROPDOWN_CONTAINER_STYLE} >
+            {rows}
           </div>);
       }
       return null;
@@ -216,9 +237,19 @@ export class EditProfilePage extends React.Component<Properties> {
     const cuisineDropdown = (() => {
       if (this.props.suggestedCuisineList &&
           this.props.suggestedCuisineList.length !== 0) {
+        const rows = this.props.suggestedCuisineList.map(cuisine => {
+          return (
+            <div
+                key={cuisine.id}
+                style={DROPDOWN_ROW_STYLE}
+                className={css(styles.dropdownRow)}
+            >
+              {cuisine.label}
+            </div>);
+        });
         return (
-          <div style={DROPDOWN_STYLE} >
-            dropdown menu
+          <div style={DROPDOWN_CONTAINER_STYLE} >
+            {rows}
           </div>);
       }
       return null;
@@ -402,15 +433,13 @@ export class EditProfilePage extends React.Component<Properties> {
           <div style={GUIDE_TEXT_STYLE} >
             Pick up to 5 of your favourite cuisines.
           </div>
-          <div style={MENU_CONTAINER_STYLE} >
-            <InputField
-              style={INPUT_FIELD_STYLE}
-              value={this.props.cuisineValue}
-              placeholder='Start typing to add a cuisine...'
-              onChange={this.handleCuisineInputChange}
-            />
-            {cuisineDropdown}
-          </div>
+          <InputField
+            style={INPUT_FIELD_STYLE}
+            value={this.props.cuisineValue}
+            placeholder='Start typing to add a cuisine...'
+            onChange={this.handleCuisineInputChange}
+          />
+          {cuisineDropdown}
         </div>
       </div>);
   }
@@ -717,23 +746,27 @@ const ROW_CONTAINER_STYLE: React.CSSProperties = {
   marginTop: '30px'
 };
 
-const MENU_CONTAINER_STYLE: React.CSSProperties = {
+const DROPDOWN_CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
   width: '100%',
-  marginTop: '10px'
-};
-
-const DROPDOWN_STYLE: React.CSSProperties = {
-  width: '100%'
+  backgroundColor: '#FFFFFF',
+  padding: '0px',
+  borderWidth: '0px 1px 1px 1px',
+  borderStyle: 'solid',
+  borderColor: '#969696',
+  borderRadius: '0px 0px 4px 4px'
 };
 
 const INPUT_FIELD_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
   width: '100%',
-  height: '38px'
+  height: '38px',
+  marginTop: '10px',
+  
 };
 
 const TEXTAREA_STYLE: React.CSSProperties = {
@@ -749,3 +782,41 @@ const SOCIAL_LINK_ROW_CONTAINER_STYLE: React.CSSProperties = {
   gap: '20px',
   marginTop: '10px'
 };
+
+const DROPDOWN_ROW_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  paddingLeft: '10px',
+  paddingRight: '10px',
+  gap: '10px',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#000000',
+  backgroundColor: '#FFFFFF',
+  width: '100%',
+  minHeight: '38px',
+  border: 'none'
+};
+
+const styles = StyleSheet.create({
+  dropdownRow: {
+    ':hover': {
+      backgroundColor: '#F6F6F6'
+    },
+    ':focus': {
+      backgroundColor: '#F6F6F6'
+    },
+    ':focus-within': {
+      backgroundColor: '#F6F6F6'
+    },
+    ':active': {
+      backgroundColor: '#F6F6F6'
+    }
+  }
+});
