@@ -1204,12 +1204,15 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('isPastEventsPrivate', true, BooleanInput),
     new PropertySchema('isLocationPrivate', false, BooleanInput),
     new PropertySchema('locationValue', 'Toronto, ON, CA', TextInput),
-    new PropertySchema('suggestedLocationList', [], ArrayInput(
+    new PropertySchema('suggestedLocationList', [
+      NeverEatAlone.CityProvince.defaultLocation(),
+      new NeverEatAlone.CityProvince(2, 'Ottawa', 'ON', 'CA')], ArrayInput(
       new PropertySchema('CityProvince',
       NeverEatAlone.CityProvince.defaultLocation(), CityProvinceInput))),
     new PropertySchema('isLanguagePrivate', false, BooleanInput),
     new PropertySchema('languageValue', '', TextInput),
-    new PropertySchema('suggestedLanguageList', [], ArrayInput(
+    new PropertySchema('suggestedLanguageList', [new NeverEatAlone.Language(1,
+      'English'), new NeverEatAlone.Language(2, 'Spanish')], ArrayInput(
       new PropertySchema('language', new NeverEatAlone.Language(1, 'English'),
       LanguageInput))),
     new PropertySchema('selectedLanguageList', [new NeverEatAlone.Language(1,
@@ -1219,7 +1222,9 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('biographyValue', '', TextInput),
     new PropertySchema('isBiographyPrivate', false, BooleanInput),
     new PropertySchema('cuisineValue', '', TextInput),
-    new PropertySchema('suggestedCuisineList', [], ArrayInput(
+    new PropertySchema('suggestedCuisineList', [new NeverEatAlone.Cuisine(1,
+      'French', 'blue'), new NeverEatAlone.Cuisine(2, 'Steak', 'yellow'),
+      new NeverEatAlone.Cuisine(3, 'Japanese', 'pink')], ArrayInput(
       new PropertySchema('cuisine', new NeverEatAlone.Cuisine(1, 'French',
       'blue'), CuisineInput))),
     new PropertySchema('selectedCuisineList', [new NeverEatAlone.Cuisine(2,
