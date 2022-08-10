@@ -1,8 +1,8 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 import { InputField, InputFieldWithIcon, InvertedSecondaryTextButton,
-  LocationInputField, PublicButton, PrivateButton, RedNavLink,
-  TextareaWithCounter } from '../../components';
+  PublicButton, PrivateButton, RedNavLink, TextareaWithCounter
+} from '../../components';
 import { CityProvince, Cuisine, DisplayMode, Language
 } from '../../definitions';
 
@@ -139,8 +139,23 @@ interface Properties {
   onInstagramInputChange: (newValue: string) => void;
 }
 
+interface State {
+  isLocationDropdownDisplayed: boolean;
+  isLanguageDropdownDisplayed: boolean;
+  isCuisineDropdownDisplayed: boolean;
+}
+
 /** Displays the edit profile page. */
-export class EditProfilePage extends React.Component<Properties> {
+export class EditProfilePage extends React.Component<Properties, State> {
+  constructor(props: Properties) {
+    super(props);
+    this.state = {
+      isLocationDropdownDisplayed: false,
+      isLanguageDropdownDisplayed: false,
+      isCuisineDropdownDisplayed: false
+    };
+  }
+
   public render(): JSX.Element {
     const { containerStyle, coverImageStyle, changeBannerButtonStyle
         } = (() => {
@@ -191,11 +206,18 @@ export class EditProfilePage extends React.Component<Properties> {
     const instagramPrivacyButton = (this.props.isInstagramPrivate &&
       <PrivateButton onClick={this.props.onInstagramPrivacyClick} /> ||
       <PublicButton onClick={this.props.onInstagramPrivacyClick} />);
+    const locationInputFieldStyle = (this.state.isLocationDropdownDisplayed &&
+      INPUT_WITH_DROPDOWN_STYLE || INPUT_FIELD_STYLE);
+    const languageInputFieldStyle = (this.state.isLanguageDropdownDisplayed &&
+      INPUT_WITH_DROPDOWN_STYLE || INPUT_FIELD_STYLE);
+    const cuisineInputFieldStyle = (this.state.isCuisineDropdownDisplayed &&
+      INPUT_WITH_DROPDOWN_STYLE || INPUT_FIELD_STYLE);
     const locationDropdown = (() => {
       if (this.props.locationValue.trim().length === 0) {
         return <div>Required</div>;
       }
-      if (this.props.suggestedLocationList &&
+      if (this.state.isLocationDropdownDisplayed &&
+          this.props.suggestedLocationList &&
           this.props.suggestedLocationList.length !== 0) {
         const rows = this.props.suggestedLocationList.map(location => {
           return (
@@ -215,7 +237,8 @@ export class EditProfilePage extends React.Component<Properties> {
       return null;
     })();
     const languageDropdown = (() => {
-      if (this.props.suggestedLanguageList &&
+      if (this.state.isLanguageDropdownDisplayed &&
+          this.props.suggestedLanguageList &&
           this.props.suggestedLanguageList.length !== 0) {
         const rows = this.props.suggestedLanguageList.map(language => {
           return (
@@ -235,7 +258,8 @@ export class EditProfilePage extends React.Component<Properties> {
       return null;
     })();
     const cuisineDropdown = (() => {
-      if (this.props.suggestedCuisineList &&
+      if (this.state.isCuisineDropdownDisplayed &&
+          this.props.suggestedCuisineList &&
           this.props.suggestedCuisineList.length !== 0) {
         const rows = this.props.suggestedCuisineList.map(cuisine => {
           return (
@@ -354,15 +378,16 @@ export class EditProfilePage extends React.Component<Properties> {
           <div style={GUIDE_TEXT_STYLE} >
             Enter your city here.
           </div>
-          <div style={MENU_CONTAINER_STYLE} >
-            <LocationInputField
-              value={this.props.locationValue}
-              placeholder='City, Province'
-              onChange={this.handleLocationInputChange}
-              hasError={this.props.locationValue.trim().length === 0}
-            />
-            {locationDropdown}
-          </div>
+          <InputField
+            style={{...locationInputFieldStyle, ...MARGIN_STYLE}}
+            value={this.props.locationValue}
+            placeholder='City, Province'
+            type='text'
+            onChange={this.handleLocationInputChange}
+            onFocus={this.handleDisplayLocationDropdown}
+            onBlur={this.handleHideLocationDropdown}
+          />
+          {locationDropdown}
           <div style={ROW_CONTAINER_STYLE} >
             {languagesPrivacyButton}
             <div style={TITLE_STYLE} >Languages</div>
@@ -370,15 +395,16 @@ export class EditProfilePage extends React.Component<Properties> {
           <div style={GUIDE_TEXT_STYLE} >
             Helps you connect to more people. Optional.
           </div>
-          <div style={MENU_CONTAINER_STYLE} >
-            <InputField
-              style={INPUT_FIELD_STYLE}
-              value={this.props.languageValue}
-              placeholder='Start typing to add a language...'
-              onChange={this.handleLanguageInputChange}
-            />
-            {languageDropdown}
-          </div>
+          <InputField
+            style={{...languageInputFieldStyle, ...MARGIN_STYLE}}
+            value={this.props.languageValue}
+            placeholder='Start typing to add a language...'
+            type='text'
+            onChange={this.handleLanguageInputChange}
+            onFocus={this.handleDisplayLanguageDropdown}
+            onBlur={this.handleHideLanguageDropdown}
+          />
+          {languageDropdown}
           <div style={ROW_CONTAINER_STYLE} >
             {biographyPrivacyButton}
             <div style={TITLE_STYLE} >Biography</div>
@@ -387,7 +413,7 @@ export class EditProfilePage extends React.Component<Properties> {
             Tell others a bit about you! Optional.
           </div>
           <TextareaWithCounter
-            style={TEXTAREA_STYLE}
+            style={MARGIN_STYLE}
             maxCount={280}
             value={this.props.biographyValue}
             onValueChange={this.props.onBiographyInputChange}
@@ -400,6 +426,7 @@ export class EditProfilePage extends React.Component<Properties> {
               iconSrc='resources/edit_profile_page/icons/facebook.svg'
               iconAlt='Facebook Icon'
               value={this.props.facebookLink}
+              type='url'
               placeholder='Enter your Facebook profile URL'
               onChange={this.handleFacebookInputChange}
             />
@@ -411,6 +438,7 @@ export class EditProfilePage extends React.Component<Properties> {
               iconSrc='resources/edit_profile_page/icons/twitter.svg'
               iconAlt='Twitter Icon'
               value={this.props.twitterLink}
+              type='url'
               placeholder='Enter your Twitter profile URL'
               onChange={this.handleTwitterInputChange}
             />
@@ -422,6 +450,7 @@ export class EditProfilePage extends React.Component<Properties> {
               iconSrc='resources/edit_profile_page/icons/instagram.svg'
               iconAlt='Instagram Icon'
               value={this.props.instagramLink}
+              type='url'
               placeholder='Enter your Instagram profile URL'
               onChange={this.handleInstagramInputChange}
             />
@@ -434,10 +463,13 @@ export class EditProfilePage extends React.Component<Properties> {
             Pick up to 5 of your favourite cuisines.
           </div>
           <InputField
-            style={INPUT_FIELD_STYLE}
+            style={{...cuisineInputFieldStyle, ...MARGIN_STYLE}}
             value={this.props.cuisineValue}
             placeholder='Start typing to add a cuisine...'
+            type='text'
             onChange={this.handleCuisineInputChange}
+            onFocus={this.handleDisplayCuisineDropdown}
+            onBlur={this.handleHideCuisineDropdown}
           />
           {cuisineDropdown}
         </div>
@@ -449,9 +481,25 @@ export class EditProfilePage extends React.Component<Properties> {
     this.props.onLocationInputChange(event.target.value);
   }
 
+  private handleDisplayLocationDropdown = () => {
+    this.setState({ isLocationDropdownDisplayed: true });
+  }
+
+  private handleHideLocationDropdown = () => {
+    this.setState({ isLocationDropdownDisplayed: false });
+  }
+
   private handleLanguageInputChange = (event: React.ChangeEvent<
       HTMLInputElement>) => {
     this.props.onLanguageInputChange(event.target.value);
+  }
+
+  private handleDisplayLanguageDropdown = () => {
+    this.setState({ isLanguageDropdownDisplayed: true });
+  }
+
+  private handleHideLanguageDropdown = () => {
+    this.setState({ isLanguageDropdownDisplayed: false });
   }
 
   private handleFacebookInputChange = (event: React.ChangeEvent<
@@ -472,6 +520,14 @@ export class EditProfilePage extends React.Component<Properties> {
   private handleCuisineInputChange = (event: React.ChangeEvent<
       HTMLInputElement>) => {
     this.props.onCuisineInputChange(event.target.value);
+  }
+
+  private handleDisplayCuisineDropdown = () => {
+    this.setState({ isCuisineDropdownDisplayed: true });
+  }
+
+  private handleHideCuisineDropdown = () => {
+    this.setState({ isCuisineDropdownDisplayed: false });
   }
 }
 
@@ -758,18 +814,15 @@ const DROPDOWN_CONTAINER_STYLE: React.CSSProperties = {
   borderWidth: '0px 1px 1px 1px',
   borderStyle: 'solid',
   borderColor: '#969696',
-  borderRadius: '0px 0px 4px 4px'
+  borderRadius: '0px 0px 4px 4px',
+  overflow: 'hidden'
 };
 
 const INPUT_FIELD_STYLE: React.CSSProperties = {
-  boxSizing: 'border-box',
-  width: '100%',
-  height: '38px',
-  marginTop: '10px',
-  
+  width: '100%'
 };
 
-const TEXTAREA_STYLE: React.CSSProperties = {
+const MARGIN_STYLE: React.CSSProperties = {
   marginTop: '10px'
 };
 
@@ -800,8 +853,12 @@ const DROPDOWN_ROW_STYLE: React.CSSProperties = {
   color: '#000000',
   backgroundColor: '#FFFFFF',
   width: '100%',
-  minHeight: '38px',
-  border: 'none'
+  minHeight: '38px'
+};
+
+const INPUT_WITH_DROPDOWN_STYLE: React.CSSProperties = {
+  width: '100%',
+  borderRadius: '4px 4px 0px 0px'
 };
 
 const styles = StyleSheet.create({
