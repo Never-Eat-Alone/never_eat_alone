@@ -1212,7 +1212,10 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('isLanguagePrivate', false, BooleanInput),
     new PropertySchema('languageValue', '', TextInput),
     new PropertySchema('suggestedLanguageList', [new NeverEatAlone.Language(1,
-      'English'), new NeverEatAlone.Language(2, 'Spanish')], ArrayInput(
+      'English'), new NeverEatAlone.Language(2, 'Spanish'),
+      new NeverEatAlone.Language(3, 'Mandarin'), new NeverEatAlone.Language(4,
+      'Farsi'), new NeverEatAlone.Language(5, 'German'),
+      new NeverEatAlone.Language(6, 'Polish')], ArrayInput(
       new PropertySchema('language', new NeverEatAlone.Language(1, 'English'),
       LanguageInput))),
     new PropertySchema('selectedLanguageList', [new NeverEatAlone.Language(1,
