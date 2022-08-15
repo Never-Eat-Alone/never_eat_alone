@@ -158,6 +158,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
       selectedCuisineList: this.props.selectedCuisineList,
       selectedLanguageList: this.props.selectedLanguageList
     };
+    this._cuisineDropdownRef = React.createRef<HTMLDivElement>();
   }
 
   public render(): JSX.Element {
@@ -289,15 +290,18 @@ export class EditProfilePage extends React.Component<Properties, State> {
         const rows = this.props.suggestedCuisineList.map(cuisine => {
           return (
             <div
+                tabIndex={0}
                 key={cuisine.id}
                 style={DROPDOWN_ROW_STYLE}
                 className={css(styles.dropdownRow)}
+                onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                  this.handleAddCuisineTag(cuisine.id)}}
             >
               {cuisine.label}
             </div>);
         });
         return (
-          <div style={DROPDOWN_CONTAINER_STYLE} >
+          <div tabIndex={0} ref={this._cuisineDropdownRef} style={DROPDOWN_CONTAINER_STYLE} >
             {rows}
           </div>);
       }
@@ -502,6 +506,19 @@ export class EditProfilePage extends React.Component<Properties, State> {
       </div>);
   }
 
+  private handleAddCuisineTag = (id: number) => {
+    this.setState({ isCuisineDropdownDisplayed: false });
+    const selectedCuisine = this.props.suggestedCuisineList.find(cuisine =>
+      cuisine.id === id);
+    if (selectedCuisine && this.state.selectedCuisineList.findIndex(cuisine =>
+        cuisine.id === id) === -1) {
+      this.setState({
+        selectedCuisineList: [...this.state.selectedCuisineList,
+          selectedCuisine]
+      });
+    }
+  }
+
   private handleRemoveCuisineTag = (id: number) => {
     this.setState((prevState) => ({
       selectedCuisineList: prevState.selectedCuisineList.filter(
@@ -555,13 +572,19 @@ export class EditProfilePage extends React.Component<Properties, State> {
     this.props.onCuisineInputChange(event.target.value);
   }
 
-  private handleDisplayCuisineDropdown = () => {
+  private handleDisplayCuisineDropdown = (event: React.FocusEvent<
+      HTMLInputElement>) => {
     this.setState({ isCuisineDropdownDisplayed: true });
   }
 
-  private handleHideCuisineDropdown = () => {
-    this.setState({ isCuisineDropdownDisplayed: false });
+  private handleHideCuisineDropdown = (event: React.FocusEvent<
+      HTMLInputElement>) => {
+    const isCuisineDropdownDisplayed = event.relatedTarget &&
+      this._cuisineDropdownRef.current.contains(event.relatedTarget);
+    this.setState({ isCuisineDropdownDisplayed });
   }
+
+  private _cuisineDropdownRef: React.RefObject<HTMLDivElement>;
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {
@@ -924,7 +947,8 @@ const SELECTED_OPTION_TAG_STYLE: React.CSSProperties = {
   lineHeight: '18px',
   color: '#000000',
   width: 'fit-content',
-  overflow: 'hidden'
+  overflow: 'hidden',
+  cursor: 'default'
 };
 
 const styles = StyleSheet.create({
