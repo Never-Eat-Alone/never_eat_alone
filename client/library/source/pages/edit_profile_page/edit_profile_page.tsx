@@ -922,11 +922,11 @@ const SELECTED_OPTIONS_ROW_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'flex-start',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   flexWrap: 'wrap',
   width: '100%',
   marginTop: '20px',
-  gap: '20px 10px',
+  gap: '10px',
   minHeight: '38px'
 };
 
@@ -937,7 +937,9 @@ const SELECTED_OPTION_TAG_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'center',
   gap: '20px',
-  padding: '10px',
+  paddingLeft: '10px',
+  paddingRight: '10px',
+  height: '38px',
   backgroundColor: '#EFEFEF',
   borderRadius: '4px',
   fontFamily: 'Source Sans Pro',
