@@ -249,6 +249,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
         const rows = this.props.suggestedLanguageList.map(language => {
           return (
             <div
+                tabIndex={0}
                 key={language.id}
                 style={DROPDOWN_ROW_STYLE}
                 className={css(styles.dropdownRow)}
