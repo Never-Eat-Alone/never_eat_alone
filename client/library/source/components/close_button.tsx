@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     ':focus': {
       color: '#4A4A4A'
     },
-    ':focus-whitin': {
+    ':focus-within': {
       color: '#4A4A4A'
     },
     ':active': {
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
       color: '#000000',
       opacity: 0.6
     },
-    ':focus-whitin': {
+    ':focus-within': {
       color: '#000000',
       opacity: 0.6
     },

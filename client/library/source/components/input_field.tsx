@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
       color: '#000000',
       boxShadow: '0px 1px 5px rgba(86, 70, 40, 0.4)'
     },
-    ':focus-whitin': {
+    ':focus-within': {
       border: '1px solid #969696',
       color: '#000000',
       boxShadow: '0px 1px 5px rgba(86, 70, 40, 0.4)'
