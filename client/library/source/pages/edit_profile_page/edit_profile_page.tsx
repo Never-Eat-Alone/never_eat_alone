@@ -551,10 +551,10 @@ export class EditProfilePage extends React.Component<Properties, State> {
       language.id === id);
     if (selectedLanguage && this.state.selectedLanguageList.findIndex(
         language => language.id === id) === -1) {
-      this.setState({
-        selectedLanguageList: [...this.state.selectedLanguageList,
+      this.setState((state) => ({
+        selectedLanguageList: [...state.selectedLanguageList,
           selectedLanguage]
-      });
+      }));
     }
   }
 
@@ -571,10 +571,9 @@ export class EditProfilePage extends React.Component<Properties, State> {
       cuisine.id === id);
     if (selectedCuisine && this.state.selectedCuisineList.findIndex(cuisine =>
         cuisine.id === id) === -1) {
-      this.setState({
-        selectedCuisineList: [...this.state.selectedCuisineList,
-          selectedCuisine]
-      });
+      this.setState((state) => ({
+        selectedCuisineList: [...state.selectedCuisineList, selectedCuisine]
+      }));
     }
   }
 
