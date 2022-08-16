@@ -1283,6 +1283,14 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('value', '', TextInput)],
     [new SignalSchema('onValueChange', '', [])],
     NeverEatAlone.TextareaWithCounter);
+  const saveCancelStickyMenuSchema = new ComponentSchema(
+    'SaveCancelStickyMenu', [
+      new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
+      DisplayModeInput)
+    ],[
+    new SignalSchema('onSaveClick', '', []),
+    new SignalSchema('onCancelClick', '', [])],
+    NeverEatAlone.SaveCancelStickyMenu);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
@@ -1300,5 +1308,6 @@ export function loadComponentSchemas(): ComponentSchema[] {
     profileBoxSchema, showAllButtonSchema, showLessButtonSchema,
     profileUpcomingEventsSchema, profilePastEventsSchema, profilePageSchema,
     editProfilePageSchema, publicButtonSchema, privateButtonSchema,
-    locationInputFieldSchema, textareaWithCounterSchema];
+    locationInputFieldSchema, textareaWithCounterSchema,
+    saveCancelStickyMenuSchema];
 }
