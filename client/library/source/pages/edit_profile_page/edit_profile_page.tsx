@@ -94,7 +94,7 @@ interface Properties {
   onLocationPrivacyClick: () => void;
 
   /** Indicates a location from the dropdown is clicked. */
-  onlocationDropdownClick: (selectedLocation: CityProvince) => void;
+  onLocationDropdownClick: (selectedLocation: CityProvince) => void;
 
   /** Indicates the change profile image button is clicked. */
   onChangeProfileImageClick: () => void;
@@ -237,9 +237,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
                 style={DROPDOWN_ROW_STYLE}
                 className={css(styles.dropdownRow)}
                 onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-                  this.props.onlocationDropdownClick(
-                    this.props.suggestedLocationList.find(
-                    location => location.id === location.id))
+                  this.props.onLocationDropdownClick(location)
                 }}
             >
               {location.city}, {location.province}, {location.country}
@@ -268,7 +266,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
                 style={DROPDOWN_ROW_STYLE}
                 className={css(styles.dropdownRow)}
                 onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-                  this.handleAddLanguageTag(language.id)
+                  this.handleAddLanguageTag(language)
                 }}
             >
               {language.name}
@@ -342,7 +340,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
                 style={DROPDOWN_ROW_STYLE}
                 className={css(styles.dropdownRow)}
                 onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-                  this.handleAddCuisineTag(cuisine.id)
+                  this.handleAddCuisineTag(cuisine)
                 }}
             >
               {cuisine.label}
@@ -561,15 +559,12 @@ export class EditProfilePage extends React.Component<Properties, State> {
       </div>);
   }
 
-  private handleAddLanguageTag = (id: number) => {
+  private handleAddLanguageTag = (selectedLanguage: Language) => {
     this.setState({ isLanguageDropdownDisplayed: false });
-    const selectedLanguage = this.props.suggestedLanguageList.find(language =>
-      language.id === id);
-    if (selectedLanguage && this.state.selectedLanguageList.findIndex(
-        language => language.id === id) === -1) {
+    if (this.state.selectedLanguageList.findIndex(language => language.id
+        === selectedLanguage.id) === -1) {
       this.setState((state) => ({
-        selectedLanguageList: [...state.selectedLanguageList,
-          selectedLanguage]
+        selectedLanguageList: [...state.selectedLanguageList, selectedLanguage]
       }));
     }
   }
@@ -581,12 +576,10 @@ export class EditProfilePage extends React.Component<Properties, State> {
       }));
   }
 
-  private handleAddCuisineTag = (id: number) => {
+  private handleAddCuisineTag = (selectedCuisine: Cuisine) => {
     this.setState({ isCuisineDropdownDisplayed: false });
-    const selectedCuisine = this.props.suggestedCuisineList.find(cuisine =>
-      cuisine.id === id);
-    if (selectedCuisine && this.state.selectedCuisineList.findIndex(cuisine =>
-        cuisine.id === id) === -1) {
+    if (this.state.selectedCuisineList.findIndex(cuisine => cuisine.id ===
+        selectedCuisine.id) === -1) {
       this.setState((state) => ({
         selectedCuisineList: [...state.selectedCuisineList, selectedCuisine]
       }));

@@ -1264,7 +1264,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new SignalSchema('onTwitterInputChange', '', []),
     new SignalSchema('onInstagramPrivacyClick', '', []),
     new SignalSchema('onInstagramInputChange', '', []),
-    new SignalSchema('onlocationDropdownClick', '', [])
+    new SignalSchema('onLocationDropdownClick', '', [])
   ], NeverEatAlone.EditProfilePage);
   const publicButtonSchema = new ComponentSchema('publicButton', [], [
     new SignalSchema('onClick', '', [])], NeverEatAlone.PublicButton);
