@@ -84,11 +84,17 @@ interface Properties {
   /** The value entered in the instagram link inputfield. */
   instagramLink: string;
 
+  /** The error message regarding the location value. */
+  locationErrorMessage?: string;
+
   /** Indicates the location inputfield value changed. */
   onLocationInputChange: (newValue: string) => void;
 
   /** Indicates the location's privacy button is clicked. */
   onLocationPrivacyClick: () => void;
+
+  /** Indicates a location from the dropdown is clicked. */
+  onlocationDropdownClick: (selectedLocation: CityProvince) => void;
 
   /** Indicates the change profile image button is clicked. */
   onChangeProfileImageClick: () => void;
@@ -160,6 +166,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
     };
     this._languageDropdownRef = React.createRef<HTMLDivElement>();
     this._cuisineDropdownRef = React.createRef<HTMLDivElement>();
+    this._locationDropdownRef = React.createRef<HTMLDivElement>();
   }
 
   public render(): JSX.Element {
@@ -219,24 +226,31 @@ export class EditProfilePage extends React.Component<Properties, State> {
     const cuisineInputFieldStyle = (this.state.isCuisineDropdownDisplayed &&
       INPUT_WITH_DROPDOWN_STYLE || INPUT_FIELD_STYLE);
     const locationDropdown = (() => {
-      if (this.props.locationValue.trim().length === 0) {
-        return <div>Required</div>;
-      }
       if (this.state.isLocationDropdownDisplayed &&
           this.props.suggestedLocationList &&
           this.props.suggestedLocationList.length !== 0) {
         const rows = this.props.suggestedLocationList.map(location => {
           return (
             <div
+                tabIndex={0}
                 key={location.id}
                 style={DROPDOWN_ROW_STYLE}
                 className={css(styles.dropdownRow)}
+                onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                  this.props.onlocationDropdownClick(
+                    this.props.suggestedLocationList.find(
+                    location => location.id === location.id))
+                }}
             >
               {location.city}, {location.province}, {location.country}
             </div>);
         });
         return (
-          <div style={DROPDOWN_CONTAINER_STYLE} >
+          <div
+              tabIndex={0}
+              ref={this._locationDropdownRef}
+              style={DROPDOWN_CONTAINER_STYLE}
+          >
             {rows}
           </div>);
       }
@@ -453,6 +467,8 @@ export class EditProfilePage extends React.Component<Properties, State> {
             onChange={this.handleLocationInputChange}
             onFocus={this.handleDisplayLocationDropdown}
             onBlur={this.handleHideLocationDropdown}
+            hasError={this.props.locationErrorMessage &&
+              this.props.locationErrorMessage.length !== 0}
           />
           {locationDropdown}
           <div style={ROW_CONTAINER_STYLE} >
@@ -647,6 +663,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
 
   private _languageDropdownRef: React.RefObject<HTMLDivElement>;
   private _cuisineDropdownRef: React.RefObject<HTMLDivElement>;
+  private _locationDropdownRef: React.RefObject<HTMLDivElement>;
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {
