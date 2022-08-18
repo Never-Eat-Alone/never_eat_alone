@@ -762,7 +762,7 @@ const MOBILE_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
   padding: '30px 20px',
   width: '100%',
   marginTop: '83px',
-  borderRadius: '4px'
+  borderRadius: '0px 0px 4px 4px'
 };
 
 const DESKTOP_TABLET_IMAGE_PRIVACY_CONTAINER_STYLE: React.CSSProperties = {
