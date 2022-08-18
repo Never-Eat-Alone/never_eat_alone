@@ -4,6 +4,7 @@ export * from './cuisine';
 export * from './display_mode';
 export * from './event_card_summary';
 export * from './event_tag';
+export * from './language';
 export * from './password_checks';
 export * from './price_range';
 export * from './social_media_image';

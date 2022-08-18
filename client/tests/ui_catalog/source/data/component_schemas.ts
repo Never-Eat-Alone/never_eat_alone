@@ -1,9 +1,9 @@
 import * as NeverEatAlone from 'never_eat_alone';
 import { ArrayInput, BooleanInput, CityProvinceInput, CSSInput, CuisineInput,
   DateInput, DisplayModeInput, EventCardSummaryInput, EventTagInput,
-  ForgotPasswordPageErrorCodeInput, HomePageErrorCodeInput, NumberInput,
-  SignUpPageErrorCodeInput, SocialMediaImageInput, TextInput, UserInput
-} from '../viewer/propertyInput';
+  ForgotPasswordPageErrorCodeInput, HomePageErrorCodeInput, LanguageInput,
+  NumberInput, SignUpPageErrorCodeInput, SocialMediaImageInput, TextInput,
+  UserInput } from '../viewer/propertyInput';
 import { ComponentSchema, PropertySchema, SignalSchema } from './schemas';
 
 /** Loads the complete list of schemas available to test. */
@@ -776,7 +776,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     [new PropertySchema('profileImageSrc', 'resources/images/profile2.jpeg',
       TextInput),
     new PropertySchema('displayName', 'Julia', TextInput),
-    new PropertySchema('userName', 'julia453', TextInput),
+    new PropertySchema('userName', '@julia453', TextInput),
     new PropertySchema('biography', 'Hello everyone! My name is julia and I \
       would love to meet you all and try new foods.', TextInput),
     new PropertySchema('facebookLink', 'https://facebook.com', TextInput),
@@ -785,8 +785,8 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
       DisplayModeInput),
     new PropertySchema('memberSince', new Date(2022, 0, 1), DateInput),
-    new PropertySchema('location', new NeverEatAlone.CityProvince('Toronto',
-      'ON'), CityProvinceInput),
+    new PropertySchema('location', NeverEatAlone.CityProvince.defaultLocation(),
+      CityProvinceInput),
     new PropertySchema('favoriteCuisineList', [
       new NeverEatAlone.Cuisine(1, 'Steakhouse', '#E5FFD8'),
       new NeverEatAlone.Cuisine(2, 'Japanese', '#FFFDD8'),
@@ -996,15 +996,16 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('profileImageSrc', 'resources/images/profile2.jpeg',
       TextInput),
     new PropertySchema('displayName', 'Julia', TextInput),
-    new PropertySchema('userName', 'julia453', TextInput),
+    new PropertySchema('userName', '@julia453', TextInput),
+    new PropertySchema('isLoggedIn', true, BooleanInput),
     new PropertySchema('biography', 'Hello everyone! My name is julia and I \
       would love to meet you all and try new foods.', TextInput),
     new PropertySchema('facebookLink', 'https://facebook.com', TextInput),
     new PropertySchema('twitterLink', 'https://twitter.com', TextInput),
     new PropertySchema('instagramLink', 'https://instagram.com', TextInput),
     new PropertySchema('memberSince', new Date(2022, 0, 1), DateInput),
-    new PropertySchema('location', new NeverEatAlone.CityProvince('Toronto',
-      'ON'), CityProvinceInput),
+    new PropertySchema('location', NeverEatAlone.CityProvince.defaultLocation(),
+      CityProvinceInput),
     new PropertySchema('favoriteCuisineList', [
       new NeverEatAlone.Cuisine(1, 'Steakhouse', '#E5FFD8'),
       new NeverEatAlone.Cuisine(2, 'Japanese', '#FFFDD8'),
@@ -1190,12 +1191,112 @@ export function loadComponentSchemas(): ComponentSchema[] {
       'yellow'), EventCardSummaryInput)))
     ], [new SignalSchema('onEditClick', '', []),
     new SignalSchema('onReportClick', '', [])], NeverEatAlone.ProfilePage);
-  const editProfilePageSchema = new ComponentSchema('editProfilePage',
-    [new PropertySchema('DisplayMode', NeverEatAlone.DisplayMode.MOBILE,
+  const editProfilePageSchema = new ComponentSchema('editProfilePage', [
+    new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
       DisplayModeInput),
     new PropertySchema('coverImageSrc',
-      'resources/profile_page/images/default_banner_2.jpg', TextInput)],
-    [], NeverEatAlone.EditProfilePage);
+      'resources/profile_page/images/default_banner_2.jpg', TextInput),
+    new PropertySchema('profileImageSrc', 'resources/images/profileguy5.jpeg',
+      TextInput),
+    new PropertySchema('displayName', 'Casper Host', TextInput),
+    new PropertySchema('userName', '@120498509', TextInput),
+    new PropertySchema('isUpcomingEventsPrivate', false, BooleanInput),
+    new PropertySchema('isPastEventsPrivate', true, BooleanInput),
+    new PropertySchema('isLocationPrivate', false, BooleanInput),
+    new PropertySchema('locationValue', 'Toronto, ON, CA', TextInput),
+    new PropertySchema('facebookInputIsValid', true, BooleanInput),
+    new PropertySchema('twitterInputIsValid', true, BooleanInput),
+    new PropertySchema('instagramInputIsValid', true, BooleanInput),
+    new PropertySchema('suggestedLocationList', [
+      NeverEatAlone.CityProvince.defaultLocation(),
+      new NeverEatAlone.CityProvince(2, 'Ottawa', 'ON', 'CA')], ArrayInput(
+      new PropertySchema('CityProvince',
+      NeverEatAlone.CityProvince.defaultLocation(), CityProvinceInput))),
+    new PropertySchema('isLanguagePrivate', false, BooleanInput),
+    new PropertySchema('languageValue', '', TextInput),
+    new PropertySchema('suggestedLanguageList', [new NeverEatAlone.Language(1,
+      'English'), new NeverEatAlone.Language(2, 'Spanish'),
+      new NeverEatAlone.Language(3, 'Mandarin'), new NeverEatAlone.Language(4,
+      'Farsi'), new NeverEatAlone.Language(5, 'German'),
+      new NeverEatAlone.Language(6, 'Polish')], ArrayInput(
+      new PropertySchema('language', new NeverEatAlone.Language(1, 'English'),
+      LanguageInput))),
+    new PropertySchema('selectedLanguageList', [new NeverEatAlone.Language(1,
+      'English')], ArrayInput(
+      new PropertySchema('language', new NeverEatAlone.Language(1, 'English'),
+      LanguageInput))),
+    new PropertySchema('biographyValue', '', TextInput),
+    new PropertySchema('isBiographyPrivate', false, BooleanInput),
+    new PropertySchema('cuisineValue', '', TextInput),
+    new PropertySchema('suggestedCuisineList', [new NeverEatAlone.Cuisine(1,
+      'French', 'blue'), new NeverEatAlone.Cuisine(4, 'Steak', 'yellow'),
+      new NeverEatAlone.Cuisine(5, 'Japanese', 'pink'),
+      new NeverEatAlone.Cuisine(6, 'Persian', 'Salmon'),
+      new NeverEatAlone.Cuisine(7, 'Middle Eastern', 'HotPink'),
+      new NeverEatAlone.Cuisine(8, 'Jamaican', 'LemonChiffon')], ArrayInput(
+      new PropertySchema('cuisine', new NeverEatAlone.Cuisine(1, 'French',
+      'blue'), CuisineInput))),
+    new PropertySchema('selectedCuisineList', [new NeverEatAlone.Cuisine(4,
+      'Steak', 'PaleGreen'), new NeverEatAlone.Cuisine(3, 'Seafood',
+      'Plum')], ArrayInput(new PropertySchema('cuisine',
+      new NeverEatAlone.Cuisine(1, 'French', 'Lavender'), CuisineInput))),
+    new PropertySchema('isCuisinePrivate', false, BooleanInput),
+    new PropertySchema('isFacebookPrivate', false, BooleanInput),
+    new PropertySchema('isTwitterPrivate', false, BooleanInput),
+    new PropertySchema('isInstagramPrivate', false, BooleanInput),
+    new PropertySchema('facebookLink', '', TextInput),
+    new PropertySchema('twitterLink', '', TextInput),
+    new PropertySchema('instagramLink', '', TextInput)
+    ], [
+    new SignalSchema('onLocationInputChange', '', []),
+    new SignalSchema('onLocationPrivacyClick', '', []),
+    new SignalSchema('onChangeProfileImageClick', '', []),
+    new SignalSchema('onChangeBanner', '', []),
+    new SignalSchema('onUpcomingEventPrivacyClick', '', []),
+    new SignalSchema('onPastEventPrivacyClick', '', []),
+    new SignalSchema('onLanguagePrivacyClick', '', []),
+    new SignalSchema('onLanguageInputChange', '', []),
+    new SignalSchema('onBiographyPrivacyClick', '', []),
+    new SignalSchema('onBiographyInputChange', '', []),
+    new SignalSchema('onCuisinePrivacyClick', '', []),
+    new SignalSchema('onCuisineInputChange', '', []),
+    new SignalSchema('onFacebookPrivacyClick', '', []),
+    new SignalSchema('onFacebookInputChange', '', []),
+    new SignalSchema('onTwitterPrivacyClick', '', []),
+    new SignalSchema('onTwitterInputChange', '', []),
+    new SignalSchema('onInstagramPrivacyClick', '', []),
+    new SignalSchema('onInstagramInputChange', '', []),
+    new SignalSchema('onLocationDropdownClick', '', []),
+    new SignalSchema('onSaveClick', '', []),
+    new SignalSchema('onCancelClick', '', [])
+  ], NeverEatAlone.EditProfilePage);
+  const publicButtonSchema = new ComponentSchema('publicButton', [], [
+    new SignalSchema('onClick', '', [])], NeverEatAlone.PublicButton);
+  const privateButtonSchema = new ComponentSchema('privateButton', [], [
+    new SignalSchema('onClick', '', [])], NeverEatAlone.PrivateButton);
+  const locationInputFieldSchema = new ComponentSchema('locationInputField',
+    [new PropertySchema('value', '', TextInput),
+    new PropertySchema('placeholder', '', TextInput),
+    new PropertySchema('hasError', false, BooleanInput),
+    new PropertySchema('disabled', false, BooleanInput)],
+    [new SignalSchema('onClick', '', [])], NeverEatAlone.LocationInputField);
+  const textareaWithCounterSchema = new ComponentSchema('TextareaWithCounter',
+    [new PropertySchema('maxCount', 280, NumberInput),
+    new PropertySchema('disabled', false, BooleanInput),
+    new PropertySchema('hasError', false, BooleanInput),
+    new PropertySchema('placeholder', 'Hello everyone! My name is Casper and I \
+      would love to meet you all AND TRY NEW FOOD.', TextInput),
+    new PropertySchema('value', '', TextInput)],
+    [new SignalSchema('onValueChange', '', [])],
+    NeverEatAlone.TextareaWithCounter);
+  const saveCancelStickyMenuSchema = new ComponentSchema(
+    'SaveCancelStickyMenu', [
+      new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
+      DisplayModeInput)
+    ],[
+    new SignalSchema('onSaveClick', '', []),
+    new SignalSchema('onCancelClick', '', [])],
+    NeverEatAlone.SaveCancelStickyMenu);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
@@ -1212,5 +1313,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     secondaryTextLinkButton, secondaryButtonNavLink, resetPasswordPage,
     profileBoxSchema, showAllButtonSchema, showLessButtonSchema,
     profileUpcomingEventsSchema, profilePastEventsSchema, profilePageSchema,
-    editProfilePageSchema];
+    editProfilePageSchema, publicButtonSchema, privateButtonSchema,
+    locationInputFieldSchema, textareaWithCounterSchema,
+    saveCancelStickyMenuSchema];
 }
