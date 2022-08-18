@@ -1204,6 +1204,9 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('isPastEventsPrivate', true, BooleanInput),
     new PropertySchema('isLocationPrivate', false, BooleanInput),
     new PropertySchema('locationValue', 'Toronto, ON, CA', TextInput),
+    new PropertySchema('facebookInputIsValid', true, BooleanInput),
+    new PropertySchema('twitterInputIsValid', true, BooleanInput),
+    new PropertySchema('instagramInputIsValid', true, BooleanInput),
     new PropertySchema('suggestedLocationList', [
       NeverEatAlone.CityProvince.defaultLocation(),
       new NeverEatAlone.CityProvince(2, 'Ottawa', 'ON', 'CA')], ArrayInput(
@@ -1262,7 +1265,8 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new SignalSchema('onTwitterPrivacyClick', '', []),
     new SignalSchema('onTwitterInputChange', '', []),
     new SignalSchema('onInstagramPrivacyClick', '', []),
-    new SignalSchema('onInstagramInputChange', '', [])
+    new SignalSchema('onInstagramInputChange', '', []),
+    new SignalSchema('onLocationDropdownClick', '', [])
   ], NeverEatAlone.EditProfilePage);
   const publicButtonSchema = new ComponentSchema('publicButton', [], [
     new SignalSchema('onClick', '', [])], NeverEatAlone.PublicButton);

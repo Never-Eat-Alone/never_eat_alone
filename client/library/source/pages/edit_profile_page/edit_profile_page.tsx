@@ -84,11 +84,23 @@ interface Properties {
   /** The value entered in the instagram link inputfield. */
   instagramLink: string;
 
+  /** Whether the facebook url input is valid or not. */
+  facebookInputIsValid: boolean;
+
+  /** Whether the twitter url input is valid or not. */
+  twitterInputIsValid: boolean;
+
+  /** Whether the instagram url input is valid or not. */
+  instagramInputIsValid: boolean;
+
   /** Indicates the location inputfield value changed. */
   onLocationInputChange: (newValue: string) => void;
 
   /** Indicates the location's privacy button is clicked. */
   onLocationPrivacyClick: () => void;
+
+  /** Indicates a location from the dropdown is clicked. */
+  onLocationDropdownClick: (selectedLocation: CityProvince) => void;
 
   /** Indicates the change profile image button is clicked. */
   onChangeProfileImageClick: () => void;
@@ -160,6 +172,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
     };
     this._languageDropdownRef = React.createRef<HTMLDivElement>();
     this._cuisineDropdownRef = React.createRef<HTMLDivElement>();
+    this._locationDropdownRef = React.createRef<HTMLDivElement>();
   }
 
   public render(): JSX.Element {
@@ -219,24 +232,29 @@ export class EditProfilePage extends React.Component<Properties, State> {
     const cuisineInputFieldStyle = (this.state.isCuisineDropdownDisplayed &&
       INPUT_WITH_DROPDOWN_STYLE || INPUT_FIELD_STYLE);
     const locationDropdown = (() => {
-      if (this.props.locationValue.trim().length === 0) {
-        return <div>Required</div>;
-      }
       if (this.state.isLocationDropdownDisplayed &&
           this.props.suggestedLocationList &&
           this.props.suggestedLocationList.length !== 0) {
         const rows = this.props.suggestedLocationList.map(location => {
           return (
             <div
+                tabIndex={0}
                 key={location.id}
                 style={DROPDOWN_ROW_STYLE}
                 className={css(styles.dropdownRow)}
+                onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                  this.props.onLocationDropdownClick(location)
+                }}
             >
               {location.city}, {location.province}, {location.country}
             </div>);
         });
         return (
-          <div style={DROPDOWN_CONTAINER_STYLE} >
+          <div
+              tabIndex={0}
+              ref={this._locationDropdownRef}
+              style={DROPDOWN_CONTAINER_STYLE}
+          >
             {rows}
           </div>);
       }
@@ -254,7 +272,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
                 style={DROPDOWN_ROW_STYLE}
                 className={css(styles.dropdownRow)}
                 onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-                  this.handleAddLanguageTag(language.id)
+                  this.handleAddLanguageTag(language)
                 }}
             >
               {language.name}
@@ -328,7 +346,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
                 style={DROPDOWN_ROW_STYLE}
                 className={css(styles.dropdownRow)}
                 onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-                  this.handleAddCuisineTag(cuisine.id)
+                  this.handleAddCuisineTag(cuisine)
                 }}
             >
               {cuisine.label}
@@ -345,6 +363,18 @@ export class EditProfilePage extends React.Component<Properties, State> {
       }
       return null;
     })();
+    const facebookErrorMessage = (!this.props.facebookInputIsValid &&
+      <div style={SOCIAL_MEDIA_ERROR_MESSAGE_STYLE} >
+        Please enter a valid URL.
+      </div> || null);
+    const twitterErrorMessage = (!this.props.twitterInputIsValid &&
+      <div style={SOCIAL_MEDIA_ERROR_MESSAGE_STYLE} >
+        Please enter a valid URL.
+      </div> || null);
+    const instagramErrorMessage = (!this.props.instagramInputIsValid &&
+      <div style={SOCIAL_MEDIA_ERROR_MESSAGE_STYLE} >
+        Please enter a valid URL.
+      </div> || null);
     return (
       <div style={{...CONTAINER_STYLE, ...containerStyle}} >
         <div
@@ -497,8 +527,10 @@ export class EditProfilePage extends React.Component<Properties, State> {
               type='url'
               placeholder='Enter your Facebook profile URL'
               onChange={this.handleFacebookInputChange}
+              hasError={!this.props.facebookInputIsValid}
             />
           </div>
+          {facebookErrorMessage}
           <div style={SOCIAL_LINK_ROW_CONTAINER_STYLE} >
             {twitterPrivacyButton}
             <InputFieldWithIcon
@@ -509,8 +541,10 @@ export class EditProfilePage extends React.Component<Properties, State> {
               type='url'
               placeholder='Enter your Twitter profile URL'
               onChange={this.handleTwitterInputChange}
+              hasError={!this.props.twitterInputIsValid}
             />
           </div>
+          {twitterErrorMessage}
           <div style={SOCIAL_LINK_ROW_CONTAINER_STYLE} >
             {instagramPrivacyButton}
             <InputFieldWithIcon
@@ -521,8 +555,10 @@ export class EditProfilePage extends React.Component<Properties, State> {
               type='url'
               placeholder='Enter your Instagram profile URL'
               onChange={this.handleInstagramInputChange}
+              hasError={!this.props.instagramInputIsValid}
             />
           </div>
+          {instagramErrorMessage}
           <div style={ROW_CONTAINER_STYLE} >
             {cuisinesPrivacyButton}
             <div style={TITLE_STYLE} >Favorite Cuisines</div>
@@ -545,15 +581,12 @@ export class EditProfilePage extends React.Component<Properties, State> {
       </div>);
   }
 
-  private handleAddLanguageTag = (id: number) => {
+  private handleAddLanguageTag = (selectedLanguage: Language) => {
     this.setState({ isLanguageDropdownDisplayed: false });
-    const selectedLanguage = this.props.suggestedLanguageList.find(language =>
-      language.id === id);
-    if (selectedLanguage && this.state.selectedLanguageList.findIndex(
-        language => language.id === id) === -1) {
+    if (this.state.selectedLanguageList.findIndex(language => language.id
+        === selectedLanguage.id) === -1) {
       this.setState((state) => ({
-        selectedLanguageList: [...state.selectedLanguageList,
-          selectedLanguage]
+        selectedLanguageList: [...state.selectedLanguageList, selectedLanguage]
       }));
     }
   }
@@ -565,12 +598,10 @@ export class EditProfilePage extends React.Component<Properties, State> {
       }));
   }
 
-  private handleAddCuisineTag = (id: number) => {
+  private handleAddCuisineTag = (selectedCuisine: Cuisine) => {
     this.setState({ isCuisineDropdownDisplayed: false });
-    const selectedCuisine = this.props.suggestedCuisineList.find(cuisine =>
-      cuisine.id === id);
-    if (selectedCuisine && this.state.selectedCuisineList.findIndex(cuisine =>
-        cuisine.id === id) === -1) {
+    if (this.state.selectedCuisineList.findIndex(cuisine => cuisine.id ===
+        selectedCuisine.id) === -1) {
       this.setState((state) => ({
         selectedCuisineList: [...state.selectedCuisineList, selectedCuisine]
       }));
@@ -647,6 +678,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
 
   private _languageDropdownRef: React.RefObject<HTMLDivElement>;
   private _cuisineDropdownRef: React.RefObject<HTMLDivElement>;
+  private _locationDropdownRef: React.RefObject<HTMLDivElement>;
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {
@@ -952,6 +984,22 @@ const SOCIAL_LINK_ROW_CONTAINER_STYLE: React.CSSProperties = {
   width: '100%',
   gap: '20px',
   marginTop: '10px'
+};
+
+const SOCIAL_MEDIA_ERROR_MESSAGE_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-end',
+  alignItems: 'center',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  textAlign: 'right',
+  color: '#FF2C79',
+  marginTop: '2px',
+  height: '18px'
 };
 
 const DROPDOWN_ROW_STYLE: React.CSSProperties = {
