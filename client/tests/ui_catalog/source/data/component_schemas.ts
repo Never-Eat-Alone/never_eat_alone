@@ -1204,7 +1204,9 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('isPastEventsPrivate', true, BooleanInput),
     new PropertySchema('isLocationPrivate', false, BooleanInput),
     new PropertySchema('locationValue', 'Toronto, ON, CA', TextInput),
-    new PropertySchema('locationErrorMessage', '', TextInput),
+    new PropertySchema('facebookErrorMessage', '', TextInput),
+    new PropertySchema('twitterErrorMessage', '', TextInput),
+    new PropertySchema('instagramErrorMessage', '', TextInput),
     new PropertySchema('suggestedLocationList', [
       NeverEatAlone.CityProvince.defaultLocation(),
       new NeverEatAlone.CityProvince(2, 'Ottawa', 'ON', 'CA')], ArrayInput(

@@ -84,8 +84,14 @@ interface Properties {
   /** The value entered in the instagram link inputfield. */
   instagramLink: string;
 
-  /** The error message regarding the location value. */
-  locationErrorMessage?: string;
+  /** The error message regarding the facebook url value. */
+  facebookInputErrorMessage?: string;
+
+  /** The error message regarding the twitter url value. */
+  twitterInputErrorMessage?: string;
+
+  /** The error message regarding the instagram url value. */
+  instagramInputErrorMessage?: string;
 
   /** Indicates the location inputfield value changed. */
   onLocationInputChange: (newValue: string) => void;
@@ -357,6 +363,18 @@ export class EditProfilePage extends React.Component<Properties, State> {
       }
       return null;
     })();
+    const facebookErrorMessage = (this.props.facebookInputErrorMessage &&
+      <div style={SOCIAL_MEDIA_ERROR_MESSAGE_STYLE} >
+        {this.props.facebookInputErrorMessage}
+      </div> || null);
+    const twitterErrorMessage = (this.props.twitterInputErrorMessage &&
+      <div style={SOCIAL_MEDIA_ERROR_MESSAGE_STYLE} >
+        {this.props.twitterInputErrorMessage}
+      </div> || null);
+    const instagramErrorMessage = (this.props.instagramInputErrorMessage &&
+      <div style={SOCIAL_MEDIA_ERROR_MESSAGE_STYLE} >
+        {this.props.instagramInputErrorMessage}
+      </div> || null);
     return (
       <div style={{...CONTAINER_STYLE, ...containerStyle}} >
         <div
@@ -465,8 +483,6 @@ export class EditProfilePage extends React.Component<Properties, State> {
             onChange={this.handleLocationInputChange}
             onFocus={this.handleDisplayLocationDropdown}
             onBlur={this.handleHideLocationDropdown}
-            hasError={this.props.locationErrorMessage &&
-              this.props.locationErrorMessage.length !== 0}
           />
           {locationDropdown}
           <div style={ROW_CONTAINER_STYLE} >
@@ -511,8 +527,11 @@ export class EditProfilePage extends React.Component<Properties, State> {
               type='url'
               placeholder='Enter your Facebook profile URL'
               onChange={this.handleFacebookInputChange}
+              hasError={this.props.facebookInputErrorMessage &&
+                this.props.facebookInputErrorMessage.length !== 0}
             />
           </div>
+          {facebookErrorMessage}
           <div style={SOCIAL_LINK_ROW_CONTAINER_STYLE} >
             {twitterPrivacyButton}
             <InputFieldWithIcon
@@ -525,6 +544,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
               onChange={this.handleTwitterInputChange}
             />
           </div>
+          {twitterErrorMessage}
           <div style={SOCIAL_LINK_ROW_CONTAINER_STYLE} >
             {instagramPrivacyButton}
             <InputFieldWithIcon
@@ -537,6 +557,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
               onChange={this.handleInstagramInputChange}
             />
           </div>
+          {instagramErrorMessage}
           <div style={ROW_CONTAINER_STYLE} >
             {cuisinesPrivacyButton}
             <div style={TITLE_STYLE} >Favorite Cuisines</div>
@@ -962,6 +983,22 @@ const SOCIAL_LINK_ROW_CONTAINER_STYLE: React.CSSProperties = {
   width: '100%',
   gap: '20px',
   marginTop: '10px'
+};
+
+const SOCIAL_MEDIA_ERROR_MESSAGE_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-end',
+  alignItems: 'center',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  textAlign: 'right',
+  color: '#FF2C79',
+  marginTop: '2px',
+  height: '18px'
 };
 
 const DROPDOWN_ROW_STYLE: React.CSSProperties = {
