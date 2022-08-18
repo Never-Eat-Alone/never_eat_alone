@@ -84,14 +84,14 @@ interface Properties {
   /** The value entered in the instagram link inputfield. */
   instagramLink: string;
 
-  /** The error message regarding the facebook url value. */
-  facebookInputErrorMessage?: string;
+  /** Whether the facebook url input is valid or not. */
+  facebookInputIsValid: boolean;
 
-  /** The error message regarding the twitter url value. */
-  twitterInputErrorMessage?: string;
+  /** Whether the twitter url input is valid or not. */
+  twitterInputIsValid: boolean;
 
-  /** The error message regarding the instagram url value. */
-  instagramInputErrorMessage?: string;
+  /** Whether the instagram url input is valid or not. */
+  instagramInputIsValid: boolean;
 
   /** Indicates the location inputfield value changed. */
   onLocationInputChange: (newValue: string) => void;
@@ -363,17 +363,17 @@ export class EditProfilePage extends React.Component<Properties, State> {
       }
       return null;
     })();
-    const facebookErrorMessage = (this.props.facebookInputErrorMessage &&
+    const facebookErrorMessage = (!this.props.facebookInputIsValid &&
       <div style={SOCIAL_MEDIA_ERROR_MESSAGE_STYLE} >
-        {this.props.facebookInputErrorMessage}
+        Please enter a valid URL.
       </div> || null);
-    const twitterErrorMessage = (this.props.twitterInputErrorMessage &&
+    const twitterErrorMessage = (!this.props.twitterInputIsValid &&
       <div style={SOCIAL_MEDIA_ERROR_MESSAGE_STYLE} >
-        {this.props.twitterInputErrorMessage}
+        Please enter a valid URL.
       </div> || null);
-    const instagramErrorMessage = (this.props.instagramInputErrorMessage &&
+    const instagramErrorMessage = (!this.props.instagramInputIsValid &&
       <div style={SOCIAL_MEDIA_ERROR_MESSAGE_STYLE} >
-        {this.props.instagramInputErrorMessage}
+        Please enter a valid URL.
       </div> || null);
     return (
       <div style={{...CONTAINER_STYLE, ...containerStyle}} >
@@ -527,8 +527,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
               type='url'
               placeholder='Enter your Facebook profile URL'
               onChange={this.handleFacebookInputChange}
-              hasError={this.props.facebookInputErrorMessage &&
-                this.props.facebookInputErrorMessage.length !== 0}
+              hasError={!this.props.facebookInputIsValid}
             />
           </div>
           {facebookErrorMessage}
@@ -542,8 +541,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
               type='url'
               placeholder='Enter your Twitter profile URL'
               onChange={this.handleTwitterInputChange}
-              hasError={this.props.twitterInputErrorMessage &&
-                this.props.twitterInputErrorMessage.length !== 0}
+              hasError={!this.props.twitterInputIsValid}
             />
           </div>
           {twitterErrorMessage}
@@ -557,8 +555,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
               type='url'
               placeholder='Enter your Instagram profile URL'
               onChange={this.handleInstagramInputChange}
-              hasError={this.props.instagramInputErrorMessage &&
-                this.props.instagramInputErrorMessage.length !== 0}
+              hasError={!this.props.instagramInputIsValid}
             />
           </div>
           {instagramErrorMessage}
