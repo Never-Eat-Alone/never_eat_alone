@@ -177,27 +177,30 @@ export class EditProfilePage extends React.Component<Properties, State> {
 
   public render(): JSX.Element {
     const { containerStyle, coverImageStyle, changeBannerButtonStyle,
-        contentContainerStyle } = (() => {
+        contentContainerStyle, imagePrivacyContainerStyle } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
           containerStyle: DESKTOP_CONTAINER_STYLE,
           coverImageStyle: DESKTOP_COVER_IMAGE_STYLE,
           changeBannerButtonStyle: DESKTOP_CHANGE_BANNER_BUTTON_STYLE,
-          contentContainerStyle: DESKTOP_TABLET_CONTENT_CONTAINER_STYLE
+          contentContainerStyle: DESKTOP_TABLET_CONTENT_CONTAINER_STYLE,
+          imagePrivacyContainerStyle: DESKTOP_TABLET_IMAGE_PRIVACY_CONTAINER_STYLE
         };
       } else if (this.props.displayMode === DisplayMode.TABLET) {
         return {
           containerStyle: TABLET_CONTAINER_STYLE,
           coverImageStyle: TABLET_COVER_IMAGE_STYLE,
           changeBannerButtonStyle: MOBILE_TABLET_CHANGE_BANNER_BUTTON_STYLE,
-          contentContainerStyle: DESKTOP_TABLET_CONTENT_CONTAINER_STYLE
+          contentContainerStyle: DESKTOP_TABLET_CONTENT_CONTAINER_STYLE,
+          imagePrivacyContainerStyle: DESKTOP_TABLET_IMAGE_PRIVACY_CONTAINER_STYLE
         };
       } else {
         return {
           containerStyle: MOBILE_CONTAINER_STYLE,
           coverImageStyle: MOBILE_COVER_IMAGE_STYLE,
           changeBannerButtonStyle: MOBILE_TABLET_CHANGE_BANNER_BUTTON_STYLE,
-          contentContainerStyle: MOBILE_CONTENT_CONTAINER_STYLE
+          contentContainerStyle: MOBILE_CONTENT_CONTAINER_STYLE,
+          imagePrivacyContainerStyle: MOBILE_IMAGE_PRIVACY_CONTAINER_STYLE
         };
       }
     })();
@@ -393,7 +396,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
           onClick={this.props.onChangeBanner}
         />
         <div style={contentContainerStyle} >
-          <div style={IMAGE_PRIVACY_CONTAINER_STYLE} >
+          <div style={imagePrivacyContainerStyle} >
             <div style={IMAGE_CONTAINER_STYLE} >
               <img
                 style={PROFILE_IMAGE_STYLE}
@@ -416,7 +419,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
                 {this.props.displayName}
               </div>
               <div style={USERNAME_STYLE} >{this.props.userName}</div>
-              <div style={GUIDE_TEXT_STYLE} >
+              <div style={ACCOUNT_GUIDE_TEXT_STYLE} >
                 To change your display name or handle, go to&nbsp;
                 <RedNavLink
                   label='Account Information'
@@ -762,7 +765,7 @@ const MOBILE_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
   borderRadius: '4px'
 };
 
-const IMAGE_PRIVACY_CONTAINER_STYLE: React.CSSProperties = {
+const DESKTOP_TABLET_IMAGE_PRIVACY_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'flex-start',
@@ -772,6 +775,16 @@ const IMAGE_PRIVACY_CONTAINER_STYLE: React.CSSProperties = {
   marginBottom: '30px'
 };
 
+const MOBILE_IMAGE_PRIVACY_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  width: '100%',
+  marginBottom: '30px',
+  gap: '10px'
+};
+
 const IMAGE_CONTAINER_STYLE: React.CSSProperties = {
   position: 'relative',
   display: 'flex',
@@ -779,7 +792,7 @@ const IMAGE_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'center',
   alignItems: 'center',
   width: '68px',
-  height: '100%',
+  height: '68px',
   marginRight: '30px'
 };
 
@@ -823,7 +836,7 @@ const COLUMN_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'space-between',
   alignItems: 'flex-start',
   width: '100%',
-  height: '100%'
+  //height: '100%'
 };
 
 const PUBLIC_HIDDEN_CONTAINER_STYLE: React.CSSProperties = {
@@ -875,6 +888,7 @@ const GUIDE_TEXT_STYLE: React.CSSProperties = {
   flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
+  flexWrap: 'wrap',
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
   fontWeight: 400,
@@ -883,6 +897,11 @@ const GUIDE_TEXT_STYLE: React.CSSProperties = {
   color: '#969696',
   width: '100%'
 };
+
+const ACCOUNT_GUIDE_TEXT_STYLE: React.CSSProperties = {
+  ...GUIDE_TEXT_STYLE,
+  whiteSpace: 'pre'
+}
 
 const TITLE_STYLE: React.CSSProperties = {
   display: 'flex',
