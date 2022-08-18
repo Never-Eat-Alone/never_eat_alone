@@ -2,7 +2,7 @@ import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 import { CloseButton, InputField, InputFieldWithIcon,
   InvertedSecondaryTextButton, PublicButton, PrivateButton, RedNavLink,
-  TextareaWithCounter } from '../../components';
+  SaveCancelStickyMenu, TextareaWithCounter } from '../../components';
 import { CityProvince, Cuisine, DisplayMode, Language
 } from '../../definitions';
 
@@ -149,6 +149,12 @@ interface Properties {
 
   /** Indicates the instagram link input value changed. */
   onInstagramInputChange: (newValue: string) => void;
+
+  /** Indicates the save button is clicked. */
+  onSaveClick: () => void;
+
+  /** Indicates the cancel button is clicked. */
+  onCancelClick: () => void;
 }
 
 interface State {
@@ -584,6 +590,11 @@ export class EditProfilePage extends React.Component<Properties, State> {
           {cuisineDropdown}
           {selectedCuisines}
         </div>
+        <SaveCancelStickyMenu
+          displayMode={this.props.displayMode}
+          onSaveClick={this.props.onSaveClick}
+          onCancelClick={this.props.onCancelClick}
+        />
       </div>);
   }
 
