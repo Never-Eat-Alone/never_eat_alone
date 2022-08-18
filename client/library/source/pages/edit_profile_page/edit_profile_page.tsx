@@ -542,6 +542,8 @@ export class EditProfilePage extends React.Component<Properties, State> {
               type='url'
               placeholder='Enter your Twitter profile URL'
               onChange={this.handleTwitterInputChange}
+              hasError={this.props.twitterInputErrorMessage &&
+                this.props.twitterInputErrorMessage.length !== 0}
             />
           </div>
           {twitterErrorMessage}
@@ -555,6 +557,8 @@ export class EditProfilePage extends React.Component<Properties, State> {
               type='url'
               placeholder='Enter your Instagram profile URL'
               onChange={this.handleInstagramInputChange}
+              hasError={this.props.instagramInputErrorMessage &&
+                this.props.instagramInputErrorMessage.length !== 0}
             />
           </div>
           {instagramErrorMessage}
