@@ -19,9 +19,10 @@ export class CityProvinceInput extends React.Component<Properties> {
   private onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = (() => {
       if (!event.target.value.trim()) {
-        return new NeverEatAlone.CityProvince('Toronto', 'ON');
+        return NeverEatAlone.CityProvince.defaultLocation();
       }
-      return new NeverEatAlone.CityProvince(event.target.value, 'ON');
+      return new NeverEatAlone.CityProvince(Date.now(),
+        event.target.value, 'ON', 'Canada');
     })();
     this.props.update(newValue);
   }

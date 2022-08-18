@@ -19,9 +19,10 @@ export class CuisineInput extends React.Component<Properties> {
   private onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = (() => {
       if (!event.target.value.trim()) {
-        return  new NeverEatAlone.Cuisine(-1, '', '');
+        return NeverEatAlone.Cuisine.empty();
       }
-      return new NeverEatAlone.Cuisine(1, event.target.value, 'yellow');
+      return new NeverEatAlone.Cuisine(Date.now(), event.target.value,
+        'yellow');
     })();
     this.props.update(newValue);
   }

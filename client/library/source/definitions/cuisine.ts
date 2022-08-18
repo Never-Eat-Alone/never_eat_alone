@@ -9,6 +9,11 @@ export class Cuisine {
     );
   }
 
+  /** Returns the empty cuisine. */
+  public static empty(): Cuisine {
+    return new Cuisine(-1, '', '');
+  }
+
   constructor(id: number, label: string, colorCode: string) {
     this._id = id;
     this._label = label;
