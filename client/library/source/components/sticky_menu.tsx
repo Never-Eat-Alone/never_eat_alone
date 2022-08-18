@@ -47,7 +47,9 @@ const CONTAINER_STYLE: React.CSSProperties = {
   width: '100%',
   height: '111px',
   backgroundColor: '#FFFFFF',
-  top: '450px',
+  bottom: '0px',
+  left: '0px',
+  right: '0px',
   boxShadow: '0px -2px 5px rgba(0, 0, 0, 0.05)'
 };
 
@@ -57,7 +59,7 @@ const CONTENT_STYLE: React.CSSProperties = {
   flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'center',
-  width: '630px',
+  width: '530px',
   height: '100%',
   gap: '20px'
 };
