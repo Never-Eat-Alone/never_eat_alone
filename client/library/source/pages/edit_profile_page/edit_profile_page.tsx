@@ -176,25 +176,28 @@ export class EditProfilePage extends React.Component<Properties, State> {
   }
 
   public render(): JSX.Element {
-    const { containerStyle, coverImageStyle, changeBannerButtonStyle
-        } = (() => {
+    const { containerStyle, coverImageStyle, changeBannerButtonStyle,
+        contentContainerStyle } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
           containerStyle: DESKTOP_CONTAINER_STYLE,
           coverImageStyle: DESKTOP_COVER_IMAGE_STYLE,
-          changeBannerButtonStyle: DESKTOP_CHANGE_BANNER_BUTTON_STYLE
+          changeBannerButtonStyle: DESKTOP_CHANGE_BANNER_BUTTON_STYLE,
+          contentContainerStyle: DESKTOP_TABLET_CONTENT_CONTAINER_STYLE
         };
       } else if (this.props.displayMode === DisplayMode.TABLET) {
         return {
           containerStyle: TABLET_CONTAINER_STYLE,
           coverImageStyle: TABLET_COVER_IMAGE_STYLE,
-          changeBannerButtonStyle: MOBILE_TABLET_CHANGE_BANNER_BUTTON_STYLE
+          changeBannerButtonStyle: MOBILE_TABLET_CHANGE_BANNER_BUTTON_STYLE,
+          contentContainerStyle: DESKTOP_TABLET_CONTENT_CONTAINER_STYLE
         };
       } else {
         return {
           containerStyle: MOBILE_CONTAINER_STYLE,
           coverImageStyle: MOBILE_COVER_IMAGE_STYLE,
-          changeBannerButtonStyle: MOBILE_TABLET_CHANGE_BANNER_BUTTON_STYLE
+          changeBannerButtonStyle: MOBILE_TABLET_CHANGE_BANNER_BUTTON_STYLE,
+          contentContainerStyle: MOBILE_CONTENT_CONTAINER_STYLE
         };
       }
     })();
@@ -389,7 +392,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
           labelStyle={CHANGE_BANNER_LABEL_STYLE}
           onClick={this.props.onChangeBanner}
         />
-        <div style={CONTENT_CONTAINER_STYLE} >
+        <div style={contentContainerStyle} >
           <div style={IMAGE_PRIVACY_CONTAINER_STYLE} >
             <div style={IMAGE_CONTAINER_STYLE} >
               <img
@@ -741,12 +744,21 @@ const CHANGE_BANNER_LABEL_STYLE: React.CSSProperties = {
   color: '#FFFFFF'
 };
 
-const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+const DESKTOP_TABLET_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   backgroundColor: '#FFFFFF',
   padding: '30px',
   width: '590px',
   marginTop: '22px',
+  borderRadius: '4px'
+};
+
+const MOBILE_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  backgroundColor: '#FFFFFF',
+  padding: '30px 20px',
+  width: '100%',
+  marginTop: '83px',
   borderRadius: '4px'
 };
 
