@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DisplayMode } from '../../definitions';
+import { Attendee, DisplayMode, DressCode, Location, Seating
+} from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -22,8 +23,8 @@ interface Properties {
   /** Seating type of the reservation. */
   seating: Seating;
 
-  /** Address of the event. */
-  address: Address;
+  /** Location of the event. */
+  location: Location;
 
   /** The name of the reservation at the venue. */
   reservationName: string;
@@ -233,6 +234,17 @@ const DETAILS_BOLD_TEXT_STYLE: React.CSSProperties = {
   fontSize: '14px',
   lineHeight: '18px',
   color: '#000000'
+};
+
+const ATTENDEES_ROW_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  flexWrap: 'wrap',
+  width: '100%',
+  backgroundColor:' trasnparent',
+  gap: '40px 20px'
 };
 
 const ATTENDEE_CONTAINER_STYLE: React.CSSProperties = {
