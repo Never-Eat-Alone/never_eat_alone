@@ -1297,6 +1297,11 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new SignalSchema('onSaveClick', '', []),
     new SignalSchema('onCancelClick', '', [])],
     NeverEatAlone.SaveCancelStickyMenu);
+  const diningEventPageSchema = new ComponentSchema('DiningEventPage', [
+    new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
+      DisplayModeInput),
+    new PropertySchema('coverImageSrc', 'resources/images/15.jpg', TextInput)
+    ], [], NeverEatAlone.DiningEventPage);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
@@ -1315,5 +1320,5 @@ export function loadComponentSchemas(): ComponentSchema[] {
     profileUpcomingEventsSchema, profilePastEventsSchema, profilePageSchema,
     editProfilePageSchema, publicButtonSchema, privateButtonSchema,
     locationInputFieldSchema, textareaWithCounterSchema,
-    saveCancelStickyMenuSchema];
+    saveCancelStickyMenuSchema, diningEventPageSchema];
 }
