@@ -3,8 +3,8 @@ import { ArrayInput, AttendeeInput, BooleanInput, CityProvinceInput, CSSInput,
   CuisineInput, DateInput, DisplayModeInput, DressCodeInput,
   EventCardSummaryInput, EventTagInput, ForgotPasswordPageErrorCodeInput,
   HomePageErrorCodeInput, LanguageInput, NumberInput, RestaurantInput,
-  SignUpPageErrorCodeInput, SocialMediaImageInput, TextInput, UserInput
-} from '../viewer/propertyInput';
+  SeatingInput, SignUpPageErrorCodeInput, SocialMediaImageInput, TextInput,
+  UserInput } from '../viewer/propertyInput';
 import { ComponentSchema, PropertySchema, SignalSchema } from './schemas';
 
 /** Loads the complete list of schemas available to test. */
@@ -1313,7 +1313,8 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('attendeeList', [], ArrayInput(new PropertySchema(
       'attendee', null, AttendeeInput))),
     new PropertySchema('dressCode', NeverEatAlone.DressCode.BUSINESS_CASUAL,
-      DressCodeInput)
+      DressCodeInput),
+    new PropertySchema('seating', NeverEatAlone.Seating.STANDARD, SeatingInput)
     ], [], NeverEatAlone.DiningEventPage);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
