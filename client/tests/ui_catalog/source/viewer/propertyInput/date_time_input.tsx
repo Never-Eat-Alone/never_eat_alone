@@ -14,8 +14,8 @@ interface State {
   localValue: Date;
 }
 
-/** A date input field. */
-export class DateInput extends React.Component<Properties, State> {
+/** A datetime input field. */
+export class DateTimeInput extends React.Component<Properties, State> {
   public static readonly defaultProps: Partial<Properties> = {
     value: new Date()
   }
@@ -28,8 +28,8 @@ export class DateInput extends React.Component<Properties, State> {
   }
 
   public render(): JSX.Element {
-    return <input type='date'
-      value={format(this.state.localValue, 'yyyy-MM-dd')}
+    return <input type='datetime-local' name='datetime'
+      value={format(this.state.localValue, 'yyyy-MM-dd HH:mm')}
       onChange={this.onChange} />;
   }
 
