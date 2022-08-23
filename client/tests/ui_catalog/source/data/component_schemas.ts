@@ -2,8 +2,8 @@ import * as NeverEatAlone from 'never_eat_alone';
 import { ArrayInput, BooleanInput, CityProvinceInput, CSSInput, CuisineInput,
   DateInput, DisplayModeInput, EventCardSummaryInput, EventTagInput,
   ForgotPasswordPageErrorCodeInput, HomePageErrorCodeInput, LanguageInput,
-  NumberInput, SignUpPageErrorCodeInput, SocialMediaImageInput, TextInput,
-  UserInput } from '../viewer/propertyInput';
+  NumberInput, RestaurantInput, SignUpPageErrorCodeInput, SocialMediaImageInput,
+  TextInput, UserInput } from '../viewer/propertyInput';
 import { ComponentSchema, PropertySchema, SignalSchema } from './schemas';
 
 /** Loads the complete list of schemas available to test. */
@@ -1300,8 +1300,15 @@ export function loadComponentSchemas(): ComponentSchema[] {
   const diningEventPageSchema = new ComponentSchema('DiningEventPage', [
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
       DisplayModeInput),
-    new PropertySchema('coverImageSrc', 'resources/images/15.jpg', TextInput)
-    ], [], NeverEatAlone.DiningEventPage);
+    new PropertySchema('eventColor', '#BF408D', TextInput),
+    new PropertySchema('coverImageSrc', 'resources/images/15.jpg', TextInput),
+    new PropertySchema('title', 'Let’s go to Mapo Korean BBQ', TextInput),
+    new PropertySchema('restaurant', new NeverEatAlone.Restaurant(1,
+      'Mapo Korean BBQ', new Date(), 1, 'Cozy BBQ place in the west end.',
+      'Go upstairs.', '6476412589', NeverEatAlone.PriceRange.MODERATELY_PRICED,
+      [new NeverEatAlone.Cuisine(1, 'Korean', '#E5FFD8'),
+      new NeverEatAlone.Cuisine(2, 'BBQ', '#FFFDD8')], 'www.mapobbq.com'),
+      RestaurantInput)], [], NeverEatAlone.DiningEventPage);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,

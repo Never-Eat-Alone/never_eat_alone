@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Attendee, DisplayMode, DressCode, Location, Seating
+import { Attendee, DisplayMode, DressCode, Location, Restaurant, Seating
 } from '../../definitions';
 
 interface Properties {
@@ -15,7 +15,7 @@ interface Properties {
   title: string;
 
   /** The restaurant that the event is happening at. */
-  restaurant: EventRestaurant;
+  restaurant: Restaurant;
 
   /** Dress code of the event. */
   dressCode: DressCode;
@@ -72,11 +72,32 @@ export class DiningEventPage extends React.Component<Properties> {
         };
       }
     })();
-    const attendees = (this.props.attendeeList &&
-      this.props.attendeeList.length !== 0 &&
-      <div style={ATTENDEES_ROW_STYLE} >
-              
-      </div> || null);
+    const attendees = (() => {
+      if (this.props.attendeeList && this.props.attendeeList.length !== 0 ) {
+        const attendees = [];
+        for (const attendee of this.props.attendeeList) {
+          attendees.push(
+            <div key={attendee.userId} style={ATTENDEE_CONTAINER_STYLE} >
+              <div style={ATTENDEE_IMAGE_CONTAINER_STYLE} >
+                <img
+                  style={ATTENDEE_IMAGE_STYLE}
+                  src={attendee.profileImageSrc}
+                  alt='Profile Image'
+                />
+              </div>
+              <div style={ATTENDEE_NAME_STYLE} >{attendee.name}</div>
+            </div>);
+        }
+        return (
+          <div style={ATTENDEES_ROW_STYLE} >
+            {attendees}
+          </div>);
+      }
+    return (
+      <div style={TEXT_STYLE} >
+        No attendees have joined yet. You can be the first!
+      </div>);
+    })();
     return (
       <div style={{...CONTAINER_STYLE, ...containerStyle}} >
         <div
@@ -255,6 +276,56 @@ const ATTENDEE_CONTAINER_STYLE: React.CSSProperties = {
   gap: '10px',
   width: '68px',
   backgroundColor: 'transparent'
+};
+
+const ATTENDEE_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '100%',
+  height: '68px',
+  backgroundColor: 'transparent'
+};
+
+const ATTENDEE_IMAGE_STYLE: React.CSSProperties = {
+  width: '100%',
+  height: '100%',
+  minHeight: '68px',
+  minWidth: '68px',
+  objectFit: 'cover',
+  borderRadius: '50%'
+};
+
+const ATTENDEE_NAME_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  flexWrap: 'wrap',
+  width: '100%',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  textAlign: 'center',
+  color: '#C67E14'
+};
+
+const TEXT_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  flexWrap: 'wrap',
+  width: '100%',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#000000'
 };
 
 const DESCRIPTION_STYLE: React.CSSProperties = {
