@@ -16,16 +16,9 @@ export class Location {
     return new Location(-1, '', '', '', '', '', '', '');
   }
 
-  constructor(
-    id: number,
-    addressLineOne: string,
-    addressLineTwo: string,
-    city: string,
-    province: string,
-    country: string,
-    postalCode: string,
-    neighbourhood: string
-  ) {
+  constructor(id: number, addressLineOne: string, addressLineTwo: string,
+      city: string, province: string, country: string, postalCode: string,
+      neighbourhood: string) {
     this._id = id;
     this._addressLineOne = addressLineOne;
     this._addressLineTwo = addressLineTwo;
