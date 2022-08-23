@@ -13,7 +13,7 @@ interface Properties {
 /** A Restaurantinput. */
 export class RestaurantInput extends React.Component<Properties> {
   public render(): JSX.Element {
-    return <input value={this.props.value.city} onChange={this.onChange} />;
+    return <input value={this.props.value.name} onChange={this.onChange} />;
   }
 
   private onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,7 +21,7 @@ export class RestaurantInput extends React.Component<Properties> {
       if (!event.target.value.trim()) {
         return NeverEatAlone.Restaurant.empty();
       }
-      return new NeverEatAlone.Restaurant(2, event.target.value, Date.now(), 2,
+      return new NeverEatAlone.Restaurant(2, event.target.value, new Date(), 2,
         'Grilled food, family style', 'Find us on Avenue St.', '4165874545',
         NeverEatAlone.PriceRange.EXPENSIVE, [new NeverEatAlone.Cuisine(1,
         'Grill', '#BF408D')], 'www.darbar.com');
