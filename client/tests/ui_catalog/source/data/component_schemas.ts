@@ -1,9 +1,9 @@
 import * as NeverEatAlone from 'never_eat_alone';
-import { ArrayInput, BooleanInput, CityProvinceInput, CSSInput, CuisineInput,
-  DateInput, DisplayModeInput, EventCardSummaryInput, EventTagInput,
-  ForgotPasswordPageErrorCodeInput, HomePageErrorCodeInput, LanguageInput,
-  NumberInput, RestaurantInput, SignUpPageErrorCodeInput, SocialMediaImageInput,
-  TextInput, UserInput } from '../viewer/propertyInput';
+import { ArrayInput, AttendeeInput, BooleanInput, CityProvinceInput, CSSInput,
+  CuisineInput, DateInput, DisplayModeInput, EventCardSummaryInput,
+  EventTagInput, ForgotPasswordPageErrorCodeInput, HomePageErrorCodeInput,
+  LanguageInput, NumberInput, RestaurantInput, SignUpPageErrorCodeInput,
+  SocialMediaImageInput, TextInput, UserInput } from '../viewer/propertyInput';
 import { ComponentSchema, PropertySchema, SignalSchema } from './schemas';
 
 /** Loads the complete list of schemas available to test. */
@@ -1308,7 +1308,10 @@ export function loadComponentSchemas(): ComponentSchema[] {
       'Go upstairs.', '6476412589', NeverEatAlone.PriceRange.MODERATELY_PRICED,
       [new NeverEatAlone.Cuisine(1, 'Korean', '#E5FFD8'),
       new NeverEatAlone.Cuisine(2, 'BBQ', '#FFFDD8')], 'www.mapobbq.com'),
-      RestaurantInput)], [], NeverEatAlone.DiningEventPage);
+      RestaurantInput),
+    new PropertySchema('attendeeList', [], ArrayInput(new PropertySchema(
+      'attendee', null, AttendeeInput)))
+    ], [], NeverEatAlone.DiningEventPage);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,

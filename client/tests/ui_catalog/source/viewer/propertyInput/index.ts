@@ -1,4 +1,5 @@
 export * from './array_input';
+export * from './attendee_input';
 export * from './boolean_input';
 export * from './city_province_input';
 export * from './color_input';
