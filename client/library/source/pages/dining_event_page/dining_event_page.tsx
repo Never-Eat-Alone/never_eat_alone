@@ -98,6 +98,15 @@ export class DiningEventPage extends React.Component<Properties> {
         No attendees have joined yet. You can be the first!
       </div>);
     })();
+    const detailsSection = (() => {
+      const details = [];
+      if (this.props.startTime) {
+
+      }
+      if (details.length === 0) {
+        return <div style={TEXT_STYLE} >No details are available yet.</div>;
+      }
+    })();
     return (
       <div style={{...CONTAINER_STYLE, ...containerStyle}} >
         <div
@@ -112,6 +121,9 @@ export class DiningEventPage extends React.Component<Properties> {
           </div>
           <div style={DIVIDER_STYLE} />
           <div style={TITLE_STYLE} >Event Details</div>
+          <div style={DETAILS_ROW_CONTAINER_STYLE} >
+            {detailsSection}
+          </div>
           <div style={TITLE_STYLE} >
             Attendees (${this.props.attendeeList.length}/
             ${this.props.totalCapacity})
