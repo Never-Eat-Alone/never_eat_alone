@@ -139,6 +139,24 @@ export class DiningEventPage extends React.Component<Properties> {
             </div>
           </div>);
       }
+      if (this.props.startTime && this.props.endTime) {
+        details.push(
+          <div key='event-hours' style={DETAIL_ICON_TEXT_CONTAINER_STYLE} >
+            <div style={ICON_CONTAINER_STYLE} >
+              <img
+                style={ICON_STYLE}
+                src='resources/icons/time.svg'
+                alt='Time Icon'
+              />
+            </div>
+            <div style={DETAILS_TEXT_CONTAINER_STYLE} >
+              <div style={DETAILS_BOLD_TEXT_STYLE} >
+                {format(this.props.startTime, 'h:mm aa')} - {format(
+                this.props.endTime, 'h:mm aa')}
+              </div>
+            </div>
+          </div>);
+      }
       if (details.length === 0) {
         return <div style={TEXT_STYLE} >No details are available yet.</div>;
       }
@@ -277,7 +295,9 @@ const DETAILS_ROW_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
   width: '100%',
-  marginTop: '30px'
+  marginTop: '30px',
+  flexWrap: 'wrap',
+  gap: '30px 40px'
 };
 
 const DETAIL_ICON_TEXT_CONTAINER_STYLE: React.CSSProperties = {
@@ -285,7 +305,7 @@ const DETAIL_ICON_TEXT_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  width: '50%',
+  width: 'calc(50% - 20px)',
   gap: '20px'
 };
 
