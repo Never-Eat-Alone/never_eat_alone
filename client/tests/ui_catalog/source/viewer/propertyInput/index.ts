@@ -6,6 +6,7 @@ export * from './color_input';
 export * from './css_input';
 export * from './cuisine_input';
 export * from './date_input';
+export * from './date_time_input';
 export * from './display_mode_input';
 export * from './dress_code_input';
 export * from './enum_input';

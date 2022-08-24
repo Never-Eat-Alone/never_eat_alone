@@ -1,6 +1,6 @@
 import * as NeverEatAlone from 'never_eat_alone';
 import { ArrayInput, AttendeeInput, BooleanInput, CityProvinceInput, CSSInput,
-  CuisineInput, DateInput, DisplayModeInput, DressCodeInput,
+  CuisineInput, DateInput, DateTimeInput, DisplayModeInput, DressCodeInput,
   EventCardSummaryInput, EventTagInput, ForgotPasswordPageErrorCodeInput,
   HomePageErrorCodeInput, LanguageInput, LocationInput, NumberInput,
   RestaurantInput, SeatingInput, SignUpPageErrorCodeInput,
@@ -1310,15 +1310,32 @@ export function loadComponentSchemas(): ComponentSchema[] {
       [new NeverEatAlone.Cuisine(1, 'Korean', '#E5FFD8'),
       new NeverEatAlone.Cuisine(2, 'BBQ', '#FFFDD8')], 'www.mapobbq.com'),
       RestaurantInput),
-    new PropertySchema('attendeeList', [], ArrayInput(new PropertySchema(
-      'attendee', null, AttendeeInput))),
     new PropertySchema('dressCode', NeverEatAlone.DressCode.BUSINESS_CASUAL,
       DressCodeInput),
     new PropertySchema('seating', NeverEatAlone.Seating.STANDARD, SeatingInput),
     new PropertySchema('location', new NeverEatAlone.Location(2, '25 Bay St',
       '', 'Toronto', 'ON', 'CA', 'M4W 4W4', 'Financial District'),
-      LocationInput)
-    ], [], NeverEatAlone.DiningEventPage);
+      LocationInput),
+    new PropertySchema('reservationName', 'NEA Group', TextInput),
+    new PropertySchema('startTime', new Date(2022, 11, 20, 18, 30),
+      DateTimeInput),
+    new PropertySchema('endTime', new Date(2022, 11, 20, 23, 30),
+      DateTimeInput),
+    new PropertySchema('attendeeList', [], ArrayInput(new PropertySchema(
+      'attendee', null, AttendeeInput))),
+    new PropertySchema('totalCapacity', 10, NumberInput),
+    new PropertySchema('description', 'In keeping with Japanese tradition, \
+      Yukashi considers the various flavours and aromas of seasonal vegetables \
+      when deciding what will make it onto our customers ‘plates, and tickle \
+      their palates. Whether with our delicious main dishes, or our exciting \
+      sake/ appetizer pairings, customers will find that locally grown \
+      ingredients complement carefully chosen ingredients from Japan to make \
+      an authentic Japanese experience with a subtle Canadian twist. This is \
+      one of my favourite sushi places in Toronto and I hope you find this \
+      experience memorable too! Please note, counter seating is only available \
+      on weekends.', TextInput)
+    ],
+    [new SignalSchema('onJoinEvent', '', [])], NeverEatAlone.DiningEventPage);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
