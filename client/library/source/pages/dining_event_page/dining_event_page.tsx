@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import * as React from 'react';
-import { Attendee, DisplayMode, DressCode, Location, Restaurant, Seating
-} from '../../definitions';
+import { Attendee, DisplayMode, DressCode, getDressCodeIconSrc,
+  getDressCodeName, Location, Restaurant, Seating } from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -153,6 +153,24 @@ export class DiningEventPage extends React.Component<Properties> {
               <div style={DETAILS_BOLD_TEXT_STYLE} >
                 {format(this.props.startTime, 'h:mm aa')} - {format(
                 this.props.endTime, 'h:mm aa')}
+              </div>
+            </div>
+          </div>);
+      }
+      if (this.props.dressCode || this.props.dressCode === 0) {
+        details.push(
+          <div key='event-dress-code' style={DETAIL_ICON_TEXT_CONTAINER_STYLE} >
+            <div style={ICON_CONTAINER_STYLE} >
+              <img
+                style={ICON_STYLE}
+                src={getDressCodeIconSrc(this.props.dressCode)}
+                alt='Dresscode Icon'
+              />
+            </div>
+            <div style={DETAILS_TEXT_CONTAINER_STYLE} >
+              <div style={DETAILS_BOLD_TEXT_STYLE} >Dress Code</div>
+              <div style={TEXT_STYLE} >
+                {getDressCodeName(this.props.dressCode)}
               </div>
             </div>
           </div>);

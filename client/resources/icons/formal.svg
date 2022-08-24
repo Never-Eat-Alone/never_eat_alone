@@ -1,0 +1,33 @@
+<svg width="38" height="41" viewBox="0 0 38 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M34 40H3C1.9 40 1 39.1518 1 38.115V10.9149C1 9.70855 1.81 8.63412 3.03 8.23828L18.5 3.24311L33.97 8.2477C35.18 8.64355 36 9.71798 36 10.9244V38.1245C36 39.1518 35.1 40 34 40Z" fill="white" stroke="black" stroke-miterlimit="10"/>
+<path d="M18.5 4.65684L11.28 1.96133C11.6 1.47124 12.14 1.14137 12.75 1.0754L24.13 1C24.74 1.06597 25.28 1.38642 25.61 1.87651L18.5 4.65684Z" fill="white" stroke="black" stroke-miterlimit="10"/>
+<g style="mix-blend-mode:darken">
+<path d="M18.5 4.65684L11.28 1.96133C11.6 1.47124 12.14 1.14137 12.75 1.0754L24.13 1C24.74 1.06597 25.28 1.38642 25.61 1.87651L18.5 4.65684Z" fill="#FF6E53"/>
+</g>
+<path d="M20.48 10.5002H16.17C15.68 10.5002 15.26 10.1704 15.18 9.70856L14.32 4.84534H22.32L21.46 9.70856C21.39 10.1609 20.97 10.5002 20.48 10.5002Z" fill="white" stroke="black" stroke-miterlimit="10"/>
+<path d="M20.33 10.5002H16.33L15.33 35.9473L18.33 37.8323L21.33 35.9473L20.33 10.5002Z" fill="white" stroke="black" stroke-miterlimit="10"/>
+<path d="M18.33 10.029V13.7989" stroke="black" stroke-miterlimit="10"/>
+<g style="mix-blend-mode:darken">
+<g style="mix-blend-mode:darken">
+<path d="M22.5 11.7255H16.5L15.5 6.07056H23.5L22.5 11.7255Z" fill="#FF6E53"/>
+</g>
+<g style="mix-blend-mode:darken">
+<path d="M21.5 11.7255H17.5L16.5 37.1726L19.5 39.0575L22.5 37.1726L21.5 11.7255Z" fill="#FF6E53"/>
+</g>
+<path d="M14 12.668L24 3.24311" stroke="white" stroke-miterlimit="10"/>
+<path d="M14 20.2078L24 10.783" stroke="white" stroke-miterlimit="10"/>
+<path d="M14 27.7477L24 18.3229" stroke="white" stroke-miterlimit="10"/>
+<path d="M14 35.2876L24 25.8627" stroke="white" stroke-miterlimit="10"/>
+</g>
+<g style="mix-blend-mode:darken">
+<path d="M18.07 4.87361L13.39 2.31948C12.9 2.05558 12.28 2.2158 12.01 2.68705L9.37 7.31464C9.15 7.69164 9.24 8.16288 9.57 8.45505L13.15 11.5841C13.6 11.9799 14.31 11.9045 14.66 11.4239L18.41 6.21194C18.72 5.75954 18.57 5.14693 18.07 4.87361Z" fill="#FF6E53"/>
+</g>
+<g style="mix-blend-mode:darken">
+<path d="M20.93 4.87361L25.61 2.31948C26.1 2.05558 26.72 2.2158 26.99 2.68705L29.63 7.31464C29.85 7.69164 29.76 8.16288 29.43 8.45505L25.85 11.5841C25.4 11.9799 24.69 11.9045 24.34 11.4239L20.6 6.21194C20.28 5.75954 20.43 5.14693 20.93 4.87361Z" fill="#FF6E53"/>
+</g>
+<path d="M17.07 3.93113L12.39 1.37699C11.9 1.1131 11.28 1.27332 11.01 1.74456L8.37 6.37216C8.15 6.74915 8.24 7.2204 8.57 7.51257L12.15 10.6416C12.6 11.0375 13.31 10.9621 13.66 10.4814L17.41 5.26945C17.72 4.81706 17.57 4.20445 17.07 3.93113Z" fill="white" stroke="black" stroke-miterlimit="10"/>
+<path d="M19.93 3.93113L24.61 1.37699C25.1 1.1131 25.72 1.27332 25.99 1.74456L28.63 6.37216C28.85 6.74915 28.76 7.2204 28.43 7.51257L24.85 10.6416C24.4 11.0375 23.69 10.9621 23.34 10.4814L19.6 5.26945C19.28 4.81706 19.43 4.20445 19.93 3.93113Z" fill="white" stroke="black" stroke-miterlimit="10"/>
+<g style="mix-blend-mode:darken">
+<path d="M4 40H34C35.1 40 36 39.1518 36 38.115V9.8405" stroke="#FF6E53" stroke-width="3" stroke-miterlimit="10" stroke-linecap="round"/>
+</g>
+</svg>
