@@ -103,7 +103,7 @@ export class DiningEventPage extends React.Component<Properties> {
       const details = [];
       if (this.props.startTime) {
         details.push(
-          <div key='start-date' style={DETAIL_ICON_TEXT_CONTAINER_STYLE} >
+          <div key='event-start-date' style={DETAIL_ICON_TEXT_CONTAINER_STYLE} >
             <div style={ICON_CONTAINER_STYLE} >
               <img
                 style={ICON_STYLE}
@@ -120,7 +120,10 @@ export class DiningEventPage extends React.Component<Properties> {
       }
       if (this.props.reservationName) {
         details.push(
-          <div key='reservation-name' style={DETAIL_ICON_TEXT_CONTAINER_STYLE} >
+          <div
+              key='event-reservation-name'
+              style={DETAIL_ICON_TEXT_CONTAINER_STYLE}
+          >
             <div style={ICON_CONTAINER_STYLE} >
               <img
                 style={ICON_STYLE}
@@ -175,6 +178,26 @@ export class DiningEventPage extends React.Component<Properties> {
             </div>
           </div>);
       }
+      if (this.props.location) {
+        details.push(
+          <div key='event-location' style={DETAIL_ICON_TEXT_CONTAINER_STYLE} >
+            <div style={ICON_CONTAINER_STYLE} >
+              <img
+                style={ICON_STYLE}
+                src='resources/icons/location.svg'
+                alt='Location Icon'
+              />
+            </div>
+            <div style={DETAILS_TEXT_CONTAINER_STYLE} >
+              <div style={DETAILS_BOLD_TEXT_STYLE} >
+                {this.props.location.neighbourhood}
+              </div>
+              <div style={TEXT_STYLE} >
+                {this.formatLocation(this.props.location)}
+              </div>
+            </div>
+          </div>);
+      }
       if (details.length === 0) {
         return <div style={TEXT_STYLE} >No details are available yet.</div>;
       }
@@ -206,6 +229,42 @@ export class DiningEventPage extends React.Component<Properties> {
           <div style={DESCRIPTION_STYLE} >{this.props.description}</div>
         </div>
       </div>);
+  }
+
+  private formatLocation(location: Location): string {
+    let address = '';
+    if (location.addressLineTwo) {
+      address = location.addressLineTwo;
+    }
+    if (location.addressLineOne) {
+      if (address) {
+        address += '- ' + location.addressLineOne;
+      } else {
+        address = location.addressLineOne;
+      }
+    }
+    if (location.city) {
+      if (address) {
+        address += ', ' + location.city;
+      } else {
+        address = location.city;
+      }
+    }
+    if (location.province) {
+      if (address) {
+        address += ', ' + location.province;
+      } else {
+        address = location.province;
+      }
+    }
+    if (location.postalCode) {
+      if (address) {
+        address += ' ' + location.postalCode;
+      } else {
+        address = location.postalCode;
+      }
+    }
+    return address;
   }
 }
 
@@ -352,7 +411,8 @@ const DETAILS_TEXT_CONTAINER_STYLE: React.CSSProperties = {
   alignItems: 'flex-start',
   width: 'calc(100% - 60px)',
   minHeight: '40px',
-  height: '100%'
+  height: '100%',
+  gap: '5px'
 };
 
 const DETAILS_BOLD_TEXT_STYLE: React.CSSProperties = {
