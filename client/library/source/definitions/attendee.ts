@@ -5,18 +5,21 @@ export class Attendee {
     return new Attendee(
       value.userId,
       value.eventId,
+      value.name,
       value.guestCount,
       value.status as AttendeeStatus,
-      new Date(Date.parse(value.updatedAt))
-    );
+      value.profileImageSrc,
+      new Date(Date.parse(value.updatedAt)));
   }
 
-  constructor(userId: number, eventId: number, guestCount: number,
-      status: AttendeeStatus, updatedAt: Date) {
+  constructor(userId: number, eventId: number, name: string, guestCount: number,
+      status: AttendeeStatus, profileImageSrc: string, updatedAt: Date) {
     this._userId = userId;
     this._eventId = eventId;
+    this._name = name;
     this._guestCount = guestCount;
     this._status = status;
+    this._profileImageSrc = profileImageSrc;
     this._updatedAt = updatedAt;
   }
 
@@ -26,6 +29,10 @@ export class Attendee {
 
   public get eventId(): number {
     return this._eventId;
+  }
+
+  public get name(): string {
+    return this._name;
   }
 
   public get guestCount(): number {
@@ -40,29 +47,27 @@ export class Attendee {
     return this._updatedAt;
   }
 
-  public updateStatus(status: AttendeeStatus, updatedAt: Date): void {
-    this._status = status;
-    this._updatedAt = updatedAt;
-  }
-
-  public updateGuests(total: number, updatedAt: Date): void {
-    this._guestCount = total;
-    this._updatedAt = updatedAt;
+  public get profileImageSrc(): string {
+    return this._profileImageSrc;
   }
 
   public toJson(): any {
     return {
       userId: this._userId,
       eventId: this._eventId,
+      name: this._name,
       guestCount: this._guestCount,
       status: this._status,
+      profileImageSrc: this._profileImageSrc,
       updatedAt: this._updatedAt.toJSON()
     };
   }
 
   private _userId: number;
   private _eventId: number;
+  private _name: string;
   private _guestCount: number;
   private _status: AttendeeStatus;
+  private _profileImageSrc: string;
   private _updatedAt: Date;
 }

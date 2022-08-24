@@ -12,6 +12,7 @@ export * from './language';
 export * from './location';
 export * from './password_checks';
 export * from './price_range';
+export * from './restaurant';
 export * from './seating';
 export * from './social_media_image';
 export * from './user';
