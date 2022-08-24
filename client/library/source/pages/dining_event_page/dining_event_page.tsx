@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import * as React from 'react';
 import { Attendee, DisplayMode, DressCode, Location, Restaurant, Seating
 } from '../../definitions';
@@ -98,6 +99,30 @@ export class DiningEventPage extends React.Component<Properties> {
         No attendees have joined yet. You can be the first!
       </div>);
     })();
+    const detailsSection = (() => {
+      const details = [];
+      if (this.props.startTime) {
+        details.push(
+          <div key='start-date' style={DETAIL_ICON_TEXT_CONTAINER_STYLE} >
+            <div style={ICON_CONTAINER_STYLE} >
+              <img
+                style={ICON_STYLE}
+                src='resources/icons/calendar.svg'
+                alt='Calendar Icon'
+              />
+            </div>
+            <div style={DETAILS_TEXT_CONTAINER_STYLE} >
+              <div style={DETAILS_BOLD_TEXT_STYLE} >
+                {format(this.props.startTime, 'eeee, MMMM d, yyyy')}
+              </div>
+            </div>
+          </div>);
+      }
+      if (details.length === 0) {
+        return <div style={TEXT_STYLE} >No details are available yet.</div>;
+      }
+      return details;
+    })();
     return (
       <div style={{...CONTAINER_STYLE, ...containerStyle}} >
         <div
@@ -112,9 +137,12 @@ export class DiningEventPage extends React.Component<Properties> {
           </div>
           <div style={DIVIDER_STYLE} />
           <div style={TITLE_STYLE} >Event Details</div>
+          <div style={DETAILS_ROW_CONTAINER_STYLE} >
+            {detailsSection}
+          </div>
           <div style={TITLE_STYLE} >
-            Attendees (${this.props.attendeeList.length}/
-            ${this.props.totalCapacity})
+            Attendees ({this.props.attendeeList.length}/
+            {this.props.totalCapacity})
           </div>
           {attendees}
           <div style={TITLE_STYLE} >Description</div>
@@ -169,7 +197,7 @@ const MOBILE_COVER_IMAGE_STYLE: React.CSSProperties = {
 const DESKTOP_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   backgroundColor: '#FFFFFF',
-  padding: '40px 0px',
+  padding: '40px 30px',
   width: '900px',
   marginTop: '-120px',
   borderRadius: '4px'
@@ -178,7 +206,7 @@ const DESKTOP_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
 const TABLET_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   backgroundColor: '#FFFFFF',
-  padding: '40px 0px',
+  padding: '40px 30px',
   width: '702px',
   marginTop: '-100px',
   borderRadius: '4px'
@@ -218,7 +246,26 @@ const TITLE_STYLE: React.CSSProperties = {
   textTransform: 'uppercase',
   color: '#969696',
   width: '100%',
-  marginTop: '40px'
+  marginTop: '40px',
+  whiteSpace: 'pre-line'
+};
+
+const DETAILS_ROW_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  width: '100%',
+  marginTop: '30px'
+};
+
+const DETAIL_ICON_TEXT_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  width: '50%',
+  gap: '20px'
 };
 
 const ICON_CONTAINER_STYLE: React.CSSProperties = {
@@ -242,19 +289,26 @@ const ICON_STYLE: React.CSSProperties = {
 const DETAILS_TEXT_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'flex-start',
+  justifyContent: 'center',
   alignItems: 'flex-start',
-  width: '340px',
-  marginLeft: '20px'
+  width: 'calc(100% - 60px)',
+  minHeight: '40px',
+  height: '100%'
 };
 
 const DETAILS_BOLD_TEXT_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  flexWrap: 'wrap',
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
   fontWeight: 600,
   fontSize: '14px',
   lineHeight: '18px',
-  color: '#000000'
+  color: '#000000',
+  width: '100%'
 };
 
 const ATTENDEES_ROW_STYLE: React.CSSProperties = {
