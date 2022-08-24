@@ -118,6 +118,27 @@ export class DiningEventPage extends React.Component<Properties> {
             </div>
           </div>);
       }
+      if (this.props.reservationName) {
+        details.push(
+          <div key='reservation-name' style={DETAIL_ICON_TEXT_CONTAINER_STYLE} >
+            <div style={ICON_CONTAINER_STYLE} >
+              <img
+                style={ICON_STYLE}
+                src='resources/icons/reservation.svg'
+                alt='Reservation Icon'
+              />
+            </div>
+            <div style={DETAILS_TEXT_CONTAINER_STYLE} >
+              <div style={DETAILS_BOLD_TEXT_STYLE} >
+                Reservation: {this.props.reservationName}
+              </div>
+              <div style={TEXT_STYLE} >
+                Upon arrival to the restaurant, ask for this name to be guided 
+                to your table.
+              </div>
+            </div>
+          </div>);
+      }
       if (details.length === 0) {
         return <div style={TEXT_STYLE} >No details are available yet.</div>;
       }
@@ -379,7 +400,8 @@ const TEXT_STYLE: React.CSSProperties = {
   fontWeight: 400,
   fontSize: '14px',
   lineHeight: '18px',
-  color: '#000000'
+  color: '#000000',
+  whiteSpace: 'pre-line'
 };
 
 const DESCRIPTION_STYLE: React.CSSProperties = {
