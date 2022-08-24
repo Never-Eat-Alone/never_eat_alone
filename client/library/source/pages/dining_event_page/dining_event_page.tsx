@@ -179,7 +179,8 @@ export class DiningEventPage extends React.Component<Properties> {
             </div>
           </div>);
       }
-      if (this.props.location) {
+      if (this.props.location &&
+          this.formatLocation(this.props.location) !== '') {
         details.push(
           <div key='event-location' style={DETAIL_ICON_TEXT_CONTAINER_STYLE} >
             <div style={ICON_CONTAINER_STYLE} >
@@ -218,7 +219,12 @@ export class DiningEventPage extends React.Component<Properties> {
           </div>);
       }
       if (details.length === 0) {
-        return <div style={TEXT_STYLE} >No details are available yet.</div>;
+      return (
+        <div style={DETAIL_ICON_TEXT_CONTAINER_STYLE} >
+          <div style={TEXT_STYLE} >
+            No details are available yet.
+          </div>
+        </div>);
       }
       return details;
     })();
