@@ -1,7 +1,8 @@
 import { format } from 'date-fns';
 import * as React from 'react';
 import { Attendee, DisplayMode, DressCode, getDressCodeIconSrc,
-  getDressCodeName, Location, Restaurant, Seating } from '../../definitions';
+  getDressCodeName, getSeatingIconSrc, getSeatingName, Location, Restaurant,
+  Seating } from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -74,7 +75,7 @@ export class DiningEventPage extends React.Component<Properties> {
       }
     })();
     const attendees = (() => {
-      if (this.props.attendeeList && this.props.attendeeList.length !== 0 ) {
+      if (this.props.attendeeList && this.props.attendeeList.length !== 0) {
         const attendees = [];
         for (const attendee of this.props.attendeeList) {
           attendees.push(
@@ -194,6 +195,24 @@ export class DiningEventPage extends React.Component<Properties> {
               </div>
               <div style={TEXT_STYLE} >
                 {this.formatLocation(this.props.location)}
+              </div>
+            </div>
+          </div>);
+      }
+      if (this.props.seating || this.props.seating === 0) {
+        details.push(
+          <div key='event-seating' style={DETAIL_ICON_TEXT_CONTAINER_STYLE} >
+            <div style={ICON_CONTAINER_STYLE} >
+              <img
+                style={ICON_STYLE}
+                src={getSeatingIconSrc(this.props.seating)}
+                alt='Seating Icon'
+              />
+            </div>
+            <div style={DETAILS_TEXT_CONTAINER_STYLE} >
+              <div style={DETAILS_BOLD_TEXT_STYLE} >Seating</div>
+              <div style={TEXT_STYLE} >
+                {getSeatingName(this.props.seating)}
               </div>
             </div>
           </div>);
