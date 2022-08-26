@@ -1,7 +1,8 @@
 import { format } from 'date-fns';
 import * as React from 'react';
-import { Attendee, DisplayMode, DressCode, Location, Restaurant, Seating
-} from '../../definitions';
+import { Attendee, DisplayMode, DressCode, getDressCodeIconSrc,
+  getDressCodeName, getSeatingIconSrc, getSeatingName, Location, Restaurant,
+  Seating } from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -74,7 +75,7 @@ export class DiningEventPage extends React.Component<Properties> {
       }
     })();
     const attendees = (() => {
-      if (this.props.attendeeList && this.props.attendeeList.length !== 0 ) {
+      if (this.props.attendeeList && this.props.attendeeList.length !== 0) {
         const attendees = [];
         for (const attendee of this.props.attendeeList) {
           attendees.push(
@@ -103,7 +104,7 @@ export class DiningEventPage extends React.Component<Properties> {
       const details = [];
       if (this.props.startTime) {
         details.push(
-          <div key='start-date' style={DETAIL_ICON_TEXT_CONTAINER_STYLE} >
+          <div key='event-start-date' style={DETAIL_ICON_TEXT_CONTAINER_STYLE} >
             <div style={ICON_CONTAINER_STYLE} >
               <img
                 style={ICON_STYLE}
@@ -118,8 +119,112 @@ export class DiningEventPage extends React.Component<Properties> {
             </div>
           </div>);
       }
+      if (this.props.reservationName) {
+        details.push(
+          <div
+              key='event-reservation-name'
+              style={DETAIL_ICON_TEXT_CONTAINER_STYLE}
+          >
+            <div style={ICON_CONTAINER_STYLE} >
+              <img
+                style={ICON_STYLE}
+                src='resources/icons/reservation.svg'
+                alt='Reservation Icon'
+              />
+            </div>
+            <div style={DETAILS_TEXT_CONTAINER_STYLE} >
+              <div style={DETAILS_BOLD_TEXT_STYLE} >
+                Reservation: {this.props.reservationName}
+              </div>
+              <div style={TEXT_STYLE} >
+                Upon arrival to the restaurant, ask for this name to be guided 
+                to your table.
+              </div>
+            </div>
+          </div>);
+      }
+      if (this.props.startTime && this.props.endTime) {
+        details.push(
+          <div key='event-hours' style={DETAIL_ICON_TEXT_CONTAINER_STYLE} >
+            <div style={ICON_CONTAINER_STYLE} >
+              <img
+                style={ICON_STYLE}
+                src='resources/icons/time.svg'
+                alt='Time Icon'
+              />
+            </div>
+            <div style={DETAILS_TEXT_CONTAINER_STYLE} >
+              <div style={DETAILS_BOLD_TEXT_STYLE} >
+                {format(this.props.startTime, 'h:mm aa')} - {format(
+                this.props.endTime, 'h:mm aa')}
+              </div>
+            </div>
+          </div>);
+      }
+      if (this.props.dressCode || this.props.dressCode === 0) {
+        details.push(
+          <div key='event-dress-code' style={DETAIL_ICON_TEXT_CONTAINER_STYLE} >
+            <div style={ICON_CONTAINER_STYLE} >
+              <img
+                style={ICON_STYLE}
+                src={getDressCodeIconSrc(this.props.dressCode)}
+                alt='Dresscode Icon'
+              />
+            </div>
+            <div style={DETAILS_TEXT_CONTAINER_STYLE} >
+              <div style={DETAILS_BOLD_TEXT_STYLE} >Dress Code</div>
+              <div style={TEXT_STYLE} >
+                {getDressCodeName(this.props.dressCode)}
+              </div>
+            </div>
+          </div>);
+      }
+      if (this.props.location &&
+          this.formatLocation(this.props.location) !== '') {
+        details.push(
+          <div key='event-location' style={DETAIL_ICON_TEXT_CONTAINER_STYLE} >
+            <div style={ICON_CONTAINER_STYLE} >
+              <img
+                style={ICON_STYLE}
+                src='resources/icons/location.svg'
+                alt='Location Icon'
+              />
+            </div>
+            <div style={DETAILS_TEXT_CONTAINER_STYLE} >
+              <div style={DETAILS_BOLD_TEXT_STYLE} >
+                {this.props.location.neighbourhood}
+              </div>
+              <div style={TEXT_STYLE} >
+                {this.formatLocation(this.props.location)}
+              </div>
+            </div>
+          </div>);
+      }
+      if (this.props.seating || this.props.seating === 0) {
+        details.push(
+          <div key='event-seating' style={DETAIL_ICON_TEXT_CONTAINER_STYLE} >
+            <div style={ICON_CONTAINER_STYLE} >
+              <img
+                style={ICON_STYLE}
+                src={getSeatingIconSrc(this.props.seating)}
+                alt='Seating Icon'
+              />
+            </div>
+            <div style={DETAILS_TEXT_CONTAINER_STYLE} >
+              <div style={DETAILS_BOLD_TEXT_STYLE} >Seating</div>
+              <div style={TEXT_STYLE} >
+                {getSeatingName(this.props.seating)}
+              </div>
+            </div>
+          </div>);
+      }
       if (details.length === 0) {
-        return <div style={TEXT_STYLE} >No details are available yet.</div>;
+      return (
+        <div style={DETAIL_ICON_TEXT_CONTAINER_STYLE} >
+          <div style={TEXT_STYLE} >
+            No details are available yet.
+          </div>
+        </div>);
       }
       return details;
     })();
@@ -149,6 +254,42 @@ export class DiningEventPage extends React.Component<Properties> {
           <div style={DESCRIPTION_STYLE} >{this.props.description}</div>
         </div>
       </div>);
+  }
+
+  private formatLocation(location: Location): string {
+    let address = '';
+    if (location.addressLineTwo) {
+      address = location.addressLineTwo;
+    }
+    if (location.addressLineOne) {
+      if (address) {
+        address += '- ' + location.addressLineOne;
+      } else {
+        address = location.addressLineOne;
+      }
+    }
+    if (location.city) {
+      if (address) {
+        address += ', ' + location.city;
+      } else {
+        address = location.city;
+      }
+    }
+    if (location.province) {
+      if (address) {
+        address += ', ' + location.province;
+      } else {
+        address = location.province;
+      }
+    }
+    if (location.postalCode) {
+      if (address) {
+        address += ' ' + location.postalCode;
+      } else {
+        address = location.postalCode;
+      }
+    }
+    return address;
   }
 }
 
@@ -256,7 +397,9 @@ const DETAILS_ROW_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
   width: '100%',
-  marginTop: '30px'
+  marginTop: '30px',
+  flexWrap: 'wrap',
+  gap: '30px 40px'
 };
 
 const DETAIL_ICON_TEXT_CONTAINER_STYLE: React.CSSProperties = {
@@ -264,7 +407,7 @@ const DETAIL_ICON_TEXT_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  width: '50%',
+  width: 'calc(50% - 20px)',
   gap: '20px'
 };
 
@@ -293,7 +436,8 @@ const DETAILS_TEXT_CONTAINER_STYLE: React.CSSProperties = {
   alignItems: 'flex-start',
   width: 'calc(100% - 60px)',
   minHeight: '40px',
-  height: '100%'
+  height: '100%',
+  gap: '5px'
 };
 
 const DETAILS_BOLD_TEXT_STYLE: React.CSSProperties = {
@@ -379,7 +523,8 @@ const TEXT_STYLE: React.CSSProperties = {
   fontWeight: 400,
   fontSize: '14px',
   lineHeight: '18px',
-  color: '#000000'
+  color: '#000000',
+  whiteSpace: 'pre-line'
 };
 
 const DESCRIPTION_STYLE: React.CSSProperties = {

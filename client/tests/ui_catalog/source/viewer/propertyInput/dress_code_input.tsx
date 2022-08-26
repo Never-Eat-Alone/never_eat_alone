@@ -37,6 +37,13 @@ export class DressCodeInput extends React.Component<Properties> {
             style={DressCodeInput.STYLE.radio}/>
           <label htmlFor='formal'>Formal</label>
         </div>
+        <div style={DressCodeInput.STYLE.label}>
+          <input type='radio' name='dress_code' id='black_tie' value='black_tie'
+            checked={this.props.value === DressCode.BLACK_TIE}
+            onChange={this.onChange}
+            style={DressCodeInput.STYLE.radio}/>
+          <label htmlFor='black_tie'>Black Tie</label>
+        </div>
       </div>);
   }
 
@@ -44,10 +51,12 @@ export class DressCodeInput extends React.Component<Properties> {
     const code = event.target.value;
     if (code === 'casual') {
       this.props.update(DressCode.CASUAL);
-    } else if (code === 'business_casual') {
-      this.props.update(DressCode.BUSINESS_CASUAL);
-    } else {
+    } else if (code === 'black_tie') {
+      this.props.update(DressCode.BLACK_TIE);
+    } else if (code === 'formal') {
       this.props.update(DressCode.FORMAL);
+    } else {
+      this.props.update(DressCode.BUSINESS_CASUAL);
     }
   }
 
