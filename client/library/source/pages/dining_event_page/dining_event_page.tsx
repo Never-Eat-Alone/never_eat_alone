@@ -96,8 +96,10 @@ export class DiningEventPage extends React.Component<Properties> {
           </div>);
       }
     return (
-      <div style={TEXT_STYLE} >
-        No attendees have joined yet. You can be the first!
+      <div style={ATTENDEES_ROW_STYLE} >
+        <div style={TEXT_STYLE} >
+          No attendees have joined yet. You can be the first!
+        </div>
       </div>);
     })();
     const detailsSection = (() => {
@@ -462,8 +464,9 @@ const ATTENDEES_ROW_STYLE: React.CSSProperties = {
   alignItems: 'flex-start',
   flexWrap: 'wrap',
   width: '100%',
-  backgroundColor:' trasnparent',
-  gap: '40px 20px'
+  backgroundColor: 'trasnparent',
+  gap: '20px 40px',
+  marginTop: '20px'
 };
 
 const ATTENDEE_CONTAINER_STYLE: React.CSSProperties = {

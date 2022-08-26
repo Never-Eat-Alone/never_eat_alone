@@ -1322,7 +1322,15 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('endTime', new Date(2022, 11, 20, 23, 30),
       DateTimeInput),
     new PropertySchema('attendeeList', [], ArrayInput(new PropertySchema(
-      'attendee', null, AttendeeInput))),
+      'attendee', new NeverEatAlone.Attendee(Date.now(), Math.floor(
+      Math.random() * 10),
+      ['Julia', 'Mark', 'Debb', 'Craig', 'Reyna', 'Alex'][Math.floor(
+      Math.random() * 5)], 0,
+      NeverEatAlone.AttendeeStatus.GOING,
+      ['resources/images/profile3.jpeg', 'resources/images/profile4.jpeg',
+      'resources/images/profileguy5.jpeg', 'resources/images/profile5.jpeg',
+      'resources/images/profileguy3.jpeg', 'resources/images/profileguy4.jpeg']
+      [Math.floor(Math.random() * 5)], new Date()), AttendeeInput))),
     new PropertySchema('totalCapacity', 10, NumberInput),
     new PropertySchema('description', 'In keeping with Japanese tradition, \
       Yukashi considers the various flavours and aromas of seasonal vegetables \
