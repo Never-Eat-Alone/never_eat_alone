@@ -1,5 +1,7 @@
+import { css, StyleSheet } from 'aphrodite';
 import { format } from 'date-fns';
 import * as React from 'react';
+import * as Router from 'react-router-dom';
 import { Attendee, DisplayMode, DressCode, getDressCodeIconSrc,
   getDressCodeName, getSeatingIconSrc, getSeatingName, Location, Restaurant,
   Seating } from '../../definitions';
@@ -50,8 +52,19 @@ interface Properties {
   onJoinEvent: () => void;
 }
 
+interface State {
+  isSeeAllAttendees: boolean;
+}
+
 /** Displays the Dining Event Page. */
-export class DiningEventPage extends React.Component<Properties> {
+export class DiningEventPage extends React.Component<Properties, State> {
+  constructor(props: Properties) {
+    super(props);
+    this.state = {
+      isSeeAllAttendees: false
+    };
+  }
+
   public render(): JSX.Element {
     const { containerStyle, coverImageStyle, contentContainerStyle } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
@@ -75,32 +88,45 @@ export class DiningEventPage extends React.Component<Properties> {
       }
     })();
     const attendees = (() => {
-      if (this.props.attendeeList && this.props.attendeeList.length !== 0) {
-        const attendees = [];
-        for (const attendee of this.props.attendeeList) {
-          attendees.push(
-            <div key={attendee.userId} style={ATTENDEE_CONTAINER_STYLE} >
-              <div style={ATTENDEE_IMAGE_CONTAINER_STYLE} >
-                <img
-                  style={ATTENDEE_IMAGE_STYLE}
-                  src={attendee.profileImageSrc}
-                  alt='Profile Image'
-                />
-              </div>
-              <div style={ATTENDEE_NAME_STYLE} >{attendee.name}</div>
-            </div>);
-        }
+      if (!this.props.attendeeList || this.props.attendeeList.length === 0) {
         return (
           <div style={ATTENDEES_ROW_STYLE} >
-            {attendees}
+            <div style={TEXT_STYLE} >
+              No attendees have joined yet. You can be the first!
+            </div>
           </div>);
       }
-    return (
-      <div style={ATTENDEES_ROW_STYLE} >
-        <div style={TEXT_STYLE} >
-          No attendees have joined yet. You can be the first!
-        </div>
-      </div>);
+      const attendees = [];
+      const total = (this.state.isSeeAllAttendees &&
+        this.props.attendeeList.length || Math.min(7,
+        this.props.attendeeList.length));
+      for (const attendee of this.props.attendeeList.slice(0, total)) {
+        attendees.push(
+          <Router.Link
+              key={attendee.userId}
+              style={ATTENDEE_CONTAINER_STYLE}
+              to={`/users/${attendee.userId}`}
+              className={css(styles.profileLink)}
+          >
+            <div style={ATTENDEE_IMAGE_CONTAINER_STYLE} >
+              <img
+                style={ATTENDEE_IMAGE_STYLE}
+                src={attendee.profileImageSrc}
+                alt='Profile Image'
+              />
+            </div>
+            <div style={ATTENDEE_NAME_STYLE} >{attendee.name}</div>
+          </Router.Link>);
+      }
+      if (this.state.isSeeAllAttendees) {
+        attendees.push();
+      } else {
+        attendees.push();
+      }
+      return (
+        <div style={ATTENDEES_ROW_STYLE} >
+          {attendees}
+        </div>);
     })();
     const detailsSection = (() => {
       const details = [];
@@ -473,10 +499,12 @@ const ATTENDEE_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
-  alignItems: 'flex-start',
+  alignItems: 'center',
   gap: '10px',
   width: '68px',
-  backgroundColor: 'transparent'
+  backgroundColor: 'transparent',
+  color: '#C67E14',
+  textDecoration: 'none'
 };
 
 const ATTENDEE_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
@@ -501,17 +529,18 @@ const ATTENDEE_IMAGE_STYLE: React.CSSProperties = {
 const ATTENDEE_NAME_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
-  justifyContent: 'flex-start',
+  justifyContent: 'center',
   alignItems: 'flex-start',
   flexWrap: 'wrap',
-  width: '100%',
+  maxWidth: '100%',
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
   fontWeight: 400,
   fontSize: '14px',
   lineHeight: '18px',
   textAlign: 'center',
-  color: '#C67E14'
+  color: 'inherit',
+  textDecoration: 'inherit'
 };
 
 const TEXT_STYLE: React.CSSProperties = {
@@ -545,3 +574,24 @@ const DESCRIPTION_STYLE: React.CSSProperties = {
   color: '#000000',
   marginTop: '20px'
 };
+
+const styles = StyleSheet.create({
+  profileLink: {
+    ':hover': {
+      color: '#EA9F26',
+      textDecoration: 'underline #EA9F26'
+    },
+    ':focus': {
+      color: '#EA9F26',
+      textDecoration: 'underline #EA9F26'
+    },
+    ':focus-within': {
+      color: '#EA9F26',
+      textDecoration: 'underline #EA9F26'
+    },
+    ':active': {
+      color: '#C67E14',
+      textDecoration: 'underline #C67E14'
+    }
+  }
+});

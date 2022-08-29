@@ -1344,6 +1344,10 @@ export function loadComponentSchemas(): ComponentSchema[] {
       on weekends.', TextInput)
     ],
     [new SignalSchema('onJoinEvent', '', [])], NeverEatAlone.DiningEventPage);
+  const seeAllButtonSchema = new ComponentSchema('SeeAllButton', [], [
+    new SignalSchema('onClick', '', [])], NeverEatAlone.SeeAllButton);
+  const seeLessButtonSchema = new ComponentSchema('SeeLessButton', [], [
+    new SignalSchema('onClick', '', [])], NeverEatAlone.SeeLessButton);
   return [logoSchema, primaryTextButtonSchema,
     invertedSecondaryTextButtonSchema, accentTextButtonSchema,
     whiteNavLinkSchema, emailInputFieldSchema, nameInputFieldSchema,
@@ -1362,5 +1366,6 @@ export function loadComponentSchemas(): ComponentSchema[] {
     profileUpcomingEventsSchema, profilePastEventsSchema, profilePageSchema,
     editProfilePageSchema, publicButtonSchema, privateButtonSchema,
     locationInputFieldSchema, textareaWithCounterSchema,
-    saveCancelStickyMenuSchema, diningEventPageSchema];
+    saveCancelStickyMenuSchema, diningEventPageSchema, seeAllButtonSchema,
+    seeLessButtonSchema];
 }
