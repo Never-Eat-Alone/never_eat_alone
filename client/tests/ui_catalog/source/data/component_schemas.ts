@@ -1321,16 +1321,41 @@ export function loadComponentSchemas(): ComponentSchema[] {
       DateTimeInput),
     new PropertySchema('endTime', new Date(2022, 11, 20, 23, 30),
       DateTimeInput),
-    new PropertySchema('attendeeList', [], ArrayInput(new PropertySchema(
-      'attendee', new NeverEatAlone.Attendee(Date.now(), Math.floor(
-      Math.random() * 10),
-      ['Julia', 'Mark', 'Debb', 'Craig', 'Reyna', 'Alex'][Math.floor(
-      Math.random() * 5)], 0,
-      NeverEatAlone.AttendeeStatus.GOING,
-      ['resources/images/profile3.jpeg', 'resources/images/profile4.jpeg',
-      'resources/images/profileguy5.jpeg', 'resources/images/profile5.jpeg',
-      'resources/images/profileguy3.jpeg', 'resources/images/profileguy4.jpeg']
-      [Math.floor(Math.random() * 5)], new Date()), AttendeeInput))),
+    new PropertySchema('attendeeList', [
+      new NeverEatAlone.Attendee(1, 1,
+      'Mark', 0, NeverEatAlone.AttendeeStatus.GOING,
+      'resources/images/profileguy5.jpeg', new Date()),
+      new NeverEatAlone.Attendee(2, 1,
+      'Mark', 0, NeverEatAlone.AttendeeStatus.GOING,
+      'resources/images/profileguy5.jpeg', new Date()),
+      new NeverEatAlone.Attendee(3, 1,
+      'Mark', 0, NeverEatAlone.AttendeeStatus.GOING,
+      'resources/images/profileguy5.jpeg', new Date()),
+      new NeverEatAlone.Attendee(4, 1,
+      'Mark', 0, NeverEatAlone.AttendeeStatus.GOING,
+      'resources/images/profileguy5.jpeg', new Date()),
+      new NeverEatAlone.Attendee(5, 1,
+      'Mark', 0, NeverEatAlone.AttendeeStatus.GOING,
+      'resources/images/profileguy5.jpeg', new Date()),
+      new NeverEatAlone.Attendee(6, 1,
+      'Mark', 0, NeverEatAlone.AttendeeStatus.GOING,
+      'resources/images/profileguy5.jpeg', new Date()),
+      new NeverEatAlone.Attendee(7, 1,
+      'Mark', 0, NeverEatAlone.AttendeeStatus.GOING,
+      'resources/images/profileguy5.jpeg', new Date()),
+      new NeverEatAlone.Attendee(8, 1,
+      'Mark', 0, NeverEatAlone.AttendeeStatus.GOING,
+      'resources/images/profileguy5.jpeg', new Date()),
+      new NeverEatAlone.Attendee(9, 1,
+      'Mark', 0, NeverEatAlone.AttendeeStatus.GOING,
+      'resources/images/profileguy5.jpeg', new Date()),
+      new NeverEatAlone.Attendee(10, 1,
+      'Mark', 0, NeverEatAlone.AttendeeStatus.GOING,
+      'resources/images/profileguy5.jpeg', new Date())
+    ], ArrayInput(new PropertySchema(
+      'attendee', new NeverEatAlone.Attendee(Date.now(), 1,
+      'Mark', 0, NeverEatAlone.AttendeeStatus.GOING,
+      'resources/images/profileguy5.jpeg', new Date()), AttendeeInput))),
     new PropertySchema('totalCapacity', 10, NumberInput),
     new PropertySchema('description', 'In keeping with Japanese tradition, \
       Yukashi considers the various flavours and aromas of seasonal vegetables \

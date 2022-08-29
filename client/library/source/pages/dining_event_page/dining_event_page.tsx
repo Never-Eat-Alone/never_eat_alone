@@ -2,6 +2,7 @@ import { css, StyleSheet } from 'aphrodite';
 import { format } from 'date-fns';
 import * as React from 'react';
 import * as Router from 'react-router-dom';
+import { SeeAllButton, SeeLessButton } from '../../components';
 import { Attendee, DisplayMode, DressCode, getDressCodeIconSrc,
   getDressCodeName, getSeatingIconSrc, getSeatingName, Location, Restaurant,
   Seating } from '../../definitions';
@@ -118,10 +119,13 @@ export class DiningEventPage extends React.Component<Properties, State> {
             <div style={ATTENDEE_NAME_STYLE} >{attendee.name}</div>
           </Router.Link>);
       }
-      if (this.state.isSeeAllAttendees) {
-        attendees.push();
-      } else {
-        attendees.push();
+      if (this.props.attendeeList.length > 7 && this.state.isSeeAllAttendees) {
+        attendees.push(
+          <SeeLessButton key='SeeLessButton' onClick={this.handleSeeLess} />);
+      }
+      if (this.props.attendeeList.length > 7 && !this.state.isSeeAllAttendees) {
+        attendees.push(
+          <SeeAllButton key='SeeAllButton' onClick={this.handleSeeAll} />);
       }
       return (
         <div style={ATTENDEES_ROW_STYLE} >
@@ -319,6 +323,14 @@ export class DiningEventPage extends React.Component<Properties, State> {
     }
     return address;
   }
+
+  private handleSeeLess = () => {
+    this.setState({ isSeeAllAttendees: false });
+  }
+
+  private handleSeeAll = () => {
+    this.setState({ isSeeAllAttendees: true });
+  }
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {
@@ -504,7 +516,8 @@ const ATTENDEE_CONTAINER_STYLE: React.CSSProperties = {
   width: '68px',
   backgroundColor: 'transparent',
   color: '#C67E14',
-  textDecoration: 'none'
+  textDecoration: 'none',
+  outline: 'none'
 };
 
 const ATTENDEE_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
