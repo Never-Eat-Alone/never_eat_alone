@@ -5,13 +5,16 @@ import * as Router from 'react-router-dom';
 import { SeeAllButton, SeeLessButton } from '../../components';
 import { Attendee, DisplayMode, DressCode, getDressCodeIconSrc,
   getDressCodeName, getSeatingIconSrc, getSeatingName, Location, Restaurant,
-  Seating } from '../../definitions';
+  Seating, toDollarSigns } from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
 
   /** The color code of the event tag. */
   eventColor: string;
+
+  /** The cost of joining the event. */
+  eventFee: number;
 
   /** The source address of the user's cover image. */
   coverImageSrc: string;
@@ -270,7 +273,31 @@ export class DiningEventPage extends React.Component<Properties, State> {
         />
         <div style={contentContainerStyle} >
           <div style={HEADER_CONTAINER_STYLE} >
-
+            <div>{this.props.title}</div>
+            <div style={ROW_STYLE} >
+              <img
+                style={RESTAURANT_ICON_STYLE}
+                src='resources/icons/restaurant.svg'
+                alt='Restaurant Icon'
+              />
+              <Router.Link
+                  style={RESTAURANT_NAME_TEXT_STYLE}
+                  to={`/restaurants/${this.props.restaurant.id}`}
+                  className={css(styles.restaurantLink)}
+              >
+                {this.props.restaurant.name}
+              </Router.Link>
+              <div style={DOT_STYLE} >.</div>
+              {toDollarSigns(this.props.restaurant.priceRange)}
+              <img
+                style={EVENT_FEE_ICON_STYLE}
+                src='resources/icons/event_fee.svg'
+                alt='Event Fee Icon'
+              />
+              <p style={EVENT_FEE_TEXT_STYLE} >
+                ${this.props.eventFee} Event Fee
+              </p>
+            </div>
           </div>
           <div style={DIVIDER_STYLE} />
           <div style={TITLE_STYLE} >Event Details</div>
