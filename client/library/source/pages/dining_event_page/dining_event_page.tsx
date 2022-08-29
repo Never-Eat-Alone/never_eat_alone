@@ -91,6 +91,24 @@ export class DiningEventPage extends React.Component<Properties, State> {
         };
       }
     })();
+    const cuisineTags = (() => {
+      if (this.props.restaurant && this.props.restaurant.cuisineList) {
+        const list = this.props.restaurant.cuisineList.slice(0, 3);
+        const tags = [];
+        for (const cuisine of list) {
+          tags.push(
+            <div
+                key={cuisine.id}
+                style={{...CUISINE_TEXT_STYLE,
+                  backgroundColor: cuisine.colorCode}}
+            >
+              {cuisine.label}
+            </div>);
+        }
+        return tags;
+      }
+      return null;
+    })();
     const attendees = (() => {
       if (!this.props.attendeeList || this.props.attendeeList.length === 0) {
         return (
@@ -289,6 +307,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
               </Router.Link>
               <div style={DOT_STYLE} >.</div>
               {toDollarSigns(this.props.restaurant.priceRange)}
+              {cuisineTags}
               <img
                 style={EVENT_FEE_ICON_STYLE}
                 src='resources/icons/event_fee.svg'
@@ -615,6 +634,34 @@ const DESCRIPTION_STYLE: React.CSSProperties = {
   marginTop: '20px'
 };
 
+const CUISINE_TEXT_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '12px',
+  lineHeight: '15px',
+  color: '#000000',
+  borderRadius: '4px',
+  padding: '2px 4px',
+  maxWidth: '100%',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap'
+};
+
+const DOT_STYLE: React.CSSProperties = {
+  
+};
+
+const EVENT_FEE_ICON_STYLE: React.CSSProperties = {
+
+};
+
+const EVENT_FEE_TEXT_STYLE: React.CSSProperties = {
+
+};
+
 const styles = StyleSheet.create({
   profileLink: {
     ':hover': {
@@ -633,5 +680,8 @@ const styles = StyleSheet.create({
       color: '#C67E14',
       textDecoration: 'underline #C67E14'
     }
+  },
+  restaurantLink: {
+
   }
 });
