@@ -12,6 +12,11 @@ interface Properties {
 
 /** An Attendeeinput. */
 export class AttendeeInput extends React.Component<Properties> {
+  constructor(props: Properties) {
+    super(props);
+    this.nextId = 1;
+  }
+
   public render(): JSX.Element {
     return <input value={this.props.value.name} onChange={this.onChange} />;
   }
@@ -21,10 +26,14 @@ export class AttendeeInput extends React.Component<Properties> {
       if (!event.target.value.trim()) {
         return null;
       }
-      return new NeverEatAlone.Attendee(1, 2, event.target.value, 0,
+      const id = this.nextId;
+      ++this.nextId;
+      return new NeverEatAlone.Attendee(id, 2, event.target.value, 0,
         NeverEatAlone.AttendeeStatus.GOING, 'resources/images/profile5.jpeg',
         new Date());
     })();
     this.props.update(newValue);
   }
+
+  private nextId: number;
 }
