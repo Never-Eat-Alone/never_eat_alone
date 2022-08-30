@@ -1302,6 +1302,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
       DisplayModeInput),
     new PropertySchema('eventColor', '#BF408D', TextInput),
+    new PropertySchema('eventFee', 3.00 , NumberInput),
     new PropertySchema('coverImageSrc', 'resources/images/15.jpg', TextInput),
     new PropertySchema('title', 'Let’s go to Mapo Korean BBQ', TextInput),
     new PropertySchema('restaurant', new NeverEatAlone.Restaurant(1,

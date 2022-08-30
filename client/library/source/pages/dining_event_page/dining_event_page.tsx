@@ -105,7 +105,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
               {cuisine.label}
             </div>);
         }
-        return tags;
+        return <div style={TAGS_CONTAINER_STYLE} >{tags}</div>;
       }
       return null;
     })();
@@ -291,22 +291,44 @@ export class DiningEventPage extends React.Component<Properties, State> {
         />
         <div style={contentContainerStyle} >
           <div style={HEADER_CONTAINER_STYLE} >
-            <div>{this.props.title}</div>
+            <div style={EVENT_TAG_CONTAINER_STYLE} >
+              <svg
+                  style={{...EVENT_TAG_ICON_STYLE,
+                    color: this.props.eventColor}}
+                  width='18' height='31' viewBox='0 0 18 31'
+                  xmlns='http://www.w3.org/2000/svg'
+              >
+                <path d='M18 31H0V0H18L14 15.5L18 31Z' fill='currentColor' />
+              </svg>
+            </div>
+            <div style={EVENT_TITLE_STYLE} >{this.props.title}</div>
             <div style={ROW_STYLE} >
-              <img
-                style={RESTAURANT_ICON_STYLE}
-                src='resources/icons/restaurant.svg'
-                alt='Restaurant Icon'
-              />
-              <Router.Link
-                  style={RESTAURANT_NAME_TEXT_STYLE}
-                  to={`/restaurants/${this.props.restaurant.id}`}
+              <div
+                  style={RESTAURANT_CONTAINER_STYLE}
                   className={css(styles.restaurantLink)}
               >
-                {this.props.restaurant.name}
-              </Router.Link>
-              <div style={DOT_STYLE} >.</div>
-              {toDollarSigns(this.props.restaurant.priceRange)}
+                <svg style={RESTAURANT_ICON_STYLE} width='20' height='20'
+                    viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'
+                >
+                  <path d='M16.2673 15.9987H11.334V11.8654C11.334 10.532 12.4007 9.33203 13.8673 9.33203C15.2007 9.33203 16.4007 10.3987 16.4007 11.8654V15.9987H16.2673Z'
+                    fill='currentColor'
+                  />
+                  <path fillRule='evenodd' clipRule='evenodd'
+                    d='M0 0V4V5.33333V20H20V5.33333V4V0H0ZM18.6667 18.6667H9.33333V11.8667C9.33333 10.4 8.13333 9.33333 6.66667 9.33333C5.2 9.33333 4 10.4 4 11.8667V18.6667H1.33333V5.33333H18.6667V18.6667ZM1.33333 4V1.33333H18.6667V4H1.33333Z'
+                    fill='currentColor'
+                  />
+                </svg>
+                <Router.Link
+                    style={RESTAURANT_NAME_TEXT_STYLE}
+                    to={`/restaurants/${this.props.restaurant.id}`}
+                >
+                  {this.props.restaurant.name}
+                </Router.Link>
+              </div>
+              <div style={DOT_STYLE} >&nbsp;&nbsp;.&nbsp;&nbsp;</div>
+              <div style={PRICE_RANGE_STYLE} >
+                {toDollarSigns(this.props.restaurant.priceRange)}
+              </div>
               {cuisineTags}
               <img
                 style={EVENT_FEE_ICON_STYLE}
@@ -314,7 +336,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
                 alt='Event Fee Icon'
               />
               <p style={EVENT_FEE_TEXT_STYLE} >
-                ${this.props.eventFee} Event Fee
+                ${this.props.eventFee.toString()} Event Fee
               </p>
             </div>
           </div>
@@ -422,6 +444,7 @@ const MOBILE_COVER_IMAGE_STYLE: React.CSSProperties = {
 };
 
 const DESKTOP_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+  position: 'relative',
   boxSizing: 'border-box',
   backgroundColor: '#FFFFFF',
   padding: '40px 30px',
@@ -431,6 +454,7 @@ const DESKTOP_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
 };
 
 const TABLET_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+  position: 'relative',
   boxSizing: 'border-box',
   backgroundColor: '#FFFFFF',
   padding: '40px 30px',
@@ -440,6 +464,7 @@ const TABLET_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
 };
 
 const MOBILE_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+  position: 'relative',
   boxSizing: 'border-box',
   backgroundColor: '#FFFFFF',
   padding: '40px 20px',
@@ -449,12 +474,53 @@ const MOBILE_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
 };
 
 const HEADER_CONTAINER_STYLE: React.CSSProperties = {
+  position: 'sticky',
+  left: '0px',
+  top: '0px',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  width: '100%',
+  backgroundColor: '#FFFFFF',
+  flexWrap: 'wrap'
+};
+
+const EVENT_TAG_CONTAINER_STYLE: React.CSSProperties = {
+  position: 'absolute',
+  left: '-30px',
+  top: '0px',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'flex-start',
+  height: '39px',
+  width: '18px',
+  backgroundColor: 'transparent'
+};
+
+const EVENT_TAG_ICON_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
   width: '100%',
+  height: '31px',
   backgroundColor: 'transparent'
+};
+
+const EVENT_TITLE_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  flexWrap: 'wrap',
+  fontFamily: 'Oswald',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '26px',
+  lineHeight: '39px',
+  color: '#000000'
 };
 
 const DIVIDER_STYLE: React.CSSProperties = {
@@ -650,16 +716,97 @@ const CUISINE_TEXT_STYLE: React.CSSProperties = {
   whiteSpace: 'nowrap'
 };
 
+const ROW_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  width: '100%',
+  marginTop: '5px'
+};
+
 const DOT_STYLE: React.CSSProperties = {
-  
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#000000'
+};
+
+const RESTAURANT_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  gap: '10px',
+  color: '#F26B55',
+  textDecoration: 'none'
+};
+
+const RESTAURANT_ICON_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '20px',
+  height: '20px',
+  objectFit: 'cover',
+  color: 'inherit'
+};
+
+const RESTAURANT_NAME_TEXT_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: 'inherit'
+};
+
+const PRICE_RANGE_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#000000',
+  marginRight: '20px'
 };
 
 const EVENT_FEE_ICON_STYLE: React.CSSProperties = {
-
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '13px',
+  height: '13px',
+  backgroundColor: 'transparent',
+  marginRight: '5px'
 };
 
 const EVENT_FEE_TEXT_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '12px',
+  lineHeight: '18px',
+  color: '#969696',
+  padding: '0px',
+  margin: '0px'
+};
 
+const TAGS_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  gap: '5px',
+  marginRight: '20px'
 };
 
 const styles = StyleSheet.create({
@@ -682,6 +829,21 @@ const styles = StyleSheet.create({
     }
   },
   restaurantLink: {
-
+    ':hover': {
+      color: '#F26B55',
+      textDecoration: 'underline #F26B55'
+    },
+    ':focus': {
+      color: '#F26B55',
+      textDecoration: 'underline #F26B55'
+    },
+    ':focus-within': {
+      color: '#F26B55',
+      textDecoration: 'underline #F26B55'
+    },
+    ':active': {
+      color: '#AA2F19',
+      textDecoration: 'none'
+    }
   }
 });
