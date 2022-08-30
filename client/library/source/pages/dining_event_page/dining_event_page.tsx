@@ -2,7 +2,8 @@ import { css, StyleSheet } from 'aphrodite';
 import { format } from 'date-fns';
 import * as React from 'react';
 import * as Router from 'react-router-dom';
-import { SeeAllButton, SeeLessButton } from '../../components';
+import { PrimaryTextButton, SeeAllButton, SeeLessButton
+} from '../../components';
 import { Attendee, DisplayMode, DressCode, getDressCodeIconSrc,
   getDressCodeName, getSeatingIconSrc, getSeatingName, Location, Restaurant,
   Seating, toDollarSigns } from '../../definitions';
@@ -70,24 +71,38 @@ export class DiningEventPage extends React.Component<Properties, State> {
   }
 
   public render(): JSX.Element {
-    const { containerStyle, coverImageStyle, contentContainerStyle } = (() => {
+    const { containerStyle, coverImageStyle, contentContainerStyle,
+        headerContainerStyle, eventTagContainerStyle,
+        detailIconTextContainerStyle, attendeesRowStyle } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
           containerStyle: DESKTOP_CONTAINER_STYLE,
           coverImageStyle: DESKTOP_COVER_IMAGE_STYLE,
-          contentContainerStyle: DESKTOP_CONTENT_CONTAINER_STYLE
+          contentContainerStyle: DESKTOP_CONTENT_CONTAINER_STYLE,
+          headerContainerStyle: DESKTOP_HEADER_CONTAINER_STYLE,
+          eventTagContainerStyle: DESKTOP_EVENT_TAG_CONTAINER_STYLE,
+          detailIconTextContainerStyle: DETAIL_ICON_TEXT_CONTAINER_STYLE,
+          attendeesRowStyle: DESKTOP_ATTENDEES_ROW_STYLE
         };
       } else if (this.props.displayMode === DisplayMode.TABLET) {
         return {
           containerStyle: TABLET_CONTAINER_STYLE,
           coverImageStyle: TABLET_COVER_IMAGE_STYLE,
-          contentContainerStyle: TABLET_CONTENT_CONTAINER_STYLE
+          contentContainerStyle: TABLET_CONTENT_CONTAINER_STYLE,
+          headerContainerStyle: TABLET_HEADER_CONTAINER_STYLE,
+          eventTagContainerStyle: TABLET_EVENT_TAG_CONTAINER_STYLE,
+          detailIconTextContainerStyle: DETAIL_ICON_TEXT_CONTAINER_STYLE,
+          attendeesRowStyle: TABLET_ATTENDEES_ROW_STYLE
         };
       } else {
         return {
           containerStyle: MOBILE_CONTAINER_STYLE,
           coverImageStyle: MOBILE_COVER_IMAGE_STYLE,
-          contentContainerStyle: MOBILE_CONTENT_CONTAINER_STYLE
+          contentContainerStyle: MOBILE_CONTENT_CONTAINER_STYLE,
+          headerContainerStyle: HEADER_CONTAINER_STYLE,
+          eventTagContainerStyle: MOBILE_EVENT_TAG_CONTAINER_STYLE,
+          detailIconTextContainerStyle: MOBILE_DETAIL_ICON_TEXT_CONTAINER_STYLE,
+          attendeesRowStyle: MOBILE_ATTENDEES_ROW_STYLE
         };
       }
     })();
@@ -109,6 +124,10 @@ export class DiningEventPage extends React.Component<Properties, State> {
       }
       return null;
     })();
+    const headerJoinButton = (this.props.displayMode !== DisplayMode.MOBILE &&
+      <PrimaryTextButton style={JOIN_BUTTON_STYLE}
+      label='Join This Event' labelStyle={JOIN_BUTTON_TEXT_STYLE}
+      onClick={this.props.onJoinEvent} /> || null);
     const attendees = (() => {
       if (!this.props.attendeeList || this.props.attendeeList.length === 0) {
         return (
@@ -149,7 +168,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
           <SeeAllButton key='SeeAllButton' onClick={this.handleSeeAll} />);
       }
       return (
-        <div style={ATTENDEES_ROW_STYLE} >
+        <div style={attendeesRowStyle} >
           {attendees}
         </div>);
     })();
@@ -157,7 +176,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
       const details = [];
       if (this.props.startTime) {
         details.push(
-          <div key='event-start-date' style={DETAIL_ICON_TEXT_CONTAINER_STYLE} >
+          <div key='event-start-date' style={detailIconTextContainerStyle} >
             <div style={ICON_CONTAINER_STYLE} >
               <img
                 style={ICON_STYLE}
@@ -176,7 +195,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
         details.push(
           <div
               key='event-reservation-name'
-              style={DETAIL_ICON_TEXT_CONTAINER_STYLE}
+              style={detailIconTextContainerStyle}
           >
             <div style={ICON_CONTAINER_STYLE} >
               <img
@@ -198,7 +217,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
       }
       if (this.props.startTime && this.props.endTime) {
         details.push(
-          <div key='event-hours' style={DETAIL_ICON_TEXT_CONTAINER_STYLE} >
+          <div key='event-hours' style={detailIconTextContainerStyle} >
             <div style={ICON_CONTAINER_STYLE} >
               <img
                 style={ICON_STYLE}
@@ -216,7 +235,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
       }
       if (this.props.dressCode || this.props.dressCode === 0) {
         details.push(
-          <div key='event-dress-code' style={DETAIL_ICON_TEXT_CONTAINER_STYLE} >
+          <div key='event-dress-code' style={detailIconTextContainerStyle} >
             <div style={ICON_CONTAINER_STYLE} >
               <img
                 style={ICON_STYLE}
@@ -235,7 +254,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
       if (this.props.location &&
           this.formatLocation(this.props.location) !== '') {
         details.push(
-          <div key='event-location' style={DETAIL_ICON_TEXT_CONTAINER_STYLE} >
+          <div key='event-location' style={detailIconTextContainerStyle} >
             <div style={ICON_CONTAINER_STYLE} >
               <img
                 style={ICON_STYLE}
@@ -255,7 +274,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
       }
       if (this.props.seating || this.props.seating === 0) {
         details.push(
-          <div key='event-seating' style={DETAIL_ICON_TEXT_CONTAINER_STYLE} >
+          <div key='event-seating' style={detailIconTextContainerStyle} >
             <div style={ICON_CONTAINER_STYLE} >
               <img
                 style={ICON_STYLE}
@@ -273,13 +292,27 @@ export class DiningEventPage extends React.Component<Properties, State> {
       }
       if (details.length === 0) {
       return (
-        <div style={DETAIL_ICON_TEXT_CONTAINER_STYLE} >
+        <div style={detailIconTextContainerStyle} >
           <div style={TEXT_STYLE} >
             No details are available yet.
           </div>
         </div>);
       }
       return details;
+    })();
+    const stickyFooter = (() => {
+      if (this.props.displayMode === DisplayMode.MOBILE) {
+        return (
+          <div style={STICKY_FOOTER_CONTAINER_STYLE} >
+            <PrimaryTextButton
+              style={MOBILE_JOIN_BUTTON_STYLE}
+              label='Join This Event'
+              labelStyle={MOBILE_JOIN_BUTTON_TEXT_STYLE}
+              onClick={this.props.onJoinEvent}
+            />
+          </div>);
+      }
+      return null;
     })();
     return (
       <div style={{...CONTAINER_STYLE, ...containerStyle}} >
@@ -290,8 +323,8 @@ export class DiningEventPage extends React.Component<Properties, State> {
           }}
         />
         <div style={contentContainerStyle} >
-          <div style={HEADER_CONTAINER_STYLE} >
-            <div style={EVENT_TAG_CONTAINER_STYLE} >
+          <div style={headerContainerStyle} >
+            <div style={eventTagContainerStyle} >
               <svg
                   style={{...EVENT_TAG_ICON_STYLE,
                     color: this.props.eventColor}}
@@ -302,6 +335,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
               </svg>
             </div>
             <div style={EVENT_TITLE_STYLE} >{this.props.title}</div>
+            {headerJoinButton}
             <div style={ROW_STYLE} >
               <div
                   style={RESTAURANT_CONTAINER_STYLE}
@@ -353,6 +387,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
           <div style={TITLE_STYLE} >Description</div>
           <div style={DESCRIPTION_STYLE} >{this.props.description}</div>
         </div>
+        {stickyFooter}
       </div>);
   }
 
@@ -474,9 +509,7 @@ const MOBILE_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
 };
 
 const HEADER_CONTAINER_STYLE: React.CSSProperties = {
-  position: 'sticky',
-  left: '0px',
-  top: '0px',
+  position: 'relative',
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'flex-start',
@@ -486,17 +519,47 @@ const HEADER_CONTAINER_STYLE: React.CSSProperties = {
   flexWrap: 'wrap'
 };
 
+const DESKTOP_HEADER_CONTAINER_STYLE: React.CSSProperties = {
+  ...HEADER_CONTAINER_STYLE,
+  position: 'sticky',
+  left: '0px',
+  top: '0px'
+};
+
+const TABLET_HEADER_CONTAINER_STYLE: React.CSSProperties = {
+  ...HEADER_CONTAINER_STYLE,
+  position: 'sticky',
+  left: '0px',
+  top: '0px'
+};
+
 const EVENT_TAG_CONTAINER_STYLE: React.CSSProperties = {
   position: 'absolute',
-  left: '-30px',
   top: '0px',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'flex-start',
   height: '39px',
-  width: '18px',
   backgroundColor: 'transparent'
+};
+
+const DESKTOP_EVENT_TAG_CONTAINER_STYLE: React.CSSProperties = {
+  ...EVENT_TAG_CONTAINER_STYLE,
+  left: '-30px',
+  width: '18px'
+};
+
+const TABLET_EVENT_TAG_CONTAINER_STYLE: React.CSSProperties = {
+  ...EVENT_TAG_CONTAINER_STYLE,
+  left: '-30px',
+  width: '18px'
+};
+
+const MOBILE_EVENT_TAG_CONTAINER_STYLE: React.CSSProperties = {
+  ...EVENT_TAG_CONTAINER_STYLE,
+  left: '-20px',
+  width: '13px'
 };
 
 const EVENT_TAG_ICON_STYLE: React.CSSProperties = {
@@ -521,6 +584,46 @@ const EVENT_TITLE_STYLE: React.CSSProperties = {
   fontSize: '26px',
   lineHeight: '39px',
   color: '#000000'
+};
+
+const STICKY_FOOTER_CONTAINER_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  position: 'sticky',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-end',
+  alignItems: 'center',
+  paddingRight: '20px',
+  paddingLeft: '20px',
+  width: '100%',
+  height: '70px',
+  backgroundColor: '#F6F6F6',
+  boxShadow: '0px 1px 8px rgba(0, 0, 0, 0.25)'
+};
+
+const JOIN_BUTTON_STYLE: React.CSSProperties = {
+  position: 'absolute',
+  top: '2px',
+  right: '0px',
+  width: '161px',
+  height: '35px'
+};
+
+const MOBILE_JOIN_BUTTON_STYLE: React.CSSProperties = {
+  width: '114px',
+  height: '30px'
+};
+
+const JOIN_BUTTON_TEXT_STYLE: React.CSSProperties = {
+  fontWeight: 600,
+  fontSize: '12px',
+  lineHeight: '15px'
+};
+
+const MOBILE_JOIN_BUTTON_TEXT_STYLE: React.CSSProperties = {
+  fontWeight: 600,
+  fontSize: '10px',
+  lineHeight: '13px'
 };
 
 const DIVIDER_STYLE: React.CSSProperties = {
@@ -561,6 +664,11 @@ const DETAIL_ICON_TEXT_CONTAINER_STYLE: React.CSSProperties = {
   alignItems: 'flex-start',
   width: 'calc(50% - 20px)',
   gap: '20px'
+};
+
+const MOBILE_DETAIL_ICON_TEXT_CONTAINER_STYLE: React.CSSProperties = {
+  ...DETAIL_ICON_TEXT_CONTAINER_STYLE,
+  width: '100%'
 };
 
 const ICON_CONTAINER_STYLE: React.CSSProperties = {
@@ -615,8 +723,22 @@ const ATTENDEES_ROW_STYLE: React.CSSProperties = {
   flexWrap: 'wrap',
   width: '100%',
   backgroundColor: 'trasnparent',
-  gap: '20px 40px',
   marginTop: '20px'
+};
+
+const DESKTOP_ATTENDEES_ROW_STYLE: React.CSSProperties = {
+  ...ATTENDEES_ROW_STYLE,
+  gap: '20px 40px'
+};
+
+const TABLET_ATTENDEES_ROW_STYLE: React.CSSProperties = {
+  ...ATTENDEES_ROW_STYLE,
+  gap: '20px 45px'
+};
+
+const MOBILE_ATTENDEES_ROW_STYLE: React.CSSProperties = {
+  ...ATTENDEES_ROW_STYLE,
+  gap: '20px 20px'
 };
 
 const ATTENDEE_CONTAINER_STYLE: React.CSSProperties = {
@@ -721,8 +843,10 @@ const ROW_STYLE: React.CSSProperties = {
   flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'center',
+  flexWrap: 'wrap',
   width: '100%',
-  marginTop: '5px'
+  marginTop: '5px',
+  gap: '10px 0px'
 };
 
 const DOT_STYLE: React.CSSProperties = {
@@ -739,6 +863,7 @@ const RESTAURANT_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
+  width: 'fit-content',
   gap: '10px',
   color: '#F26B55',
   textDecoration: 'none'
@@ -782,7 +907,8 @@ const EVENT_FEE_ICON_STYLE: React.CSSProperties = {
   width: '13px',
   height: '13px',
   backgroundColor: 'transparent',
-  marginRight: '5px'
+  marginRight: '5px',
+  marginTop: '3px'
 };
 
 const EVENT_FEE_TEXT_STYLE: React.CSSProperties = {
