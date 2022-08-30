@@ -73,7 +73,8 @@ export class DiningEventPage extends React.Component<Properties, State> {
   public render(): JSX.Element {
     const { containerStyle, coverImageStyle, contentContainerStyle,
         headerContainerStyle, eventTagContainerStyle,
-        detailIconTextContainerStyle, attendeesRowStyle } = (() => {
+        detailIconTextContainerStyle, attendeesRowStyle, eventTitleStyle
+    } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
           containerStyle: DESKTOP_CONTAINER_STYLE,
@@ -82,7 +83,8 @@ export class DiningEventPage extends React.Component<Properties, State> {
           headerContainerStyle: DESKTOP_HEADER_CONTAINER_STYLE,
           eventTagContainerStyle: DESKTOP_EVENT_TAG_CONTAINER_STYLE,
           detailIconTextContainerStyle: DETAIL_ICON_TEXT_CONTAINER_STYLE,
-          attendeesRowStyle: DESKTOP_ATTENDEES_ROW_STYLE
+          attendeesRowStyle: DESKTOP_ATTENDEES_ROW_STYLE,
+          eventTitleStyle: DESKTOP_EVENT_TITLE_STYLE
         };
       } else if (this.props.displayMode === DisplayMode.TABLET) {
         return {
@@ -92,7 +94,8 @@ export class DiningEventPage extends React.Component<Properties, State> {
           headerContainerStyle: TABLET_HEADER_CONTAINER_STYLE,
           eventTagContainerStyle: TABLET_EVENT_TAG_CONTAINER_STYLE,
           detailIconTextContainerStyle: DETAIL_ICON_TEXT_CONTAINER_STYLE,
-          attendeesRowStyle: TABLET_ATTENDEES_ROW_STYLE
+          attendeesRowStyle: TABLET_ATTENDEES_ROW_STYLE,
+          eventTitleStyle: TABLET_EVENT_TITLE_STYLE
         };
       } else {
         return {
@@ -102,7 +105,8 @@ export class DiningEventPage extends React.Component<Properties, State> {
           headerContainerStyle: HEADER_CONTAINER_STYLE,
           eventTagContainerStyle: MOBILE_EVENT_TAG_CONTAINER_STYLE,
           detailIconTextContainerStyle: MOBILE_DETAIL_ICON_TEXT_CONTAINER_STYLE,
-          attendeesRowStyle: MOBILE_ATTENDEES_ROW_STYLE
+          attendeesRowStyle: MOBILE_ATTENDEES_ROW_STYLE,
+          eventTitleStyle: MOBILE_EVENT_TITLE_STYLE
         };
       }
     })();
@@ -300,6 +304,17 @@ export class DiningEventPage extends React.Component<Properties, State> {
       }
       return details;
     })();
+    const eventFee = (this.props.eventFee &&
+      <div style={EVENT_FEE_CONTAINER_STYLE} >
+        <img
+          style={EVENT_FEE_ICON_STYLE}
+          src='resources/icons/event_fee.svg'
+          alt='Event Fee Icon'
+        />
+        <p style={EVENT_FEE_TEXT_STYLE} >
+          ${this.props.eventFee.toString()} Event Fee
+        </p>
+      </div> || null);
     const stickyFooter = (() => {
       if (this.props.displayMode === DisplayMode.MOBILE) {
         return (
@@ -313,6 +328,21 @@ export class DiningEventPage extends React.Component<Properties, State> {
           </div>);
       }
       return null;
+    })();
+    const attendeesTitle = (() => {
+      if (!this.props.totalCapacity) {
+        if (!this.props.attendeeList) {
+          return 'Attendees (0)';
+        } else {
+          return `Attendees (${this.props.attendeeList.length})`;
+        }
+      } else {
+        if (!this.props.attendeeList) {
+          return `Attendees (0/${this.props.totalCapacity})`;
+        }
+        return (`Attendees (${
+          this.props.attendeeList.length}/${this.props.totalCapacity})`);
+      }
     })();
     return (
       <div style={{...CONTAINER_STYLE, ...containerStyle}} >
@@ -334,7 +364,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
                 <path d='M18 31H0V0H18L14 15.5L18 31Z' fill='currentColor' />
               </svg>
             </div>
-            <div style={EVENT_TITLE_STYLE} >{this.props.title}</div>
+            <div style={eventTitleStyle} >{this.props.title}</div>
             {headerJoinButton}
             <div style={ROW_STYLE} >
               <div
@@ -364,14 +394,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
                 {toDollarSigns(this.props.restaurant.priceRange)}
               </div>
               {cuisineTags}
-              <img
-                style={EVENT_FEE_ICON_STYLE}
-                src='resources/icons/event_fee.svg'
-                alt='Event Fee Icon'
-              />
-              <p style={EVENT_FEE_TEXT_STYLE} >
-                ${this.props.eventFee.toString()} Event Fee
-              </p>
+              {eventFee}
             </div>
           </div>
           <div style={DIVIDER_STYLE} />
@@ -379,10 +402,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
           <div style={DETAILS_ROW_CONTAINER_STYLE} >
             {detailsSection}
           </div>
-          <div style={TITLE_STYLE} >
-            Attendees ({this.props.attendeeList.length}/
-            {this.props.totalCapacity})
-          </div>
+          <div style={TITLE_STYLE} >{attendeesTitle}</div>
           {attendees}
           <div style={TITLE_STYLE} >Description</div>
           <div style={DESCRIPTION_STYLE} >{this.props.description}</div>
@@ -583,7 +603,23 @@ const EVENT_TITLE_STYLE: React.CSSProperties = {
   fontWeight: 400,
   fontSize: '26px',
   lineHeight: '39px',
-  color: '#000000'
+  color: '#000000',
+  whiteSpace: 'pre-line'
+};
+
+const DESKTOP_EVENT_TITLE_STYLE: React.CSSProperties = {
+  ...EVENT_TITLE_STYLE,
+  width: 'calc(100% - 200px)'
+};
+
+const TABLET_EVENT_TITLE_STYLE: React.CSSProperties = {
+  ...EVENT_TITLE_STYLE,
+  width: 'calc(100% - 200px)'
+};
+
+const MOBILE_EVENT_TITLE_STYLE: React.CSSProperties = {
+  ...EVENT_TITLE_STYLE,
+  width: '100%'
 };
 
 const STICKY_FOOTER_CONTAINER_STYLE: React.CSSProperties = {
@@ -907,8 +943,7 @@ const EVENT_FEE_ICON_STYLE: React.CSSProperties = {
   width: '13px',
   height: '13px',
   backgroundColor: 'transparent',
-  marginRight: '5px',
-  marginTop: '3px'
+  marginRight: '5px'
 };
 
 const EVENT_FEE_TEXT_STYLE: React.CSSProperties = {
@@ -933,6 +968,14 @@ const TAGS_CONTAINER_STYLE: React.CSSProperties = {
   alignItems: 'center',
   gap: '5px',
   marginRight: '20px'
+};
+
+const EVENT_FEE_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  height: '100%'
 };
 
 const styles = StyleSheet.create({
