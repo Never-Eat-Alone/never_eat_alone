@@ -1378,7 +1378,9 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
       DisplayModeInput),
     new PropertySchema('eventFee', 3.00 , NumberInput),
+    new PropertySchema('taxRate', 0.13 , NumberInput),
     new PropertySchema('eventTitle', 'Let’s go to Mapo Korean BBQ' , TextInput),
+    new PropertySchema('imageSrc', 'resources/images/13.jpg' , TextInput),
     new PropertySchema('eventStartDate', new Date(2022, 11, 20, 18, 30),
       DateTimeInput),
   ], [
