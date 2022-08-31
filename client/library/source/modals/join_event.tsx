@@ -62,19 +62,21 @@ const CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
   position: 'relative',
-  height: '486px',
-  width: '687px',
   boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
   borderRadius: '4px',
   overflow: 'hidden'
 };
 
 const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
-
+  ...CONTAINER_STYLE,
+  width: '675px',
+  height: '410px'
 };
 
 const TABLET_CONTAINER_STYLE: React.CSSProperties = {
-
+  ...CONTAINER_STYLE,
+  width: '675px',
+  height: '410px'
 };
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
@@ -84,8 +86,7 @@ const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
   position: 'relative',
-  width: '335px',
-  height: '482px',
+  width: '100%',
   boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
   borderRadius: '4px',
   overflow: 'hidden'
