@@ -31,19 +31,26 @@ interface Properties {
 /** Displays the Join Event Modal. */
 export class JoinEventModal extends React.Component<Properties> {
   public render(): JSX.Element {
-    const { containerStyle } = (() => {
+    const { containerStyle, eventNameButtonContainerStyle,
+        costDetailsContainerStyle } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
-          containerStyle: DESKTOP_CONTAINER_STYLE
+          containerStyle: DESKTOP_CONTAINER_STYLE,
+          eventNameButtonContainerStyle: EVENT_NAME_BUTTON_CONTAINER_STYLE,
+          costDetailsContainerStyle: COST_DETAILS_CONTAINER_STYLE
         };
       }
       if (this.props.displayMode === DisplayMode.TABLET) {
         return {
-          containerStyle: TABLET_CONTAINER_STYLE
+          containerStyle: TABLET_CONTAINER_STYLE,
+          eventNameButtonContainerStyle: EVENT_NAME_BUTTON_CONTAINER_STYLE,
+          costDetailsContainerStyle: COST_DETAILS_CONTAINER_STYLE
         };
       }
       return {
-        containerStyle: MOBILE_CONTAINER_STYLE
+        containerStyle: MOBILE_CONTAINER_STYLE,
+        eventNameButtonContainerStyle: MOBILE_EVENT_NAME_BUTTON_CONTAINER_STYLE,
+        costDetailsContainerStyle: MOBILE_COST_DETAILS_CONTAINER_STYLE
       };
     })();
     const joinButton = (() => {
@@ -58,6 +65,73 @@ export class JoinEventModal extends React.Component<Properties> {
       }
       return null;
     })();
+    const eventNameButtonSection = (
+      <div style={eventNameButtonContainerStyle} >
+        <div style={EVENT_NAME_DATE_CONTAINER_STYLE} >
+          <h1 style={EVENT_NAME_STYLE} >{this.props.eventTitle}</h1>
+          <div style={EVENT_DATE_STYLE} >
+            {format(this.props.eventStartDate,
+            'eeee, MMMM do, yyyy')}{' at '}{format(
+            this.props.eventStartDate, 'h:mm aa')}
+          </div>
+        </div>
+        {joinButton}
+      </div>);
+    const costDetailsSection = (
+      <div style={costDetailsContainerStyle} >
+        <h2 style={CHECKOUT_TITLE_STYLE} >Event Checkout</h2>
+        <div style={DIVIDER_STYLE} />
+        <div style={COST_BREAKDOWN_TOTAL_CONTAINER_STYLE} >
+          <div style={COLUMN_CONTAINER_STYLE} >
+            <div style={EVENT_FEE_ROW_STYLE} >
+              <div style={EVENT_FEE_BOLD_TEXT_STYLE} >Event Fee</div>
+              <div style={EVENT_PRICE_STYLE} >
+                CAD ${this.props.eventFee.toString()}
+              </div>
+            </div>
+          </div>
+          <div style={COLUMN_CONTAINER_STYLE} >
+            <div style={PRICE_DIVIDER_STYLE} />
+            <div style={EVENT_FEE_ROW_STYLE} >
+              <div style={GREY_TEXT_STYLE} >Subtotal</div>
+              <div style={EVENT_PRICE_STYLE} >
+                CAD ${this.props.eventFee.toString()}
+              </div>
+            </div>
+            <div style={EVENT_FEE_ROW_STYLE} >
+              <div style={GREY_TEXT_STYLE} >Tax</div>
+              <div style={EVENT_PRICE_STYLE} >
+                CAD ${this.getTaxAmount(this.props.eventFee,
+                this.props.taxRate).toString()}
+              </div>
+            </div>
+            <div style={EVENT_FEE_ROW_STYLE} >
+              <div style={EVENT_FEE_BOLD_TEXT_STYLE} >Total Payment</div>
+              <div style={EVENT_PRICE_STYLE} >
+                CAD ${(this.getTaxAmount(this.props.eventFee,
+                  this.props.taxRate) + this.props.eventFee).toString()}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>);
+    if (this.props.displayMode === DisplayMode.MOBILE) {
+      return (
+        <div style={containerStyle} >
+          <CloseButton
+            style={CLOSE_BUTTON_STYLE}
+            displayMode={DisplayMode.MOBILE}
+            onClick={this.props.onClose}
+          />
+          <img
+            style={IMAGE_STYLE}
+            src={this.props.imageSrc}
+            alt='Event Image'
+          />
+          {costDetailsSection}
+          {eventNameButtonSection}
+        </div>);
+    }
     return (
       <div style={containerStyle} >
         <CloseButton
@@ -65,60 +139,14 @@ export class JoinEventModal extends React.Component<Properties> {
           displayMode={DisplayMode.MOBILE}
           onClick={this.props.onClose}
         />
-        <div style={COST_DETAILS_CONTAINER_STYLE} >
-          <h2 style={CHECKOUT_TITLE_STYLE} >Event Checkout</h2>
-          <div style={DIVIDER_STYLE} />
-          <div style={COST_BREAKDOWN_TOTAL_CONTAINER_STYLE} >
-            <div style={COLUMN_CONTAINER_STYLE} >
-              <div style={EVENT_FEE_ROW_STYLE} >
-                <div style={EVENT_FEE_BOLD_TEXT_STYLE} >Event Fee</div>
-                <div style={EVENT_PRICE_STYLE} >
-                  CAD ${this.props.eventFee.toString()}
-                </div>
-              </div>
-            </div>
-            <div style={COLUMN_CONTAINER_STYLE} >
-              <div style={PRICE_DIVIDER_STYLE} />
-              <div style={EVENT_FEE_ROW_STYLE} >
-                <div style={GREY_TEXT_STYLE} >Subtotal</div>
-                <div style={EVENT_PRICE_STYLE} >
-                  CAD ${this.props.eventFee.toString()}
-                </div>
-              </div>
-              <div style={EVENT_FEE_ROW_STYLE} >
-                <div style={GREY_TEXT_STYLE} >Tax</div>
-                <div style={EVENT_PRICE_STYLE} >
-                  CAD ${this.getTaxAmount(this.props.eventFee,
-                  this.props.taxRate).toString()}
-                </div>
-              </div>
-              <div style={EVENT_FEE_ROW_STYLE} >
-                <div style={EVENT_FEE_BOLD_TEXT_STYLE} >Total Payment</div>
-                <div style={EVENT_PRICE_STYLE} >
-                  CAD ${(this.getTaxAmount(this.props.eventFee,
-                    this.props.taxRate) + this.props.eventFee).toString()}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        {costDetailsSection}
         <div style={PAYMENT_METHOD_CONTAINER_STYLE} >
           <img
             style={IMAGE_STYLE}
             src={this.props.imageSrc}
             alt='Event Image'
           />
-          <div style={EVENT_PAYMENT_TEXT_CONTAINER_STYLE} >
-            <div style={EVENT_NAME_DATE_CONTAINER_STYLE} >
-              <h1 style={EVENT_NAME_STYLE} >{this.props.eventTitle}</h1>
-              <div style={EVENT_DATE_STYLE} >
-                {format(this.props.eventStartDate,
-                'eeee, MMMM do, yyyy')}{' at '}{format(
-                this.props.eventStartDate, 'h:mm aa')}
-              </div>
-            </div>
-            {joinButton}
-          </div>
+          {eventNameButtonSection}
         </div>
       </div>);
   }
@@ -131,44 +159,42 @@ export class JoinEventModal extends React.Component<Properties> {
 const CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'flex-start',
-  alignItems: 'flex-start',
   position: 'relative',
-  boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
+  overflow: 'hidden',
   borderRadius: '4px',
-  overflow: 'hidden'
+  boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)'
 };
 
 const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
   ...CONTAINER_STYLE,
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
   width: '675px',
   height: '410px'
 };
 
 const TABLET_CONTAINER_STYLE: React.CSSProperties = {
   ...CONTAINER_STYLE,
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
   width: '675px',
   height: '410px'
 };
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
-  boxSizing: 'border-box',
-  display: 'flex',
+  ...CONTAINER_STYLE,
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  position: 'relative',
-  width: '100%',
-  boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
-  borderRadius: '4px',
-  overflow: 'hidden'
+  width: '100%'
 };
 
 const CLOSE_BUTTON_STYLE: React.CSSProperties = {
   position: 'absolute',
-  top: '8px',
-  right: '8px'
+  top: '10px',
+  right: '10px'
 };
 
 const COST_DETAILS_CONTAINER_STYLE: React.CSSProperties = {
@@ -177,6 +203,13 @@ const COST_DETAILS_CONTAINER_STYLE: React.CSSProperties = {
   width: '375px',
   height: '100%',
   padding: '40px 20px'
+};
+
+const MOBILE_COST_DETAILS_CONTAINER_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  backgroundColor: '#FFFFFF',
+  width: '100%',
+  padding: '20px'
 };
 
 const COST_BREAKDOWN_TOTAL_CONTAINER_STYLE: React.CSSProperties = {
@@ -197,7 +230,6 @@ const COLUMN_CONTAINER_STYLE: React.CSSProperties = {
 };
 
 const PAYMENT_METHOD_CONTAINER_STYLE: React.CSSProperties = {
-  backgroundColor: '#F6F6F6',
   width: '300px',
   height: '100%'
 };
@@ -279,10 +311,11 @@ const IMAGE_STYLE: React.CSSProperties = {
   height: '150px',
   minHeight: '150px',
   minWidth: '300px',
-  objectFit: 'cover'
+  objectFit: 'cover',
+  overflow: 'hidden'
 };
 
-const EVENT_PAYMENT_TEXT_CONTAINER_STYLE: React.CSSProperties = {
+const EVENT_NAME_BUTTON_CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
@@ -291,7 +324,12 @@ const EVENT_PAYMENT_TEXT_CONTAINER_STYLE: React.CSSProperties = {
   width: '100%',
   height: 'calc(100% - 150px)',
   padding: '20px 20px 40px 20px',
-  backgroundColor: 'transparent'
+  backgroundColor: '#F6F6F6'
+};
+
+const MOBILE_EVENT_NAME_BUTTON_CONTAINER_STYLE: React.CSSProperties = {
+  ...EVENT_NAME_BUTTON_CONTAINER_STYLE,
+  height: 'fit-content'
 };
 
 const EVENT_NAME_DATE_CONTAINER_STYLE: React.CSSProperties = {
@@ -337,7 +375,8 @@ const EVENT_DATE_STYLE: React.CSSProperties = {
 
 const JOIN_BUTTON_STYLE: React.CSSProperties = {
   width: '100%',
-  height: '40px'
+  height: '40px',
+  marginTop: '30px'
 };
 
 const JOIN_BUTTON_TEXT_STYLE: React.CSSProperties = {
