@@ -15,10 +15,10 @@ export function CloseButton(props: Properties) {
         >
           <circle opacity='inherit' cx='12' cy='12' r='12' fill='currentColor'
           />
-          <path d='M6 6L18 18' stroke='white' strokeWidth='2'
+          <path d='M6 6L18 18' stroke='#FFFFFF' strokeWidth='2'
             strokeMiterlimit='10' strokeLinecap='round'
           />
-          <path d='M18 6L6 18' stroke='white' strokeWidth='2'
+          <path d='M18 6L6 18' stroke='#FFFFFF' strokeWidth='2'
             strokeMiterlimit='10' strokeLinecap='round'
           />
         </svg>
@@ -77,7 +77,7 @@ const MOBILE_ICON_STYLE: React.CSSProperties = {
   minWidth: '24px',
   objectFit: 'cover',
   color: '#000000',
-  opacity: 0.25
+  opacity: 0.5
 };
 
 const styles = StyleSheet.create({
@@ -98,15 +98,15 @@ const styles = StyleSheet.create({
   mobileIcon: {
     ':hover': {
       color: '#000000',
-      opacity: 0.6
+      opacity: 0.75
     },
     ':focus': {
       color: '#000000',
-      opacity: 0.6
+      opacity: 0.75
     },
     ':focus-within': {
       color: '#000000',
-      opacity: 0.6
+      opacity: 0.75
     },
     ':active': {
       color: '#000000',
