@@ -28,6 +28,10 @@ interface Properties {
   onClose: () => void;
 }
 
+function getTaxAmount(fee: number, taxRate: number) {
+  return fee * taxRate;
+}
+
 /** Displays the Join Event Modal. */
 export class JoinEventModal extends React.Component<Properties> {
   public render(): JSX.Element {
@@ -101,14 +105,14 @@ export class JoinEventModal extends React.Component<Properties> {
             <div style={EVENT_FEE_ROW_STYLE} >
               <div style={GREY_TEXT_STYLE} >Tax</div>
               <div style={EVENT_PRICE_STYLE} >
-                CAD ${this.getTaxAmount(this.props.eventFee,
+                CAD ${getTaxAmount(this.props.eventFee,
                 this.props.taxRate).toString()}
               </div>
             </div>
             <div style={EVENT_FEE_ROW_STYLE} >
               <div style={EVENT_FEE_BOLD_TEXT_STYLE} >Total Payment</div>
               <div style={EVENT_PRICE_STYLE} >
-                CAD ${(this.getTaxAmount(this.props.eventFee,
+                CAD ${(getTaxAmount(this.props.eventFee,
                   this.props.taxRate) + this.props.eventFee).toString()}
               </div>
             </div>
@@ -149,10 +153,6 @@ export class JoinEventModal extends React.Component<Properties> {
           {eventNameButtonSection}
         </div>
       </div>);
-  }
-
-  private getTaxAmount = (fee: number, taxRate: number) => {
-    return fee * taxRate;
   }
 }
 
