@@ -1,13 +1,17 @@
 import { format } from 'date-fns';
 import * as React from 'react';
-import { CloseButton, PrimaryTextButton } from '../components';
-import { DisplayMode } from '../definitions';
+import { CloseButton, CreditCardDropdownMenu, PrimaryTextButton,
+  SecondaryTextButtonWithArrow } from '../components';
+import { DisplayMode, PaymentCard } from '../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
 
   /** The fee associated with the event. */
   eventFee: number;
+
+  /** The description displayed about the event fee. */
+  eventFeeDescription: string;
 
   /** The tax rate of the event such as 0.13 for ontario. */
   taxRate: number;
@@ -21,11 +25,31 @@ interface Properties {
   /** The start date of the event. */
   eventStartDate: Date;
 
+  /** The list of payment cards associated with the user profile. */
+  paymentCardsOnFile: PaymentCard[];
+
   /** Indicates the join button is clicked. */
   onJoinEvent: () => void;
 
+  onCreditCardClick: () => void;
+  
   /** Indicates the close button is clicked. */
   onClose: () => void;
+
+  /** Indicates the Checkout button is clicked. */
+  onCheckout: () => void;
+
+  /** Indicates the Add card button is clicked. */
+  onAddCard: () => void;
+
+  /** Indicates the Paypal button is clicked. */
+  onPaypalClick: () => void;
+
+  /** Indicates the Google Pay button is clicked. */
+  onGooglePayClick: () => void;
+
+  /** Indicates the Apple Pay button is clicked. */
+  onApplePay: () => void;
 }
 
 function getTaxAmount(fee: number, taxRate: number) {
@@ -68,6 +92,29 @@ export class JoinEventModal extends React.Component<Properties> {
           />);
       }
       return null;
+    })();
+    const cardsOnFileSection = (() => {
+      if (!this.props.paymentCardsOnFile ||
+          this.props.paymentCardsOnFile.length === 0) {
+        return (
+          <React.Fragment>
+            <h3 style={CARD_ON_FILE_TITLE_STYLE} >No cards on file.</h3>
+            <SecondaryTextButtonWithArrow
+              style={ADD_CARD_BUTTON_STYLE}
+              labelStyle={ADD_CARD_BUTTON_LABEL_STYLE}
+              label='Add a card'
+            />
+          </React.Fragment>);
+      }
+      return (
+        <React.Fragment>
+          <h3 style={CARD_ON_FILE_TITLE_STYLE} >Cards on file:</h3>
+          <CreditCardDropdownMenu
+            cardList={this.props.paymentCardsOnFile}
+            onAddCard={this.props.onAddCard}
+            onCardClick={this.props.onCreditCardClick}
+          />
+        </React.Fragment>);
     })();
     const eventNameButtonSection = (
       <div style={eventNameButtonContainerStyle} >
@@ -128,7 +175,8 @@ export class JoinEventModal extends React.Component<Properties> {
             onClick={this.props.onClose}
           />
           <img
-            style={IMAGE_STYLE}
+            style={{...IMAGE_STYLE,
+              height: this.props.eventFee == 0 && '150px' || '50px'}}
             src={this.props.imageSrc}
             alt='Event Image'
           />
@@ -146,7 +194,8 @@ export class JoinEventModal extends React.Component<Properties> {
         {costDetailsSection}
         <div style={PAYMENT_METHOD_CONTAINER_STYLE} >
           <img
-            style={IMAGE_STYLE}
+            style={{...IMAGE_STYLE,
+              height: this.props.eventFee == 0 && '150px' || '50px'}}
             src={this.props.imageSrc}
             alt='Event Image'
           />
@@ -383,4 +432,32 @@ const JOIN_BUTTON_TEXT_STYLE: React.CSSProperties = {
   fontWeight: 600,
   fontSize: '12px',
   lineHeight: '15px',
+};
+
+const CARD_ON_FILE_TITLE_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '14px',
+  lineHeight: '18px',
+  height: '20px',
+  padding: '0px',
+  margin: '30px 0px 0px 0px',
+  color: '#000000'
+};
+
+const ADD_CARD_BUTTON_STYLE: React.CSSProperties = {
+  width: '100%',
+  height: '38px',
+  marginTop: '20px'
+};
+
+const ADD_CARD_BUTTON_LABEL_STYLE: React.CSSProperties = {
+  fontSize: '12px',
+  lineHeight: '18px',
+  height: '18px'
 };

@@ -5,6 +5,7 @@ export * from './check_box';
 export * from './circular_counter_with_counter_inside';
 export * from './close_burger_button';
 export * from './close_button';
+export * from './credit_card_dropdown_menu';
 export * from './dining_event_card';
 export * from './display_mode_renderer';
 export * from './ellipsis_button';

@@ -91,11 +91,26 @@ export function PrimaryTextButtonWithArrow(props: WithIconProperties) {
       style={{...BUTTON_WITH_ARROW_STYLE , ...props.style}}
       iconSrc={props.iconSrc || 'resources/text_button/icons/arrow.svg'}
       iconAlt={props.iconAlt || 'Arrow Icon'}
-      iconStyle={{...PRIMARY_BUTTON_ICON_STYLE, ...props.iconStyle}}
-      iconContainerStyle={{...PRIMARY_BUTTON_ICON_CONTAINER_STYLE,
+      iconStyle={{...BUTTON_ICON_STYLE, ...props.iconStyle}}
+      iconContainerStyle={{...BUTTON_ICON_CONTAINER_STYLE,
         ...props.iconContainerStyle}}
       labelStyle={{...PRIMARY_LABEL_STYLE, ...props.labelStyle}}
       className={css(styles.primaryTextButton)}
+    />);
+}
+
+export function SecondaryTextButtonWithArrow(props: WithIconProperties) {
+  return (
+    <TextButtonWithArrow
+      {...props}
+      style={{...BUTTON_WITH_ARROW_STYLE , ...props.style}}
+      iconSrc={props.iconSrc || 'resources/text_button/icons/arrow.svg'}
+      iconAlt={props.iconAlt || 'Arrow Icon'}
+      iconStyle={{...BUTTON_ICON_STYLE, ...props.iconStyle}}
+      iconContainerStyle={{...BUTTON_ICON_CONTAINER_STYLE,
+        ...props.iconContainerStyle}}
+      labelStyle={{...SECONDARY_LABEL_STYLE, ...props.labelStyle}}
+      className={css(styles.secondaryTextButton)}
     />);
 }
 
@@ -128,7 +143,7 @@ const BUTTON_WITH_ARROW_STYLE: React.CSSProperties = {
   alignItems: 'center'
 };
 
-const PRIMARY_BUTTON_ICON_CONTAINER_STYLE: React.CSSProperties = {
+const BUTTON_ICON_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
@@ -137,7 +152,7 @@ const PRIMARY_BUTTON_ICON_CONTAINER_STYLE: React.CSSProperties = {
   height: '10px'
 };
 
-const PRIMARY_BUTTON_ICON_STYLE: React.CSSProperties = {
+const BUTTON_ICON_STYLE: React.CSSProperties = {
   width: '100%',
   height: '100%',
   minWidth: '10px',
@@ -206,6 +221,12 @@ const PRIMARY_LABEL_STYLE: React.CSSProperties = {
   fontSize: '12px',
   lineHeight: '15px',
   color: '#FFFFFF'
+};
+
+const SECONDARY_LABEL_STYLE: React.CSSProperties = {
+  fontSize: '12px',
+  lineHeight: '15px',
+  color: '#F26B55'
 };
 
 const ARROW_ICON_CONTAINER_STYLE: React.CSSProperties = {
