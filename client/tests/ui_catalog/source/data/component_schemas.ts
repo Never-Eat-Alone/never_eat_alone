@@ -3,7 +3,7 @@ import { ArrayInput, AttendeeInput, BooleanInput, CityProvinceInput, CSSInput,
   CuisineInput, DateInput, DateTimeInput, DisplayModeInput, DressCodeInput,
   EventCardSummaryInput, EventTagInput, ForgotPasswordPageErrorCodeInput,
   HomePageErrorCodeInput, LanguageInput, LocationInput, NumberInput,
-  RestaurantInput, SeatingInput, SignUpPageErrorCodeInput,
+  PaymentCardInput, RestaurantInput, SeatingInput, SignUpPageErrorCodeInput,
   SocialMediaImageInput, TextInput, UserInput } from '../viewer/propertyInput';
 import { ComponentSchema, PropertySchema, SignalSchema } from './schemas';
 
@@ -1387,6 +1387,21 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new SignalSchema('onJoinEvent', '', []),
     new SignalSchema('onClose', '', [])
   ], NeverEatAlone.JoinEventModal);
+  const creditCardDropdownMenu = new ComponentSchema('CreditCardDropdownMenu',
+    [new PropertySchema('cardList', [
+    new NeverEatAlone.PaymentCard(11, NeverEatAlone.CreditCardType.VISA, 4054),
+    new NeverEatAlone.PaymentCard(151, NeverEatAlone.CreditCardType.AMEX, 1052),
+    new NeverEatAlone.PaymentCard(12, NeverEatAlone.CreditCardType.VISA, 5052),
+    new NeverEatAlone.PaymentCard(21, NeverEatAlone.CreditCardType.MASTERCARD,
+      7754),
+    ], ArrayInput(new PropertySchema(
+      'paymentCard', new NeverEatAlone.PaymentCard(1,
+      NeverEatAlone.CreditCardType.VISA, 4044), PaymentCardInput))),
+    new PropertySchema('displayedCard', new NeverEatAlone.PaymentCard(1,
+      NeverEatAlone.CreditCardType.VISA, 4044),
+      PaymentCardInput),
+    ], [new SignalSchema('onCardClick', '', [])],
+    NeverEatAlone.CreditCardDropdownMenu);
   return [
     accentTextButtonSchema,
     albumCardSchema,
@@ -1394,6 +1409,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     avatarWithCheckMarkSchema,
     checkBoxSchema,
     closeButtonSchema,
+    creditCardDropdownMenu,
     diningEventCardSchema,
     diningEventPageSchema,
     editProfilePageSchema,
