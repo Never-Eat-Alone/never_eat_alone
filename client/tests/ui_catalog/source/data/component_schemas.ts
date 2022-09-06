@@ -1378,16 +1378,36 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
       DisplayModeInput),
     new PropertySchema('eventFee', 3.00 , NumberInput),
+    new PropertySchema('eventFeeDescription', 'Because this restaurant is in \
+      high demand, we charge a fee to hold your spot.', TextInput),
     new PropertySchema('taxRate', 0.13 , NumberInput),
     new PropertySchema('eventTitle', 'Let’s go to Mapo Korean BBQ' , TextInput),
     new PropertySchema('imageSrc', 'resources/images/13.jpg' , TextInput),
     new PropertySchema('eventStartDate', new Date(2022, 11, 20, 18, 30),
       DateTimeInput),
+    new PropertySchema('paymentCardsOnFile', [
+      new NeverEatAlone.PaymentCard(11, NeverEatAlone.CreditCardType.VISA,
+        4054),
+      new NeverEatAlone.PaymentCard(151, NeverEatAlone.CreditCardType.AMEX,
+        1052),
+      new NeverEatAlone.PaymentCard(12, NeverEatAlone.CreditCardType.VISA,
+        5052),
+      new NeverEatAlone.PaymentCard(21, NeverEatAlone.CreditCardType.MASTERCARD,
+        7754),
+    ], ArrayInput(new PropertySchema('paymentCard',
+      new NeverEatAlone.PaymentCard(1, NeverEatAlone.CreditCardType.VISA, 4044),
+      PaymentCardInput))),
     new PropertySchema('displayedCard', new NeverEatAlone.PaymentCard(1,
       NeverEatAlone.CreditCardType.VISA, 4044), PaymentCardInput)
   ], [
     new SignalSchema('onJoinEvent', '', []),
-    new SignalSchema('onClose', '', [])
+    new SignalSchema('onClose', '', []),
+    new SignalSchema('onCreditCardClick', '', []),
+    new SignalSchema('onCheckout', '', []),
+    new SignalSchema('onAddCard', '', []),
+    new SignalSchema('onPaypalClick', '', []),
+    new SignalSchema('onGooglePayClick', '', []),
+    new SignalSchema('onApplePay', '', [])
   ], NeverEatAlone.JoinEventModal);
   const creditCardDropdownMenu = new ComponentSchema('CreditCardDropdownMenu',
     [new PropertySchema('cardList', [

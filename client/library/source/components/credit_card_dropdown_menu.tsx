@@ -157,7 +157,7 @@ const CONTAINER_STYLE: React.CSSProperties = {
   border: '1px solid #CCCCCC',
   backgroundColor: '#FFFFFF',
   borderRadius: '4px',
-  overflow: 'hidden'
+  width: '100%'
 };
 
 const MENU_CONTAINER_STYLE: React.CSSProperties = {
@@ -171,6 +171,7 @@ const MENU_CONTAINER_STYLE: React.CSSProperties = {
   borderTop: '1px solid #969696',
   top: '38px',
   left: '0px',
+  borderRadius: '0px 0px 4px 4px',
   overflowY: 'auto'
 };
 
@@ -193,7 +194,8 @@ const DISPLAYED_CARD_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',
-  alignItems: 'center'
+  alignItems: 'center',
+  borderRadius: '4px'
 };
 
 const ICON_TEXT_CONTAINER_STYLE: React.CSSProperties = {
