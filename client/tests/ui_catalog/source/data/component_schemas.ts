@@ -744,7 +744,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new SignalSchema('onGoogleLogInClick', '', []),
     new SignalSchema('onFacebookLogInClick', '', [])],
     NeverEatAlone.LogInModal);
-  const forgotPasswordPageSchema = new ComponentSchema('forgotPasswordPage',
+  const forgotPasswordPageSchema = new ComponentSchema('ForgotPasswordPage',
     [new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
     DisplayModeInput),
     new PropertySchema('errorCode',
@@ -753,27 +753,27 @@ export function loadComponentSchemas(): ComponentSchema[] {
     [new SignalSchema('onSendLinkClick', '', [])],
     NeverEatAlone.ForgotPasswordPage);
   const forgotPasswordLinkSentPageSchema = new ComponentSchema(
-    'forgotPasswordLinkSentPage',
+    'ForgotPasswordLinkSentPage',
     [new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
     DisplayModeInput)],
     [new SignalSchema('onResendLinkClick', '', [])],
     NeverEatAlone.ForgotPasswordLinkSentPage);
-  const secondaryTextLinkButton = new ComponentSchema('secondaryTextLinkButton',
+  const secondaryTextLinkButton = new ComponentSchema('SecondaryTextLinkButton',
     [new PropertySchema('label', 'Resend Link', TextInput),
     new PropertySchema('labelStyle', { fontSize: '14px' } , CSSInput)], [],
     NeverEatAlone.SecondaryTextLinkButton);
-  const secondaryButtonNavLink = new ComponentSchema('secondaryButtonNavLink',
+  const secondaryButtonNavLink = new ComponentSchema('SecondaryButtonNavLink',
     [new PropertySchema('label', 'Back to HomePage', TextInput),
     new PropertySchema('style', { width: '178px' } , CSSInput),
     new PropertySchema('className', JSON.stringify({ fontSize: '14px' }) ,
     TextInput)], [], NeverEatAlone.SecondaryButtonNavLink);
-  const resetPasswordPage = new ComponentSchema('resetPasswordPage',
+  const resetPasswordPage = new ComponentSchema('ResetPasswordPage',
     [new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
     DisplayModeInput), new PropertySchema('displayName', 'Ella', TextInput),
     new PropertySchema('profileImageSrc', 'resources/images/profile3.jpeg',
     TextInput)], [new SignalSchema('onSaveClick', '', [])],
     NeverEatAlone.ResetPasswordPage);
-  const profileBoxSchema = new ComponentSchema('profileBox',
+  const profileBoxSchema = new ComponentSchema('ProfileBox',
     [new PropertySchema('profileImageSrc', 'resources/images/profile2.jpeg',
       TextInput),
     new PropertySchema('displayName', 'Julia', TextInput),
@@ -989,7 +989,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
       'Le Select', NeverEatAlone.PriceRange.EXPENSIVE, [], '', 12, 12, true,
       'yellow'), EventCardSummaryInput)))
     ], [], NeverEatAlone.ProfilePastEvents);
-  const profilePageSchema = new ComponentSchema('profilePage', [
+  const profilePageSchema = new ComponentSchema('ProfilePage', [
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
       DisplayModeInput),
     new PropertySchema('coverImageSrc',
@@ -1192,7 +1192,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
       'yellow'), EventCardSummaryInput)))
     ], [new SignalSchema('onEditClick', '', []),
     new SignalSchema('onReportClick', '', [])], NeverEatAlone.ProfilePage);
-  const editProfilePageSchema = new ComponentSchema('editProfilePage', [
+  const editProfilePageSchema = new ComponentSchema('EditProfilePage', [
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
       DisplayModeInput),
     new PropertySchema('coverImageSrc',
@@ -1271,11 +1271,11 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new SignalSchema('onSaveClick', '', []),
     new SignalSchema('onCancelClick', '', [])
   ], NeverEatAlone.EditProfilePage);
-  const publicButtonSchema = new ComponentSchema('publicButton', [], [
+  const publicButtonSchema = new ComponentSchema('PublicButton', [], [
     new SignalSchema('onClick', '', [])], NeverEatAlone.PublicButton);
-  const privateButtonSchema = new ComponentSchema('privateButton', [], [
+  const privateButtonSchema = new ComponentSchema('PrivateButton', [], [
     new SignalSchema('onClick', '', [])], NeverEatAlone.PrivateButton);
-  const locationInputFieldSchema = new ComponentSchema('locationInputField',
+  const locationInputFieldSchema = new ComponentSchema('LocationInputField',
     [new PropertySchema('value', '', TextInput),
     new PropertySchema('placeholder', '', TextInput),
     new PropertySchema('hasError', false, BooleanInput),
@@ -1383,6 +1383,9 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('imageSrc', 'resources/images/13.jpg' , TextInput),
     new PropertySchema('eventStartDate', new Date(2022, 11, 20, 18, 30),
       DateTimeInput),
+    new PropertySchema('displayedCard', new NeverEatAlone.PaymentCard(1,
+      NeverEatAlone.CreditCardType.VISA, 4044),
+      PaymentCardInput)
   ], [
     new SignalSchema('onJoinEvent', '', []),
     new SignalSchema('onClose', '', [])

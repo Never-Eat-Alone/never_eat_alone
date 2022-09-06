@@ -17,14 +17,16 @@ export class PaymentCardInput extends React.Component<Properties> {
       <div style={PaymentCardInput.STYLE.container}>
         <div style={PaymentCardInput.STYLE.label}>
           <input type='radio' name='credit_type' id='visa' value='visa'
-            checked={this.props.value ===  NeverEatAlone.CreditCardType.VISA}
+            checked={this.props.value.creditType ===
+              NeverEatAlone.CreditCardType.VISA}
             onChange={this.onChange}
             style={PaymentCardInput.STYLE.radio}/>
           <label htmlFor='visa'>visa</label>
         </div>
         <div style={PaymentCardInput.STYLE.label}>
           <input type='radio' name='credit_type' id='amex' value='amex'
-            checked={this.props.value ===  NeverEatAlone.CreditCardType.AMEX}
+            checked={this.props.value.creditType ===
+              NeverEatAlone.CreditCardType.AMEX}
             onChange={this.onChange}
             style={PaymentCardInput.STYLE.radio}/>
           <label htmlFor='amex'>amex</label>
@@ -32,26 +34,38 @@ export class PaymentCardInput extends React.Component<Properties> {
         <div style={PaymentCardInput.STYLE.label}>
           <input type='radio' name='credit_type' id='mastercard'
             value='mastercard'
-            checked={this.props.value ===
+            checked={this.props.value.creditType ===
               NeverEatAlone.CreditCardType.MASTERCARD}
             onChange={this.onChange}
             style={PaymentCardInput.STYLE.radio}/>
           <label htmlFor='mastercard'>mastercard</label>
         </div>
+        <div style={PaymentCardInput.STYLE.label}>
+          <input type='radio' name='credit_type' id='other'
+            value='other'
+            checked={this.props.value.creditType ===
+              NeverEatAlone.CreditCardType.OTHER}
+            onChange={this.onChange}
+            style={PaymentCardInput.STYLE.radio}/>
+          <label htmlFor='other'>other</label>
+        </div>
       </div>);
   }
 
   private onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const mode = event.target.value;
-    if (mode === 'amex') {
-      this.props.update(new NeverEatAlone.PaymentCard(Date.now(),
-        NeverEatAlone.CreditCardType.AMEX, 1111));
-    } else if (mode === 'mastercard') {
-      this.props.update(new NeverEatAlone.PaymentCard(Date.now(),
-        NeverEatAlone.CreditCardType.MASTERCARD, 6666));
-    } else {
-      this.props.update(new NeverEatAlone.PaymentCard(Date.now(),
-        NeverEatAlone.CreditCardType.VISA, 5555));
+    switch (event.target.value) {
+      case 'amex':
+        this.props.update(new NeverEatAlone.PaymentCard(Date.now(),
+          NeverEatAlone.CreditCardType.AMEX, 1111));
+      case 'mastercard':
+        this.props.update(new NeverEatAlone.PaymentCard(Date.now(),
+          NeverEatAlone.CreditCardType.MASTERCARD, 6666));
+      case 'visa':
+        this.props.update(new NeverEatAlone.PaymentCard(Date.now(),
+          NeverEatAlone.CreditCardType.VISA, 5555));
+      default:
+        this.props.update(new NeverEatAlone.PaymentCard(Date.now(),
+          NeverEatAlone.CreditCardType.OTHER, 8070));
     }
   }
 
