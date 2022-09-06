@@ -89,15 +89,7 @@ export class JoinEventModal extends React.Component<Properties> {
     const cardsOnFileSection = (() => {
       if (!this.props.paymentCardsOnFile ||
           this.props.paymentCardsOnFile.length === 0) {
-        return (
-          <React.Fragment>
-            <h3 style={CARD_ON_FILE_TITLE_STYLE} >No cards on file.</h3>
-            <SecondaryTextButtonWithArrow
-              style={ADD_CARD_BUTTON_STYLE}
-              labelStyle={ADD_CARD_BUTTON_LABEL_STYLE}
-              label='Add a card'
-            />
-          </React.Fragment>);
+        return <h3 style={NO_CARD_TITLE_STYLE} >No cards on file.</h3>;
       }
       return (
         <React.Fragment>
@@ -107,8 +99,20 @@ export class JoinEventModal extends React.Component<Properties> {
             displayedCard={this.props.displayedCard}
             onCardClick={this.props.onCreditCardClick}
           />
+          <PrimaryTextButton label='Checkout' style={CHECKOUT_BUTTON_STYLE}
+            onClick={this.props.onCheckout}
+          />
         </React.Fragment>);
     })();
+    const paymentMethodSection = (
+      <React.Fragment>
+        {cardsOnFileSection}
+        <SecondaryTextButtonWithArrow
+          style={ADD_CARD_BUTTON_STYLE}
+          labelStyle={ADD_CARD_BUTTON_LABEL_STYLE}
+          label='Add a card'
+        />
+      </React.Fragment>);
     const joinButton = (() => {
       if (this.props.eventFee == 0) {
         return (
@@ -119,7 +123,7 @@ export class JoinEventModal extends React.Component<Properties> {
             onClick={this.props.onJoinEvent}
           />);
       }
-      return cardsOnFileSection;
+      return paymentMethodSection;
     })();
     const eventNameButtonSection = (
       <div style={eventNameButtonContainerStyle} >
@@ -455,14 +459,25 @@ const CARD_ON_FILE_TITLE_STYLE: React.CSSProperties = {
   color: '#000000'
 };
 
+const NO_CARD_TITLE_STYLE: React.CSSProperties = {
+  ...CARD_ON_FILE_TITLE_STYLE,
+  margin: '30px 0px 20px 0px'
+};
+
 const ADD_CARD_BUTTON_STYLE: React.CSSProperties = {
   width: '100%',
-  height: '38px',
-  marginTop: '20px'
+  height: '38px'
 };
 
 const ADD_CARD_BUTTON_LABEL_STYLE: React.CSSProperties = {
   fontSize: '12px',
   lineHeight: '18px',
   height: '18px'
+};
+
+const CHECKOUT_BUTTON_STYLE: React.CSSProperties = {
+  width: '100%',
+  height: '38px',
+  marginTop: '20px',
+  marginBottom: '10px'
 };

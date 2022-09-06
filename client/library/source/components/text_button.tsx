@@ -103,8 +103,9 @@ export function SecondaryTextButtonWithArrow(props: WithIconProperties) {
   return (
     <TextButtonWithArrow
       {...props}
-      style={{...BUTTON_WITH_ARROW_STYLE , ...props.style}}
-      iconSrc={props.iconSrc || 'resources/text_button/icons/arrow.svg'}
+      style={{...BUTTON_WITH_ARROW_STYLE, ...SECONDARY_BUTTON_STYLE,
+        ...props.style}}
+      iconSrc={props.iconSrc || 'resources/text_button/icons/arrow_orange.svg'}
       iconAlt={props.iconAlt || 'Arrow Icon'}
       iconStyle={{...BUTTON_ICON_STYLE, ...props.iconStyle}}
       iconContainerStyle={{...BUTTON_ICON_CONTAINER_STYLE,
@@ -149,7 +150,8 @@ const BUTTON_ICON_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'center',
   alignItems: 'center',
   width: '10px',
-  height: '10px'
+  height: '10px',
+  color: 'inherit'
 };
 
 const BUTTON_ICON_STYLE: React.CSSProperties = {
@@ -158,6 +160,7 @@ const BUTTON_ICON_STYLE: React.CSSProperties = {
   minWidth: '10px',
   minHeight: '10px',
   objectFit: 'cover',
+  color: 'inherit',
   backgroundColor: 'transparent'
 };
 
@@ -226,7 +229,7 @@ const PRIMARY_LABEL_STYLE: React.CSSProperties = {
 const SECONDARY_LABEL_STYLE: React.CSSProperties = {
   fontSize: '12px',
   lineHeight: '15px',
-  color: '#F26B55'
+  color: 'inherit'
 };
 
 const ARROW_ICON_CONTAINER_STYLE: React.CSSProperties = {
@@ -236,7 +239,8 @@ const ARROW_ICON_CONTAINER_STYLE: React.CSSProperties = {
   alignItems: 'center',
   width: '10px',
   height: '10px',
-  marginLeft: '5px'
+  marginLeft: '5px',
+  color: 'inherit'
 };
 
 const ARROW_ICON_STYLE: React.CSSProperties = {
@@ -246,7 +250,7 @@ const ARROW_ICON_STYLE: React.CSSProperties = {
   minHeight: '10px',
   objectFit: 'cover',
   backgroundColor: 'transparent',
-  color: '#FFFFFF'
+  color: 'inherit'
 };
 
 const styles = StyleSheet.create({
