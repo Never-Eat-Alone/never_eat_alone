@@ -1,7 +1,6 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
-import { CreditCardType, getCreditCardTypeName, PaymentCard
-} from '../definitions';
+import { CreditCardType, PaymentCard } from '../definitions';
 
 /** Describes the credit card drop down menu properties. */
 interface Properties {
