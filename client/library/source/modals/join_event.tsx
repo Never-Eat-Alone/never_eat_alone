@@ -28,11 +28,14 @@ interface Properties {
   /** The list of payment cards associated with the user profile. */
   paymentCardsOnFile: PaymentCard[];
 
+  /** User's default payment card. */
+  displayedCard: PaymentCard;
+
   /** Indicates the join button is clicked. */
   onJoinEvent: () => void;
 
   onCreditCardClick: () => void;
-  
+
   /** Indicates the close button is clicked. */
   onClose: () => void;
 
@@ -111,7 +114,7 @@ export class JoinEventModal extends React.Component<Properties> {
           <h3 style={CARD_ON_FILE_TITLE_STYLE} >Cards on file:</h3>
           <CreditCardDropdownMenu
             cardList={this.props.paymentCardsOnFile}
-            onAddCard={this.props.onAddCard}
+            displayedCard={this.props.displayedCard}
             onCardClick={this.props.onCreditCardClick}
           />
         </React.Fragment>);
