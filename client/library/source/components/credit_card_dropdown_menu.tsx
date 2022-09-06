@@ -226,12 +226,6 @@ const CARD_TYPE_ICON_STYLE: React.CSSProperties = {
   objectFit: 'cover'
 };
 
-const OTHER_CARD_TYPE_STYLE: React.CSSProperties = {
-  width: '100%',
-  height: '100%',
-  backgroundColor: '#5EC745'
-};
-
 const TEXT_STYLE: React.CSSProperties = {
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
