@@ -2,19 +2,18 @@
 export enum CreditCardType {
   VISA,
   MASTERCARD,
-  AMEX,
-  OTHER
+  AMEX
 }
 
 export function getCreditCardTypeName(cardType: CreditCardType): string {
   switch (cardType) {
-    case 0:
+    case CreditCardType.VISA:
       return 'Visa';
-    case 1:
+    case CreditCardType.MASTERCARD:
       return 'Mastercard';
-    case 2:
+    case CreditCardType.AMEX:
       return 'Amex';
     default:
-      return 'Other';
+      return 'Card';
   }
 }

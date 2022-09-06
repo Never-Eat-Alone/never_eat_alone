@@ -38,14 +38,6 @@ export class CreditCardTypeInput extends React.Component<Properties> {
             style={CreditCardTypeInput.STYLE.radio}/>
           <label htmlFor='mastercard'>Mastercard</label>
         </div>
-        <div style={CreditCardTypeInput.STYLE.label}>
-          <input type='radio' name='credit_type' id='other'
-            value='other'
-            checked={this.props.value === NeverEatAlone.CreditCardType.OTHER}
-            onChange={this.onChange}
-            style={CreditCardTypeInput.STYLE.radio}/>
-          <label htmlFor='other'>Other</label>
-        </div>
       </div>);
   }
 
@@ -55,10 +47,8 @@ export class CreditCardTypeInput extends React.Component<Properties> {
         this.props.update(NeverEatAlone.CreditCardType.AMEX);
       case 'mastercard':
         this.props.update(NeverEatAlone.CreditCardType.MASTERCARD);
-      case 'visa':
-        this.props.update(NeverEatAlone.CreditCardType.VISA);
       default:
-        this.props.update(NeverEatAlone.CreditCardType.OTHER);
+        this.props.update(NeverEatAlone.CreditCardType.VISA);
     }
   }
 

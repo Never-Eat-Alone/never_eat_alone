@@ -142,7 +142,6 @@ export function CardInfo(props: CardInfoProperties) {
     <div {...props} style={{...ICON_TEXT_CONTAINER_STYLE, ...props.style}} >
       <div style={ICON_CONTAINER_STYLE} >{cardIcon}</div>
       <div style={TEXT_STYLE} >
-        {getCreditCardTypeName(props.paymentCard.creditType)}&nbsp;
         ending in&nbsp;
         {props.paymentCard.last4Digits.toString()}
       </div>
@@ -174,7 +173,8 @@ const MENU_CONTAINER_STYLE: React.CSSProperties = {
   width: '100%',
   borderTop: '1px solid #969696',
   top: '38px',
-  left: '0px'
+  left: '0px',
+  overflowY: 'auto'
 };
 
 const MENU_ITEM_STYLE: React.CSSProperties = {
@@ -184,6 +184,7 @@ const MENU_ITEM_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'center',
   height: '37px',
+  minHeight: '37px',
   width: '100%',
   cursor: 'pointer',
   padding: '0px 12px 0px 9px',

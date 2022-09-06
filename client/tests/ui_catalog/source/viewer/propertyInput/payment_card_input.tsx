@@ -22,7 +22,7 @@ export class PaymentCardInput extends React.Component<Properties> {
       if (!event.target.value.trim() ||
           Number(event.target.value).toString() === 'NaN') {
         return new NeverEatAlone.PaymentCard(Date.now(),
-          NeverEatAlone.CreditCardType.OTHER, 3838);
+          NeverEatAlone.CreditCardType.AMEX, 3838);
       }
       return new NeverEatAlone.PaymentCard(Date.now(),
         NeverEatAlone.CreditCardType.VISA, Number(event.target.value));
