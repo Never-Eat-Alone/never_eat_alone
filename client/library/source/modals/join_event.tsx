@@ -56,45 +56,35 @@ interface Properties {
 }
 
 function getTaxAmount(fee: number, taxRate: number) {
-  return fee * taxRate;
+  return (Math.ceil(fee * taxRate * 100) / 100).toFixed(2);
 }
 
 /** Displays the Join Event Modal. */
 export class JoinEventModal extends React.Component<Properties> {
   public render(): JSX.Element {
-    const { containerStyle, eventNameButtonContainerStyle,
-        costDetailsContainerStyle } = (() => {
+    const { containerStyle, costDetailsContainerStyle } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
           containerStyle: DESKTOP_CONTAINER_STYLE,
-          eventNameButtonContainerStyle: EVENT_NAME_BUTTON_CONTAINER_STYLE,
           costDetailsContainerStyle: COST_DETAILS_CONTAINER_STYLE
         };
       }
       if (this.props.displayMode === DisplayMode.TABLET) {
         return {
           containerStyle: TABLET_CONTAINER_STYLE,
-          eventNameButtonContainerStyle: EVENT_NAME_BUTTON_CONTAINER_STYLE,
           costDetailsContainerStyle: COST_DETAILS_CONTAINER_STYLE
         };
       }
       return {
         containerStyle: MOBILE_CONTAINER_STYLE,
-        eventNameButtonContainerStyle: MOBILE_EVENT_NAME_BUTTON_CONTAINER_STYLE,
         costDetailsContainerStyle: MOBILE_COST_DETAILS_CONTAINER_STYLE
       };
     })();
-    const joinButton = (() => {
-      if (this.props.eventFee == 0) {
-        return (
-          <PrimaryTextButton
-            style={JOIN_BUTTON_STYLE}
-            label='Join Event'
-            labelStyle={JOIN_BUTTON_TEXT_STYLE}
-            onClick={this.props.onJoinEvent}
-          />);
+    const eventNameButtonContainerStyle = (() => {
+      if (this.props.eventFee && this.props.eventFee != 0) {
+        return EVENT_NAME_BUTTON_CONTAINER_STYLE;
       }
-      return null;
+      return FREE_EVENT_NAME_BUTTON_CONTAINER_STYLE;
     })();
     const cardsOnFileSection = (() => {
       if (!this.props.paymentCardsOnFile ||
@@ -118,6 +108,18 @@ export class JoinEventModal extends React.Component<Properties> {
             onCardClick={this.props.onCreditCardClick}
           />
         </React.Fragment>);
+    })();
+    const joinButton = (() => {
+      if (this.props.eventFee == 0) {
+        return (
+          <PrimaryTextButton
+            style={JOIN_BUTTON_STYLE}
+            label='Join Event'
+            labelStyle={JOIN_BUTTON_TEXT_STYLE}
+            onClick={this.props.onJoinEvent}
+          />);
+      }
+      return cardsOnFileSection;
     })();
     const eventNameButtonSection = (
       <div style={eventNameButtonContainerStyle} >
@@ -155,15 +157,14 @@ export class JoinEventModal extends React.Component<Properties> {
             <div style={EVENT_FEE_ROW_STYLE} >
               <div style={GREY_TEXT_STYLE} >Tax</div>
               <div style={EVENT_PRICE_STYLE} >
-                CAD ${getTaxAmount(this.props.eventFee,
-                this.props.taxRate).toString()}
+                CAD ${getTaxAmount(this.props.eventFee, this.props.taxRate)}
               </div>
             </div>
             <div style={EVENT_FEE_ROW_STYLE} >
               <div style={EVENT_FEE_BOLD_TEXT_STYLE} >Total Payment</div>
               <div style={EVENT_PRICE_STYLE} >
-                CAD ${(getTaxAmount(this.props.eventFee,
-                  this.props.taxRate) + this.props.eventFee).toString()}
+                CAD ${(Number(getTaxAmount(this.props.eventFee,
+                  this.props.taxRate)) + this.props.eventFee).toFixed(2)}
               </div>
             </div>
           </div>
@@ -212,9 +213,10 @@ const CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
   position: 'relative',
-  overflow: 'hidden',
+  overflowY: 'auto',
   borderRadius: '4px',
-  boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)'
+  boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
+  backgroundColor: '#F6F6F6'
 };
 
 const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
@@ -223,7 +225,7 @@ const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
   width: '675px',
-  height: '410px'
+  minHeight: '410px'
 };
 
 const TABLET_CONTAINER_STYLE: React.CSSProperties = {
@@ -232,7 +234,7 @@ const TABLET_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
   width: '675px',
-  height: '410px'
+  minHeight: '410px'
 };
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
@@ -267,7 +269,7 @@ const MOBILE_COST_DETAILS_CONTAINER_STYLE: React.CSSProperties = {
 const COST_BREAKDOWN_TOTAL_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'space-between',
+  justifyContent: 'flex-start',
   alignItems: 'flex-start',
   width: '100%',
   height: 'calc(100% - 40px)'
@@ -371,17 +373,16 @@ const EVENT_NAME_BUTTON_CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'space-between',
+  justifyContent: 'flex-start',
   alignItems: 'flex-start',
   width: '100%',
-  height: 'calc(100% - 150px)',
   padding: '20px 20px 40px 20px',
-  backgroundColor: '#F6F6F6'
+  height: 'calc(100% - 150px)'
 };
 
-const MOBILE_EVENT_NAME_BUTTON_CONTAINER_STYLE: React.CSSProperties = {
+const FREE_EVENT_NAME_BUTTON_CONTAINER_STYLE: React.CSSProperties = {
   ...EVENT_NAME_BUTTON_CONTAINER_STYLE,
-  height: 'fit-content'
+  justifyContent: 'space-between'
 };
 
 const EVENT_NAME_DATE_CONTAINER_STYLE: React.CSSProperties = {
@@ -428,6 +429,7 @@ const EVENT_DATE_STYLE: React.CSSProperties = {
 const JOIN_BUTTON_STYLE: React.CSSProperties = {
   width: '100%',
   height: '40px',
+  minHeight: '40px',
   marginTop: '30px'
 };
 
@@ -447,9 +449,9 @@ const CARD_ON_FILE_TITLE_STYLE: React.CSSProperties = {
   fontWeight: 600,
   fontSize: '14px',
   lineHeight: '18px',
-  height: '20px',
+  height: '18px',
   padding: '0px',
-  margin: '30px 0px 0px 0px',
+  margin: '30px 0px 10px 0px',
   color: '#000000'
 };
 
