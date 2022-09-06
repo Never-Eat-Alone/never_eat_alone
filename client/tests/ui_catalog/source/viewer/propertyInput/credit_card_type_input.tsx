@@ -47,7 +47,7 @@ export class CreditCardTypeInput extends React.Component<Properties> {
         this.props.update(NeverEatAlone.CreditCardType.AMEX);
       case 'mastercard':
         this.props.update(NeverEatAlone.CreditCardType.MASTERCARD);
-      default:
+      case 'visa':
         this.props.update(NeverEatAlone.CreditCardType.VISA);
     }
   }

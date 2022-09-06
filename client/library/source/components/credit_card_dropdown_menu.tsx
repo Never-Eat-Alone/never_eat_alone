@@ -134,8 +134,6 @@ export function CardInfo(props: CardInfoProperties) {
             src={'resources/icons/mastercard.svg'}
             alt='Mastercard Icon'
           />);
-      default:
-        return <div style={OTHER_CARD_TYPE_STYLE} />;
     }
   })();
   return (
