@@ -1384,8 +1384,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('eventStartDate', new Date(2022, 11, 20, 18, 30),
       DateTimeInput),
     new PropertySchema('displayedCard', new NeverEatAlone.PaymentCard(1,
-      NeverEatAlone.CreditCardType.VISA, 4044),
-      PaymentCardInput)
+      NeverEatAlone.CreditCardType.VISA, 4044), PaymentCardInput)
   ], [
     new SignalSchema('onJoinEvent', '', []),
     new SignalSchema('onClose', '', [])
@@ -1401,8 +1400,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
       'paymentCard', new NeverEatAlone.PaymentCard(1,
       NeverEatAlone.CreditCardType.VISA, 4044), PaymentCardInput))),
     new PropertySchema('displayedCard', new NeverEatAlone.PaymentCard(1,
-      NeverEatAlone.CreditCardType.VISA, 4044),
-      PaymentCardInput),
+      NeverEatAlone.CreditCardType.VISA, 4044), PaymentCardInput),
     ], [new SignalSchema('onCardClick', '', [])],
     NeverEatAlone.CreditCardDropdownMenu);
   return [
