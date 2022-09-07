@@ -56,12 +56,23 @@ interface Properties {
   onApplePay: () => void;
 }
 
+interface State {
+  isAddCard: boolean;
+}
+
 function getTaxAmount(fee: number, taxRate: number) {
   return (Math.ceil(fee * taxRate * 100) / 100).toFixed(2);
 }
 
 /** Displays the Join Event Modal. */
-export class JoinEventModal extends React.Component<Properties> {
+export class JoinEventModal extends React.Component<Properties, State> {
+  constructor(props: Properties) {
+    super(props);
+    this.state = {
+      isAddCard: false
+    };
+  }
+
   public render(): JSX.Element {
     const { containerStyle, costDetailsContainerStyle } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
