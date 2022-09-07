@@ -53,14 +53,23 @@ export class CreditCardDropdownMenu extends React.Component<Properties,
       }
       return null;
     })();
+    const displayedCardBorderStyle = (() => {
+      if (this.state.isDisplayed) {
+        return {
+          border: '1px solid #969696', borderBottom: 'none',
+          borderRadius: '4px 4px 0px 0px'
+        };
+      }
+      return {};
+    })();
     return (
       <div
           style={{...CONTAINER_STYLE, ...this.props.style}}
           ref={this._dropDownRef}
-          className={css(styles.container)}
       >
         <div
-            style={DISPLAYED_CARD_STYLE}
+            style={{...DISPLAYED_CARD_STYLE, ...displayedCardBorderStyle}}
+            className={css(styles.displayedCard)}
             onClick={this.handleDropDownClick}
         >
           <CardInfo paymentCard={this.props.displayedCard} />
@@ -154,22 +163,22 @@ const CONTAINER_STYLE: React.CSSProperties = {
   alignItems: 'flex-start',
   outline: 'none',
   cursor: 'pointer',
-  border: '1px solid #CCCCCC',
   backgroundColor: '#FFFFFF',
   borderRadius: '4px',
   width: '100%'
 };
 
 const MENU_CONTAINER_STYLE: React.CSSProperties = {
-  zIndex: 13,
+  position: 'absolute',
+  zIndex: 14,
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
   width: '100%',
-  borderTop: '1px solid #969696',
-  top: '38px',
+  border: '1px solid #969696',
+  top: '37px',
   left: '0px',
   borderRadius: '0px 0px 4px 4px',
   overflowY: 'auto'
@@ -194,15 +203,17 @@ const DISPLAYED_CARD_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',
-  alignItems: 'center',
-  borderRadius: '4px'
+  alignItems: 'flex-start',
+  borderRadius: '4px',
+  border: '1px solid #CCCCCC',
+  padding: '9px 12px 0px 9px'
 };
 
 const ICON_TEXT_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'flex-start',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   height: '100%'
 };
 
@@ -243,6 +254,7 @@ const VECTOR_CONTAINER_STYLE: React.CSSProperties = {
   alignItems: 'center',
   width: '14px',
   height: '7px',
+  marginTop: '6px',
   marginLeft: '13px'
 };
 
@@ -255,18 +267,18 @@ const VECTOR_ICON_STYLE: React.CSSProperties = {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  displayedCard: {
     ':hover': {
-      border: '1px solid #969696'
+      borderColor: '#969696'
     },
     ':focus': {
-      border: '1px solid #969696'
+      borderColor: '#969696'
     },
     ':focus-within': {
-      border: '1px solid #969696'
+      borderColor: '#969696'
     },
     ':active': {
-      border: '1px solid #969696'
+      borderColor: '#969696'
     }
   },
   menuItem: {
