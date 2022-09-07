@@ -1,7 +1,8 @@
 import { format } from 'date-fns';
 import * as React from 'react';
-import { CloseButton, CreditCardDropdownMenu, GooglePayButton, PayPalButton,
-  PrimaryTextButton, SecondaryTextButtonWithArrow, ApplePayButton } from '../components';
+import { ApplePayButton, CloseButton, CreditCardDropdownMenu, GooglePayButton,
+  PayPalButton, PrimaryTextButton, SecondaryTextButtonWithArrow
+} from '../components';
 import { DisplayMode, PaymentCard } from '../definitions';
 
 interface Properties {
