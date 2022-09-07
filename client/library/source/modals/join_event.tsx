@@ -559,6 +559,7 @@ const PAY_BUTTON_STYLE: React.CSSProperties = {
 };
 
 const FEE_DESCRIPTION_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'flex-start',
@@ -572,5 +573,6 @@ const FEE_DESCRIPTION_STYLE: React.CSSProperties = {
   lineHeight: '18px',
   color: '#969696',
   marginTop: '10px',
-  marginBottom: '10px'
+  marginBottom: '10px',
+  padding: '0px 10px'
 };
