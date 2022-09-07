@@ -1423,10 +1423,39 @@ export function loadComponentSchemas(): ComponentSchema[] {
       NeverEatAlone.CreditCardType.VISA, 4044), PaymentCardInput),
     ], [new SignalSchema('onCardClick', '', [])],
     NeverEatAlone.CreditCardDropdownMenu);
+  const primaryButtonWithArrowSchema = new ComponentSchema(
+    'PrimaryButtonWithArrow', [new PropertySchema('iconStyle', {}, CSSInput),
+    new PropertySchema('style', {}, CSSInput),
+    new PropertySchema('labelStyle', {}, CSSInput),
+    new PropertySchema('label', 'Primary Button', TextInput),
+    new PropertySchema('disabled', false, BooleanInput)],
+    [new SignalSchema('onClick', '', [])],
+    NeverEatAlone.PrimaryTextButtonWithArrow);
+  const secondaryButtonWithArrowSchema = new ComponentSchema(
+    'SecondaryButtonWithArrow', [new PropertySchema('iconStyle', {}, CSSInput),
+    new PropertySchema('style', {}, CSSInput),
+    new PropertySchema('labelStyle', {}, CSSInput),
+    new PropertySchema('label', 'Secondary Button', TextInput),
+    new PropertySchema('disabled', false, BooleanInput)],
+    [new SignalSchema('onClick', '', [])],
+    NeverEatAlone.SecondaryTextButtonWithArrow);
+  const payPalButtonSchema = new ComponentSchema('PayPalButton', [
+    new PropertySchema('style', {}, CSSInput)
+  ],
+    [new SignalSchema('onClick', '', [])], NeverEatAlone.PayPalButton);
+  const applePayButtonSchema = new ComponentSchema('ApplePayButton', [
+    new PropertySchema('style', {}, CSSInput)
+  ],
+    [new SignalSchema('onClick', '', [])], NeverEatAlone.ApplePayButton);
+  const googlePayButtonSchema = new ComponentSchema('GooglePayButton', [
+    new PropertySchema('style', {}, CSSInput)
+  ],
+    [new SignalSchema('onClick', '', [])], NeverEatAlone.GooglePayButton);
   return [
     accentTextButtonSchema,
     albumCardSchema,
     albumSummarySchema,
+    applePayButtonSchema,
     avatarWithCheckMarkSchema,
     checkBoxSchema,
     closeButtonSchema,
@@ -1442,6 +1471,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     forgotPasswordLinkSentPageSchema,
     forgotPasswordPageSchema,
     googleLogInButtonSchema,
+    googlePayButtonSchema,
     headerLoggedInSchema,
     headerNotLoggedInSchema,
     heroLoggedInNoEventSchema,
@@ -1459,6 +1489,8 @@ export function loadComponentSchemas(): ComponentSchema[] {
     logoSchema,
     nameInputFieldSchema,
     partnerWithUsSummarySchema,
+    payPalButtonSchema,
+    primaryButtonWithArrowSchema,
     primaryTextButtonSchema,
     privateButtonSchema,
     profileBoxSchema,
@@ -1470,6 +1502,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     resetPasswordPage,
     saveCancelStickyMenuSchema,
     secondaryButtonNavLink,
+    secondaryButtonWithArrowSchema,
     secondaryTextLinkButton,
     seeAllButtonSchema,
     seeLessButtonSchema,

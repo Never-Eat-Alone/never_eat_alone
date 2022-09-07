@@ -62,25 +62,38 @@ export function PrimaryTextButton(props: Properties) {
 }
 
 interface WithIconProperties extends Properties {
-  iconSrc?: string;
   iconStyle?: React.CSSProperties;
-  iconContainerStyle?: React.CSSProperties;
-  iconAlt?: string;
 }
 
 export function TextButtonWithArrow(props: WithIconProperties) {
   return (
     <button {...props} style={{...BUTTON_STYLE, ...props.style}} >
       <p style={{...LABEL_STYLE, ...props.labelStyle}} >{props.label}</p>
-      <div
-          style={{...ARROW_ICON_CONTAINER_STYLE, ...props.iconContainerStyle}}
-      >
-        <img
+      <svg
           style={{...ARROW_ICON_STYLE, ...props.iconStyle}}
-          src={props.iconSrc}
-          alt={props.iconAlt}
-        />
-      </div>
+          width='11px' height='10px' viewBox='0 0 11 10'
+          fill='none'
+          xmlns='http://www.w3.org/2000/svg'
+      >
+        <g clipPath='url(#clip0_2250_58471)' >
+          <path
+            d='M4.45251 0.651959L9.10337 4.9939L4.45251 9.34814'
+            stroke='currentColor' strokeWidth='1.5' strokeMiterlimit='10'
+          />
+          <path
+            d='M8.40514 4.99365L0.5 4.99365' stroke='currentColor'
+            strokeWidth='1.5' strokeMiterlimit='10'
+          />
+        </g>
+        <defs>
+        <clipPath id='clip0_2250_58471' >
+          <rect
+            width='10px' height='10px' fill='white'
+            transform='translate(0.5 10) rotate(-90)'
+          />
+        </clipPath>
+        </defs>
+      </svg>
     </button>);
 }
 
@@ -88,12 +101,9 @@ export function PrimaryTextButtonWithArrow(props: WithIconProperties) {
   return (
     <TextButtonWithArrow
       {...props}
-      style={{...BUTTON_WITH_ARROW_STYLE , ...props.style}}
-      iconSrc={props.iconSrc || 'resources/text_button/icons/arrow.svg'}
-      iconAlt={props.iconAlt || 'Arrow Icon'}
+      style={{...PRIMARY_BUTTON_STYLE, ...BUTTON_WITH_ARROW_STYLE,
+        ...props.style}}
       iconStyle={{...BUTTON_ICON_STYLE, ...props.iconStyle}}
-      iconContainerStyle={{...BUTTON_ICON_CONTAINER_STYLE,
-        ...props.iconContainerStyle}}
       labelStyle={{...PRIMARY_LABEL_STYLE, ...props.labelStyle}}
       className={css(styles.primaryTextButton)}
     />);
@@ -103,12 +113,9 @@ export function SecondaryTextButtonWithArrow(props: WithIconProperties) {
   return (
     <TextButtonWithArrow
       {...props}
-      style={{...BUTTON_WITH_ARROW_STYLE , ...props.style}}
-      iconSrc={props.iconSrc || 'resources/text_button/icons/arrow.svg'}
-      iconAlt={props.iconAlt || 'Arrow Icon'}
+      style={{...BUTTON_WITH_ARROW_STYLE, ...SECONDARY_BUTTON_STYLE,
+        ...props.style}}
       iconStyle={{...BUTTON_ICON_STYLE, ...props.iconStyle}}
-      iconContainerStyle={{...BUTTON_ICON_CONTAINER_STYLE,
-        ...props.iconContainerStyle}}
       labelStyle={{...SECONDARY_LABEL_STYLE, ...props.labelStyle}}
       className={css(styles.secondaryTextButton)}
     />);
@@ -130,34 +137,19 @@ const BUTTON_STYLE: React.CSSProperties = {
 };
 
 const BUTTON_WITH_ARROW_STYLE: React.CSSProperties = {
-  boxSizing: 'border-box',
-  border: 'none',
-  outline: 'none',
+  ...BUTTON_STYLE,
   backgroundColor: '#F26B55',
-  borderRadius: '4px',
   height: '35px',
-  width: '161px',
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'center'
-};
-
-const BUTTON_ICON_CONTAINER_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  width: '10px',
-  height: '10px'
+  minHeight: '35px',
+  width: '161px'
 };
 
 const BUTTON_ICON_STYLE: React.CSSProperties = {
-  width: '100%',
-  height: '100%',
+  width: '10px',
+  height: '10px',
   minWidth: '10px',
   minHeight: '10px',
-  objectFit: 'cover',
+  color: 'inherit',
   backgroundColor: 'transparent'
 };
 
@@ -175,6 +167,7 @@ const LABEL_STYLE: React.CSSProperties = {
 const SECONDARY_LINK_BUTTON_STYLE: React.CSSProperties = {
   width: 'fit-content',
   height: '18px',
+  minHeight: '18px',
   backgroundColor: 'transparent',
   color: '#F26B55',
   border: 'none'
@@ -182,28 +175,37 @@ const SECONDARY_LINK_BUTTON_STYLE: React.CSSProperties = {
 
 const SECONDARY_BUTTON_STYLE: React.CSSProperties = {
   ...SECONDARY_LINK_BUTTON_STYLE,
-  border: '1px solid #F26B55'
+  border: '1px solid #F26B55',
+  height: '38px',
+  minHeight: '38px',
+  width: '200px'
 };
 
 const INVERTED_BUTTON_STYLE: React.CSSProperties = {
+  ...BUTTON_STYLE,
   width: '68px',
   height: '30px',
+  minHeight: '30px',
   backgroundColor: 'transparent',
   border: '1px solid #FFFFFF',
   color: '#FFFFFF'
 };
 
 const ACCENT_BUTTON_STYLE: React.CSSProperties = {
+  ...BUTTON_STYLE,
   width: '75px',
   height: '30px',
+  minHeight: '30px',
   backgroundColor: '#FFFFFF',
   color: '#F26B55',
   border: 'none'
 };
 
 const PRIMARY_BUTTON_STYLE: React.CSSProperties = {
+  ...BUTTON_STYLE,
   width: '116px',
   height: '35px',
+  minHeight: '35px',
   backgroundColor: '#F26B55',
   border: 'none',
   color: '#FFFFFF'
@@ -218,35 +220,27 @@ const SECONDARY_LINK_LABEL_STYLE: React.CSSProperties = {
 };
 
 const PRIMARY_LABEL_STYLE: React.CSSProperties = {
+  ...LABEL_STYLE,
   fontSize: '12px',
   lineHeight: '15px',
-  color: '#FFFFFF'
+  color: 'inherit'
 };
 
 const SECONDARY_LABEL_STYLE: React.CSSProperties = {
+  ...LABEL_STYLE,
   fontSize: '12px',
   lineHeight: '15px',
-  color: '#F26B55'
-};
-
-const ARROW_ICON_CONTAINER_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  width: '10px',
-  height: '10px',
-  marginLeft: '5px'
+  color: 'inherit'
 };
 
 const ARROW_ICON_STYLE: React.CSSProperties = {
-  width: '100%',
-  height: '100%',
+  width: '10px',
+  height: '10px',
   minWidth: '10px',
   minHeight: '10px',
-  objectFit: 'cover',
   backgroundColor: 'transparent',
-  color: '#FFFFFF'
+  color: 'inherit',
+  marginLeft: '5px'
 };
 
 const styles = StyleSheet.create({
