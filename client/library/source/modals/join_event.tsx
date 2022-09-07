@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import * as React from 'react';
-import { CloseButton, CreditCardDropdownMenu, PayPalButton, PrimaryTextButton,
-  SecondaryTextButtonWithArrow } from '../components';
+import { CloseButton, CreditCardDropdownMenu, GooglePayButton, PayPalButton,
+  PrimaryTextButton, SecondaryTextButtonWithArrow, ApplePayButton } from '../components';
 import { DisplayMode, PaymentCard } from '../definitions';
 
 interface Properties {
@@ -111,13 +111,21 @@ export class JoinEventModal extends React.Component<Properties> {
           style={ADD_CARD_BUTTON_STYLE}
           labelStyle={ADD_CARD_BUTTON_LABEL_STYLE}
           label='Add a card'
+          onClick={this.props.onAddCard}
         />
         <div style={OR_LINE_CONTAINER_STYLE} >
           <div style={PARTIAL_LINE_STYLE} />
           <p style={OR_CHECKOUT_TEXT_STYLE} >or checkout with</p>
           <div style={PARTIAL_LINE_STYLE} />
         </div>
-        <PayPalButton style={PAYPAL_BUTTON_STYLE} />
+        <PayPalButton style={PAYPAL_BUTTON_STYLE}
+          onClick={this.props.onPaypalClick} />
+        <div style={PAY_BUTTON_CONTAINER_STYLE} >
+          <ApplePayButton style={PAY_BUTTON_STYLE}
+            onClick={this.props.onApplePay} />
+          <GooglePayButton style={PAY_BUTTON_STYLE}
+            onClick={this.props.onGooglePayClick} />
+        </div>
       </React.Fragment>);
     const joinButton = (() => {
       if (this.props.eventFee == 0) {
@@ -143,6 +151,10 @@ export class JoinEventModal extends React.Component<Properties> {
         </div>
         {joinButton}
       </div>);
+    const feeDescription = (this.props.eventFeeDescription &&
+      <div style={FEE_DESCRIPTION_STYLE} >
+        {this.props.eventFeeDescription}
+      </div> || null);
     const costDetailsSection = (
       <div style={costDetailsContainerStyle} >
         <h2 style={CHECKOUT_TITLE_STYLE} >Event Checkout</h2>
@@ -155,6 +167,7 @@ export class JoinEventModal extends React.Component<Properties> {
                 CAD ${this.props.eventFee.toString()}
               </div>
             </div>
+            {feeDescription}
           </div>
           <div style={COLUMN_CONTAINER_STYLE} >
             <div style={PRICE_DIVIDER_STYLE} />
@@ -485,7 +498,7 @@ const CHECKOUT_BUTTON_STYLE: React.CSSProperties = {
   width: '100%',
   height: '38px',
   marginTop: '20px',
-  marginBottom: '10px'
+  marginBottom: '20px'
 };
 
 const OR_LINE_CONTAINER_STYLE: React.CSSProperties = {
@@ -523,4 +536,41 @@ const PAYPAL_BUTTON_STYLE: React.CSSProperties = {
   height: '38px',
   minHeight: '38px',
   marginTop: '30px'
+};
+
+const PAY_BUTTON_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: 'transparent',
+  width: '100%',
+  gap: '20px',
+  marginTop: '20px',
+  height: '38px',
+  minHeight: '38px'
+};
+
+const PAY_BUTTON_STYLE: React.CSSProperties = {
+  width: 'calc(50% - 10px)',
+  minWidth: 'calc(50% - 10px)',
+  height: '100%',
+  minHeight: '100%'
+};
+
+const FEE_DESCRIPTION_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  flexWrap: 'wrap',
+  width: '100%',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#969696',
+  marginTop: '10px',
+  marginBottom: '10px'
 };
