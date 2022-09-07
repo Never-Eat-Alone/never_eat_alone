@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 import * as React from 'react';
-import { CloseButton, CreditCardDropdownMenu, PrimaryTextButton,
+import { CloseButton, CreditCardDropdownMenu, PayPalButton, PrimaryTextButton,
   SecondaryTextButtonWithArrow } from '../components';
 import { DisplayMode, PaymentCard } from '../definitions';
 
@@ -112,6 +112,12 @@ export class JoinEventModal extends React.Component<Properties> {
           labelStyle={ADD_CARD_BUTTON_LABEL_STYLE}
           label='Add a card'
         />
+        <div style={OR_LINE_CONTAINER_STYLE} >
+          <div style={PARTIAL_LINE_STYLE} />
+          <p style={OR_CHECKOUT_TEXT_STYLE} >or checkout with</p>
+          <div style={PARTIAL_LINE_STYLE} />
+        </div>
+        <PayPalButton style={PAYPAL_BUTTON_STYLE} />
       </React.Fragment>);
     const joinButton = (() => {
       if (this.props.eventFee == 0) {
@@ -480,4 +486,41 @@ const CHECKOUT_BUTTON_STYLE: React.CSSProperties = {
   height: '38px',
   marginTop: '20px',
   marginBottom: '10px'
+};
+
+const OR_LINE_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: 'transparent',
+  width: '100%',
+  color: '#969696',
+  gap: '10px',
+  marginTop: '30px',
+  height: '18px'
+};
+
+const PARTIAL_LINE_STYLE: React.CSSProperties = {
+  width: 'calc(50% - 59px)',
+  height: '1px',
+  backgroundColor: '#969696'
+};
+
+const OR_CHECKOUT_TEXT_STYLE: React.CSSProperties = {
+  padding: '0px',
+  margin: '0px',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px'
+};
+
+const PAYPAL_BUTTON_STYLE: React.CSSProperties = {
+  width: '100%',
+  minWidth: '100%',
+  height: '38px',
+  minHeight: '38px',
+  marginTop: '30px'
 };

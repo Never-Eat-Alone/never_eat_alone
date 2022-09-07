@@ -1439,10 +1439,23 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('disabled', false, BooleanInput)],
     [new SignalSchema('onClick', '', [])],
     NeverEatAlone.SecondaryTextButtonWithArrow);
+  const payPalButtonSchema = new ComponentSchema('PayPalButton', [
+    new PropertySchema('style', {}, CSSInput)
+  ],
+    [new SignalSchema('onClick', '', [])], NeverEatAlone.PayPalButton);
+  const applePayButtonSchema = new ComponentSchema('ApplePayButton', [
+    new PropertySchema('style', {}, CSSInput)
+  ],
+    [new SignalSchema('onClick', '', [])], NeverEatAlone.ApplePayButton);
+  const googlePayButtonSchema = new ComponentSchema('GooglePayButton', [
+    new PropertySchema('style', {}, CSSInput)
+  ],
+    [new SignalSchema('onClick', '', [])], NeverEatAlone.GooglePayButton);
   return [
     accentTextButtonSchema,
     albumCardSchema,
     albumSummarySchema,
+    applePayButtonSchema,
     avatarWithCheckMarkSchema,
     checkBoxSchema,
     closeButtonSchema,
@@ -1458,6 +1471,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     forgotPasswordLinkSentPageSchema,
     forgotPasswordPageSchema,
     googleLogInButtonSchema,
+    googlePayButtonSchema,
     headerLoggedInSchema,
     headerNotLoggedInSchema,
     heroLoggedInNoEventSchema,
@@ -1475,6 +1489,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     logoSchema,
     nameInputFieldSchema,
     partnerWithUsSummarySchema,
+    payPalButtonSchema,
     primaryButtonWithArrowSchema,
     primaryTextButtonSchema,
     privateButtonSchema,
