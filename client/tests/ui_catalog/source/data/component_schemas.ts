@@ -1451,6 +1451,13 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('style', {}, CSSInput)
   ],
     [new SignalSchema('onClick', '', [])], NeverEatAlone.GooglePayButton);
+  const paymentCardInputFieldSchema = new ComponentSchema(
+    'PaymentCardInputField', [
+      new PropertySchema('style', {}, CSSInput),
+      new PropertySchema('placeholder', '', TextInput),
+      new PropertySchema('disabled', false, BooleanInput),
+      new PropertySchema('hasError', false, BooleanInput)], [],
+      NeverEatAlone.PaymentCardInputField);
   return [
     accentTextButtonSchema,
     albumCardSchema,
@@ -1489,6 +1496,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     logoSchema,
     nameInputFieldSchema,
     partnerWithUsSummarySchema,
+    paymentCardInputFieldSchema,
     payPalButtonSchema,
     primaryButtonWithArrowSchema,
     primaryTextButtonSchema,

@@ -1,8 +1,8 @@
 import { format } from 'date-fns';
 import * as React from 'react';
 import { ApplePayButton, CloseButton, CreditCardDropdownMenu, GooglePayButton,
-  PayPalButton, PrimaryTextButton, SecondaryTextButtonWithArrow
-} from '../components';
+  PaymentCardInputField, PayPalButton, PrimaryTextButton,
+  SecondaryTextButtonWithArrow } from '../components';
 import { DisplayMode, PaymentCard } from '../definitions';
 
 interface Properties {
@@ -123,7 +123,7 @@ export class JoinEventModal extends React.Component<Properties, State> {
           style={ADD_CARD_BUTTON_STYLE}
           labelStyle={ADD_CARD_BUTTON_LABEL_STYLE}
           label='Add a card'
-          onClick={this.props.onAddCard}
+          onClick={this.handleAddCard}
         />
         <div style={OR_LINE_CONTAINER_STYLE} >
           <div style={PARTIAL_LINE_STYLE} />
@@ -151,18 +151,36 @@ export class JoinEventModal extends React.Component<Properties, State> {
       }
       return paymentMethodSection;
     })();
-    const eventNameButtonSection = (
-      <div style={eventNameButtonContainerStyle} >
-        <div style={EVENT_NAME_DATE_CONTAINER_STYLE} >
-          <h1 style={EVENT_NAME_STYLE} >{this.props.eventTitle}</h1>
-          <div style={EVENT_DATE_STYLE} >
-            {format(this.props.eventStartDate,
-            'eeee, MMMM do, yyyy')}{' at '}{format(
-            this.props.eventStartDate, 'h:mm aa')}
+    const eventNameButtonSection = (() => {
+      if (this.state.isAddCard) {
+        return (
+          <div style={EVENT_NAME_BUTTON_CONTAINER_STYLE} >
+            <div style={ADD_CARD_TITLE_ROW_STYLE} >
+              <img
+                style={ADD_ICON_STYLE}
+                src='resources/icons/add_card.svg'
+                alt='Add Icon'
+              />
+              <h1 style={ADD_CARD_HEADLINE_STYLE} >Add a card</h1>
+              <p>Card number</p>
+              <PaymentCardInputField />
+              <p>Name on card</p>
+            </div>
+          </div>);
+      }
+      return (
+        <div style={eventNameButtonContainerStyle} >
+          <div style={EVENT_NAME_DATE_CONTAINER_STYLE} >
+            <h1 style={EVENT_NAME_STYLE} >{this.props.eventTitle}</h1>
+            <div style={EVENT_DATE_STYLE} >
+              {format(this.props.eventStartDate,
+              'eeee, MMMM do, yyyy')}{' at '}{format(
+              this.props.eventStartDate, 'h:mm aa')}
+            </div>
           </div>
-        </div>
-        {joinButton}
-      </div>);
+          {joinButton}
+        </div>);
+      })();
     const feeDescription = (this.props.eventFeeDescription &&
       <div style={FEE_DESCRIPTION_STYLE} >
         {this.props.eventFeeDescription}
@@ -242,6 +260,10 @@ export class JoinEventModal extends React.Component<Properties, State> {
         </div>
       </div>);
   }
+
+  private handleAddCard = () => {
+    this.setState({ isAddCard: true });
+  };
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {
@@ -587,4 +609,32 @@ const FEE_DESCRIPTION_STYLE: React.CSSProperties = {
   marginTop: '10px',
   marginBottom: '10px',
   padding: '0px 10px'
+};
+
+const ADD_CARD_TITLE_ROW_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  width: '100%',
+  height: '30px',
+  backgroundColor: 'transparent',
+  gap: '10px'
+};
+
+const ADD_ICON_STYLE: React.CSSProperties = {
+  width: '15px',
+  height: '15px',
+  minWidth: '15px',
+  minHeight: '15px',
+  backgroundColor: 'transparent'
+};
+
+const ADD_CARD_HEADLINE_STYLE: React.CSSProperties = {
+  fontFamily: 'Oswald',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '20px',
+  lineHeight: '30px',
+  color: '#000000'
 };
