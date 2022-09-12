@@ -1398,7 +1398,9 @@ export function loadComponentSchemas(): ComponentSchema[] {
       new NeverEatAlone.PaymentCard(1, NeverEatAlone.CreditCardType.VISA, 4044),
       PaymentCardInput))),
     new PropertySchema('displayedCard', new NeverEatAlone.PaymentCard(1,
-      NeverEatAlone.CreditCardType.VISA, 4044), PaymentCardInput)
+      NeverEatAlone.CreditCardType.VISA, 4044), PaymentCardInput),
+    new PropertySchema('isContinueDisabled', true, BooleanInput),
+    new PropertySchema('addCardErrorMessage', '', TextInput)
   ], [
     new SignalSchema('onJoinEvent', '', []),
     new SignalSchema('onClose', '', []),

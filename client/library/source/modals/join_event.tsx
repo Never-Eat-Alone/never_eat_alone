@@ -1,8 +1,8 @@
 import { format } from 'date-fns';
 import * as React from 'react';
 import { ApplePayButton, CloseButton, CreditCardDropdownMenu, GooglePayButton,
-  PaymentCardInputField, PayPalButton, PrimaryTextButton,
-  SecondaryTextButtonWithArrow } from '../components';
+  InputField, PaymentCardInputField, PayPalButton, PrimaryTextButton,
+  SecondaryTextButtonWithArrow, SecurityCodeInputField } from '../components';
 import { DisplayMode, PaymentCard } from '../definitions';
 
 interface Properties {
@@ -32,6 +32,11 @@ interface Properties {
   /** User's default payment card. */
   displayedCard: PaymentCard;
 
+  /** Whether the continue button on add card modal is disabled or not. */
+  isContinueDisabled: boolean;
+
+  addCardErrorMessage?: string;
+
   /** Indicates the join button is clicked. */
   onJoinEvent: () => void;
 
@@ -58,6 +63,10 @@ interface Properties {
 
 interface State {
   isAddCard: boolean;
+  zipcode: string;
+  nameOnCard: string;
+  securityCode: number;
+  cardNumber: number;
 }
 
 function getTaxAmount(fee: number, taxRate: number) {
@@ -69,7 +78,11 @@ export class JoinEventModal extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props);
     this.state = {
-      isAddCard: false
+      isAddCard: false,
+      zipcode: '',
+      nameOnCard: '',
+      securityCode: null,
+      cardNumber: null
     };
   }
 
@@ -162,10 +175,24 @@ export class JoinEventModal extends React.Component<Properties, State> {
                 alt='Add Icon'
               />
               <h1 style={ADD_CARD_HEADLINE_STYLE} >Add a card</h1>
-              <p>Card number</p>
-              <PaymentCardInputField />
-              <p>Name on card</p>
             </div>
+            <p style={ADD_FIELD_TEXT_STYLE} >Card number</p>
+            <PaymentCardInputField style={PAYMENT_CARD_INPUT_STYLE} />
+            <p style={ADD_FIELD_TEXT_STYLE} >Name on card</p>
+            <InputField style={PAYMENT_CARD_INPUT_STYLE} />
+            <p style={ADD_FIELD_TEXT_STYLE} >Expiration date</p>
+            <p style={ADD_FIELD_TEXT_STYLE} >Security code</p>
+            <SecurityCodeInputField style={CODE_INPUT_STYLE} />
+            <p style={ADD_FIELD_TEXT_STYLE} >Zip/Postal code</p>
+            <InputField style={CODE_INPUT_STYLE} value={this.state.zipcode}
+              onChange={() => this.setState({ zipcode: this.state.zipcode })}
+              hasError={this.props.zipcodeErrorMessage}
+            />
+            <PrimaryTextButton
+              style={CONTINUE_BUTTON_STYLE}
+              label='Continue'
+              disabled={this.props.isContinueDisabled}
+            />
           </div>);
       }
       return (
@@ -619,7 +646,8 @@ const ADD_CARD_TITLE_ROW_STYLE: React.CSSProperties = {
   width: '100%',
   height: '30px',
   backgroundColor: 'transparent',
-  gap: '10px'
+  gap: '10px',
+  marginBottom: '10px'
 };
 
 const ADD_ICON_STYLE: React.CSSProperties = {
@@ -636,5 +664,50 @@ const ADD_CARD_HEADLINE_STYLE: React.CSSProperties = {
   fontWeight: 400,
   fontSize: '20px',
   lineHeight: '30px',
-  color: '#000000'
+  color: '#000000',
+  margin: '0px',
+  padding: '0px'
+};
+
+const PAYMENT_CARD_INPUT_STYLE: React.CSSProperties = {
+  width: '100%',
+  minWidth: '100%',
+  marginTop: '10px'
+};
+
+const ADD_FIELD_TEXT_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#000000',
+  width: '100%',
+  padding: '0px',
+  margin: '20px 0px 0px 0px'
+};
+
+const CODE_INPUT_STYLE: React.CSSProperties = {
+  width: '150px',
+  minWidth: '150px',
+  marginTop: '10px'
+};
+
+const ADD_ERROR_STYLE: React.CSSProperties = {
+  height: '18px',
+  width: '100%',
+  marginTop: '5px',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#FF2C79'
+};
+
+const CONTINUE_BUTTON_STYLE: React.CSSProperties = {
+  width: '100%',
+  minWidth: '100%',
+  marginTop: '7px',
+  height: '38px'
 };

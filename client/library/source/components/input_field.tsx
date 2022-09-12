@@ -61,13 +61,27 @@ export function PaymentCardInputField(props: InputFieldWithIconProperties) {
   return (
     <InputFieldWithIcon
       {...props}
-      type='number'
+      type='text'
       name='card'
       iconSrc='resources/icons/card.svg'
       iconAlt='Card Icon'
-      style={PAYMENT_CARD_CONTAINER_STYLE}
+      style={{...PAYMENT_CARD_CONTAINER_STYLE, ...props.style}}
       iconContainerStyle={CARD_ICON_CONTAINER_STYLE}
       iconStyle={CARD_ICON_STYLE}
+    />);
+}
+
+export function SecurityCodeInputField(props: InputFieldWithIconProperties) {
+  return (
+    <InputFieldWithIcon
+      {...props}
+      type='text'
+      name='card'
+      iconSrc='resources/icons/cvs.svg'
+      iconAlt='Card Code Icon'
+      style={{...PAYMENT_CARD_CONTAINER_STYLE, ...props.style}}
+      iconContainerStyle={CVS_ICON_CONTAINER_STYLE}
+      iconStyle={CVS_ICON_STYLE}
     />);
 }
 
@@ -226,6 +240,7 @@ const CONTAINER_WITH_ICON_STYLE: React.CSSProperties = {
 };
 
 const PAYMENT_CARD_CONTAINER_STYLE: React.CSSProperties = {
+  flexDirection: 'row-reverse',
   justifyContent: 'space-between',
   padding: '9px',
   gap: '10px'
@@ -266,6 +281,13 @@ const CARD_ICON_CONTAINER_STYLE: React.CSSProperties = {
   minHeight: '18px'
 };
 
+const CVS_ICON_CONTAINER_STYLE: React.CSSProperties = {
+  width: '21px',
+  minWidth: '21px',
+  height: '18px',
+  minHeight: '18px'
+};
+
 const ICON_STYLE: React.CSSProperties = {
   width: '20px',
   height: '20px',
@@ -279,6 +301,13 @@ const CARD_ICON_STYLE: React.CSSProperties = {
   width: '100%',
   height: '100%',
   minWidth: '27px',
+  minHeight: '18px'
+};
+
+const CVS_ICON_STYLE: React.CSSProperties = {
+  width: '100%',
+  height: '100%',
+  minWidth: '21px',
   minHeight: '18px'
 };
 
