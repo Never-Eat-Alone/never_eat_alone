@@ -1400,7 +1400,9 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('displayedCard', new NeverEatAlone.PaymentCard(1,
       NeverEatAlone.CreditCardType.VISA, 4044), PaymentCardInput),
     new PropertySchema('isContinueDisabled', true, BooleanInput),
-    new PropertySchema('addCardErrorMessage', '', TextInput)
+    new PropertySchema('addCardErrorMessage', '', TextInput),
+    new PropertySchema('selectedMonth', 1, NumberInput),
+    new PropertySchema('selectedYear', 2022, NumberInput)
   ], [
     new SignalSchema('onJoinEvent', '', []),
     new SignalSchema('onClose', '', []),
@@ -1409,7 +1411,9 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new SignalSchema('onAddCard', '', []),
     new SignalSchema('onPaypalClick', '', []),
     new SignalSchema('onGooglePayClick', '', []),
-    new SignalSchema('onApplePay', '', [])
+    new SignalSchema('onApplePay', '', []),
+    new SignalSchema('onMonthClick', '', []),
+    new SignalSchema('onYearClick', '', [])
   ], NeverEatAlone.JoinEventModal);
   const creditCardDropdownMenu = new ComponentSchema('CreditCardDropdownMenu',
     [new PropertySchema('cardList', [

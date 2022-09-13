@@ -1,8 +1,9 @@
 import { format } from 'date-fns';
 import * as React from 'react';
 import { ApplePayButton, CloseButton, CreditCardDropdownMenu, GooglePayButton,
-  InputField, PaymentCardInputField, PayPalButton, PrimaryTextButton,
-  SecondaryTextButtonWithArrow, SecurityCodeInputField } from '../components';
+  InputField, NumberedMonthDropdownMenu, PaymentCardInputField, PayPalButton,
+  PrimaryTextButton, SecondaryTextButtonWithArrow, SecurityCodeInputField
+} from '../components';
 import { DisplayMode, PaymentCard } from '../definitions';
 
 interface Properties {
@@ -35,11 +36,19 @@ interface Properties {
   /** Whether the continue button on add card modal is disabled or not. */
   isContinueDisabled: boolean;
 
-  addCardErrorMessage?: string;
+  /** Error message regarding the add credit card form. */
+  addCardErrorMessage: string;
+
+  /** Displayed month number on dropdown menu. */
+  selectedMonth: number;
+
+  /** Displayed year number on dropdown menu. */
+  selectedYear: number;
 
   /** Indicates the join button is clicked. */
   onJoinEvent: () => void;
 
+  /** Indictes a credit card in dropdown menu is clicked. */
   onCreditCardClick: () => void;
 
   /** Indicates the close button is clicked. */
@@ -59,6 +68,12 @@ interface Properties {
 
   /** Indicates the Apple Pay button is clicked. */
   onApplePay: () => void;
+
+  /** Indictes a month in dropdown menu is clicked. */
+  onMonthClick: () => void;
+
+  /** Indictes a year in dropdown menu is clicked. */
+  onYearClick: () => void;
 }
 
 interface State {
@@ -181,13 +196,20 @@ export class JoinEventModal extends React.Component<Properties, State> {
             <p style={ADD_FIELD_TEXT_STYLE} >Name on card</p>
             <InputField style={PAYMENT_CARD_INPUT_STYLE} />
             <p style={ADD_FIELD_TEXT_STYLE} >Expiration date</p>
+            <div style={MONTH_YEAR_CONTAINER_STYLE} >
+              <NumberedMonthDropdownMenu
+                style={NUMBER_DROPDOWN_STYLE}
+                displayedValue={this.props.selectedMonth}
+                onMenuItemClick={this.props.onMonthClick}
+              />
+            </div>
             <p style={ADD_FIELD_TEXT_STYLE} >Security code</p>
             <SecurityCodeInputField style={CODE_INPUT_STYLE} />
             <p style={ADD_FIELD_TEXT_STYLE} >Zip/Postal code</p>
             <InputField style={CODE_INPUT_STYLE} value={this.state.zipcode}
               onChange={() => this.setState({ zipcode: this.state.zipcode })}
-              hasError={this.props.zipcodeErrorMessage}
             />
+            <p style={ERROR_MESSAGE_STYLE} >{this.props.addCardErrorMessage}</p>
             <PrimaryTextButton
               style={CONTINUE_BUTTON_STYLE}
               label='Continue'
@@ -300,7 +322,7 @@ const CONTAINER_STYLE: React.CSSProperties = {
   overflowY: 'auto',
   borderRadius: '4px',
   boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
-  backgroundColor: '#F6F6F6'
+  backgroundColor: '#FFFFFF'
 };
 
 const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
@@ -461,7 +483,7 @@ const EVENT_NAME_BUTTON_CONTAINER_STYLE: React.CSSProperties = {
   alignItems: 'flex-start',
   width: '100%',
   padding: '20px 20px 40px 20px',
-  height: 'calc(100% - 150px)'
+  backgroundColor: '#F6F6F6'
 };
 
 const FREE_EVENT_NAME_BUTTON_CONTAINER_STYLE: React.CSSProperties = {
@@ -693,21 +715,36 @@ const CODE_INPUT_STYLE: React.CSSProperties = {
   marginTop: '10px'
 };
 
-const ADD_ERROR_STYLE: React.CSSProperties = {
-  height: '18px',
-  width: '100%',
-  marginTop: '5px',
-  fontFamily: 'Source Sans Pro',
-  fontStyle: 'normal',
-  fontWeight: 400,
-  fontSize: '14px',
-  lineHeight: '18px',
-  color: '#FF2C79'
-};
-
 const CONTINUE_BUTTON_STYLE: React.CSSProperties = {
   width: '100%',
   minWidth: '100%',
   marginTop: '7px',
   height: '38px'
+};
+
+const ERROR_MESSAGE_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  minHeight: '18px',
+  color: '#FF2C79',
+  padding: '0px',
+  margin: '5px 0px 0px 0px',
+  width: '100%'
+};
+
+const MONTH_YEAR_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'flex-start',
+  width: '100%',
+  gap: '10px',
+  marginTop: '10px'
+};
+
+const NUMBER_DROPDOWN_STYLE: React.CSSProperties = {
+  width: 'calc(50% - 5px)'
 };
