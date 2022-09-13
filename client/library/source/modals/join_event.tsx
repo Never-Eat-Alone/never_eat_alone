@@ -206,7 +206,7 @@ export class JoinEventModal extends React.Component<Properties, State> {
       return paymentMethodSection;
     })();
     const eventNameButtonSection = (() => {
-      if (!this.props.isCardAdded && this.state.isAddCard) {
+      if (this.state.isAddCard) {
         const currentYear = new Date().getFullYear();
         return (
           <div style={EVENT_NAME_BUTTON_CONTAINER_STYLE} >
