@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import * as React from 'react';
 import { ApplePayButton, CloseButton, CreditCardDropdownMenu, GooglePayButton,
-  InputField, NumberedMonthDropdownMenu, PaymentCardInputField, PayPalButton,
+  InputField, NumberedDropdownMenu, PaymentCardInputField, PayPalButton,
   PrimaryTextButton, SecondaryTextButtonWithArrow, SecurityCodeInputField
 } from '../components';
 import { DisplayMode, PaymentCard } from '../definitions';
@@ -181,6 +181,7 @@ export class JoinEventModal extends React.Component<Properties, State> {
     })();
     const eventNameButtonSection = (() => {
       if (this.state.isAddCard) {
+        const currentYear = new Date().getFullYear();
         return (
           <div style={EVENT_NAME_BUTTON_CONTAINER_STYLE} >
             <div style={ADD_CARD_TITLE_ROW_STYLE} >
@@ -188,6 +189,7 @@ export class JoinEventModal extends React.Component<Properties, State> {
                 style={ADD_ICON_STYLE}
                 src='resources/icons/add_card.svg'
                 alt='Add Icon'
+                onClick={this.handleBackClick}
               />
               <h1 style={ADD_CARD_HEADLINE_STYLE} >Add a card</h1>
             </div>
@@ -197,10 +199,20 @@ export class JoinEventModal extends React.Component<Properties, State> {
             <InputField style={PAYMENT_CARD_INPUT_STYLE} />
             <p style={ADD_FIELD_TEXT_STYLE} >Expiration date</p>
             <div style={MONTH_YEAR_CONTAINER_STYLE} >
-              <NumberedMonthDropdownMenu
+              <NumberedDropdownMenu
                 style={NUMBER_DROPDOWN_STYLE}
+                values={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}
                 displayedValue={this.props.selectedMonth}
                 onMenuItemClick={this.props.onMonthClick}
+              />
+              <NumberedDropdownMenu
+                values={[currentYear, currentYear + 1, currentYear + 2,
+                  currentYear + 3, currentYear + 4, currentYear + 5,
+                  currentYear + 6, currentYear + 7, currentYear + 8,
+                  currentYear + 9, currentYear + 10]}
+                style={NUMBER_DROPDOWN_STYLE}
+                displayedValue={this.props.selectedYear}
+                onMenuItemClick={this.props.onYearClick}
               />
             </div>
             <p style={ADD_FIELD_TEXT_STYLE} >Security code</p>
@@ -313,6 +325,10 @@ export class JoinEventModal extends React.Component<Properties, State> {
   private handleAddCard = () => {
     this.setState({ isAddCard: true });
   };
+
+  private handleBackClick = () => {
+    this.setState({ isAddCard: false });
+  };
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {
@@ -322,7 +338,7 @@ const CONTAINER_STYLE: React.CSSProperties = {
   overflowY: 'auto',
   borderRadius: '4px',
   boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
-  backgroundColor: '#FFFFFF'
+  backgroundColor: '#F6F6F6'
 };
 
 const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {

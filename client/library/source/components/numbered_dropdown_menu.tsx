@@ -3,7 +3,11 @@ import * as React from 'react';
 
 /** Describes the credit card drop down menu properties. */
 interface Properties {
+  /** Displayed value on the menu card. */
   displayedValue: number;
+
+  /** List of values in the dropdown menu. */
+  values: number[];
 
   /** Style that is applied to the container. */
   style?: React.CSSProperties;
@@ -23,8 +27,8 @@ function formatNumber(value: number) {
   return value.toString();
 }
 
-/** Implements the numbered month dropdown menu component. */
-export class NumberedMonthDropdownMenu extends React.Component<Properties,
+/** Implements the numbered dropdown menu component. */
+export class NumberedDropdownMenu extends React.Component<Properties,
     State> {
   constructor(props: Properties) {
     super(props);
@@ -38,16 +42,16 @@ export class NumberedMonthDropdownMenu extends React.Component<Properties,
     const dropDownMenu = (() => {
       if (this.state.isDisplayed) {
         const items = [];
-        for (let i = 1; i < 13; i++) {
-          const value = formatNumber(i);
+        for (const value of this.props.values) {
+          const stringValue = formatNumber(value);
           items.push(
             <div
                 style={{...MENU_ITEM_STYLE, ...TEXT_STYLE}}
-                key={`month-${i}`}
+                key={`dropdown-item-${value}`}
                 className={css(styles.menuItem)}
-                onClick={() => this.props.onMenuItemClick(i)}
+                onClick={() => this.props.onMenuItemClick(value)}
             >
-              {value}
+              {stringValue}
             </div>);
         }
         return (
