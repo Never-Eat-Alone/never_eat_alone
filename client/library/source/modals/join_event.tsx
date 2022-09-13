@@ -45,6 +45,18 @@ interface Properties {
   /** Displayed year number on dropdown menu. */
   selectedYear: number;
 
+  /** The security code on the card. */
+  securityCode: string;
+
+  /** Card number. */
+  cardNumber: string;
+
+  /** First name and last name on the card. */
+  nameOnCard: string;
+
+  /** Indicate a payment card is added successfully. */
+  isCardAdded: boolean;
+
   /** Indicates the join button is clicked. */
   onJoinEvent: () => void;
 
@@ -131,9 +143,23 @@ export class JoinEventModal extends React.Component<Properties, State> {
           this.props.paymentCardsOnFile.length === 0) {
         return <h3 style={NO_CARD_TITLE_STYLE} >No cards on file.</h3>;
       }
+      const cardTitle = (() => {
+        if (this.props.isCardAdded) {
+          return (
+            <div style={CARD_TITLE_CONTAINER_STYLE} >
+              <img
+                style={ADDED_ICON_STYLE}
+                src='resources/icons/added.svg'
+                alt='Added Icon'
+              />
+              <div>Card added</div>
+            </div>);
+        }
+        return <h3 style={CARD_ON_FILE_TITLE_STYLE} >Cards on file:</h3>;
+      })();
       return (
         <React.Fragment>
-          <h3 style={CARD_ON_FILE_TITLE_STYLE} >Cards on file:</h3>
+          {cardTitle}
           <CreditCardDropdownMenu
             cardList={this.props.paymentCardsOnFile}
             displayedCard={this.props.displayedCard}
@@ -180,7 +206,7 @@ export class JoinEventModal extends React.Component<Properties, State> {
       return paymentMethodSection;
     })();
     const eventNameButtonSection = (() => {
-      if (this.state.isAddCard) {
+      if (!this.props.isCardAdded && this.state.isAddCard) {
         const currentYear = new Date().getFullYear();
         return (
           <div style={EVENT_NAME_BUTTON_CONTAINER_STYLE} >
@@ -561,6 +587,24 @@ const JOIN_BUTTON_TEXT_STYLE: React.CSSProperties = {
   lineHeight: '15px',
 };
 
+const CARD_TITLE_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  gap: '10px',
+  width: '100%',
+  height: '18px',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '14px',
+  lineHeight: '18px',
+  padding: '0px',
+  margin: '30px 0px 10px 0px',
+  color: '#000000'
+};
+
 const CARD_ON_FILE_TITLE_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
@@ -763,4 +807,12 @@ const MONTH_YEAR_CONTAINER_STYLE: React.CSSProperties = {
 
 const NUMBER_DROPDOWN_STYLE: React.CSSProperties = {
   width: 'calc(50% - 5px)'
+};
+
+const ADDED_ICON_STYLE: React.CSSProperties = {
+  width: '15px',
+  minWidth: '15px',
+  height: '15px',
+  minHeight: '15px',
+  backgroundColor: 'transparent'
 };

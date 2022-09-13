@@ -1402,7 +1402,11 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('isContinueDisabled', true, BooleanInput),
     new PropertySchema('addCardErrorMessage', '', TextInput),
     new PropertySchema('selectedMonth', 1, NumberInput),
-    new PropertySchema('selectedYear', 2022, NumberInput)
+    new PropertySchema('selectedYear', 2022, NumberInput),
+    new PropertySchema('securityCode', '', TextInput),
+    new PropertySchema('cardNumber', '', TextInput),
+    new PropertySchema('nameOnCard', '', TextInput),
+    new PropertySchema('isCardAdded', false, BooleanInput)
   ], [
     new SignalSchema('onJoinEvent', '', []),
     new SignalSchema('onClose', '', []),
