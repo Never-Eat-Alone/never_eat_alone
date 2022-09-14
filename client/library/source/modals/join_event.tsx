@@ -294,6 +294,10 @@ export class JoinEventModal extends React.Component<Properties, State> {
                   styles.spinDivThird)} />
                 <div style={SPIN_DIV_STYLE} className={css(styles.spinDiv)} />
               </div>
+              <h3 style={PROCESSING_TITLE_STYLE} >Processing</h3>
+              <p style={PROCESSING_DESCRIPTION_STYLE} >
+                You’re almost done! Please wait while we process your payment.
+              </p>
             </div>
           </div>);
       }
@@ -856,7 +860,8 @@ const CENTER_CONTAINER_STYLE: React.CSSProperties = {
   width: '100%',
   height: '100%',
   backgroundColor: 'transparent',
-  minHeight: '385px'
+  minHeight: '385px',
+  gap: '20px'
 };
 
 const SPINNER_CONTAINER_STYLE: React.CSSProperties = {
@@ -896,6 +901,33 @@ const spinKeyframes = {
   '100%': {
     transform: 'rotate(360deg)'
   }
+};
+
+const PROCESSING_TITLE_STYLE: React.CSSProperties = {
+  fontFamily: 'Oswald',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '20px',
+  lineHeight: '30px',
+  textAlign: 'center',
+  color: '#000000',
+  height: '30px',
+  padding: '0px',
+  margin: '0px',
+  maxWidth: '100%'
+};
+
+const PROCESSING_DESCRIPTION_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  textAlign: 'center',
+  color: '#969696',
+  maxWidth: '100%',
+  padding: '0px',
+  margin: '0px'
 };
 
 const styles = StyleSheet.create({
