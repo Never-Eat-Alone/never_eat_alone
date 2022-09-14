@@ -1,3 +1,4 @@
+import { css, StyleSheet } from 'aphrodite';
 import { format } from 'date-fns';
 import * as React from 'react';
 import { ApplePayButton, CloseButton, CreditCardDropdownMenu, GooglePayButton,
@@ -94,6 +95,7 @@ interface State {
   nameOnCard: string;
   securityCode: number;
   cardNumber: number;
+  isProcessingPayment: boolean;
 }
 
 function getTaxAmount(fee: number, taxRate: number) {
@@ -109,7 +111,8 @@ export class JoinEventModal extends React.Component<Properties, State> {
       zipcode: '',
       nameOnCard: '',
       securityCode: null,
-      cardNumber: null
+      cardNumber: null,
+      isProcessingPayment: false
     };
   }
 
@@ -166,7 +169,7 @@ export class JoinEventModal extends React.Component<Properties, State> {
             onCardClick={this.props.onCreditCardClick}
           />
           <PrimaryTextButton label='Checkout' style={CHECKOUT_BUTTON_STYLE}
-            onClick={this.props.onCheckout}
+            onClick={this.handleCheckout}
           />
         </React.Fragment>);
     })();
@@ -272,44 +275,67 @@ export class JoinEventModal extends React.Component<Properties, State> {
       <div style={FEE_DESCRIPTION_STYLE} >
         {this.props.eventFeeDescription}
       </div> || null);
-    const costDetailsSection = (
-      <div style={costDetailsContainerStyle} >
-        <h2 style={CHECKOUT_TITLE_STYLE} >Event Checkout</h2>
-        <div style={DIVIDER_STYLE} />
-        <div style={COST_BREAKDOWN_TOTAL_CONTAINER_STYLE} >
-          <div style={COLUMN_CONTAINER_STYLE} >
-            <div style={EVENT_FEE_ROW_STYLE} >
-              <div style={EVENT_FEE_BOLD_TEXT_STYLE} >Event Fee</div>
-              <div style={EVENT_PRICE_STYLE} >
-                CAD ${this.props.eventFee.toString()}
+    const costDetailsSection = (() => {
+      if (this.state.isProcessingPayment) {
+        return (
+          <div style={costDetailsContainerStyle} >
+            <div style={CENTER_CONTAINER_STYLE} >
+              <div style={SPINNER_CONTAINER_STYLE} >
+                <img
+                  style={PROCESSING_IMAGE_STYLE}
+                  src='resources/icons/processing.svg'
+                  alt='Processing Icon'
+                />
+                <div style={SPIN_DIV_STYLE} className={css(styles.spinDiv,
+                  styles.spinDivFirst)} />
+                <div style={SPIN_DIV_STYLE} className={css(styles.spinDiv,
+                  styles.spinDivSecond)} />
+                <div style={SPIN_DIV_STYLE} className={css(styles.spinDiv,
+                  styles.spinDivThird)} />
+                <div style={SPIN_DIV_STYLE} className={css(styles.spinDiv)} />
               </div>
             </div>
-            {feeDescription}
+          </div>);
+      }
+      return (
+        <div style={costDetailsContainerStyle} >
+          <h2 style={CHECKOUT_TITLE_STYLE} >Event Checkout</h2>
+          <div style={DIVIDER_STYLE} />
+          <div style={COST_BREAKDOWN_TOTAL_CONTAINER_STYLE} >
+            <div style={COLUMN_CONTAINER_STYLE} >
+              <div style={EVENT_FEE_ROW_STYLE} >
+                <div style={EVENT_FEE_BOLD_TEXT_STYLE} >Event Fee</div>
+                <div style={EVENT_PRICE_STYLE} >
+                  CAD ${this.props.eventFee.toString()}
+                </div>
+              </div>
+              {feeDescription}
+            </div>
+            <div style={COLUMN_CONTAINER_STYLE} >
+              <div style={PRICE_DIVIDER_STYLE} />
+              <div style={EVENT_FEE_ROW_STYLE} >
+                <div style={GREY_TEXT_STYLE} >Subtotal</div>
+                <div style={EVENT_PRICE_STYLE} >
+                  CAD ${this.props.eventFee.toString()}
+                </div>
+              </div>
+              <div style={EVENT_FEE_ROW_STYLE} >
+                <div style={GREY_TEXT_STYLE} >Tax</div>
+                <div style={EVENT_PRICE_STYLE} >
+                  CAD ${getTaxAmount(this.props.eventFee, this.props.taxRate)}
+                </div>
+              </div>
+              <div style={EVENT_FEE_ROW_STYLE} >
+                <div style={EVENT_FEE_BOLD_TEXT_STYLE} >Total Payment</div>
+                <div style={EVENT_PRICE_STYLE} >
+                  CAD ${(Number(getTaxAmount(this.props.eventFee,
+                    this.props.taxRate)) + this.props.eventFee).toFixed(2)}
+                </div>
+              </div>
+            </div>
           </div>
-          <div style={COLUMN_CONTAINER_STYLE} >
-            <div style={PRICE_DIVIDER_STYLE} />
-            <div style={EVENT_FEE_ROW_STYLE} >
-              <div style={GREY_TEXT_STYLE} >Subtotal</div>
-              <div style={EVENT_PRICE_STYLE} >
-                CAD ${this.props.eventFee.toString()}
-              </div>
-            </div>
-            <div style={EVENT_FEE_ROW_STYLE} >
-              <div style={GREY_TEXT_STYLE} >Tax</div>
-              <div style={EVENT_PRICE_STYLE} >
-                CAD ${getTaxAmount(this.props.eventFee, this.props.taxRate)}
-              </div>
-            </div>
-            <div style={EVENT_FEE_ROW_STYLE} >
-              <div style={EVENT_FEE_BOLD_TEXT_STYLE} >Total Payment</div>
-              <div style={EVENT_PRICE_STYLE} >
-                CAD ${(Number(getTaxAmount(this.props.eventFee,
-                  this.props.taxRate)) + this.props.eventFee).toFixed(2)}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>);
+        </div>);
+    })();
     if (this.props.displayMode === DisplayMode.MOBILE) {
       return (
         <div style={containerStyle} >
@@ -354,6 +380,11 @@ export class JoinEventModal extends React.Component<Properties, State> {
 
   private handleBackClick = () => {
     this.setState({ isAddCard: false });
+  };
+
+  private handleCheckout = () => {
+    this.setState({ isProcessingPayment: true });
+    this.props.onCheckout();
   };
 }
 
@@ -816,3 +847,71 @@ const ADDED_ICON_STYLE: React.CSSProperties = {
   minHeight: '15px',
   backgroundColor: 'transparent'
 };
+
+const CENTER_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '100%',
+  height: '100%',
+  backgroundColor: 'transparent',
+  minHeight: '385px'
+};
+
+const SPINNER_CONTAINER_STYLE: React.CSSProperties = {
+  position: 'relative',
+  display: 'inline-block',
+  width: '70px',
+  height: '70px'
+};
+
+const SPIN_DIV_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  display: 'block',
+  position: 'absolute',
+  width: '64px',
+  height: '64px',
+  margin: '3px',
+  border: '3px solid #F26B55',
+  borderRadius: '50%',
+  borderColor: '#F26B55 transparent transparent transparent'
+};
+
+const PROCESSING_IMAGE_STYLE: React.CSSProperties = {
+  position: 'absolute',
+  top: '20px',
+  left: '20px',
+  width: '30px',
+  height: '30px',
+  minWidth: '30px',
+  minHeight: '30px',
+  backgroundColor: 'transparent'
+};
+
+const spinKeyframes = {
+  '0%': {
+    transform: 'rotate(0deg)'
+  },
+  '100%': {
+    transform: 'rotate(360deg)'
+  }
+};
+
+const styles = StyleSheet.create({
+  spinDiv: {
+    animationName: [spinKeyframes],
+    animationDuration: '1.2s',
+    animationTimingFunction: 'cubic-bezier(0.5, 0, 0.5, 1)',
+    animationIterationCount: 'infinite'
+  },
+  spinDivFirst: {
+    animationDelay: '-0.45s'
+  },
+  spinDivSecond:{
+    animationDelay: '-0.3s'
+  },
+  spinDivThird: {
+    animationDelay: '-0.15s'
+  }
+});
