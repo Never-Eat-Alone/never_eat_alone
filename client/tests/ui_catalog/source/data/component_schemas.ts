@@ -1398,7 +1398,15 @@ export function loadComponentSchemas(): ComponentSchema[] {
       new NeverEatAlone.PaymentCard(1, NeverEatAlone.CreditCardType.VISA, 4044),
       PaymentCardInput))),
     new PropertySchema('displayedCard', new NeverEatAlone.PaymentCard(1,
-      NeverEatAlone.CreditCardType.VISA, 4044), PaymentCardInput)
+      NeverEatAlone.CreditCardType.VISA, 4044), PaymentCardInput),
+    new PropertySchema('isContinueDisabled', true, BooleanInput),
+    new PropertySchema('addCardErrorMessage', '', TextInput),
+    new PropertySchema('selectedMonth', 1, NumberInput),
+    new PropertySchema('selectedYear', 2022, NumberInput),
+    new PropertySchema('securityCode', '', TextInput),
+    new PropertySchema('cardNumber', '', TextInput),
+    new PropertySchema('nameOnCard', '', TextInput),
+    new PropertySchema('isCardAdded', false, BooleanInput)
   ], [
     new SignalSchema('onJoinEvent', '', []),
     new SignalSchema('onClose', '', []),
@@ -1407,7 +1415,9 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new SignalSchema('onAddCard', '', []),
     new SignalSchema('onPaypalClick', '', []),
     new SignalSchema('onGooglePayClick', '', []),
-    new SignalSchema('onApplePay', '', [])
+    new SignalSchema('onApplePay', '', []),
+    new SignalSchema('onMonthClick', '', []),
+    new SignalSchema('onYearClick', '', [])
   ], NeverEatAlone.JoinEventModal);
   const creditCardDropdownMenu = new ComponentSchema('CreditCardDropdownMenu',
     [new PropertySchema('cardList', [
@@ -1451,6 +1461,13 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('style', {}, CSSInput)
   ],
     [new SignalSchema('onClick', '', [])], NeverEatAlone.GooglePayButton);
+  const paymentCardInputFieldSchema = new ComponentSchema(
+    'PaymentCardInputField', [
+      new PropertySchema('style', {}, CSSInput),
+      new PropertySchema('placeholder', '', TextInput),
+      new PropertySchema('disabled', false, BooleanInput),
+      new PropertySchema('hasError', false, BooleanInput)], [],
+      NeverEatAlone.PaymentCardInputField);
   return [
     accentTextButtonSchema,
     albumCardSchema,
@@ -1489,6 +1506,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     logoSchema,
     nameInputFieldSchema,
     partnerWithUsSummarySchema,
+    paymentCardInputFieldSchema,
     payPalButtonSchema,
     primaryButtonWithArrowSchema,
     primaryTextButtonSchema,

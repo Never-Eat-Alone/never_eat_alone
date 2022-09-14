@@ -1,7 +1,8 @@
 import { format } from 'date-fns';
 import * as React from 'react';
 import { ApplePayButton, CloseButton, CreditCardDropdownMenu, GooglePayButton,
-  PayPalButton, PrimaryTextButton, SecondaryTextButtonWithArrow
+  InputField, NumberedDropdownMenu, PaymentCardInputField, PayPalButton,
+  PrimaryTextButton, SecondaryTextButtonWithArrow, SecurityCodeInputField
 } from '../components';
 import { DisplayMode, PaymentCard } from '../definitions';
 
@@ -32,9 +33,34 @@ interface Properties {
   /** User's default payment card. */
   displayedCard: PaymentCard;
 
+  /** Whether the continue button on add card modal is disabled or not. */
+  isContinueDisabled: boolean;
+
+  /** Error message regarding the add credit card form. */
+  addCardErrorMessage: string;
+
+  /** Displayed month number on dropdown menu. */
+  selectedMonth: number;
+
+  /** Displayed year number on dropdown menu. */
+  selectedYear: number;
+
+  /** The security code on the card. */
+  securityCode: string;
+
+  /** Card number. */
+  cardNumber: string;
+
+  /** First name and last name on the card. */
+  nameOnCard: string;
+
+  /** Indicate a payment card is added successfully. */
+  isCardAdded: boolean;
+
   /** Indicates the join button is clicked. */
   onJoinEvent: () => void;
 
+  /** Indictes a credit card in dropdown menu is clicked. */
   onCreditCardClick: () => void;
 
   /** Indicates the close button is clicked. */
@@ -54,6 +80,20 @@ interface Properties {
 
   /** Indicates the Apple Pay button is clicked. */
   onApplePay: () => void;
+
+  /** Indictes a month in dropdown menu is clicked. */
+  onMonthClick: () => void;
+
+  /** Indictes a year in dropdown menu is clicked. */
+  onYearClick: () => void;
+}
+
+interface State {
+  isAddCard: boolean;
+  zipcode: string;
+  nameOnCard: string;
+  securityCode: number;
+  cardNumber: number;
 }
 
 function getTaxAmount(fee: number, taxRate: number) {
@@ -61,7 +101,18 @@ function getTaxAmount(fee: number, taxRate: number) {
 }
 
 /** Displays the Join Event Modal. */
-export class JoinEventModal extends React.Component<Properties> {
+export class JoinEventModal extends React.Component<Properties, State> {
+  constructor(props: Properties) {
+    super(props);
+    this.state = {
+      isAddCard: false,
+      zipcode: '',
+      nameOnCard: '',
+      securityCode: null,
+      cardNumber: null
+    };
+  }
+
   public render(): JSX.Element {
     const { containerStyle, costDetailsContainerStyle } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
@@ -92,9 +143,23 @@ export class JoinEventModal extends React.Component<Properties> {
           this.props.paymentCardsOnFile.length === 0) {
         return <h3 style={NO_CARD_TITLE_STYLE} >No cards on file.</h3>;
       }
+      const cardTitle = (() => {
+        if (this.props.isCardAdded) {
+          return (
+            <div style={CARD_TITLE_CONTAINER_STYLE} >
+              <img
+                style={ADDED_ICON_STYLE}
+                src='resources/icons/added.svg'
+                alt='Added Icon'
+              />
+              <div>Card added</div>
+            </div>);
+        }
+        return <h3 style={CARD_ON_FILE_TITLE_STYLE} >Cards on file:</h3>;
+      })();
       return (
         <React.Fragment>
-          <h3 style={CARD_ON_FILE_TITLE_STYLE} >Cards on file:</h3>
+          {cardTitle}
           <CreditCardDropdownMenu
             cardList={this.props.paymentCardsOnFile}
             displayedCard={this.props.displayedCard}
@@ -112,7 +177,7 @@ export class JoinEventModal extends React.Component<Properties> {
           style={ADD_CARD_BUTTON_STYLE}
           labelStyle={ADD_CARD_BUTTON_LABEL_STYLE}
           label='Add a card'
-          onClick={this.props.onAddCard}
+          onClick={this.handleAddCard}
         />
         <div style={OR_LINE_CONTAINER_STYLE} >
           <div style={PARTIAL_LINE_STYLE} />
@@ -140,18 +205,69 @@ export class JoinEventModal extends React.Component<Properties> {
       }
       return paymentMethodSection;
     })();
-    const eventNameButtonSection = (
-      <div style={eventNameButtonContainerStyle} >
-        <div style={EVENT_NAME_DATE_CONTAINER_STYLE} >
-          <h1 style={EVENT_NAME_STYLE} >{this.props.eventTitle}</h1>
-          <div style={EVENT_DATE_STYLE} >
-            {format(this.props.eventStartDate,
-            'eeee, MMMM do, yyyy')}{' at '}{format(
-            this.props.eventStartDate, 'h:mm aa')}
+    const eventNameButtonSection = (() => {
+      if (!this.props.isCardAdded && this.state.isAddCard) {
+        const currentYear = new Date().getFullYear();
+        return (
+          <div style={EVENT_NAME_BUTTON_CONTAINER_STYLE} >
+            <div style={ADD_CARD_TITLE_ROW_STYLE} >
+              <img
+                style={ADD_ICON_STYLE}
+                src='resources/icons/add_card.svg'
+                alt='Add Icon'
+                onClick={this.handleBackClick}
+              />
+              <h1 style={ADD_CARD_HEADLINE_STYLE} >Add a card</h1>
+            </div>
+            <p style={ADD_FIELD_TEXT_STYLE} >Card number</p>
+            <PaymentCardInputField style={PAYMENT_CARD_INPUT_STYLE} />
+            <p style={ADD_FIELD_TEXT_STYLE} >Name on card</p>
+            <InputField style={PAYMENT_CARD_INPUT_STYLE} />
+            <p style={ADD_FIELD_TEXT_STYLE} >Expiration date</p>
+            <div style={MONTH_YEAR_CONTAINER_STYLE} >
+              <NumberedDropdownMenu
+                style={NUMBER_DROPDOWN_STYLE}
+                values={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}
+                displayedValue={this.props.selectedMonth}
+                onMenuItemClick={this.props.onMonthClick}
+              />
+              <NumberedDropdownMenu
+                values={[currentYear, currentYear + 1, currentYear + 2,
+                  currentYear + 3, currentYear + 4, currentYear + 5,
+                  currentYear + 6, currentYear + 7, currentYear + 8,
+                  currentYear + 9, currentYear + 10]}
+                style={NUMBER_DROPDOWN_STYLE}
+                displayedValue={this.props.selectedYear}
+                onMenuItemClick={this.props.onYearClick}
+              />
+            </div>
+            <p style={ADD_FIELD_TEXT_STYLE} >Security code</p>
+            <SecurityCodeInputField style={CODE_INPUT_STYLE} />
+            <p style={ADD_FIELD_TEXT_STYLE} >Zip/Postal code</p>
+            <InputField style={CODE_INPUT_STYLE} value={this.state.zipcode}
+              onChange={() => this.setState({ zipcode: this.state.zipcode })}
+            />
+            <p style={ERROR_MESSAGE_STYLE} >{this.props.addCardErrorMessage}</p>
+            <PrimaryTextButton
+              style={CONTINUE_BUTTON_STYLE}
+              label='Continue'
+              disabled={this.props.isContinueDisabled}
+            />
+          </div>);
+      }
+      return (
+        <div style={eventNameButtonContainerStyle} >
+          <div style={EVENT_NAME_DATE_CONTAINER_STYLE} >
+            <h1 style={EVENT_NAME_STYLE} >{this.props.eventTitle}</h1>
+            <div style={EVENT_DATE_STYLE} >
+              {format(this.props.eventStartDate,
+              'eeee, MMMM do, yyyy')}{' at '}{format(
+              this.props.eventStartDate, 'h:mm aa')}
+            </div>
           </div>
-        </div>
-        {joinButton}
-      </div>);
+          {joinButton}
+        </div>);
+      })();
     const feeDescription = (this.props.eventFeeDescription &&
       <div style={FEE_DESCRIPTION_STYLE} >
         {this.props.eventFeeDescription}
@@ -231,6 +347,14 @@ export class JoinEventModal extends React.Component<Properties> {
         </div>
       </div>);
   }
+
+  private handleAddCard = () => {
+    this.setState({ isAddCard: true });
+  };
+
+  private handleBackClick = () => {
+    this.setState({ isAddCard: false });
+  };
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {
@@ -401,7 +525,7 @@ const EVENT_NAME_BUTTON_CONTAINER_STYLE: React.CSSProperties = {
   alignItems: 'flex-start',
   width: '100%',
   padding: '20px 20px 40px 20px',
-  height: 'calc(100% - 150px)'
+  backgroundColor: '#F6F6F6'
 };
 
 const FREE_EVENT_NAME_BUTTON_CONTAINER_STYLE: React.CSSProperties = {
@@ -461,6 +585,24 @@ const JOIN_BUTTON_TEXT_STYLE: React.CSSProperties = {
   fontWeight: 600,
   fontSize: '12px',
   lineHeight: '15px',
+};
+
+const CARD_TITLE_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  gap: '10px',
+  width: '100%',
+  height: '18px',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '14px',
+  lineHeight: '18px',
+  padding: '0px',
+  margin: '30px 0px 10px 0px',
+  color: '#000000'
 };
 
 const CARD_ON_FILE_TITLE_STYLE: React.CSSProperties = {
@@ -576,4 +718,101 @@ const FEE_DESCRIPTION_STYLE: React.CSSProperties = {
   marginTop: '10px',
   marginBottom: '10px',
   padding: '0px 10px'
+};
+
+const ADD_CARD_TITLE_ROW_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  width: '100%',
+  height: '30px',
+  backgroundColor: 'transparent',
+  gap: '10px',
+  marginBottom: '10px'
+};
+
+const ADD_ICON_STYLE: React.CSSProperties = {
+  width: '15px',
+  height: '15px',
+  minWidth: '15px',
+  minHeight: '15px',
+  backgroundColor: 'transparent'
+};
+
+const ADD_CARD_HEADLINE_STYLE: React.CSSProperties = {
+  fontFamily: 'Oswald',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '20px',
+  lineHeight: '30px',
+  color: '#000000',
+  margin: '0px',
+  padding: '0px'
+};
+
+const PAYMENT_CARD_INPUT_STYLE: React.CSSProperties = {
+  width: '100%',
+  minWidth: '100%',
+  marginTop: '10px'
+};
+
+const ADD_FIELD_TEXT_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#000000',
+  width: '100%',
+  padding: '0px',
+  margin: '20px 0px 0px 0px'
+};
+
+const CODE_INPUT_STYLE: React.CSSProperties = {
+  width: '150px',
+  minWidth: '150px',
+  marginTop: '10px'
+};
+
+const CONTINUE_BUTTON_STYLE: React.CSSProperties = {
+  width: '100%',
+  minWidth: '100%',
+  marginTop: '7px',
+  height: '38px'
+};
+
+const ERROR_MESSAGE_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  minHeight: '18px',
+  color: '#FF2C79',
+  padding: '0px',
+  margin: '5px 0px 0px 0px',
+  width: '100%'
+};
+
+const MONTH_YEAR_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'flex-start',
+  width: '100%',
+  gap: '10px',
+  marginTop: '10px'
+};
+
+const NUMBER_DROPDOWN_STYLE: React.CSSProperties = {
+  width: 'calc(50% - 5px)'
+};
+
+const ADDED_ICON_STYLE: React.CSSProperties = {
+  width: '15px',
+  minWidth: '15px',
+  height: '15px',
+  minHeight: '15px',
+  backgroundColor: 'transparent'
 };
