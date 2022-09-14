@@ -206,6 +206,9 @@ export class JoinEventModal extends React.Component<Properties, State> {
             onClick={this.props.onJoinEvent}
           />);
       }
+      if (this.state.isProcessingPayment) {
+        return null;
+      }
       return paymentMethodSection;
     })();
     const eventNameButtonSection = (() => {
@@ -560,7 +563,8 @@ const EVENT_NAME_BUTTON_CONTAINER_STYLE: React.CSSProperties = {
   alignItems: 'flex-start',
   width: '100%',
   padding: '20px 20px 40px 20px',
-  backgroundColor: '#F6F6F6'
+  backgroundColor: '#F6F6F6',
+  minHeight: '190px'
 };
 
 const FREE_EVENT_NAME_BUTTON_CONTAINER_STYLE: React.CSSProperties = {
