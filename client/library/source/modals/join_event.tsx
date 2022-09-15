@@ -96,6 +96,11 @@ interface State {
   securityCode: number;
   cardNumber: number;
   isProcessingPayment: boolean;
+  isContinueDisabled: boolean;
+  invalidName: boolean;
+  invalidCardNumber: boolean;
+  invalidZipCode: boolean;
+  invalidSecurityCode: boolean;
 }
 
 function getTaxAmount(fee: number, taxRate: number) {
@@ -112,7 +117,12 @@ export class JoinEventModal extends React.Component<Properties, State> {
       nameOnCard: '',
       securityCode: null,
       cardNumber: null,
-      isProcessingPayment: false
+      isProcessingPayment: false,
+      isContinueDisabled: this.props.isContinueDisabled,
+      invalidCardNumber: false,
+      invalidName: false,
+      invalidSecurityCode: false,
+      invalidZipCode: false
     };
   }
 
@@ -226,9 +236,24 @@ export class JoinEventModal extends React.Component<Properties, State> {
               <h1 style={ADD_CARD_HEADLINE_STYLE} >Add a card</h1>
             </div>
             <p style={ADD_FIELD_TEXT_STYLE} >Card number</p>
-            <PaymentCardInputField style={PAYMENT_CARD_INPUT_STYLE} />
+            <PaymentCardInputField
+              style={PAYMENT_CARD_INPUT_STYLE}
+              name='card number'
+              inputMode='numeric'
+              pattern='\d*'
+              required
+              onInvalid={() => this.handleInvalidInput('card number')}
+              hasError={this.state.invalidCardNumber}
+            />
             <p style={ADD_FIELD_TEXT_STYLE} >Name on card</p>
-            <InputField style={PAYMENT_CARD_INPUT_STYLE} />
+            <InputField
+              style={PAYMENT_CARD_INPUT_STYLE}
+              name='name on card'
+              pattern='^[A-Za-z]([A-Za-z]*([ ]{1})+[A-Za-z]*)+[A-Za-z]$'
+              required
+              onInvalid={() => this.handleInvalidInput('name on card')}
+              hasError={this.state.invalidName}
+            />
             <p style={ADD_FIELD_TEXT_STYLE} >Expiration date</p>
             <div style={MONTH_YEAR_CONTAINER_STYLE} >
               <NumberedDropdownMenu
@@ -248,16 +273,30 @@ export class JoinEventModal extends React.Component<Properties, State> {
               />
             </div>
             <p style={ADD_FIELD_TEXT_STYLE} >Security code</p>
-            <SecurityCodeInputField style={CODE_INPUT_STYLE} />
+            <SecurityCodeInputField
+              style={CODE_INPUT_STYLE}
+              name='security code'
+              inputMode='numeric'
+              pattern='\d{3}\d?'
+              required
+              onInvalid={() => this.handleInvalidInput('security code')}
+              hasError={this.state.invalidSecurityCode}
+            />
             <p style={ADD_FIELD_TEXT_STYLE} >Zip/Postal code</p>
-            <InputField style={CODE_INPUT_STYLE} value={this.state.zipcode}
+            <InputField
+              style={CODE_INPUT_STYLE}
+              name='zipcode'
+              pattern='^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$'
               onChange={() => this.setState({ zipcode: this.state.zipcode })}
+              required
+              onInvalid={() => this.handleInvalidInput('zipcode')}
+              hasError={this.state.invalidZipCode}
             />
             <p style={ERROR_MESSAGE_STYLE} >{this.props.addCardErrorMessage}</p>
             <PrimaryTextButton
               style={CONTINUE_BUTTON_STYLE}
               label='Continue'
-              disabled={this.props.isContinueDisabled}
+              disabled={this.state.isContinueDisabled}
             />
           </div>);
       }
@@ -383,16 +422,41 @@ export class JoinEventModal extends React.Component<Properties, State> {
 
   private handleAddCard = () => {
     this.setState({ isAddCard: true });
-  };
+  }
 
   private handleBackClick = () => {
     this.setState({ isAddCard: false });
-  };
+  }
 
   private handleCheckout = () => {
     this.setState({ isProcessingPayment: true });
     this.props.onCheckout();
-  };
+  }
+
+  private handleInvalidInput = (fieldName: string) => {
+    switch (fieldName) {
+      case 'name on card':
+        this.setState({ invalidName: true, isContinueDisabled: true });
+        break;
+      case 'zipcode':
+        this.setState({ invalidZipCode: true, isContinueDisabled: true });
+        break;
+      case 'security code':
+        this.setState({ invalidSecurityCode: true, isContinueDisabled: true });
+        break;
+      case 'card number':
+        this.setState({ invalidCardNumber: true, isContinueDisabled: true });
+    }
+  }
+}
+
+export namespace JoinEventModal {
+  export enum PAGE {
+    INITIAL,
+    ADD_CARD,
+    PROCESSING_PAYMENT,
+    PAYMENT_COMPLETED
+  }
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {
