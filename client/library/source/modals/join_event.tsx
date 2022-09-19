@@ -249,6 +249,9 @@ export class JoinEventModal extends React.Component<Properties, State> {
           if (this.props.addCardErrorMessage) {
             return this.props.addCardErrorMessage;
           }
+          if (this.state.isZipcodeInvalid) {
+            return 'Please enter a valid postal code.';
+          }
           return '';
         })();
         const nameOnCardErrorMessage = (() => {
@@ -257,6 +260,24 @@ export class JoinEventModal extends React.Component<Properties, State> {
           }
           if (this.state.isNameOnCardInvalid) {
             return 'Please enter a valid fullname.';
+          }
+          return '';
+        })();
+        const cardNumberErrorMessage = (() => {
+          if (!this.state.addCardInputHasChanged) {
+            return '';
+          }
+          if (this.state.isCardNumberInvalid) {
+            return 'Please enter a valid card number.';
+          }
+          return '';
+        })();
+        const securityCodeErrorMessage = (() => {
+          if (!this.state.addCardInputHasChanged) {
+            return '';
+          }
+          if (this.state.isSecurityCodeInvalid) {
+            return 'Please enter a valid security code.';
           }
           return '';
         })();
@@ -282,9 +303,9 @@ export class JoinEventModal extends React.Component<Properties, State> {
               onChange={this.handleCardNumberChange}
               onInvalid={() => this.handleInvalidInput('card number')}
               hasError={this.state.isCardNumberInvalid &&
-                !this.state.addCardInputHasChanged}
+                this.state.addCardInputHasChanged}
             />
-            <div style={ERROR_MESSAGE_STYLE}>{}</div>
+            <div style={ERROR_MESSAGE_STYLE}>{cardNumberErrorMessage}</div>
             <p style={ADD_FIELD_TEXT_STYLE} >Name on card</p>
             <InputField
               style={PAYMENT_CARD_INPUT_STYLE}
@@ -295,7 +316,7 @@ export class JoinEventModal extends React.Component<Properties, State> {
               onChange={this.handleNameOnCardChange}
               onInvalid={() => this.handleInvalidInput('name on card')}
               hasError={this.state.isNameOnCardInvalid &&
-                !this.state.addCardInputHasChanged}
+                this.state.addCardInputHasChanged}
             />
             <div style={ERROR_MESSAGE_STYLE}>{nameOnCardErrorMessage}</div>
             <p style={ADD_FIELD_TEXT_STYLE} >Expiration date</p>
@@ -326,9 +347,10 @@ export class JoinEventModal extends React.Component<Properties, State> {
               onChange={this.handleSecurityCodeChange}
               required
               onInvalid={() => this.handleInvalidInput('security code')}
-              hasError={this.state.isSecurityCodeInvalid}
+              hasError={this.state.isSecurityCodeInvalid &&
+                this.state.addCardInputHasChanged}
             />
-            <div style={ERROR_MESSAGE_STYLE}>{}</div>
+            <div style={ERROR_MESSAGE_STYLE}>{securityCodeErrorMessage}</div>
             <p style={ADD_FIELD_TEXT_STYLE} >Zip/Postal code</p>
             <InputField
               style={CODE_INPUT_STYLE}
@@ -338,7 +360,8 @@ export class JoinEventModal extends React.Component<Properties, State> {
               onChange={this.handleZipCodeChange}
               required
               onInvalid={() => this.handleInvalidInput('zipcode')}
-              hasError={this.state.isZipcodeInvalid}
+              hasError={this.state.isZipcodeInvalid &&
+                this.state.addCardInputHasChanged}
             />
             <p style={ERROR_MESSAGE_STYLE} >{addCardErrorMessage}</p>
             <PrimaryTextButton
@@ -473,7 +496,7 @@ export class JoinEventModal extends React.Component<Properties, State> {
   private handleCardNumberChange = (event: React.ChangeEvent<HTMLInputElement>
       ) => {
     this.setState({
-      cardNumber: event.target.value.trim(),
+      cardNumber: event.target.value,
       addCardInputHasChanged: true
     });
   }
@@ -520,13 +543,15 @@ export class JoinEventModal extends React.Component<Properties, State> {
       isNameOnCardInvalid: false,
       isSecurityCodeInvalid: false,
       isCardNumberInvalid: false,
-      isZipcodeInvalid: false
+      isZipcodeInvalid: false,
+      nameOnCard: this.state.nameOnCard.trim(),
+      cardNumber: this.state.cardNumber.trim(),
+      zipcode: this.state.zipcode.trim()
     });
     this.props.onAddCard();
   }
 
   private handleInvalidInput = (fieldName: string) => {
-    console.log('handleInvalidInput');
     switch (fieldName) {
       case 'name on card':
         this.setState({
