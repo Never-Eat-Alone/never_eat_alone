@@ -2,9 +2,10 @@ import * as NeverEatAlone from 'never_eat_alone';
 import { ArrayInput, AttendeeInput, BooleanInput, CityProvinceInput, CSSInput,
   CuisineInput, DateInput, DateTimeInput, DisplayModeInput, DressCodeInput,
   EventCardSummaryInput, EventTagInput, ForgotPasswordPageErrorCodeInput,
-  HomePageErrorCodeInput, LanguageInput, LocationInput, NumberInput,
-  PaymentCardInput, RestaurantInput, SeatingInput, SignUpPageErrorCodeInput,
-  SocialMediaImageInput, TextInput, UserInput } from '../viewer/propertyInput';
+  HomePageErrorCodeInput, JoinEventModalErrorCodeInput, LanguageInput,
+  LocationInput, NumberInput, PaymentCardInput, RestaurantInput, SeatingInput,
+  SignUpPageErrorCodeInput, SocialMediaImageInput, TextInput, UserInput
+} from '../viewer/propertyInput';
 import { ComponentSchema, PropertySchema, SignalSchema } from './schemas';
 
 /** Loads the complete list of schemas available to test. */
@@ -1399,14 +1400,18 @@ export function loadComponentSchemas(): ComponentSchema[] {
       PaymentCardInput))),
     new PropertySchema('displayedCard', new NeverEatAlone.PaymentCard(1,
       NeverEatAlone.CreditCardType.VISA, 4044), PaymentCardInput),
-    new PropertySchema('isContinueDisabled', true, BooleanInput),
     new PropertySchema('addCardErrorMessage', '', TextInput),
     new PropertySchema('selectedMonth', 1, NumberInput),
     new PropertySchema('selectedYear', 2022, NumberInput),
     new PropertySchema('securityCode', '', TextInput),
+    new PropertySchema('zipcode', '', TextInput),
     new PropertySchema('cardNumber', '', TextInput),
     new PropertySchema('nameOnCard', '', TextInput),
-    new PropertySchema('isCardAdded', false, BooleanInput)
+    new PropertySchema('errorCode',
+      NeverEatAlone.JoinEventModal.ErrorCode.NONE,
+      JoinEventModalErrorCodeInput),
+    new PropertySchema('cardAdded', false, BooleanInput),
+    new PropertySchema('checkoutCompleted', false, BooleanInput)
   ], [
     new SignalSchema('onJoinEvent', '', []),
     new SignalSchema('onClose', '', []),
