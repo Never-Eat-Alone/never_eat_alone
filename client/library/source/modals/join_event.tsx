@@ -391,6 +391,19 @@ export class JoinEventModal extends React.Component<Properties, State> {
         {this.props.eventFeeDescription}
       </div> || null);
     const costDetailsSection = (() => {
+      if (this.state.page === JoinEventModal.Page.PAYMENT_COMPLETED) {
+        return (
+          <div style={costDetailsContainerStyle} >
+            <div style={PAYMENT_COMPLETED_CONTAINER_STYLE} >
+              <div>
+
+              </div>
+              <div>
+
+              </div>
+            </div>
+          </div>);
+      }
       if (this.state.page === JoinEventModal.Page.PROCESSING_PAYMENT) {
         return (
           <div style={costDetailsContainerStyle} >
@@ -1101,6 +1114,10 @@ const PROCESSING_IMAGE_STYLE: React.CSSProperties = {
   minWidth: '30px',
   minHeight: '30px',
   backgroundColor: 'transparent'
+};
+
+const PAYMENT_COMPLETED_CONTAINER_STYLE: React.CSSProperties = {
+  
 };
 
 const spinKeyframes = {
