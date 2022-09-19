@@ -102,6 +102,11 @@ interface State {
   securityCode: string;
   cardNumber: string;
   errorCode: JoinEventModal.ErrorCode;
+  isNameOnCardInvalid: boolean;
+  isSecurityCodeInvalid: boolean;
+  isCardNumberInvalid: boolean;
+  isZipcodeInvalid: boolean;
+  addCardInputHasChanged: boolean;
 }
 
 function getTaxAmount(fee: number, taxRate: number) {
@@ -118,12 +123,16 @@ export class JoinEventModal extends React.Component<Properties, State> {
       nameOnCard: this.props.nameOnCard,
       securityCode: this.props.securityCode,
       cardNumber: this.props.cardNumber,
-      errorCode: this.props.errorCode
+      errorCode: this.props.errorCode,
+      isNameOnCardInvalid: false,
+      isSecurityCodeInvalid: false,
+      isCardNumberInvalid: false,
+      isZipcodeInvalid: false,
+      addCardInputHasChanged: false
     };
   }
 
   public render(): JSX.Element {
-    console.log('page', this.state.page, 'error', this.state.errorCode);
     const { containerStyle, costDetailsContainerStyle } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
@@ -227,14 +236,32 @@ export class JoinEventModal extends React.Component<Properties, State> {
               this.state.zipcode.length === 0) {
             return true;
           }
+          if (this.state.addCardInputHasChanged) {
+            return false;
+          }
           if (this.state.errorCode !== JoinEventModal.ErrorCode.NONE) {
             return true;
           }
           return false;
         })();
         const currentYear = new Date().getFullYear();
+        const addCardErrorMessage = (() => {
+          if (this.props.addCardErrorMessage) {
+            return this.props.addCardErrorMessage;
+          }
+          return '';
+        })();
+        const nameOnCardErrorMessage = (() => {
+          if (!this.state.addCardInputHasChanged) {
+            return '';
+          }
+          if (this.state.isNameOnCardInvalid) {
+            return 'Please enter a valid fullname.';
+          }
+          return '';
+        })();
         return (
-          <div style={EVENT_NAME_BUTTON_CONTAINER_STYLE} >
+          <form style={EVENT_NAME_BUTTON_CONTAINER_STYLE} >
             <div style={ADD_CARD_TITLE_ROW_STYLE} >
               <img
                 style={ADD_ICON_STYLE}
@@ -254,9 +281,10 @@ export class JoinEventModal extends React.Component<Properties, State> {
               required
               onChange={this.handleCardNumberChange}
               onInvalid={() => this.handleInvalidInput('card number')}
-              hasError={this.state.errorCode ===
-                JoinEventModal.ErrorCode.INVALID_CARD_NUMBER}
+              hasError={this.state.isCardNumberInvalid &&
+                !this.state.addCardInputHasChanged}
             />
+            <div style={ERROR_MESSAGE_STYLE}>{}</div>
             <p style={ADD_FIELD_TEXT_STYLE} >Name on card</p>
             <InputField
               style={PAYMENT_CARD_INPUT_STYLE}
@@ -266,9 +294,10 @@ export class JoinEventModal extends React.Component<Properties, State> {
               required
               onChange={this.handleNameOnCardChange}
               onInvalid={() => this.handleInvalidInput('name on card')}
-              hasError={this.state.errorCode ===
-                JoinEventModal.ErrorCode.INVALID_NAME}
+              hasError={this.state.isNameOnCardInvalid &&
+                !this.state.addCardInputHasChanged}
             />
+            <div style={ERROR_MESSAGE_STYLE}>{nameOnCardErrorMessage}</div>
             <p style={ADD_FIELD_TEXT_STYLE} >Expiration date</p>
             <div style={MONTH_YEAR_CONTAINER_STYLE} >
               <NumberedDropdownMenu
@@ -297,9 +326,9 @@ export class JoinEventModal extends React.Component<Properties, State> {
               onChange={this.handleSecurityCodeChange}
               required
               onInvalid={() => this.handleInvalidInput('security code')}
-              hasError={this.state.errorCode ===
-                JoinEventModal.ErrorCode.INVALID_SECURITY_CODE}
+              hasError={this.state.isSecurityCodeInvalid}
             />
+            <div style={ERROR_MESSAGE_STYLE}>{}</div>
             <p style={ADD_FIELD_TEXT_STYLE} >Zip/Postal code</p>
             <InputField
               style={CODE_INPUT_STYLE}
@@ -309,17 +338,17 @@ export class JoinEventModal extends React.Component<Properties, State> {
               onChange={this.handleZipCodeChange}
               required
               onInvalid={() => this.handleInvalidInput('zipcode')}
-              hasError={this.state.errorCode ===
-                JoinEventModal.ErrorCode.INVALID_ZIPCODE}
+              hasError={this.state.isZipcodeInvalid}
             />
-            <p style={ERROR_MESSAGE_STYLE} >{this.props.addCardErrorMessage}</p>
+            <p style={ERROR_MESSAGE_STYLE} >{addCardErrorMessage}</p>
             <PrimaryTextButton
+              type='submit'
               style={CONTINUE_BUTTON_STYLE}
               label='Continue'
-              onClick={this.props.onAddCard}
+              onClick={this.handleContinue}
               disabled={isContinueAddCardDisabled}
             />
-          </div>);
+          </form>);
       }
       return (
         <div style={eventNameButtonContainerStyle} >
@@ -443,22 +472,34 @@ export class JoinEventModal extends React.Component<Properties, State> {
 
   private handleCardNumberChange = (event: React.ChangeEvent<HTMLInputElement>
       ) => {
-    this.setState({ cardNumber: event.target.value.trim() });
+    this.setState({
+      cardNumber: event.target.value.trim(),
+      addCardInputHasChanged: true
+    });
   }
 
   private handleNameOnCardChange = (event: React.ChangeEvent<HTMLInputElement>
       ) => {
-    this.setState({ nameOnCard: event.target.value });
+    this.setState({
+      nameOnCard: event.target.value,
+      addCardInputHasChanged: true
+    });
   }
 
   private handleSecurityCodeChange = (event: React.ChangeEvent<
       HTMLInputElement>) => {
-    this.setState({ securityCode: event.target.value.trim() });
+    this.setState({
+      securityCode: event.target.value.trim(),
+      addCardInputHasChanged: true
+    });
   }
 
   private handleZipCodeChange = (event: React.ChangeEvent<
       HTMLInputElement>) => {
-    this.setState({ zipcode: event.target.value });
+    this.setState({
+      zipcode: event.target.value,
+      addCardInputHasChanged: true
+    });
   }
 
   private handleAddCard = () => {
@@ -474,23 +515,41 @@ export class JoinEventModal extends React.Component<Properties, State> {
     this.props.onCheckout();
   }
 
+  private handleContinue = () => {
+    this.setState({
+      isNameOnCardInvalid: false,
+      isSecurityCodeInvalid: false,
+      isCardNumberInvalid: false,
+      isZipcodeInvalid: false
+    });
+    this.props.onAddCard();
+  }
+
   private handleInvalidInput = (fieldName: string) => {
     console.log('handleInvalidInput');
     switch (fieldName) {
       case 'name on card':
-        this.setState({ errorCode: JoinEventModal.ErrorCode.INVALID_NAME });
+        this.setState({
+          errorCode: JoinEventModal.ErrorCode.INVALID_ADD_CARD_INPUT,
+          isNameOnCardInvalid: true
+        });
         break;
       case 'zipcode':
-        this.setState({ errorCode: JoinEventModal.ErrorCode.INVALID_ZIPCODE });
+        this.setState({
+          errorCode: JoinEventModal.ErrorCode.INVALID_ADD_CARD_INPUT,
+          isZipcodeInvalid: true
+        });
         break;
       case 'security code':
         this.setState({
-          errorCode: JoinEventModal.ErrorCode.INVALID_SECURITY_CODE
+          errorCode: JoinEventModal.ErrorCode.INVALID_ADD_CARD_INPUT,
+          isSecurityCodeInvalid: true
         });
         break;
       case 'card number':
         this.setState({
-          errorCode: JoinEventModal.ErrorCode.INVALID_CARD_NUMBER
+          errorCode: JoinEventModal.ErrorCode.INVALID_ADD_CARD_INPUT,
+          isCardNumberInvalid: true
         });
     }
   }
@@ -507,10 +566,7 @@ export namespace JoinEventModal {
 
   export enum ErrorCode {
     NONE,
-    INVALID_NAME,
-    INVALID_ZIPCODE,
-    INVALID_CARD_NUMBER,
-    INVALID_SECURITY_CODE,
+    INVALID_ADD_CARD_INPUT,
     PAYMENT_FAILED,
     THIRDPARTY_PAYMENT_FAILED,
     INVALID_CARD_INFO,
@@ -923,7 +979,7 @@ const ADD_FIELD_TEXT_STYLE: React.CSSProperties = {
   color: '#000000',
   width: '100%',
   padding: '0px',
-  margin: '20px 0px 0px 0px'
+  margin: '7px 0px 0px 0px'
 };
 
 const CODE_INPUT_STYLE: React.CSSProperties = {
@@ -964,7 +1020,8 @@ const MONTH_YEAR_CONTAINER_STYLE: React.CSSProperties = {
   alignItems: 'flex-start',
   width: '100%',
   gap: '10px',
-  marginTop: '10px'
+  marginTop: '10px',
+  marginBottom: '13px'
 };
 
 const NUMBER_DROPDOWN_STYLE: React.CSSProperties = {
