@@ -1,3 +1,4 @@
+import { css, StyleSheet } from 'aphrodite';
 import { format } from 'date-fns';
 import * as React from 'react';
 import { ApplePayButton, CloseButton, CreditCardDropdownMenu, GooglePayButton,
@@ -33,9 +34,6 @@ interface Properties {
   /** User's default payment card. */
   displayedCard: PaymentCard;
 
-  /** Whether the continue button on add card modal is disabled or not. */
-  isContinueDisabled: boolean;
-
   /** Error message regarding the add credit card form. */
   addCardErrorMessage: string;
 
@@ -51,11 +49,20 @@ interface Properties {
   /** Card number. */
   cardNumber: string;
 
+  /** The zipcode of the creditcard. */
+  zipcode: string;
+
   /** First name and last name on the card. */
   nameOnCard: string;
 
-  /** Indicate a payment card is added successfully. */
-  isCardAdded: boolean;
+  /** ErrorCode of the page. */
+  errorCode: JoinEventModal.ErrorCode;
+
+  /** Whether the credit card is added successfully or not. */
+  cardAdded: boolean;
+
+  /** Whether the checkout process is completed or not. */
+  checkoutCompleted: boolean;
 
   /** Indicates the join button is clicked. */
   onJoinEvent: () => void;
@@ -89,11 +96,12 @@ interface Properties {
 }
 
 interface State {
-  isAddCard: boolean;
+  page: JoinEventModal.Page;
   zipcode: string;
   nameOnCard: string;
-  securityCode: number;
-  cardNumber: number;
+  securityCode: string;
+  cardNumber: string;
+  errorCode: JoinEventModal.ErrorCode;
 }
 
 function getTaxAmount(fee: number, taxRate: number) {
@@ -105,15 +113,17 @@ export class JoinEventModal extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props);
     this.state = {
-      isAddCard: false,
-      zipcode: '',
-      nameOnCard: '',
-      securityCode: null,
-      cardNumber: null
+      page: JoinEventModal.Page.INITIAL,
+      zipcode: this.props.zipcode,
+      nameOnCard: this.props.nameOnCard,
+      securityCode: this.props.securityCode,
+      cardNumber: this.props.cardNumber,
+      errorCode: this.props.errorCode
     };
   }
 
   public render(): JSX.Element {
+    console.log('page', this.state.page, 'error', this.state.errorCode);
     const { containerStyle, costDetailsContainerStyle } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
@@ -144,7 +154,7 @@ export class JoinEventModal extends React.Component<Properties, State> {
         return <h3 style={NO_CARD_TITLE_STYLE} >No cards on file.</h3>;
       }
       const cardTitle = (() => {
-        if (this.props.isCardAdded) {
+        if (this.props.cardAdded) {
           return (
             <div style={CARD_TITLE_CONTAINER_STYLE} >
               <img
@@ -166,7 +176,7 @@ export class JoinEventModal extends React.Component<Properties, State> {
             onCardClick={this.props.onCreditCardClick}
           />
           <PrimaryTextButton label='Checkout' style={CHECKOUT_BUTTON_STYLE}
-            onClick={this.props.onCheckout}
+            onClick={this.handleCheckout}
           />
         </React.Fragment>);
     })();
@@ -203,10 +213,25 @@ export class JoinEventModal extends React.Component<Properties, State> {
             onClick={this.props.onJoinEvent}
           />);
       }
+      if (this.state.page === JoinEventModal.Page.PROCESSING_PAYMENT) {
+        return null;
+      }
       return paymentMethodSection;
     })();
     const eventNameButtonSection = (() => {
-      if (!this.props.isCardAdded && this.state.isAddCard) {
+      if (this.state.page === JoinEventModal.Page.ADD_CARD) {
+        const isContinueAddCardDisabled = (() => {
+          if (this.state.cardNumber.trim().length === 0 ||
+              this.state.nameOnCard.length === 0 ||
+              this.state.securityCode.length === 0 ||
+              this.state.zipcode.length === 0) {
+            return true;
+          }
+          if (this.state.errorCode !== JoinEventModal.ErrorCode.NONE) {
+            return true;
+          }
+          return false;
+        })();
         const currentYear = new Date().getFullYear();
         return (
           <div style={EVENT_NAME_BUTTON_CONTAINER_STYLE} >
@@ -220,9 +245,30 @@ export class JoinEventModal extends React.Component<Properties, State> {
               <h1 style={ADD_CARD_HEADLINE_STYLE} >Add a card</h1>
             </div>
             <p style={ADD_FIELD_TEXT_STYLE} >Card number</p>
-            <PaymentCardInputField style={PAYMENT_CARD_INPUT_STYLE} />
+            <PaymentCardInputField
+              style={PAYMENT_CARD_INPUT_STYLE}
+              name='card number'
+              inputMode='numeric'
+              value={this.state.cardNumber}
+              pattern='\d*'
+              required
+              onChange={this.handleCardNumberChange}
+              onInvalid={() => this.handleInvalidInput('card number')}
+              hasError={this.state.errorCode ===
+                JoinEventModal.ErrorCode.INVALID_CARD_NUMBER}
+            />
             <p style={ADD_FIELD_TEXT_STYLE} >Name on card</p>
-            <InputField style={PAYMENT_CARD_INPUT_STYLE} />
+            <InputField
+              style={PAYMENT_CARD_INPUT_STYLE}
+              name='name on card'
+              pattern='^[A-Za-z]([A-Za-z]*([ ]{1})+[A-Za-z]*)+[A-Za-z]$'
+              value={this.state.nameOnCard}
+              required
+              onChange={this.handleNameOnCardChange}
+              onInvalid={() => this.handleInvalidInput('name on card')}
+              hasError={this.state.errorCode ===
+                JoinEventModal.ErrorCode.INVALID_NAME}
+            />
             <p style={ADD_FIELD_TEXT_STYLE} >Expiration date</p>
             <div style={MONTH_YEAR_CONTAINER_STYLE} >
               <NumberedDropdownMenu
@@ -242,16 +288,36 @@ export class JoinEventModal extends React.Component<Properties, State> {
               />
             </div>
             <p style={ADD_FIELD_TEXT_STYLE} >Security code</p>
-            <SecurityCodeInputField style={CODE_INPUT_STYLE} />
+            <SecurityCodeInputField
+              style={CODE_INPUT_STYLE}
+              name='security code'
+              inputMode='numeric'
+              pattern='\d{3}\d?'
+              value={this.state.securityCode}
+              onChange={this.handleSecurityCodeChange}
+              required
+              onInvalid={() => this.handleInvalidInput('security code')}
+              hasError={this.state.errorCode ===
+                JoinEventModal.ErrorCode.INVALID_SECURITY_CODE}
+            />
             <p style={ADD_FIELD_TEXT_STYLE} >Zip/Postal code</p>
-            <InputField style={CODE_INPUT_STYLE} value={this.state.zipcode}
-              onChange={() => this.setState({ zipcode: this.state.zipcode })}
+            <InputField
+              style={CODE_INPUT_STYLE}
+              name='zipcode'
+              pattern='^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$'
+              value={this.state.zipcode}
+              onChange={this.handleZipCodeChange}
+              required
+              onInvalid={() => this.handleInvalidInput('zipcode')}
+              hasError={this.state.errorCode ===
+                JoinEventModal.ErrorCode.INVALID_ZIPCODE}
             />
             <p style={ERROR_MESSAGE_STYLE} >{this.props.addCardErrorMessage}</p>
             <PrimaryTextButton
               style={CONTINUE_BUTTON_STYLE}
               label='Continue'
-              disabled={this.props.isContinueDisabled}
+              onClick={this.props.onAddCard}
+              disabled={isContinueAddCardDisabled}
             />
           </div>);
       }
@@ -272,44 +338,71 @@ export class JoinEventModal extends React.Component<Properties, State> {
       <div style={FEE_DESCRIPTION_STYLE} >
         {this.props.eventFeeDescription}
       </div> || null);
-    const costDetailsSection = (
-      <div style={costDetailsContainerStyle} >
-        <h2 style={CHECKOUT_TITLE_STYLE} >Event Checkout</h2>
-        <div style={DIVIDER_STYLE} />
-        <div style={COST_BREAKDOWN_TOTAL_CONTAINER_STYLE} >
-          <div style={COLUMN_CONTAINER_STYLE} >
-            <div style={EVENT_FEE_ROW_STYLE} >
-              <div style={EVENT_FEE_BOLD_TEXT_STYLE} >Event Fee</div>
-              <div style={EVENT_PRICE_STYLE} >
-                CAD ${this.props.eventFee.toString()}
+    const costDetailsSection = (() => {
+      if (this.state.page === JoinEventModal.Page.PROCESSING_PAYMENT) {
+        return (
+          <div style={costDetailsContainerStyle} >
+            <div style={CENTER_CONTAINER_STYLE} >
+              <div style={SPINNER_CONTAINER_STYLE} >
+                <img
+                  style={PROCESSING_IMAGE_STYLE}
+                  src='resources/icons/processing.svg'
+                  alt='Processing Icon'
+                />
+                <div style={SPIN_DIV_STYLE} className={css(styles.spinDiv,
+                  styles.spinDivFirst)} />
+                <div style={SPIN_DIV_STYLE} className={css(styles.spinDiv,
+                  styles.spinDivSecond)} />
+                <div style={SPIN_DIV_STYLE} className={css(styles.spinDiv,
+                  styles.spinDivThird)} />
+                <div style={SPIN_DIV_STYLE} className={css(styles.spinDiv)} />
+              </div>
+              <h3 style={PROCESSING_TITLE_STYLE} >Processing</h3>
+              <p style={PROCESSING_DESCRIPTION_STYLE} >
+                You’re almost done! Please wait while we process your payment.
+              </p>
+            </div>
+          </div>);
+      }
+      return (
+        <div style={costDetailsContainerStyle} >
+          <h2 style={CHECKOUT_TITLE_STYLE} >Event Checkout</h2>
+          <div style={DIVIDER_STYLE} />
+          <div style={COST_BREAKDOWN_TOTAL_CONTAINER_STYLE} >
+            <div style={COLUMN_CONTAINER_STYLE} >
+              <div style={EVENT_FEE_ROW_STYLE} >
+                <div style={EVENT_FEE_BOLD_TEXT_STYLE} >Event Fee</div>
+                <div style={EVENT_PRICE_STYLE} >
+                  CAD ${this.props.eventFee.toString()}
+                </div>
+              </div>
+              {feeDescription}
+            </div>
+            <div style={COLUMN_CONTAINER_STYLE} >
+              <div style={PRICE_DIVIDER_STYLE} />
+              <div style={EVENT_FEE_ROW_STYLE} >
+                <div style={GREY_TEXT_STYLE} >Subtotal</div>
+                <div style={EVENT_PRICE_STYLE} >
+                  CAD ${this.props.eventFee.toString()}
+                </div>
+              </div>
+              <div style={EVENT_FEE_ROW_STYLE} >
+                <div style={GREY_TEXT_STYLE} >Tax</div>
+                <div style={EVENT_PRICE_STYLE} >
+                  CAD ${getTaxAmount(this.props.eventFee, this.props.taxRate)}
+                </div>
+              </div>
+              <div style={EVENT_FEE_ROW_STYLE} >
+                <div style={EVENT_FEE_BOLD_TEXT_STYLE} >Total Payment</div>
+                <div style={EVENT_PRICE_STYLE} >
+                  CAD ${(Number(getTaxAmount(this.props.eventFee,
+                    this.props.taxRate)) + this.props.eventFee).toFixed(2)}
+                </div>
               </div>
             </div>
-            {feeDescription}
           </div>
-          <div style={COLUMN_CONTAINER_STYLE} >
-            <div style={PRICE_DIVIDER_STYLE} />
-            <div style={EVENT_FEE_ROW_STYLE} >
-              <div style={GREY_TEXT_STYLE} >Subtotal</div>
-              <div style={EVENT_PRICE_STYLE} >
-                CAD ${this.props.eventFee.toString()}
-              </div>
-            </div>
-            <div style={EVENT_FEE_ROW_STYLE} >
-              <div style={GREY_TEXT_STYLE} >Tax</div>
-              <div style={EVENT_PRICE_STYLE} >
-                CAD ${getTaxAmount(this.props.eventFee, this.props.taxRate)}
-              </div>
-            </div>
-            <div style={EVENT_FEE_ROW_STYLE} >
-              <div style={EVENT_FEE_BOLD_TEXT_STYLE} >Total Payment</div>
-              <div style={EVENT_PRICE_STYLE} >
-                CAD ${(Number(getTaxAmount(this.props.eventFee,
-                  this.props.taxRate)) + this.props.eventFee).toFixed(2)}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>);
+        </div>);
+    })();
     if (this.props.displayMode === DisplayMode.MOBILE) {
       return (
         <div style={containerStyle} >
@@ -348,23 +441,91 @@ export class JoinEventModal extends React.Component<Properties, State> {
       </div>);
   }
 
+  private handleCardNumberChange = (event: React.ChangeEvent<HTMLInputElement>
+      ) => {
+    this.setState({ cardNumber: event.target.value.trim() });
+  }
+
+  private handleNameOnCardChange = (event: React.ChangeEvent<HTMLInputElement>
+      ) => {
+    this.setState({ nameOnCard: event.target.value });
+  }
+
+  private handleSecurityCodeChange = (event: React.ChangeEvent<
+      HTMLInputElement>) => {
+    this.setState({ securityCode: event.target.value.trim() });
+  }
+
+  private handleZipCodeChange = (event: React.ChangeEvent<
+      HTMLInputElement>) => {
+    this.setState({ zipcode: event.target.value });
+  }
+
   private handleAddCard = () => {
-    this.setState({ isAddCard: true });
-  };
+    this.setState({ page: JoinEventModal.Page.ADD_CARD });
+  }
 
   private handleBackClick = () => {
-    this.setState({ isAddCard: false });
-  };
+    this.setState({ page: JoinEventModal.Page.INITIAL });
+  }
+
+  private handleCheckout = () => {
+    this.setState({ page: JoinEventModal.Page.PROCESSING_PAYMENT });
+    this.props.onCheckout();
+  }
+
+  private handleInvalidInput = (fieldName: string) => {
+    console.log('handleInvalidInput');
+    switch (fieldName) {
+      case 'name on card':
+        this.setState({ errorCode: JoinEventModal.ErrorCode.INVALID_NAME });
+        break;
+      case 'zipcode':
+        this.setState({ errorCode: JoinEventModal.ErrorCode.INVALID_ZIPCODE });
+        break;
+      case 'security code':
+        this.setState({
+          errorCode: JoinEventModal.ErrorCode.INVALID_SECURITY_CODE
+        });
+        break;
+      case 'card number':
+        this.setState({
+          errorCode: JoinEventModal.ErrorCode.INVALID_CARD_NUMBER
+        });
+    }
+  }
+}
+
+export namespace JoinEventModal {
+  export enum Page {
+    INITIAL,
+    ADD_CARD,
+    PROCESSING_PAYMENT,
+    PAYMENT_COMPLETED,
+    PAYMENT_FAILED
+  }
+
+  export enum ErrorCode {
+    NONE,
+    INVALID_NAME,
+    INVALID_ZIPCODE,
+    INVALID_CARD_NUMBER,
+    INVALID_SECURITY_CODE,
+    PAYMENT_FAILED,
+    THIRDPARTY_PAYMENT_FAILED,
+    INVALID_CARD_INFO,
+    EXPIRED_CARD
+  }
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
   position: 'relative',
-  overflowY: 'auto',
   borderRadius: '4px',
   boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
-  backgroundColor: '#F6F6F6'
+  backgroundColor: '#F6F6F6',
+  overflowY: 'initial'
 };
 
 const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
@@ -372,8 +533,7 @@ const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  width: '675px',
-  minHeight: '410px'
+  width: '675px'
 };
 
 const TABLET_CONTAINER_STYLE: React.CSSProperties = {
@@ -381,8 +541,7 @@ const TABLET_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  width: '675px',
-  minHeight: '410px'
+  width: '675px'
 };
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
@@ -402,7 +561,6 @@ const CLOSE_BUTTON_STYLE: React.CSSProperties = {
 const COST_DETAILS_CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   backgroundColor: '#FFFFFF',
-  width: '375px',
   height: '100%',
   padding: '40px 20px'
 };
@@ -419,8 +577,7 @@ const COST_BREAKDOWN_TOTAL_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  width: '100%',
-  height: 'calc(100% - 40px)'
+  width: '100%'
 };
 
 const COLUMN_CONTAINER_STYLE: React.CSSProperties = {
@@ -783,6 +940,11 @@ const CONTINUE_BUTTON_STYLE: React.CSSProperties = {
 };
 
 const ERROR_MESSAGE_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-end',
+  alignItems: 'flex-start',
+  flexWrap: 'wrap',
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
   fontWeight: 400,
@@ -816,3 +978,99 @@ const ADDED_ICON_STYLE: React.CSSProperties = {
   minHeight: '15px',
   backgroundColor: 'transparent'
 };
+
+const CENTER_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '100%',
+  height: '100%',
+  backgroundColor: 'transparent',
+  minHeight: '385px',
+  gap: '20px'
+};
+
+const SPINNER_CONTAINER_STYLE: React.CSSProperties = {
+  position: 'relative',
+  display: 'inline-block',
+  width: '70px',
+  height: '70px'
+};
+
+const SPIN_DIV_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  display: 'block',
+  position: 'absolute',
+  width: '64px',
+  height: '64px',
+  margin: '3px',
+  border: '3px solid #F26B55',
+  borderRadius: '50%',
+  borderColor: '#F26B55 transparent transparent transparent'
+};
+
+const PROCESSING_IMAGE_STYLE: React.CSSProperties = {
+  position: 'absolute',
+  top: '20px',
+  left: '20px',
+  width: '30px',
+  height: '30px',
+  minWidth: '30px',
+  minHeight: '30px',
+  backgroundColor: 'transparent'
+};
+
+const spinKeyframes = {
+  '0%': {
+    transform: 'rotate(0deg)'
+  },
+  '100%': {
+    transform: 'rotate(360deg)'
+  }
+};
+
+const PROCESSING_TITLE_STYLE: React.CSSProperties = {
+  fontFamily: 'Oswald',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '20px',
+  lineHeight: '30px',
+  textAlign: 'center',
+  color: '#000000',
+  height: '30px',
+  padding: '0px',
+  margin: '0px',
+  maxWidth: '100%'
+};
+
+const PROCESSING_DESCRIPTION_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  textAlign: 'center',
+  color: '#969696',
+  maxWidth: '100%',
+  padding: '0px',
+  margin: '0px'
+};
+
+const styles = StyleSheet.create({
+  spinDiv: {
+    animationName: [spinKeyframes],
+    animationDuration: '1.2s',
+    animationTimingFunction: 'cubic-bezier(0.5, 0, 0.5, 1)',
+    animationIterationCount: 'infinite'
+  },
+  spinDivFirst: {
+    animationDelay: '-0.45s'
+  },
+  spinDivSecond:{
+    animationDelay: '-0.3s'
+  },
+  spinDivThird: {
+    animationDelay: '-0.15s'
+  }
+});
