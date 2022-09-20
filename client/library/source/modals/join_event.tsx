@@ -153,6 +153,9 @@ export class JoinEventModal extends React.Component<Properties, State> {
     })();
     const eventNameButtonContainerStyle = (() => {
       if (this.props.eventFee && this.props.eventFee != 0) {
+        if (this.props.checkoutCompleted) {
+          return PAYMENT_COMPLETED_EVENT_NAME_BUTTON_CONTAINER_STYLE;
+        }
         return EVENT_NAME_BUTTON_CONTAINER_STYLE;
       }
       return FREE_EVENT_NAME_BUTTON_CONTAINER_STYLE;
@@ -297,7 +300,18 @@ export class JoinEventModal extends React.Component<Properties, State> {
         return null;
       }
       if (this.props.checkoutCompleted) {
-        return null;
+        if (this.props.errorCode === JoinEventModal.ErrorCode.PAYMENT_FAILED ||
+            this.props.errorCode ===
+            JoinEventModal.ErrorCode.THIRDPARTY_PAYMENT_FAILED) {
+          return <PrimaryTextButton label='Back to Checkout'
+                    style={BACK_TO_BUTTON_STYLE}
+                    onClick={this.handleBackToCheckout}
+                  />;
+        }
+        return <PrimaryTextButton label='Back to Event'
+                  style={BACK_TO_BUTTON_STYLE}
+                  onClick={this.props.onClose}
+                />;
       }
       return paymentMethodSection;
     })();
@@ -619,6 +633,10 @@ export class JoinEventModal extends React.Component<Properties, State> {
     });
   }
 
+  private handleBackToCheckout = () => {
+    this.setState({ page: JoinEventModal.Page.INITIAL });
+  }
+
   private handleAddCard = () => {
     this.setState({ page: JoinEventModal.Page.ADD_CARD });
   }
@@ -870,6 +888,13 @@ const EVENT_NAME_BUTTON_CONTAINER_STYLE: React.CSSProperties = {
   borderRadius: '0px 0px 4px 4px'
 };
 
+const PAYMENT_COMPLETED_EVENT_NAME_BUTTON_CONTAINER_STYLE:
+    React.CSSProperties = {
+  ...EVENT_NAME_BUTTON_CONTAINER_STYLE,
+  justifyContent: 'space-between',
+  height: 'calc(100% - 150px)'
+};
+
 const FREE_EVENT_NAME_BUTTON_CONTAINER_STYLE: React.CSSProperties = {
   ...EVENT_NAME_BUTTON_CONTAINER_STYLE,
   justifyContent: 'space-between'
@@ -985,6 +1010,11 @@ const CHECKOUT_BUTTON_STYLE: React.CSSProperties = {
   marginTop: '20px',
   marginBottom: '20px'
 };
+
+const BACK_TO_BUTTON_STYLE: React.CSSProperties = {
+  ...CHECKOUT_BUTTON_STYLE,
+  margin: '0px'
+}
 
 const OR_LINE_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
