@@ -1489,6 +1489,12 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new SignalSchema('onRemoveSeat', '', []),
     new SignalSchema('onCancel', '', [])
   ], NeverEatAlone.RemoveSeatModal);
+  const settingsPageSchema = new ComponentSchema('SettingsPage', [
+    new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
+      DisplayModeInput),
+  ], [
+
+  ], NeverEatAlone.SettingsPage);
   return [
     accentTextButtonSchema,
     albumCardSchema,
@@ -1546,6 +1552,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     secondaryTextLinkButton,
     seeAllButtonSchema,
     seeLessButtonSchema,
+    settingsPageSchema,
     showAllButtonSchema,
     showLessButtonSchema,
     signUpPageSchema,
