@@ -165,7 +165,8 @@ export class JoinEventModal extends React.Component<Properties, State> {
         {this.props.eventFeeDescription}
       </div> || null);
     const totalPaymentSection = (() => {
-      if (this.props.checkoutCompleted) {
+      if (this.props.checkoutCompleted && this.state.page ===
+          JoinEventModal.Page.PROCESSING_PAYMENT) {
         if (this.props.errorCode === JoinEventModal.ErrorCode.PAYMENT_FAILED ||
             this.props.errorCode ===
             JoinEventModal.ErrorCode.THIRDPARTY_PAYMENT_FAILED) {
@@ -296,10 +297,12 @@ export class JoinEventModal extends React.Component<Properties, State> {
             onClick={this.props.onJoinEvent}
           />);
       }
-      if (this.state.page === JoinEventModal.Page.PROCESSING_PAYMENT) {
+      if (this.state.page === JoinEventModal.Page.PROCESSING_PAYMENT &&
+          !this.props.checkoutCompleted) {
         return null;
       }
-      if (this.props.checkoutCompleted) {
+      if (this.props.checkoutCompleted && this.state.page ===
+          JoinEventModal.Page.PROCESSING_PAYMENT) {
         if (this.props.errorCode === JoinEventModal.ErrorCode.PAYMENT_FAILED ||
             this.props.errorCode ===
             JoinEventModal.ErrorCode.THIRDPARTY_PAYMENT_FAILED) {
@@ -475,7 +478,8 @@ export class JoinEventModal extends React.Component<Properties, State> {
         </div>);
       })();
     const costDetailsSection = (() => {
-      if (this.props.checkoutCompleted) {
+      if (this.props.checkoutCompleted &&
+          this.state.page === JoinEventModal.Page.PROCESSING_PAYMENT) {
         if (this.props.errorCode === JoinEventModal.ErrorCode.PAYMENT_FAILED ||
             this.props.errorCode ===
             JoinEventModal.ErrorCode.THIRDPARTY_PAYMENT_FAILED) {
@@ -530,8 +534,8 @@ export class JoinEventModal extends React.Component<Properties, State> {
               </div>
             </div>);
         }
-      }
-      if (this.state.page === JoinEventModal.Page.PROCESSING_PAYMENT) {
+      } else if (this.state.page === JoinEventModal.Page.PROCESSING_PAYMENT &&
+          !this.props.checkoutCompleted) {
         return (
           <div style={costDetailsContainerStyle} >
             <div style={CENTER_CONTAINER_STYLE} >
@@ -555,13 +559,14 @@ export class JoinEventModal extends React.Component<Properties, State> {
               </p>
             </div>
           </div>);
+      } else {
+        return (
+          <div style={costDetailsContainerStyle} >
+            <h2 style={CHECKOUT_TITLE_STYLE} >Event Checkout</h2>
+            <div style={DIVIDER_STYLE} />
+            {costBreakDownSection}
+          </div>);
       }
-      return (
-        <div style={costDetailsContainerStyle} >
-          <h2 style={CHECKOUT_TITLE_STYLE} >Event Checkout</h2>
-          <div style={DIVIDER_STYLE} />
-          {costBreakDownSection}
-        </div>);
     })();
     if (this.props.displayMode === DisplayMode.MOBILE) {
       return (
@@ -634,7 +639,10 @@ export class JoinEventModal extends React.Component<Properties, State> {
   }
 
   private handleBackToCheckout = () => {
-    this.setState({ page: JoinEventModal.Page.INITIAL });
+    this.setState({
+      page: JoinEventModal.Page.INITIAL,
+      errorCode: JoinEventModal.ErrorCode.NONE
+    });
   }
 
   private handleAddCard = () => {
@@ -1012,8 +1020,9 @@ const CHECKOUT_BUTTON_STYLE: React.CSSProperties = {
 };
 
 const BACK_TO_BUTTON_STYLE: React.CSSProperties = {
-  ...CHECKOUT_BUTTON_STYLE,
-  margin: '0px'
+  width: '100%',
+  height: '38px',
+  margin: '30px 0px 0px 0px'
 }
 
 const OR_LINE_CONTAINER_STYLE: React.CSSProperties = {
