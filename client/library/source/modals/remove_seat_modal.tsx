@@ -48,11 +48,11 @@ export function RemoveSeatModal(props: Properties) {
           <div style={REFUND_AMOUNT_ROW_STYLE} >
             <img
               style={ICON_STYLE}
-              src='resources/icons/green_checkmark.svg'
+              src='resources/icons/added.svg'
               alt='Checkmark Icon'
             />
             <div style={REFUND_AMOUNT_TEXT_STYLE} >
-              <b>Refund:</b>&nbsp;${props.refundAmount.toString()}
+              <b>Refund:</b>&nbsp;${props.refundAmount.toFixed(2).toString()}
             </div>
           </div>
           <p style={DESCRIPTION_STYLE} >{props.refundDescription}</p>
