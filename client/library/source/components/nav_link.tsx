@@ -46,6 +46,43 @@ export function SecondaryButtonNavLink(props: Properties) {
     />);
 }
 
+export function RedNavLinkWithArrow(props: Properties) {
+  return (
+    <Router.Link
+        {...props}
+        style={{...LINK_STYLE, ...NAVLINK_WITH_ARROW_CONTAINER_STYLE,
+          ...REDLINK_WITH_ARROW_STYLE, ...props.style}}
+        className={css(styles.redNavLink)}
+    >
+      <p style={LABEL_STYLE} >{props.label}</p>
+      <svg
+          style={ARROW_ICON_STYLE}
+          width='8' height='8'
+          fill='none'
+          xmlns='http://www.w3.org/2000/svg'
+      >
+        <g clipPath='url(#clip0_1443_22362)' >
+        <path
+          d='M3.66211 0.521566L7.38279 3.99512L3.66211 7.47852'
+          stroke='currentColor' strokeWidth='1.5' strokeMiterlimit='10'
+        />
+        <path
+          d='M6.82411 3.99512L0.5 3.99512' stroke='currentColor'
+          strokeWidth='1.5' strokeMiterlimit='10'
+        />
+        </g>
+        <defs>
+          <clipPath id='clip0_1443_22362' >
+          <rect
+            width='8' height='8' fill='white'
+            transform='translate(0.5 8) rotate(-90)'
+          />
+          </clipPath>
+        </defs>
+      </svg>
+    </Router.Link>);
+}
+
 const LINK_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
@@ -72,6 +109,14 @@ const LABEL_STYLE: React.CSSProperties = {
   fontSize: 'inherit',
   lineHeight: 'inherit',
   color: 'inherit'
+};
+
+const REDLINK_WITH_ARROW_STYLE: React.CSSProperties = {
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#F26B55'
 };
 
 const WHITE_LINK_STYLE: React.CSSProperties = {
@@ -107,6 +152,22 @@ const SECONDARY_BUTTON_STYLE: React.CSSProperties = {
   textTransform: 'uppercase',
   color: '#F26B55',
   cursor: 'pointer'
+};
+
+const NAVLINK_WITH_ARROW_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  gap: '5px',
+  backgroundColor: 'transparent'
+};
+
+const ARROW_ICON_STYLE: React.CSSProperties = {
+  width: '8px',
+  height: '8px',
+  backgroundColor: 'transparent',
+  color: 'inherit'
 };
 
 const styles = StyleSheet.create({

@@ -3,8 +3,8 @@ import { format } from 'date-fns';
 import * as React from 'react';
 import { ApplePayButton, CloseButton, CreditCardDropdownMenu, GooglePayButton,
   InputField, NumberedDropdownMenu, PaymentCardInputField, PayPalButton,
-  PrimaryTextButton, SecondaryTextButtonWithArrow, SecurityCodeInputField
-} from '../components';
+  PrimaryTextButton, RedNavLinkWithArrow, SecondaryTextButtonWithArrow,
+  SecurityCodeInputField } from '../components';
 import { DisplayMode, PaymentCard } from '../definitions';
 
 interface Properties {
@@ -153,10 +153,85 @@ export class JoinEventModal extends React.Component<Properties, State> {
     })();
     const eventNameButtonContainerStyle = (() => {
       if (this.props.eventFee && this.props.eventFee != 0) {
+        if (this.props.checkoutCompleted) {
+          return PAYMENT_COMPLETED_EVENT_NAME_BUTTON_CONTAINER_STYLE;
+        }
         return EVENT_NAME_BUTTON_CONTAINER_STYLE;
       }
       return FREE_EVENT_NAME_BUTTON_CONTAINER_STYLE;
     })();
+    const feeDescription = (this.props.eventFeeDescription &&
+      <div style={FEE_DESCRIPTION_STYLE} >
+        {this.props.eventFeeDescription}
+      </div> || null);
+    const totalPaymentSection = (() => {
+      if (this.props.checkoutCompleted && this.state.page ===
+          JoinEventModal.Page.PROCESSING_PAYMENT) {
+        if (this.props.errorCode === JoinEventModal.ErrorCode.PAYMENT_FAILED ||
+            this.props.errorCode ===
+            JoinEventModal.ErrorCode.THIRDPARTY_PAYMENT_FAILED) {
+          return (
+            <React.Fragment>
+              <div
+                style={{...EVENT_FEE_BOLD_TEXT_STYLE,
+                  ...EVENT_FEE_FAILED_STYLE}}
+              >
+                Total Paid
+              </div>
+              <div style={{...EVENT_PRICE_STYLE, ...EVENT_FEE_FAILED_STYLE}} >
+                CAD $0.00
+              </div>
+            </React.Fragment>);
+        } else {
+          return (
+            <React.Fragment>
+              <div style={EVENT_FEE_BOLD_TEXT_STYLE} >Total Paid</div>
+              <div style={EVENT_PRICE_STYLE} >
+                CAD ${(Number(getTaxAmount(this.props.eventFee,
+                  this.props.taxRate)) + this.props.eventFee).toFixed(2)}
+              </div>
+            </React.Fragment>);
+        }
+      }
+      return (
+        <React.Fragment>
+          <div style={EVENT_FEE_BOLD_TEXT_STYLE} >Total Payment</div>
+          <div style={EVENT_PRICE_STYLE} >
+            CAD ${(Number(getTaxAmount(this.props.eventFee,
+              this.props.taxRate)) + this.props.eventFee).toFixed(2)}
+          </div>
+        </React.Fragment>);
+    })();
+    const costBreakDownSection = (
+      <div style={COST_BREAKDOWN_TOTAL_CONTAINER_STYLE} >
+        <div style={COLUMN_CONTAINER_STYLE} >
+          <div style={EVENT_FEE_ROW_STYLE} >
+            <div style={EVENT_FEE_BOLD_TEXT_STYLE} >Event Fee</div>
+            <div style={EVENT_PRICE_STYLE} >
+              CAD ${this.props.eventFee.toString()}
+            </div>
+          </div>
+          {feeDescription}
+        </div>
+        <div style={COLUMN_CONTAINER_STYLE} >
+          <div style={PRICE_DIVIDER_STYLE} />
+          <div style={EVENT_FEE_ROW_STYLE} >
+            <div style={GREY_TEXT_STYLE} >Subtotal</div>
+            <div style={EVENT_PRICE_STYLE} >
+              CAD ${this.props.eventFee.toString()}
+            </div>
+          </div>
+          <div style={EVENT_FEE_ROW_STYLE} >
+            <div style={GREY_TEXT_STYLE} >Tax</div>
+            <div style={EVENT_PRICE_STYLE} >
+              CAD ${getTaxAmount(this.props.eventFee, this.props.taxRate)}
+            </div>
+          </div>
+          <div style={EVENT_FEE_ROW_STYLE} >
+            {totalPaymentSection}
+          </div>
+        </div>
+      </div>);
     const cardsOnFileSection = (() => {
       if (!this.props.paymentCardsOnFile ||
           this.props.paymentCardsOnFile.length === 0) {
@@ -222,8 +297,24 @@ export class JoinEventModal extends React.Component<Properties, State> {
             onClick={this.props.onJoinEvent}
           />);
       }
-      if (this.state.page === JoinEventModal.Page.PROCESSING_PAYMENT) {
+      if (this.state.page === JoinEventModal.Page.PROCESSING_PAYMENT &&
+          !this.props.checkoutCompleted) {
         return null;
+      }
+      if (this.props.checkoutCompleted && this.state.page ===
+          JoinEventModal.Page.PROCESSING_PAYMENT) {
+        if (this.props.errorCode === JoinEventModal.ErrorCode.PAYMENT_FAILED ||
+            this.props.errorCode ===
+            JoinEventModal.ErrorCode.THIRDPARTY_PAYMENT_FAILED) {
+          return <PrimaryTextButton label='Back to Checkout'
+                    style={BACK_TO_BUTTON_STYLE}
+                    onClick={this.handleBackToCheckout}
+                  />;
+        }
+        return <PrimaryTextButton label='Back to Event'
+                  style={BACK_TO_BUTTON_STYLE}
+                  onClick={this.props.onClose}
+                />;
       }
       return paymentMethodSection;
     })();
@@ -386,12 +477,65 @@ export class JoinEventModal extends React.Component<Properties, State> {
           {joinButton}
         </div>);
       })();
-    const feeDescription = (this.props.eventFeeDescription &&
-      <div style={FEE_DESCRIPTION_STYLE} >
-        {this.props.eventFeeDescription}
-      </div> || null);
     const costDetailsSection = (() => {
-      if (this.state.page === JoinEventModal.Page.PROCESSING_PAYMENT) {
+      if (this.props.checkoutCompleted &&
+          this.state.page === JoinEventModal.Page.PROCESSING_PAYMENT) {
+        if (this.props.errorCode === JoinEventModal.ErrorCode.PAYMENT_FAILED ||
+            this.props.errorCode ===
+            JoinEventModal.ErrorCode.THIRDPARTY_PAYMENT_FAILED) {
+          return (
+            <div style={costDetailsContainerStyle} >
+              <div style={PAYMENT_COMPLETED_CONTAINER_STYLE} >
+                <div style={PAYMENT_TOP_SECTION_STYLE} >
+                  <div style={ROW_STYLE} >
+                    <img
+                      style={PAYMENT_FAILED_ICON_STYLE}
+                      src='resources/icons/failed.svg'
+                      alt='Failed Icon'
+                    />
+                    <div style={PAYMENT_FAILED_TITLE_STYLE} >
+                      Payment Failed
+                    </div>
+                  </div>
+                  <p style={FAILED_PAYMENT_DESCRIPTION_STYLE} >
+                    We ran into a problem processing your payment.&nbsp;
+                    Your payment method has not been charged.
+                  </p>
+                </div>
+                <div style={PAYMENT_BOTTOM_SECTION_STYLE} >
+                  {costBreakDownSection}
+                </div>
+              </div>
+            </div>);
+        } else {
+          return (
+            <div style={costDetailsContainerStyle} >
+              <div style={PAYMENT_COMPLETED_CONTAINER_STYLE} >
+                <div style={PAYMENT_TOP_SECTION_STYLE} >
+                  <div style={PAYMENT_ICON_CONTAINER_STYLE} >
+                    <img
+                      style={PAYMENT_ICON_STYLE}
+                      src='resources/icons/celebration.svg'
+                      alt='Icon'
+                    />
+                  </div>
+                  <div style={PAYMENT_TITLE_STYLE} >Payment completed</div>
+                </div>
+                <div style={PAYMENT_BOTTOM_SECTION_STYLE} >
+                  {costBreakDownSection}
+                  <div style={DIVIDER_STYLE} />
+                  <div style={PAYMENT_HISTORY_LINK_STYLE} >
+                    <RedNavLinkWithArrow
+                      label='Payment History'
+                      to='/payment_history/:user_id'
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>);
+        }
+      } else if (this.state.page === JoinEventModal.Page.PROCESSING_PAYMENT &&
+          !this.props.checkoutCompleted) {
         return (
           <div style={costDetailsContainerStyle} >
             <div style={CENTER_CONTAINER_STYLE} >
@@ -415,45 +559,14 @@ export class JoinEventModal extends React.Component<Properties, State> {
               </p>
             </div>
           </div>);
+      } else {
+        return (
+          <div style={costDetailsContainerStyle} >
+            <h2 style={CHECKOUT_TITLE_STYLE} >Event Checkout</h2>
+            <div style={DIVIDER_STYLE} />
+            {costBreakDownSection}
+          </div>);
       }
-      return (
-        <div style={costDetailsContainerStyle} >
-          <h2 style={CHECKOUT_TITLE_STYLE} >Event Checkout</h2>
-          <div style={DIVIDER_STYLE} />
-          <div style={COST_BREAKDOWN_TOTAL_CONTAINER_STYLE} >
-            <div style={COLUMN_CONTAINER_STYLE} >
-              <div style={EVENT_FEE_ROW_STYLE} >
-                <div style={EVENT_FEE_BOLD_TEXT_STYLE} >Event Fee</div>
-                <div style={EVENT_PRICE_STYLE} >
-                  CAD ${this.props.eventFee.toString()}
-                </div>
-              </div>
-              {feeDescription}
-            </div>
-            <div style={COLUMN_CONTAINER_STYLE} >
-              <div style={PRICE_DIVIDER_STYLE} />
-              <div style={EVENT_FEE_ROW_STYLE} >
-                <div style={GREY_TEXT_STYLE} >Subtotal</div>
-                <div style={EVENT_PRICE_STYLE} >
-                  CAD ${this.props.eventFee.toString()}
-                </div>
-              </div>
-              <div style={EVENT_FEE_ROW_STYLE} >
-                <div style={GREY_TEXT_STYLE} >Tax</div>
-                <div style={EVENT_PRICE_STYLE} >
-                  CAD ${getTaxAmount(this.props.eventFee, this.props.taxRate)}
-                </div>
-              </div>
-              <div style={EVENT_FEE_ROW_STYLE} >
-                <div style={EVENT_FEE_BOLD_TEXT_STYLE} >Total Payment</div>
-                <div style={EVENT_PRICE_STYLE} >
-                  CAD ${(Number(getTaxAmount(this.props.eventFee,
-                    this.props.taxRate)) + this.props.eventFee).toFixed(2)}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>);
     })();
     if (this.props.displayMode === DisplayMode.MOBILE) {
       return (
@@ -464,7 +577,7 @@ export class JoinEventModal extends React.Component<Properties, State> {
             onClick={this.props.onClose}
           />
           <img
-            style={{...IMAGE_STYLE,
+            style={{...IMAGE_STYLE, ...MOBILE_IMAGE_STYLE,
               height: this.props.eventFee == 0 && '150px' || '50px'}}
             src={this.props.imageSrc}
             alt='Event Image'
@@ -522,6 +635,13 @@ export class JoinEventModal extends React.Component<Properties, State> {
     this.setState({
       zipcode: event.target.value,
       addCardInputHasChanged: true
+    });
+  }
+
+  private handleBackToCheckout = () => {
+    this.setState({
+      page: JoinEventModal.Page.INITIAL,
+      errorCode: JoinEventModal.ErrorCode.NONE
     });
   }
 
@@ -584,9 +704,7 @@ export namespace JoinEventModal {
   export enum Page {
     INITIAL,
     ADD_CARD,
-    PROCESSING_PAYMENT,
-    PAYMENT_COMPLETED,
-    PAYMENT_FAILED
+    PROCESSING_PAYMENT
   }
 
   export enum ErrorCode {
@@ -643,14 +761,16 @@ const COST_DETAILS_CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   backgroundColor: '#FFFFFF',
   height: '100%',
-  padding: '40px 20px'
+  padding: '40px 20px',
+  borderRadius: '4px 0px 0px 4px'
 };
 
 const MOBILE_COST_DETAILS_CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   backgroundColor: '#FFFFFF',
   width: '100%',
-  padding: '20px'
+  padding: '20px',
+  borderRadius: '0px'
 };
 
 const COST_BREAKDOWN_TOTAL_CONTAINER_STYLE: React.CSSProperties = {
@@ -717,6 +837,10 @@ const EVENT_FEE_BOLD_TEXT_STYLE: React.CSSProperties = {
   color: '#000000'
 };
 
+const EVENT_FEE_FAILED_STYLE: React.CSSProperties = {
+  color: '#DE6956'
+};
+
 const EVENT_PRICE_STYLE: React.CSSProperties = {
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
@@ -752,7 +876,12 @@ const IMAGE_STYLE: React.CSSProperties = {
   minHeight: '150px',
   minWidth: '300px',
   objectFit: 'cover',
-  overflow: 'hidden'
+  overflow: 'hidden',
+  borderRadius: '0px 4px 0px 0px'
+};
+
+const MOBILE_IMAGE_STYLE: React.CSSProperties = {
+  borderRadius: '4px 4px 0px 0px'
 };
 
 const EVENT_NAME_BUTTON_CONTAINER_STYLE: React.CSSProperties = {
@@ -763,7 +892,15 @@ const EVENT_NAME_BUTTON_CONTAINER_STYLE: React.CSSProperties = {
   alignItems: 'flex-start',
   width: '100%',
   padding: '20px 20px 40px 20px',
-  backgroundColor: '#F6F6F6'
+  backgroundColor: '#F6F6F6',
+  borderRadius: '0px 0px 4px 4px'
+};
+
+const PAYMENT_COMPLETED_EVENT_NAME_BUTTON_CONTAINER_STYLE:
+    React.CSSProperties = {
+  ...EVENT_NAME_BUTTON_CONTAINER_STYLE,
+  justifyContent: 'space-between',
+  height: 'calc(100% - 150px)'
 };
 
 const FREE_EVENT_NAME_BUTTON_CONTAINER_STYLE: React.CSSProperties = {
@@ -881,6 +1018,12 @@ const CHECKOUT_BUTTON_STYLE: React.CSSProperties = {
   marginTop: '20px',
   marginBottom: '20px'
 };
+
+const BACK_TO_BUTTON_STYLE: React.CSSProperties = {
+  width: '100%',
+  height: '38px',
+  margin: '30px 0px 0px 0px'
+}
 
 const OR_LINE_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
@@ -1103,6 +1246,15 @@ const PROCESSING_IMAGE_STYLE: React.CSSProperties = {
   backgroundColor: 'transparent'
 };
 
+const PAYMENT_COMPLETED_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  width: '100%',
+  gap: '20px'
+};
+
 const spinKeyframes = {
   '0%': {
     transform: 'rotate(0deg)'
@@ -1137,6 +1289,104 @@ const PROCESSING_DESCRIPTION_STYLE: React.CSSProperties = {
   maxWidth: '100%',
   padding: '0px',
   margin: '0px'
+};
+
+const PAYMENT_ICON_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '50px',
+  height: '50px'
+};
+
+const PAYMENT_ICON_STYLE: React.CSSProperties = {
+  width: '100%',
+  height: '100%',
+  objectFit: 'cover',
+  minWidth: '50px',
+  backgroundColor: 'transparent'
+};
+
+const PAYMENT_TITLE_STYLE: React.CSSProperties = {
+  marginTop: '20px',
+  fontFamily: 'Oswald',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '20px',
+  lineHeight: '30px',
+  textAlign: 'center',
+  color: '#000000'
+};
+
+const PAYMENT_TOP_SECTION_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  width: '100%'
+};
+
+const PAYMENT_BOTTOM_SECTION_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  justifyContent: 'center',
+  width: '100%'
+};
+
+const PAYMENT_HISTORY_LINK_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '100%',
+  height: '18px',
+  backgroundColor: 'transparent',
+  marginTop: '10px'
+};
+
+const PAYMENT_FAILED_ICON_STYLE: React.CSSProperties = {
+  width: '17px',
+  height: '15px',
+  backgroundColor: 'transparent'
+};
+
+const PAYMENT_FAILED_TITLE_STYLE: React.CSSProperties = {
+  fontFamily: 'Oswald',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '20px',
+  lineHeight: '30px',
+  textAlign: 'center',
+  color: '#DE6956'
+};
+
+const FAILED_PAYMENT_DESCRIPTION_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'flex-start',
+  flexWrap: 'wrap',
+  margin: '20px 0px 0px 0px',
+  padding: '0px',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  textAlign: 'center',
+  color: '#DE6956',
+  whiteSpace: 'pre-line'
+};
+
+const ROW_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '100%',
+  gap: '10px'
 };
 
 const styles = StyleSheet.create({
