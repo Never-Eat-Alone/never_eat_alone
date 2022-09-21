@@ -1368,9 +1368,14 @@ export function loadComponentSchemas(): ComponentSchema[] {
       an authentic Japanese experience with a subtle Canadian twist. This is \
       one of my favourite sushi places in Toronto and I hope you find this \
       experience memorable too! Please note, counter seating is only available \
-      on weekends.', TextInput)
+      on weekends.', TextInput),
+    new PropertySchema('isRSVPOpen', true, BooleanInput),
+    new PropertySchema('isLoggedIn', true, BooleanInput),
+    new PropertySchema('isGoing', true, BooleanInput)
     ],
-    [new SignalSchema('onJoinEvent', '', [])], NeverEatAlone.DiningEventPage);
+    [new SignalSchema('onJoinEvent', '', []),
+    new SignalSchema('onRemoveSeat', '', [])
+    ], NeverEatAlone.DiningEventPage);
   const seeAllButtonSchema = new ComponentSchema('SeeAllButton', [], [
     new SignalSchema('onClick', '', [])], NeverEatAlone.SeeAllButton);
   const seeLessButtonSchema = new ComponentSchema('SeeLessButton', [], [

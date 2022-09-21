@@ -2,7 +2,7 @@ import { css, StyleSheet } from 'aphrodite';
 import { format } from 'date-fns';
 import * as React from 'react';
 import * as Router from 'react-router-dom';
-import { PrimaryTextButton, SeeAllButton, SeeLessButton
+import { PrimaryTextButton, SeeAllButton, SeeLessButton, SecondaryTextButton
 } from '../../components';
 import { Attendee, DisplayMode, DressCode, getDressCodeIconSrc,
   getDressCodeName, getSeatingIconSrc, getSeatingName, Location, Restaurant,
@@ -53,8 +53,20 @@ interface Properties {
   /** The event description. */
   description: string;
 
+  /** Whether the user is on the going list of the event or not. */
+  isGoing: boolean;
+
+  /** Whether the user is logged in or not. */
+  isLoggedIn: boolean;
+
+  /** Whether the rsvp to the event is open or not. */
+  isRSVPOpen: boolean;
+
   /** Indicates the join event button is clicked. */
   onJoinEvent: () => void;
+
+  /** Indicates the user clicked on remove seat button. */
+  onRemoveSeat: () => void;
 }
 
 interface State {
@@ -71,9 +83,57 @@ export class DiningEventPage extends React.Component<Properties, State> {
   }
 
   public render(): JSX.Element {
+    const joinButton = (() => {
+      const currentTime = new Date();
+      const { joinButtonStyle, joinButtonLabelStyle } = (() => {
+        if (this.props.displayMode === DisplayMode.MOBILE) {
+          return {
+            joinButtonStyle: MOBILE_JOIN_BUTTON_STYLE,
+            joinButtonLabelStyle: MOBILE_JOIN_BUTTON_TEXT_STYLE
+          };
+        }
+        return {
+          joinButtonStyle: JOIN_BUTTON_STYLE,
+          joinButtonLabelStyle: JOIN_BUTTON_TEXT_STYLE
+        };
+      })();
+      if (currentTime > this.props.endTime) {
+        return <PrimaryTextButton style={joinButtonStyle}
+                label='Past Event' labelStyle={joinButtonLabelStyle}
+                disabled />;
+      }
+      if (currentTime > this.props.startTime && currentTime <
+          this.props.endTime) {
+        return <PrimaryTextButton style={joinButtonStyle}
+                label='Happening Now' labelStyle={joinButtonLabelStyle}
+                disabled />;
+      }
+      if (this.props.isLoggedIn && this.props.isGoing) {
+        return <SecondaryTextButton style={joinButtonStyle}
+                label='Remove Seat' labelStyle={joinButtonLabelStyle}
+                onClick={this.props.onRemoveSeat} />;
+      }
+      if (!this.props.isRSVPOpen) {
+        return <PrimaryTextButton style={joinButtonStyle}
+                label='RSVP Close' labelStyle={joinButtonLabelStyle}
+                disabled />;
+      }
+      if (this.props.attendeeList.length >= this.props.totalCapacity) {
+        return <PrimaryTextButton style={joinButtonStyle}
+                label='Full' labelStyle={joinButtonLabelStyle}
+                disabled />;
+      }
+      if (this.props.isRSVPOpen && (!this.props.isGoing ||
+          !this.props.isLoggedIn)) {
+        return <PrimaryTextButton style={joinButtonStyle}
+                label='Join This Event' labelStyle={joinButtonLabelStyle}
+                onClick={this.props.onJoinEvent} />;
+      }
+    })();
     const { containerStyle, coverImageStyle, contentContainerStyle,
         headerContainerStyle, eventTagContainerStyle,
-        detailIconTextContainerStyle, attendeesRowStyle, eventTitleStyle
+        detailIconTextContainerStyle, attendeesRowStyle, eventTitleStyle,
+        headerJoinButton, stickyFooter
     } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
@@ -84,7 +144,9 @@ export class DiningEventPage extends React.Component<Properties, State> {
           eventTagContainerStyle: DESKTOP_EVENT_TAG_CONTAINER_STYLE,
           detailIconTextContainerStyle: DETAIL_ICON_TEXT_CONTAINER_STYLE,
           attendeesRowStyle: DESKTOP_ATTENDEES_ROW_STYLE,
-          eventTitleStyle: DESKTOP_EVENT_TITLE_STYLE
+          eventTitleStyle: DESKTOP_EVENT_TITLE_STYLE,
+          headerJoinButton: joinButton,
+          stickyFooter: <div />
         };
       } else if (this.props.displayMode === DisplayMode.TABLET) {
         return {
@@ -95,7 +157,9 @@ export class DiningEventPage extends React.Component<Properties, State> {
           eventTagContainerStyle: TABLET_EVENT_TAG_CONTAINER_STYLE,
           detailIconTextContainerStyle: DETAIL_ICON_TEXT_CONTAINER_STYLE,
           attendeesRowStyle: TABLET_ATTENDEES_ROW_STYLE,
-          eventTitleStyle: TABLET_EVENT_TITLE_STYLE
+          eventTitleStyle: TABLET_EVENT_TITLE_STYLE,
+          headerJoinButton: joinButton,
+          stickyFooter: <div />
         };
       } else {
         return {
@@ -106,7 +170,10 @@ export class DiningEventPage extends React.Component<Properties, State> {
           eventTagContainerStyle: MOBILE_EVENT_TAG_CONTAINER_STYLE,
           detailIconTextContainerStyle: MOBILE_DETAIL_ICON_TEXT_CONTAINER_STYLE,
           attendeesRowStyle: MOBILE_ATTENDEES_ROW_STYLE,
-          eventTitleStyle: MOBILE_EVENT_TITLE_STYLE
+          eventTitleStyle: MOBILE_EVENT_TITLE_STYLE,
+          headerJoinButton: <div />,
+          stickyFooter: (
+            <div style={STICKY_FOOTER_CONTAINER_STYLE} >{joinButton}</div>)
         };
       }
     })();
@@ -128,10 +195,6 @@ export class DiningEventPage extends React.Component<Properties, State> {
       }
       return null;
     })();
-    const headerJoinButton = (this.props.displayMode !== DisplayMode.MOBILE &&
-      <PrimaryTextButton style={JOIN_BUTTON_STYLE}
-      label='Join This Event' labelStyle={JOIN_BUTTON_TEXT_STYLE}
-      onClick={this.props.onJoinEvent} /> || null);
     const attendees = (() => {
       if (!this.props.attendeeList || this.props.attendeeList.length === 0) {
         return (
@@ -179,6 +242,9 @@ export class DiningEventPage extends React.Component<Properties, State> {
     const detailsSection = (() => {
       const details = [];
       if (this.props.startTime) {
+        const startTime = (this.props.isLoggedIn &&
+          format(this.props.startTime, 'eeee, MMMM d, yyyy') ||
+          'Lon in to see the date');
         details.push(
           <div key='event-start-date' style={detailIconTextContainerStyle} >
             <div style={ICON_CONTAINER_STYLE} >
@@ -190,12 +256,15 @@ export class DiningEventPage extends React.Component<Properties, State> {
             </div>
             <div style={DETAILS_TEXT_CONTAINER_STYLE} >
               <div style={DETAILS_BOLD_TEXT_STYLE} >
-                {format(this.props.startTime, 'eeee, MMMM d, yyyy')}
+                {startTime}
               </div>
             </div>
           </div>);
       }
       if (this.props.reservationName) {
+        const reservationName = (this.props.isLoggedIn && this.props.isGoing &&
+          `Reservation: ${this.props.reservationName}` ||
+          'Join to see the details');
         details.push(
           <div
               key='event-reservation-name'
@@ -210,7 +279,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
             </div>
             <div style={DETAILS_TEXT_CONTAINER_STYLE} >
               <div style={DETAILS_BOLD_TEXT_STYLE} >
-                Reservation: {this.props.reservationName}
+                {reservationName}
               </div>
               <div style={TEXT_STYLE} >
                 Upon arrival to the restaurant, ask for this name to be guided 
@@ -220,6 +289,9 @@ export class DiningEventPage extends React.Component<Properties, State> {
           </div>);
       }
       if (this.props.startTime && this.props.endTime) {
+        const eventTime = (this.props.isLoggedIn &&
+          `${format(this.props.startTime, 'h:mm aa')} - ${format(
+            this.props.endTime, 'h:mm aa')}` || 'Log in to see the time');
         details.push(
           <div key='event-hours' style={detailIconTextContainerStyle} >
             <div style={ICON_CONTAINER_STYLE} >
@@ -231,8 +303,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
             </div>
             <div style={DETAILS_TEXT_CONTAINER_STYLE} >
               <div style={DETAILS_BOLD_TEXT_STYLE} >
-                {format(this.props.startTime, 'h:mm aa')} - {format(
-                this.props.endTime, 'h:mm aa')}
+                {eventTime}
               </div>
             </div>
           </div>);
@@ -315,20 +386,6 @@ export class DiningEventPage extends React.Component<Properties, State> {
           ${this.props.eventFee.toString()} Event Fee
         </p>
       </div> || null);
-    const stickyFooter = (() => {
-      if (this.props.displayMode === DisplayMode.MOBILE) {
-        return (
-          <div style={STICKY_FOOTER_CONTAINER_STYLE} >
-            <PrimaryTextButton
-              style={MOBILE_JOIN_BUTTON_STYLE}
-              label='Join This Event'
-              labelStyle={MOBILE_JOIN_BUTTON_TEXT_STYLE}
-              onClick={this.props.onJoinEvent}
-            />
-          </div>);
-      }
-      return null;
-    })();
     const attendeesTitle = (() => {
       if (!this.props.totalCapacity) {
         if (!this.props.attendeeList) {
@@ -344,6 +401,8 @@ export class DiningEventPage extends React.Component<Properties, State> {
           this.props.attendeeList.length}/${this.props.totalCapacity})`);
       }
     })();
+    const eventDescription = (this.props.isLoggedIn && this.props.description ||
+      'Log in to see the event description.');
     return (
       <div style={{...CONTAINER_STYLE, ...containerStyle}} >
         <div
@@ -396,8 +455,8 @@ export class DiningEventPage extends React.Component<Properties, State> {
               {cuisineTags}
               {eventFee}
             </div>
+            <div style={DIVIDER_STYLE} />
           </div>
-          <div style={DIVIDER_STYLE} />
           <div style={TITLE_STYLE} >Event Details</div>
           <div style={DETAILS_ROW_CONTAINER_STYLE} >
             {detailsSection}
@@ -405,7 +464,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
           <div style={TITLE_STYLE} >{attendeesTitle}</div>
           {attendees}
           <div style={TITLE_STYLE} >Description</div>
-          <div style={DESCRIPTION_STYLE} >{this.props.description}</div>
+          <div style={DESCRIPTION_STYLE} >{eventDescription}</div>
         </div>
         {stickyFooter}
       </div>);
@@ -543,14 +602,14 @@ const DESKTOP_HEADER_CONTAINER_STYLE: React.CSSProperties = {
   ...HEADER_CONTAINER_STYLE,
   position: 'sticky',
   left: '0px',
-  top: '0px'
+  top: '20px'
 };
 
 const TABLET_HEADER_CONTAINER_STYLE: React.CSSProperties = {
   ...HEADER_CONTAINER_STYLE,
   position: 'sticky',
   left: '0px',
-  top: '0px'
+  top: '20px'
 };
 
 const EVENT_TAG_CONTAINER_STYLE: React.CSSProperties = {
@@ -641,12 +700,14 @@ const JOIN_BUTTON_STYLE: React.CSSProperties = {
   position: 'absolute',
   top: '2px',
   right: '0px',
-  width: '161px',
+  minWidth: '161px',
+  width: 'fit-content',
   height: '35px'
 };
 
 const MOBILE_JOIN_BUTTON_STYLE: React.CSSProperties = {
-  width: '114px',
+  minWidth: '114px',
+  width: 'fit-content',
   height: '30px'
 };
 
