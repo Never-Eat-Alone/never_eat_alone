@@ -592,14 +592,14 @@ const DESKTOP_HEADER_CONTAINER_STYLE: React.CSSProperties = {
   ...HEADER_CONTAINER_STYLE,
   position: 'sticky',
   left: '0px',
-  top: '0px'
+  top: '20px'
 };
 
 const TABLET_HEADER_CONTAINER_STYLE: React.CSSProperties = {
   ...HEADER_CONTAINER_STYLE,
   position: 'sticky',
   left: '0px',
-  top: '0px'
+  top: '20px'
 };
 
 const EVENT_TAG_CONTAINER_STYLE: React.CSSProperties = {
