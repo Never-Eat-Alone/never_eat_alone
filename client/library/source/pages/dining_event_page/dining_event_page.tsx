@@ -108,7 +108,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
                 label='Happening Now' labelStyle={joinButtonLabelStyle}
                 disabled />;
       }
-      if (this.props.isGoing) {
+      if (this.props.isLoggedIn && this.props.isGoing) {
         return <SecondaryTextButton style={joinButtonStyle}
                 label='Remove Seat' labelStyle={joinButtonLabelStyle}
                 onClick={this.props.onRemoveSeat} />;
@@ -242,6 +242,9 @@ export class DiningEventPage extends React.Component<Properties, State> {
     const detailsSection = (() => {
       const details = [];
       if (this.props.startTime) {
+        const startTime = (this.props.isLoggedIn &&
+          format(this.props.startTime, 'eeee, MMMM d, yyyy') ||
+          'Lon in to see the date');
         details.push(
           <div key='event-start-date' style={detailIconTextContainerStyle} >
             <div style={ICON_CONTAINER_STYLE} >
@@ -253,12 +256,15 @@ export class DiningEventPage extends React.Component<Properties, State> {
             </div>
             <div style={DETAILS_TEXT_CONTAINER_STYLE} >
               <div style={DETAILS_BOLD_TEXT_STYLE} >
-                {format(this.props.startTime, 'eeee, MMMM d, yyyy')}
+                {startTime}
               </div>
             </div>
           </div>);
       }
       if (this.props.reservationName) {
+        const reservationName = (this.props.isLoggedIn && this.props.isGoing &&
+          `Reservation: ${this.props.reservationName}` ||
+          'Join to see the details');
         details.push(
           <div
               key='event-reservation-name'
@@ -273,7 +279,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
             </div>
             <div style={DETAILS_TEXT_CONTAINER_STYLE} >
               <div style={DETAILS_BOLD_TEXT_STYLE} >
-                Reservation: {this.props.reservationName}
+                {reservationName}
               </div>
               <div style={TEXT_STYLE} >
                 Upon arrival to the restaurant, ask for this name to be guided 
@@ -283,6 +289,9 @@ export class DiningEventPage extends React.Component<Properties, State> {
           </div>);
       }
       if (this.props.startTime && this.props.endTime) {
+        const eventTime = (this.props.isLoggedIn &&
+          `${format(this.props.startTime, 'h:mm aa')} - ${format(
+            this.props.endTime, 'h:mm aa')}` || 'Log in to see the time');
         details.push(
           <div key='event-hours' style={detailIconTextContainerStyle} >
             <div style={ICON_CONTAINER_STYLE} >
@@ -294,8 +303,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
             </div>
             <div style={DETAILS_TEXT_CONTAINER_STYLE} >
               <div style={DETAILS_BOLD_TEXT_STYLE} >
-                {format(this.props.startTime, 'h:mm aa')} - {format(
-                this.props.endTime, 'h:mm aa')}
+                {eventTime}
               </div>
             </div>
           </div>);
@@ -393,6 +401,8 @@ export class DiningEventPage extends React.Component<Properties, State> {
           this.props.attendeeList.length}/${this.props.totalCapacity})`);
       }
     })();
+    const eventDescription = (this.props.isLoggedIn && this.props.description ||
+      'Log in to see the event description.');
     return (
       <div style={{...CONTAINER_STYLE, ...containerStyle}} >
         <div
@@ -454,7 +464,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
           <div style={TITLE_STYLE} >{attendeesTitle}</div>
           {attendees}
           <div style={TITLE_STYLE} >Description</div>
-          <div style={DESCRIPTION_STYLE} >{this.props.description}</div>
+          <div style={DESCRIPTION_STYLE} >{eventDescription}</div>
         </div>
         {stickyFooter}
       </div>);
