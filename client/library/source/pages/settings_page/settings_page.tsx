@@ -5,7 +5,19 @@ interface Properties {
   displayMode: DisplayMode;
 }
 
-export class SettingsPage extends React.Component<Properties> {
+interface State {
+  page: SettingsPage.Page
+}
+
+/** Displays the Settings Page. */
+export class SettingsPage extends React.Component<Properties, State> {
+  constructor(props: Properties) {
+    super(props);
+    this.state = {
+      page: SettingsPage.Page.ACCOUNT_INFORMATION
+    };
+  }
+
   render(): JSX.Element {
     const { containerStyle, contentStyle } = (() => {
       if (this.props.displayMode === DisplayMode.MOBILE) {
@@ -24,13 +36,35 @@ export class SettingsPage extends React.Component<Properties> {
         contentStyle: DESKTOP_CONTENT_STYLE
       };
     })();
+    const tabs = [];
+
     return (
       <div style={containerStyle} >
         <div style={contentStyle} >
           <h1 style={HEADING_STYLE} >Settings</h1>
+          <div style={TABS_ROW_STYLE} >
+
+          </div>
         </div>
       </div>);
   }
+}
+
+export namespace SettingsPage {
+  export enum Page {
+    ACCOUNT_INFORMATION,
+    NOTIFICATIONS,
+    PAYMENT_METHODS,
+    PAYMENT_HISTORY
+  }
+}
+
+interface tabProperties {
+  label: string;
+}
+
+export function tab(props: tabProperties) {
+  
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {
@@ -44,6 +78,7 @@ const CONTAINER_STYLE: React.CSSProperties = {
 };
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTAINER_STYLE,
   alignItems: 'flex-start'
 };
 
@@ -79,4 +114,12 @@ const HEADING_STYLE: React.CSSProperties = {
   color: '#969696',
   padding: '0px',
   margin: '0px'
+};
+
+const TABS_ROW_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  height: '45px'
 };
