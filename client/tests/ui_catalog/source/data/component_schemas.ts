@@ -1478,6 +1478,17 @@ export function loadComponentSchemas(): ComponentSchema[] {
       new PropertySchema('disabled', false, BooleanInput),
       new PropertySchema('hasError', false, BooleanInput)], [],
       NeverEatAlone.PaymentCardInputField);
+  const removeSeatModalSchema = new ComponentSchema('RemoveSeatModal', [
+    new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
+      DisplayModeInput),
+    new PropertySchema('refundAmount', 5.00, NumberInput),
+    new PropertySchema('refundDescription', 'You will be refunded this amount \
+      within 10 business days or earlier on your original method of payment.',
+      TextInput)
+  ], [
+    new SignalSchema('onRemoveSeat', '', []),
+    new SignalSchema('onCancel', '', [])
+  ], NeverEatAlone.RemoveSeatModal);
   return [
     accentTextButtonSchema,
     albumCardSchema,
@@ -1527,6 +1538,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     profileSetUpPageSchema,
     profileUpcomingEventsSchema,
     publicButtonSchema,
+    removeSeatModalSchema,
     resetPasswordPage,
     saveCancelStickyMenuSchema,
     secondaryButtonNavLink,
