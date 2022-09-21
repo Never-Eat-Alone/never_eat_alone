@@ -23,6 +23,8 @@ export function InputField(props: InputFieldProperties) {
 interface InputFieldWithIconProperties extends InputFieldProperties {
   iconSrc?: string;
   iconAlt?: string;
+  iconContainerStyle?: React.CSSProperties;
+  iconStyle?: React.CSSProperties;
 }
 
 export function InputFieldWithIcon(props: InputFieldWithIconProperties) {
@@ -33,9 +35,9 @@ export function InputFieldWithIcon(props: InputFieldWithIconProperties) {
         className={rest.disabled && css(styles.disabled) ||
           hasError && css(styles.hasError) || css(styles.container)}
     >
-      <div style={ICON_CONTAINER_STYLE} >
+      <div style={{...ICON_CONTAINER_STYLE, ...props.iconContainerStyle}} >
         <img
-          style={ICON_STYLE}
+          style={{...ICON_STYLE, ...props.iconStyle}}
           src={iconSrc}
           alt={iconAlt}
         />
@@ -52,6 +54,34 @@ export function EmailInputField(props: InputFieldWithIconProperties) {
       name='email'
       iconSrc='resources/input_field/icons/email.svg'
       iconAlt='Email Icon'
+    />);
+}
+
+export function PaymentCardInputField(props: InputFieldWithIconProperties) {
+  return (
+    <InputFieldWithIcon
+      {...props}
+      type='text'
+      name='card'
+      iconSrc='resources/icons/card.svg'
+      iconAlt='Card Icon'
+      style={{...PAYMENT_CARD_CONTAINER_STYLE, ...props.style}}
+      iconContainerStyle={CARD_ICON_CONTAINER_STYLE}
+      iconStyle={CARD_ICON_STYLE}
+    />);
+}
+
+export function SecurityCodeInputField(props: InputFieldWithIconProperties) {
+  return (
+    <InputFieldWithIcon
+      {...props}
+      type='text'
+      name='card'
+      iconSrc='resources/icons/cvs.svg'
+      iconAlt='Card Code Icon'
+      style={{...PAYMENT_CARD_CONTAINER_STYLE, ...props.style}}
+      iconContainerStyle={CVS_ICON_CONTAINER_STYLE}
+      iconStyle={CVS_ICON_STYLE}
     />);
 }
 
@@ -209,6 +239,13 @@ const CONTAINER_WITH_ICON_STYLE: React.CSSProperties = {
   padding: '0px 10px 0px 0px'
 };
 
+const PAYMENT_CARD_CONTAINER_STYLE: React.CSSProperties = {
+  flexDirection: 'row-reverse',
+  justifyContent: 'space-between',
+  padding: '9px',
+  gap: '10px'
+};
+
 const INPUT_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   fontFamily: 'Source Sans Pro',
@@ -237,6 +274,20 @@ const ICON_CONTAINER_STYLE: React.CSSProperties = {
   minWidth: '39px'
 };
 
+const CARD_ICON_CONTAINER_STYLE: React.CSSProperties = {
+  width: '27px',
+  minWidth: '27px',
+  height: '18px',
+  minHeight: '18px'
+};
+
+const CVS_ICON_CONTAINER_STYLE: React.CSSProperties = {
+  width: '21px',
+  minWidth: '21px',
+  height: '18px',
+  minHeight: '18px'
+};
+
 const ICON_STYLE: React.CSSProperties = {
   width: '20px',
   height: '20px',
@@ -244,6 +295,20 @@ const ICON_STYLE: React.CSSProperties = {
   minHeight: '20px',
   backgroundColor: 'transparent',
   overflow: 'hidden'
+};
+
+const CARD_ICON_STYLE: React.CSSProperties = {
+  width: '100%',
+  height: '100%',
+  minWidth: '27px',
+  minHeight: '18px'
+};
+
+const CVS_ICON_STYLE: React.CSSProperties = {
+  width: '100%',
+  height: '100%',
+  minWidth: '21px',
+  minHeight: '18px'
 };
 
 const TWO_ICON_CONTAINER_STYLE: React.CSSProperties = {

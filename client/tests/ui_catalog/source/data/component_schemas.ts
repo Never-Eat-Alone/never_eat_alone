@@ -2,9 +2,10 @@ import * as NeverEatAlone from 'never_eat_alone';
 import { ArrayInput, AttendeeInput, BooleanInput, CityProvinceInput, CSSInput,
   CuisineInput, DateInput, DateTimeInput, DisplayModeInput, DressCodeInput,
   EventCardSummaryInput, EventTagInput, ForgotPasswordPageErrorCodeInput,
-  HomePageErrorCodeInput, LanguageInput, LocationInput, NumberInput,
-  RestaurantInput, SeatingInput, SignUpPageErrorCodeInput,
-  SocialMediaImageInput, TextInput, UserInput } from '../viewer/propertyInput';
+  HomePageErrorCodeInput, JoinEventModalErrorCodeInput, LanguageInput,
+  LocationInput, NumberInput, PaymentCardInput, RestaurantInput, SeatingInput,
+  SignUpPageErrorCodeInput, SocialMediaImageInput, TextInput, UserInput
+} from '../viewer/propertyInput';
 import { ComponentSchema, PropertySchema, SignalSchema } from './schemas';
 
 /** Loads the complete list of schemas available to test. */
@@ -744,7 +745,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new SignalSchema('onGoogleLogInClick', '', []),
     new SignalSchema('onFacebookLogInClick', '', [])],
     NeverEatAlone.LogInModal);
-  const forgotPasswordPageSchema = new ComponentSchema('forgotPasswordPage',
+  const forgotPasswordPageSchema = new ComponentSchema('ForgotPasswordPage',
     [new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
     DisplayModeInput),
     new PropertySchema('errorCode',
@@ -753,27 +754,27 @@ export function loadComponentSchemas(): ComponentSchema[] {
     [new SignalSchema('onSendLinkClick', '', [])],
     NeverEatAlone.ForgotPasswordPage);
   const forgotPasswordLinkSentPageSchema = new ComponentSchema(
-    'forgotPasswordLinkSentPage',
+    'ForgotPasswordLinkSentPage',
     [new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
     DisplayModeInput)],
     [new SignalSchema('onResendLinkClick', '', [])],
     NeverEatAlone.ForgotPasswordLinkSentPage);
-  const secondaryTextLinkButton = new ComponentSchema('secondaryTextLinkButton',
+  const secondaryTextLinkButton = new ComponentSchema('SecondaryTextLinkButton',
     [new PropertySchema('label', 'Resend Link', TextInput),
     new PropertySchema('labelStyle', { fontSize: '14px' } , CSSInput)], [],
     NeverEatAlone.SecondaryTextLinkButton);
-  const secondaryButtonNavLink = new ComponentSchema('secondaryButtonNavLink',
+  const secondaryButtonNavLink = new ComponentSchema('SecondaryButtonNavLink',
     [new PropertySchema('label', 'Back to HomePage', TextInput),
     new PropertySchema('style', { width: '178px' } , CSSInput),
     new PropertySchema('className', JSON.stringify({ fontSize: '14px' }) ,
     TextInput)], [], NeverEatAlone.SecondaryButtonNavLink);
-  const resetPasswordPage = new ComponentSchema('resetPasswordPage',
+  const resetPasswordPage = new ComponentSchema('ResetPasswordPage',
     [new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
     DisplayModeInput), new PropertySchema('displayName', 'Ella', TextInput),
     new PropertySchema('profileImageSrc', 'resources/images/profile3.jpeg',
     TextInput)], [new SignalSchema('onSaveClick', '', [])],
     NeverEatAlone.ResetPasswordPage);
-  const profileBoxSchema = new ComponentSchema('profileBox',
+  const profileBoxSchema = new ComponentSchema('ProfileBox',
     [new PropertySchema('profileImageSrc', 'resources/images/profile2.jpeg',
       TextInput),
     new PropertySchema('displayName', 'Julia', TextInput),
@@ -989,7 +990,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
       'Le Select', NeverEatAlone.PriceRange.EXPENSIVE, [], '', 12, 12, true,
       'yellow'), EventCardSummaryInput)))
     ], [], NeverEatAlone.ProfilePastEvents);
-  const profilePageSchema = new ComponentSchema('profilePage', [
+  const profilePageSchema = new ComponentSchema('ProfilePage', [
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
       DisplayModeInput),
     new PropertySchema('coverImageSrc',
@@ -1192,7 +1193,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
       'yellow'), EventCardSummaryInput)))
     ], [new SignalSchema('onEditClick', '', []),
     new SignalSchema('onReportClick', '', [])], NeverEatAlone.ProfilePage);
-  const editProfilePageSchema = new ComponentSchema('editProfilePage', [
+  const editProfilePageSchema = new ComponentSchema('EditProfilePage', [
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
       DisplayModeInput),
     new PropertySchema('coverImageSrc',
@@ -1271,11 +1272,11 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new SignalSchema('onSaveClick', '', []),
     new SignalSchema('onCancelClick', '', [])
   ], NeverEatAlone.EditProfilePage);
-  const publicButtonSchema = new ComponentSchema('publicButton', [], [
+  const publicButtonSchema = new ComponentSchema('PublicButton', [], [
     new SignalSchema('onClick', '', [])], NeverEatAlone.PublicButton);
-  const privateButtonSchema = new ComponentSchema('privateButton', [], [
+  const privateButtonSchema = new ComponentSchema('PrivateButton', [], [
     new SignalSchema('onClick', '', [])], NeverEatAlone.PrivateButton);
-  const locationInputFieldSchema = new ComponentSchema('locationInputField',
+  const locationInputFieldSchema = new ComponentSchema('LocationInputField',
     [new PropertySchema('value', '', TextInput),
     new PropertySchema('placeholder', '', TextInput),
     new PropertySchema('hasError', false, BooleanInput),
@@ -1378,22 +1379,109 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
       DisplayModeInput),
     new PropertySchema('eventFee', 3.00 , NumberInput),
+    new PropertySchema('eventFeeDescription', 'Because this restaurant is in \
+      high demand, we charge a fee to hold your spot.', TextInput),
     new PropertySchema('taxRate', 0.13 , NumberInput),
     new PropertySchema('eventTitle', 'Let’s go to Mapo Korean BBQ' , TextInput),
     new PropertySchema('imageSrc', 'resources/images/13.jpg' , TextInput),
     new PropertySchema('eventStartDate', new Date(2022, 11, 20, 18, 30),
       DateTimeInput),
+    new PropertySchema('paymentCardsOnFile', [
+      new NeverEatAlone.PaymentCard(11, NeverEatAlone.CreditCardType.VISA,
+        4054),
+      new NeverEatAlone.PaymentCard(151, NeverEatAlone.CreditCardType.AMEX,
+        1052),
+      new NeverEatAlone.PaymentCard(12, NeverEatAlone.CreditCardType.VISA,
+        5052),
+      new NeverEatAlone.PaymentCard(21, NeverEatAlone.CreditCardType.MASTERCARD,
+        7754),
+    ], ArrayInput(new PropertySchema('paymentCard',
+      new NeverEatAlone.PaymentCard(1, NeverEatAlone.CreditCardType.VISA, 4044),
+      PaymentCardInput))),
+    new PropertySchema('displayedCard', new NeverEatAlone.PaymentCard(1,
+      NeverEatAlone.CreditCardType.VISA, 4044), PaymentCardInput),
+    new PropertySchema('addCardErrorMessage', '', TextInput),
+    new PropertySchema('selectedMonth', 1, NumberInput),
+    new PropertySchema('selectedYear', 2022, NumberInput),
+    new PropertySchema('securityCode', '', TextInput),
+    new PropertySchema('zipcode', '', TextInput),
+    new PropertySchema('cardNumber', '', TextInput),
+    new PropertySchema('nameOnCard', '', TextInput),
+    new PropertySchema('errorCode',
+      NeverEatAlone.JoinEventModal.ErrorCode.NONE,
+      JoinEventModalErrorCodeInput),
+    new PropertySchema('cardAdded', false, BooleanInput),
+    new PropertySchema('checkoutCompleted', false, BooleanInput)
   ], [
     new SignalSchema('onJoinEvent', '', []),
-    new SignalSchema('onClose', '', [])
+    new SignalSchema('onClose', '', []),
+    new SignalSchema('onCreditCardClick', '', []),
+    new SignalSchema('onCheckout', '', []),
+    new SignalSchema('onAddCard', '', []),
+    new SignalSchema('onPaypalClick', '', []),
+    new SignalSchema('onGooglePayClick', '', []),
+    new SignalSchema('onApplePay', '', []),
+    new SignalSchema('onMonthClick', '', []),
+    new SignalSchema('onYearClick', '', [])
   ], NeverEatAlone.JoinEventModal);
+  const creditCardDropdownMenu = new ComponentSchema('CreditCardDropdownMenu',
+    [new PropertySchema('cardList', [
+    new NeverEatAlone.PaymentCard(11, NeverEatAlone.CreditCardType.VISA, 4054),
+    new NeverEatAlone.PaymentCard(151, NeverEatAlone.CreditCardType.AMEX, 1052),
+    new NeverEatAlone.PaymentCard(12, NeverEatAlone.CreditCardType.VISA, 5052),
+    new NeverEatAlone.PaymentCard(21, NeverEatAlone.CreditCardType.MASTERCARD,
+      7754),
+    ], ArrayInput(new PropertySchema(
+      'paymentCard', new NeverEatAlone.PaymentCard(1,
+      NeverEatAlone.CreditCardType.VISA, 4044), PaymentCardInput))),
+    new PropertySchema('displayedCard', new NeverEatAlone.PaymentCard(1,
+      NeverEatAlone.CreditCardType.VISA, 4044), PaymentCardInput),
+    ], [new SignalSchema('onCardClick', '', [])],
+    NeverEatAlone.CreditCardDropdownMenu);
+  const primaryButtonWithArrowSchema = new ComponentSchema(
+    'PrimaryButtonWithArrow', [new PropertySchema('iconStyle', {}, CSSInput),
+    new PropertySchema('style', {}, CSSInput),
+    new PropertySchema('labelStyle', {}, CSSInput),
+    new PropertySchema('label', 'Primary Button', TextInput),
+    new PropertySchema('disabled', false, BooleanInput)],
+    [new SignalSchema('onClick', '', [])],
+    NeverEatAlone.PrimaryTextButtonWithArrow);
+  const secondaryButtonWithArrowSchema = new ComponentSchema(
+    'SecondaryButtonWithArrow', [new PropertySchema('iconStyle', {}, CSSInput),
+    new PropertySchema('style', {}, CSSInput),
+    new PropertySchema('labelStyle', {}, CSSInput),
+    new PropertySchema('label', 'Secondary Button', TextInput),
+    new PropertySchema('disabled', false, BooleanInput)],
+    [new SignalSchema('onClick', '', [])],
+    NeverEatAlone.SecondaryTextButtonWithArrow);
+  const payPalButtonSchema = new ComponentSchema('PayPalButton', [
+    new PropertySchema('style', {}, CSSInput)
+  ],
+    [new SignalSchema('onClick', '', [])], NeverEatAlone.PayPalButton);
+  const applePayButtonSchema = new ComponentSchema('ApplePayButton', [
+    new PropertySchema('style', {}, CSSInput)
+  ],
+    [new SignalSchema('onClick', '', [])], NeverEatAlone.ApplePayButton);
+  const googlePayButtonSchema = new ComponentSchema('GooglePayButton', [
+    new PropertySchema('style', {}, CSSInput)
+  ],
+    [new SignalSchema('onClick', '', [])], NeverEatAlone.GooglePayButton);
+  const paymentCardInputFieldSchema = new ComponentSchema(
+    'PaymentCardInputField', [
+      new PropertySchema('style', {}, CSSInput),
+      new PropertySchema('placeholder', '', TextInput),
+      new PropertySchema('disabled', false, BooleanInput),
+      new PropertySchema('hasError', false, BooleanInput)], [],
+      NeverEatAlone.PaymentCardInputField);
   return [
     accentTextButtonSchema,
     albumCardSchema,
     albumSummarySchema,
+    applePayButtonSchema,
     avatarWithCheckMarkSchema,
     checkBoxSchema,
     closeButtonSchema,
+    creditCardDropdownMenu,
     diningEventCardSchema,
     diningEventPageSchema,
     editProfilePageSchema,
@@ -1405,6 +1493,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     forgotPasswordLinkSentPageSchema,
     forgotPasswordPageSchema,
     googleLogInButtonSchema,
+    googlePayButtonSchema,
     headerLoggedInSchema,
     headerNotLoggedInSchema,
     heroLoggedInNoEventSchema,
@@ -1422,6 +1511,9 @@ export function loadComponentSchemas(): ComponentSchema[] {
     logoSchema,
     nameInputFieldSchema,
     partnerWithUsSummarySchema,
+    paymentCardInputFieldSchema,
+    payPalButtonSchema,
+    primaryButtonWithArrowSchema,
     primaryTextButtonSchema,
     privateButtonSchema,
     profileBoxSchema,
@@ -1433,6 +1525,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     resetPasswordPage,
     saveCancelStickyMenuSchema,
     secondaryButtonNavLink,
+    secondaryButtonWithArrowSchema,
     secondaryTextLinkButton,
     seeAllButtonSchema,
     seeLessButtonSchema,
