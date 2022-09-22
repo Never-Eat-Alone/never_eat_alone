@@ -42,23 +42,28 @@ export class SettingsPage extends React.Component<Properties, State> {
       switch (this.state.activeTab) {
         case SettingsPage.Tab.ACCOUNT_INFORMATION:
           return (
-            <div>
-              Account Info
+            <div style={PAGE_CONTAINER_STYLE} >
+              <h1 style={PAGE_HEADING_STYLE} >Account Information</h1>
+              <h2 style={SUB_HEADING_STYLE} >Linked Accounts</h2>
+              <h3 style={DESCRIPTION_STYLE} >
+                You can use these accounts to log in to NeverEatAlone.
+              </h3>
+              
             </div>);
         case SettingsPage.Tab.NOTIFICATIONS:
           return (
-            <div>
-              Notifications
+            <div style={PAGE_CONTAINER_STYLE} >
+              <h1 style={PAGE_HEADING_STYLE} >Notifications</h1>
             </div>);
         case SettingsPage.Tab.PAYMENT_METHODS:
           return (
-            <div>
-              Payment method
+            <div style={PAGE_CONTAINER_STYLE} >
+              <h1 style={PAGE_HEADING_STYLE} >Payment Method</h1>
             </div>);
         case SettingsPage.Tab.PAYMENT_HISTORY:
           return (
-            <div>
-              Payment history
+            <div style={PAGE_CONTAINER_STYLE} >
+              <h1 style={PAGE_HEADING_STYLE} >Payment History</h1>
             </div>);
       }
     })();
@@ -196,4 +201,57 @@ const GREY_BORDER_STYLE: React.CSSProperties = {
 const PAYMENY_HISTORY_TAB_STYLE: React.CSSProperties = {
   ...GREY_BORDER_STYLE,
   borderRadius: '0px 4px 4px 0px'
+};
+
+const PAGE_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  width: '100%',
+  paddingTop: '50px',
+  paddingBottom: '90px',
+  backgroundColor: '#FFFFFF'
+};
+
+const PAGE_HEADING_STYLE: React.CSSProperties = {
+  fontFamily: 'Oswald',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '23px',
+  lineHeight: '34px',
+  height: '34px',
+  textTransform: 'capitalize',
+  color: '#000000',
+  margin: '0px 0px 30px 0px',
+  padding: '0px'
+};
+
+const SUB_HEADING_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '18px',
+  lineHeight: '23px',
+  textTransform: 'capitalize',
+  color: '#000000',
+  padding: '0px',
+  margin: '0px 0px 2px 0px'
+};
+
+const DESCRIPTION_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  flexWrap: 'wrap',
+  width: '100%',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '12px',
+  lineHeight: '15px',
+  color: '#969696',
+  padding: '0px',
+  margin: '0px 0px 20px 0px'
 };
