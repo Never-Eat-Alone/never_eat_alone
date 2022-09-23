@@ -1,10 +1,12 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
-import { DisplayMode } from '../../definitions';
+import { DisplayMode, SocialAccount } from '../../definitions';
 import { Tab } from './tab';
+import { LinkSocialAccountButton } from './link_social_account_button';
 
 interface Properties {
   displayMode: DisplayMode;
+  linkedSocialAccounts: SocialAccount[];
 }
 
 interface State {
@@ -48,6 +50,8 @@ export class SettingsPage extends React.Component<Properties, State> {
               <h3 style={DESCRIPTION_STYLE} >
                 You can use these accounts to log in to NeverEatAlone.
               </h3>
+              <LinkSocialAccountButton style={} account={} />
+              <LinkSocialAccountButton style={} />
             </div>);
         case SettingsPage.Tab.NOTIFICATIONS:
           return (
