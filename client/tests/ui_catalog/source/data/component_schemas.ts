@@ -3,10 +3,9 @@ import { ArrayInput, AttendeeInput, BooleanInput, CityProvinceInput, CSSInput,
   CuisineInput, DateInput, DateTimeInput, DisplayModeInput, DressCodeInput,
   EventCardSummaryInput, EventTagInput, ForgotPasswordPageErrorCodeInput,
   HomePageErrorCodeInput, JoinEventModalErrorCodeInput, LanguageInput,
-  LinkSocialAccountButtonTypeInput,
   LocationInput, NumberInput, PaymentCardInput, RestaurantInput, SeatingInput,
-  SignUpPageErrorCodeInput, SocialMediaImageInput, TextInput, UserInput
-} from '../viewer/propertyInput';
+  SignUpPageErrorCodeInput, SocialAccountInput, SocialAccountTypeInput,
+  SocialMediaImageInput, TextInput, UserInput } from '../viewer/propertyInput';
 import { ComponentSchema, PropertySchema, SignalSchema } from './schemas';
 
 /** Loads the complete list of schemas available to test. */
@@ -1492,12 +1491,21 @@ export function loadComponentSchemas(): ComponentSchema[] {
   ], NeverEatAlone.RemoveSeatModal);
   const settingsPageSchema = new ComponentSchema('SettingsPage', [
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
-      DisplayModeInput)], [], NeverEatAlone.SettingsPage);
+      DisplayModeInput),
+    new PropertySchema('linkedSocialAccounts', [
+      new NeverEatAlone.SocialAccount(1, 'lucy@gmail.com',
+        NeverEatAlone.SocialAccountType.GOOGLE),
+      new NeverEatAlone.SocialAccount(1, 'lucy@gmail.com',
+        NeverEatAlone.SocialAccountType.FACEBOOK)
+    ], ArrayInput(
+      new PropertySchema('SocialAccount', new NeverEatAlone.SocialAccount(1,
+      'lucy@gmail.com', NeverEatAlone.SocialAccountType.GOOGLE),
+      SocialAccountInput)))], [], NeverEatAlone.SettingsPage);
   const linkSocialMediaButtonSchema = new ComponentSchema(
     'LinkSocialMediaButton',
     [new PropertySchema('accountType',
-      NeverEatAlone.LinkSocialAccountButton.Type.FACEBOOK,
-      LinkSocialAccountButtonTypeInput),
+      NeverEatAlone.SocialAccountType.FACEBOOK,
+      SocialAccountTypeInput),
     new PropertySchema('account', '', TextInput),
     new PropertySchema('disabled', false, BooleanInput)], [
     new SignalSchema('onClick', '', [])

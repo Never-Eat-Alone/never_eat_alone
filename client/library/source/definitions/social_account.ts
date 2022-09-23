@@ -1,6 +1,15 @@
 import { SocialAccountType } from './social_account_type';
 
 export class SocialAccount {
+  /** Creates a SocialAccount from a json object. */
+  public static fromJson(value: any): SocialAccount {
+    return new SocialAccount(
+      value.userId,
+      value.socialAccountEmail,
+      value.accountType as SocialAccountType
+    );
+  }
+
   constructor(userId: number, socialAccountEmail: string,
       accountType: SocialAccountType) {
     this._userId = userId;
@@ -20,8 +29,13 @@ export class SocialAccount {
     return this._accountType;
   }
 
+  /** Converts the SocialAccount object to json. */
   public toJson() {
-    
+    return {
+      userId: this._userId,
+      socialAccountEmail: this._socialAccountEmail,
+      accountType: this._accountType
+    }
   }
 
   private _userId: number;
