@@ -48,7 +48,6 @@ export class SettingsPage extends React.Component<Properties, State> {
               <h3 style={DESCRIPTION_STYLE} >
                 You can use these accounts to log in to NeverEatAlone.
               </h3>
-              
             </div>);
         case SettingsPage.Tab.NOTIFICATIONS:
           return (
