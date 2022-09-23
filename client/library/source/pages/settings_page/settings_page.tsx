@@ -40,6 +40,9 @@ export class SettingsPage extends React.Component<Properties, State> {
         contentStyle: DESKTOP_CONTENT_STYLE
       };
     })();
+    const isFacebookLinked = (this.props.linkedSocialAccounts &&
+      this.props.linkedSocialAccounts.findIndex(account => account.accountType
+        === SocialAccountType.FACEBOOK) !== -1);
     const tabContent = (() => {
       switch (this.state.activeTab) {
         case SettingsPage.Tab.ACCOUNT_INFORMATION:
@@ -55,12 +58,16 @@ export class SettingsPage extends React.Component<Properties, State> {
                   account => account.accountType === SocialAccountType.GOOGLE)
                   .socialAccountEmail}
                 accountType={SocialAccountType.GOOGLE}
+                onClick={}
+                disabled={isGoogleLinked}
               />
               <LinkSocialAccountButton style={SOCIAL_ACCOUNT_BUTTON_STYLE}
                 account={this.props.linkedSocialAccounts.find(
                   account => account.accountType === SocialAccountType.FACEBOOK)
                   .socialAccountEmail}
                 accountType={SocialAccountType.FACEBOOK}
+                onClick={}
+                disabled={isFacebookLinked}
               />
             </div>);
         case SettingsPage.Tab.NOTIFICATIONS:
