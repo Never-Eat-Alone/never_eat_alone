@@ -17,6 +17,7 @@ export * from './forgot_password_page_error_code_input';
 export * from './home_page_error_code_input';
 export * from './join_event_modal_error_code_input';
 export * from './language_input';
+export * from './link_social_account_button_type_input';
 export * from './location_input';
 export * from './number_input';
 export * from './optional_input';
