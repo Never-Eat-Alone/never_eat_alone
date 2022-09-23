@@ -3,6 +3,7 @@ import { ArrayInput, AttendeeInput, BooleanInput, CityProvinceInput, CSSInput,
   CuisineInput, DateInput, DateTimeInput, DisplayModeInput, DressCodeInput,
   EventCardSummaryInput, EventTagInput, ForgotPasswordPageErrorCodeInput,
   HomePageErrorCodeInput, JoinEventModalErrorCodeInput, LanguageInput,
+  LinkSocialAccountButtonTypeInput,
   LocationInput, NumberInput, PaymentCardInput, RestaurantInput, SeatingInput,
   SignUpPageErrorCodeInput, SocialMediaImageInput, TextInput, UserInput
 } from '../viewer/propertyInput';
@@ -1489,6 +1490,19 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new SignalSchema('onRemoveSeat', '', []),
     new SignalSchema('onCancel', '', [])
   ], NeverEatAlone.RemoveSeatModal);
+  const settingsPageSchema = new ComponentSchema('SettingsPage', [
+    new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
+      DisplayModeInput)], [], NeverEatAlone.SettingsPage);
+  const linkSocialMediaButtonSchema = new ComponentSchema(
+    'LinkSocialMediaButton',
+    [new PropertySchema('accountType',
+      NeverEatAlone.LinkSocialAccountButton.Type.FACEBOOK,
+      LinkSocialAccountButtonTypeInput),
+    new PropertySchema('account', '', TextInput),
+    new PropertySchema('disabled', false, BooleanInput)], [
+    new SignalSchema('onClick', '', [])
+    ],
+    NeverEatAlone.LinkSocialAccountButton);
   return [
     accentTextButtonSchema,
     albumCardSchema,
@@ -1522,6 +1536,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     joinEventModalSchema,
     joinModalSchema,
     JoinRequestSentModalSchema,
+    linkSocialMediaButtonSchema,
     locationInputFieldSchema,
     logInModalSchema,
     logoSchema,
@@ -1546,6 +1561,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     secondaryTextLinkButton,
     seeAllButtonSchema,
     seeLessButtonSchema,
+    settingsPageSchema,
     showAllButtonSchema,
     showLessButtonSchema,
     signUpPageSchema,
