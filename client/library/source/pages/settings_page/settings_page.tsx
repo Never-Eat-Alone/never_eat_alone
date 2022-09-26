@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { SecondaryTextButton } from '../../components';
 import { DisplayMode, SocialAccount, SocialAccountType
 } from '../../definitions';
 import { LinkSocialAccountButton } from './link_social_account_button';
@@ -6,7 +7,18 @@ import { Tab } from './tab';
 
 interface Properties {
   displayMode: DisplayMode;
+
+  /** User's linked social acounts. */
   linkedSocialAccounts: SocialAccount[];
+
+  /** Indicates link Google account button is clicked. */
+  onGoogleClick: () => void;
+
+  /** Indicates link Facebook account button is clicked. */
+  onFacebookClick: () => void;
+
+  /** Indicates the remove social account button is clicked. */
+  onRemoveLinkedAccount: (account: SocialAccount) => void;
 }
 
 interface State {
@@ -23,26 +35,111 @@ export class SettingsPage extends React.Component<Properties, State> {
   }
 
   render(): JSX.Element {
-    const { containerStyle, contentStyle } = (() => {
+    const { containerStyle, contentStyle, linkButtonRowStyle } = (() => {
       if (this.props.displayMode === DisplayMode.MOBILE) {
         return {
           containerStyle: MOBILE_CONTAINER_STYLE,
-          contentStyle: MOBILE_CONTENT_STYLE
+          contentStyle: MOBILE_CONTENT_STYLE,
+          linkButtonRowStyle: MOBILE_LINK_BUTTON_ROW_STYLE
         };
       } else if (this.props.displayMode === DisplayMode.TABLET) {
         return {
           containerStyle: CONTAINER_STYLE,
-          contentStyle: TABLET_CONTENT_STYLE
+          contentStyle: TABLET_CONTENT_STYLE,
+          linkButtonRowStyle: LINK_BUTTON_ROW_STYLE
         };
       }
       return {
         containerStyle: CONTAINER_STYLE,
-        contentStyle: DESKTOP_CONTENT_STYLE
+        contentStyle: DESKTOP_CONTENT_STYLE,
+        linkButtonRowStyle: LINK_BUTTON_ROW_STYLE
       };
     })();
-    const isFacebookLinked = (this.props.linkedSocialAccounts &&
-      this.props.linkedSocialAccounts.findIndex(account => account.accountType
-        === SocialAccountType.FACEBOOK) !== -1);
+    const socialAccountButtons = [];
+    if (this.props.linkedSocialAccounts &&
+        this.props.linkedSocialAccounts.length !== 0) {
+      let isGoogle, isFacebook = false;
+      for (const account of this.props.linkedSocialAccounts) {
+        if (account.accountType === SocialAccountType.GOOGLE) {
+          isGoogle = true;
+          socialAccountButtons.push(
+            <div style={linkButtonRowStyle} >
+              <LinkSocialAccountButton
+                key={account.socialAccountEmail}
+                style={SOCIAL_ACCOUNT_BUTTON_STYLE}
+                account={account.socialAccountEmail}
+                accountType={SocialAccountType.GOOGLE}
+                onClick={this.props.onGoogleClick}
+                disabled
+              />
+              <SecondaryTextButton
+                style={REMOVE_BUTTON_STYLE}
+                label='Remove'
+                onClick={() => this.props.onRemoveLinkedAccount(account)}
+              />
+            </div>);
+        } else {
+          isFacebook = true;
+          socialAccountButtons.push(
+            <div style={linkButtonRowStyle} >
+              <LinkSocialAccountButton
+                key={account.socialAccountEmail}
+                style={SOCIAL_ACCOUNT_BUTTON_STYLE}
+                account={account.socialAccountEmail}
+                accountType={SocialAccountType.FACEBOOK}
+                onClick={this.props.onFacebookClick}
+                disabled
+              />
+              <SecondaryTextButton
+                style={REMOVE_BUTTON_STYLE}
+                label='Remove'
+                onClick={() => this.props.onRemoveLinkedAccount(account)}
+              />
+            </div>);
+        }
+      }
+      if (!isGoogle) {
+        socialAccountButtons.push(
+          <LinkSocialAccountButton
+            key='link_google'
+            style={{...linkButtonRowStyle ,...SOCIAL_ACCOUNT_BUTTON_STYLE}}
+            account=''
+            accountType={SocialAccountType.GOOGLE}
+            onClick={this.props.onGoogleClick}
+            disabled={false}
+          />);
+      }
+      if (!isFacebook) {
+        socialAccountButtons.push(
+          <LinkSocialAccountButton
+            key='link_facebook'
+            style={{...linkButtonRowStyle ,...SOCIAL_ACCOUNT_BUTTON_STYLE}}
+            account=''
+            accountType={SocialAccountType.FACEBOOK}
+            onClick={this.props.onFacebookClick}
+            disabled={false}
+          />);
+      }
+    } else {
+      socialAccountButtons.push(
+        <LinkSocialAccountButton
+          key='link_google'
+          style={{...linkButtonRowStyle ,...SOCIAL_ACCOUNT_BUTTON_STYLE}}
+          account=''
+          accountType={SocialAccountType.GOOGLE}
+          onClick={this.props.onGoogleClick}
+          disabled={false}
+        />);
+      socialAccountButtons.push(
+        <LinkSocialAccountButton
+          key='link_facebook'
+          style={{...linkButtonRowStyle ,...SOCIAL_ACCOUNT_BUTTON_STYLE}}
+          account=''
+          accountType={SocialAccountType.FACEBOOK}
+          onClick={this.props.onFacebookClick}
+          disabled={false}
+        />);
+    }
     const tabContent = (() => {
       switch (this.state.activeTab) {
         case SettingsPage.Tab.ACCOUNT_INFORMATION:
@@ -53,22 +150,7 @@ export class SettingsPage extends React.Component<Properties, State> {
               <h3 style={DESCRIPTION_STYLE} >
                 You can use these accounts to log in to NeverEatAlone.
               </h3>
-              <LinkSocialAccountButton style={SOCIAL_ACCOUNT_BUTTON_STYLE}
-                account={this.props.linkedSocialAccounts.find(
-                  account => account.accountType === SocialAccountType.GOOGLE)
-                  .socialAccountEmail}
-                accountType={SocialAccountType.GOOGLE}
-                onClick={}
-                disabled={isGoogleLinked}
-              />
-              <LinkSocialAccountButton style={SOCIAL_ACCOUNT_BUTTON_STYLE}
-                account={this.props.linkedSocialAccounts.find(
-                  account => account.accountType === SocialAccountType.FACEBOOK)
-                  .socialAccountEmail}
-                accountType={SocialAccountType.FACEBOOK}
-                onClick={}
-                disabled={isFacebookLinked}
-              />
+              {socialAccountButtons}
             </div>);
         case SettingsPage.Tab.NOTIFICATIONS:
           return (
@@ -277,5 +359,40 @@ const DESCRIPTION_STYLE: React.CSSProperties = {
 };
 
 const SOCIAL_ACCOUNT_BUTTON_STYLE: React.CSSProperties = {
-  
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  width: '335px',
+  maxWidth: '100%',
+  height: '38px',
+  minHeight: '38px'
+};
+
+const LINK_BUTTON_ROW_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  width: '100%',
+  gap: '50px',
+  height: '38px',
+  marginBottom: '10px'
+};
+
+const MOBILE_LINK_BUTTON_ROW_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  width: '100%',
+  gap: '10px',
+  marginBottom: '20px'
+};
+
+const REMOVE_BUTTON_STYLE: React.CSSProperties = {
+  height: '35px',
+  minHeight: '35px',
+  width: '116px',
+  minWidth: '116px'
 };
