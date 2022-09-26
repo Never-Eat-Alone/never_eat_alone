@@ -1506,7 +1506,9 @@ export function loadComponentSchemas(): ComponentSchema[] {
     ], [
       new SignalSchema('onGoogleClick', '', []),
       new SignalSchema('onFacebookClick', '', []),
-      new SignalSchema('onRemoveLinkedAccount', '', [])
+      new SignalSchema('onRemoveLinkedAccount', '', []),
+      new SignalSchema('onDeactivateAccount', '', []),
+      new SignalSchema('onDeleteAccount', '', [])
       ], NeverEatAlone.SettingsPage);
   const linkSocialMediaButtonSchema = new ComponentSchema(
     'LinkSocialMediaButton',
