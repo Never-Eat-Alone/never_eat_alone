@@ -1500,7 +1500,10 @@ export function loadComponentSchemas(): ComponentSchema[] {
     ], ArrayInput(
       new PropertySchema('SocialAccount', new NeverEatAlone.SocialAccount(1,
       'lucy@gmail.com', NeverEatAlone.SocialAccountType.GOOGLE),
-      SocialAccountInput)))], [
+      SocialAccountInput))),
+    new PropertySchema('displayName', 'Arthur', TextInput),
+    new PropertySchema('profileId', 17826, NumberInput)
+    ], [
       new SignalSchema('onGoogleClick', '', []),
       new SignalSchema('onFacebookClick', '', []),
       new SignalSchema('onRemoveLinkedAccount', '', [])

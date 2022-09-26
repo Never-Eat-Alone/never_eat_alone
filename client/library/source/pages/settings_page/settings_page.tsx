@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SecondaryTextButton } from '../../components';
+import { InputField, SecondaryTextButton } from '../../components';
 import { DisplayMode, SocialAccount, SocialAccountType
 } from '../../definitions';
 import { LinkSocialAccountButton } from './link_social_account_button';
@@ -10,6 +10,12 @@ interface Properties {
 
   /** User's linked social acounts. */
   linkedSocialAccounts: SocialAccount[];
+
+  /** User's displayname. */
+  displayName: string;
+
+  /** User's profile id number. */
+  profileId: number;
 
   /** Indicates link Google account button is clicked. */
   onGoogleClick: () => void;
@@ -36,27 +42,37 @@ export class SettingsPage extends React.Component<Properties, State> {
 
   render(): JSX.Element {
     const { containerStyle, contentStyle, linkButtonRowStyle,
-        socialButtonsColumnStyle } = (() => {
+        socialButtonsColumnStyle, socialAccountButtonStyle, inputFieldStyle,
+        idRowStyle } = (() => {
       if (this.props.displayMode === DisplayMode.MOBILE) {
         return {
           containerStyle: MOBILE_CONTAINER_STYLE,
           contentStyle: MOBILE_CONTENT_STYLE,
           linkButtonRowStyle: MOBILE_LINK_BUTTON_ROW_STYLE,
-          socialButtonsColumnStyle: MOBILE_SOCIAL_BUTTONS_COLUMN_STYLE
+          socialButtonsColumnStyle: MOBILE_SOCIAL_BUTTONS_COLUMN_STYLE,
+          socialAccountButtonStyle: MOBILE_SOCIAL_ACCOUNT_BUTTON_STYLE,
+          inputFieldStyle: MOBILE_INPUT_FIELD_STYLE,
+          idRowStyle: MOBILE_ID_ROW_STYLE
         };
       } else if (this.props.displayMode === DisplayMode.TABLET) {
         return {
           containerStyle: CONTAINER_STYLE,
           contentStyle: TABLET_CONTENT_STYLE,
           linkButtonRowStyle: LINK_BUTTON_ROW_STYLE,
-          socialButtonsColumnStyle: SOCIAL_BUTTONS_COLUMN_STYLE
+          socialButtonsColumnStyle: SOCIAL_BUTTONS_COLUMN_STYLE,
+          socialAccountButtonStyle: SOCIAL_ACCOUNT_BUTTON_STYLE,
+          inputFieldStyle: INPUT_FIELD_STYLE,
+          idRowStyle: ID_ROW_STYLE
         };
       }
       return {
         containerStyle: CONTAINER_STYLE,
         contentStyle: DESKTOP_CONTENT_STYLE,
         linkButtonRowStyle: LINK_BUTTON_ROW_STYLE,
-        socialButtonsColumnStyle: SOCIAL_BUTTONS_COLUMN_STYLE
+        socialButtonsColumnStyle: SOCIAL_BUTTONS_COLUMN_STYLE,
+        socialAccountButtonStyle: SOCIAL_ACCOUNT_BUTTON_STYLE,
+        inputFieldStyle: INPUT_FIELD_STYLE,
+        idRowStyle: ID_INPUT_STYLE
       };
     })();
     const socialAccountButtons = [];
@@ -70,7 +86,7 @@ export class SettingsPage extends React.Component<Properties, State> {
             <div style={linkButtonRowStyle} >
               <LinkSocialAccountButton
                 key={account.socialAccountEmail}
-                style={SOCIAL_ACCOUNT_BUTTON_STYLE}
+                style={socialAccountButtonStyle}
                 account={account.socialAccountEmail}
                 accountType={SocialAccountType.GOOGLE}
                 onClick={this.props.onGoogleClick}
@@ -88,7 +104,7 @@ export class SettingsPage extends React.Component<Properties, State> {
             <div style={linkButtonRowStyle} >
               <LinkSocialAccountButton
                 key={account.socialAccountEmail}
-                style={SOCIAL_ACCOUNT_BUTTON_STYLE}
+                style={socialAccountButtonStyle}
                 account={account.socialAccountEmail}
                 accountType={SocialAccountType.FACEBOOK}
                 onClick={this.props.onFacebookClick}
@@ -106,7 +122,7 @@ export class SettingsPage extends React.Component<Properties, State> {
         socialAccountButtons.push(
           <LinkSocialAccountButton
             key='link_google'
-            style={SOCIAL_ACCOUNT_BUTTON_STYLE}
+            style={socialAccountButtonStyle}
             account=''
             accountType={SocialAccountType.GOOGLE}
             onClick={this.props.onGoogleClick}
@@ -117,7 +133,7 @@ export class SettingsPage extends React.Component<Properties, State> {
         socialAccountButtons.push(
           <LinkSocialAccountButton
             key='link_facebook'
-            style={SOCIAL_ACCOUNT_BUTTON_STYLE}
+            style={socialAccountButtonStyle}
             account=''
             accountType={SocialAccountType.FACEBOOK}
             onClick={this.props.onFacebookClick}
@@ -128,7 +144,7 @@ export class SettingsPage extends React.Component<Properties, State> {
       socialAccountButtons.push(
         <LinkSocialAccountButton
           key='link_google'
-          style={SOCIAL_ACCOUNT_BUTTON_STYLE}
+          style={socialAccountButtonStyle}
           account=''
           accountType={SocialAccountType.GOOGLE}
           onClick={this.props.onGoogleClick}
@@ -137,7 +153,7 @@ export class SettingsPage extends React.Component<Properties, State> {
       socialAccountButtons.push(
         <LinkSocialAccountButton
           key='link_facebook'
-          style={SOCIAL_ACCOUNT_BUTTON_STYLE}
+          style={socialAccountButtonStyle}
           account=''
           accountType={SocialAccountType.FACEBOOK}
           onClick={this.props.onFacebookClick}
@@ -156,6 +172,22 @@ export class SettingsPage extends React.Component<Properties, State> {
               </h3>
               <div style={socialButtonsColumnStyle} >
                 {socialAccountButtons}
+              </div>
+              <h2 style={SUB_HEADING_STYLE} >Display Name</h2>
+              <h3 style={DESCRIPTION_STYLE} >Required.</h3>
+              <InputField
+                style={inputFieldStyle}
+                type='text'
+                value={this.props.displayName}
+                disabled
+              />
+              <div style={idRowStyle} >
+                www.nevereatalone.net/users/
+                <InputField
+                  style={ID_INPUT_STYLE}
+                  value={this.props.profileId}
+                  disabled
+                />
               </div>
             </div>);
         case SettingsPage.Tab.NOTIFICATIONS:
@@ -366,7 +398,12 @@ const DESCRIPTION_STYLE: React.CSSProperties = {
 
 const SOCIAL_ACCOUNT_BUTTON_STYLE: React.CSSProperties = {
   width: '335px',
-  maxWidth: '100%',
+  height: '38px',
+  minHeight: '38px'
+};
+
+const MOBILE_SOCIAL_ACCOUNT_BUTTON_STYLE: React.CSSProperties = {
+  width: '100%',
   height: '38px',
   minHeight: '38px'
 };
@@ -410,4 +447,46 @@ const SOCIAL_BUTTONS_COLUMN_STYLE: React.CSSProperties = {
 const MOBILE_SOCIAL_BUTTONS_COLUMN_STYLE: React.CSSProperties = {
   ...SOCIAL_BUTTONS_COLUMN_STYLE,
   gap: '20px'
+};
+
+const INPUT_FIELD_STYLE: React.CSSProperties = {
+  width: '335px',
+  minWidth: '335px',
+  height: '38px',
+  minHeight: '38px',
+  marginBottom: '10px'
+};
+
+const MOBILE_INPUT_FIELD_STYLE: React.CSSProperties = {
+  ...INPUT_FIELD_STYLE,
+  width: '100%',
+  minWidth: 'auto'
+};
+
+const ID_ROW_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  width: '335px',
+  height: '38px',
+  marginBottom: '20px',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#000000'
+};
+
+const MOBILE_ID_ROW_STYLE: React.CSSProperties = {
+  ...ID_ROW_STYLE,
+  width: '100%',
+  minWidth: 'auto'
+};
+
+const ID_INPUT_STYLE: React.CSSProperties = {
+  width: '100%',
+  height: '100%',
+  marginLeft: '10px'
 };
