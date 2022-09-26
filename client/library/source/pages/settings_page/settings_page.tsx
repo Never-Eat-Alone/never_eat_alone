@@ -15,6 +15,12 @@ interface Properties {
   /** User's profile id number. */
   profileId: number;
 
+  /** User's email. */
+  email: string;
+
+  /** User's password. */
+  password: string;
+
   /** Indicates link Google account button is clicked. */
   onGoogleClick: () => void;
 

@@ -16,6 +16,12 @@ interface Properties {
   /** User's profile id number. */
   profileId: number;
 
+  /** User's email. */
+  email: string;
+
+  /** User's password. */
+  password: string;
+
   /** Indicates link Google account button is clicked. */
   onGoogleClick: () => void;
 
@@ -62,14 +68,16 @@ export class AccountInformationTab extends React.Component<Properties, State> {
 
   public render(): JSX.Element {
     const { linkButtonRowStyle, socialButtonsColumnStyle,
-        socialAccountButtonStyle, inputFieldStyle, idRowStyle } = (() => {
+        socialAccountButtonStyle, inputFieldStyle, idRowStyle,
+        inputEditRowStyle } = (() => {
       if (this.props.displayMode === DisplayMode.MOBILE) {
         return {
           linkButtonRowStyle: MOBILE_LINK_BUTTON_ROW_STYLE,
           socialButtonsColumnStyle: MOBILE_SOCIAL_BUTTONS_COLUMN_STYLE,
           socialAccountButtonStyle: MOBILE_SOCIAL_ACCOUNT_BUTTON_STYLE,
           inputFieldStyle: MOBILE_INPUT_FIELD_STYLE,
-          idRowStyle: MOBILE_ID_ROW_STYLE
+          idRowStyle: MOBILE_ID_ROW_STYLE,
+          inputEditRowStyle: MOBILE_INPUT_EDIT_ROW_STYLE
         };
       } else if (this.props.displayMode === DisplayMode.TABLET) {
         return {
@@ -77,7 +85,8 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           socialButtonsColumnStyle: SOCIAL_BUTTONS_COLUMN_STYLE,
           socialAccountButtonStyle: SOCIAL_ACCOUNT_BUTTON_STYLE,
           inputFieldStyle: INPUT_FIELD_STYLE,
-          idRowStyle: ID_ROW_STYLE
+          idRowStyle: ID_ROW_STYLE,
+          inputEditRowStyle: INPUT_EDIT_ROW_STYLE
         };
       }
       return {
@@ -85,7 +94,8 @@ export class AccountInformationTab extends React.Component<Properties, State> {
         socialButtonsColumnStyle: SOCIAL_BUTTONS_COLUMN_STYLE,
         socialAccountButtonStyle: SOCIAL_ACCOUNT_BUTTON_STYLE,
         inputFieldStyle: INPUT_FIELD_STYLE,
-        idRowStyle: ID_ROW_STYLE
+        idRowStyle: ID_ROW_STYLE,
+        inputEditRowStyle: INPUT_EDIT_ROW_STYLE
       };
     })();
     const socialAccountButtons = [];
@@ -204,6 +214,34 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           label='Edit'
           onClick={this.props.onEditDisplayNameClick}
         />
+        <h2 style={SUB_HEADING_STYLE} >Email</h2>
+        <div style={inputEditRowStyle} >
+          <InputField
+            style={inputFieldStyle}
+            type='email'
+            value={this.props.email}
+            disabled
+          />
+          <SecondaryTextButton
+            style={EDIT_BUTTON_STYLE}
+            label='Edit'
+            onClick={this.props.onEditEmailClick}
+          />
+        </div>
+        <h2 style={SUB_HEADING_STYLE} >Password</h2>
+        <div style={inputEditRowStyle} >
+          <InputField
+            style={inputFieldStyle}
+            type='password'
+            value={this.props.password}
+            disabled
+          />
+          <SecondaryTextButton
+          style={EDIT_BUTTON_STYLE}
+          label='Edit'
+          onClick={this.props.onEditPasswordClick}
+        />
+        </div>
       </div>);
   }
 }
@@ -290,6 +328,15 @@ const MOBILE_LINK_BUTTON_ROW_STYLE: React.CSSProperties = {
   alignItems: 'flex-start',
   width: '100%',
   gap: '10px'
+};
+
+const INPUT_EDIT_ROW_STYLE: React.CSSProperties = {
+  ...LINK_BUTTON_ROW_STYLE
+};
+
+const MOBILE_INPUT_EDIT_ROW_STYLE: React.CSSProperties = {
+  ...MOBILE_LINK_BUTTON_ROW_STYLE,
+  gap: '20px'
 };
 
 const REMOVE_BUTTON_STYLE: React.CSSProperties = {

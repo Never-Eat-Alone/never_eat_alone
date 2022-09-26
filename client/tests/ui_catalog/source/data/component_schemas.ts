@@ -1502,6 +1502,8 @@ export function loadComponentSchemas(): ComponentSchema[] {
       'lucy@gmail.com', NeverEatAlone.SocialAccountType.GOOGLE),
       SocialAccountInput))),
     new PropertySchema('displayName', 'Arthur', TextInput),
+    new PropertySchema('email', 'shshs@gmail.com', TextInput),
+    new PropertySchema('password', 'dsfdsf', TextInput),
     new PropertySchema('profileId', 17826, NumberInput)
     ], [
       new SignalSchema('onGoogleClick', '', []),
