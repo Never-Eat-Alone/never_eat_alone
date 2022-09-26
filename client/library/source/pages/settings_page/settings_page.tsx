@@ -35,24 +35,28 @@ export class SettingsPage extends React.Component<Properties, State> {
   }
 
   render(): JSX.Element {
-    const { containerStyle, contentStyle, linkButtonRowStyle } = (() => {
+    const { containerStyle, contentStyle, linkButtonRowStyle,
+        socialButtonsColumnStyle } = (() => {
       if (this.props.displayMode === DisplayMode.MOBILE) {
         return {
           containerStyle: MOBILE_CONTAINER_STYLE,
           contentStyle: MOBILE_CONTENT_STYLE,
-          linkButtonRowStyle: MOBILE_LINK_BUTTON_ROW_STYLE
+          linkButtonRowStyle: MOBILE_LINK_BUTTON_ROW_STYLE,
+          socialButtonsColumnStyle: MOBILE_SOCIAL_BUTTONS_COLUMN_STYLE
         };
       } else if (this.props.displayMode === DisplayMode.TABLET) {
         return {
           containerStyle: CONTAINER_STYLE,
           contentStyle: TABLET_CONTENT_STYLE,
-          linkButtonRowStyle: LINK_BUTTON_ROW_STYLE
+          linkButtonRowStyle: LINK_BUTTON_ROW_STYLE,
+          socialButtonsColumnStyle: SOCIAL_BUTTONS_COLUMN_STYLE
         };
       }
       return {
         containerStyle: CONTAINER_STYLE,
         contentStyle: DESKTOP_CONTENT_STYLE,
-        linkButtonRowStyle: LINK_BUTTON_ROW_STYLE
+        linkButtonRowStyle: LINK_BUTTON_ROW_STYLE,
+        socialButtonsColumnStyle: SOCIAL_BUTTONS_COLUMN_STYLE
       };
     })();
     const socialAccountButtons = [];
@@ -102,7 +106,7 @@ export class SettingsPage extends React.Component<Properties, State> {
         socialAccountButtons.push(
           <LinkSocialAccountButton
             key='link_google'
-            style={{...linkButtonRowStyle ,...SOCIAL_ACCOUNT_BUTTON_STYLE}}
+            style={SOCIAL_ACCOUNT_BUTTON_STYLE}
             account=''
             accountType={SocialAccountType.GOOGLE}
             onClick={this.props.onGoogleClick}
@@ -113,7 +117,7 @@ export class SettingsPage extends React.Component<Properties, State> {
         socialAccountButtons.push(
           <LinkSocialAccountButton
             key='link_facebook'
-            style={{...linkButtonRowStyle ,...SOCIAL_ACCOUNT_BUTTON_STYLE}}
+            style={SOCIAL_ACCOUNT_BUTTON_STYLE}
             account=''
             accountType={SocialAccountType.FACEBOOK}
             onClick={this.props.onFacebookClick}
@@ -124,7 +128,7 @@ export class SettingsPage extends React.Component<Properties, State> {
       socialAccountButtons.push(
         <LinkSocialAccountButton
           key='link_google'
-          style={{...linkButtonRowStyle ,...SOCIAL_ACCOUNT_BUTTON_STYLE}}
+          style={SOCIAL_ACCOUNT_BUTTON_STYLE}
           account=''
           accountType={SocialAccountType.GOOGLE}
           onClick={this.props.onGoogleClick}
@@ -133,7 +137,7 @@ export class SettingsPage extends React.Component<Properties, State> {
       socialAccountButtons.push(
         <LinkSocialAccountButton
           key='link_facebook'
-          style={{...linkButtonRowStyle ,...SOCIAL_ACCOUNT_BUTTON_STYLE}}
+          style={SOCIAL_ACCOUNT_BUTTON_STYLE}
           account=''
           accountType={SocialAccountType.FACEBOOK}
           onClick={this.props.onFacebookClick}
@@ -150,7 +154,9 @@ export class SettingsPage extends React.Component<Properties, State> {
               <h3 style={DESCRIPTION_STYLE} >
                 You can use these accounts to log in to NeverEatAlone.
               </h3>
-              {socialAccountButtons}
+              <div style={socialButtonsColumnStyle} >
+                {socialAccountButtons}
+              </div>
             </div>);
         case SettingsPage.Tab.NOTIFICATIONS:
           return (
@@ -359,10 +365,6 @@ const DESCRIPTION_STYLE: React.CSSProperties = {
 };
 
 const SOCIAL_ACCOUNT_BUTTON_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
   width: '335px',
   maxWidth: '100%',
   height: '38px',
@@ -376,8 +378,7 @@ const LINK_BUTTON_ROW_STYLE: React.CSSProperties = {
   alignItems: 'center',
   width: '100%',
   gap: '50px',
-  height: '38px',
-  marginBottom: '10px'
+  height: '38px'
 };
 
 const MOBILE_LINK_BUTTON_ROW_STYLE: React.CSSProperties = {
@@ -386,8 +387,7 @@ const MOBILE_LINK_BUTTON_ROW_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
   width: '100%',
-  gap: '10px',
-  marginBottom: '20px'
+  gap: '10px'
 };
 
 const REMOVE_BUTTON_STYLE: React.CSSProperties = {
@@ -395,4 +395,19 @@ const REMOVE_BUTTON_STYLE: React.CSSProperties = {
   minHeight: '35px',
   width: '116px',
   minWidth: '116px'
+};
+
+const SOCIAL_BUTTONS_COLUMN_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  width: '100%',
+  gap: '10px',
+  marginBottom: '30px'
+};
+
+const MOBILE_SOCIAL_BUTTONS_COLUMN_STYLE: React.CSSProperties = {
+  ...SOCIAL_BUTTONS_COLUMN_STYLE,
+  gap: '20px'
 };
