@@ -85,7 +85,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
         socialButtonsColumnStyle: SOCIAL_BUTTONS_COLUMN_STYLE,
         socialAccountButtonStyle: SOCIAL_ACCOUNT_BUTTON_STYLE,
         inputFieldStyle: INPUT_FIELD_STYLE,
-        idRowStyle: ID_INPUT_STYLE
+        idRowStyle: ID_ROW_STYLE
       };
     })();
     const socialAccountButtons = [];
@@ -346,8 +346,7 @@ const ID_ROW_STYLE: React.CSSProperties = {
 
 const MOBILE_ID_ROW_STYLE: React.CSSProperties = {
   ...ID_ROW_STYLE,
-  width: '100%',
-  minWidth: 'auto'
+  width: '100%'
 };
 
 const ID_INPUT_STYLE: React.CSSProperties = {
