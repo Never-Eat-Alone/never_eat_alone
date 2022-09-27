@@ -1525,6 +1525,10 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new SignalSchema('onClick', '', [])
     ],
     NeverEatAlone.LinkSocialAccountButton);
+  const toggleButtonSchema = new ComponentSchema('ToggleButton', [
+    new PropertySchema('style', {}, CSSInput),
+    new PropertySchema('checked', false, BooleanInput)
+  ], [new SignalSchema('onClick', '', [])], NeverEatAlone.ToggleButton);
   return [
     accentTextButtonSchema,
     albumCardSchema,
@@ -1588,6 +1592,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     showLessButtonSchema,
     signUpPageSchema,
     textareaWithCounterSchema,
+    toggleButtonSchema,
     userUpcomingEventsSummarySchema,
     whiteNavLinkSchema];
 }
