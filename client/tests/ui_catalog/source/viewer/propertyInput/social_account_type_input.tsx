@@ -1,33 +1,33 @@
 import * as React from 'react';
-import { LinkSocialAccountButton } from 'never_eat_alone';
+import { SocialAccountType } from 'never_eat_alone';
 
 interface Properties {
 
   /** The value of the field. */
-  value?: LinkSocialAccountButton.Type;
+  value?: SocialAccountType;
 
   /** The callback to update the value. */
-  update?: (newValue: LinkSocialAccountButton.Type) => void;
+  update?: (newValue: SocialAccountType) => void;
 }
 
-/** A LinkSocialAccountButton type input field. */
-export class LinkSocialAccountButtonTypeInput extends React.Component<
+/** A SocialAccountType input field. */
+export class SocialAccountTypeInput extends React.Component<
     Properties> {
   public render(): JSX.Element {
     return (
-      <div style={LinkSocialAccountButtonTypeInput.STYLE.container} >
-        <div style={LinkSocialAccountButtonTypeInput.STYLE.label} >
+      <div style={SocialAccountTypeInput.STYLE.container} >
+        <div style={SocialAccountTypeInput.STYLE.label} >
           <input type='radio' name='button_type' id='FACEBOOK' value='FACEBOOK'
-            checked={this.props.value === LinkSocialAccountButton.Type.FACEBOOK}
+            checked={this.props.value === SocialAccountType.FACEBOOK}
             onChange={this.onChange}
-            style={LinkSocialAccountButtonTypeInput.STYLE.radio} />
+            style={SocialAccountTypeInput.STYLE.radio} />
           <label htmlFor='FACEBOOK'>FACEBOOK</label>
         </div>
-        <div style={LinkSocialAccountButtonTypeInput.STYLE.label} >
+        <div style={SocialAccountTypeInput.STYLE.label} >
           <input type='radio' name='button_type' id='GOOGLE' value='GOOGLE'
-            checked={this.props.value === LinkSocialAccountButton.Type.GOOGLE}
+            checked={this.props.value === SocialAccountType.GOOGLE}
             onChange={this.onChange}
-            style={LinkSocialAccountButtonTypeInput.STYLE.radio} />
+            style={SocialAccountTypeInput.STYLE.radio} />
           <label htmlFor='GOOGLE'>GOOGLE</label>
         </div>
       </div>);
@@ -36,9 +36,9 @@ export class LinkSocialAccountButtonTypeInput extends React.Component<
   private onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const mode = event.target.value;
     if (mode === 'FACEBOOK') {
-      this.props.update(LinkSocialAccountButton.Type.FACEBOOK);
+      this.props.update(SocialAccountType.FACEBOOK);
     } else {
-      this.props.update(LinkSocialAccountButton.Type.GOOGLE);
+      this.props.update(SocialAccountType.GOOGLE);
     }
   }
 

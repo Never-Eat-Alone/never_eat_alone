@@ -1,8 +1,9 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
+import { SocialAccountType } from '../../definitions';
 
 interface Properties extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  accountType: LinkSocialAccountButton.Type;
+  accountType: SocialAccountType;
   account: string;
 }
 
@@ -10,12 +11,12 @@ interface Properties extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 export function LinkSocialAccountButton(props: Properties) {
   const { iconSrc, label }= (() => {
     switch (props.accountType) {
-      case LinkSocialAccountButton.Type.FACEBOOK:
+      case SocialAccountType.FACEBOOK:
         return {
           iconSrc: 'resources/icons/facebook.svg',
           label: 'Facebook'
       };
-      case LinkSocialAccountButton.Type.GOOGLE:
+      case SocialAccountType.GOOGLE:
         return {
           iconSrc: 'resources/icons/google.svg',
           label: 'Google'
@@ -47,13 +48,6 @@ export function LinkSocialAccountButton(props: Properties) {
       />
       {buttonText}
     </button>);
-}
-
-export namespace LinkSocialAccountButton {
-  export enum Type {
-    FACEBOOK,
-    GOOGLE
-  }
 }
 
 const BUTTON_STYLE: React.CSSProperties = {

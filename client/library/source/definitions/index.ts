@@ -16,6 +16,8 @@ export * from './payment_card';
 export * from './price_range';
 export * from './restaurant';
 export * from './seating';
+export * from './social_account';
+export * from './social_account_type';
 export * from './social_media_image';
 export * from './user';
 export * from './user_status';

@@ -161,6 +161,8 @@ const LABEL_STYLE: React.CSSProperties = {
   lineHeight: '13px',
   height: '13px',
   textTransform: 'uppercase',
+  margin: '0px',
+  padding: '0px',
   color: 'inherit'
 };
 
