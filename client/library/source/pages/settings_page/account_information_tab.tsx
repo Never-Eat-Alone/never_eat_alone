@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { InputField, SecondaryTextButton } from '../../components';
+import { InputField, SecondaryTextButton, SecondaryTextLinkButton } from '../../components';
 import { DisplayMode, SocialAccount, SocialAccountType
 } from '../../definitions';
 import { LinkSocialAccountButton } from './link_social_account_button';
@@ -98,6 +98,9 @@ export class AccountInformationTab extends React.Component<Properties, State> {
         inputEditRowStyle: INPUT_EDIT_ROW_STYLE
       };
     })();
+    if (this.state.isDeactivate) {
+      return <div>Deactivate account page</div>;
+    }
     const socialAccountButtons = [];
     if (this.props.linkedSocialAccounts &&
         this.props.linkedSocialAccounts.length !== 0) {
@@ -184,7 +187,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
         />);
     }
     return (
-      <div style={PAGE_CONTAINER_STYLE} >
+      <React.Fragment>
         <h1 style={PAGE_HEADING_STYLE} >Account Information</h1>
         <h2 style={SUB_HEADING_STYLE} >Linked Accounts</h2>
         <h3 style={DESCRIPTION_STYLE} >
@@ -210,11 +213,12 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           />
         </div>
         <SecondaryTextButton
-          style={EDIT_BUTTON_STYLE}
+          style={EDIT_DISPLAYNAME_BUTTON_STYLE}
           label='Edit'
           onClick={this.props.onEditDisplayNameClick}
         />
         <h2 style={SUB_HEADING_STYLE} >Email</h2>
+        <h3 style={DESCRIPTION_STYLE} >Required.</h3>
         <div style={inputEditRowStyle} >
           <InputField
             style={inputFieldStyle}
@@ -229,6 +233,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           />
         </div>
         <h2 style={SUB_HEADING_STYLE} >Password</h2>
+        <h3 style={DESCRIPTION_STYLE} >Required.</h3>
         <div style={inputEditRowStyle} >
           <InputField
             style={inputFieldStyle}
@@ -242,20 +247,24 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           onClick={this.props.onEditPasswordClick}
         />
         </div>
-      </div>);
+        <h2 style={DEACTIVATE_HEADING_STYLE} >
+          Looking To Deactivate or Delete your account?
+        </h2>
+        <h3 style={DESCRIPTION_STYLE} >
+          Click the link below to be redirected.
+        </h3>
+        <SecondaryTextLinkButton
+          labelStyle={DEACTIVE_LINK_STYLE}
+          label='Deactivate or Delete your account'
+          onClick={this.handleDeactivateClick}
+        />
+      </React.Fragment>);
+  }
+
+  private handleDeactivateClick = () => {
+    this.setState({ isDeactivate: true });
   }
 }
-
-const PAGE_CONTAINER_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'flex-start',
-  alignItems: 'flex-start',
-  width: '100%',
-  paddingTop: '50px',
-  paddingBottom: '90px',
-  backgroundColor: '#FFFFFF'
-};
 
 const PAGE_HEADING_STYLE: React.CSSProperties = {
   fontFamily: 'Oswald',
@@ -331,12 +340,18 @@ const MOBILE_LINK_BUTTON_ROW_STYLE: React.CSSProperties = {
 };
 
 const INPUT_EDIT_ROW_STYLE: React.CSSProperties = {
-  ...LINK_BUTTON_ROW_STYLE
+  ...LINK_BUTTON_ROW_STYLE,
+  marginBottom: '30px'
 };
 
 const MOBILE_INPUT_EDIT_ROW_STYLE: React.CSSProperties = {
-  ...MOBILE_LINK_BUTTON_ROW_STYLE,
-  gap: '20px'
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  width: '100%',
+  gap: '20px',
+  marginBottom: '30px'
 };
 
 const REMOVE_BUTTON_STYLE: React.CSSProperties = {
@@ -365,14 +380,13 @@ const INPUT_FIELD_STYLE: React.CSSProperties = {
   width: '335px',
   minWidth: '335px',
   height: '38px',
-  minHeight: '38px',
-  marginBottom: '10px'
+  minHeight: '38px'
 };
 
 const MOBILE_INPUT_FIELD_STYLE: React.CSSProperties = {
   ...INPUT_FIELD_STYLE,
   width: '100%',
-  minWidth: 'auto'
+  minWidth: '100%'
 };
 
 const ID_ROW_STYLE: React.CSSProperties = {
@@ -388,7 +402,8 @@ const ID_ROW_STYLE: React.CSSProperties = {
   fontWeight: 400,
   fontSize: '14px',
   lineHeight: '18px',
-  color: '#000000'
+  color: '#000000',
+  marginTop: '10px'
 };
 
 const MOBILE_ID_ROW_STYLE: React.CSSProperties = {
@@ -406,6 +421,29 @@ const EDIT_BUTTON_STYLE: React.CSSProperties = {
   width: '96px',
   minWidth: '96px',
   height: '35px',
-  minHeight: '35px',
+  minHeight: '35px'
+};
+
+const DEACTIVATE_HEADING_STYLE: React.CSSProperties = {
+  ...SUB_HEADING_STYLE,
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  flexWrap: 'wrap',
+  marginTop: '20px'
+};
+
+const DEACTIVE_LINK_STYLE: React.CSSProperties = {
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  height: '18px',
+  color: '#F26B55'
+};
+
+const EDIT_DISPLAYNAME_BUTTON_STYLE: React.CSSProperties = {
+  ...EDIT_BUTTON_STYLE,
   marginBottom: '30px'
 };
