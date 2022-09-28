@@ -47,7 +47,7 @@ const LABEL_STYLE: React.CSSProperties = {
   position: 'relative',
   display: 'inline-block',
   width: '44px',
-  height: '26px',
+  height: '24px',
   backgroundColor: 'transparent'
 };
 
@@ -58,22 +58,25 @@ const INPUT_STYLE: React.CSSProperties = {
 };
 
 const SLIDER_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
   position: 'absolute',
   cursor: 'pointer',
   top: '0px',
   left: '0px',
   right: '0px',
   bottom: '0px',
-  backgroundColor: '#FFFFFF',
+  backgroundColor: 'transparent',
+  border: '1px solid #969696',
   WebkitTransition: '.4s',
   transition: '.4s',
-  borderRadius: '26px',
+  borderRadius: '20px',
   boxShadow: 'none'
 };
 
 const CHECKED_SLIDER: React.CSSProperties = {
   ...SLIDER_STYLE,
-  backgroundColor: '#F26B55'
+  backgroundColor: 'transparent',
+  border: '1px solid #F26B55'
 };
 
 const FOCUSED_SLIDER: React.CSSProperties = {
@@ -85,7 +88,17 @@ const styles = StyleSheet.create({
     ':before': {
       WebkitTransform: 'translateX(26px)',
       MsTransform: 'translateX(26px)',
-      transform: 'translateX(26px)'
+      transform: 'translateX(26px)',
+      position: 'absolute',
+      content: '""',
+      height: '26px',
+      width: '26px',
+      right: '26px',
+      bottom: '-2px',
+      WebkitTransition: '.4s',
+      transition: '.4s',
+      borderRadius: '50%',
+      backgroundColor: '#F26B55'
     }
   },
   slider: {
@@ -94,9 +107,9 @@ const styles = StyleSheet.create({
       content: '""',
       height: '26px',
       width: '26px',
-      left: '4px',
-      bottom: '4px',
-      backgroundColor: 'transparent',
+      right: '18px',
+      bottom: '-2px',
+      backgroundColor: '#969696',
       WebkitTransition: '.4s',
       transition: '.4s',
       borderRadius: '50%'
