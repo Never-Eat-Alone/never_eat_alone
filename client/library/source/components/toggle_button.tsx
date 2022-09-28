@@ -9,6 +9,7 @@ interface Properties {
 
 interface State {
   checked: boolean;
+  focused: boolean;
 }
 
 /** Displays a Toggle Button. */
@@ -16,17 +17,24 @@ export class ToggleButton extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props);
     this.state = {
-      checked: this.props.checked
+      checked: this.props.checked,
+      focused: false
     };
   }
 
   public render(): JSX.Element {
-    const sliderClassName = (this.state.checked && css(styles.checkedSlider) ||
-      css(styles.slider));
+    const sliderClassName = css(
+      this.state.checked ? styles.checkedSlider : styles.slider,
+      this.state.focused && styles.boxShadow);
     const sliderStyle = (this.state.checked && CHECKED_SLIDER || SLIDER_STYLE);
-    console.log('checked', this.state.checked);
     return (
-      <label style={{...LABEL_STYLE, ...this.props.style}} >
+      <label
+          style={{...LABEL_STYLE, ...this.props.style}}
+          onFocus={this.handleOnFocus}
+          onBlur={this.handleOnBlur}
+          onMouseEnter={this.handleOnFocus}
+          onMouseLeave={this.handleOnBlur}
+      >
         <input
           style={INPUT_STYLE}
           type='checkbox'
@@ -40,6 +48,14 @@ export class ToggleButton extends React.Component<Properties, State> {
   private handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState((preState) => ({ checked: !preState.checked }));
     this.props.onClick();
+  }
+
+  private handleOnFocus = () => {
+    this.setState({ focused: true });
+  }
+
+  private handleOnBlur = () => {
+    this.setState({ focused: false });
   }
 }
 
@@ -79,10 +95,6 @@ const CHECKED_SLIDER: React.CSSProperties = {
   border: '1px solid #F26B55'
 };
 
-const FOCUSED_SLIDER: React.CSSProperties = {
-  boxShadow: '0px 1px 5px rgba(86, 70, 40, 0.4)'
-};
-
 const styles = StyleSheet.create({
   checkedSlider: {
     ':before': {
@@ -113,6 +125,11 @@ const styles = StyleSheet.create({
       WebkitTransition: '.4s',
       transition: '.4s',
       borderRadius: '50%'
+    }
+  },
+  boxShadow: {
+    ':before': {
+      boxShadow: '0px 1px 5px rgba(86, 70, 40, 0.4)'
     }
   }
 });
