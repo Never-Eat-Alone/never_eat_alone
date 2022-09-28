@@ -176,7 +176,8 @@ const COLUMN_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
   height: '100%',
-  gap: '2px'
+  gap: '2px',
+  width: 'calc(100% - 74px)'
 };
 
 const BOLD_TEXT_STYLE: React.CSSProperties = {
@@ -192,11 +193,11 @@ const BOLD_TEXT_STYLE: React.CSSProperties = {
   lineHeight: '18px',
   color: '#000000',
   padding: '0px',
-  margin: '0px'
+  margin: '0px',
+  width: '100%'
 };
 
 const P_STYLE: React.CSSProperties = {
   ...BOLD_TEXT_STYLE,
-  fontWeight: 400,
-  whiteSpace: 'pre-line'
+  fontWeight: 400
 };
