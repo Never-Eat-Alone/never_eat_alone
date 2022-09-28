@@ -1527,7 +1527,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     NeverEatAlone.LinkSocialAccountButton);
   const toggleButtonSchema = new ComponentSchema('ToggleButton', [
     new PropertySchema('style', {}, CSSInput),
-    new PropertySchema('checked', false, BooleanInput)
+    new PropertySchema('checked', true, BooleanInput)
   ], [new SignalSchema('onClick', '', [])], NeverEatAlone.ToggleButton);
   return [
     accentTextButtonSchema,
