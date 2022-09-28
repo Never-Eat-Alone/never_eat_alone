@@ -2,6 +2,7 @@ import * as React from 'react';
 import { DisplayMode, SocialAccount } from '../../definitions';
 import { AccountInformationTab } from './account_information_tab';
 import { NotificationsTab } from './notifications_tab';
+import { PaymentMethodsTab } from './payment_methods_tab';
 import { Tab } from './tab';
 
 interface Properties {
@@ -137,7 +138,7 @@ export class SettingsPage extends React.Component<Properties, State> {
         case SettingsPage.Tab.NOTIFICATIONS:
           return <NotificationsTab {...this.props} />;
         case SettingsPage.Tab.PAYMENT_METHODS:
-          return <h1 style={PAGE_HEADING_STYLE} >Payment Method</h1>;
+          return <PaymentMethodsTab {...this.props} />;
         case SettingsPage.Tab.PAYMENT_HISTORY:
           return <h1 style={PAGE_HEADING_STYLE} >Payment History</h1>;
       }
