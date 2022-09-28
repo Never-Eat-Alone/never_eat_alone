@@ -1504,7 +1504,14 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('displayName', 'Arthur', TextInput),
     new PropertySchema('email', 'shshs@gmail.com', TextInput),
     new PropertySchema('password', 'dsfdsf', TextInput),
-    new PropertySchema('profileId', 17826, NumberInput)
+    new PropertySchema('profileId', 17826, NumberInput),
+    new PropertySchema('isNewEvents', true, BooleanInput),
+    new PropertySchema('isEventJoined', true, BooleanInput),
+    new PropertySchema('isEventReminders', true, BooleanInput),
+    new PropertySchema('isChanges', true, BooleanInput),
+    new PropertySchema('isSomeoneJoined', true, BooleanInput),
+    new PropertySchema('isFoodieAcceptedInvite', true, BooleanInput),
+    new PropertySchema('isAnnouncement', true, BooleanInput)
     ], [
       new SignalSchema('onGoogleClick', '', []),
       new SignalSchema('onFacebookClick', '', []),
@@ -1513,7 +1520,14 @@ export function loadComponentSchemas(): ComponentSchema[] {
       new SignalSchema('onEditEmailClick', '', []),
       new SignalSchema('onEditPasswordClick', '', []),
       new SignalSchema('onDeactivateAccount', '', []),
-      new SignalSchema('onDeleteAccount', '', [])
+      new SignalSchema('onDeleteAccount', '', []),
+      new SignalSchema('onNewEventsToggle', '', []),
+      new SignalSchema('onEventJoinedToggle', '', []),
+      new SignalSchema('onEventRemindersToggle', '', []),
+      new SignalSchema('onChangesToggle', '', []),
+      new SignalSchema('onSomeoneJoinedToggle', '', []),
+      new SignalSchema('onFoodieAcceptedInviteToggle', '', []),
+      new SignalSchema('onAnnouncementToggle', '', [])
       ], NeverEatAlone.SettingsPage);
   const linkSocialMediaButtonSchema = new ComponentSchema(
     'LinkSocialMediaButton',
@@ -1525,6 +1539,10 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new SignalSchema('onClick', '', [])
     ],
     NeverEatAlone.LinkSocialAccountButton);
+  const toggleButtonSchema = new ComponentSchema('ToggleButton', [
+    new PropertySchema('style', {}, CSSInput),
+    new PropertySchema('checked', true, BooleanInput)
+  ], [new SignalSchema('onClick', '', [])], NeverEatAlone.ToggleButton);
   return [
     accentTextButtonSchema,
     albumCardSchema,
@@ -1588,6 +1606,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     showLessButtonSchema,
     signUpPageSchema,
     textareaWithCounterSchema,
+    toggleButtonSchema,
     userUpcomingEventsSummarySchema,
     whiteNavLinkSchema];
 }

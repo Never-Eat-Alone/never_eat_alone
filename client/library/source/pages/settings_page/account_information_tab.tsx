@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { InputField, SecondaryTextButton, SecondaryTextLinkButton } from '../../components';
+import { InputField, SecondaryTextButton, SecondaryTextLinkButton
+} from '../../components';
 import { DisplayMode, SocialAccount, SocialAccountType
 } from '../../definitions';
 import { LinkSocialAccountButton } from './link_social_account_button';

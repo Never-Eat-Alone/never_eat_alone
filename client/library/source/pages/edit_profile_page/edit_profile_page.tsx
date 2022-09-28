@@ -846,8 +846,7 @@ const COLUMN_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'column',
   justifyContent: 'space-between',
   alignItems: 'flex-start',
-  width: '100%',
-  //height: '100%'
+  width: '100%'
 };
 
 const PUBLIC_HIDDEN_CONTAINER_STYLE: React.CSSProperties = {
