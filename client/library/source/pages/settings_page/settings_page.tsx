@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { DisplayMode, SocialAccount } from '../../definitions';
 import { AccountInformationTab } from './account_information_tab';
+import { NotificationsTab } from './notifications_tab';
 import { Tab } from './tab';
 
 interface Properties {
@@ -20,6 +21,48 @@ interface Properties {
 
   /** User's password. */
   password: string;
+
+  /** Whether the new events notification is checked or not. */
+  isNewEvents: boolean;
+
+  /** Whether the event joined notification is checked or not. */
+  isEventJoined: boolean;
+
+  /** Whether the event reminders notification is checked or not. */
+  isEventReminders: boolean;
+
+  /** Whether the changes to attending events notification is checked or not. */
+  isChanges: boolean;
+
+  /** Whether the someone joins event notification is checked or not. */
+  isSomeoneJoined: boolean;
+
+  /** Whether the foodie accepts invite notification is checked or not. */
+  isFoodieAcceptedInvite: boolean;
+
+  /** Whether the announcement notification is checked or not. */
+  isAnnouncement: boolean;
+
+  /** Indicates the New Events toggle button is clicked. */
+  onNewEventsToggle: () => void;
+
+  /** Indicates the Event Joined toggle button is clicked. */
+  onEventJoinedToggle: () => void;
+
+  /** Indicates the Event Reminders toggle button is clicked. */
+  onEventRemindersToggle: () => void;
+
+  /** Indicates the Changes toggle button is clicked. */
+  onChangesToggle: () => void;
+
+  /** Indicates the Someone Joined toggle button is clicked. */
+  onSomeoneJoinedToggle: () => void;
+
+  /** Indicates the Foodie Accepted Invite toggle button is clicked. */
+  onFoodieAcceptedInviteToggle: () => void;
+
+  /** Indicates the Announcement toggle button is clicked. */
+  onAnnouncementToggle: () => void;
 
   /** Indicates link Google account button is clicked. */
   onGoogleClick: () => void;
@@ -92,7 +135,7 @@ export class SettingsPage extends React.Component<Properties, State> {
         case SettingsPage.Tab.ACCOUNT_INFORMATION:
           return <AccountInformationTab {...this.props} />;
         case SettingsPage.Tab.NOTIFICATIONS:
-          return <h1 style={PAGE_HEADING_STYLE} >Notifications</h1>;
+          return <NotificationsTab {...this.props} />;
         case SettingsPage.Tab.PAYMENT_METHODS:
           return <h1 style={PAGE_HEADING_STYLE} >Payment Method</h1>;
         case SettingsPage.Tab.PAYMENT_HISTORY:
