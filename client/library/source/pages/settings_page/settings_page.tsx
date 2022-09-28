@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DisplayMode, SocialAccount } from '../../definitions';
+import { DisplayMode, PaymentCard, SocialAccount } from '../../definitions';
 import { AccountInformationTab } from './account_information_tab';
 import { NotificationsTab } from './notifications_tab';
 import { PaymentMethodsTab } from './payment_methods_tab';
@@ -43,6 +43,15 @@ interface Properties {
 
   /** Whether the announcement notification is checked or not. */
   isAnnouncement: boolean;
+
+  /** User's list of existing cards on file other than the default card. */
+  otherPaymentCards: PaymentCard[];
+
+  /** User's default payment card. */
+  defaultCard: PaymentCard;
+
+  /** Indicates the Add card button is clicked. */
+  onAddCardClick: () => void;
 
   /** Indicates the New Events toggle button is clicked. */
   onNewEventsToggle: () => void;

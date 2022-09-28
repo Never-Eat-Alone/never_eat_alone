@@ -1511,7 +1511,12 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('isChanges', true, BooleanInput),
     new PropertySchema('isSomeoneJoined', true, BooleanInput),
     new PropertySchema('isFoodieAcceptedInvite', true, BooleanInput),
-    new PropertySchema('isAnnouncement', true, BooleanInput)
+    new PropertySchema('isAnnouncement', true, BooleanInput),
+    new PropertySchema('defaultCard', new NeverEatAlone.PaymentCard(12,
+      NeverEatAlone.CreditCardType.VISA, 3758), PaymentCardInput),
+    new PropertySchema('otherPaymentCards', [], ArrayInput(
+      new PropertySchema('PaymentCard', new NeverEatAlone.PaymentCard(14,
+        NeverEatAlone.CreditCardType.VISA, 3895), PaymentCardInput)))
     ], [
       new SignalSchema('onGoogleClick', '', []),
       new SignalSchema('onFacebookClick', '', []),
@@ -1527,7 +1532,8 @@ export function loadComponentSchemas(): ComponentSchema[] {
       new SignalSchema('onChangesToggle', '', []),
       new SignalSchema('onSomeoneJoinedToggle', '', []),
       new SignalSchema('onFoodieAcceptedInviteToggle', '', []),
-      new SignalSchema('onAnnouncementToggle', '', [])
+      new SignalSchema('onAnnouncementToggle', '', []),
+      new SignalSchema('onAddCardClick', '', [])
       ], NeverEatAlone.SettingsPage);
   const linkSocialMediaButtonSchema = new ComponentSchema(
     'LinkSocialMediaButton',
