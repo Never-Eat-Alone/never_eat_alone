@@ -1,10 +1,9 @@
 import { css, StyleSheet } from 'aphrodite';
 import { format } from 'date-fns';
 import * as React from 'react';
-import { ApplePayButton, CloseButton, CreditCardDropdownMenu, GooglePayButton,
-  InputField, NumberedDropdownMenu, PaymentCardInputField, PayPalButton,
-  PrimaryTextButton, RedNavLinkWithArrow, SecondaryTextButtonWithArrow,
-  SecurityCodeInputField } from '../components';
+import { AddCreditCardForm, ApplePayButton, CloseButton,
+  CreditCardDropdownMenu, GooglePayButton, PayPalButton, PrimaryTextButton,
+  RedNavLinkWithArrow, SecondaryTextButtonWithArrow } from '../components';
 import { DisplayMode, PaymentCard } from '../definitions';
 
 interface Properties {
@@ -58,6 +57,9 @@ interface Properties {
   /** ErrorCode of the page. */
   errorCode: JoinEventModal.ErrorCode;
 
+  /** Errorcode regarding the add credit card form. */
+  addCardErrorCode: AddCreditCardForm.ErrorCode;
+
   /** Whether the credit card is added successfully or not. */
   cardAdded: boolean;
 
@@ -77,7 +79,8 @@ interface Properties {
   onCheckout: () => void;
 
   /** Indicates the Add card button is clicked. */
-  onAddCard: () => void;
+  onAddCard: (cardNumber: string, cardName: string, month: number, year: number,
+    securityCode: string, zipcode: string) => void;
 
   /** Indicates the Paypal button is clicked. */
   onPaypalClick: () => void;
@@ -87,26 +90,11 @@ interface Properties {
 
   /** Indicates the Apple Pay button is clicked. */
   onApplePay: () => void;
-
-  /** Indictes a month in dropdown menu is clicked. */
-  onMonthClick: () => void;
-
-  /** Indictes a year in dropdown menu is clicked. */
-  onYearClick: () => void;
 }
 
 interface State {
   page: JoinEventModal.Page;
-  zipcode: string;
-  nameOnCard: string;
-  securityCode: string;
-  cardNumber: string;
   errorCode: JoinEventModal.ErrorCode;
-  isNameOnCardInvalid: boolean;
-  isSecurityCodeInvalid: boolean;
-  isCardNumberInvalid: boolean;
-  isZipcodeInvalid: boolean;
-  addCardInputHasChanged: boolean;
 }
 
 function getTaxAmount(fee: number, taxRate: number) {
@@ -119,16 +107,7 @@ export class JoinEventModal extends React.Component<Properties, State> {
     super(props);
     this.state = {
       page: JoinEventModal.Page.INITIAL,
-      zipcode: this.props.zipcode,
-      nameOnCard: this.props.nameOnCard,
-      securityCode: this.props.securityCode,
-      cardNumber: this.props.cardNumber,
-      errorCode: this.props.errorCode,
-      isNameOnCardInvalid: false,
-      isSecurityCodeInvalid: false,
-      isCardNumberInvalid: false,
-      isZipcodeInvalid: false,
-      addCardInputHasChanged: false
+      errorCode: this.props.errorCode
     };
   }
 
@@ -320,149 +299,21 @@ export class JoinEventModal extends React.Component<Properties, State> {
     })();
     const eventNameButtonSection = (() => {
       if (this.state.page === JoinEventModal.Page.ADD_CARD) {
-        const isContinueAddCardDisabled = (() => {
-          if (this.state.cardNumber.trim().length === 0 ||
-              this.state.nameOnCard.length === 0 ||
-              this.state.securityCode.length === 0 ||
-              this.state.zipcode.length === 0) {
-            return true;
-          }
-          if (this.state.addCardInputHasChanged) {
-            return false;
-          }
-          if (this.state.errorCode !== JoinEventModal.ErrorCode.NONE) {
-            return true;
-          }
-          return false;
-        })();
-        const currentYear = new Date().getFullYear();
-        const addCardErrorMessage = (() => {
-          if (this.props.addCardErrorMessage) {
-            return this.props.addCardErrorMessage;
-          }
-          if (this.state.isZipcodeInvalid) {
-            return 'Please enter a valid postal code.';
-          }
-          return '';
-        })();
-        const nameOnCardErrorMessage = (() => {
-          if (!this.state.addCardInputHasChanged) {
-            return '';
-          }
-          if (this.state.isNameOnCardInvalid) {
-            return 'Please enter a valid fullname.';
-          }
-          return '';
-        })();
-        const cardNumberErrorMessage = (() => {
-          if (!this.state.addCardInputHasChanged) {
-            return '';
-          }
-          if (this.state.isCardNumberInvalid) {
-            return 'Please enter a valid card number.';
-          }
-          return '';
-        })();
-        const securityCodeErrorMessage = (() => {
-          if (!this.state.addCardInputHasChanged) {
-            return '';
-          }
-          if (this.state.isSecurityCodeInvalid) {
-            return 'Please enter a valid security code.';
-          }
-          return '';
-        })();
         return (
-          <form style={EVENT_NAME_BUTTON_CONTAINER_STYLE} >
-            <div style={ADD_CARD_TITLE_ROW_STYLE} >
-              <img
-                style={ADD_ICON_STYLE}
-                src='resources/icons/add_card.svg'
-                alt='Add Icon'
-                onClick={this.handleBackClick}
-              />
-              <h1 style={ADD_CARD_HEADLINE_STYLE} >Add a card</h1>
-            </div>
-            <p style={ADD_FIELD_TEXT_STYLE} >Card number</p>
-            <PaymentCardInputField
-              style={PAYMENT_CARD_INPUT_STYLE}
-              name='card number'
-              inputMode='numeric'
-              value={this.state.cardNumber}
-              pattern='\d*'
-              required
-              onChange={this.handleCardNumberChange}
-              onInvalid={() => this.handleInvalidInput('card number')}
-              hasError={this.state.isCardNumberInvalid &&
-                this.state.addCardInputHasChanged}
-            />
-            <div style={ERROR_MESSAGE_STYLE}>{cardNumberErrorMessage}</div>
-            <p style={ADD_FIELD_TEXT_STYLE} >Name on card</p>
-            <InputField
-              style={PAYMENT_CARD_INPUT_STYLE}
-              name='name on card'
-              pattern='^[A-Za-z]([A-Za-z]*([ ]{1})+[A-Za-z]*)+[A-Za-z]$'
-              value={this.state.nameOnCard}
-              required
-              onChange={this.handleNameOnCardChange}
-              onInvalid={() => this.handleInvalidInput('name on card')}
-              hasError={this.state.isNameOnCardInvalid &&
-                this.state.addCardInputHasChanged}
-            />
-            <div style={ERROR_MESSAGE_STYLE}>{nameOnCardErrorMessage}</div>
-            <p style={ADD_FIELD_TEXT_STYLE} >Expiration date</p>
-            <div style={MONTH_YEAR_CONTAINER_STYLE} >
-              <NumberedDropdownMenu
-                style={NUMBER_DROPDOWN_STYLE}
-                values={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}
-                displayedValue={this.props.selectedMonth}
-                onMenuItemClick={this.props.onMonthClick}
-              />
-              <NumberedDropdownMenu
-                values={[currentYear, currentYear + 1, currentYear + 2,
-                  currentYear + 3, currentYear + 4, currentYear + 5,
-                  currentYear + 6, currentYear + 7, currentYear + 8,
-                  currentYear + 9, currentYear + 10]}
-                style={NUMBER_DROPDOWN_STYLE}
-                displayedValue={this.props.selectedYear}
-                onMenuItemClick={this.props.onYearClick}
-              />
-            </div>
-            <p style={ADD_FIELD_TEXT_STYLE} >Security code</p>
-            <SecurityCodeInputField
-              style={CODE_INPUT_STYLE}
-              name='security code'
-              inputMode='numeric'
-              pattern='\d{3}\d?'
-              value={this.state.securityCode}
-              onChange={this.handleSecurityCodeChange}
-              required
-              onInvalid={() => this.handleInvalidInput('security code')}
-              hasError={this.state.isSecurityCodeInvalid &&
-                this.state.addCardInputHasChanged}
-            />
-            <div style={ERROR_MESSAGE_STYLE}>{securityCodeErrorMessage}</div>
-            <p style={ADD_FIELD_TEXT_STYLE} >Zip/Postal code</p>
-            <InputField
-              style={CODE_INPUT_STYLE}
-              name='zipcode'
-              pattern='^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$'
-              value={this.state.zipcode}
-              onChange={this.handleZipCodeChange}
-              required
-              onInvalid={() => this.handleInvalidInput('zipcode')}
-              hasError={this.state.isZipcodeInvalid &&
-                this.state.addCardInputHasChanged}
-            />
-            <p style={ERROR_MESSAGE_STYLE} >{addCardErrorMessage}</p>
-            <PrimaryTextButton
-              type='submit'
-              style={CONTINUE_BUTTON_STYLE}
-              label='Continue'
-              onClick={this.handleContinue}
-              disabled={isContinueAddCardDisabled}
-            />
-          </form>);
+          <AddCreditCardForm
+            style={EVENT_NAME_BUTTON_CONTAINER_STYLE}
+            errorCode={this.props.addCardErrorCode}
+            addCardErrorMessage={this.props.addCardErrorMessage}
+            cardNumber={this.props.cardNumber}
+            nameOnCard={this.props.nameOnCard}
+            zipcode={this.props.zipcode}
+            securityCode={this.props.securityCode}
+            selectedMonth={this.props.selectedMonth}
+            selectedYear={this.props.selectedYear}
+            onAddLabel='Continue'
+            onCancel={this.handleBackClick}
+            onAdd={this.props.onAddCard}
+          />);
       }
       return (
         <div style={eventNameButtonContainerStyle} >
@@ -606,38 +457,6 @@ export class JoinEventModal extends React.Component<Properties, State> {
       </div>);
   }
 
-  private handleCardNumberChange = (event: React.ChangeEvent<HTMLInputElement>
-      ) => {
-    this.setState({
-      cardNumber: event.target.value,
-      addCardInputHasChanged: true
-    });
-  }
-
-  private handleNameOnCardChange = (event: React.ChangeEvent<HTMLInputElement>
-      ) => {
-    this.setState({
-      nameOnCard: event.target.value,
-      addCardInputHasChanged: true
-    });
-  }
-
-  private handleSecurityCodeChange = (event: React.ChangeEvent<
-      HTMLInputElement>) => {
-    this.setState({
-      securityCode: event.target.value.trim(),
-      addCardInputHasChanged: true
-    });
-  }
-
-  private handleZipCodeChange = (event: React.ChangeEvent<
-      HTMLInputElement>) => {
-    this.setState({
-      zipcode: event.target.value,
-      addCardInputHasChanged: true
-    });
-  }
-
   private handleBackToCheckout = () => {
     this.setState({
       page: JoinEventModal.Page.INITIAL,
@@ -657,47 +476,6 @@ export class JoinEventModal extends React.Component<Properties, State> {
     this.setState({ page: JoinEventModal.Page.PROCESSING_PAYMENT });
     this.props.onCheckout();
   }
-
-  private handleContinue = () => {
-    this.setState({
-      isNameOnCardInvalid: false,
-      isSecurityCodeInvalid: false,
-      isCardNumberInvalid: false,
-      isZipcodeInvalid: false,
-      nameOnCard: this.state.nameOnCard.trim(),
-      cardNumber: this.state.cardNumber.trim(),
-      zipcode: this.state.zipcode.trim()
-    });
-    this.props.onAddCard();
-  }
-
-  private handleInvalidInput = (fieldName: string) => {
-    switch (fieldName) {
-      case 'name on card':
-        this.setState({
-          errorCode: JoinEventModal.ErrorCode.INVALID_ADD_CARD_INPUT,
-          isNameOnCardInvalid: true
-        });
-        break;
-      case 'zipcode':
-        this.setState({
-          errorCode: JoinEventModal.ErrorCode.INVALID_ADD_CARD_INPUT,
-          isZipcodeInvalid: true
-        });
-        break;
-      case 'security code':
-        this.setState({
-          errorCode: JoinEventModal.ErrorCode.INVALID_ADD_CARD_INPUT,
-          isSecurityCodeInvalid: true
-        });
-        break;
-      case 'card number':
-        this.setState({
-          errorCode: JoinEventModal.ErrorCode.INVALID_ADD_CARD_INPUT,
-          isCardNumberInvalid: true
-        });
-    }
-  }
 }
 
 export namespace JoinEventModal {
@@ -709,11 +487,8 @@ export namespace JoinEventModal {
 
   export enum ErrorCode {
     NONE,
-    INVALID_ADD_CARD_INPUT,
     PAYMENT_FAILED,
-    THIRDPARTY_PAYMENT_FAILED,
-    INVALID_CARD_INFO,
-    EXPIRED_CARD
+    THIRDPARTY_PAYMENT_FAILED
   }
 }
 
@@ -1099,101 +874,6 @@ const FEE_DESCRIPTION_STYLE: React.CSSProperties = {
   marginTop: '10px',
   marginBottom: '10px',
   padding: '0px 10px'
-};
-
-const ADD_CARD_TITLE_ROW_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
-  width: '100%',
-  height: '30px',
-  backgroundColor: 'transparent',
-  gap: '10px',
-  marginBottom: '10px'
-};
-
-const ADD_ICON_STYLE: React.CSSProperties = {
-  width: '15px',
-  height: '15px',
-  minWidth: '15px',
-  minHeight: '15px',
-  backgroundColor: 'transparent'
-};
-
-const ADD_CARD_HEADLINE_STYLE: React.CSSProperties = {
-  fontFamily: 'Oswald',
-  fontStyle: 'normal',
-  fontWeight: 400,
-  fontSize: '20px',
-  lineHeight: '30px',
-  color: '#000000',
-  margin: '0px',
-  padding: '0px'
-};
-
-const PAYMENT_CARD_INPUT_STYLE: React.CSSProperties = {
-  width: '100%',
-  minWidth: '100%',
-  marginTop: '10px'
-};
-
-const ADD_FIELD_TEXT_STYLE: React.CSSProperties = {
-  fontFamily: 'Source Sans Pro',
-  fontStyle: 'normal',
-  fontWeight: 400,
-  fontSize: '14px',
-  lineHeight: '18px',
-  color: '#000000',
-  width: '100%',
-  padding: '0px',
-  margin: '7px 0px 0px 0px'
-};
-
-const CODE_INPUT_STYLE: React.CSSProperties = {
-  width: '150px',
-  minWidth: '150px',
-  marginTop: '10px'
-};
-
-const CONTINUE_BUTTON_STYLE: React.CSSProperties = {
-  width: '100%',
-  minWidth: '100%',
-  marginTop: '7px',
-  height: '38px'
-};
-
-const ERROR_MESSAGE_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'flex-end',
-  alignItems: 'flex-start',
-  flexWrap: 'wrap',
-  fontFamily: 'Source Sans Pro',
-  fontStyle: 'normal',
-  fontWeight: 400,
-  fontSize: '14px',
-  lineHeight: '18px',
-  minHeight: '18px',
-  color: '#FF2C79',
-  padding: '0px',
-  margin: '5px 0px 0px 0px',
-  width: '100%'
-};
-
-const MONTH_YEAR_CONTAINER_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'flex-start',
-  width: '100%',
-  gap: '10px',
-  marginTop: '10px',
-  marginBottom: '13px'
-};
-
-const NUMBER_DROPDOWN_STYLE: React.CSSProperties = {
-  width: 'calc(50% - 5px)'
 };
 
 const ADDED_ICON_STYLE: React.CSSProperties = {

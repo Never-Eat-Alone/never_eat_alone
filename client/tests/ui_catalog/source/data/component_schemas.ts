@@ -1,11 +1,12 @@
 import * as NeverEatAlone from 'never_eat_alone';
-import { ArrayInput, AttendeeInput, BooleanInput, CityProvinceInput, CSSInput,
-  CuisineInput, DateInput, DateTimeInput, DisplayModeInput, DressCodeInput,
-  EventCardSummaryInput, EventTagInput, ForgotPasswordPageErrorCodeInput,
-  HomePageErrorCodeInput, JoinEventModalErrorCodeInput, LanguageInput,
-  LocationInput, NumberInput, PaymentCardInput, RestaurantInput, SeatingInput,
-  SignUpPageErrorCodeInput, SocialAccountInput, SocialAccountTypeInput,
-  SocialMediaImageInput, TextInput, UserInput } from '../viewer/propertyInput';
+import { AddCreditCardFormErrorCodeInput, ArrayInput, AttendeeInput,
+  BooleanInput, CityProvinceInput, CSSInput, CuisineInput, DateInput,
+  DateTimeInput, DisplayModeInput, DressCodeInput, EventCardSummaryInput,
+  EventTagInput, ForgotPasswordPageErrorCodeInput, HomePageErrorCodeInput,
+  JoinEventModalErrorCodeInput, LanguageInput, LocationInput, NumberInput,
+  PaymentCardInput, RestaurantInput, SeatingInput, SignUpPageErrorCodeInput,
+  SocialAccountInput, SocialAccountTypeInput, SocialMediaImageInput, TextInput,
+  UserInput } from '../viewer/propertyInput';
 import { ComponentSchema, PropertySchema, SignalSchema } from './schemas';
 
 /** Loads the complete list of schemas available to test. */
@@ -1415,6 +1416,9 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('errorCode',
       NeverEatAlone.JoinEventModal.ErrorCode.NONE,
       JoinEventModalErrorCodeInput),
+    new PropertySchema('addCardErrorCode',
+      NeverEatAlone.AddCreditCardForm.ErrorCode.NONE,
+      AddCreditCardFormErrorCodeInput),
     new PropertySchema('cardAdded', false, BooleanInput),
     new PropertySchema('checkoutCompleted', false, BooleanInput)
   ], [
