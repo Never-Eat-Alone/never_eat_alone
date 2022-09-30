@@ -110,9 +110,11 @@ export class AccountInformationTab extends React.Component<Properties, State> {
         if (account.accountType === SocialAccountType.GOOGLE) {
           isGoogle = true;
           socialAccountButtons.push(
-            <div style={linkButtonRowStyle} >
+            <div
+                key={account.socialAccountEmail + 'Google'}
+                style={linkButtonRowStyle}
+            >
               <LinkSocialAccountButton
-                key={account.socialAccountEmail}
                 style={socialAccountButtonStyle}
                 account={account.socialAccountEmail}
                 accountType={SocialAccountType.GOOGLE}
@@ -128,9 +130,11 @@ export class AccountInformationTab extends React.Component<Properties, State> {
         } else {
           isFacebook = true;
           socialAccountButtons.push(
-            <div style={linkButtonRowStyle} >
+            <div
+                key={account.socialAccountEmail + 'Facebook'}
+                style={linkButtonRowStyle}
+            >
               <LinkSocialAccountButton
-                key={account.socialAccountEmail}
                 style={socialAccountButtonStyle}
                 account={account.socialAccountEmail}
                 accountType={SocialAccountType.FACEBOOK}

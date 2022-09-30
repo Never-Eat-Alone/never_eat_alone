@@ -9,6 +9,8 @@ interface Properties {
   /** The title section of the form. */
   titleSection?: JSX.Element;
 
+  titleSectionStyle?: React.CSSProperties;
+
   /** Card number. */
   cardNumber: number;
 
@@ -82,7 +84,9 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
 
   public render(): JSX.Element {
     const titleSection = (this.props.titleSection ||
-      <div style={ADD_CARD_TITLE_ROW_STYLE} >
+      <div
+          style={{...ADD_CARD_TITLE_ROW_STYLE, ...this.props.titleSectionStyle}}
+      >
         <img
           style={ADD_ICON_STYLE}
           src='resources/icons/add_card.svg'

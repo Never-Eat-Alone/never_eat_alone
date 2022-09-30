@@ -43,15 +43,23 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
   public render(): JSX.Element {
     if (this.state.page === PaymentMethodsTab.Page.CARD_DETAILS) {
       return (
-        <div>Card Details</div>);
+        <React.Fragment>
+          <h1 style={PAGE_HEADING_STYLE} >Payment Methods</h1>
+          <div>Card Details</div>
+        </React.Fragment>);
     } else if (this.state.page === PaymentMethodsTab.Page.ADD_CARD) {
-      return <AddCreditCardForm
-        {...this.props}
-        style={ADD_CARD_CONTAINER_STYLE}
-        onAddLabel='Save'
-        errorCode={this.props.addCardErrorCode}
-        onCancel={this.handleBack}
-      />;
+      return (
+        <React.Fragment>
+          <h1 style={PAGE_HEADING_STYLE} >Payment Methods</h1>
+          <AddCreditCardForm
+            {...this.props}
+            style={ADD_CARD_CONTAINER_STYLE}
+            titleSectionStyle={ADD_FORM_TITLE_STYLE}
+            onAddLabel='Save'
+            errorCode={this.props.addCardErrorCode}
+            onCancel={this.handleBack}
+          />
+        </React.Fragment>);
     }
     const cardsOnFile = (() => {
       const cards = [];
@@ -76,7 +84,7 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
     })();
     return (
       <React.Fragment>
-        <h1 style={PAGE_HEADING_STYLE} >Payment Methods</h1>
+        <h1 style={INITIAL_PAGE_HEADING_STYLE} >Payment Methods</h1>
         {cardsOnFile}
       </React.Fragment>);
   }
@@ -158,40 +166,84 @@ const PAGE_HEADING_STYLE: React.CSSProperties = {
   height: '34px',
   textTransform: 'capitalize',
   color: '#000000',
-  margin: '0px 0px 30px 0px',
+  margin: '0px',
   padding: '0px'
+};
+
+const INITIAL_PAGE_HEADING_STYLE: React.CSSProperties = {
+  ...PAGE_HEADING_STYLE,
+  margin: '0px 0px 30px 0px'
 };
 
 const COLUMN_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
-  alignItems: 'flex-stat',
+  alignItems: 'flex-start',
   gap: '30px'
 };
 
 const ADD_CARD_BUTTON_STYLE: React.CSSProperties = {
-
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  height: '83px',
+  minHeight: '83px',
+  width: '335px',
+  minWidth: '335px',
+  backgroundColor: '#FFFFFF',
+  padding: '20px',
+  border: '1px solid #CCCCCC',
+  boxShadow: 'none',
+  borderRadius: '4px',
+  outline: 'none'
 };
 
 const PLUS_CONTAINER_STYLE: React.CSSProperties = {
-
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  border: '2px solid #969696',
+  borderRadius: '4px',
+  width: '64px',
+  height: '43px'
 };
 
 const PLUS_ICON_STYLE: React.CSSProperties = {
-
+  width: '20px',
+  height: '20px',
+  backgroundColor: 'transparent'
 };
 
 const ADD_CARD_TEXT_STYLE: React.CSSProperties = {
-
+  height: '18px',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#000000'
 };
 
 const ARROW_ICON_STYLE: React.CSSProperties = {
-
+  width: '9px',
+  minWidth: '9px',
+  height: '15px',
+  minHeight: '15px',
+  backgroundColor: 'transparent'
 };
 
 const CARD_ROW_STYLE: React.CSSProperties = {
 
+};
+
+const ADD_FORM_TITLE_STYLE: React.CSSProperties = {
+  height: '34px',
+  marginBottom: '23px'
 };
 
 const ADD_CARD_CONTAINER_STYLE: React.CSSProperties = {
@@ -208,6 +260,14 @@ const ADD_CARD_CONTAINER_STYLE: React.CSSProperties = {
 
 const styles = StyleSheet.create({
   addCardButton: {
-
+    ':hover': {
+      boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)'
+    },
+    ':focus': {
+      boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)'
+    },
+    ':focus-within': {
+      boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)'
+    }
   }
 });

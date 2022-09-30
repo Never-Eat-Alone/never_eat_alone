@@ -30,7 +30,10 @@ const TAB_CONTAINER_STYLE: React.CSSProperties = {
   backgroundColor: '#F6F6F6',
   gap: '10px',
   height: '100%',
-  border: 'none',
+  borderTop: 'none',
+  borderBottom: 'none',
+  borderLeft: 'none',
+  borderRight: 'none',
   cursor: 'pointer'
 };
 

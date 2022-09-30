@@ -21,11 +21,14 @@ interface State {
   displayedValue: number;
 }
 
-function formatNumber(value: number) {
-  if (value < 10) {
-    return `0${value}`;
+function formatNumber(value: number): string {
+  if (value) {
+    if (value < 10) {
+      return `0${value}`;
+    }
+    return value.toString();
   }
-  return value.toString();
+  return '';
 }
 
 /** Implements the numbered dropdown menu component. */
