@@ -4,6 +4,7 @@ import { AccountInformationTab } from './account_information_tab';
 import { NotificationsTab } from './notifications_tab';
 import { PaymentMethodsTab } from './payment_methods_tab';
 import { Tab } from './tab';
+import { AddCreditCardForm } from '../../components';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -49,6 +50,22 @@ interface Properties {
 
   /** User's default payment card. */
   defaultCard: PaymentCard;
+
+  cardNumber: number;
+
+  nameOnCard: string;
+
+  selectedMonth: number;
+
+  selectedYear: number;
+
+  securityCode: number;
+
+  zipcode: string;
+
+  addCardErrorMessage: string;
+
+  addCardErrorCode: AddCreditCardForm.ErrorCode;
 
   /** Indicates the Add card button is clicked. */
   onAddCardClick: () => void;
@@ -147,7 +164,8 @@ export class SettingsPage extends React.Component<Properties, State> {
         case SettingsPage.Tab.NOTIFICATIONS:
           return <NotificationsTab {...this.props} />;
         case SettingsPage.Tab.PAYMENT_METHODS:
-          return <PaymentMethodsTab {...this.props} />;
+          return <PaymentMethodsTab {...this.props}
+            onAdd={this.props.onAddCardClick} />;
         case SettingsPage.Tab.PAYMENT_HISTORY:
           return <h1 style={PAGE_HEADING_STYLE} >Payment History</h1>;
       }

@@ -149,7 +149,7 @@ export function CardInfo(props: CardInfoProperties) {
       <div style={ICON_CONTAINER_STYLE} >{cardIcon}</div>
       <div style={TEXT_STYLE} >
         ending in&nbsp;
-        {props.paymentCard.last4Digits.toString()}
+        {props.paymentCard.cardNumber.toString().slice(-4)}
       </div>
     </div>);
 }

@@ -43,10 +43,10 @@ interface Properties {
   selectedYear: number;
 
   /** The security code on the card. */
-  securityCode: string;
+  securityCode: number;
 
   /** Card number. */
-  cardNumber: string;
+  cardNumber: number;
 
   /** The zipcode of the creditcard. */
   zipcode: string;
@@ -79,8 +79,8 @@ interface Properties {
   onCheckout: () => void;
 
   /** Indicates the Add card button is clicked. */
-  onAddCard: (cardNumber: string, cardName: string, month: number, year: number,
-    securityCode: string, zipcode: string) => void;
+  onAddCard: (cardNumber: number, cardName: string, month: number, year: number,
+    securityCode: number, zipcode: string) => void;
 
   /** Indicates the Paypal button is clicked. */
   onPaypalClick: () => void;
