@@ -18,6 +18,7 @@ interface Properties {
 
 interface State {
   isDisplayed: boolean;
+  displayedValue: number;
 }
 
 function formatNumber(value: number) {
@@ -33,7 +34,8 @@ export class NumberedDropdownMenu extends React.Component<Properties,
   constructor(props: Properties) {
     super(props);
     this.state = {
-      isDisplayed: false
+      isDisplayed: false,
+      displayedValue: this.props.displayedValue
     }
     this._dropDownRef = React.createRef<HTMLDivElement>();
   }
@@ -49,7 +51,7 @@ export class NumberedDropdownMenu extends React.Component<Properties,
                 style={{...MENU_ITEM_STYLE, ...TEXT_STYLE}}
                 key={`dropdown-item-${value}`}
                 className={css(styles.menuItem)}
-                onClick={() => this.props.onMenuItemClick(value)}
+                onClick={() => this.handleOnMenuClick(value)}
             >
               {stringValue}
             </div>);
@@ -119,6 +121,11 @@ export class NumberedDropdownMenu extends React.Component<Properties,
     this.setState((state) => {
       return { isDisplayed: !state.isDisplayed };
     });
+  }
+
+  private handleOnMenuClick = (value: number) => {
+    this.setState({ displayedValue: value, isDisplayed: false });
+    this.props.onMenuItemClick(value);
   }
 
   private _dropDownRef: React.RefObject<HTMLDivElement>;

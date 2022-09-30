@@ -1,3 +1,4 @@
+export * from './add_credit_card_form';
 export * from './album_card';
 export * from './apple_pay_button';
 export * from './attendance_record';

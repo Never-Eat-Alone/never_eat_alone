@@ -2,6 +2,10 @@ import { CreditCardType } from './credit_card_type';
 
 /** Describes the payment card. */
 export class PaymentCard {
+  public static noCard(): PaymentCard {
+    return new PaymentCard(-1, CreditCardType.VISA, 0);
+  }
+
   public static fromJson(value: any): PaymentCard {
     return new PaymentCard(
       value.id,

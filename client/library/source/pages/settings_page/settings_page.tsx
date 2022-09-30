@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { DisplayMode, SocialAccount } from '../../definitions';
+import { DisplayMode, PaymentCard, SocialAccount } from '../../definitions';
 import { AccountInformationTab } from './account_information_tab';
 import { NotificationsTab } from './notifications_tab';
+import { PaymentMethodsTab } from './payment_methods_tab';
 import { Tab } from './tab';
 
 interface Properties {
@@ -42,6 +43,15 @@ interface Properties {
 
   /** Whether the announcement notification is checked or not. */
   isAnnouncement: boolean;
+
+  /** User's list of existing cards on file other than the default card. */
+  otherPaymentCards: PaymentCard[];
+
+  /** User's default payment card. */
+  defaultCard: PaymentCard;
+
+  /** Indicates the Add card button is clicked. */
+  onAddCardClick: () => void;
 
   /** Indicates the New Events toggle button is clicked. */
   onNewEventsToggle: () => void;
@@ -137,7 +147,7 @@ export class SettingsPage extends React.Component<Properties, State> {
         case SettingsPage.Tab.NOTIFICATIONS:
           return <NotificationsTab {...this.props} />;
         case SettingsPage.Tab.PAYMENT_METHODS:
-          return <h1 style={PAGE_HEADING_STYLE} >Payment Method</h1>;
+          return <PaymentMethodsTab {...this.props} />;
         case SettingsPage.Tab.PAYMENT_HISTORY:
           return <h1 style={PAGE_HEADING_STYLE} >Payment History</h1>;
       }
