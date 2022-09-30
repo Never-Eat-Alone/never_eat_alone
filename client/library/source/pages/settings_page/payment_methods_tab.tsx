@@ -1,7 +1,8 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 import { AddCreditCardForm } from '../../components';
-import { DisplayMode, PaymentCard } from '../../definitions';
+import { DisplayMode, getCreditCardTypeName, PaymentCard, CreditCardType
+} from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -112,11 +113,11 @@ interface AddCardProps {
 function AddCardButton(props: AddCardProps) {
   return (
     <button
-        style={ADD_CARD_BUTTON_STYLE}
+        style={CARD_BUTTON_STYLE}
+        className={css(styles.cardButton)}
         onClick={props.onAddCard}
-        className={css(styles.addCardButton)}
     >
-      <div style={PLUS_CONTAINER_STYLE} >
+      <div style={RECTANGLE_CONTAINER_STYLE} >
         <img
           style={PLUS_ICON_STYLE}
           src='resources/icons/plus_grey.svg'
@@ -138,14 +139,44 @@ interface PaymentCardRowProps {
 }
 
 function PaymentCardRow(props: PaymentCardRowProps) {
+  const cardSrc = (() => {
+    switch (props.card.creditType) {
+      case CreditCardType.VISA:
+        return 'resources/icons/visa_big.svg';
+      case CreditCardType.MASTERCARD:
+        return 'resources/icons/mastercard_big.svg';
+      case CreditCardType.AMEX:
+        return 'resources/icons/amex_big.svg';
+      default:
+        return '';
+    }
+  })();
   return (
-    <button style={CARD_ROW_STYLE} onClick={props.onClick} >
-      
-      <div>
-        <p>{props.card.creditType}</p>
-        <p>Cards ending in {props.card.cardNumber.toString().slice(-4)}</p>
+    <button
+        style={CARD_BUTTON_STYLE}
+        className={css(styles.cardButton)}
+        onClick={props.onClick}
+    >
+      <div style={RECTANGLE_CONTAINER_STYLE} >
+        <img
+          style={CREDIT_ICON_STYLE}
+          src={cardSrc}
+          alt='Add Icon'
+        />
       </div>
-     
+      <div style={CARD_INFO_COLUMN_STYLE} >
+        <p style={CARD_TYPE_TEXT_STYLE} >
+          {getCreditCardTypeName(props.card.creditType)}
+        </p>
+        <p style={CARD_TEXT_STYLE} >
+          Cards ending in {props.card.cardNumber.toString().slice(-4)}
+        </p>
+      </div>
+      <img
+        style={ARROW_ICON_STYLE}
+        src='resources/icons/arrow_grey.svg' 
+        alt='Arrow Icon'
+      />
     </button>);
 }
 
@@ -183,7 +214,7 @@ const COLUMN_STYLE: React.CSSProperties = {
   gap: '30px'
 };
 
-const ADD_CARD_BUTTON_STYLE: React.CSSProperties = {
+const CARD_BUTTON_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'row',
@@ -201,7 +232,7 @@ const ADD_CARD_BUTTON_STYLE: React.CSSProperties = {
   outline: 'none'
 };
 
-const PLUS_CONTAINER_STYLE: React.CSSProperties = {
+const RECTANGLE_CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
@@ -237,10 +268,6 @@ const ARROW_ICON_STYLE: React.CSSProperties = {
   backgroundColor: 'transparent'
 };
 
-const CARD_ROW_STYLE: React.CSSProperties = {
-
-};
-
 const ADD_FORM_TITLE_STYLE: React.CSSProperties = {
   height: '34px',
   marginBottom: '23px'
@@ -258,8 +285,43 @@ const ADD_CARD_CONTAINER_STYLE: React.CSSProperties = {
   backgroundColor: '#FFFFFF'
 };
 
+const CARD_INFO_COLUMN_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'flex-start',
+  height: '100%',
+  width: '154px',
+  gap: '2px'
+};
+
+const CREDIT_ICON_STYLE: React.CSSProperties = {
+  width: '100%',
+  height: '100%',
+  minWidth: '64px',
+  minHeight: '43px',
+  borderRadius: '4px'
+};
+
+const CARD_TYPE_TEXT_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '14px',
+  lineHeight: '18px',
+  height: '18px',
+  color: '#000000',
+  margin: '0px',
+  padding: '0px'
+};
+
+const CARD_TEXT_STYLE: React.CSSProperties = {
+  ...CARD_TYPE_TEXT_STYLE,
+  fontWeight: 400
+};
+
 const styles = StyleSheet.create({
-  addCardButton: {
+  cardButton: {
     ':hover': {
       boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)'
     },
