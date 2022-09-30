@@ -13,7 +13,7 @@ interface Properties {
 /** A payment card input. */
 export class PaymentCardInput extends React.Component<Properties> {
   public render(): JSX.Element {
-    return <input value={this.props.value.last4Digits.toString()}
+    return <input value={this.props.value.cardNumber.toString().slice(-4)}
       onChange={this.onChange} />;
   }
 
@@ -21,11 +21,13 @@ export class PaymentCardInput extends React.Component<Properties> {
     const newValue = (() => {
       if (!event.target.value.trim() ||
           Number(event.target.value).toString() === 'NaN') {
-        return new NeverEatAlone.PaymentCard(Date.now(),
-          NeverEatAlone.CreditCardType.AMEX, 3838);
+        return new NeverEatAlone.PaymentCard(Date.now(), 4567890123456789,
+          'Jlo Jlo', 12, 2026, 2345, 'M3E 5G6',
+          NeverEatAlone.CreditCardType.AMEX);
       }
       return new NeverEatAlone.PaymentCard(Date.now(),
-        NeverEatAlone.CreditCardType.VISA, Number(event.target.value));
+        Number(event.target.value), 'Jlo Jlo', 12, 2026, 2345, 'M3E 5G6',
+        NeverEatAlone.CreditCardType.VISA);
     })();
     this.props.update(newValue);
   }

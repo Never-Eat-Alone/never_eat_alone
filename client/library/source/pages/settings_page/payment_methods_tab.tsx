@@ -1,6 +1,6 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
-import { PaymentCardInputField, SecurityCodeInputField } from '../../components';
+import { AddCreditCardForm } from '../../components';
 import { DisplayMode, PaymentCard } from '../../definitions';
 
 interface Properties {
@@ -12,8 +12,17 @@ interface Properties {
   /** User's default payment card. */
   defaultCard: PaymentCard;
 
+  cardNumber: number;
+  nameOnCard: string;
+  selectedMonth: number;
+  selectedYear: number;
+  securityCode: number;
+  zipcode: string;
+  addCardErrorMessage: string;
+  addCardErrorCode: AddCreditCardForm.ErrorCode;
+
   /** Indicates the Add card button is clicked. */
-  onAddCardClick: () => void;
+  onAdd: () => void;
 }
 
 interface State {
@@ -36,17 +45,13 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
       return (
         <div>Card Details</div>);
     } else if (this.state.page === PaymentMethodsTab.Page.ADD_CARD) {
-      return (
-        <div style={ADD_CARD_CONTAINER_STYLE} >
-          <h2 style={ADD_CARD_TITLE_STYLE} >Add a card</h2>
-          <h3 style={FIELD_TEXT_STYLE} >Card number</h3>
-          <PaymentCardInputField style={INPUT_FIELD_STYLE} />
-          <h3 style={FIELD_TEXT_STYLE} >Name on card</h3>
-          <h3 style={FIELD_TEXT_STYLE} >Expiration date</h3>
-          <h3 style={FIELD_TEXT_STYLE} >Security code</h3>
-          <SecurityCodeInputField style={SMALL_INPUT_FIELD_STYLE} />
-          <h3 style={FIELD_TEXT_STYLE} >Postal code/ZIP</h3>
-        </div>);
+      return <AddCreditCardForm
+        {...this.props}
+        style={ADD_CARD_CONTAINER_STYLE}
+        onAddLabel='Save'
+        errorCode={this.props.addCardErrorCode}
+        onCancel={this.handleBack}
+      />;
     }
     const cardsOnFile = (() => {
       const cards = [];
@@ -81,6 +86,10 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
       selectedCard: card,
       page: PaymentMethodsTab.Page.CARD_DETAILS
     });
+  }
+
+  private handleBack = () => {
+    this.setState({ page: PaymentMethodsTab.Page.INITIAL });
   }
 
   private handleAddCard = () => {
@@ -126,7 +135,7 @@ function PaymentCardRow(props: PaymentCardRowProps) {
       
       <div>
         <p>{props.card.creditType}</p>
-        <p>Cards ending in {props.card.last4Digits.toString()}</p>
+        <p>Cards ending in {props.card.cardNumber.toString().slice(-4)}</p>
       </div>
      
     </button>);
@@ -195,44 +204,6 @@ const ADD_CARD_CONTAINER_STYLE: React.CSSProperties = {
   marginTop: '20px',
   width: '375px',
   backgroundColor: '#FFFFFF'
-};
-
-const ADD_CARD_TITLE_STYLE: React.CSSProperties = {
-  fontFamily: 'Oswald',
-  fontStyle: 'normal',
-  fontWeight: 400,
-  fontSize: '23px',
-  lineHeight: '34px',
-  textTransform: 'uppercase',
-  color: '#969696',
-  margin: '0px 0px 30px 0px',
-  width: '100%',
-  padding: '0px'
-};
-
-const FIELD_TEXT_STYLE: React.CSSProperties = {
-  height: '18px',
-  width: '100%',
-  padding: '0px',
-  margin: '0px 0px 10px 0px',
-  fontFamily: 'Source Sans Pro',
-  fontStyle: 'normal',
-  fontWeight: 400,
-  fontSize: '14px',
-  lineHeight: '18px',
-  color: '#000000'
-};
-
-const INPUT_FIELD_STYLE: React.CSSProperties = {
-  height: '38px',
-  width: '100%',
-  marginBottom: '30px'
-};
-
-const SMALL_INPUT_FIELD_STYLE: React.CSSProperties = {
-  height: '38px',
-  width: '150px',
-  marginBottom: '30px'
 };
 
 const styles = StyleSheet.create({

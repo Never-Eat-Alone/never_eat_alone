@@ -10,7 +10,7 @@ interface Properties {
   titleSection?: JSX.Element;
 
   /** Card number. */
-  cardNumber: string;
+  cardNumber: number;
 
   /** Name on card. */
   nameOnCard: string;
@@ -22,7 +22,7 @@ interface Properties {
   selectedYear: number;
 
   /** Securitycode associated with the card. */
-  securityCode: string;
+  securityCode: number;
 
   /** Zipcode/postal code associated with the card. */
   zipcode: string;
@@ -41,16 +41,16 @@ interface Properties {
   onCancel: () => void;
 
   /** Indicates the add button is clicked. */
-  onAdd: (cardNumber: string, cardName: string, month: number, year: number,
-    securityCode: string, zipcode: string) => void;
+  onAdd: (cardNumber: number, cardName: string, month: number, year: number,
+    securityCode: number, zipcode: string) => void;
 }
 
 interface State {
-  cardNumber: string;
+  cardNumber: number;
   nameOnCard: string;
   selectedMonth: number;
   selectedYear: number;
-  securityCode: string;
+  securityCode: number;
   zipcode: string;
   isCardNumberInvalid: boolean;
   isNameOnCardInvalid: boolean;
@@ -129,10 +129,8 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
       return '';
     })();
     const isContinueAddCardDisabled = (() => {
-      if (this.state.cardNumber.trim().length === 0 ||
-          this.state.nameOnCard.length === 0 ||
-          this.state.securityCode.length === 0 ||
-          this.state.zipcode.length === 0) {
+      if (!this.state.cardNumber || this.state.nameOnCard.length === 0 ||
+          !this.state.securityCode || this.state.zipcode.length === 0) {
         return true;
       }
       if (this.state.addCardInputHasChanged) {
@@ -231,7 +229,7 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
   private handleOnCardNumberChange = (event: React.ChangeEvent<HTMLInputElement>
       ) => {
     this.setState({
-      cardNumber: event.target.value,
+      cardNumber: Number(event.target.value.trim()),
       addCardInputHasChanged: true
     });
   }
@@ -247,7 +245,7 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
   private handleOnSecurityCodeChange = (event: React.ChangeEvent<
       HTMLInputElement>) => {
     this.setState({
-      securityCode: event.target.value.trim(),
+      securityCode: Number(event.target.value.trim()),
       addCardInputHasChanged: true
     });
   }
