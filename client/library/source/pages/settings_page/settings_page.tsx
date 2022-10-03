@@ -1,10 +1,11 @@
 import * as React from 'react';
+import { AddCreditCardForm } from '../../components';
 import { DisplayMode, PaymentCard, SocialAccount } from '../../definitions';
 import { AccountInformationTab } from './account_information_tab';
+import { CardDetailsForm } from './card_details_form'; 
 import { NotificationsTab } from './notifications_tab';
 import { PaymentMethodsTab } from './payment_methods_tab';
 import { Tab } from './tab';
-import { AddCreditCardForm } from '../../components';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -45,11 +46,11 @@ interface Properties {
   /** Whether the announcement notification is checked or not. */
   isAnnouncement: boolean;
 
-  /** User's list of existing cards on file other than the default card. */
-  otherPaymentCards: PaymentCard[];
-
   /** User's default payment card. */
   defaultCard: PaymentCard;
+
+  /** User's list of existing cards on file other than the default card. */
+  otherPaymentCards: PaymentCard[];
 
   cardNumber: number;
 
@@ -63,14 +64,30 @@ interface Properties {
 
   zipcode: string;
 
+  /** Error message regarding adding a new card. */
   addCardErrorMessage: string;
 
+  /** Error code regarding adding a new card. */
   addCardErrorCode: AddCreditCardForm.ErrorCode;
 
-  /** Indicates the Add card button is clicked. */
-  onAddCardClick: () => void;
+  /** Error message regarding updating an existing card info. */
+  updateCardErrorMessage: string;
 
-  onDeleteCard: (card: PaymentCard) => void;
+  /** Error code regarding updating an existing credit card. */
+  updateCardErrorCode: CardDetailsForm.ErrorCode;
+
+  /** Indicates the Add card button is clicked. */
+  onAddCard: (cardNumber: number, cardName: string, month: number, year: number,
+    securityCode: number, zipcode: string) => void;
+
+  /** Indicates the update card details button is clicked. */
+  onUpdateCard: (newCard: PaymentCard) => void;
+
+  /** Indicates the make default card on card details is clicked. */
+  onMakeDefaultCard: (cardId: number) => void;
+
+  /** Indicates the delete card button is clicked. */
+  onDeleteCard: (cardId: number) => void;
 
   /** Indicates the New Events toggle button is clicked. */
   onNewEventsToggle: () => void;
@@ -166,8 +183,7 @@ export class SettingsPage extends React.Component<Properties, State> {
         case SettingsPage.Tab.NOTIFICATIONS:
           return <NotificationsTab {...this.props} />;
         case SettingsPage.Tab.PAYMENT_METHODS:
-          return <PaymentMethodsTab {...this.props}
-            onAdd={this.props.onAddCardClick} />;
+          return <PaymentMethodsTab {...this.props} />;
         case SettingsPage.Tab.PAYMENT_HISTORY:
           return <h1 style={PAGE_HEADING_STYLE} >Payment History</h1>;
       }

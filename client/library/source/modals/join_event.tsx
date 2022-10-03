@@ -312,7 +312,7 @@ export class JoinEventModal extends React.Component<Properties, State> {
             selectedYear={this.props.selectedYear}
             onAddLabel='Continue'
             onCancel={this.handleBackClick}
-            onAdd={this.props.onAddCard}
+            onAddCard={this.props.onAddCard}
           />);
       }
       return (

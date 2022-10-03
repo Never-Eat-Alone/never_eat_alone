@@ -1,15 +1,12 @@
 import * as React from 'react';
-import { InputField, PaymentCardInputField, SecurityCodeInputField
-} from './input_field';
-import { NumberedDropdownMenu } from './numbered_dropdown_menu';
-import { PrimaryTextButton } from './text_button';
+import { InputField, NumberedDropdownMenu, PaymentCardInputField,
+  PrimaryTextButton, SecurityCodeInputField } from '../../components';
+import { CreditCardType, getCreditCardTypeName, PaymentCard
+} from '../../definitions';
 
 interface Properties {
-  /** The title section of the form. */
-  titleSection?: JSX.Element;
 
-  titleSectionStyle?: React.CSSProperties;
-
+  cardId: number;
   /** Card number. */
   cardNumber: number;
 
@@ -28,22 +25,23 @@ interface Properties {
   /** Zipcode/postal code associated with the card. */
   zipcode: string;
 
-  /** The label used for the Add card button. */
-  onAddLabel: string;
+  creditType: CreditCardType;
 
-  addCardErrorMessage: string;
+  errorMessage: string;
 
-  errorCode: AddCreditCardForm.ErrorCode;
+  errorCode: CardDetailsForm.ErrorCode;
 
-  /** The form css style. */
-  style?: React.CSSProperties;
+  isDefault?: boolean;
+
+  onDeleteCard: () => void;
+
+  onMakeDefault?: () => void;
 
   /** Indicates the cancel button is clicked. */
   onCancel: () => void;
 
-  /** Indicates the add button is clicked. */
-  onAddCard: (cardNumber: number, cardName: string, month: number, year: number,
-    securityCode: number, zipcode: string) => void;
+  /** Indicates the update(save) button is clicked. */
+  onUpdateCard: (card: PaymentCard) => void;
 }
 
 interface State {
@@ -57,47 +55,56 @@ interface State {
   isNameOnCardInvalid: boolean;
   isSecurityCodeInvalid: boolean;
   isZipcodeInvalid: boolean;
-  addCardInputHasChanged: boolean;
-  errorCode: AddCreditCardForm.ErrorCode;
+  cardInputHasChanged: boolean;
+  errorCode: CardDetailsForm.ErrorCode;
 }
 
-/** Displays the Add Creditcard Form. */
-export class AddCreditCardForm extends React.Component<Properties, State> {
+/** Displays the Card Details Form. */
+export class CardDetailsForm extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props);
     this.state = {
-      cardNumber: 0,
-      nameOnCard: '',
-      selectedMonth: 0,
-      selectedYear: 0,
-      securityCode: 0,
-      zipcode: '',
+      cardNumber: this.props.cardNumber,
+      nameOnCard: this.props.nameOnCard,
+      selectedMonth: this.props.selectedMonth,
+      selectedYear: this.props.selectedYear,
+      securityCode: this.props.securityCode,
+      zipcode: this.props.zipcode,
       isNameOnCardInvalid: false,
       isCardNumberInvalid: false,
       isSecurityCodeInvalid: false,
       isZipcodeInvalid: false,
-      addCardInputHasChanged: false,
+      cardInputHasChanged: false,
       errorCode: this.props.errorCode
     };
   }
 
   public render(): JSX.Element {
-    const titleSection = (this.props.titleSection ||
-      <div
-          style={{...ADD_CARD_TITLE_ROW_STYLE, ...this.props.titleSectionStyle}}
-      >
+    const cardSrc = (() => {
+      if (this.props.creditType === CreditCardType.VISA) {
+        return 'resources/icons/super_big_visa.svg';
+      }
+      if (this.props.creditType === CreditCardType.AMEX) {
+        return 'resources/icons/super_big_amex.svg';
+      }
+      if (this.props.creditType === CreditCardType.MASTERCARD) {
+        return 'resources/icons/super_big_mastercard.svg';
+      }
+      return '';
+    })();
+    const isDefault = (this.props.isDefault &&
+      <div style={IS_DEFAULT_CONTAINER_STYLE} >
         <img
-          style={BACK_ICON_STYLE}
-          src='resources/icons/back.svg'
-          alt='Back Icon'
-          onClick={this.props.onCancel}
+          style={GREY_MARK_ICON_STYLE}
+          src='resources/icons/grey_mark.svg'
+          alt='Check Mark'
         />
-        <h1 style={ADD_CARD_HEADLINE_STYLE} >Add a card</h1>
-      </div>);
+        <p style={IS_DEFAULT_TEXT_STYLE} >Your default card</p>
+      </div> || null);
     const currentYear = new Date().getFullYear();
-    const addCardErrorMessage = (() => {
-      if (this.props.addCardErrorMessage) {
-        return this.props.addCardErrorMessage;
+    const updateCardErrorMessage = (() => {
+      if (this.props.errorMessage) {
+        return this.props.errorMessage;
       }
       if (this.state.isZipcodeInvalid) {
         return 'Please enter a valid postal code.';
@@ -105,7 +112,7 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
       return '';
     })();
     const nameOnCardErrorMessage = (() => {
-      if (!this.state.addCardInputHasChanged) {
+      if (!this.state.cardInputHasChanged) {
         return '';
       }
       if (this.state.isNameOnCardInvalid) {
@@ -114,7 +121,7 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
       return '';
     })();
     const cardNumberErrorMessage = (() => {
-      if (!this.state.addCardInputHasChanged) {
+      if (!this.state.cardInputHasChanged) {
         return '';
       }
       if (this.state.isCardNumberInvalid) {
@@ -123,7 +130,7 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
       return '';
     })();
     const securityCodeErrorMessage = (() => {
-      if (!this.state.addCardInputHasChanged) {
+      if (!this.state.cardInputHasChanged) {
         return '';
       }
       if (this.state.isSecurityCodeInvalid) {
@@ -131,24 +138,60 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
       }
       return '';
     })();
-    const isContinueAddCardDisabled = (() => {
+    const isUpdateCardDisabled = (() => {
       if (!this.state.cardNumber || !this.state.nameOnCard ||
           this.state.nameOnCard.length === 0 || !this.state.securityCode ||
-          !this.state.zipcode || this.state.zipcode.length === 0) {
+          !this.state.zipcode || this.state.zipcode.length === 0 ||
+          !this.state.cardInputHasChanged) {
         return true;
       }
-      if (this.state.addCardInputHasChanged) {
+      if (this.state.cardInputHasChanged) {
         return false;
       }
-      if (this.state.errorCode !== AddCreditCardForm.ErrorCode.NONE) {
+      if (this.state.errorCode !== CardDetailsForm.ErrorCode.NONE) {
         return true;
       }
       return false;
     })();
     return (
-      <form style={this.props.style} onSubmit={this.handleOnAdd} >
-        {titleSection}
-        <p style={ADD_FIELD_TEXT_STYLE} >Card number</p>
+      <form style={CARD_DETAILS_CONTAINER_STYLE} onSubmit={this.handleOnSave} >
+        <div style={ROW_CONTAINER_STYLE} >
+          <img
+            style={BACK_ICON_STYLE}
+            src='resources/icons/back.svg'
+            alt='Back Icon'
+            onClick={this.props.onCancel}
+          />
+          <h2 style={CARD_DETAILS_HEADING_STYLE} >Card Details</h2>
+        </div>
+        <div style={DELETE_CARD_ROW_CONTAINER_STYLE} >
+          <img
+            style={SUPER_BIG_CARD_IMAGE_STYLE}
+            src={cardSrc}
+            alt='Card Image'
+          />
+          <div style={COLUMN_CONTAINER_STYLE} >
+            <p style={CARD_ENDING_TEXT_STYLE} >
+              {getCreditCardTypeName(this.props.creditType)}
+              &nbsp;card ending in {this.props.cardNumber.toString().slice(-4)}
+            </p>
+            <div style={DEFAULT_DELETE_ROW_STYLE} >
+              {isDefault}
+              <div
+                  style={DELETE_BUTTON_STYLE}
+                  onClick={this.props.onDeleteCard}
+              >
+                <img
+                  style={CROSS_ICON_STYLE}
+                  src='resources/icons/red_cross.svg'
+                  alt='Cross Icon'
+                />
+                <p style={DELETE_TEXT_STYLE} >Delete</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p style={CARD_DETAILS_FIELD_TEXT_STYLE} >Card number</p>
         <PaymentCardInputField
           style={PAYMENT_CARD_INPUT_STYLE}
           name='card number'
@@ -159,10 +202,10 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
           onChange={this.handleOnCardNumberChange}
           onInvalid={() => this.handleInvalidInput('card number')}
           hasError={this.state.isCardNumberInvalid &&
-            this.state.addCardInputHasChanged}
+            this.state.cardInputHasChanged}
         />
         <div style={ERROR_MESSAGE_STYLE}>{cardNumberErrorMessage}</div>
-        <p style={ADD_FIELD_TEXT_STYLE} >Name on card</p>
+        <p style={CARD_DETAILS_FIELD_TEXT_STYLE} >Name on card</p>
         <InputField
           style={PAYMENT_CARD_INPUT_STYLE}
           name='name on card'
@@ -172,10 +215,10 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
           onChange={this.handleOnNameChange}
           onInvalid={() => this.handleInvalidInput('name on card')}
           hasError={this.state.isNameOnCardInvalid &&
-            this.state.addCardInputHasChanged}
+            this.state.cardInputHasChanged}
         />
         <div style={ERROR_MESSAGE_STYLE}>{nameOnCardErrorMessage}</div>
-        <p style={ADD_FIELD_TEXT_STYLE} >Expiration date</p>
+        <p style={CARD_DETAILS_FIELD_TEXT_STYLE} >Expiration date</p>
         <div style={MONTH_YEAR_CONTAINER_STYLE} >
           <NumberedDropdownMenu
             style={NUMBER_DROPDOWN_STYLE}
@@ -193,7 +236,7 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
             onMenuItemClick={this.handleOnYearClick}
           />
         </div>
-        <p style={ADD_FIELD_TEXT_STYLE} >Security code</p>
+        <p style={CARD_DETAILS_FIELD_TEXT_STYLE} >Security code</p>
         <SecurityCodeInputField
           style={CODE_INPUT_STYLE}
           name='security code'
@@ -204,10 +247,10 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
           required
           onInvalid={() => this.handleInvalidInput('security code')}
           hasError={this.state.isSecurityCodeInvalid &&
-            this.state.addCardInputHasChanged}
+            this.state.cardInputHasChanged}
         />
         <div style={ERROR_MESSAGE_STYLE}>{securityCodeErrorMessage}</div>
-        <p style={ADD_FIELD_TEXT_STYLE} >Zip/Postal code</p>
+        <p style={CARD_DETAILS_FIELD_TEXT_STYLE} >Zip/Postal code</p>
         <InputField
           style={CODE_INPUT_STYLE}
           name='zipcode'
@@ -217,15 +260,15 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
           required
           onInvalid={() => this.handleInvalidInput('zipcode')}
           hasError={this.state.isZipcodeInvalid &&
-            this.state.addCardInputHasChanged}
+            this.state.cardInputHasChanged}
         />
-        <p style={ERROR_MESSAGE_STYLE} >{addCardErrorMessage}</p>
+        <p style={ERROR_MESSAGE_STYLE} >{updateCardErrorMessage}</p>
         <PrimaryTextButton
           type='submit'
           style={CONTINUE_BUTTON_STYLE}
-          label={this.props.onAddLabel}
-          onClick={this.handleOnAdd}
-          disabled={isContinueAddCardDisabled}
+          label='Save'
+          onClick={this.handleOnSave}
+          disabled={isUpdateCardDisabled}
         />
       </form>);
   }
@@ -234,7 +277,7 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
       ) => {
     this.setState({
       cardNumber: Number(event.target.value.trim()),
-      addCardInputHasChanged: true
+      cardInputHasChanged: true
     });
   }
 
@@ -242,7 +285,7 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
       ) => {
     this.setState({
       nameOnCard: event.target.value,
-      addCardInputHasChanged: true
+      cardInputHasChanged: true
     });
   }
 
@@ -250,7 +293,7 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
       HTMLInputElement>) => {
     this.setState({
       securityCode: Number(event.target.value.trim()),
-      addCardInputHasChanged: true
+      cardInputHasChanged: true
     });
   }
 
@@ -258,19 +301,19 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
       HTMLInputElement>) => {
     this.setState({
       zipcode: event.target.value,
-      addCardInputHasChanged: true
+      cardInputHasChanged: true
     });
   }
 
   private handleOnMonthClick = (newValue: number) => {
-    this.setState({ selectedMonth: newValue });
+    this.setState({ selectedMonth: newValue, cardInputHasChanged: true });
   }
 
   private handleOnYearClick = (newValue: number) => {
-    this.setState({ selectedYear: newValue });
+    this.setState({ selectedYear: newValue, cardInputHasChanged: true });
   }
 
-  private handleOnAdd = (event: React.SyntheticEvent) => {
+  private handleOnSave = (event: React.SyntheticEvent) => {
     event.preventDefault();
     this.setState({
       isNameOnCardInvalid: false,
@@ -278,59 +321,69 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
       isCardNumberInvalid: false,
       isZipcodeInvalid: false
     });
-    this.props.onAddCard(this.state.cardNumber, this.state.nameOnCard,
-      this.state.selectedMonth, this.state.selectedYear,
-      this.state.securityCode, this.state.zipcode);
+    const newCard = new PaymentCard(this.props.cardId, this.state.cardNumber,
+      this.state.nameOnCard, this.state.selectedMonth, this.state.selectedYear,
+      this.state.securityCode, this.state.zipcode, this.props.creditType);
+    this.props.onUpdateCard(newCard);
   }
 
   private handleInvalidInput = (fieldName: string) => {
     switch (fieldName) {
       case 'name on card':
         this.setState({
-          errorCode: AddCreditCardForm.ErrorCode.INVALID_ADD_CARD_INPUT,
+          errorCode: CardDetailsForm.ErrorCode.INVALID_UPDATE_CARD_INPUT,
           isNameOnCardInvalid: true
         });
         break;
       case 'zipcode':
         this.setState({
-          errorCode: AddCreditCardForm.ErrorCode.INVALID_ADD_CARD_INPUT,
+          errorCode: CardDetailsForm.ErrorCode.INVALID_UPDATE_CARD_INPUT,
           isZipcodeInvalid: true
         });
         break;
       case 'security code':
         this.setState({
-          errorCode: AddCreditCardForm.ErrorCode.INVALID_ADD_CARD_INPUT,
+          errorCode: CardDetailsForm.ErrorCode.INVALID_UPDATE_CARD_INPUT,
           isSecurityCodeInvalid: true
         });
         break;
       case 'card number':
         this.setState({
-          errorCode: AddCreditCardForm.ErrorCode.INVALID_ADD_CARD_INPUT,
+          errorCode: CardDetailsForm.ErrorCode.INVALID_UPDATE_CARD_INPUT,
           isCardNumberInvalid: true
         });
     }
   }
 }
 
-export namespace AddCreditCardForm {
+export namespace CardDetailsForm {
   export enum ErrorCode {
     NONE,
     INVALID_CARD_INFO,
     EXPIRED_CARD,
-    INVALID_ADD_CARD_INPUT
+    INVALID_UPDATE_CARD_INPUT
   }
 }
 
-const ADD_CARD_TITLE_ROW_STYLE: React.CSSProperties = {
+const CARD_DETAILS_CONTAINER_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  padding: '20px',
+  marginTop: '20px',
+  backgroundColor: '#FFFFFF',
+  width: '395px'
+};
+
+const ROW_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'center',
   width: '100%',
-  height: '30px',
-  backgroundColor: 'transparent',
-  gap: '10px',
-  marginBottom: '10px'
+  gap: '10px'
 };
 
 const BACK_ICON_STYLE: React.CSSProperties = {
@@ -341,15 +394,120 @@ const BACK_ICON_STYLE: React.CSSProperties = {
   backgroundColor: 'transparent'
 };
 
-const ADD_CARD_HEADLINE_STYLE: React.CSSProperties = {
+const CARD_DETAILS_HEADING_STYLE: React.CSSProperties = {
   fontFamily: 'Oswald',
   fontStyle: 'normal',
   fontWeight: 400,
-  fontSize: '20px',
-  lineHeight: '30px',
+  fontSize: '23px',
+  lineHeight: '34px',
+  textTransform: 'uppercase',
+  color: '#969696',
+  padding: '0px',
+  margin: '0px'
+};
+
+const DELETE_CARD_ROW_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  height: '90px',
+  width: '100%',
+  marginTop: '30px',
+  marginBottom: '30px'
+};
+
+const DEFAULT_DELETE_ROW_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  height: '18px',
+  width: '100%',
+  gap: '10px'
+};
+
+const DELETE_BUTTON_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  gap: '10px',
+  height: '100%'
+};
+
+const CROSS_ICON_STYLE: React.CSSProperties = {
+  backgroundColor: 'transparent',
+  width: '12px',
+  height: '12px',
+  minWidth: '12px',
+  minHeight: '12px'
+};
+
+const DELETE_TEXT_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#F26B55'
+};
+
+const SUPER_BIG_CARD_IMAGE_STYLE: React.CSSProperties = {
+  minHeight: '90px',
+  height: '100%',
+  width: '133px',
+  borderRadius: '4px'
+};
+
+const COLUMN_CONTAINER_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'flex-start',
+  padding: '20px 0px 20px 20px',
+  height: '100%',
+  width: 'calc(100% - 133px)',
+  gap: '10px'
+};
+
+const CARD_ENDING_TEXT_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '14px',
+  lineHeight: '18px',
   color: '#000000',
-  margin: '0px',
-  padding: '0px'
+  width: '100%',
+  whiteSpace: 'pre'
+};
+
+const IS_DEFAULT_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  height: '100%',
+  gap: '10px'
+};
+
+const GREY_MARK_ICON_STYLE: React.CSSProperties = {
+  width: '12px',
+  minWidth: '12px',
+  height: '10px',
+  minHeight: '10px',
+  backgroundColor: 'transparent'
+};
+
+const IS_DEFAULT_TEXT_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  height: '100%',
+  color: '#969696'
 };
 
 const PAYMENT_CARD_INPUT_STYLE: React.CSSProperties = {
@@ -358,7 +516,7 @@ const PAYMENT_CARD_INPUT_STYLE: React.CSSProperties = {
   marginTop: '10px'
 };
 
-const ADD_FIELD_TEXT_STYLE: React.CSSProperties = {
+const CARD_DETAILS_FIELD_TEXT_STYLE: React.CSSProperties = {
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
   fontWeight: 400,
