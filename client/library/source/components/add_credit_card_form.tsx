@@ -88,9 +88,9 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
           style={{...ADD_CARD_TITLE_ROW_STYLE, ...this.props.titleSectionStyle}}
       >
         <img
-          style={ADD_ICON_STYLE}
-          src='resources/icons/add_card.svg'
-          alt='Add Icon'
+          style={BACK_ICON_STYLE}
+          src='resources/icons/back.svg'
+          alt='Back Icon'
           onClick={this.props.onCancel}
         />
         <h1 style={ADD_CARD_HEADLINE_STYLE} >Add a card</h1>
@@ -332,7 +332,7 @@ const ADD_CARD_TITLE_ROW_STYLE: React.CSSProperties = {
   marginBottom: '10px'
 };
 
-const ADD_ICON_STYLE: React.CSSProperties = {
+const BACK_ICON_STYLE: React.CSSProperties = {
   width: '15px',
   height: '15px',
   minWidth: '15px',

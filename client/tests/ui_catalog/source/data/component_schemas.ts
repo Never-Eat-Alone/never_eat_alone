@@ -1545,7 +1545,8 @@ export function loadComponentSchemas(): ComponentSchema[] {
       new SignalSchema('onSomeoneJoinedToggle', '', []),
       new SignalSchema('onFoodieAcceptedInviteToggle', '', []),
       new SignalSchema('onAnnouncementToggle', '', []),
-      new SignalSchema('onAddCardClick', '', [])
+      new SignalSchema('onAddCardClick', '', []),
+      new SignalSchema('onDeleteCard', '', [])
       ], NeverEatAlone.SettingsPage);
   const linkSocialMediaButtonSchema = new ComponentSchema(
     'LinkSocialMediaButton',

@@ -70,6 +70,8 @@ interface Properties {
   /** Indicates the Add card button is clicked. */
   onAddCardClick: () => void;
 
+  onDeleteCard: (card: PaymentCard) => void;
+
   /** Indicates the New Events toggle button is clicked. */
   onNewEventsToggle: () => void;
 

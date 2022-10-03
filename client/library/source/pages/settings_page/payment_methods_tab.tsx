@@ -24,6 +24,9 @@ interface Properties {
 
   /** Indicates the Add card button is clicked. */
   onAdd: () => void;
+
+  /** Indicates the delete card button is clicked. */
+  onDeleteCard: (card: PaymentCard) => void;
 }
 
 interface State {
@@ -43,10 +46,71 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
 
   public render(): JSX.Element {
     if (this.state.page === PaymentMethodsTab.Page.CARD_DETAILS) {
+      const cardSrc = (() => {
+        if (this.state.selectedCard.creditType === CreditCardType.VISA) {
+          return 'resources/icons/super_big_visa.svg';
+        }
+        if (this.state.selectedCard.creditType === CreditCardType.AMEX) {
+          return 'resources/icons/super_big_amex.svg';
+        }
+        if (this.state.selectedCard.creditType === CreditCardType.MASTERCARD) {
+          return 'resources/icons/super_big_mastercard.svg';
+        }
+        return '';
+      })();
+      const isDefault = (this.state.selectedCard.id ===
+        this.props.defaultCard.id &&
+        <div style={IS_DEFAULT_CONTAINER_STYLE} >
+          <img
+            style={GREY_MARK_ICON_STYLE}
+            src='resources/icons/grey_mark.svg'
+            alt='Check Mark'
+          />
+          <p style={IS_DEFAULT_TEXT_STYLE} >Your default card</p>
+        </div> || null);
       return (
         <React.Fragment>
           <h1 style={PAGE_HEADING_STYLE} >Payment Methods</h1>
-          <div>Card Details</div>
+          <div style={CARD_DETAILS_CONTAINER_STYLE} >
+            <div style={ROW_CONTAINER_STYLE} >
+              <img
+                style={BACK_ICON_STYLE}
+                src='resources/icons/back.svg'
+                alt='Back Icon'
+                onClick={this.handleBackClick}
+              />
+              <h2 style={CARD_DETAILS_HEADING_STYLE} >Card Details</h2>
+            </div>
+            <div style={DELETE_CARD_ROW_CONTAINER_STYLE} >
+              <img
+                style={SUPER_BIG_CARD_IMAGE_STYLE}
+                src={cardSrc}
+                alt='Card Image'
+              />
+              <div style={COLUMN_CONTAINER_STYLE} >
+                <p style={CARD_ENDING_TEXT_STYLE} >
+                  {getCreditCardTypeName(this.state.selectedCard.creditType)}
+                  &nbsp;card ending in {this.state.selectedCard.cardNumber
+                    .toString().slice(-4)}
+                </p>
+                <div style={DEFAULT_DELETE_ROW_STYLE} >
+                  {isDefault}
+                  <div
+                      style={DELETE_BUTTON_STYLE}
+                      onClick={() => this.props.onDeleteCard(
+                        this.state.selectedCard)}
+                  >
+                    <img
+                      style={CROSS_ICON_STYLE}
+                      src='resources/icons/red_cross.svg'
+                      alt='Cross Icon'
+                    />
+                    <p style={DELETE_TEXT_STYLE} >Delete</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </React.Fragment>);
     } else if (this.state.page === PaymentMethodsTab.Page.ADD_CARD) {
       return (
@@ -58,7 +122,7 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
             titleSectionStyle={ADD_FORM_TITLE_STYLE}
             onAddLabel='Save'
             errorCode={this.props.addCardErrorCode}
-            onCancel={this.handleBack}
+            onCancel={this.handleBackClick}
           />
         </React.Fragment>);
     }
@@ -97,7 +161,7 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
     });
   }
 
-  private handleBack = () => {
+  private handleBackClick = () => {
     this.setState({ page: PaymentMethodsTab.Page.INITIAL });
   }
 
@@ -292,6 +356,11 @@ const ADD_CARD_CONTAINER_STYLE: React.CSSProperties = {
   backgroundColor: '#FFFFFF'
 };
 
+const CARD_DETAILS_CONTAINER_STYLE: React.CSSProperties = {
+  ...ADD_CARD_CONTAINER_STYLE,
+  width: '395px'
+};
+
 const CARD_INFO_COLUMN_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
@@ -352,6 +421,138 @@ const DEFAULT_TEXT_STYLE: React.CSSProperties = {
   color: '#FFFFFF',
   margin: '0px',
   padding: '0px'
+};
+
+const ROW_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  width: '100%',
+  gap: '10px'
+};
+
+const BACK_ICON_STYLE: React.CSSProperties = {
+  width: '15px',
+  height: '15px',
+  minWidth: '15px',
+  minHeight: '15px',
+  backgroundColor: 'transparent'
+};
+
+const CARD_DETAILS_HEADING_STYLE: React.CSSProperties = {
+  fontFamily: 'Oswald',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '23px',
+  lineHeight: '34px',
+  textTransform: 'uppercase',
+  color: '#969696',
+  padding: '0px',
+  margin: '0px'
+};
+
+const DELETE_CARD_ROW_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  height: '90px',
+  width: '100%',
+  marginTop: '30px'
+};
+
+const DEFAULT_DELETE_ROW_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  height: '18px',
+  width: '100%',
+  gap: '10px'
+};
+
+const DELETE_BUTTON_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  gap: '10px',
+  height: '100%'
+};
+
+const CROSS_ICON_STYLE: React.CSSProperties = {
+  backgroundColor: 'transparent',
+  width: '12px',
+  height: '12px',
+  minWidth: '12px',
+  minHeight: '12px'
+};
+
+const DELETE_TEXT_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#F26B55'
+};
+
+const SUPER_BIG_CARD_IMAGE_STYLE: React.CSSProperties = {
+  minHeight: '90px',
+  height: '100%',
+  width: '133px',
+  borderRadius: '4px'
+};
+
+const COLUMN_CONTAINER_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'flex-start',
+  padding: '20px 0px 20px 20px',
+  height: '100%',
+  width: 'calc(100% - 133px)',
+  gap: '10px'
+};
+
+const CARD_ENDING_TEXT_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#000000',
+  width: '100%',
+  whiteSpace: 'pre'
+};
+
+const IS_DEFAULT_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  height: '100%',
+  gap: '10px'
+};
+
+const GREY_MARK_ICON_STYLE: React.CSSProperties = {
+  width: '12px',
+  minWidth: '12px',
+  height: '10px',
+  minHeight: '10px',
+  backgroundColor: 'transparent'
+};
+
+const IS_DEFAULT_TEXT_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  height: '100%',
+  color: '#969696'
 };
 
 const styles = StyleSheet.create({
