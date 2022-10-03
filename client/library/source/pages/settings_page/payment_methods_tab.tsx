@@ -1,7 +1,7 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 import { AddCreditCardForm } from '../../components';
-import { DisplayMode, getCreditCardTypeName, PaymentCard, CreditCardType
+import { CreditCardType, DisplayMode, getCreditCardTypeName, PaymentCard
 } from '../../definitions';
 
 interface Properties {
@@ -65,7 +65,7 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
     const cardsOnFile = (() => {
       const cards = [];
       if (this.props.defaultCard && this.props.defaultCard.id !== -1) {
-        cards.push(<PaymentCardRow key={this.props.defaultCard.id}
+        cards.push(<PaymentCardRow key={this.props.defaultCard.id} isDefault
           card={this.props.defaultCard}
           onClick={() => this.handleCardClick(this.props.defaultCard)} />);
       }
@@ -135,6 +135,7 @@ function AddCardButton(props: AddCardProps) {
 
 interface PaymentCardRowProps {
   card: PaymentCard;
+  isDefault?: boolean;
   onClick: () => void;
 }
 
@@ -151,12 +152,17 @@ function PaymentCardRow(props: PaymentCardRowProps) {
         return '';
     }
   })();
+  const defaultSign = (props.isDefault &&
+    <div style={DEFAULT_SIGN_CONTAINER_STYLE} >
+      <p style={DEFAULT_TEXT_STYLE} >Default</p>
+    </div> || null);
   return (
     <button
         style={CARD_BUTTON_STYLE}
         className={css(styles.cardButton)}
         onClick={props.onClick}
     >
+      {defaultSign}
       <div style={RECTANGLE_CONTAINER_STYLE} >
         <img
           style={CREDIT_ICON_STYLE}
@@ -215,6 +221,7 @@ const COLUMN_STYLE: React.CSSProperties = {
 };
 
 const CARD_BUTTON_STYLE: React.CSSProperties = {
+  position: 'relative',
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'row',
@@ -318,6 +325,33 @@ const CARD_TYPE_TEXT_STYLE: React.CSSProperties = {
 const CARD_TEXT_STYLE: React.CSSProperties = {
   ...CARD_TYPE_TEXT_STYLE,
   fontWeight: 400
+};
+
+const DEFAULT_SIGN_CONTAINER_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: '5px 10px',
+  position: 'absolute',
+  width: '58px',
+  height: '28px',
+  left: '-1px',
+  top: '-1px',
+  background: '#F26B55',
+  borderRadius: '4px 0px'
+};
+
+const DEFAULT_TEXT_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '12px',
+  lineHeight: '18px',
+  color: '#FFFFFF',
+  margin: '0px',
+  padding: '0px'
 };
 
 const styles = StyleSheet.create({
