@@ -173,6 +173,35 @@ interface PaymentCardRowProps {
 }
 
 function PaymentCardRow(props: PaymentCardRowProps) {
+  const expiringSoon = (() => {
+    const currentDate = new Date();
+    const expDate = new Date(props.card.year, props.card.month, 1);
+    const diffTime = expDate.getTime() - currentDate.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays < 1) {
+      return (
+        <div style={EXPIRE_ROW_CONTAINER} >
+          <img
+            style={WARNING_ICON_STYLE}
+            src='resources/icons/red_warning.svg'
+            alt='Expired icon'
+          />
+          <p style={EXPIRED_TEXT_STYLE} >Information may be outdated</p>
+        </div>);
+    }
+    if (diffDays < 30) {
+      return (
+        <div style={EXPIRE_ROW_CONTAINER} >
+         <img
+            style={WARNING_ICON_STYLE}
+            src='resources/icons/yellow_warning.svg'
+            alt='Expired icon'
+          />
+          <p style={EXPIRING_SOON_TEXT_STYLE} >Expiring soon</p>
+        </div>);
+    }
+    return null;
+  })();
   const cardSrc = (() => {
     switch (props.card.creditType) {
       case CreditCardType.VISA:
@@ -210,6 +239,7 @@ function PaymentCardRow(props: PaymentCardRowProps) {
         <p style={CARD_TEXT_STYLE} >
           Card ending in {props.card.cardNumber.toString().slice(-4)}
         </p>
+        {expiringSoon}
       </div>
       <img
         style={ARROW_ICON_STYLE}
@@ -385,6 +415,40 @@ const DEFAULT_TEXT_STYLE: React.CSSProperties = {
   color: '#FFFFFF',
   margin: '0px',
   padding: '0px'
+};
+
+const EXPIRE_ROW_CONTAINER: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  height: '13px',
+  width: '100%',
+  gap: '5px'
+};
+
+const WARNING_ICON_STYLE: React.CSSProperties = {
+  width: '10px',
+  minWidth: '10px',
+  height: '9px',
+  minHeight: '9px',
+  backgroundColor: 'transparent'
+};
+
+const EXPIRED_TEXT_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '10px',
+  lineHeight: '13px',
+  color: '#DE6956',
+  padding: '0px',
+  margin: '0px'
+};
+
+const EXPIRING_SOON_TEXT_STYLE: React.CSSProperties = {
+  ...EXPIRED_TEXT_STYLE,
+  color: '#C7943D'
 };
 
 const styles = StyleSheet.create({

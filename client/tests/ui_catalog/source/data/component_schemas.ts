@@ -1524,12 +1524,12 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('isFoodieAcceptedInvite', true, BooleanInput),
     new PropertySchema('isAnnouncement', true, BooleanInput),
     new PropertySchema('defaultCard', new NeverEatAlone.PaymentCard(12,
-      4567890123456789, 'Jlo Jlo', 12, 2026, 2345, 'M3E 5G6',
+      4567890123456789, 'Jlo Jlo', 10, 2022, 2345, 'M3E 5G6',
       NeverEatAlone.CreditCardType.VISA), PaymentCardInput),
     new PropertySchema('otherPaymentCards', [
-      new NeverEatAlone.PaymentCard(14, 4567890123456789, 'Jlo Jlo', 12, 2026,
+      new NeverEatAlone.PaymentCard(14, 4567890123456789, 'Jlo Jlo', 8, 2022,
         2345, 'M3E 5G6', NeverEatAlone.CreditCardType.VISA),
-      new NeverEatAlone.PaymentCard(15, 4567890123456789, 'ahs jdfj', 10, 2024,
+      new NeverEatAlone.PaymentCard(15, 4567890123456789, 'ahs jdfj', 11, 2022,
         9524, 'M3E 5G6', NeverEatAlone.CreditCardType.AMEX),
       new NeverEatAlone.PaymentCard(16, 4567890123456789, 'allo gil', 11, 2023,
         7458, 'M3E 3T7', NeverEatAlone.CreditCardType.MASTERCARD)
