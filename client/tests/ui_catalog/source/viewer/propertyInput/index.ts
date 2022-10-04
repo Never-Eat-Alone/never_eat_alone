@@ -2,6 +2,7 @@ export * from './add_credit_card_form_error_code_input';
 export * from './array_input';
 export * from './attendee_input';
 export * from './boolean_input';
+export * from './card_details_form_error_code_input';
 export * from './city_province_input';
 export * from './color_input';
 export * from './credit_card_type_input';

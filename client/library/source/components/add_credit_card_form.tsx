@@ -4,36 +4,20 @@ import { InputField, PaymentCardInputField, SecurityCodeInputField
 import { NumberedDropdownMenu } from './numbered_dropdown_menu';
 import { PrimaryTextButton } from './text_button';
 
-
 interface Properties {
-  /** The title section of the form. */
+  /** Title section of the form. */
   titleSection?: JSX.Element;
 
+  /** Style associated with the title section. */
   titleSectionStyle?: React.CSSProperties;
 
-  /** Card number. */
-  cardNumber: number;
-
-  /** Name on card. */
-  nameOnCard: string;
-
-  /** Expiration month. */
-  selectedMonth: number;
-
-  /** Expiration year. */
-  selectedYear: number;
-
-  /** Securitycode associated with the card. */
-  securityCode: number;
-
-  /** Zipcode/postal code associated with the card. */
-  zipcode: string;
-
-  /** The label used for the Add card button. */
+  /** Label used for the Add card button. */
   onAddLabel: string;
 
+  /** Error message regarding adding a new card. */
   addCardErrorMessage: string;
 
+  /** Error code regarding adding a new card. */
   errorCode: AddCreditCardForm.ErrorCode;
 
   /** The form css style. */
@@ -43,7 +27,7 @@ interface Properties {
   onCancel: () => void;
 
   /** Indicates the add button is clicked. */
-  onAdd: (cardNumber: number, cardName: string, month: number, year: number,
+  onAddCard: (cardNumber: number, cardName: string, month: number, year: number,
     securityCode: number, zipcode: string) => void;
 }
 
@@ -67,12 +51,12 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props);
     this.state = {
-      cardNumber: this.props.cardNumber,
-      nameOnCard: this.props.nameOnCard,
-      selectedMonth: this.props.selectedMonth,
-      selectedYear: this.props.selectedYear,
-      securityCode: this.props.securityCode,
-      zipcode: this.props.zipcode,
+      cardNumber: 0,
+      nameOnCard: '',
+      selectedMonth: 0,
+      selectedYear: 0,
+      securityCode: 0,
+      zipcode: '',
       isNameOnCardInvalid: false,
       isCardNumberInvalid: false,
       isSecurityCodeInvalid: false,
@@ -88,9 +72,9 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
           style={{...ADD_CARD_TITLE_ROW_STYLE, ...this.props.titleSectionStyle}}
       >
         <img
-          style={ADD_ICON_STYLE}
-          src='resources/icons/add_card.svg'
-          alt='Add Icon'
+          style={BACK_ICON_STYLE}
+          src='resources/icons/back.svg'
+          alt='Back Icon'
           onClick={this.props.onCancel}
         />
         <h1 style={ADD_CARD_HEADLINE_STYLE} >Add a card</h1>
@@ -133,8 +117,9 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
       return '';
     })();
     const isContinueAddCardDisabled = (() => {
-      if (!this.state.cardNumber || this.state.nameOnCard.length === 0 ||
-          !this.state.securityCode || this.state.zipcode.length === 0) {
+      if (!this.state.cardNumber || !this.state.nameOnCard ||
+          this.state.nameOnCard.length === 0 || !this.state.securityCode ||
+          !this.state.zipcode || this.state.zipcode.length === 0) {
         return true;
       }
       if (this.state.addCardInputHasChanged) {
@@ -146,14 +131,14 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
       return false;
     })();
     return (
-      <form style={this.props.style} >
+      <form style={this.props.style} onSubmit={this.handleOnAdd} >
         {titleSection}
         <p style={ADD_FIELD_TEXT_STYLE} >Card number</p>
         <PaymentCardInputField
           style={PAYMENT_CARD_INPUT_STYLE}
           name='card number'
           inputMode='numeric'
-          value={this.state.cardNumber}
+          value={this.state.cardNumber ? this.state.cardNumber : ''}
           pattern='\d*'
           required
           onChange={this.handleOnCardNumberChange}
@@ -199,7 +184,7 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
           name='security code'
           inputMode='numeric'
           pattern='\d{3}\d?'
-          value={this.state.securityCode}
+          value={this.state.securityCode? this.state.securityCode : ''}
           onChange={this.handleOnSecurityCodeChange}
           required
           onInvalid={() => this.handleInvalidInput('security code')}
@@ -270,14 +255,15 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
     this.setState({ selectedYear: newValue });
   }
 
-  private handleOnAdd = () => {
+  private handleOnAdd = (event: React.SyntheticEvent) => {
+    event.preventDefault();
     this.setState({
       isNameOnCardInvalid: false,
       isSecurityCodeInvalid: false,
       isCardNumberInvalid: false,
       isZipcodeInvalid: false
     });
-    this.props.onAdd(this.state.cardNumber, this.state.nameOnCard,
+    this.props.onAddCard(this.state.cardNumber, this.state.nameOnCard,
       this.state.selectedMonth, this.state.selectedYear,
       this.state.securityCode, this.state.zipcode);
   }
@@ -332,7 +318,7 @@ const ADD_CARD_TITLE_ROW_STYLE: React.CSSProperties = {
   marginBottom: '10px'
 };
 
-const ADD_ICON_STYLE: React.CSSProperties = {
+const BACK_ICON_STYLE: React.CSSProperties = {
   width: '15px',
   height: '15px',
   minWidth: '15px',

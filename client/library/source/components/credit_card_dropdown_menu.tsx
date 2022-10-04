@@ -8,7 +8,7 @@ interface Properties {
   cardList: PaymentCard[];
 
   /** Displayed card on the dropdown menu as the selected card. */
-  displayedCard: PaymentCard;
+  defaultCard: PaymentCard;
 
   /** Style that is applied to the container. */
   style?: React.CSSProperties;
@@ -72,7 +72,7 @@ export class CreditCardDropdownMenu extends React.Component<Properties,
             className={css(styles.displayedCard)}
             onClick={this.handleDropDownClick}
         >
-          <CardInfo paymentCard={this.props.displayedCard} />
+          <CardInfo paymentCard={this.props.defaultCard} />
           <div style={VECTOR_CONTAINER_STYLE} >
             <img
               style={VECTOR_ICON_STYLE}

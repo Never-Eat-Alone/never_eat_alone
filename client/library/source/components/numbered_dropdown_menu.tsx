@@ -12,6 +12,9 @@ interface Properties {
   /** Style that is applied to the container. */
   style?: React.CSSProperties;
 
+  /** Indicates the selected value is not valid. */
+  hasError?: boolean;
+
   /** Indicates an item from the menu is clicked. */
   onMenuItemClick: (value: number) => void;
 }
@@ -82,7 +85,8 @@ export class NumberedDropdownMenu extends React.Component<Properties,
       >
         <div
             style={{...DISPLAYED_CARD_STYLE, ...displayedCardBorderStyle}}
-            className={css(styles.displayedCard)}
+            className={css(this.props.hasError ? styles.error :
+              styles.displayedCard)}
             onClick={this.handleDropDownClick}
         >
           <div style={TEXT_STYLE} >
@@ -218,6 +222,9 @@ const VECTOR_ICON_STYLE: React.CSSProperties = {
 };
 
 const styles = StyleSheet.create({
+  error: {
+    borderColor: '#FF2C79'
+  },
   displayedCard: {
     ':hover': {
       borderColor: '#969696'

@@ -39,6 +39,7 @@ interface Properties extends Router.LinkProps {
 interface State {
   email: string;
   password: string;
+  isRememberMe: boolean;
 }
 
 /** Displays the Log In Modal. */
@@ -47,7 +48,8 @@ export class LogInModal extends React.Component<Properties, State> {
     super(props);
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      isRememberMe: true
     };
   }
 
@@ -118,7 +120,11 @@ export class LogInModal extends React.Component<Properties, State> {
           onChange={this.handlePasswordChange}
         />
         <div style={ROW_CONTAINER_STYLE} >
-          <CheckBox label='Remember Me' />
+          <CheckBox
+            label='Remember Me'
+            checked={this.state.isRememberMe}
+            onBoxClick={this.handleRememberMe}
+          />
           <RedNavLink
             {...this.props}
             label='Forgot password?'
@@ -167,6 +173,10 @@ export class LogInModal extends React.Component<Properties, State> {
   private handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>
       ) => {
     this.setState({ password: event.target.value });
+  }
+
+  private handleRememberMe = () => {
+    this.setState((prevState) => ({ isRememberMe: !prevState.isRememberMe }));
   }
 }
 

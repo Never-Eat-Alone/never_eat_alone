@@ -1,12 +1,12 @@
 import * as NeverEatAlone from 'never_eat_alone';
 import { AddCreditCardFormErrorCodeInput, ArrayInput, AttendeeInput,
-  BooleanInput, CityProvinceInput, CSSInput, CuisineInput, DateInput,
-  DateTimeInput, DisplayModeInput, DressCodeInput, EventCardSummaryInput,
-  EventTagInput, ForgotPasswordPageErrorCodeInput, HomePageErrorCodeInput,
-  JoinEventModalErrorCodeInput, LanguageInput, LocationInput, NumberInput,
-  PaymentCardInput, RestaurantInput, SeatingInput, SignUpPageErrorCodeInput,
-  SocialAccountInput, SocialAccountTypeInput, SocialMediaImageInput, TextInput,
-  UserInput } from '../viewer/propertyInput';
+  BooleanInput, CardDetailsFormErrorCodeInput, CityProvinceInput, CSSInput,
+  CuisineInput, DateInput, DateTimeInput, DisplayModeInput, DressCodeInput,
+  EventCardSummaryInput, EventTagInput, ForgotPasswordPageErrorCodeInput,
+  HomePageErrorCodeInput, JoinEventModalErrorCodeInput, LanguageInput,
+  LocationInput, NumberInput, PaymentCardInput, RestaurantInput, SeatingInput,
+  SignUpPageErrorCodeInput, SocialAccountInput, SocialAccountTypeInput,
+  SocialMediaImageInput, TextInput, UserInput } from '../viewer/propertyInput';
 import { ComponentSchema, PropertySchema, SignalSchema } from './schemas';
 
 /** Loads the complete list of schemas available to test. */
@@ -721,8 +721,9 @@ export function loadComponentSchemas(): ComponentSchema[] {
   const checkBoxSchema = new ComponentSchema('CheckBox', [
     new PropertySchema('label', 'Remember me', TextInput),
     new PropertySchema('disabled', true, BooleanInput),
-    new PropertySchema('hasError', false, BooleanInput)
-    ], [], NeverEatAlone.CheckBox);
+    new PropertySchema('hasError', false, BooleanInput),
+    new PropertySchema('checked', true, BooleanInput)
+    ], [new SignalSchema('onBoxClick', '', [])], NeverEatAlone.CheckBox);
   const googleLogInButtonSchema = new ComponentSchema('GoogleLogInButton', [
     new PropertySchema('label', 'Log in with Google', TextInput),
     new PropertySchema('style', {} , CSSInput),
@@ -1402,9 +1403,9 @@ export function loadComponentSchemas(): ComponentSchema[] {
       new NeverEatAlone.PaymentCard(21, 4567890123456789, 'Jlo Jlo', 12, 2026,
       2345, 'M3E 5G6', NeverEatAlone.CreditCardType.MASTERCARD),
     ], ArrayInput(new PropertySchema('paymentCard',
-      new NeverEatAlone.PaymentCard(1, 4567890123456789, 'Jlo Jlo', 12, 2026,
+      new NeverEatAlone.PaymentCard(3, 4567890123456789, 'Jlo Jlo', 12, 2026,
       2345, 'M3E 5G6', NeverEatAlone.CreditCardType.VISA), PaymentCardInput))),
-    new PropertySchema('displayedCard', new NeverEatAlone.PaymentCard(1,
+    new PropertySchema('defaultCard', new NeverEatAlone.PaymentCard(1,
       4567890123456789, 'Jlo Jlo', 12, 2026, 2345, 'M3E 5G6',
       NeverEatAlone.CreditCardType.VISA), PaymentCardInput),
     new PropertySchema('addCardErrorMessage', '', TextInput),
@@ -1436,19 +1437,19 @@ export function loadComponentSchemas(): ComponentSchema[] {
   ], NeverEatAlone.JoinEventModal);
   const creditCardDropdownMenu = new ComponentSchema('CreditCardDropdownMenu',
     [new PropertySchema('cardList', [
-    new NeverEatAlone.PaymentCard(11, 4567890123456789, 'Jlo Jlo', 12, 2026,
+    new NeverEatAlone.PaymentCard(2, 4567890123456789, 'Jlo Jlo', 12, 2026,
       2345, 'M3E 5G6', NeverEatAlone.CreditCardType.VISA),
     new NeverEatAlone.PaymentCard(151, 4567890123456789, 'Jlo Jlo', 12, 2026,
       2345, 'M3E 5G6', NeverEatAlone.CreditCardType.AMEX),
-    new NeverEatAlone.PaymentCard(12, 4567890123456789, 'Jlo Jlo', 12, 2026,
+    new NeverEatAlone.PaymentCard(1, 4567890123456789, 'Jlo Jlo', 12, 2026,
       2345, 'M3E 5G6', NeverEatAlone.CreditCardType.VISA),
     new NeverEatAlone.PaymentCard(21,4567890123456789, 'Jlo Jlo', 12, 2026,
       2345, 'M3E 5G6', NeverEatAlone.CreditCardType.MASTERCARD),
     ], ArrayInput(new PropertySchema(
-      'paymentCard', new NeverEatAlone.PaymentCard(1,4567890123456789,
+      'paymentCard', new NeverEatAlone.PaymentCard(3, 4567890123456789,
       'Jlo Jlo', 12, 2026, 2345, 'M3E 5G6', NeverEatAlone.CreditCardType.VISA),
       PaymentCardInput))),
-    new PropertySchema('displayedCard', new NeverEatAlone.PaymentCard(1,
+    new PropertySchema('defaultCard', new NeverEatAlone.PaymentCard(4,
       4567890123456789, 'Jlo Jlo', 12, 2026, 2345, 'M3E 5G6',
       NeverEatAlone.CreditCardType.VISA), PaymentCardInput),
     ], [new SignalSchema('onCardClick', '', [])],
@@ -1512,9 +1513,9 @@ export function loadComponentSchemas(): ComponentSchema[] {
       'lucy@gmail.com', NeverEatAlone.SocialAccountType.GOOGLE),
       SocialAccountInput))),
     new PropertySchema('displayName', 'Arthur', TextInput),
+    new PropertySchema('profileId', 17826, NumberInput),
     new PropertySchema('email', 'shshs@gmail.com', TextInput),
     new PropertySchema('password', 'dsfdsf', TextInput),
-    new PropertySchema('profileId', 17826, NumberInput),
     new PropertySchema('isNewEvents', true, BooleanInput),
     new PropertySchema('isEventJoined', true, BooleanInput),
     new PropertySchema('isEventReminders', true, BooleanInput),
@@ -1525,19 +1526,30 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('defaultCard', new NeverEatAlone.PaymentCard(12,
       4567890123456789, 'Jlo Jlo', 12, 2026, 2345, 'M3E 5G6',
       NeverEatAlone.CreditCardType.VISA), PaymentCardInput),
-    new PropertySchema('otherPaymentCards', [], ArrayInput(
-      new PropertySchema('PaymentCard', new NeverEatAlone.PaymentCard(14,
+    new PropertySchema('otherPaymentCards', [
+      new NeverEatAlone.PaymentCard(14, 4567890123456789, 'Jlo Jlo', 12, 2026,
+        2345, 'M3E 5G6', NeverEatAlone.CreditCardType.VISA),
+      new NeverEatAlone.PaymentCard(15, 4567890123456789, 'ahs jdfj', 10, 2024,
+        9524, 'M3E 5G6', NeverEatAlone.CreditCardType.AMEX),
+      new NeverEatAlone.PaymentCard(16, 4567890123456789, 'allo gil', 11, 2023,
+        7458, 'M3E 3T7', NeverEatAlone.CreditCardType.MASTERCARD)
+    ], ArrayInput(
+      new PropertySchema('PaymentCard', new NeverEatAlone.PaymentCard(17,
         4567890123456789, 'Jlo Jlo', 12, 2026, 2345, 'M3E 5G6',
-        NeverEatAlone.CreditCardType.VISA), PaymentCardInput)))
+        NeverEatAlone.CreditCardType.VISA), PaymentCardInput))),
+    new PropertySchema('addCardErrorMessage', '', TextInput),
+    new PropertySchema('addCardErrorCode',
+      NeverEatAlone.AddCreditCardForm.ErrorCode.NONE,
+      AddCreditCardFormErrorCodeInput),
+    new PropertySchema('updateCardErrorMessage', '', TextInput),
+    new PropertySchema('updateCardErrorCode',
+      NeverEatAlone.CardDetailsForm.ErrorCode.NONE,
+      CardDetailsFormErrorCodeInput),
     ], [
-      new SignalSchema('onGoogleClick', '', []),
-      new SignalSchema('onFacebookClick', '', []),
-      new SignalSchema('onRemoveLinkedAccount', '', []),
-      new SignalSchema('onEditDisplayNameClick', '', []),
-      new SignalSchema('onEditEmailClick', '', []),
-      new SignalSchema('onEditPasswordClick', '', []),
-      new SignalSchema('onDeactivateAccount', '', []),
-      new SignalSchema('onDeleteAccount', '', []),
+      new SignalSchema('onAddCard', '', []),
+      new SignalSchema('onUpdateCard', '', []),
+      new SignalSchema('onMakeDefaultCard', '', []),
+      new SignalSchema('onDeleteCard', '', []),
       new SignalSchema('onNewEventsToggle', '', []),
       new SignalSchema('onEventJoinedToggle', '', []),
       new SignalSchema('onEventRemindersToggle', '', []),
@@ -1545,7 +1557,14 @@ export function loadComponentSchemas(): ComponentSchema[] {
       new SignalSchema('onSomeoneJoinedToggle', '', []),
       new SignalSchema('onFoodieAcceptedInviteToggle', '', []),
       new SignalSchema('onAnnouncementToggle', '', []),
-      new SignalSchema('onAddCardClick', '', [])
+      new SignalSchema('onGoogleClick', '', []),
+      new SignalSchema('onFacebookClick', '', []),
+      new SignalSchema('onRemoveLinkedAccount', '', []),
+      new SignalSchema('onEditDisplayNameClick', '', []),
+      new SignalSchema('onEditEmailClick', '', []),
+      new SignalSchema('onEditPasswordClick', '', []),
+      new SignalSchema('onDeactivateAccount', '', []),
+      new SignalSchema('onDeleteAccount', '', [])
       ], NeverEatAlone.SettingsPage);
   const linkSocialMediaButtonSchema = new ComponentSchema(
     'LinkSocialMediaButton',
