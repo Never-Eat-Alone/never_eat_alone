@@ -69,7 +69,7 @@ interface Properties {
     securityCode: number, zipcode: string) => void;
 
   /** Indicates the update card details button is clicked. */
-  onUpdateCard: (newCard: PaymentCard) => void;
+  onUpdateCard: (newCard: PaymentCard, isMarkedDefault: boolean) => void;
 
   /** Indicates the make default card on card details is clicked. */
   onMakeDefaultCard: (cardId: number) => void;

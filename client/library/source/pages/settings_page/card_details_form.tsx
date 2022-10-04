@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { InputField, NumberedDropdownMenu, PaymentCardInputField,
-  PrimaryTextButton, SecurityCodeInputField } from '../../components';
+  PrimaryTextButton, SecurityCodeInputField, CheckBox } from '../../components';
 import { CreditCardType, getCreditCardTypeName, PaymentCard
 } from '../../definitions';
 
@@ -49,7 +49,7 @@ interface Properties {
   onCancel: () => void;
 
   /** Indicates the update(save) button is clicked. */
-  onUpdateCard: (card: PaymentCard) => void;
+  onUpdateCard: (card: PaymentCard, isMarkedDefault: boolean) => void;
 }
 
 interface State {
@@ -65,6 +65,7 @@ interface State {
   isZipcodeInvalid: boolean;
   cardInputHasChanged: boolean;
   errorCode: CardDetailsForm.ErrorCode;
+  isMakeDefaultMarked: boolean;
 }
 
 /** Displays the Card Details Form. */
@@ -83,7 +84,8 @@ export class CardDetailsForm extends React.Component<Properties, State> {
       isSecurityCodeInvalid: false,
       isZipcodeInvalid: false,
       cardInputHasChanged: false,
-      errorCode: this.props.errorCode
+      errorCode: this.props.errorCode,
+      isMakeDefaultMarked: false
     };
   }
 
@@ -167,6 +169,13 @@ export class CardDetailsForm extends React.Component<Properties, State> {
       }
       return false;
     })();
+    const makeDefaultRow = (this.props.isDefault ? null :
+      <div style={MAKE_DEFAULT_ROW_STYLE} >
+        <CheckBox
+          label='Make this my default card'
+          onClick={this.handleCheckBox}
+        />
+      </div>);
     return (
       <form style={CARD_DETAILS_CONTAINER_STYLE} onSubmit={this.handleOnSave} >
         <div style={ROW_CONTAINER_STYLE} >
@@ -205,6 +214,7 @@ export class CardDetailsForm extends React.Component<Properties, State> {
             </div>
           </div>
         </div>
+        {makeDefaultRow}
         <p style={CARD_DETAILS_FIELD_TEXT_STYLE} >Card number</p>
         <PaymentCardInputField
           style={PAYMENT_CARD_INPUT_STYLE}
@@ -316,6 +326,12 @@ export class CardDetailsForm extends React.Component<Properties, State> {
     });
   }
 
+  private handleCheckBox = () => {
+    this.setState((prevState) => ({
+      isMakeDefaultMarked: !prevState.isMakeDefaultMarked
+    }));
+  }
+
   private handleOnZipCodeChange = (event: React.ChangeEvent<
       HTMLInputElement>) => {
     this.setState({
@@ -343,7 +359,7 @@ export class CardDetailsForm extends React.Component<Properties, State> {
     const newCard = new PaymentCard(this.props.cardId, this.state.cardNumber,
       this.state.nameOnCard, this.state.selectedMonth, this.state.selectedYear,
       this.state.securityCode, this.state.zipcode, this.props.creditType);
-    this.props.onUpdateCard(newCard);
+    this.props.onUpdateCard(newCard, this.state.isMakeDefaultMarked);
   }
 
   private handleInvalidInput = (fieldName: string) => {
@@ -595,4 +611,15 @@ const MONTH_YEAR_CONTAINER_STYLE: React.CSSProperties = {
 
 const NUMBER_DROPDOWN_STYLE: React.CSSProperties = {
   width: 'calc(50% - 5px)'
+};
+
+const MAKE_DEFAULT_ROW_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-stat',
+  alignItems: 'center',
+  width: '100%',
+  height: '18px',
+  gap: '10px',
+  marginBottom: '30px'
 };

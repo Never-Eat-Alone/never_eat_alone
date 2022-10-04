@@ -36,7 +36,7 @@ interface Properties {
   onDeleteCard: (cardId: number) => void;
 
   /** Indicates the card details is changed and save button is clicked. */
-  onUpdateCard: (newCard: PaymentCard) => void;
+  onUpdateCard: (newCard: PaymentCard, isMarkedDefault: boolean) => void;
 }
 
 interface State {
