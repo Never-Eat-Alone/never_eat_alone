@@ -14,6 +14,7 @@ interface Properties {
 
 interface State {
   page: PaymentHistoryTab.Page;
+  selectedRecord: PaymentRecord;
 }
 
 /** Dislays the payment history tab inside the setting page. */
@@ -21,7 +22,8 @@ export class PaymentHistoryTab extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props);
     this.state = {
-      page: PaymentHistoryTab.Page.INITIAL
+      page: PaymentHistoryTab.Page.INITIAL,
+      selectedRecord: PaymentRecord.noRecord()
     };
   }
 
@@ -49,7 +51,9 @@ export class PaymentHistoryTab extends React.Component<Properties, State> {
       const rows = [];
       for (const record of this.props.paymentRecords) {
         rows.push(<PaymentRecordCard key={record.id}
-          displayMode={this.props.displayMode} paymentRecord={record} />);
+          displayMode={this.props.displayMode} paymentRecord={record}
+          onViewReceiptClick={() => this.handleViewReceipt(record)}
+          />);
       }
       return rows;
     })();
@@ -59,11 +63,19 @@ export class PaymentHistoryTab extends React.Component<Properties, State> {
         {recordRows}
       </div>);
   }
+
+  private handleViewReceipt = (record: PaymentRecord) => {
+    this.setState({
+      page: PaymentHistoryTab.Page.PAYMENT_DETAILS,
+      selectedRecord: record
+    });
+  }
 }
 
 interface PaymentRecordCardProp {
   displayMode: DisplayMode;
   paymentRecord: PaymentRecord;
+  onViewReceiptClick: () => void;
 }
 
 function PaymentRecordCard(props: PaymentRecordCardProp) {
@@ -95,7 +107,7 @@ function PaymentRecordCard(props: PaymentRecordCardProp) {
       <SecondaryTextButton
         style={VIEW_RECEIPT_BUTTON_STYLE}
         label='View Receipt'
-        onClick={this.handleViewReceipt}
+        onClick={props.onViewReceiptClick}
       />
     </div>);
 }

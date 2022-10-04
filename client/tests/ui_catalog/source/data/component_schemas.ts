@@ -1538,7 +1538,30 @@ export function loadComponentSchemas(): ComponentSchema[] {
       new PropertySchema('PaymentCard', new NeverEatAlone.PaymentCard(17,
         4567890123456789, 'Jlo Jlo', 12, 2026, 2345, 'M3E 5G6',
         NeverEatAlone.CreditCardType.VISA), PaymentCardInput))),
-    new PropertySchema('paymentRecords', [], ArrayInput(
+    new PropertySchema('paymentRecords', [
+      new NeverEatAlone.PaymentRecord(
+        2, new NeverEatAlone.EventCardSummary(1, 'best french restaurant',
+        new Date(2022, 6, 12, 19, 0, 0), new Date(2021, 6, 12, 23, 0, 0),
+        'Le Select', NeverEatAlone.PriceRange.EXPENSIVE, [], '', 12, 12, true,
+        'yellow'), 5.65, 0, new Date(2022, 9, 23, 18, 35),
+        new NeverEatAlone.PaymentCard(16, 4567890123456789, 'allo gil', 11,
+        2023, 7458, 'M3E 3T7', NeverEatAlone.CreditCardType.MASTERCARD)),
+      new NeverEatAlone.PaymentRecord(
+        3, new NeverEatAlone.EventCardSummary(2, 'Thanksgiving dinner together!',
+        new Date(2022, 6, 12, 19, 0, 0), new Date(2021, 6, 12, 23, 0, 0),
+        'Le Select', NeverEatAlone.PriceRange.EXPENSIVE, [], '', 12, 12, true,
+        'yellow'), 5.00, 10, new Date(2022, 9, 23, 18, 35),
+        new NeverEatAlone.PaymentCard(16, 4567890123456789, 'allo gil', 11,
+        2023, 7458, 'M3E 3T7', NeverEatAlone.CreditCardType.AMEX)),
+      new NeverEatAlone.PaymentRecord(
+        4, new NeverEatAlone.EventCardSummary(1,
+        "Let's have fun at the buffet...", new Date(2022, 6, 12, 19, 0, 0),
+        new Date(2021, 6, 12, 23, 0, 0), 'Le Select',
+        NeverEatAlone.PriceRange.EXPENSIVE, [], '', 12, 12, true, 'yellow'),
+        140.00 , 0, new Date(2022, 9, 23, 18, 35),
+        new NeverEatAlone.PaymentCard(16, 4567890123456789, 'allo gil', 11,
+        2023, 7458, 'M3E 3T7', NeverEatAlone.CreditCardType.VISA))
+    ], ArrayInput(
       new PropertySchema('paymentRecord', new NeverEatAlone.PaymentRecord(
         1, new NeverEatAlone.EventCardSummary(1, 'best french restaurant',
         new Date(2022, 6, 12, 19, 0, 0), new Date(2021, 6, 12, 23, 0, 0),
