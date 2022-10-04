@@ -14,15 +14,16 @@ interface Properties {
   /** User's default payment card. */
   defaultCard: PaymentCard;
 
-  cardNumber: number;
-  nameOnCard: string;
-  selectedMonth: number;
-  selectedYear: number;
-  securityCode: number;
-  zipcode: string;
+  /** Error message regarding adding a new card. */
   addCardErrorMessage: string;
+
+  /** Error code regarding adding a new card. */
   addCardErrorCode: AddCreditCardForm.ErrorCode;
+
+  /** Error message regarding updating an existing card. */
   updateCardErrorMessage: string;
+
+  /** Error code regarding updating an existing card. */
   updateCardErrorCode: CardDetailsForm.ErrorCode;
 
   /** Indicates the Add card button is clicked. */

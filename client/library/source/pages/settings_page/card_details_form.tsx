@@ -6,7 +6,9 @@ import { CreditCardType, getCreditCardTypeName, PaymentCard
 
 interface Properties {
 
+  /** Payment Card Id. */
   cardId: number;
+
   /** Card number. */
   cardNumber: number;
 
@@ -25,16 +27,22 @@ interface Properties {
   /** Zipcode/postal code associated with the card. */
   zipcode: string;
 
+  /** Credit type of the card. */
   creditType: CreditCardType;
 
+  /** Error message related to updating the card info. */
   errorMessage: string;
 
+  /** Error code related to updating the card info. */
   errorCode: CardDetailsForm.ErrorCode;
 
+  /** Whether this card is selected as the default payment card or not. */
   isDefault?: boolean;
 
+  /** Indicates the delete card button is clicked. */
   onDeleteCard: () => void;
 
+  /** Indicates the make default card button is clicked. */
   onMakeDefault?: () => void;
 
   /** Indicates the cancel button is clicked. */

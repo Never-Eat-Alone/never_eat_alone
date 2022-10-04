@@ -5,34 +5,19 @@ import { NumberedDropdownMenu } from './numbered_dropdown_menu';
 import { PrimaryTextButton } from './text_button';
 
 interface Properties {
-  /** The title section of the form. */
+  /** Title section of the form. */
   titleSection?: JSX.Element;
 
+  /** Style associated with the title section. */
   titleSectionStyle?: React.CSSProperties;
 
-  /** Card number. */
-  cardNumber: number;
-
-  /** Name on card. */
-  nameOnCard: string;
-
-  /** Expiration month. */
-  selectedMonth: number;
-
-  /** Expiration year. */
-  selectedYear: number;
-
-  /** Securitycode associated with the card. */
-  securityCode: number;
-
-  /** Zipcode/postal code associated with the card. */
-  zipcode: string;
-
-  /** The label used for the Add card button. */
+  /** Label used for the Add card button. */
   onAddLabel: string;
 
+  /** Error message regarding adding a new card. */
   addCardErrorMessage: string;
 
+  /** Error code regarding adding a new card. */
   errorCode: AddCreditCardForm.ErrorCode;
 
   /** The form css style. */

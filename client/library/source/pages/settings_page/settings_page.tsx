@@ -52,18 +52,6 @@ interface Properties {
   /** User's list of existing cards on file other than the default card. */
   otherPaymentCards: PaymentCard[];
 
-  cardNumber: number;
-
-  nameOnCard: string;
-
-  selectedMonth: number;
-
-  selectedYear: number;
-
-  securityCode: number;
-
-  zipcode: string;
-
   /** Error message regarding adding a new card. */
   addCardErrorMessage: string;
 

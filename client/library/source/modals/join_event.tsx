@@ -31,28 +31,10 @@ interface Properties {
   paymentCardsOnFile: PaymentCard[];
 
   /** User's default payment card. */
-  displayedCard: PaymentCard;
+  defaultCard: PaymentCard;
 
   /** Error message regarding the add credit card form. */
   addCardErrorMessage: string;
-
-  /** Displayed month number on dropdown menu. */
-  selectedMonth: number;
-
-  /** Displayed year number on dropdown menu. */
-  selectedYear: number;
-
-  /** The security code on the card. */
-  securityCode: number;
-
-  /** Card number. */
-  cardNumber: number;
-
-  /** The zipcode of the creditcard. */
-  zipcode: string;
-
-  /** First name and last name on the card. */
-  nameOnCard: string;
 
   /** ErrorCode of the page. */
   errorCode: JoinEventModal.ErrorCode;
@@ -235,7 +217,7 @@ export class JoinEventModal extends React.Component<Properties, State> {
           {cardTitle}
           <CreditCardDropdownMenu
             cardList={this.props.paymentCardsOnFile}
-            displayedCard={this.props.displayedCard}
+            defaultCard={this.props.defaultCard}
             onCardClick={this.props.onCreditCardClick}
           />
           <PrimaryTextButton label='Checkout' style={CHECKOUT_BUTTON_STYLE}
@@ -304,12 +286,6 @@ export class JoinEventModal extends React.Component<Properties, State> {
             style={EVENT_NAME_BUTTON_CONTAINER_STYLE}
             errorCode={this.props.addCardErrorCode}
             addCardErrorMessage={this.props.addCardErrorMessage}
-            cardNumber={this.props.cardNumber}
-            nameOnCard={this.props.nameOnCard}
-            zipcode={this.props.zipcode}
-            securityCode={this.props.securityCode}
-            selectedMonth={this.props.selectedMonth}
-            selectedYear={this.props.selectedYear}
             onAddLabel='Continue'
             onCancel={this.handleBackClick}
             onAddCard={this.props.onAddCard}
