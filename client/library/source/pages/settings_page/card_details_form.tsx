@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { InputField, NumberedDropdownMenu, PaymentCardInputField,
-  PrimaryTextButton, SecurityCodeInputField, CheckBox } from '../../components';
+import { CheckBox, InputField, NumberedDropdownMenu, PaymentCardInputField,
+  PrimaryTextButton, SecurityCodeInputField } from '../../components';
 import { CreditCardType, getCreditCardTypeName, PaymentCard
 } from '../../definitions';
 
