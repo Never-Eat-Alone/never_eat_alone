@@ -98,7 +98,8 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
     const cardsOnFile = (() => {
       const cards = [];
       if (this.props.defaultCard && this.props.defaultCard.id !== -1) {
-        cards.push(<PaymentCardRow key={this.props.defaultCard.id} isDefault
+        cards.push(<PaymentCardRow key={this.props.defaultCard.id}
+          isDefault displayMode={this.props.displayMode}
           card={this.props.defaultCard}
           onClick={() => this.handleCardClick(this.props.defaultCard)} />);
       }
@@ -106,11 +107,12 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
           this.props.otherPaymentCards.length !== 0) {
         for (const card of this.props.otherPaymentCards) {
           cards.push(<PaymentCardRow key={card.id} card={card}
+            displayMode={this.props.displayMode}
             onClick={() => this.handleCardClick(card)} />);
         }
       }
-      cards.push(<AddCardButton key='add_card' onAddCard={this.handleAddCard}
-        />);
+      cards.push(<AddCardButton key='add_card'
+        displayMode={this.props.displayMode} onAddCard={this.handleAddCard} />);
       return (
         <div style={COLUMN_STYLE} >
           {cards}
@@ -140,13 +142,16 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
 }
 
 interface AddCardProps {
+  displayMode: DisplayMode;
   onAddCard: () => void;
 }
 
 function AddCardButton(props: AddCardProps) {
+  const cardButtonStyle = (props.displayMode === DisplayMode.MOBILE &&
+    MOBILE_CARD_BUTTON_STYLE || CARD_BUTTON_STYLE);
   return (
     <button
-        style={CARD_BUTTON_STYLE}
+        style={cardButtonStyle}
         className={css(styles.cardButton)}
         onClick={props.onAddCard}
     >
@@ -168,6 +173,7 @@ function AddCardButton(props: AddCardProps) {
 
 interface PaymentCardRowProps {
   card: PaymentCard;
+  displayMode: DisplayMode;
   isDefault?: boolean;
   onClick: () => void;
 }
@@ -218,9 +224,11 @@ function PaymentCardRow(props: PaymentCardRowProps) {
     <div style={DEFAULT_SIGN_CONTAINER_STYLE} >
       <p style={DEFAULT_TEXT_STYLE} >Default</p>
     </div> || null);
+  const cardButtonStyle = (props.displayMode === DisplayMode.MOBILE &&
+    MOBILE_CARD_BUTTON_STYLE || CARD_BUTTON_STYLE);
   return (
     <button
-        style={CARD_BUTTON_STYLE}
+        style={cardButtonStyle}
         className={css(styles.cardButton)}
         onClick={props.onClick}
     >
@@ -280,7 +288,8 @@ const COLUMN_STYLE: React.CSSProperties = {
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  gap: '30px'
+  gap: '30px',
+  width: '100%'
 };
 
 const CARD_BUTTON_STYLE: React.CSSProperties = {
@@ -300,6 +309,11 @@ const CARD_BUTTON_STYLE: React.CSSProperties = {
   boxShadow: 'none',
   borderRadius: '4px',
   outline: 'none'
+};
+
+const MOBILE_CARD_BUTTON_STYLE: React.CSSProperties = {
+  ...CARD_BUTTON_STYLE,
+  width: '100%'
 };
 
 const RECTANGLE_CONTAINER_STYLE: React.CSSProperties = {
