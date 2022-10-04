@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { CheckBox, InputField, NumberedDropdownMenu, PaymentCardInputField,
   PrimaryTextButton, SecurityCodeInputField } from '../../components';
-import { CreditCardType, getCreditCardTypeName, PaymentCard
+import { CreditCardType, DisplayMode, getCreditCardTypeName, PaymentCard
 } from '../../definitions';
 
 interface Properties {
+  displayMode: DisplayMode;
 
   /** Payment Card Id. */
   cardId: number;
@@ -90,6 +91,8 @@ export class CardDetailsForm extends React.Component<Properties, State> {
   }
 
   public render(): JSX.Element {
+    const containerStyle = (this.props.displayMode === DisplayMode.MOBILE &&
+      MOBILE_CARD_DETAILS_CONTAINER_STYLE || CARD_DETAILS_CONTAINER_STYLE);
     const cardSrc = (() => {
       if (this.props.creditType === CreditCardType.VISA) {
         return 'resources/icons/super_big_visa.svg';
@@ -168,25 +171,36 @@ export class CardDetailsForm extends React.Component<Properties, State> {
         return false;
       }
     })();
-    const makeDefaultRow = (this.props.isDefault ? null :
-      <div style={MAKE_DEFAULT_ROW_STYLE} >
-        <CheckBox
-          label='Make this my default card'
-          checked={this.state.isMakeDefaultMarked}
-          onBoxClick={this.handleCheckBox}
-        />
-      </div>);
-    return (
-      <form style={CARD_DETAILS_CONTAINER_STYLE} onSubmit={this.handleOnSave} >
-        <div style={ROW_CONTAINER_STYLE} >
-          <img
-            style={BACK_ICON_STYLE}
-            src='resources/icons/back.svg'
-            alt='Back Icon'
-            onClick={this.props.onCancel}
-          />
-          <h2 style={CARD_DETAILS_HEADING_STYLE} >Card Details</h2>
-        </div>
+    const deleteCardSection = (() => {
+      if (this.props.displayMode === DisplayMode.MOBILE) {
+        return (
+          <div style={MOBILE_DELETE_CARD_CONTAINER_STYLE} >
+            <img
+              style={MOBILE_SUPER_BIG_CARD_IMAGE_STYLE}
+              src={cardSrc}
+              alt='Card Image'
+            />
+            <p style={MOBILE_CARD_ENDING_TEXT_STYLE} >
+              {getCreditCardTypeName(this.props.creditType)}
+              &nbsp;card ending in {this.props.cardNumber.toString().slice(-4)}
+            </p>
+            <div style={MOBILE_DEFAULT_DELETE_ROW_STYLE} >
+              {isDefault}
+              <div
+                  style={DELETE_BUTTON_STYLE}
+                  onClick={this.props.onDeleteCard}
+              >
+                <img
+                  style={CROSS_ICON_STYLE}
+                  src='resources/icons/red_cross.svg'
+                  alt='Cross Icon'
+                />
+                <p style={DELETE_TEXT_STYLE} >Delete</p>
+              </div>
+            </div>
+          </div>);
+      }
+      return (
         <div style={DELETE_CARD_ROW_CONTAINER_STYLE} >
           <img
             style={SUPER_BIG_CARD_IMAGE_STYLE}
@@ -213,7 +227,28 @@ export class CardDetailsForm extends React.Component<Properties, State> {
               </div>
             </div>
           </div>
+        </div>);
+    })();
+    const makeDefaultRow = (this.props.isDefault ? null :
+      <div style={MAKE_DEFAULT_ROW_STYLE} >
+        <CheckBox
+          label='Make this my default card'
+          checked={this.state.isMakeDefaultMarked}
+          onBoxClick={this.handleCheckBox}
+        />
+      </div>);
+    return (
+      <form style={containerStyle} onSubmit={this.handleOnSave} >
+        <div style={ROW_CONTAINER_STYLE} >
+          <img
+            style={BACK_ICON_STYLE}
+            src='resources/icons/back.svg'
+            alt='Back Icon'
+            onClick={this.props.onCancel}
+          />
+          <h2 style={CARD_DETAILS_HEADING_STYLE} >Card Details</h2>
         </div>
+        {deleteCardSection}
         {makeDefaultRow}
         <p style={CARD_DETAILS_FIELD_TEXT_STYLE} >Card number</p>
         <PaymentCardInputField
@@ -413,6 +448,11 @@ const CARD_DETAILS_CONTAINER_STYLE: React.CSSProperties = {
   width: '395px'
 };
 
+const MOBILE_CARD_DETAILS_CONTAINER_STYLE: React.CSSProperties = {
+  ...CARD_DETAILS_CONTAINER_STYLE,
+  width: '100%'
+};
+
 const ROW_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
@@ -453,6 +493,20 @@ const DELETE_CARD_ROW_CONTAINER_STYLE: React.CSSProperties = {
   marginBottom: '30px'
 };
 
+const MOBILE_DELETE_CARD_CONTAINER_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  padding: '20px',
+  backgroundColor: '#F6F6F6',
+  borderRadius: '4px',
+  width: '100%',
+  marginTop: '30px',
+  marginBottom: '30px'
+};
+
 const DEFAULT_DELETE_ROW_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
@@ -461,6 +515,15 @@ const DEFAULT_DELETE_ROW_STYLE: React.CSSProperties = {
   height: '18px',
   width: '100%',
   gap: '10px'
+};
+
+const MOBILE_DEFAULT_DELETE_ROW_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  height: '18px',
+  gap: '20px'
 };
 
 const DELETE_BUTTON_STYLE: React.CSSProperties = {
@@ -496,6 +559,12 @@ const SUPER_BIG_CARD_IMAGE_STYLE: React.CSSProperties = {
   borderRadius: '4px'
 };
 
+const MOBILE_SUPER_BIG_CARD_IMAGE_STYLE: React.CSSProperties = {
+  ...SUPER_BIG_CARD_IMAGE_STYLE,
+  height: '90px',
+  marginBottom: '20px'
+};
+
 const COLUMN_CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
@@ -519,6 +588,12 @@ const CARD_ENDING_TEXT_STYLE: React.CSSProperties = {
   padding: '0px',
   margin: '0px',
   whiteSpace: 'pre'
+};
+
+const MOBILE_CARD_ENDING_TEXT_STYLE: React.CSSProperties = {
+  ...CARD_ENDING_TEXT_STYLE,
+  width: 'auto',
+  marginBottom: '10px'
 };
 
 const IS_DEFAULT_CONTAINER_STYLE: React.CSSProperties = {

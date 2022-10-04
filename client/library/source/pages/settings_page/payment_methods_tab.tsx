@@ -81,12 +81,15 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
             />
         </React.Fragment>);
     } else if (this.state.page === PaymentMethodsTab.Page.ADD_CARD) {
+      const addCardContainerStyle = (this.props.displayMode ===
+        DisplayMode.MOBILE && MOBILE_ADD_CARD_CONTAINER_STYLE ||
+        ADD_CARD_CONTAINER_STYLE);
       return (
         <React.Fragment>
           <h1 style={PAGE_HEADING_STYLE} >Payment Methods</h1>
           <AddCreditCardForm
             {...this.props}
-            style={ADD_CARD_CONTAINER_STYLE}
+            style={addCardContainerStyle}
             titleSectionStyle={ADD_FORM_TITLE_STYLE}
             onAddLabel='Save'
             errorCode={this.props.addCardErrorCode}
@@ -98,7 +101,8 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
     const cardsOnFile = (() => {
       const cards = [];
       if (this.props.defaultCard && this.props.defaultCard.id !== -1) {
-        cards.push(<PaymentCardRow key={this.props.defaultCard.id} isDefault
+        cards.push(<PaymentCardRow key={this.props.defaultCard.id}
+          isDefault displayMode={this.props.displayMode}
           card={this.props.defaultCard}
           onClick={() => this.handleCardClick(this.props.defaultCard)} />);
       }
@@ -106,11 +110,12 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
           this.props.otherPaymentCards.length !== 0) {
         for (const card of this.props.otherPaymentCards) {
           cards.push(<PaymentCardRow key={card.id} card={card}
+            displayMode={this.props.displayMode}
             onClick={() => this.handleCardClick(card)} />);
         }
       }
-      cards.push(<AddCardButton key='add_card' onAddCard={this.handleAddCard}
-        />);
+      cards.push(<AddCardButton key='add_card'
+        displayMode={this.props.displayMode} onAddCard={this.handleAddCard} />);
       return (
         <div style={COLUMN_STYLE} >
           {cards}
@@ -140,13 +145,16 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
 }
 
 interface AddCardProps {
+  displayMode: DisplayMode;
   onAddCard: () => void;
 }
 
 function AddCardButton(props: AddCardProps) {
+  const cardButtonStyle = (props.displayMode === DisplayMode.MOBILE &&
+    MOBILE_CARD_BUTTON_STYLE || CARD_BUTTON_STYLE);
   return (
     <button
-        style={CARD_BUTTON_STYLE}
+        style={cardButtonStyle}
         className={css(styles.cardButton)}
         onClick={props.onAddCard}
     >
@@ -168,11 +176,41 @@ function AddCardButton(props: AddCardProps) {
 
 interface PaymentCardRowProps {
   card: PaymentCard;
+  displayMode: DisplayMode;
   isDefault?: boolean;
   onClick: () => void;
 }
 
 function PaymentCardRow(props: PaymentCardRowProps) {
+  const expiringSoon = (() => {
+    const currentDate = new Date();
+    const expDate = new Date(props.card.year, props.card.month, 1);
+    const diffTime = expDate.getTime() - currentDate.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays < 1) {
+      return (
+        <div style={EXPIRE_ROW_CONTAINER} >
+          <img
+            style={WARNING_ICON_STYLE}
+            src='resources/icons/red_warning.svg'
+            alt='Expired icon'
+          />
+          <p style={EXPIRED_TEXT_STYLE} >Information may be outdated</p>
+        </div>);
+    }
+    if (diffDays < 30) {
+      return (
+        <div style={EXPIRE_ROW_CONTAINER} >
+         <img
+            style={WARNING_ICON_STYLE}
+            src='resources/icons/yellow_warning.svg'
+            alt='Expired icon'
+          />
+          <p style={EXPIRING_SOON_TEXT_STYLE} >Expiring soon</p>
+        </div>);
+    }
+    return null;
+  })();
   const cardSrc = (() => {
     switch (props.card.creditType) {
       case CreditCardType.VISA:
@@ -189,9 +227,11 @@ function PaymentCardRow(props: PaymentCardRowProps) {
     <div style={DEFAULT_SIGN_CONTAINER_STYLE} >
       <p style={DEFAULT_TEXT_STYLE} >Default</p>
     </div> || null);
+  const cardButtonStyle = (props.displayMode === DisplayMode.MOBILE &&
+    MOBILE_CARD_BUTTON_STYLE || CARD_BUTTON_STYLE);
   return (
     <button
-        style={CARD_BUTTON_STYLE}
+        style={cardButtonStyle}
         className={css(styles.cardButton)}
         onClick={props.onClick}
     >
@@ -210,6 +250,7 @@ function PaymentCardRow(props: PaymentCardRowProps) {
         <p style={CARD_TEXT_STYLE} >
           Card ending in {props.card.cardNumber.toString().slice(-4)}
         </p>
+        {expiringSoon}
       </div>
       <img
         style={ARROW_ICON_STYLE}
@@ -250,7 +291,8 @@ const COLUMN_STYLE: React.CSSProperties = {
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  gap: '30px'
+  gap: '30px',
+  width: '100%'
 };
 
 const CARD_BUTTON_STYLE: React.CSSProperties = {
@@ -270,6 +312,11 @@ const CARD_BUTTON_STYLE: React.CSSProperties = {
   boxShadow: 'none',
   borderRadius: '4px',
   outline: 'none'
+};
+
+const MOBILE_CARD_BUTTON_STYLE: React.CSSProperties = {
+  ...CARD_BUTTON_STYLE,
+  width: '100%'
 };
 
 const RECTANGLE_CONTAINER_STYLE: React.CSSProperties = {
@@ -323,6 +370,11 @@ const ADD_CARD_CONTAINER_STYLE: React.CSSProperties = {
   marginTop: '20px',
   width: '375px',
   backgroundColor: '#FFFFFF'
+};
+
+const MOBILE_ADD_CARD_CONTAINER_STYLE: React.CSSProperties = {
+  ...ADD_CARD_CONTAINER_STYLE,
+  width: '100%'
 };
 
 const CARD_INFO_COLUMN_STYLE: React.CSSProperties = {
@@ -385,6 +437,40 @@ const DEFAULT_TEXT_STYLE: React.CSSProperties = {
   color: '#FFFFFF',
   margin: '0px',
   padding: '0px'
+};
+
+const EXPIRE_ROW_CONTAINER: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  height: '13px',
+  width: '100%',
+  gap: '5px'
+};
+
+const WARNING_ICON_STYLE: React.CSSProperties = {
+  width: '10px',
+  minWidth: '10px',
+  height: '9px',
+  minHeight: '9px',
+  backgroundColor: 'transparent'
+};
+
+const EXPIRED_TEXT_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '10px',
+  lineHeight: '13px',
+  color: '#DE6956',
+  padding: '0px',
+  margin: '0px'
+};
+
+const EXPIRING_SOON_TEXT_STYLE: React.CSSProperties = {
+  ...EXPIRED_TEXT_STYLE,
+  color: '#C7943D'
 };
 
 const styles = StyleSheet.create({
