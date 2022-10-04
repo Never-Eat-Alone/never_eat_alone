@@ -3,6 +3,7 @@ import * as React from 'react';
 interface Properties extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   hasError?: boolean;
+  onBoxClick: () => void;
 }
 
 interface State {
@@ -16,7 +17,7 @@ export class CheckBox extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props);
     this.state = {
-      checked: false,
+      checked: this.props.checked ? this.props.checked : false,
       focused: false,
       hovered: false,
       active: false
@@ -73,8 +74,10 @@ export class CheckBox extends React.Component<Properties, State> {
           onMouseUp={this.handleMouseUp}
       >
         <input
+          checked={this.state.checked}
           type='checkbox'
           style={CHECKBOX_STYLE}
+          onChange={this.handleClick}
           disabled={this.props.disabled}
         />
         <span style={{...CHECKMARK_STYLE, ...checkmarkStyle}} />
@@ -87,6 +90,7 @@ export class CheckBox extends React.Component<Properties, State> {
     if (!this.props.disabled && !this.props.hasError) {
       this.setState({ checked: !this.state.checked });
     }
+    this.props.onBoxClick();
   }
 
   private handleFocus = () => {

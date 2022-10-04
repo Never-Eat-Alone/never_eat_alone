@@ -160,20 +160,20 @@ export class CardDetailsForm extends React.Component<Properties, State> {
           !this.state.zipcode || this.state.zipcode.length === 0 ||
           !this.state.cardInputHasChanged) {
         return true;
-      }
-      if (this.state.cardInputHasChanged) {
+      } else if (this.state.cardInputHasChanged) {
+        return false;
+      } else if (this.state.errorCode !== CardDetailsForm.ErrorCode.NONE) {
+        return true;
+      } else {
         return false;
       }
-      if (this.state.errorCode !== CardDetailsForm.ErrorCode.NONE) {
-        return true;
-      }
-      return false;
     })();
     const makeDefaultRow = (this.props.isDefault ? null :
       <div style={MAKE_DEFAULT_ROW_STYLE} >
         <CheckBox
           label='Make this my default card'
-          onClick={this.handleCheckBox}
+          checked={this.state.isMakeDefaultMarked}
+          onBoxClick={this.handleCheckBox}
         />
       </div>);
     return (
@@ -328,7 +328,8 @@ export class CardDetailsForm extends React.Component<Properties, State> {
 
   private handleCheckBox = () => {
     this.setState((prevState) => ({
-      isMakeDefaultMarked: !prevState.isMakeDefaultMarked
+      isMakeDefaultMarked: !prevState.isMakeDefaultMarked,
+      cardInputHasChanged: true
     }));
   }
 

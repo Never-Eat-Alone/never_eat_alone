@@ -721,8 +721,9 @@ export function loadComponentSchemas(): ComponentSchema[] {
   const checkBoxSchema = new ComponentSchema('CheckBox', [
     new PropertySchema('label', 'Remember me', TextInput),
     new PropertySchema('disabled', true, BooleanInput),
-    new PropertySchema('hasError', false, BooleanInput)
-    ], [], NeverEatAlone.CheckBox);
+    new PropertySchema('hasError', false, BooleanInput),
+    new PropertySchema('checked', true, BooleanInput)
+    ], [new SignalSchema('onBoxClick', '', [])], NeverEatAlone.CheckBox);
   const googleLogInButtonSchema = new ComponentSchema('GoogleLogInButton', [
     new PropertySchema('label', 'Log in with Google', TextInput),
     new PropertySchema('style', {} , CSSInput),
