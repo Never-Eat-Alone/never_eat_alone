@@ -81,12 +81,15 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
             />
         </React.Fragment>);
     } else if (this.state.page === PaymentMethodsTab.Page.ADD_CARD) {
+      const addCardContainerStyle = (this.props.displayMode ===
+        DisplayMode.MOBILE && MOBILE_ADD_CARD_CONTAINER_STYLE ||
+        ADD_CARD_CONTAINER_STYLE);
       return (
         <React.Fragment>
           <h1 style={PAGE_HEADING_STYLE} >Payment Methods</h1>
           <AddCreditCardForm
             {...this.props}
-            style={ADD_CARD_CONTAINER_STYLE}
+            style={addCardContainerStyle}
             titleSectionStyle={ADD_FORM_TITLE_STYLE}
             onAddLabel='Save'
             errorCode={this.props.addCardErrorCode}
@@ -367,6 +370,11 @@ const ADD_CARD_CONTAINER_STYLE: React.CSSProperties = {
   marginTop: '20px',
   width: '375px',
   backgroundColor: '#FFFFFF'
+};
+
+const MOBILE_ADD_CARD_CONTAINER_STYLE: React.CSSProperties = {
+  ...ADD_CARD_CONTAINER_STYLE,
+  width: '100%'
 };
 
 const CARD_INFO_COLUMN_STYLE: React.CSSProperties = {
