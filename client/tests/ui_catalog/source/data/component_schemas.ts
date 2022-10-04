@@ -4,9 +4,10 @@ import { AddCreditCardFormErrorCodeInput, ArrayInput, AttendeeInput,
   CuisineInput, DateInput, DateTimeInput, DisplayModeInput, DressCodeInput,
   EventCardSummaryInput, EventTagInput, ForgotPasswordPageErrorCodeInput,
   HomePageErrorCodeInput, JoinEventModalErrorCodeInput, LanguageInput,
-  LocationInput, NumberInput, PaymentCardInput, RestaurantInput, SeatingInput,
-  SignUpPageErrorCodeInput, SocialAccountInput, SocialAccountTypeInput,
-  SocialMediaImageInput, TextInput, UserInput } from '../viewer/propertyInput';
+  LocationInput, NumberInput, PaymentCardInput, PaymentRecordInput,
+  RestaurantInput, SeatingInput, SignUpPageErrorCodeInput, SocialAccountInput,
+  SocialAccountTypeInput, SocialMediaImageInput, TextInput, UserInput
+} from '../viewer/propertyInput';
 import { ComponentSchema, PropertySchema, SignalSchema } from './schemas';
 
 /** Loads the complete list of schemas available to test. */
@@ -1537,6 +1538,16 @@ export function loadComponentSchemas(): ComponentSchema[] {
       new PropertySchema('PaymentCard', new NeverEatAlone.PaymentCard(17,
         4567890123456789, 'Jlo Jlo', 12, 2026, 2345, 'M3E 5G6',
         NeverEatAlone.CreditCardType.VISA), PaymentCardInput))),
+    new PropertySchema('paymentRecords', [], ArrayInput(
+      new PropertySchema('paymentRecord', new NeverEatAlone.PaymentRecord(
+        1, new NeverEatAlone.EventCardSummary(1, 'best french restaurant',
+        new Date(2022, 6, 12, 19, 0, 0), new Date(2021, 6, 12, 23, 0, 0),
+        'Le Select', NeverEatAlone.PriceRange.EXPENSIVE, [], '', 12, 12, true,
+        'yellow'), 5.65, 0, new Date(2022, 9, 23, 18, 35),
+        new NeverEatAlone.PaymentCard(16, 4567890123456789, 'allo gil', 11,
+        2023, 7458, 'M3E 3T7', NeverEatAlone.CreditCardType.MASTERCARD)),
+        PaymentRecordInput)
+    )),
     new PropertySchema('addCardErrorMessage', '', TextInput),
     new PropertySchema('addCardErrorCode',
       NeverEatAlone.AddCreditCardForm.ErrorCode.NONE,
