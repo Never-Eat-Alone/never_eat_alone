@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { AddCreditCardForm } from '../../components';
-import { DisplayMode, PaymentCard, SocialAccount } from '../../definitions';
+import { DisplayMode, PaymentCard, PaymentRecord, SocialAccount
+} from '../../definitions';
 import { AccountInformationTab } from './account_information_tab';
 import { CardDetailsForm } from './card_details_form'; 
 import { NotificationsTab } from './notifications_tab';
+import { PaymentHistoryTab } from './payment_history_tab';
 import { PaymentMethodsTab } from './payment_methods_tab';
 import { Tab } from './tab';
 
@@ -51,6 +53,9 @@ interface Properties {
 
   /** User's list of existing cards on file other than the default card. */
   otherPaymentCards: PaymentCard[];
+
+  /** User's list of payment records. */
+  paymentRecords: PaymentRecord[];
 
   /** Error message regarding adding a new card. */
   addCardErrorMessage: string;
@@ -173,7 +178,7 @@ export class SettingsPage extends React.Component<Properties, State> {
         case SettingsPage.Tab.PAYMENT_METHODS:
           return <PaymentMethodsTab {...this.props} />;
         case SettingsPage.Tab.PAYMENT_HISTORY:
-          return <h1 style={PAGE_HEADING_STYLE} >Payment History</h1>;
+          return <PaymentHistoryTab {...this.props} />;
       }
     })();
     return (

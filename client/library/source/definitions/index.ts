@@ -13,6 +13,7 @@ export * from './language';
 export * from './location';
 export * from './password_checks';
 export * from './payment_card';
+export * from './payment_record';
 export * from './price_range';
 export * from './restaurant';
 export * from './seating';

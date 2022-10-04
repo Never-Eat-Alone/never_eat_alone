@@ -4,6 +4,11 @@ import { PriceRange } from './price_range';
 
 /** Implements the EventCardSummary. */
 export class EventCardSummary {
+  public static noSummary(): EventCardSummary {
+    return new EventCardSummary(-1, '', new Date(), new Date(), '',
+      PriceRange.UNKNOWN, [], '', 0, 0, false, '');
+  }
+
   /** Creates an EventCardSummary from a json object. */
   public static fromJson(value: any): EventCardSummary {
     return new EventCardSummary(
