@@ -208,7 +208,7 @@ function PaymentCardRow(props: PaymentCardRowProps) {
           {getCreditCardTypeName(props.card.creditType)}
         </p>
         <p style={CARD_TEXT_STYLE} >
-          Cards ending in {props.card.cardNumber.toString().slice(-4)}
+          Card ending in {props.card.cardNumber.toString().slice(-4)}
         </p>
       </div>
       <img

@@ -1402,7 +1402,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
       new NeverEatAlone.PaymentCard(21, 4567890123456789, 'Jlo Jlo', 12, 2026,
       2345, 'M3E 5G6', NeverEatAlone.CreditCardType.MASTERCARD),
     ], ArrayInput(new PropertySchema('paymentCard',
-      new NeverEatAlone.PaymentCard(1, 4567890123456789, 'Jlo Jlo', 12, 2026,
+      new NeverEatAlone.PaymentCard(3, 4567890123456789, 'Jlo Jlo', 12, 2026,
       2345, 'M3E 5G6', NeverEatAlone.CreditCardType.VISA), PaymentCardInput))),
     new PropertySchema('defaultCard', new NeverEatAlone.PaymentCard(1,
       4567890123456789, 'Jlo Jlo', 12, 2026, 2345, 'M3E 5G6',
@@ -1436,19 +1436,19 @@ export function loadComponentSchemas(): ComponentSchema[] {
   ], NeverEatAlone.JoinEventModal);
   const creditCardDropdownMenu = new ComponentSchema('CreditCardDropdownMenu',
     [new PropertySchema('cardList', [
-    new NeverEatAlone.PaymentCard(11, 4567890123456789, 'Jlo Jlo', 12, 2026,
+    new NeverEatAlone.PaymentCard(2, 4567890123456789, 'Jlo Jlo', 12, 2026,
       2345, 'M3E 5G6', NeverEatAlone.CreditCardType.VISA),
     new NeverEatAlone.PaymentCard(151, 4567890123456789, 'Jlo Jlo', 12, 2026,
       2345, 'M3E 5G6', NeverEatAlone.CreditCardType.AMEX),
-    new NeverEatAlone.PaymentCard(12, 4567890123456789, 'Jlo Jlo', 12, 2026,
+    new NeverEatAlone.PaymentCard(1, 4567890123456789, 'Jlo Jlo', 12, 2026,
       2345, 'M3E 5G6', NeverEatAlone.CreditCardType.VISA),
     new NeverEatAlone.PaymentCard(21,4567890123456789, 'Jlo Jlo', 12, 2026,
       2345, 'M3E 5G6', NeverEatAlone.CreditCardType.MASTERCARD),
     ], ArrayInput(new PropertySchema(
-      'paymentCard', new NeverEatAlone.PaymentCard(1,4567890123456789,
+      'paymentCard', new NeverEatAlone.PaymentCard(3, 4567890123456789,
       'Jlo Jlo', 12, 2026, 2345, 'M3E 5G6', NeverEatAlone.CreditCardType.VISA),
       PaymentCardInput))),
-    new PropertySchema('defaultCard', new NeverEatAlone.PaymentCard(1,
+    new PropertySchema('defaultCard', new NeverEatAlone.PaymentCard(4,
       4567890123456789, 'Jlo Jlo', 12, 2026, 2345, 'M3E 5G6',
       NeverEatAlone.CreditCardType.VISA), PaymentCardInput),
     ], [new SignalSchema('onCardClick', '', [])],
@@ -1525,8 +1525,15 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('defaultCard', new NeverEatAlone.PaymentCard(12,
       4567890123456789, 'Jlo Jlo', 12, 2026, 2345, 'M3E 5G6',
       NeverEatAlone.CreditCardType.VISA), PaymentCardInput),
-    new PropertySchema('otherPaymentCards', [], ArrayInput(
-      new PropertySchema('PaymentCard', new NeverEatAlone.PaymentCard(14,
+    new PropertySchema('otherPaymentCards', [
+      new NeverEatAlone.PaymentCard(14, 4567890123456789, 'Jlo Jlo', 12, 2026,
+        2345, 'M3E 5G6', NeverEatAlone.CreditCardType.VISA),
+      new NeverEatAlone.PaymentCard(15, 4567890123456789, 'ahs jdfj', 10, 2024,
+        9524, 'M3E 5G6', NeverEatAlone.CreditCardType.AMEX),
+      new NeverEatAlone.PaymentCard(16, 4567890123456789, 'allo gil', 11, 2023,
+        7458, 'M3E 3T7', NeverEatAlone.CreditCardType.MASTERCARD)
+    ], ArrayInput(
+      new PropertySchema('PaymentCard', new NeverEatAlone.PaymentCard(17,
         4567890123456789, 'Jlo Jlo', 12, 2026, 2345, 'M3E 5G6',
         NeverEatAlone.CreditCardType.VISA), PaymentCardInput))),
     new PropertySchema('addCardErrorMessage', '', TextInput),

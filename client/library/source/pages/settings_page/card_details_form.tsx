@@ -146,6 +146,12 @@ export class CardDetailsForm extends React.Component<Properties, State> {
       }
       return '';
     })();
+    const dateErrorMessage = (() => {
+      if (this.props.errorCode === CardDetailsForm.ErrorCode.EXPIRED_CARD) {
+        return 'The card is expired.';
+      }
+      return '';
+    })();
     const isUpdateCardDisabled = (() => {
       if (!this.state.cardNumber || !this.state.nameOnCard ||
           this.state.nameOnCard.length === 0 || !this.state.securityCode ||
@@ -233,6 +239,8 @@ export class CardDetailsForm extends React.Component<Properties, State> {
             values={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}
             displayedValue={this.state.selectedMonth}
             onMenuItemClick={this.handleOnMonthClick}
+            hasError={this.props.errorCode ===
+              CardDetailsForm.ErrorCode.EXPIRED_CARD}
           />
           <NumberedDropdownMenu
             values={[currentYear, currentYear + 1, currentYear + 2,
@@ -242,8 +250,11 @@ export class CardDetailsForm extends React.Component<Properties, State> {
             style={NUMBER_DROPDOWN_STYLE}
             displayedValue={this.state.selectedYear}
             onMenuItemClick={this.handleOnYearClick}
+            hasError={this.props.errorCode ===
+              CardDetailsForm.ErrorCode.EXPIRED_CARD}
           />
         </div>
+        <div style={ERROR_MESSAGE_STYLE}>{dateErrorMessage}</div>
         <p style={CARD_DETAILS_FIELD_TEXT_STYLE} >Security code</p>
         <SecurityCodeInputField
           style={CODE_INPUT_STYLE}
@@ -488,6 +499,8 @@ const CARD_ENDING_TEXT_STYLE: React.CSSProperties = {
   lineHeight: '18px',
   color: '#000000',
   width: '100%',
+  padding: '0px',
+  margin: '0px',
   whiteSpace: 'pre'
 };
 
@@ -515,7 +528,9 @@ const IS_DEFAULT_TEXT_STYLE: React.CSSProperties = {
   fontSize: '14px',
   lineHeight: '18px',
   height: '100%',
-  color: '#969696'
+  color: '#969696',
+  padding: '0px',
+  margin: '0px'
 };
 
 const PAYMENT_CARD_INPUT_STYLE: React.CSSProperties = {
