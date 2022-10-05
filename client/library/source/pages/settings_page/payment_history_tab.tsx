@@ -1,9 +1,10 @@
 import { css, StyleSheet } from 'aphrodite';
+import { format } from 'date-fns';
 import * as React from 'react';
 import * as Router from 'react-router-dom';
+import { RedNavLink, SecondaryTextButton } from '../../components';
 import { DisplayMode, getCreditCardTypeName, PaymentRecord
 } from '../../definitions';
-import { SecondaryTextButton } from '../../components';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -35,7 +36,7 @@ export class PaymentHistoryTab extends React.Component<Properties, State> {
       if (!this.props.paymentRecords || this.props.paymentRecords.length === 0
           ) {
         return (
-          <React.Fragment>
+          <div style={NOT_FOUND_CONTAINER_STYLE} >
             <img
               style={NO_RECORDS_IMAGE_STYLE}
               src='resources/illustrations/not_found.svg'
@@ -44,9 +45,14 @@ export class PaymentHistoryTab extends React.Component<Properties, State> {
             <h1 style={NOTHING_FOUND_HEADING_STYLE} >Nothing here yet!</h1>
             <div style={NOTHING_FOUND_TEXT_STYLE} >
               This is where your payment history and receipts will appear.
-              For now, go join some events!
+              For now, go&nbsp;
+              <RedNavLink
+                  style={EXPLORE_EVENT_LINK_STYLE}
+                  to='/explore_events'
+                  label='join some events!'
+              />
             </div>
-          </React.Fragment>);
+          </div>);
       }
       const rows = [];
       for (const record of this.props.paymentRecords) {
@@ -79,6 +85,10 @@ interface PaymentRecordCardProp {
 }
 
 function PaymentRecordCard(props: PaymentRecordCardProp) {
+  const onHoldSection = (props.paymentRecord.amountOnHold &&
+  <div style={HOLD_AMOUNT_TEXT_STYLE} >
+    {props.paymentRecord.amountOnHold.toString()}
+  </div> || null);
   return (
     <div style={CARD_CONTAINER_STYLE} >
       <div style={IMAGE_DETAILS_CONTAINER_STYLE} >
@@ -97,11 +107,17 @@ function PaymentRecordCard(props: PaymentRecordCardProp) {
           </Router.Link>
         </div>
         <div style={DETAILS_CONTAINER_STYLE} >
-          <p>{props.paymentRecord.eventCardSummary.eventTitle}</p>
-          <div>${props.paymentRecord.amountCharged.toString()} paid via
+          <p style={EVENT_TITLE_STYLE} >
+            {props.paymentRecord.eventCardSummary.eventTitle}
+          </p>
+          <div style={COST_TEXT_STYLE} >
+            ${props.paymentRecord.amountCharged.toString()} paid via&nbsp;
             {getCreditCardTypeName(props.paymentRecord.paymentCard.creditType)}
-            on {props.paymentRecord.transactionDate.toString()}
+            &nbsp;on <span style={DATE_TEXT_STYLE} >
+            {format(props.paymentRecord.transactionDate, 'MMM d, yyyy')}
+            </span>
           </div>
+          {onHoldSection}
         </div>
       </div>
       <SecondaryTextButton
@@ -123,7 +139,7 @@ const CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   width: '100%',
   backgroundColor: '#FFFFFF',
   gap: '10px'
@@ -209,7 +225,9 @@ const EVENT_IMAGE_STYLE: React.CSSProperties = {
   minWidth: '150px',
   height: '100%',
   minHeight: '100px',
-  backgroundColor: 'transparent'
+  backgroundColor: 'transparent',
+  borderRadius: '4px',
+  objectFit: 'cover'
 };
 
 const EVENT_BUTTON_STYLE: React.CSSProperties = {
@@ -245,7 +263,8 @@ const DETAILS_CONTAINER_STYLE: React.CSSProperties = {
   alignItems: 'flex-start',
   padding: '15px',
   gap: '5px',
-  height: '100%'
+  height: '100%',
+  width: 'calc(100% - 170px)'
 };
 
 const VIEW_RECEIPT_BUTTON_STYLE: React.CSSProperties = {
@@ -254,6 +273,54 @@ const VIEW_RECEIPT_BUTTON_STYLE: React.CSSProperties = {
   height: '35px',
   minHeight: '35px',
   marginRight: '20px'
+};
+
+const NOT_FOUND_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  width: '100%'
+};
+
+const EVENT_TITLE_STYLE: React.CSSProperties = {
+  padding: '0px',
+  margin: '0px',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#000000',
+  width: '100%'
+};
+
+const COST_TEXT_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#000000',
+  padding: '0px',
+  margin: '0px',
+  width: '100%',
+  whiteSpace: 'pre'
+};
+
+const DATE_TEXT_STYLE: React.CSSProperties = {
+  color: '#969696'
+};
+
+const EXPLORE_EVENT_LINK_STYLE: React.CSSProperties = {
+  fontSize: '14px',
+  lineHeight: '18px',
+  height: 'auto',
+  width: 'auto'
 };
 
 const styles = StyleSheet.create({

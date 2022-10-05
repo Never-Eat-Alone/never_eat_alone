@@ -1,5 +1,6 @@
 import { EventCardSummary } from './event_card_summary';
 import { PaymentCard } from './payment_card';
+import { PaymentTransaction } from './payment_transaction';
 
 /** Describes the payment record. */
 export class PaymentRecord {
@@ -19,14 +20,14 @@ export class PaymentRecord {
   }
 
   constructor(id: number, eventCardSummary: EventCardSummary,
-      amountCharged: number, amountOnHold: number, transactionDate: Date,
-      paymentCard: PaymentCard) {
+      amountCharged: number, transactionDate: Date,
+      paymentMethod: PaymentMethod, cardType: CreditCardType,
+      cardLast4digits: number, ) {
     this._id = id;
     this._eventCardSummary = eventCardSummary;
     this._amountCharged = amountCharged;
     this._amountOnHold = amountOnHold;
     this._transactionDate = transactionDate;
-    this._paymentCard = paymentCard;
   }
 
   public get id(): number {
