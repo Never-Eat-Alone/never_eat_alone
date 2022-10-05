@@ -38,7 +38,7 @@ export class PaymentHistoryTab extends React.Component<Properties, State> {
           <React.Fragment>
             <img
               style={NO_RECORDS_IMAGE_STYLE}
-              src='resources/illustrations/'
+              src='resources/illustrations/not_found.svg'
               alt='Nothing found icon'
             />
             <h1 style={NOTHING_FOUND_HEADING_STYLE} >Nothing here yet!</h1>
