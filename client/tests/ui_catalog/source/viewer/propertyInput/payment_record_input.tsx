@@ -13,8 +13,10 @@ interface Properties {
 /** A payment record input. */
 export class PaymentRecordInput extends React.Component<Properties> {
   public render(): JSX.Element {
-    return <input value={this.props.value && this.props.value.amountCharged ||
-      '0'} onChange={this.onChange} />;
+    return <input value={this.props.value &&
+      this.props.value.paymentTransactions &&
+      this.props.value.paymentTransactions[0].amount.toFixed() ||
+      '0.00'} onChange={this.onChange} />;
   }
 
   private onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,18 +27,26 @@ export class PaymentRecordInput extends React.Component<Properties> {
           new NeverEatAlone.EventCardSummary(1, 'best french restaurant',
           new Date(2022, 6, 12, 19, 0, 0), new Date(2021, 6, 12, 23, 0, 0),
           'Le Select', NeverEatAlone.PriceRange.EXPENSIVE, [], '', 12, 12, true,
-          'yellow'), 0, 0, new Date(), new NeverEatAlone.PaymentCard(Date.now(),
-          4567890123456789, 'Jlo Jlo', 12, 2026, 2345, 'M3E 5G6',
-          NeverEatAlone.CreditCardType.AMEX));
+          'yellow'), [
+          new NeverEatAlone.PaymentTransaction(99, 3.98,
+            NeverEatAlone.PaymentMethod.CREDIT_CARD,
+            NeverEatAlone.CreditCardType.AMEX, 9604, 'Event fee', new Date(),
+            new Date(2021, 9, 2, 23, 15),
+            NeverEatAlone.PaymentStatus.CHARGED)
+        ]);
       }
       return new NeverEatAlone.PaymentRecord(1,
         new NeverEatAlone.EventCardSummary(2, 'best french restaurant',
         new Date(2022, 6, 12, 19, 0, 0), new Date(2021, 6, 12, 23, 0, 0),
         'Le Select', NeverEatAlone.PriceRange.EXPENSIVE, [], '', 12, 12, true,
-        'yellow'), Number(event.target.value), 0, new Date(),
-        new NeverEatAlone.PaymentCard(Date.now(),
-        4567890123456789, 'Jlo Jlo', 12, 2026, 2345, 'M3E 5G6',
-        NeverEatAlone.CreditCardType.AMEX));
+        'yellow'), [
+          new NeverEatAlone.PaymentTransaction(99,
+            Number(event.target.value),
+            NeverEatAlone.PaymentMethod.CREDIT_CARD,
+            NeverEatAlone.CreditCardType.VISA, 1458, 'Event fee', new Date(),
+            new Date(2022, 10, 1, 23, 15),
+            NeverEatAlone.PaymentStatus.CHARGED)
+        ]);
     })();
     this.props.update(newValue);
   }

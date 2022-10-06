@@ -1,33 +1,26 @@
+import { arrayFromJson, arrayToJson } from './array_json';
 import { EventCardSummary } from './event_card_summary';
-import { PaymentCard } from './payment_card';
 import { PaymentTransaction } from './payment_transaction';
 
 /** Describes the payment record. */
 export class PaymentRecord {
   public static noRecord(): PaymentRecord {
-    return new PaymentRecord(-1, EventCardSummary.noSummary(), 0, 0,
-      new Date(), PaymentCard.noCard());
+    return new PaymentRecord(-1, EventCardSummary.noSummary(), []);
   }
 
   public static fromJson(value: any): PaymentRecord {
     return new PaymentRecord(
       value.id,
-      value.eventId,
-      value.amountCharged,
-      value.amountOnHold,
-      new Date(Date.parse(value.transactionDate)),
-      value.paymentCardId);
+      value.eventCardSummary,
+      arrayFromJson(PaymentTransaction, value.paymentTransactions)
+    );
   }
 
   constructor(id: number, eventCardSummary: EventCardSummary,
-      amountCharged: number, transactionDate: Date,
-      paymentMethod: PaymentMethod, cardType: CreditCardType,
-      cardLast4digits: number, ) {
+      paymentTransactions: PaymentTransaction[]) {
     this._id = id;
     this._eventCardSummary = eventCardSummary;
-    this._amountCharged = amountCharged;
-    this._amountOnHold = amountOnHold;
-    this._transactionDate = transactionDate;
+    this._paymentTransactions = paymentTransactions;
   }
 
   public get id(): number {
@@ -38,38 +31,20 @@ export class PaymentRecord {
     return this._eventCardSummary;
   }
 
-  public get amountCharged(): number {
-    return this._amountCharged;
-  }
-
-  public get amountOnHold(): number {
-    return this._amountOnHold;
-  }
-
-  public get transactionDate(): Date {
-    return this._transactionDate;
-  }
-
-  public get paymentCard(): PaymentCard {
-    return this._paymentCard;
+  public get paymentTransactions(): PaymentTransaction[] {
+    return this._paymentTransactions;
   }
 
   /** Converts the payment record object to json. */
   public toJson(): any {
     return {
       id: this._id,
-      eventId: this._eventCardSummary,
-      amountCharged: this._amountCharged,
-      amountOnHold: this._amountOnHold,
-      transactionDate: this._transactionDate.toJSON(),
-      paymentCardId: this._paymentCard
+      eventCardSummary: this._eventCardSummary,
+      paymentTransactions: arrayToJson(this._paymentTransactions)
     };
   }
 
   private _id: number;
   private _eventCardSummary: EventCardSummary;
-  private _amountCharged: number;
-  private _amountOnHold: number;
-  private _transactionDate: Date;
-  private _paymentCard: PaymentCard;
+  private _paymentTransactions: PaymentTransaction[];
 }

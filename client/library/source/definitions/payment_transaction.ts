@@ -1,5 +1,6 @@
-import { PaymentStatus } from './payment_status';
+import { CreditCardType } from './credit_card_type';
 import { PaymentMethod } from './payment_method';
+import { PaymentStatus } from './payment_status';
 
 /** Describes the payment transaction. */
 export class PaymentTransaction {
@@ -8,6 +9,8 @@ export class PaymentTransaction {
       value.id,
       value.amount,
       value.paymentMethod as PaymentMethod,
+      value.cardType as CreditCardType,
+      value.cardLast4digits,
       value.description,
       new Date(Date.parse(value.scheduledAt)),
       new Date(Date.parse(value.processedAt)),
@@ -22,6 +25,8 @@ export class PaymentTransaction {
     this._id = id;
     this._amount = amount;
     this._paymentMethod = paymentMethod;
+    this._cardType = cardType;
+    this._cardLast4digits = cardLast4digits;
     this._description = description;
     this._scheduledAt = scheduledAt;
     this._processedAt = processedAt;
@@ -40,14 +45,24 @@ export class PaymentTransaction {
     return this._paymentMethod;
   }
 
+  public get cardType(): CreditCardType {
+    return this._cardType;
+  }
+
+  public get cardLast4digits(): number {
+    return this._cardLast4digits;
+  }
+
   public get description(): string {
     return this._description;
   }
 
-  public scheduledAt(): Date {
+  /** The date that the transaction should happen. */
+  public get scheduledAt(): Date {
     return this._scheduledAt;
   }
 
+  /** The date the transaction happened. */
   public get processedAt(): Date {
     return this._processedAt;
   }
@@ -61,6 +76,8 @@ export class PaymentTransaction {
       id: this._id,
       amount: this._amount,
       paymentMethod: this._paymentMethod,
+      cardType: this._cardType,
+      cardLast4digits: this._cardLast4digits,
       description: this._description,
       scheduledAt: this._scheduledAt.toJSON(),
       processedAt: this._processedAt.toJSON(),
@@ -71,6 +88,8 @@ export class PaymentTransaction {
   private _id: number;
   private _amount: number;
   private _paymentMethod: PaymentMethod;
+  private _cardType: CreditCardType;
+  private _cardLast4digits: number;
   private _description: string;
   private _scheduledAt: Date;
   private _processedAt: Date;

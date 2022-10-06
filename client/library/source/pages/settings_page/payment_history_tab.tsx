@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { RedNavLink, SecondaryTextButton } from '../../components';
-import { DisplayMode, getCreditCardTypeName, PaymentRecord
+import { DisplayMode, getCreditCardTypeName, PaymentRecord, PaymentStatus
 } from '../../definitions';
 
 interface Properties {
@@ -55,11 +55,16 @@ export class PaymentHistoryTab extends React.Component<Properties, State> {
           </div>);
       }
       const rows = [];
-      for (const record of this.props.paymentRecords) {
-        rows.push(<PaymentRecordCard key={record.id}
-          displayMode={this.props.displayMode} paymentRecord={record}
-          onViewReceiptClick={() => this.handleViewReceipt(record)}
+      for (let i = 0; i < this.props.paymentRecords.length; ++i) {
+        const record = this.props.paymentRecords[i];
+        rows.push(
+          <PaymentRecordCard key={'PaymentRecordCard' + record.id}
+            displayMode={this.props.displayMode} paymentRecord={record}
+            onViewReceiptClick={() => this.handleViewReceipt(record)}
           />);
+        if (i !== this.props.paymentRecords.length - 1) {
+          rows.push(<div key={'divider' + i} style={DIVIDER_STYLE} />);
+        }
       }
       return rows;
     })();
@@ -85,10 +90,41 @@ interface PaymentRecordCardProp {
 }
 
 function PaymentRecordCard(props: PaymentRecordCardProp) {
-  const onHoldSection = (props.paymentRecord.amountOnHold &&
-  <div style={HOLD_AMOUNT_TEXT_STYLE} >
-    {props.paymentRecord.amountOnHold.toString()}
-  </div> || null);
+  const charges = [];
+  for (const transaction of props.paymentRecord.paymentTransactions) {
+    switch (transaction.status) {
+      case PaymentStatus.CHARGED:
+        charges.push(
+          <div key={'transaction' + transaction.id} style={COST_TEXT_STYLE} >
+            ${transaction.amount.toFixed(2).toString()} paid via&nbsp;
+            {getCreditCardTypeName(transaction.cardType)}
+            &nbsp;on <span style={DATE_TEXT_STYLE} >
+            {format(transaction.processedAt, 'MMM d, yyyy')}
+            </span>
+          </div>);
+          break;
+      case PaymentStatus.WILL_BE_CHARGED:
+        charges.push(<div key={transaction.id} style={HOLD_AMOUNT_TEXT_STYLE} >
+          ${transaction.amount.toFixed(2).toString()} will be charged on&nbsp;
+          {format(transaction.scheduledAt, 'MMM d, yyyy')}
+        </div>);
+        break;
+      case PaymentStatus.ON_HOLD:
+        charges.push(<div key={transaction.id} style={HOLD_AMOUNT_TEXT_STYLE} >
+          ${transaction.amount.toFixed(2).toString()} hold on your card
+        </div>);
+        break;
+      case PaymentStatus.REFUNDED:
+        charges.push(<div key={transaction.id} style={HOLD_AMOUNT_TEXT_STYLE} >
+          ${transaction.amount.toFixed(2).toString()} refunded
+        </div>);
+        break;
+      case PaymentStatus.PARTIALLY_REFUNDED:
+        charges.push(<div key={transaction.id} style={HOLD_AMOUNT_TEXT_STYLE} >
+          ${transaction.amount.toFixed(2).toString()} partially refunded
+        </div>);
+    }
+  }
   return (
     <div style={CARD_CONTAINER_STYLE} >
       <div style={IMAGE_DETAILS_CONTAINER_STYLE} >
@@ -110,14 +146,7 @@ function PaymentRecordCard(props: PaymentRecordCardProp) {
           <p style={EVENT_TITLE_STYLE} >
             {props.paymentRecord.eventCardSummary.eventTitle}
           </p>
-          <div style={COST_TEXT_STYLE} >
-            ${props.paymentRecord.amountCharged.toString()} paid via&nbsp;
-            {getCreditCardTypeName(props.paymentRecord.paymentCard.creditType)}
-            &nbsp;on <span style={DATE_TEXT_STYLE} >
-            {format(props.paymentRecord.transactionDate, 'MMM d, yyyy')}
-            </span>
-          </div>
-          {onHoldSection}
+          {charges}
         </div>
       </div>
       <SecondaryTextButton
@@ -201,8 +230,7 @@ const CARD_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
-  width: '100%',
-  height: '100px'
+  width: '100%'
 };
 
 const IMAGE_DETAILS_CONTAINER_STYLE: React.CSSProperties = {
@@ -210,14 +238,13 @@ const IMAGE_DETAILS_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  gap: '20px',
-  height: '100%'
+  gap: '20px'
 };
 
 const EVENT_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
   position: 'relative',
   width: '150px',
-  height: '100%'
+  height: '100px'
 };
 
 const EVENT_IMAGE_STYLE: React.CSSProperties = {
@@ -321,6 +348,17 @@ const EXPLORE_EVENT_LINK_STYLE: React.CSSProperties = {
   lineHeight: '18px',
   height: 'auto',
   width: 'auto'
+};
+
+const HOLD_AMOUNT_TEXT_STYLE: React.CSSProperties = {
+  ...COST_TEXT_STYLE,
+  color: '#969696'
+};
+
+const DIVIDER_STYLE: React.CSSProperties = {
+  height: '1px',
+  backgroundColor: '#CCCCCC',
+  width: '100%'
 };
 
 const styles = StyleSheet.create({
