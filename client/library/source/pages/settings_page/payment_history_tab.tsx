@@ -96,7 +96,7 @@ function PaymentRecordCard(props: PaymentRecordCardProp) {
       case PaymentStatus.CHARGED:
         charges.push(
           <div key={'transaction' + transaction.id} style={COST_TEXT_STYLE} >
-            ${transaction.amount.toFixed(2).toString()} paid via&nbsp;
+            ${transaction.amount.toFixed(2)} paid via&nbsp;
             {getCreditCardTypeName(transaction.cardType)}
             &nbsp;on <span style={DATE_TEXT_STYLE} >
             {format(transaction.processedAt, 'MMM d, yyyy')}
@@ -105,24 +105,24 @@ function PaymentRecordCard(props: PaymentRecordCardProp) {
           break;
       case PaymentStatus.WILL_BE_CHARGED:
         charges.push(<div key={transaction.id} style={HOLD_AMOUNT_TEXT_STYLE} >
-          ${transaction.amount.toFixed(2).toString()} will be charged on&nbsp;
+          ${transaction.amount.toFixed(2)} will be charged on&nbsp;
           {format(transaction.scheduledAt, 'MMM d, yyyy')}
         </div>);
         break;
       case PaymentStatus.ON_HOLD:
         charges.push(<div key={transaction.id} style={HOLD_AMOUNT_TEXT_STYLE} >
-          ${transaction.amount.toFixed(2).toString()} hold on your card
+          ${transaction.amount.toFixed(2)} hold on your card
         </div>);
         break;
       case PaymentStatus.REFUNDED:
         charges.push(<div key={transaction.id} style={HOLD_AMOUNT_TEXT_STYLE} >
-          ${transaction.amount.toFixed(2).toString()} refunded on&nbsp;
+          ${transaction.amount.toFixed(2)} refunded on&nbsp;
           {format(transaction.processedAt, 'MMM d, yyyy')}
         </div>);
         break;
       case PaymentStatus.PARTIALLY_REFUNDED:
         charges.push(<div key={transaction.id} style={HOLD_AMOUNT_TEXT_STYLE} >
-          ${transaction.amount.toFixed(2).toString()} partially refunded on
+          ${transaction.amount.toFixed(2)} partially refunded on
           &nbsp;{format(transaction.processedAt, 'MMM d, yyyy')}
         </div>);
     }
