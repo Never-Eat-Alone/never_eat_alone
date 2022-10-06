@@ -1546,8 +1546,8 @@ export function loadComponentSchemas(): ComponentSchema[] {
         'resources/images/3.jpg', 12, 12, true, 'yellow'), [
         new NeverEatAlone.PaymentTransaction(999, 78.00,
           NeverEatAlone.PaymentMethod.CREDIT_CARD,
-          NeverEatAlone.CreditCardType.VISA, 1458, 'Event fee', new Date(),
-          new Date(2022, 2, 1, 23, 15),
+          NeverEatAlone.CreditCardType.VISA, '1458', 'Event fee', new Date(
+          2022, 2, 1, 23, 15), new Date(2022, 2, 1, 23, 15),
           NeverEatAlone.PaymentStatus.CHARGED)
         ]),
       new NeverEatAlone.PaymentRecord(
@@ -1558,13 +1558,13 @@ export function loadComponentSchemas(): ComponentSchema[] {
         12, true, 'yellow'), [
           new NeverEatAlone.PaymentTransaction(58, 9.99,
             NeverEatAlone.PaymentMethod.CREDIT_CARD,
-            NeverEatAlone.CreditCardType.MASTERCARD, 1458, 'Event fee',
-            new Date(), new Date(2022, 10, 1, 23, 15),
+            NeverEatAlone.CreditCardType.MASTERCARD, '1458', 'Event fee',
+            new Date(2022, 10, 1, 23, 15), new Date(2022, 10, 1, 23, 15),
             NeverEatAlone.PaymentStatus.CHARGED),
           new NeverEatAlone.PaymentTransaction(59, 50,
             NeverEatAlone.PaymentMethod.CREDIT_CARD,
-            NeverEatAlone.CreditCardType.MASTERCARD, 1458, 'Cancellation fee',
-            new Date(), new Date(2022, 10, 10, 23, 15),
+            NeverEatAlone.CreditCardType.MASTERCARD, '1458', 'Cancellation fee',
+            new Date(2022, 10, 10, 23, 15), new Date(2022, 10, 10, 23, 15),
             NeverEatAlone.PaymentStatus.WILL_BE_CHARGED)
         ]),
       new NeverEatAlone.PaymentRecord(
@@ -1575,13 +1575,13 @@ export function loadComponentSchemas(): ComponentSchema[] {
         'resources/images/1.jpg', 12, 12, true, 'yellow'), [
           new NeverEatAlone.PaymentTransaction(909, 7.25,
             NeverEatAlone.PaymentMethod.CREDIT_CARD,
-            NeverEatAlone.CreditCardType.AMEX, 1458, 'Event fee', new Date(),
-            new Date(2022, 10, 1, 23, 15),
+            NeverEatAlone.CreditCardType.AMEX, '1458', 'Event fee', new Date(
+            2022, 10, 1, 23, 15), new Date(2022, 10, 1, 23, 15),
             NeverEatAlone.PaymentStatus.CHARGED),
           new NeverEatAlone.PaymentTransaction(90, 7.25,
             NeverEatAlone.PaymentMethod.CREDIT_CARD,
-            NeverEatAlone.CreditCardType.AMEX, 1458, 'Event fee', new Date(),
-            new Date(2022, 10, 15, 20, 15),
+            NeverEatAlone.CreditCardType.AMEX, '1458', 'Event fee',
+            new Date(2022, 10, 15, 20, 15), new Date(2022, 10, 15, 20, 15),
             NeverEatAlone.PaymentStatus.REFUNDED)
         ])
     ], ArrayInput(
@@ -1592,8 +1592,8 @@ export function loadComponentSchemas(): ComponentSchema[] {
         'resources/images/5.jpg', 12, 12, true, 'yellow'), [
           new NeverEatAlone.PaymentTransaction(14, 26.54,
             NeverEatAlone.PaymentMethod.CREDIT_CARD,
-            NeverEatAlone.CreditCardType.VISA, 1458, 'Event fee', new Date(),
-            new Date(2022, 10, 1, 23, 15),
+            NeverEatAlone.CreditCardType.VISA, '1458', 'Event fee',
+            new Date(2022, 10, 1, 23, 15), new Date(2022, 10, 1, 23, 15),
             NeverEatAlone.PaymentStatus.CHARGED)
         ]),
         PaymentRecordInput)

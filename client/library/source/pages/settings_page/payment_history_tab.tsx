@@ -116,12 +116,14 @@ function PaymentRecordCard(props: PaymentRecordCardProp) {
         break;
       case PaymentStatus.REFUNDED:
         charges.push(<div key={transaction.id} style={HOLD_AMOUNT_TEXT_STYLE} >
-          ${transaction.amount.toFixed(2).toString()} refunded
+          ${transaction.amount.toFixed(2).toString()} refunded on&nbsp;
+          {format(transaction.processedAt, 'MMM d, yyyy')}
         </div>);
         break;
       case PaymentStatus.PARTIALLY_REFUNDED:
         charges.push(<div key={transaction.id} style={HOLD_AMOUNT_TEXT_STYLE} >
-          ${transaction.amount.toFixed(2).toString()} partially refunded
+          ${transaction.amount.toFixed(2).toString()} partially refunded on
+          &nbsp;{format(transaction.processedAt, 'MMM d, yyyy')}
         </div>);
     }
   }
