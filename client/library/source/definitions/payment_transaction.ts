@@ -19,7 +19,7 @@ export class PaymentTransaction {
   }
 
   constructor(id: number, amount: number, paymentMethod: PaymentMethod,
-      cardType: CreditCardType, cardLast4digits: number, 
+      cardType: CreditCardType, cardLast4digits: string, 
       description: string, scheduledAt: Date, processedAt: Date,
       status: PaymentStatus) {
     this._id = id;
@@ -49,7 +49,7 @@ export class PaymentTransaction {
     return this._cardType;
   }
 
-  public get cardLast4digits(): number {
+  public get cardLast4digits(): string {
     return this._cardLast4digits;
   }
 
@@ -89,7 +89,7 @@ export class PaymentTransaction {
   private _amount: number;
   private _paymentMethod: PaymentMethod;
   private _cardType: CreditCardType;
-  private _cardLast4digits: number;
+  private _cardLast4digits: string;
   private _description: string;
   private _scheduledAt: Date;
   private _processedAt: Date;
