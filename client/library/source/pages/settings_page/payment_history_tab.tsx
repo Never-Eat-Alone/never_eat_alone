@@ -127,6 +127,8 @@ function PaymentRecordCard(props: PaymentRecordCardProp) {
         </div>);
     }
   }
+  const imageDetailsContainerStyle = (props.displayMode === DisplayMode.MOBILE
+    && MOBILE_IMAGE_DETAILS_CONTAINER_STYLE || IMAGE_DETAILS_CONTAINER_STYLE);
   const viewReceiptButton = (() => {
     switch (props.displayMode) {
       case DisplayMode.DESKTOP:
@@ -136,15 +138,24 @@ function PaymentRecordCard(props: PaymentRecordCardProp) {
             label='View Receipt'
             onClick={props.onViewReceiptClick}
           />);
-      case DisplayMode.TABLET:
+      default:
         return (
-          
-        );
+          <button
+            style={ARROW_BUTTON_STYLE}
+            onClick={props.onViewReceiptClick}
+            className={css(styles.arrowButton)}
+          >
+            <img
+              style={ARROW_IMAGE_STYLE}
+              src='resources/icons/arrow_grey.svg'
+              alt='Arrow Icon'
+            />
+         </button>);
     }
   })();
   return (
     <div style={CARD_CONTAINER_STYLE} >
-      <div style={IMAGE_DETAILS_CONTAINER_STYLE} >
+      <div style={imageDetailsContainerStyle} >
         <div style={EVENT_IMAGE_CONTAINER_STYLE} >
           <img
             style={EVENT_IMAGE_STYLE}
@@ -252,6 +263,14 @@ const IMAGE_DETAILS_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
   gap: '20px'
+};
+
+const MOBILE_IMAGE_DETAILS_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  gap: '15px'
 };
 
 const EVENT_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
@@ -374,8 +393,40 @@ const DIVIDER_STYLE: React.CSSProperties = {
   width: '100%'
 };
 
+const ARROW_BUTTON_STYLE: React.CSSProperties = {
+  width: '9px',
+  height: '15px',
+  backgroundColor: 'transparent',
+  minHeight: '15px',
+  minWidth: '9px',
+  outline: 'none',
+  border: 'none',
+  boxShadow: 'none',
+  padding: '0px',
+  margin: '0px 0px 0px 20px'
+};
+
+const ARROW_IMAGE_STYLE: React.CSSProperties = {
+  height: '100%',
+  width: '100%',
+  minWidth: '9px',
+  minHeight: '15px',
+  backgroundColor: 'transparent'
+};
+
 const styles = StyleSheet.create({
   eventLink: {
+    ':hover': {
+      boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)'
+    },
+    ':focus': {
+      boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)'
+    },
+    ':focus-within': {
+      boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)'
+    }
+  },
+  arrowButton: {
     ':hover': {
       boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)'
     },
