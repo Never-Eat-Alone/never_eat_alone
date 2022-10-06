@@ -1,0 +1,9 @@
+export enum PaymentStatus {
+  PENDING,
+  ON_HOLD,
+  CHARGED,
+  REFUNDED,
+  PARTIALLY_REFUNDED,
+  DECLINED,
+  WILL_BE_CHARGED
+}

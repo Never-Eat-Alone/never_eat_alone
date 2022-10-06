@@ -23,6 +23,7 @@ export * from './location_input';
 export * from './number_input';
 export * from './optional_input';
 export * from './payment_card_input';
+export * from './payment_record_input';
 export * from './readonly_input';
 export * from './restaurant_input';
 export * from './seating_input';

@@ -4,9 +4,10 @@ import { AddCreditCardFormErrorCodeInput, ArrayInput, AttendeeInput,
   CuisineInput, DateInput, DateTimeInput, DisplayModeInput, DressCodeInput,
   EventCardSummaryInput, EventTagInput, ForgotPasswordPageErrorCodeInput,
   HomePageErrorCodeInput, JoinEventModalErrorCodeInput, LanguageInput,
-  LocationInput, NumberInput, PaymentCardInput, RestaurantInput, SeatingInput,
-  SignUpPageErrorCodeInput, SocialAccountInput, SocialAccountTypeInput,
-  SocialMediaImageInput, TextInput, UserInput } from '../viewer/propertyInput';
+  LocationInput, NumberInput, PaymentCardInput, PaymentRecordInput,
+  RestaurantInput, SeatingInput, SignUpPageErrorCodeInput, SocialAccountInput,
+  SocialAccountTypeInput, SocialMediaImageInput, TextInput, UserInput
+} from '../viewer/propertyInput';
 import { ComponentSchema, PropertySchema, SignalSchema } from './schemas';
 
 /** Loads the complete list of schemas available to test. */
@@ -1537,6 +1538,66 @@ export function loadComponentSchemas(): ComponentSchema[] {
       new PropertySchema('PaymentCard', new NeverEatAlone.PaymentCard(17,
         4567890123456789, 'Jlo Jlo', 12, 2026, 2345, 'M3E 5G6',
         NeverEatAlone.CreditCardType.VISA), PaymentCardInput))),
+    new PropertySchema('paymentRecords', [
+      new NeverEatAlone.PaymentRecord(
+        2, new NeverEatAlone.EventCardSummary(3, 'best french restaurant',
+        new Date(2022, 6, 12, 19, 0, 0), new Date(2021, 6, 12, 23, 0, 0),
+        'Le Select', NeverEatAlone.PriceRange.EXPENSIVE, [],
+        'resources/images/3.jpg', 12, 12, true, 'yellow'), [
+        new NeverEatAlone.PaymentTransaction(999, 78.00,
+          NeverEatAlone.PaymentMethod.CREDIT_CARD,
+          NeverEatAlone.CreditCardType.VISA, '1458', 'Event fee', new Date(
+          2022, 2, 1, 23, 15), new Date(2022, 2, 1, 23, 15),
+          NeverEatAlone.PaymentStatus.CHARGED)
+        ]),
+      new NeverEatAlone.PaymentRecord(
+        3, new NeverEatAlone.EventCardSummary(2,
+        'Thanksgiving dinner together!', new Date(2022, 6, 12, 19, 0, 0),
+        new Date(2021, 6, 12, 23, 0, 0), 'Le Select',
+        NeverEatAlone.PriceRange.EXPENSIVE, [], 'resources/images/2.jpg', 12,
+        12, true, 'yellow'), [
+          new NeverEatAlone.PaymentTransaction(58, 9.99,
+            NeverEatAlone.PaymentMethod.CREDIT_CARD,
+            NeverEatAlone.CreditCardType.MASTERCARD, '1458', 'Event fee',
+            new Date(2022, 10, 1, 23, 15), new Date(2022, 10, 1, 23, 15),
+            NeverEatAlone.PaymentStatus.CHARGED),
+          new NeverEatAlone.PaymentTransaction(59, 50,
+            NeverEatAlone.PaymentMethod.CREDIT_CARD,
+            NeverEatAlone.CreditCardType.MASTERCARD, '1458', 'Cancellation fee',
+            new Date(2022, 10, 10, 23, 15), new Date(2022, 10, 10, 23, 15),
+            NeverEatAlone.PaymentStatus.WILL_BE_CHARGED)
+        ]),
+      new NeverEatAlone.PaymentRecord(
+        4, new NeverEatAlone.EventCardSummary(1,
+        "Let's have fun at the buffet...", new Date(2022, 6, 12, 19, 0, 0),
+        new Date(2021, 6, 12, 23, 0, 0), 'Le Select',
+        NeverEatAlone.PriceRange.EXPENSIVE, [],
+        'resources/images/1.jpg', 12, 12, true, 'yellow'), [
+          new NeverEatAlone.PaymentTransaction(909, 7.25,
+            NeverEatAlone.PaymentMethod.CREDIT_CARD,
+            NeverEatAlone.CreditCardType.AMEX, '1458', 'Event fee', new Date(
+            2022, 10, 1, 23, 15), new Date(2022, 10, 1, 23, 15),
+            NeverEatAlone.PaymentStatus.CHARGED),
+          new NeverEatAlone.PaymentTransaction(90, 7.25,
+            NeverEatAlone.PaymentMethod.CREDIT_CARD,
+            NeverEatAlone.CreditCardType.AMEX, '1458', 'Event fee',
+            new Date(2022, 10, 15, 20, 15), new Date(2022, 10, 15, 20, 15),
+            NeverEatAlone.PaymentStatus.REFUNDED)
+        ])
+    ], ArrayInput(
+      new PropertySchema('paymentRecord', new NeverEatAlone.PaymentRecord(
+        1, new NeverEatAlone.EventCardSummary(1, 'best french restaurant',
+        new Date(2022, 6, 12, 19, 0, 0), new Date(2021, 6, 12, 23, 0, 0),
+        'Le Select', NeverEatAlone.PriceRange.EXPENSIVE, [],
+        'resources/images/5.jpg', 12, 12, true, 'yellow'), [
+          new NeverEatAlone.PaymentTransaction(14, 26.54,
+            NeverEatAlone.PaymentMethod.CREDIT_CARD,
+            NeverEatAlone.CreditCardType.VISA, '1458', 'Event fee',
+            new Date(2022, 10, 1, 23, 15), new Date(2022, 10, 1, 23, 15),
+            NeverEatAlone.PaymentStatus.CHARGED)
+        ]),
+        PaymentRecordInput)
+    )),
     new PropertySchema('addCardErrorMessage', '', TextInput),
     new PropertySchema('addCardErrorCode',
       NeverEatAlone.AddCreditCardForm.ErrorCode.NONE,
