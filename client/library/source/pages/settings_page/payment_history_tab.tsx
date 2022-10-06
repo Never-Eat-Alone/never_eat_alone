@@ -125,6 +125,21 @@ function PaymentRecordCard(props: PaymentRecordCardProp) {
         </div>);
     }
   }
+  const viewReceiptButton = (() => {
+    switch (props.displayMode) {
+      case DisplayMode.DESKTOP:
+        return (
+          <SecondaryTextButton
+            style={VIEW_RECEIPT_BUTTON_STYLE}
+            label='View Receipt'
+            onClick={props.onViewReceiptClick}
+          />);
+      case DisplayMode.TABLET:
+        return (
+          
+        );
+    }
+  })();
   return (
     <div style={CARD_CONTAINER_STYLE} >
       <div style={IMAGE_DETAILS_CONTAINER_STYLE} >
@@ -149,11 +164,7 @@ function PaymentRecordCard(props: PaymentRecordCardProp) {
           {charges}
         </div>
       </div>
-      <SecondaryTextButton
-        style={VIEW_RECEIPT_BUTTON_STYLE}
-        label='View Receipt'
-        onClick={props.onViewReceiptClick}
-      />
+      {viewReceiptButton}
     </div>);
 }
 
