@@ -78,6 +78,7 @@ const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
 };
 
 const BACKGROUND_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
@@ -88,7 +89,8 @@ const BACKGROUND_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
   backgroundImage: 'url(resources/payment_receipt_modal/background.svg)',
   backgroundSize: '290px 453px',
   backgroundRepeat: 'no-repeat',
-  backgroundPosition: 'top -121px center'
+  backgroundPosition: 'top -121px center',
+  padding: '40px 20px 20px 20px'
 };
 
 const LOGO_ROW_STYLE: React.CSSProperties = {
@@ -96,20 +98,16 @@ const LOGO_ROW_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',
-  alignItems: 'center',
-  padding: '40px 40px 0px 40px',
+  alignItems: 'flex-start',
+  padding: '0px 20px 0px 20px',
   width: '100%',
-  height: '83px',
-  minHeight: '83px',
   backgroundColor: 'transparent',
   marginBottom: '137px'
 };
 
 const MOBILE_LOGO_ROW_STYLE: React.CSSProperties = {
   ...LOGO_ROW_STYLE,
-  padding: '20px 20px 0px 20px',
-  height: '63px',
-  minHeight: '63px',
+  padding: '0px',
   marginBottom: '47px'
 };
 
@@ -122,7 +120,7 @@ const LOGO_LINK_STYLE: React.CSSProperties = {
   textDecoration: 'none',
   cursor: 'pointer',
   outline: 'none',
-  height: '100%',
+  height: '43px',
   width: '50px'
 };
 
@@ -150,7 +148,6 @@ const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
   padding: '100px 30px 40px 28px',
   backgroundColor: '#FFFFFF',
   borderRadius: '4px',
-  margin: '0px 20px',
   width: '100%'
 };
 
@@ -164,7 +161,7 @@ const PLATE_IMAGE_STYLE: React.CSSProperties = {
   height: '140px',
   minWidth: '140px',
   minHeight: '140px',
-  marginTop: '-70px',
+  marginTop: '-170px',
   backgroundColor: 'transparent'
 };
 
@@ -173,6 +170,6 @@ const MOBILE_PLATE_IMAGE_STYLE: React.CSSProperties = {
   height: '100px',
   minWidth: '100px',
   minHeight: '100px',
-  marginTop: '-50px',
+  marginTop: '-110px',
   backgroundColor: 'transparent'
 };
