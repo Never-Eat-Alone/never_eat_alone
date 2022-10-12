@@ -153,6 +153,29 @@ function PaymentRecordCard(props: PaymentRecordCardProp) {
          </button>);
     }
   })();
+  const eventButtonStyle = (props.displayMode ===
+    DisplayMode.MOBILE && MOBILE_EVENT_BUTTON_STYLE || EVENT_BUTTON_STYLE);
+  const detailsSection = (() => {
+    if (props.displayMode === DisplayMode.DESKTOP) {
+      return (
+        <div style={DETAILS_CONTAINER_STYLE} >
+          <p style={EVENT_TITLE_STYLE} >
+            {props.paymentRecord.eventCardSummary.eventTitle}
+          </p>
+          {charges}
+        </div>);
+    }
+    return (
+      <button
+          style={DETAILS_CONTAINER_BUTTON_STYLE}
+          onClick={props.onViewReceiptClick}
+      >
+        <p style={EVENT_TITLE_STYLE} >
+          {props.paymentRecord.eventCardSummary.eventTitle}
+        </p>
+        {charges}
+      </button>);
+  })();
   return (
     <div style={CARD_CONTAINER_STYLE} >
       <div style={imageDetailsContainerStyle} >
@@ -163,19 +186,14 @@ function PaymentRecordCard(props: PaymentRecordCardProp) {
             alt='Event Image'
           />
           <Router.Link
-            style={EVENT_BUTTON_STYLE}
+            style={eventButtonStyle}
             to={`events/${props.paymentRecord.eventCardSummary.eventId}`}
             className={css(styles.eventLink)}
           >
             Event Page
           </Router.Link>
         </div>
-        <div style={DETAILS_CONTAINER_STYLE} >
-          <p style={EVENT_TITLE_STYLE} >
-            {props.paymentRecord.eventCardSummary.eventTitle}
-          </p>
-          {charges}
-        </div>
+        {detailsSection}
       </div>
       {viewReceiptButton}
     </div>);
@@ -314,6 +332,19 @@ const EVENT_BUTTON_STYLE: React.CSSProperties = {
   color: '#FFFFFF'
 };
 
+const TABLET_EVENT_BUTTON_STYLE: React.CSSProperties = {
+  ...EVENT_BUTTON_STYLE,
+  width: '75px',
+  height: '25px'
+};
+
+const MOBILE_EVENT_BUTTON_STYLE: React.CSSProperties = {
+  ...EVENT_BUTTON_STYLE,
+  right: 'calc((100% - 75px) / 2)',
+  width: '75px',
+  height: '25px'
+};
+
 const DETAILS_CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
@@ -324,6 +355,18 @@ const DETAILS_CONTAINER_STYLE: React.CSSProperties = {
   gap: '5px',
   height: '100%',
   width: 'calc(100% - 170px)'
+};
+
+const DETAILS_CONTAINER_BUTTON_STYLE: React.CSSProperties = {
+  ...DETAILS_CONTAINER_STYLE,
+  boxShadow: 'none',
+  outline: 'none',
+  border: 'none',
+  textDecoration: 'none',
+  margin: '0px',
+  backgroundColor: 'transparent',
+  minHeight: '100%',
+  minWidth: 'calc(100% - 170px)'
 };
 
 const VIEW_RECEIPT_BUTTON_STYLE: React.CSSProperties = {
@@ -350,8 +393,7 @@ const EVENT_TITLE_STYLE: React.CSSProperties = {
   fontWeight: 600,
   fontSize: '14px',
   lineHeight: '18px',
-  color: '#000000',
-  width: '100%'
+  color: '#000000'
 };
 
 const COST_TEXT_STYLE: React.CSSProperties = {
