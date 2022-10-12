@@ -11,76 +11,54 @@ interface Properties {
 
   /** List of the user's payment records. */
   paymentRecords: PaymentRecord[];
+
+  /** Indicates the view receipt button is clicked. */
+  onViewReceiptClick: (record: PaymentRecord) => void;
 }
 
-interface State {
-  page: PaymentHistoryTab.Page;
-  selectedRecord: PaymentRecord;
-}
-
-/** Dislays the payment history tab inside the setting page. */
-export class PaymentHistoryTab extends React.Component<Properties, State> {
-  constructor(props: Properties) {
-    super(props);
-    this.state = {
-      page: PaymentHistoryTab.Page.INITIAL,
-      selectedRecord: PaymentRecord.noRecord()
-    };
-  }
-
-  public render(): JSX.Element {
-    if (this.state.page === PaymentHistoryTab.Page.PAYMENT_DETAILS) {
-      return <div>Payment details</div>;
-    }
-    const recordRows = (() => {
-      if (!this.props.paymentRecords || this.props.paymentRecords.length === 0
-          ) {
-        return (
-          <div style={NOT_FOUND_CONTAINER_STYLE} >
-            <img
-              style={NO_RECORDS_IMAGE_STYLE}
-              src='resources/illustrations/not_found.svg'
-              alt='Nothing found icon'
+/** Displays the payment history tab inside the setting page. */
+export function PaymentHistoryTab(props: Properties) {
+  const recordRows = (() => {
+    if (!props.paymentRecords || props.paymentRecords.length === 0
+        ) {
+      return (
+        <div style={NOT_FOUND_CONTAINER_STYLE} >
+          <img
+            style={NO_RECORDS_IMAGE_STYLE}
+            src='resources/illustrations/not_found.svg'
+            alt='Nothing found icon'
+          />
+          <h1 style={NOTHING_FOUND_HEADING_STYLE} >Nothing here yet!</h1>
+          <div style={NOTHING_FOUND_TEXT_STYLE} >
+            This is where your payment history and receipts will appear.
+            For now, go&nbsp;
+            <RedNavLink
+                style={EXPLORE_EVENT_LINK_STYLE}
+                to='/explore_events'
+                label='join some events!'
             />
-            <h1 style={NOTHING_FOUND_HEADING_STYLE} >Nothing here yet!</h1>
-            <div style={NOTHING_FOUND_TEXT_STYLE} >
-              This is where your payment history and receipts will appear.
-              For now, go&nbsp;
-              <RedNavLink
-                  style={EXPLORE_EVENT_LINK_STYLE}
-                  to='/explore_events'
-                  label='join some events!'
-              />
-            </div>
-          </div>);
+          </div>
+        </div>);
+    }
+    const rows = [];
+    for (let i = 0; i < props.paymentRecords.length; ++i) {
+      const record = props.paymentRecords[i];
+      rows.push(
+        <PaymentRecordCard key={'PaymentRecordCard' + record.id}
+          displayMode={props.displayMode} paymentRecord={record}
+          onViewReceiptClick={() => props.onViewReceiptClick(record)}
+        />);
+      if (i !== props.paymentRecords.length - 1) {
+        rows.push(<div key={'divider' + i} style={DIVIDER_STYLE} />);
       }
-      const rows = [];
-      for (let i = 0; i < this.props.paymentRecords.length; ++i) {
-        const record = this.props.paymentRecords[i];
-        rows.push(
-          <PaymentRecordCard key={'PaymentRecordCard' + record.id}
-            displayMode={this.props.displayMode} paymentRecord={record}
-            onViewReceiptClick={() => this.handleViewReceipt(record)}
-          />);
-        if (i !== this.props.paymentRecords.length - 1) {
-          rows.push(<div key={'divider' + i} style={DIVIDER_STYLE} />);
-        }
-      }
-      return rows;
-    })();
-    return (
-      <div style={CONTAINER_STYLE} >
-        <h1 style={PAGE_HEADING_STYLE} >Payment Methods</h1>
-        {recordRows}
-      </div>);
-  }
-
-  private handleViewReceipt = (record: PaymentRecord) => {
-    this.setState({
-      page: PaymentHistoryTab.Page.PAYMENT_DETAILS,
-      selectedRecord: record
-    });
-  }
+    }
+    return rows;
+  })();
+  return (
+    <div style={CONTAINER_STYLE} >
+      <h1 style={PAGE_HEADING_STYLE} >Payment Methods</h1>
+      {recordRows}
+    </div>);
 }
 
 interface PaymentRecordCardProp {
@@ -153,8 +131,15 @@ function PaymentRecordCard(props: PaymentRecordCardProp) {
          </button>);
     }
   })();
-  const eventButtonStyle = (props.displayMode ===
-    DisplayMode.MOBILE && MOBILE_EVENT_BUTTON_STYLE || EVENT_BUTTON_STYLE);
+  const eventButtonStyle = (() => {
+    if (props.displayMode === DisplayMode.DESKTOP) {
+      return EVENT_BUTTON_STYLE;
+    }
+    if (props.displayMode === DisplayMode.TABLET) {
+      return TABLET_EVENT_BUTTON_STYLE;
+    }
+    return MOBILE_EVENT_BUTTON_STYLE;
+  })();
   const detailsSection = (() => {
     if (props.displayMode === DisplayMode.DESKTOP) {
       return (
@@ -197,13 +182,6 @@ function PaymentRecordCard(props: PaymentRecordCardProp) {
       </div>
       {viewReceiptButton}
     </div>);
-}
-
-export namespace PaymentHistoryTab {
-  export enum Page {
-    INITIAL,
-    PAYMENT_DETAILS
-  }
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {

@@ -126,6 +126,9 @@ interface Properties {
 
   /** Indicates the delete account button is clicked. */
   onDeleteAccount: () => void;
+
+  /** Indicates the view receipt button is clicked. */
+  onViewReceiptClick: (record: PaymentRecord) => void;
 }
 
 interface State {

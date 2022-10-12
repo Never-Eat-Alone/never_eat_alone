@@ -1625,7 +1625,8 @@ export function loadComponentSchemas(): ComponentSchema[] {
       new SignalSchema('onEditEmailClick', '', []),
       new SignalSchema('onEditPasswordClick', '', []),
       new SignalSchema('onDeactivateAccount', '', []),
-      new SignalSchema('onDeleteAccount', '', [])
+      new SignalSchema('onDeleteAccount', '', []),
+      new SignalSchema('onViewReceiptClick', '', [])
       ], NeverEatAlone.SettingsPage);
   const linkSocialMediaButtonSchema = new ComponentSchema(
     'LinkSocialMediaButton',
@@ -1641,6 +1642,21 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('style', {}, CSSInput),
     new PropertySchema('checked', true, BooleanInput)
   ], [new SignalSchema('onClick', '', [])], NeverEatAlone.ToggleButton);
+  const paymentReceiptModalSchema = new ComponentSchema('PaymentReceiptModal',
+    [new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
+      DisplayModeInput),
+    new PropertySchema('paymentRecord', new NeverEatAlone.PaymentRecord(
+      1, new NeverEatAlone.EventCardSummary(1, 'best french restaurant',
+      new Date(2022, 6, 12, 19, 0, 0), new Date(2021, 6, 12, 23, 0, 0),
+      'Le Select', NeverEatAlone.PriceRange.EXPENSIVE, [],
+      'resources/images/5.jpg', 12, 12, true, 'yellow'), [
+        new NeverEatAlone.PaymentTransaction(14, 26.54,
+          NeverEatAlone.PaymentMethod.CREDIT_CARD,
+          NeverEatAlone.CreditCardType.VISA, '1458', 'Event fee',
+          new Date(2022, 10, 1, 23, 15), new Date(2022, 10, 1, 23, 15),
+          NeverEatAlone.PaymentStatus.CHARGED)
+      ]), PaymentRecordInput)],
+    [new SignalSchema('onClose', '', [])], NeverEatAlone.PaymentReceiptModal);
   return [
     accentTextButtonSchema,
     albumCardSchema,
@@ -1681,6 +1697,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     nameInputFieldSchema,
     partnerWithUsSummarySchema,
     paymentCardInputFieldSchema,
+    paymentReceiptModalSchema,
     payPalButtonSchema,
     primaryButtonWithArrowSchema,
     primaryTextButtonSchema,
