@@ -68,6 +68,31 @@ interface PaymentRecordCardProp {
 }
 
 function PaymentRecordCard(props: PaymentRecordCardProp) {
+  const { imageDetailsContainerStyle, eventButtonStyle,
+      eventImageContainerStyle, eventImageStyle } = (() => {
+    if (props.displayMode === DisplayMode.MOBILE) {
+      return {
+        imageDetailsContainerStyle: MOBILE_IMAGE_DETAILS_CONTAINER_STYLE,
+        eventButtonStyle: MOBILE_EVENT_BUTTON_STYLE,
+        eventImageContainerStyle: MOBILE_EVENT_IMAGE_CONTAINER_STYLE,
+        eventImageStyle: MOBILE_EVENT_IMAGE_STYLE
+      };
+    }
+    if (props.displayMode === DisplayMode.TABLET) {
+      return {
+        imageDetailsContainerStyle: IMAGE_DETAILS_CONTAINER_STYLE,
+        eventButtonStyle: TABLET_EVENT_BUTTON_STYLE,
+        eventImageContainerStyle: EVENT_IMAGE_CONTAINER_STYLE,
+        eventImageStyle: EVENT_IMAGE_STYLE
+      };
+    }
+    return {
+      imageDetailsContainerStyle: IMAGE_DETAILS_CONTAINER_STYLE,
+      eventButtonStyle: EVENT_BUTTON_STYLE,
+      eventImageContainerStyle: EVENT_IMAGE_CONTAINER_STYLE,
+      eventImageStyle: EVENT_IMAGE_STYLE
+    }
+  })();
   const charges = [];
   for (const transaction of props.paymentRecord.paymentTransactions) {
     switch (transaction.status) {
@@ -105,8 +130,6 @@ function PaymentRecordCard(props: PaymentRecordCardProp) {
         </div>);
     }
   }
-  const imageDetailsContainerStyle = (props.displayMode === DisplayMode.MOBILE
-    && MOBILE_IMAGE_DETAILS_CONTAINER_STYLE || IMAGE_DETAILS_CONTAINER_STYLE);
   const viewReceiptButton = (() => {
     switch (props.displayMode) {
       case DisplayMode.DESKTOP:
@@ -130,15 +153,6 @@ function PaymentRecordCard(props: PaymentRecordCardProp) {
             />
          </button>);
     }
-  })();
-  const eventButtonStyle = (() => {
-    if (props.displayMode === DisplayMode.DESKTOP) {
-      return EVENT_BUTTON_STYLE;
-    }
-    if (props.displayMode === DisplayMode.TABLET) {
-      return TABLET_EVENT_BUTTON_STYLE;
-    }
-    return MOBILE_EVENT_BUTTON_STYLE;
   })();
   const detailsSection = (() => {
     if (props.displayMode === DisplayMode.DESKTOP) {
@@ -164,9 +178,9 @@ function PaymentRecordCard(props: PaymentRecordCardProp) {
   return (
     <div style={CARD_CONTAINER_STYLE} >
       <div style={imageDetailsContainerStyle} >
-        <div style={EVENT_IMAGE_CONTAINER_STYLE} >
+        <div style={eventImageContainerStyle} >
           <img
-            style={EVENT_IMAGE_STYLE}
+            style={eventImageStyle}
             src={props.paymentRecord.eventCardSummary.imageSrc}
             alt='Event Image'
           />
@@ -275,6 +289,11 @@ const EVENT_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
   height: '100px'
 };
 
+const MOBILE_EVENT_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  ...EVENT_IMAGE_CONTAINER_STYLE,
+  width: '85px'
+};
+
 const EVENT_IMAGE_STYLE: React.CSSProperties = {
   width: '100%',
   minWidth: '150px',
@@ -283,6 +302,12 @@ const EVENT_IMAGE_STYLE: React.CSSProperties = {
   backgroundColor: 'transparent',
   borderRadius: '4px',
   objectFit: 'cover'
+};
+
+const MOBILE_EVENT_IMAGE_STYLE: React.CSSProperties = {
+  ...EVENT_IMAGE_STYLE,
+  width: '100%',
+  minWidth: '85px',
 };
 
 const EVENT_BUTTON_STYLE: React.CSSProperties = {
@@ -344,7 +369,8 @@ const DETAILS_CONTAINER_BUTTON_STYLE: React.CSSProperties = {
   margin: '0px',
   backgroundColor: 'transparent',
   minHeight: '100%',
-  minWidth: 'calc(100% - 170px)'
+  width: 'calc(100% - 100px)',
+  minWidth: 'calc(100% - 100px)'
 };
 
 const VIEW_RECEIPT_BUTTON_STYLE: React.CSSProperties = {
