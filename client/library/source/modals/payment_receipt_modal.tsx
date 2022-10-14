@@ -55,6 +55,33 @@ export function PaymentReceiptModal(props: Properties) {
             src='resources/payment_receipt_modal/plate.svg'
             alt='Plate Image'
           />
+          <div style={EVENT_TAG_CONTAINER_STYLE} >
+            <svg
+                style={{...EVENT_TAG_ICON_STYLE,
+                  color: props.paymentRecord.eventCardSummary.eventColor}}
+                width='18' height='31' viewBox='0 0 18 31'
+                xmlns='http://www.w3.org/2000/svg'
+            >
+              <path d='M18 31H0V0H18L14 15.5L18 31Z' fill='currentColor' />
+            </svg>
+          </div>
+          <h1 style={EVENT_TITLE_STYLE} >
+            {props.paymentRecord.eventCardSummary.eventTitle}
+          </h1>
+          <div style={DATE_TIME_ROW_STYLE} >
+            <img
+              style={DATE_ICON_STYLE}
+              src='resources/payment_receipt_modal/date.svg'
+              alt='Date Icon'
+            />
+            <p style={DATE_TEXT_STYLE} >Date</p>
+            <img
+              style={TIME_ICON_STYLE}
+              src='resources/payment_receipt_modal/time.svg'
+              alt='Time Icon'
+            />
+            <p style={TIME_TEXT_STYLE} >Time</p>
+          </div>
         </div>
       </div>
     </div>);
@@ -140,6 +167,7 @@ const CLOSE_BUTTON_STYLE: React.CSSProperties = {
 };
 
 const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+  position: 'relative',
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
@@ -172,4 +200,78 @@ const MOBILE_PLATE_IMAGE_STYLE: React.CSSProperties = {
   minHeight: '100px',
   marginTop: '-110px',
   backgroundColor: 'transparent'
+};
+
+const EVENT_TAG_CONTAINER_STYLE: React.CSSProperties = {
+  position: 'absolute',
+  top: '105px',
+  left: '0px',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  width: '18px',
+  height: '31px',
+  backgroundColor: 'transparent'
+};
+
+const EVENT_TAG_ICON_STYLE: React.CSSProperties = {
+  width: '100%',
+  minWidth: '18px',
+  height: '100%',
+  minHeight: '31px'
+};
+
+const EVENT_TITLE_STYLE: React.CSSProperties = {
+  fontFamily: 'Oswald',
+  fontStyle: 'normal',
+  fontWeight: 500,
+  fontSize: '26px',
+  lineHeight: '39px',
+  textTransform: 'capitalize',
+  color: '#000000',
+  padding: '0px',
+  margin: '0px 0px 10px 0px',
+  width: '100%'
+};
+
+const DATE_TIME_ROW_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  height: '25px',
+  width: '100%',
+  marginBottom: '10px'
+};
+
+const DATE_ICON_STYLE: React.CSSProperties = {
+  width: '15px',
+  minWidth: '15px',
+  height: '14px',
+  minHeight: '14px'
+};
+
+const DATE_TEXT_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '20px',
+  lineHeight: '25px',
+  color: '#000000',
+  padding: '0px',
+  margin: '0px 30px 0px 0px'
+};
+
+const TIME_ICON_STYLE: React.CSSProperties = {
+  width: '15px',
+  minWidth: '15px',
+  height: '15px',
+  minHeight: '15px',
+  marginRight: '10px'
+};
+
+const TIME_TEXT_STYLE: React.CSSProperties = {
+  ...DATE_TEXT_STYLE,
+  margin: '0px'
 };

@@ -1649,7 +1649,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
       1, new NeverEatAlone.EventCardSummary(1, 'best french restaurant',
       new Date(2022, 6, 12, 19, 0, 0), new Date(2021, 6, 12, 23, 0, 0),
       'Le Select', NeverEatAlone.PriceRange.EXPENSIVE, [],
-      'resources/images/5.jpg', 12, 12, true, 'yellow'), [
+      'resources/images/5.jpg', 12, 12, true, '#BF408D'), [
         new NeverEatAlone.PaymentTransaction(14, 26.54,
           NeverEatAlone.PaymentMethod.CREDIT_CARD,
           NeverEatAlone.CreditCardType.VISA, '1458', 'Event fee',
