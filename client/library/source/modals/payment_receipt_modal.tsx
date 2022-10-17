@@ -15,21 +15,23 @@ interface Properties {
 
 /** Displays the Payment Receipt Modal. */
 export function PaymentReceiptModal(props: Properties) {
-  const { containerStyle, logoRowStyle, contentContainerStyle, plateImageStyle
-      } = (() => {
+  const { containerStyle, logoRowStyle, contentContainerStyle, plateImageStyle,
+      eventTitleStyle } = (() => {
     if (props.displayMode === DisplayMode.MOBILE) {
       return {
         containerStyle: MOBILE_CONTAINER_STYLE,
         logoRowStyle: MOBILE_LOGO_ROW_STYLE,
         contentContainerStyle: MOBILE_CONTENT_CONTAINER_STYLE,
-        plateImageStyle: MOBILE_PLATE_IMAGE_STYLE
+        plateImageStyle: MOBILE_PLATE_IMAGE_STYLE,
+        eventTitleStyle: MOBILE_EVENT_TITLE_STYLE
       };
     }
     return {
       containerStyle: CONTAINER_STYLE,
       logoRowStyle: LOGO_ROW_STYLE,
       contentContainerStyle: CONTENT_CONTAINER_STYLE,
-      plateImageStyle: PLATE_IMAGE_STYLE
+      plateImageStyle: PLATE_IMAGE_STYLE,
+      eventTitleStyle: EVENT_TITLE_STYLE
     };
   })();
   return (
@@ -65,10 +67,10 @@ export function PaymentReceiptModal(props: Properties) {
               <path d='M18 31H0V0H18L14 15.5L18 31Z' fill='currentColor' />
             </svg>
           </div>
-          <h1 style={EVENT_TITLE_STYLE} >
+          <h1 style={eventTitleStyle} >
             {props.paymentRecord.eventCardSummary.eventTitle}
           </h1>
-          <div style={DATE_TIME_ROW_STYLE} >
+          <div style={DATE_TIME_SECTION_STYLE} >
             <img
               style={DATE_ICON_STYLE}
               src='resources/payment_receipt_modal/date.svg'
@@ -189,7 +191,7 @@ const PLATE_IMAGE_STYLE: React.CSSProperties = {
   height: '140px',
   minWidth: '140px',
   minHeight: '140px',
-  marginTop: '-170px',
+  marginTop: '-171px',
   backgroundColor: 'transparent'
 };
 
@@ -231,25 +233,51 @@ const EVENT_TITLE_STYLE: React.CSSProperties = {
   textTransform: 'capitalize',
   color: '#000000',
   padding: '0px',
-  margin: '0px 0px 10px 0px',
+  margin: '31px 0px 10px 0px',
   width: '100%'
 };
 
-const DATE_TIME_ROW_STYLE: React.CSSProperties = {
+const MOBILE_EVENT_TITLE_STYLE: React.CSSProperties = {
+  ...EVENT_TITLE_STYLE,
+  fontSize: '24px',
+  lineHeight: '36px',
+  margin: '10px 0px 10px 0px'
+};
+
+const DATE_TIME_SECTION_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'flex-start',
-  alignItems: 'center',
-  height: '25px',
+  alignItems: 'flex-start',
   width: '100%',
-  marginBottom: '10px'
+  marginBottom: '10px',
+  gap: '30px'
+};
+
+const MOBILE_DATE_TIME_SECTION_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  width: '100%',
+  marginBottom: '10px',
+  gap: '10px'
+};
+
+const ICON_TEXT_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  gap: '10px'
 };
 
 const DATE_ICON_STYLE: React.CSSProperties = {
   width: '15px',
   minWidth: '15px',
   height: '14px',
-  minHeight: '14px'
+  minHeight: '14px',
+  marginRight: '10px'
 };
 
 const DATE_TEXT_STYLE: React.CSSProperties = {
