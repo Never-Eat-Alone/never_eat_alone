@@ -16,14 +16,15 @@ interface Properties {
 /** Displays the Payment Receipt Modal. */
 export function PaymentReceiptModal(props: Properties) {
   const { containerStyle, logoRowStyle, contentContainerStyle, plateImageStyle,
-      eventTitleStyle } = (() => {
+      eventTitleStyle, dateTimeSectionStyle } = (() => {
     if (props.displayMode === DisplayMode.MOBILE) {
       return {
         containerStyle: MOBILE_CONTAINER_STYLE,
         logoRowStyle: MOBILE_LOGO_ROW_STYLE,
         contentContainerStyle: MOBILE_CONTENT_CONTAINER_STYLE,
         plateImageStyle: MOBILE_PLATE_IMAGE_STYLE,
-        eventTitleStyle: MOBILE_EVENT_TITLE_STYLE
+        eventTitleStyle: MOBILE_EVENT_TITLE_STYLE,
+        dateTimeSectionStyle: MOBILE_DATE_TIME_SECTION_STYLE
       };
     }
     return {
@@ -31,7 +32,8 @@ export function PaymentReceiptModal(props: Properties) {
       logoRowStyle: LOGO_ROW_STYLE,
       contentContainerStyle: CONTENT_CONTAINER_STYLE,
       plateImageStyle: PLATE_IMAGE_STYLE,
-      eventTitleStyle: EVENT_TITLE_STYLE
+      eventTitleStyle: EVENT_TITLE_STYLE,
+      dateTimeSectionStyle: DATE_TIME_SECTION_STYLE
     };
   })();
   return (
@@ -70,19 +72,46 @@ export function PaymentReceiptModal(props: Properties) {
           <h1 style={eventTitleStyle} >
             {props.paymentRecord.eventCardSummary.eventTitle}
           </h1>
-          <div style={DATE_TIME_SECTION_STYLE} >
+          <div style={dateTimeSectionStyle} >
+            <div style={TEXT_ICON_CONTAINER_STYLE} >
+              <img
+                style={DATE_ICON_STYLE}
+                src='resources/payment_receipt_modal/date.svg'
+                alt='Date Icon'
+              />
+              <p style={DATE_TEXT_STYLE} >Date</p>
+            </div>
+            <div style={TEXT_ICON_CONTAINER_STYLE} >
+              <img
+                style={TIME_ICON_STYLE}
+                src='resources/payment_receipt_modal/time.svg'
+                alt='Time Icon'
+              />
+              <p style={TIME_TEXT_STYLE} >Time</p>
+            </div>
+          </div>
+          <div style={LOCATION_ICON_CONTAINER_STYLE} >
             <img
-              style={DATE_ICON_STYLE}
-              src='resources/payment_receipt_modal/date.svg'
-              alt='Date Icon'
+              style={LOCATION_ICON_STYLE}
+              src='resources/payment_receipt_modal/location.svg'
+              alt='Location Icon'
             />
-            <p style={DATE_TEXT_STYLE} >Date</p>
-            <img
-              style={TIME_ICON_STYLE}
-              src='resources/payment_receipt_modal/time.svg'
-              alt='Time Icon'
-            />
-            <p style={TIME_TEXT_STYLE} >Time</p>
+            <p style={TIME_TEXT_STYLE} >Restaurant</p>
+          </div>
+          <div style={JOINED_TEXT_STYLE} >You joined on </div>
+          {fees}
+          <div style={DIVIDER_STYLE} />
+          <div style={FEE_ROW_STYLE} >
+            <div style={GREY_TEXT_STYLE} >Subtotal</div>
+            <div style={AMOUNT_TEXT_STYLE} ></div>
+          </div>
+          <div style={FEE_ROW_STYLE} >
+            <div style={GREY_TEXT_STYLE} >Tax</div>
+            <div style={AMOUNT_TEXT_STYLE} ></div>
+          </div>
+          <div style={FEE_ROW_STYLE} >
+            <div style={TOTAL_PAYMENT_TEXT_STYLE} >Total Payment</div>
+            <div style={AMOUNT_TEXT_STYLE} ></div>
           </div>
         </div>
       </div>
@@ -264,14 +293,6 @@ const MOBILE_DATE_TIME_SECTION_STYLE: React.CSSProperties = {
   gap: '10px'
 };
 
-const ICON_TEXT_CONTAINER_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'flex-start',
-  alignItems: 'flex-start',
-  gap: '10px'
-};
-
 const DATE_ICON_STYLE: React.CSSProperties = {
   width: '15px',
   minWidth: '15px',
@@ -302,4 +323,37 @@ const TIME_ICON_STYLE: React.CSSProperties = {
 const TIME_TEXT_STYLE: React.CSSProperties = {
   ...DATE_TEXT_STYLE,
   margin: '0px'
+};
+
+const TEXT_ICON_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  gap: '10px'
+};
+
+const LOCATION_ICON_CONTAINER_STYLE: React.CSSProperties = {
+  ...TEXT_ICON_CONTAINER_STYLE,
+  marginBottom: '40px',
+  width: '100%'
+};
+
+const JOINED_TEXT_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  marginBottom: '40px',
+  width: '100%',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '16px',
+  lineHeight: '20px',
+  color: '#000000'
+};
+
+const LOCATION_ICON_STYLE: React.CSSProperties = {
+  
 };
