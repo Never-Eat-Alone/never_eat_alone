@@ -103,15 +103,36 @@ export function PaymentReceiptModal(props: Properties) {
           <div style={DIVIDER_STYLE} />
           <div style={FEE_ROW_STYLE} >
             <div style={GREY_TEXT_STYLE} >Subtotal</div>
-            <div style={AMOUNT_TEXT_STYLE} ></div>
+            <div style={AMOUNT_TEXT_STYLE} >CAD $5.00</div>
           </div>
           <div style={FEE_ROW_STYLE} >
             <div style={GREY_TEXT_STYLE} >Tax</div>
-            <div style={AMOUNT_TEXT_STYLE} ></div>
+            <div style={AMOUNT_TEXT_STYLE} >CAD $0.65</div>
           </div>
           <div style={FEE_ROW_STYLE} >
-            <div style={TOTAL_PAYMENT_TEXT_STYLE} >Total Payment</div>
-            <div style={AMOUNT_TEXT_STYLE} ></div>
+            <div style={BOLD_FEE_TEXT_STYLE} >Total Payment</div>
+            <div style={AMOUNT_TEXT_STYLE} >CAD $5.65</div>
+          </div>
+          <div style={DIVIDER_STYLE} />
+          <div style={RECEIPT_NUMBER_STYLE} >Receipt #19827491</div>
+          <div style={FEE_DESCRIPTION_STYLE} >
+            There’s an amount of $60 on hold for the cancellation fee. This fee 
+            will not be charged if you attend the event.
+          </div>
+          <div style={BOLD_FEE_TEXT_STYLE} >Payment Method</div>
+          <div style={CARD_AMOUNT_ROW_STYLE} >
+            <div style={CARD_NUMBER_COLUMN_STYLE} >
+              <img
+                style={CARD_IMAGE_STYLE}
+                src=''
+                alt='Card Icon'
+              />
+              <div style={} >
+                <div style={} >Ending in 1200</div>
+                <div style={} >03/27/22 5:22 PM</div>
+              </div>
+            </div>
+            <div style={} >CAD $5.65</div>
           </div>
         </div>
       </div>
@@ -297,8 +318,7 @@ const DATE_ICON_STYLE: React.CSSProperties = {
   width: '15px',
   minWidth: '15px',
   height: '14px',
-  minHeight: '14px',
-  marginRight: '10px'
+  minHeight: '14px'
 };
 
 const DATE_TEXT_STYLE: React.CSSProperties = {
@@ -316,8 +336,7 @@ const TIME_ICON_STYLE: React.CSSProperties = {
   width: '15px',
   minWidth: '15px',
   height: '15px',
-  minHeight: '15px',
-  marginRight: '10px'
+  minHeight: '15px'
 };
 
 const TIME_TEXT_STYLE: React.CSSProperties = {
@@ -355,5 +374,104 @@ const JOINED_TEXT_STYLE: React.CSSProperties = {
 };
 
 const LOCATION_ICON_STYLE: React.CSSProperties = {
-  
+  width: '15px',
+  minWidth: '15px',
+  height: '15px',
+  minHeight: '15px'
+};
+
+const DIVIDER_STYLE: React.CSSProperties = {
+  width: '100%',
+  height: '1px',
+  backgroundColor: '#EFEFEF',
+  marginTop: '30px',
+  marginBottom: '20px'
+};
+
+const FEE_ROW_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'space-between',
+  width: '100%',
+  gap: '20px'
+};
+
+const BOLD_FEE_TEXT_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '16px',
+  lineHeight: '20px',
+  color: '#000000'
+};
+
+const GREY_TEXT_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '16px',
+  lineHeight: '20px',
+  color: '#969696'
+};
+
+const AMOUNT_TEXT_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '16px',
+  lineHeight: '20px',
+  color: '#000000'
+};
+
+const RECEIPT_NUMBER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-end',
+  alignItems: 'flex-start',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 300,
+  fontSize: '12px',
+  lineHeight: '15px',
+  color: '#000000',
+  marginBottom: '40px'
+};
+
+const FEE_DESCRIPTION_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  width: '100%',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '16px',
+  lineHeight: '20px',
+  color: '#000000',
+  marginBottom: '40px'
+};
+
+const CARD_AMOUNT_ROW_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  gap: '20px'
+};
+
+const CARD_NUMBER_COLUMN_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  gap: '20px'
+};
+
+const CARD_IMAGE_STYLE: React.CSSProperties = {
+  width: '55px',
+  minWidth: '55px',
+  height: '40px',
+  minHeight: '40px'
 };
