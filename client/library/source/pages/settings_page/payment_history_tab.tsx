@@ -11,76 +11,54 @@ interface Properties {
 
   /** List of the user's payment records. */
   paymentRecords: PaymentRecord[];
+
+  /** Indicates the view receipt button is clicked. */
+  onViewReceiptClick: (record: PaymentRecord) => void;
 }
 
-interface State {
-  page: PaymentHistoryTab.Page;
-  selectedRecord: PaymentRecord;
-}
-
-/** Dislays the payment history tab inside the setting page. */
-export class PaymentHistoryTab extends React.Component<Properties, State> {
-  constructor(props: Properties) {
-    super(props);
-    this.state = {
-      page: PaymentHistoryTab.Page.INITIAL,
-      selectedRecord: PaymentRecord.noRecord()
-    };
-  }
-
-  public render(): JSX.Element {
-    if (this.state.page === PaymentHistoryTab.Page.PAYMENT_DETAILS) {
-      return <div>Payment details</div>;
-    }
-    const recordRows = (() => {
-      if (!this.props.paymentRecords || this.props.paymentRecords.length === 0
-          ) {
-        return (
-          <div style={NOT_FOUND_CONTAINER_STYLE} >
-            <img
-              style={NO_RECORDS_IMAGE_STYLE}
-              src='resources/illustrations/not_found.svg'
-              alt='Nothing found icon'
+/** Displays the payment history tab inside the setting page. */
+export function PaymentHistoryTab(props: Properties) {
+  const recordRows = (() => {
+    if (!props.paymentRecords || props.paymentRecords.length === 0
+        ) {
+      return (
+        <div style={NOT_FOUND_CONTAINER_STYLE} >
+          <img
+            style={NO_RECORDS_IMAGE_STYLE}
+            src='resources/illustrations/not_found.svg'
+            alt='Nothing found icon'
+          />
+          <h1 style={NOTHING_FOUND_HEADING_STYLE} >Nothing here yet!</h1>
+          <div style={NOTHING_FOUND_TEXT_STYLE} >
+            This is where your payment history and receipts will appear.
+            For now, go&nbsp;
+            <RedNavLink
+                style={EXPLORE_EVENT_LINK_STYLE}
+                to='/explore_events'
+                label='join some events!'
             />
-            <h1 style={NOTHING_FOUND_HEADING_STYLE} >Nothing here yet!</h1>
-            <div style={NOTHING_FOUND_TEXT_STYLE} >
-              This is where your payment history and receipts will appear.
-              For now, go&nbsp;
-              <RedNavLink
-                  style={EXPLORE_EVENT_LINK_STYLE}
-                  to='/explore_events'
-                  label='join some events!'
-              />
-            </div>
-          </div>);
+          </div>
+        </div>);
+    }
+    const rows = [];
+    for (let i = 0; i < props.paymentRecords.length; ++i) {
+      const record = props.paymentRecords[i];
+      rows.push(
+        <PaymentRecordCard key={'PaymentRecordCard' + record.id}
+          displayMode={props.displayMode} paymentRecord={record}
+          onViewReceiptClick={() => props.onViewReceiptClick(record)}
+        />);
+      if (i !== props.paymentRecords.length - 1) {
+        rows.push(<div key={'divider' + i} style={DIVIDER_STYLE} />);
       }
-      const rows = [];
-      for (let i = 0; i < this.props.paymentRecords.length; ++i) {
-        const record = this.props.paymentRecords[i];
-        rows.push(
-          <PaymentRecordCard key={'PaymentRecordCard' + record.id}
-            displayMode={this.props.displayMode} paymentRecord={record}
-            onViewReceiptClick={() => this.handleViewReceipt(record)}
-          />);
-        if (i !== this.props.paymentRecords.length - 1) {
-          rows.push(<div key={'divider' + i} style={DIVIDER_STYLE} />);
-        }
-      }
-      return rows;
-    })();
-    return (
-      <div style={CONTAINER_STYLE} >
-        <h1 style={PAGE_HEADING_STYLE} >Payment Methods</h1>
-        {recordRows}
-      </div>);
-  }
-
-  private handleViewReceipt = (record: PaymentRecord) => {
-    this.setState({
-      page: PaymentHistoryTab.Page.PAYMENT_DETAILS,
-      selectedRecord: record
-    });
-  }
+    }
+    return rows;
+  })();
+  return (
+    <div style={CONTAINER_STYLE} >
+      <h1 style={PAGE_HEADING_STYLE} >Payment Methods</h1>
+      {recordRows}
+    </div>);
 }
 
 interface PaymentRecordCardProp {
@@ -90,6 +68,31 @@ interface PaymentRecordCardProp {
 }
 
 function PaymentRecordCard(props: PaymentRecordCardProp) {
+  const { imageDetailsContainerStyle, eventButtonStyle,
+      eventImageContainerStyle, eventImageStyle } = (() => {
+    if (props.displayMode === DisplayMode.MOBILE) {
+      return {
+        imageDetailsContainerStyle: MOBILE_IMAGE_DETAILS_CONTAINER_STYLE,
+        eventButtonStyle: MOBILE_EVENT_BUTTON_STYLE,
+        eventImageContainerStyle: MOBILE_EVENT_IMAGE_CONTAINER_STYLE,
+        eventImageStyle: MOBILE_EVENT_IMAGE_STYLE
+      };
+    }
+    if (props.displayMode === DisplayMode.TABLET) {
+      return {
+        imageDetailsContainerStyle: IMAGE_DETAILS_CONTAINER_STYLE,
+        eventButtonStyle: TABLET_EVENT_BUTTON_STYLE,
+        eventImageContainerStyle: EVENT_IMAGE_CONTAINER_STYLE,
+        eventImageStyle: EVENT_IMAGE_STYLE
+      };
+    }
+    return {
+      imageDetailsContainerStyle: IMAGE_DETAILS_CONTAINER_STYLE,
+      eventButtonStyle: EVENT_BUTTON_STYLE,
+      eventImageContainerStyle: EVENT_IMAGE_CONTAINER_STYLE,
+      eventImageStyle: EVENT_IMAGE_STYLE
+    }
+  })();
   const charges = [];
   for (const transaction of props.paymentRecord.paymentTransactions) {
     switch (transaction.status) {
@@ -127,8 +130,6 @@ function PaymentRecordCard(props: PaymentRecordCardProp) {
         </div>);
     }
   }
-  const imageDetailsContainerStyle = (props.displayMode === DisplayMode.MOBILE
-    && MOBILE_IMAGE_DETAILS_CONTAINER_STYLE || IMAGE_DETAILS_CONTAINER_STYLE);
   const viewReceiptButton = (() => {
     switch (props.displayMode) {
       case DisplayMode.DESKTOP:
@@ -153,39 +154,48 @@ function PaymentRecordCard(props: PaymentRecordCardProp) {
          </button>);
     }
   })();
+  const detailsSection = (() => {
+    if (props.displayMode === DisplayMode.DESKTOP) {
+      return (
+        <div style={DETAILS_CONTAINER_STYLE} >
+          <p style={EVENT_TITLE_STYLE} >
+            {props.paymentRecord.eventCardSummary.eventTitle}
+          </p>
+          {charges}
+        </div>);
+    }
+    return (
+      <button
+          style={DETAILS_CONTAINER_BUTTON_STYLE}
+          onClick={props.onViewReceiptClick}
+      >
+        <p style={EVENT_TITLE_STYLE} >
+          {props.paymentRecord.eventCardSummary.eventTitle}
+        </p>
+        {charges}
+      </button>);
+  })();
   return (
     <div style={CARD_CONTAINER_STYLE} >
       <div style={imageDetailsContainerStyle} >
-        <div style={EVENT_IMAGE_CONTAINER_STYLE} >
+        <div style={eventImageContainerStyle} >
           <img
-            style={EVENT_IMAGE_STYLE}
+            style={eventImageStyle}
             src={props.paymentRecord.eventCardSummary.imageSrc}
             alt='Event Image'
           />
           <Router.Link
-            style={EVENT_BUTTON_STYLE}
+            style={eventButtonStyle}
             to={`events/${props.paymentRecord.eventCardSummary.eventId}`}
             className={css(styles.eventLink)}
           >
             Event Page
           </Router.Link>
         </div>
-        <div style={DETAILS_CONTAINER_STYLE} >
-          <p style={EVENT_TITLE_STYLE} >
-            {props.paymentRecord.eventCardSummary.eventTitle}
-          </p>
-          {charges}
-        </div>
+        {detailsSection}
       </div>
       {viewReceiptButton}
     </div>);
-}
-
-export namespace PaymentHistoryTab {
-  export enum Page {
-    INITIAL,
-    PAYMENT_DETAILS
-  }
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {
@@ -279,6 +289,11 @@ const EVENT_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
   height: '100px'
 };
 
+const MOBILE_EVENT_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  ...EVENT_IMAGE_CONTAINER_STYLE,
+  width: '85px'
+};
+
 const EVENT_IMAGE_STYLE: React.CSSProperties = {
   width: '100%',
   minWidth: '150px',
@@ -287,6 +302,12 @@ const EVENT_IMAGE_STYLE: React.CSSProperties = {
   backgroundColor: 'transparent',
   borderRadius: '4px',
   objectFit: 'cover'
+};
+
+const MOBILE_EVENT_IMAGE_STYLE: React.CSSProperties = {
+  ...EVENT_IMAGE_STYLE,
+  width: '100%',
+  minWidth: '85px',
 };
 
 const EVENT_BUTTON_STYLE: React.CSSProperties = {
@@ -314,6 +335,19 @@ const EVENT_BUTTON_STYLE: React.CSSProperties = {
   color: '#FFFFFF'
 };
 
+const TABLET_EVENT_BUTTON_STYLE: React.CSSProperties = {
+  ...EVENT_BUTTON_STYLE,
+  width: '75px',
+  height: '25px'
+};
+
+const MOBILE_EVENT_BUTTON_STYLE: React.CSSProperties = {
+  ...EVENT_BUTTON_STYLE,
+  right: 'calc((100% - 75px) / 2)',
+  width: '75px',
+  height: '25px'
+};
+
 const DETAILS_CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
@@ -324,6 +358,19 @@ const DETAILS_CONTAINER_STYLE: React.CSSProperties = {
   gap: '5px',
   height: '100%',
   width: 'calc(100% - 170px)'
+};
+
+const DETAILS_CONTAINER_BUTTON_STYLE: React.CSSProperties = {
+  ...DETAILS_CONTAINER_STYLE,
+  boxShadow: 'none',
+  outline: 'none',
+  border: 'none',
+  textDecoration: 'none',
+  margin: '0px',
+  backgroundColor: 'transparent',
+  minHeight: '100%',
+  width: 'calc(100% - 100px)',
+  minWidth: 'calc(100% - 100px)'
 };
 
 const VIEW_RECEIPT_BUTTON_STYLE: React.CSSProperties = {
@@ -350,8 +397,7 @@ const EVENT_TITLE_STYLE: React.CSSProperties = {
   fontWeight: 600,
   fontSize: '14px',
   lineHeight: '18px',
-  color: '#000000',
-  width: '100%'
+  color: '#000000'
 };
 
 const COST_TEXT_STYLE: React.CSSProperties = {
