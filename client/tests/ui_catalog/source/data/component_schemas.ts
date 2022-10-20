@@ -1656,7 +1656,12 @@ export function loadComponentSchemas(): ComponentSchema[] {
           new Date(2022, 10, 1, 23, 15), new Date(2022, 10, 1, 23, 15),
           NeverEatAlone.PaymentStatus.CHARGED)
       ]), PaymentRecordInput)],
-    [new SignalSchema('onClose', '', [])], NeverEatAlone.PaymentReceiptModal);
+    [new SignalSchema('onClose', '', []),
+      new SignalSchema('onPrintClick', '', []),
+      new SignalSchema('onDownloadPdfClick', '', []),
+      new SignalSchema('onSendEmailClick', '', []),
+      new SignalSchema('onHelpClick', '', [])],
+    NeverEatAlone.PaymentReceiptModal);
   return [
     accentTextButtonSchema,
     albumCardSchema,

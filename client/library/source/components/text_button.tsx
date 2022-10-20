@@ -23,6 +23,16 @@ export function SecondaryTextLinkButton(props: Properties) {
     />);
 }
 
+export function PrimaryTextLinkButton(props: Properties) {
+  return (
+    <TextButton
+      {...props}
+      labelStyle={{...PRIMARY_LINK_LABEL_STYLE, ...props.labelStyle}}
+      style={{...PRIMARY_LINK_BUTTON_STYLE, ...props.style}}
+      className={css(styles.primaryTextLinkButton)}
+    />);
+}
+
 export function SecondaryTextButton(props: Properties) {
   return (
     <TextButton
@@ -175,6 +185,15 @@ const SECONDARY_LINK_BUTTON_STYLE: React.CSSProperties = {
   border: 'none'
 };
 
+const PRIMARY_LINK_BUTTON_STYLE: React.CSSProperties = {
+  width: 'fit-content',
+  height: '23px',
+  minHeight: '23px',
+  backgroundColor: 'transparent',
+  color: '#FFFFFF',
+  border: 'none'
+};
+
 const SECONDARY_BUTTON_STYLE: React.CSSProperties = {
   ...SECONDARY_LINK_BUTTON_STYLE,
   border: '1px solid #F26B55',
@@ -218,6 +237,16 @@ const SECONDARY_LINK_LABEL_STYLE: React.CSSProperties = {
   fontWeight: 600,
   fontSize: '14px',
   lineHeight: '18px',
+  textTransform: 'capitalize'
+};
+
+const PRIMARY_LINK_LABEL_STYLE: React.CSSProperties = {
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '18px',
+  lineHeight: '23px',
+  height: '23px',
+  minHeight: '23px',
   textTransform: 'capitalize'
 };
 
@@ -351,6 +380,24 @@ const styles = StyleSheet.create({
     ':focus-within': {
       textDecoration: 'underline solid #F26B55 1px',
       color: '#F26B55'
+    },
+    ':active': {
+      textDecoration: 'underline solid #AA2F19 1px',
+      color: '#AA2F19'
+    }
+  },
+  primaryTextLinkButton: {
+    ':hover': {
+      textDecoration: 'underline solid #FFFFFF 1px',
+      color: '#FFFFFF'
+    },
+    ':focus': {
+      textDecoration: 'underline solid #FFFFFF 1px',
+      color: '#FFFFFF'
+    },
+    ':focus-within': {
+      textDecoration: 'underline solid #FFFFFF 1px',
+      color: '#FFFFFF'
     },
     ':active': {
       textDecoration: 'underline solid #AA2F19 1px',

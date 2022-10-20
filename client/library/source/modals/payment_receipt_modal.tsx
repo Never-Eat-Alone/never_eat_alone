@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
-import { CloseButton } from '../components';
+import { AccentTextButton, CloseButton, PrimaryTextLinkButton
+} from '../components';
 import { DisplayMode, PaymentRecord } from '../definitions';
 
 interface Properties {
@@ -11,12 +12,25 @@ interface Properties {
 
   /** Indicates the close button is clicked. */
   onClose: () => void;
+
+  /** Indicates the print button is clicked. */
+  onPrintClick: () => void;
+
+  /** Indicates the Download Pdf button is clicked. */
+  onDownloadPdfClick: () => void;
+
+  /** Indicates the send email button is clicked. */
+  onSendEmailClick: () => void;
+
+  /** Indicates the help button is clicked. */
+  onHelpClick: () => void;
 }
 
 /** Displays the Payment Receipt Modal. */
 export function PaymentReceiptModal(props: Properties) {
   const { containerStyle, logoRowStyle, contentContainerStyle, plateImageStyle,
-      eventTitleStyle, dateTimeSectionStyle, eventTagContainerStyle } = (() => {
+      eventTitleStyle, dateTimeSectionStyle, eventTagContainerStyle,
+      buttonContainerStyle } = (() => {
     if (props.displayMode === DisplayMode.MOBILE) {
       return {
         containerStyle: MOBILE_CONTAINER_STYLE,
@@ -25,7 +39,8 @@ export function PaymentReceiptModal(props: Properties) {
         plateImageStyle: MOBILE_PLATE_IMAGE_STYLE,
         eventTitleStyle: MOBILE_EVENT_TITLE_STYLE,
         dateTimeSectionStyle: MOBILE_DATE_TIME_SECTION_STYLE,
-        eventTagContainerStyle: MOBILE_EVENT_TAG_CONTAINER_STYLE
+        eventTagContainerStyle: MOBILE_EVENT_TAG_CONTAINER_STYLE,
+        buttonContainerStyle: MOBILE_BUTTON_CONTAINER_STYLE
       };
     }
     return {
@@ -35,8 +50,32 @@ export function PaymentReceiptModal(props: Properties) {
       plateImageStyle: PLATE_IMAGE_STYLE,
       eventTitleStyle: EVENT_TITLE_STYLE,
       dateTimeSectionStyle: DATE_TIME_SECTION_STYLE,
-      eventTagContainerStyle: EVENT_TAG_CONTAINER_STYLE
+      eventTagContainerStyle: EVENT_TAG_CONTAINER_STYLE,
+      buttonContainerStyle: BUTTON_CONTAINER_STYLE
     };
+  })();
+  const buttons = (() => {
+    const temp = [];
+    if (props.displayMode === DisplayMode.MOBILE) {
+      temp.push(<AccentTextButton key='Print' label='Print'
+        style={MOBILE_BUTTON_STYLE} onClick={props.onPrintClick} />);
+      temp.push(<AccentTextButton key='PDF' label='Download PDF'
+        style={MOBILE_BUTTON_STYLE} onClick={props.onDownloadPdfClick} />);
+      temp.push(<AccentTextButton key='Email' label='Send Email'
+        style={MOBILE_BUTTON_STYLE} onClick={props.onSendEmailClick} />);
+      temp.push(<AccentTextButton key='Help' label='Help'
+        style={MOBILE_BUTTON_STYLE} onClick={props.onHelpClick} />);
+    } else {
+      temp.push(<PrimaryTextLinkButton key='Print' label='Print'
+        onClick={props.onPrintClick} />);
+      temp.push(<PrimaryTextLinkButton key='PDF' label='Download PDF'
+        onClick={props.onDownloadPdfClick} />);
+      temp.push(<PrimaryTextLinkButton key='Email' label='Send Email'
+        onClick={props.onSendEmailClick} />);
+      temp.push(<PrimaryTextLinkButton key='Help' label='Help'
+        onClick={props.onHelpClick} />);
+    }
+    return temp;
   })();
   return (
     <div style={containerStyle} >
@@ -144,6 +183,9 @@ export function PaymentReceiptModal(props: Properties) {
             <div style={AMOUNT_TEXT_STYLE} >CAD $5.65</div>
           </div>
         </div>
+        <div style={buttonContainerStyle} >
+          {buttons}
+        </div>
       </div>
     </div>);
 }
@@ -155,7 +197,6 @@ const CONTAINER_STYLE: React.CSSProperties = {
   borderRadius: '4px',
   background: 'linear-gradient(180deg, #F26A54 54.18%, #F26A54 54.19%, \
     #F24D3D 100%, #F24D3D 100%)',
-  minHeight: '993px',
   overflowY: 'initial'
 };
 
@@ -506,4 +547,31 @@ const COLUMN_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'flex-start'
+};
+
+const BUTTON_CONTAINER_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  padding: '0px 10px',
+  height: '63px',
+  width: '100%'
+};
+
+const MOBILE_BUTTON_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  width: '100%',
+  gap: '20px',
+  marginTop: '20px'
+};
+
+const MOBILE_BUTTON_STYLE: React.CSSProperties = {
+  width: '100%',
+  height: '35px',
+  minHeight: '35px'
 };
