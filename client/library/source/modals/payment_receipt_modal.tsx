@@ -16,7 +16,7 @@ interface Properties {
 /** Displays the Payment Receipt Modal. */
 export function PaymentReceiptModal(props: Properties) {
   const { containerStyle, logoRowStyle, contentContainerStyle, plateImageStyle,
-      eventTitleStyle, dateTimeSectionStyle } = (() => {
+      eventTitleStyle, dateTimeSectionStyle, eventTagContainerStyle } = (() => {
     if (props.displayMode === DisplayMode.MOBILE) {
       return {
         containerStyle: MOBILE_CONTAINER_STYLE,
@@ -24,7 +24,8 @@ export function PaymentReceiptModal(props: Properties) {
         contentContainerStyle: MOBILE_CONTENT_CONTAINER_STYLE,
         plateImageStyle: MOBILE_PLATE_IMAGE_STYLE,
         eventTitleStyle: MOBILE_EVENT_TITLE_STYLE,
-        dateTimeSectionStyle: MOBILE_DATE_TIME_SECTION_STYLE
+        dateTimeSectionStyle: MOBILE_DATE_TIME_SECTION_STYLE,
+        eventTagContainerStyle: MOBILE_EVENT_TAG_CONTAINER_STYLE
       };
     }
     return {
@@ -33,7 +34,8 @@ export function PaymentReceiptModal(props: Properties) {
       contentContainerStyle: CONTENT_CONTAINER_STYLE,
       plateImageStyle: PLATE_IMAGE_STYLE,
       eventTitleStyle: EVENT_TITLE_STYLE,
-      dateTimeSectionStyle: DATE_TIME_SECTION_STYLE
+      dateTimeSectionStyle: DATE_TIME_SECTION_STYLE,
+      eventTagContainerStyle: EVENT_TAG_CONTAINER_STYLE
     };
   })();
   return (
@@ -54,12 +56,14 @@ export function PaymentReceiptModal(props: Properties) {
           />
         </div>
         <div style={contentContainerStyle} >
-          <img
-            style={plateImageStyle}
-            src='resources/payment_receipt_modal/plate.svg'
-            alt='Plate Image'
-          />
-          <div style={EVENT_TAG_CONTAINER_STYLE} >
+          <div style={PLATE_IMAGE_CONTAINER_STYLE} >
+            <img
+              style={plateImageStyle}
+              src='resources/payment_receipt_modal/plate.svg'
+              alt='Plate Image'
+            />
+          </div>
+          <div style={eventTagContainerStyle} >
             <svg
                 style={{...EVENT_TAG_ICON_STYLE,
                   color: props.paymentRecord.eventCardSummary.eventColor}}
@@ -79,7 +83,7 @@ export function PaymentReceiptModal(props: Properties) {
                 src='resources/payment_receipt_modal/date.svg'
                 alt='Date Icon'
               />
-              <p style={DATE_TEXT_STYLE} >Date</p>
+              <p style={DATE_TEXT_STYLE} >Friday, April 1st</p>
             </div>
             <div style={TEXT_ICON_CONTAINER_STYLE} >
               <img
@@ -87,19 +91,24 @@ export function PaymentReceiptModal(props: Properties) {
                 src='resources/payment_receipt_modal/time.svg'
                 alt='Time Icon'
               />
-              <p style={TIME_TEXT_STYLE} >Time</p>
+              <p style={TIME_TEXT_STYLE} >7:00 PM - 9:00 PM</p>
             </div>
           </div>
           <div style={LOCATION_ICON_CONTAINER_STYLE} >
             <img
               style={LOCATION_ICON_STYLE}
-              src='resources/payment_receipt_modal/location.svg'
+              src='resources/icons/location.svg'
               alt='Location Icon'
             />
-            <p style={TIME_TEXT_STYLE} >Restaurant</p>
+            <p style={TIME_TEXT_STYLE} >Tsujiri Dundas</p>
           </div>
-          <div style={JOINED_TEXT_STYLE} >You joined on </div>
-          {fees}
+          <div style={JOINED_TEXT_STYLE} >
+            You joined on Wednesday, March 27th 2022, 5:22 PM.
+          </div>
+          <div style={FEE_ROW_STYLE} >
+            <div style={BOLD_FEE_TEXT_STYLE} >Event Fee</div>
+            <div style={AMOUNT_TEXT_STYLE} >CAD $5.00</div>
+          </div>
           <div style={DIVIDER_STYLE} />
           <div style={FEE_ROW_STYLE} >
             <div style={GREY_TEXT_STYLE} >Subtotal</div>
@@ -124,15 +133,15 @@ export function PaymentReceiptModal(props: Properties) {
             <div style={CARD_NUMBER_COLUMN_STYLE} >
               <img
                 style={CARD_IMAGE_STYLE}
-                src=''
+                src='resources/icons/amex.svg'
                 alt='Card Icon'
               />
-              <div style={} >
-                <div style={} >Ending in 1200</div>
-                <div style={} >03/27/22 5:22 PM</div>
+              <div style={COLUMN_CONTAINER_STYLE} >
+                <div style={BOLD_FEE_TEXT_STYLE} >Ending in 1200</div>
+                <div style={GREY_TEXT_STYLE} >03/27/22 5:22 PM</div>
               </div>
             </div>
-            <div style={} >CAD $5.65</div>
+            <div style={AMOUNT_TEXT_STYLE} >CAD $5.65</div>
           </div>
         </div>
       </div>
@@ -224,7 +233,7 @@ const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   padding: '100px 30px 40px 28px',
   backgroundColor: '#FFFFFF',
   borderRadius: '4px',
@@ -234,6 +243,14 @@ const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
 const MOBILE_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
   ...CONTENT_CONTAINER_STYLE,
   padding: '60px 20px 40px 30px'
+};
+
+const PLATE_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'flex-start',
+  width: '100%'
 };
 
 const PLATE_IMAGE_STYLE: React.CSSProperties = {
@@ -267,6 +284,11 @@ const EVENT_TAG_CONTAINER_STYLE: React.CSSProperties = {
   backgroundColor: 'transparent'
 };
 
+const MOBILE_EVENT_TAG_CONTAINER_STYLE: React.CSSProperties = {
+  ...EVENT_TAG_CONTAINER_STYLE,
+  top: '65px'
+};
+
 const EVENT_TAG_ICON_STYLE: React.CSSProperties = {
   width: '100%',
   minWidth: '18px',
@@ -283,7 +305,7 @@ const EVENT_TITLE_STYLE: React.CSSProperties = {
   textTransform: 'capitalize',
   color: '#000000',
   padding: '0px',
-  margin: '31px 0px 10px 0px',
+  margin: '0px 0px 10px 0px',
   width: '100%'
 };
 
@@ -291,7 +313,7 @@ const MOBILE_EVENT_TITLE_STYLE: React.CSSProperties = {
   ...EVENT_TITLE_STYLE,
   fontSize: '24px',
   lineHeight: '36px',
-  margin: '10px 0px 10px 0px'
+  margin: '0px 0px 10px 0px'
 };
 
 const DATE_TIME_SECTION_STYLE: React.CSSProperties = {
@@ -348,7 +370,7 @@ const TEXT_ICON_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'flex-start',
-  alignItems: 'flex-start',
+  alignItems: 'center',
   gap: '10px'
 };
 
@@ -384,17 +406,17 @@ const DIVIDER_STYLE: React.CSSProperties = {
   width: '100%',
   height: '1px',
   backgroundColor: '#EFEFEF',
-  marginTop: '30px',
   marginBottom: '20px'
 };
 
 const FEE_ROW_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
-  justifyContent: 'flex-start',
-  alignItems: 'space-between',
+  justifyContent: 'space-between',
+  alignItems: 'flex-start',
   width: '100%',
-  gap: '20px'
+  gap: '20px',
+  marginBottom: '20px'
 };
 
 const BOLD_FEE_TEXT_STYLE: React.CSSProperties = {
@@ -435,6 +457,7 @@ const RECEIPT_NUMBER_STYLE: React.CSSProperties = {
   fontSize: '12px',
   lineHeight: '15px',
   color: '#000000',
+  width: '100%',
   marginBottom: '40px'
 };
 
@@ -458,7 +481,9 @@ const CARD_AMOUNT_ROW_STYLE: React.CSSProperties = {
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
-  gap: '20px'
+  gap: '20px',
+  width: '100%',
+  marginTop: '20px'
 };
 
 const CARD_NUMBER_COLUMN_STYLE: React.CSSProperties = {
@@ -474,4 +499,11 @@ const CARD_IMAGE_STYLE: React.CSSProperties = {
   minWidth: '55px',
   height: '40px',
   minHeight: '40px'
+};
+
+const COLUMN_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start'
 };
