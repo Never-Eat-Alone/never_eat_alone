@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { AccentTextButton, CloseButton, PrimaryTextLinkButton
@@ -77,6 +78,23 @@ export function PaymentReceiptModal(props: Properties) {
     }
     return temp;
   })();
+  let totalFee = 0, totalTax = 0, totalPayment = 0;
+  const feeRows = [];
+  if (props.paymentRecord.paymentTransactions &&
+      props.paymentRecord.paymentTransactions.length !== 0) {
+    for (const payment of props.paymentRecord.paymentTransactions) {
+      const newFee = payment.amount;
+      totalFee += newFee;
+      const newTaxAmount = newFee * payment.taxRate;
+      totalTax += newTaxAmount;
+      totalPayment += newFee + newTaxAmount;
+      feeRows.push(
+        <div key={payment.id} style={FEE_ROW_STYLE} >
+          <div style={BOLD_FEE_TEXT_STYLE} >{payment.title}</div>
+          <div style={AMOUNT_TEXT_STYLE} >CAD ${newFee}</div>
+        </div>);
+    }
+  }
   return (
     <div style={containerStyle} >
       <div style={BACKGROUND_IMAGE_CONTAINER_STYLE} >
@@ -122,7 +140,10 @@ export function PaymentReceiptModal(props: Properties) {
                 src='resources/payment_receipt_modal/date.svg'
                 alt='Date Icon'
               />
-              <p style={DATE_TEXT_STYLE} >Friday, April 1st</p>
+              <p style={DATE_TEXT_STYLE} >
+                {format(props.paymentRecord.eventCardSummary.eventStartTime,
+                'eeee, MMMM do')}
+              </p>
             </div>
             <div style={TEXT_ICON_CONTAINER_STYLE} >
               <img
@@ -130,7 +151,11 @@ export function PaymentReceiptModal(props: Properties) {
                 src='resources/payment_receipt_modal/time.svg'
                 alt='Time Icon'
               />
-              <p style={TIME_TEXT_STYLE} >7:00 PM - 9:00 PM</p>
+              <p style={TIME_TEXT_STYLE} >
+                {format(props.paymentRecord.eventCardSummary.eventStartTime,
+                'h:mm aa')} - {format(
+                props.paymentRecord.eventCardSummary.eventEndTime, 'h:mm aa')}
+              </p>
             </div>
           </div>
           <div style={LOCATION_ICON_CONTAINER_STYLE} >
@@ -139,33 +164,32 @@ export function PaymentReceiptModal(props: Properties) {
               src='resources/icons/location.svg'
               alt='Location Icon'
             />
-            <p style={TIME_TEXT_STYLE} >Tsujiri Dundas</p>
+            <p style={TIME_TEXT_STYLE} >
+              {props.paymentRecord.eventCardSummary.restaurantName}
+            </p>
           </div>
           <div style={JOINED_TEXT_STYLE} >
-            You joined on Wednesday, March 27th 2022, 5:22 PM.
+            You joined on {format(
+            props.paymentRecord.paymentTransactions[0].processedAt,
+            'eeee, MMMM do, yyyy, h:mm aa')}.
           </div>
-          <div style={FEE_ROW_STYLE} >
-            <div style={BOLD_FEE_TEXT_STYLE} >Event Fee</div>
-            <div style={AMOUNT_TEXT_STYLE} >CAD $5.00</div>
-          </div>
+          {feeRows}
           <div style={DIVIDER_STYLE} />
           <div style={FEE_ROW_STYLE} >
             <div style={GREY_TEXT_STYLE} >Subtotal</div>
-            <div style={AMOUNT_TEXT_STYLE} >CAD $5.00</div>
+            <div style={AMOUNT_TEXT_STYLE} >CAD ${totalFee.toFixed(2)}</div>
           </div>
           <div style={FEE_ROW_STYLE} >
             <div style={GREY_TEXT_STYLE} >Tax</div>
-            <div style={AMOUNT_TEXT_STYLE} >CAD $0.65</div>
+            <div style={AMOUNT_TEXT_STYLE} >CAD ${totalTax.toFixed(2)}</div>
           </div>
           <div style={FEE_ROW_STYLE} >
             <div style={BOLD_FEE_TEXT_STYLE} >Total Payment</div>
-            <div style={AMOUNT_TEXT_STYLE} >CAD $5.65</div>
+            <div style={AMOUNT_TEXT_STYLE} >CAD ${totalPayment.toFixed(2)}</div>
           </div>
           <div style={DIVIDER_STYLE} />
-          <div style={RECEIPT_NUMBER_STYLE} >Receipt #19827491</div>
-          <div style={FEE_DESCRIPTION_STYLE} >
-            There’s an amount of $60 on hold for the cancellation fee. This fee 
-            will not be charged if you attend the event.
+          <div style={RECEIPT_NUMBER_STYLE} >
+            Receipt #{props.paymentRecord.id}
           </div>
           <div style={BOLD_FEE_TEXT_STYLE} >Payment Method</div>
           <div style={CARD_AMOUNT_ROW_STYLE} >
@@ -176,11 +200,16 @@ export function PaymentReceiptModal(props: Properties) {
                 alt='Card Icon'
               />
               <div style={COLUMN_CONTAINER_STYLE} >
-                <div style={BOLD_FEE_TEXT_STYLE} >Ending in 1200</div>
-                <div style={GREY_TEXT_STYLE} >03/27/22 5:22 PM</div>
+                <div style={BOLD_FEE_TEXT_STYLE} >Ending in {
+                  props.paymentRecord.paymentTransactions[0].cardLast4digits}
+                </div>
+                <div style={GREY_TEXT_STYLE} >
+                  {format(
+                  props.paymentRecord.paymentTransactions[0].processedAt,
+                  'MM/dd/yy h:mm aa')}
+                </div>
               </div>
             </div>
-            <div style={AMOUNT_TEXT_STYLE} >CAD $5.65</div>
           </div>
         </div>
         <div style={buttonContainerStyle} >
@@ -499,21 +528,6 @@ const RECEIPT_NUMBER_STYLE: React.CSSProperties = {
   lineHeight: '15px',
   color: '#000000',
   width: '100%',
-  marginBottom: '40px'
-};
-
-const FEE_DESCRIPTION_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'flex-start',
-  alignItems: 'flex-start',
-  width: '100%',
-  fontFamily: 'Source Sans Pro',
-  fontStyle: 'normal',
-  fontWeight: 400,
-  fontSize: '16px',
-  lineHeight: '20px',
-  color: '#000000',
   marginBottom: '40px'
 };
 

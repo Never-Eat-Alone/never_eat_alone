@@ -28,11 +28,11 @@ export class PaymentRecordInput extends React.Component<Properties> {
           new Date(2022, 6, 12, 19, 0, 0), new Date(2021, 6, 12, 23, 0, 0),
           'Le Select', NeverEatAlone.PriceRange.EXPENSIVE, [], '', 12, 12, true,
           'yellow'), [
-          new NeverEatAlone.PaymentTransaction(99, 3.98,
+          new NeverEatAlone.PaymentTransaction(99, 'Event Fee', 3.98,
             NeverEatAlone.PaymentMethod.CREDIT_CARD,
             NeverEatAlone.CreditCardType.AMEX, '9604', 'Event fee',
             new Date(2021, 9, 2, 23, 15), new Date(2021, 9, 2, 23, 15),
-            NeverEatAlone.PaymentStatus.CHARGED)
+            NeverEatAlone.PaymentStatus.CHARGED, 0.13)
         ]);
       }
       return new NeverEatAlone.PaymentRecord(1,
@@ -40,12 +40,12 @@ export class PaymentRecordInput extends React.Component<Properties> {
         new Date(2022, 6, 12, 19, 0, 0), new Date(2021, 6, 12, 23, 0, 0),
         'Le Select', NeverEatAlone.PriceRange.EXPENSIVE, [], '', 12, 12, true,
         'yellow'), [
-          new NeverEatAlone.PaymentTransaction(99,
+          new NeverEatAlone.PaymentTransaction(99, 'Event Fee',
             Number(event.target.value),
             NeverEatAlone.PaymentMethod.CREDIT_CARD,
             NeverEatAlone.CreditCardType.VISA, '1458', 'Event fee',
             new Date(2022, 10, 1, 23, 15), new Date(2022, 10, 1, 23, 15),
-            NeverEatAlone.PaymentStatus.CHARGED)
+            NeverEatAlone.PaymentStatus.CHARGED, 0.13)
         ]);
     })();
     this.props.update(newValue);
