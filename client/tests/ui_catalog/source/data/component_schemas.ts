@@ -1544,11 +1544,11 @@ export function loadComponentSchemas(): ComponentSchema[] {
         new Date(2022, 6, 12, 19, 0, 0), new Date(2021, 6, 12, 23, 0, 0),
         'Le Select', NeverEatAlone.PriceRange.EXPENSIVE, [],
         'resources/images/3.jpg', 12, 12, true, 'yellow'), [
-        new NeverEatAlone.PaymentTransaction(999, 78.00,
+        new NeverEatAlone.PaymentTransaction(999, 'Event Fee', 78.00,
           NeverEatAlone.PaymentMethod.CREDIT_CARD,
           NeverEatAlone.CreditCardType.VISA, '1458', 'Event fee', new Date(
           2022, 2, 1, 23, 15), new Date(2022, 2, 1, 23, 15),
-          NeverEatAlone.PaymentStatus.CHARGED)
+          NeverEatAlone.PaymentStatus.CHARGED, 0.13)
         ]),
       new NeverEatAlone.PaymentRecord(
         3, new NeverEatAlone.EventCardSummary(2,
@@ -1556,16 +1556,16 @@ export function loadComponentSchemas(): ComponentSchema[] {
         new Date(2021, 6, 12, 23, 0, 0), 'Le Select',
         NeverEatAlone.PriceRange.EXPENSIVE, [], 'resources/images/2.jpg', 12,
         12, true, 'yellow'), [
-          new NeverEatAlone.PaymentTransaction(58, 9.99,
+          new NeverEatAlone.PaymentTransaction(58, 'Event Fee', 9.99,
             NeverEatAlone.PaymentMethod.CREDIT_CARD,
             NeverEatAlone.CreditCardType.MASTERCARD, '1458', 'Event fee',
             new Date(2022, 10, 1, 23, 15), new Date(2022, 10, 1, 23, 15),
-            NeverEatAlone.PaymentStatus.CHARGED),
-          new NeverEatAlone.PaymentTransaction(59, 50,
+            NeverEatAlone.PaymentStatus.CHARGED, 0.13),
+          new NeverEatAlone.PaymentTransaction(59, 'Event Fee', 50,
             NeverEatAlone.PaymentMethod.CREDIT_CARD,
             NeverEatAlone.CreditCardType.MASTERCARD, '1458', 'Cancellation fee',
             new Date(2022, 10, 10, 23, 15), new Date(2022, 10, 10, 23, 15),
-            NeverEatAlone.PaymentStatus.WILL_BE_CHARGED)
+            NeverEatAlone.PaymentStatus.WILL_BE_CHARGED, 0.13)
         ]),
       new NeverEatAlone.PaymentRecord(
         4, new NeverEatAlone.EventCardSummary(1,
@@ -1573,16 +1573,16 @@ export function loadComponentSchemas(): ComponentSchema[] {
         new Date(2021, 6, 12, 23, 0, 0), 'Le Select',
         NeverEatAlone.PriceRange.EXPENSIVE, [],
         'resources/images/1.jpg', 12, 12, true, 'yellow'), [
-          new NeverEatAlone.PaymentTransaction(909, 7.25,
+          new NeverEatAlone.PaymentTransaction(909, 'Event Fee', 7.25,
             NeverEatAlone.PaymentMethod.CREDIT_CARD,
             NeverEatAlone.CreditCardType.AMEX, '1458', 'Event fee', new Date(
             2022, 10, 1, 23, 15), new Date(2022, 10, 1, 23, 15),
-            NeverEatAlone.PaymentStatus.CHARGED),
-          new NeverEatAlone.PaymentTransaction(90, 7.25,
+            NeverEatAlone.PaymentStatus.CHARGED, 0.13),
+          new NeverEatAlone.PaymentTransaction(90, 'Event Fee', 7.25,
             NeverEatAlone.PaymentMethod.CREDIT_CARD,
             NeverEatAlone.CreditCardType.AMEX, '1458', 'Event fee',
             new Date(2022, 10, 15, 20, 15), new Date(2022, 10, 15, 20, 15),
-            NeverEatAlone.PaymentStatus.REFUNDED)
+            NeverEatAlone.PaymentStatus.REFUNDED, 0.13)
         ])
     ], ArrayInput(
       new PropertySchema('paymentRecord', new NeverEatAlone.PaymentRecord(
@@ -1590,11 +1590,11 @@ export function loadComponentSchemas(): ComponentSchema[] {
         new Date(2022, 6, 12, 19, 0, 0), new Date(2021, 6, 12, 23, 0, 0),
         'Le Select', NeverEatAlone.PriceRange.EXPENSIVE, [],
         'resources/images/5.jpg', 12, 12, true, 'yellow'), [
-          new NeverEatAlone.PaymentTransaction(14, 26.54,
+          new NeverEatAlone.PaymentTransaction(14, 'Event Fee', 26.54,
             NeverEatAlone.PaymentMethod.CREDIT_CARD,
             NeverEatAlone.CreditCardType.VISA, '1458', 'Event fee',
             new Date(2022, 10, 1, 23, 15), new Date(2022, 10, 1, 23, 15),
-            NeverEatAlone.PaymentStatus.CHARGED)
+            NeverEatAlone.PaymentStatus.CHARGED, 0.13)
         ]),
         PaymentRecordInput)
     )),
@@ -1650,11 +1650,11 @@ export function loadComponentSchemas(): ComponentSchema[] {
       new Date(2022, 6, 12, 19, 0, 0), new Date(2021, 6, 12, 23, 0, 0),
       'Le Select', NeverEatAlone.PriceRange.EXPENSIVE, [],
       'resources/images/5.jpg', 12, 12, true, '#BF408D'), [
-        new NeverEatAlone.PaymentTransaction(14, 26.54,
+        new NeverEatAlone.PaymentTransaction(14, 'Event Fee', 26.54,
           NeverEatAlone.PaymentMethod.CREDIT_CARD,
           NeverEatAlone.CreditCardType.VISA, '1458', 'Event fee',
           new Date(2022, 10, 1, 23, 15), new Date(2022, 10, 1, 23, 15),
-          NeverEatAlone.PaymentStatus.CHARGED)
+          NeverEatAlone.PaymentStatus.CHARGED, 0.13)
       ]), PaymentRecordInput)],
     [new SignalSchema('onClose', '', []),
       new SignalSchema('onPrintClick', '', []),
