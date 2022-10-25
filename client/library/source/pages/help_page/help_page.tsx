@@ -1103,7 +1103,7 @@ const CONTAINER_STYLE: React.CSSProperties = {
 
 const BACK_TO_TOP_BUTTON_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
-  position: 'fixed',
+  position: 'absolute',
   bottom: '50px',
   right: '50px',
   display: 'flex',
@@ -1141,7 +1141,7 @@ const NEW_LINE_STYLE: React.CSSProperties = {
 const HEADING_STYLE: React.CSSProperties = {
   fontFamily: 'Oswald',
   fontStyle: 'normal',
-  fontWeight: 'normal',
+  fontWeight: 400,
   textTransform: 'uppercase',
   color: '#969696',
   padding: '0px',
@@ -1165,10 +1165,9 @@ const SEARCH_TITLE_STYLE: React.CSSProperties = {
   alignItems: 'center',
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
-  fontWeight: 'normal',
+  fontWeight: 300,
   fontSize: '14px',
-  lineHeight: '20px',
-  height: '20px',
+  lineHeight: '18px',
   color: '#000000',
   width: '100%',
   marginBottom: '30px'
@@ -1226,7 +1225,7 @@ const TOPICS_BUTTON_TEXT_STYLE: React.CSSProperties = {
   fontStyle: 'normal',
   fontWeight: 700,
   fontSize: '14px',
-  lineHeight: '20px',
+  lineHeight: '18px',
   color: '#F26B55',
   marginTop: '2px'
 };
