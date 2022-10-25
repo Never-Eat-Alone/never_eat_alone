@@ -1664,7 +1664,8 @@ export function loadComponentSchemas(): ComponentSchema[] {
     NeverEatAlone.PaymentReceiptModal);
   const helpPageSchema = new ComponentSchema('HelpPage', [
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
-      DisplayModeInput)], [], NeverEatAlone.HelpPage);
+      DisplayModeInput)], [new SignalSchema('onInviteAFoodieClick', '', [])],
+    NeverEatAlone.HelpPage);
   return [
     accentTextButtonSchema,
     albumCardSchema,

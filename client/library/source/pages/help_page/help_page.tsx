@@ -1,10 +1,15 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
+import * as Router from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
+import { InviteAFoodieButton } from '../../components';
 import { DisplayMode } from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
+
+  /** Indicates Invite a foodie button is clicked. */
+  onInviteAFoodieClick: () => void;
 }
 
 export class HelpPage extends React.Component<Properties> {
@@ -22,7 +27,6 @@ export class HelpPage extends React.Component<Properties> {
                 style={TOPICS_BUTTON_STYLE}
                 className={css(styles.topicsButton)}
                 to='#attending_an_event'
-                draggable='false'
                 onMouseLeave={this.handleMouseLeave}
             >
               <div style={TOPICS_ICON_CONTAINER_STYLE} >
@@ -40,7 +44,6 @@ export class HelpPage extends React.Component<Properties> {
                 style={TOPICS_BUTTON_STYLE}
                 className={css(styles.topicsButton)}
                 to='#restaurant'
-                draggable='false'
                 onMouseLeave={this.handleMouseLeave}
             >
               <div style={TOPICS_ICON_CONTAINER_STYLE} >
@@ -59,7 +62,6 @@ export class HelpPage extends React.Component<Properties> {
                 style={TOPICS_BUTTON_STYLE}
                 className={css(styles.topicsButton)}
                 to='#settings_and_support'
-                draggable='false'
                 onMouseLeave={this.handleMouseLeave}
             >
               <div style={TOPICS_ICON_CONTAINER_STYLE} >
@@ -76,7 +78,6 @@ export class HelpPage extends React.Component<Properties> {
                 style={TOPICS_BUTTON_STYLE}
                 className={css(styles.topicsButton)}
                 to='#my_profile'
-                draggable='false'
                 onMouseLeave={this.handleMouseLeave}
             >
               <div style={TOPICS_ICON_CONTAINER_STYLE} >
@@ -93,7 +94,6 @@ export class HelpPage extends React.Component<Properties> {
                 style={TOPICS_BUTTON_STYLE}
                 className={css(styles.topicsButton)}
                 to='#community'
-                draggable='false'
                 onMouseLeave={this.handleMouseLeave}
             >
               <div style={TOPICS_ICON_CONTAINER_STYLE} >
@@ -108,34 +108,6 @@ export class HelpPage extends React.Component<Properties> {
             </HashLink>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
-          <h3 style={QUESTION_STYLE} >
-            I want to find a specific event
-          </h3>
-          <div style={ANSWER_STYLE} >
-            Head to Explore Events page. You can use the search bar to type a 
-            specific keyword (event title, restaurant name, cuisine) 
-            and/or you can use the filter button&nbsp;
-            <img
-              style={{...NO_SELECTION_STYLE, ...ICON_STYLE}}
-              src='resources/help_page/icons/filter.svg'
-              alt='Filter Icon'
-              draggable={false}
-            />
-            &nbsp;to narrow down by:{'\n'}
-            <ul style={UL_STYLE} >
-              <li>Only upcoming events</li>
-              <li>Reviews</li>
-              <li>Seats available</li>
-              <li>Price range</li>
-              <li>Date</li>
-              <li>And Cuisine</li>
-            </ul>
-            {'\n'}
-            Any changes made on the filter overlay are automatically applied to 
-            the results.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
-          </div>
-          <div style={DIVIDER_LINE_STYLE} />
           <h2
               style={{...HEADING_STYLE, ...H2_STYLE, ...ORANGE_TEXT_STYLE}}
               id='attending_an_event'
@@ -146,153 +118,182 @@ export class HelpPage extends React.Component<Properties> {
             How do I join events?
           </h3>
           <div style={ANSWER_STYLE} >
-            Once you are logged in, locate the event you are interested in. Hit 
-            the button “Join this Event” located at the top right corner of the 
-            event page. You will receive a notification saying you are going 
-            and following that event.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
+            Locate the event you are interested in. Hit the button 
+            “Join this Event” located at the top right corner of the event 
+            page. If you are not logged in, follow the instructions on the 
+            screen to login or sign-up. Once you’ve joined an event, it will 
+            appear on Your Upcoming Events and your&nbsp;
+            <Router.Link to='/users/profile/:id' style={LINK_STYLE} >
+              Profile page
+            </Router.Link>.
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
-            How to see my event’s attendees?
+            I want to join an event, but it’s full
           </h3>
           <div style={ANSWER_STYLE} >
-            Once you are logged in, head to your event page. On the right side 
-            you will see a list of attendees and, if you have more than 5 
+            Currently, there is no way to join an event if it is full. If an 
+            attendee drops out of an event, a seat will open up and the option 
+            to join will become available. Please check back on an event you’re 
+            interested in to see if there are any last-minute changes.
+            <div style={NEW_LINE_STYLE} >{'\n'}</div>
+            We’re working on a follow system and other community features. 
+            Please look forward to updates in the near future.
+          </div>
+          <div style={DIVIDER_LINE_STYLE} />
+          <h3 style={QUESTION_STYLE} >
+            How do I see events I joined?
+          </h3>
+          <div style={ANSWER_STYLE} >
+            Events that you’re attending will appear on Your Upcoming Events 
+            and your Profile page.
+            <div style={NEW_LINE_STYLE} >{'\n'}</div>
+            Your Upcoming Events:{'\n'}
+            <ul style={UL_STYLE} >
+              <li>
+                Follow the “Your Events” link in the header to see a list of 
+                your upcoming events. You must be logged in to access this link
+              </li>
+              <li>
+                You can view your events in a listview or a calendar view by 
+                selecting the appropriate icons
+                <img
+                  style={LISTVIEW_CALENDAR_ICONS_STYLE}
+                  src='resources/help_page/icons/listview_calendar_icons.svg'
+                  alt='Listview Calendar Icons'
+                />
+              </li>
+              {'\n'}
+              Only future events will appear on this page. To see a list of 
+              your past events, navigate to your Profile page
+              {'\n'}
+              Profile:{'\n'}
+              <ul style={UL_STYLE} >
+                <li>View a list of your upcoming events and past events</li>
+                <li>
+                  You can choose to hide these from other users. For more 
+                  information, see&nbsp;
+                  <HashLink
+                      style={LINK_STYLE}
+                      className={css(styles.linkStates)}
+                      to='#hide_activity'
+                  >
+                    How do I hide my event activity?
+                  </HashLink>
+                </li>
+              </ul>
+            </ul>
+          </div>
+          <div style={DIVIDER_LINE_STYLE} />
+          <h3 style={QUESTION_STYLE} >
+            How to see an event’s attendees?
+          </h3>
+          <div style={ANSWER_STYLE} >
+            Once you are logged in, head to an event page. If anyone has joined 
+            the event, their name and profile picture will appear under the 
+            “Attendees” section of the page. If there are more than 5 
             attendees, click on the last option (See All) to see a full list of 
             attendees.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
-          </div>
-          <div style={DIVIDER_LINE_STYLE} />
-          <h3 style={QUESTION_STYLE} >
-            I was on the waitlist but I didn’t get a spot at an event
-          </h3>
-          <div style={ANSWER_STYLE} >
-            The waitlist works in a first in first out way, meaning that once a 
-            spot opens, everyone in the waitlist is notified and the first one 
-            who joins gets the spot.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
-          </div>
-          <div style={DIVIDER_LINE_STYLE} />
-          <h3 style={QUESTION_STYLE} >
-            How to post a photo to an event page?
-          </h3>
-          <div style={ANSWER_STYLE} >
-            Once you are logged in, locate the event page and scroll down until 
-            you find the “Gallery” section and hit the button  “Add Photos”. A 
-            popup will appear, click on the gray area to select your photo, or 
-            drag and drop there to start uploading. Once the photo loads, you 
-            will notice the bottom bar with the following options:{'\n'}
-            <ul style={UL_STYLE} >
-              <li><b>Rotate</b>: Rotate the image 90º clockwise.</li>
-              <li><b>Zoom in</b>: Crop the image on a selected area.</li>
-              <li><b>Zoom out</b>: Only available if the image is zoomed.</li>
-              <li><b>Fill it based on the height</b>: Photos on NEA are 
-              squared, so if you camera is set to take 4:3 photos, you have the 
-              option to crop your image here, otherwise there will be black 
-              bars (top and bottom for landscape photos; left and right for 
-              portrait photos).</li>
-              <li><b>Fill it based on the width</b>: Same as previous.</li>
-              <li><b>Replace image</b>: Selecting a different photo will 
-              discard all the changes you did with the current one.</li>
-            </ul>
-            {'\n'}
-            You can add a caption on the right side. Once you are done, hit the 
-            button “Post”. Repeat this process for every photo you want to 
-            post.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
-          </div>
-          <div style={DIVIDER_LINE_STYLE} />
-          <h3 id='review_attended_event' style={QUESTION_STYLE} >
-            How do I leave a review for an event I attended?
-          </h3>
-          <div style={ANSWER_STYLE} >
-            Once you are logged in, after an event has happened, you will see a 
-            notification asking you to leave a review on it. You can also head 
-            to the event page, scroll down until you find the “Attendee 
-            Reviews” and hit the button “Add Review”.{'\n'}
-            A popup will appear with the following options:{'\n'}
-            <ul style={UL_STYLE} >
-              <li><b>Rate the restaurant</b>: select one from five stars</li>
-              <li><b>Restaurant labels</b>: select all labels that apply to the 
-              restaurant’s atmosphere</li>
-              <li><b>Restaurant review</b>: the content on this field will be 
-              posted on the restaurant page</li>
-            </ul>
-            {'\n'}
-            Once you are done, hit the button “Submit”.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
-          </div>
-          <div style={DIVIDER_LINE_STYLE} />
-          <h3 style={QUESTION_STYLE} >
-            How do I change my review for an event?
-          </h3>
-          <div style={ANSWER_STYLE} >
-            Once you are logged in, locate the event page and scroll down until 
-            you find the “Attendee Reviews” section and hit the button 
-            “Edit Review”. From there on follow the instructions on&nbsp;
-            <HashLink
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-                to='#review_attended_event'
-                draggable='false'
-            >
-              How do I leave a review for an event I attended?
-            </HashLink>
-            .
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How to invite a friend to an event?
           </h3>
           <div style={ANSWER_STYLE} >
-            Once you are logged in, locate the event 
-            page and click on the share icon&nbsp;
-            <img
-              style={{...NO_SELECTION_STYLE, ...ICON_STYLE}}
-              src='resources/help_page/icons/share.svg'
-              alt='Share Icon'
-              draggable={false}
-            />
-            &nbsp;. A popup will appear, if your friend has an NEA account, 
-            type their name with @ and hit the button “Notify them” so they can 
-            receive a notification; or hit the button “Send via message” For 
-            your friends who don’t have an NEA account yet, you can type their 
-            email address and write them a personalized message. They will 
-            receive an invitation to create an account and a link to the event 
-            you shared with them.{'\n\n'}
-            Additionally you can share your event on your social media channels 
-            using the icons on the bottom part of the popup:{'\n'}
+            Navigate to the event page of any event that you would like to 
+            share. You can share the URL of this page with your friend. They 
+            will be able to view the event details, restaurant, and attendees 
+            without an account, and they will be asked to log in or sign up 
+            once they click on “Join This Event.”
+          </div>
+          <div style={DIVIDER_LINE_STYLE} />
+          <h3 style={QUESTION_STYLE} >
+            How to invite a friend to NeverEatAlone?
+          </h3>
+          <div style={ANSWER_STYLE} >
+            To share the NeverEatAlone app with a friend, make sure you are 
+            logged in and scroll to the bottom of any page to find the&nbsp;
+            <InviteAFoodieButton
+              style={INVITE_FOODIE_BUTTON_STYLE}
+              onInviteAFoodie={this.props.onInviteAFoodieClick}
+            />&nbsp;
+            link in the footer. A popup will appear where you can type 
+            in a friend’s email address and write them a personalized message. 
+            They will receive an email invitation to create and account, along 
+            with the username and profile picture of the account who invited 
+            them.{'\n'}
+            Additionally you can share NeverEatAlone without logging in by 
+            using the social media icons on the bottom part of the popup:{'\n'}
             <ul style={UL_STYLE} >
               <li>Twitter</li>
               <li>Facebook</li>
               <li>Reddit</li>
-              <li>Or any other channel, using the unique link</li>
+              <li>Or any other channel, using the link</li>
             </ul>
-           <div style={NEW_LINE_STYLE} >{'\n'}</div>
+            {'\n'}
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
-            How do I delete past events from my events list?
+            How do I hide my event activity?
           </h3>
           <div style={ANSWER_STYLE} >
-            You can hide your past events from your user profile.{'\n'}
-            Once you are logged in, head to your 
-            profile and hit the button “Edit Profile” on the bottom part of 
-            your user card. On the following page, scroll down to the “Tabs” 
-            section and hit the eye icon&nbsp;
+            You will always appear on the attendees section of an event page 
+            you’re attending, but you can hide the events you are attending or 
+            your past events from your user profile.
             <img
-              style={{...NO_SELECTION_STYLE, ...ICON_STYLE, ...EYE_ICON_STYLE}}
-              src='resources/help_page/icons/eye.svg'
-              alt='Share Icon'
-              draggable={false}
+              style={USER_SETTINGS_IMAGE_STYLE}
+              src='resources/help_page/images/settings.jpg'
+              alt='Settings Image'
             />
-            &nbsp;beside “Past Events” to hide that section to other users.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
+            Once you are logged in, head to your profile and hit the button 
+            “Edit Profile” on the bottom part of your user card. On the 
+            following page, find the “Events” section and hit the eye icon 
+            beside the section that you want to hide from other users.
           </div>
           <div style={DIVIDER_LINE_STYLE} />
-          <h3 id='delete_photo_from_event' style={QUESTION_STYLE} >
+          <h3 style={QUESTION_STYLE} >
+            I won’t be able to attend an event I joined
+          </h3>
+          <div style={ANSWER_STYLE} >
+            You can remove your seat from the event anytime before the event 
+            happens. Once you are logged in, head to the event page and hit the 
+            button “Remove my Seat” on the top right corner.
+          </div>
+          <div style={DIVIDER_LINE_STYLE} />
+          <h3 style={QUESTION_STYLE} >
+            I can’t find any events near me?
+          </h3>
+          <div style={ANSWER_STYLE} >
+            We are currently focussing on events in Toronto, but you may be 
+            able to find events in other cities in the Greater Toronto Area.
+            {'\n'}
+            Navigate to the Home Page or Explore Events page and click on the 
+            location dropdown&nbsp;
+            <img
+              style={LOCATION_DROPDOWN_IMAGE_STYLE}
+              src='resources/help_page/images/location_dropdown.jpg'
+              alt='Dropdown Image'
+              draggable={false}
+            />
+            &nbsp;at the top of the page. If any other cities are available, 
+            you’ll be able to select them from this dropdown to view events in 
+            that area.
+          </div>
+          <div style={DIVIDER_LINE_STYLE} />
+          <h3 style={QUESTION_STYLE} >
+            Can I host an event of my own?
+          </h3>
+          <div style={ANSWER_STYLE} >
+            We are currently working on user-hosted events and other community 
+            features. If you’re interested in hosting an event, or if there’s a 
+            restaurant you think we should host at, send us some feedback to 
+            info@nevereatalone.net.
+            <div style={NEW_LINE_STYLE} >{'\n'}</div>
+            If you’re a restaurant owner, head to the partner with us page and 
+            send us a message. We would love to work with you.
+          </div>
+          <div style={DIVIDER_LINE_STYLE} />
+          <h3 style={QUESTION_STYLE} >
             How can I delete a photo from an event?
           </h3>
           <div style={ANSWER_STYLE} >
@@ -308,7 +309,6 @@ export class HelpPage extends React.Component<Properties> {
                 style={LINK_STYLE}
                 className={css(styles.linkStates)}
                 to='#tagged_in_photo_without_permission'
-                draggable='false'
             >
               I was tagged in photo without my permission
             </HashLink>
@@ -331,7 +331,6 @@ export class HelpPage extends React.Component<Properties> {
                 style={LINK_STYLE}
                 className={css(styles.linkStates)}
                 to='#my_profile'
-                draggable='false'
             >
               User Profile
             </HashLink>
@@ -566,7 +565,6 @@ export class HelpPage extends React.Component<Properties> {
                 href='mailto:info@nevereatalone.net'
                 target='_blank'
                 rel='noopener noreferrer'
-                draggable={false}
             >
               info@nevereatalone.net
             </a>
@@ -598,7 +596,6 @@ export class HelpPage extends React.Component<Properties> {
                 style={LINK_STYLE}
                 className={css(styles.linkStates)}
                 to='#fix_restaurant_info'
-                draggable='false'
             >
               How to fix incorrect information about a restaurant?
             </HashLink>
@@ -714,7 +711,6 @@ export class HelpPage extends React.Component<Properties> {
                 style={LINK_STYLE}
                 className={css(styles.linkStates)}
                 to='#fix_restaurant_info'
-                draggable='false'
             >
               How to fix incorrect information about a restaurant?
             </HashLink>
@@ -726,7 +722,6 @@ export class HelpPage extends React.Component<Properties> {
                 href='mailto:info@nevereatalone.net'
                 target='_blank'
                 rel='noopener noreferrer'
-                draggable={false}
             >
               info@nevereatalone.net
             </a>
@@ -807,7 +802,6 @@ export class HelpPage extends React.Component<Properties> {
                 href='mailto:info@nevereatalone.net'
                 target='_blank'
                 rel='noopener noreferrer'
-                draggable={false}
             >
               info@nevereatalone.net
             </a>
@@ -861,7 +855,6 @@ export class HelpPage extends React.Component<Properties> {
                 style={LINK_STYLE}
                 className={css(styles.linkStates)}
                 to='#delete_photo_from_event'
-                draggable='false'
             >
               How can I delete a photo from an event?
             </HashLink>
@@ -871,7 +864,6 @@ export class HelpPage extends React.Component<Properties> {
                 style={LINK_STYLE}
                 className={css(styles.linkStates)}
                 to='#tagged_in_photo_without_permission'
-                draggable='false'
             >
               I was tagged in photo without my permission
             </HashLink>
@@ -919,7 +911,6 @@ export class HelpPage extends React.Component<Properties> {
                 style={LINK_STYLE}
                 className={css(styles.linkStates)}
                 to='#delete_photo_from_event'
-                draggable='false'
             >
               How can I delete a photo from an event?
             </HashLink>
@@ -946,7 +937,6 @@ export class HelpPage extends React.Component<Properties> {
                 style={LINK_STYLE}
                 className={css(styles.linkStates)}
                 to='#tagged_in_photo_without_permission'
-                draggable='false'
             >
               I was tagged in photo without my permission
             </HashLink>
@@ -1049,7 +1039,6 @@ export class HelpPage extends React.Component<Properties> {
                 style={LINK_STYLE}
                 className={css(styles.linkStates)}
                 to='#blocked_list'
-                draggable='false'
             >
               Where can I see all my blocked users?
             </HashLink>
@@ -1071,7 +1060,6 @@ export class HelpPage extends React.Component<Properties> {
         <HashLink
             style={BACK_TO_TOP_BUTTON_STYLE}
             to='#top'
-            draggable='false'
         >
           <img
             style={{...NO_SELECTION_STYLE, ...BACK_TO_TOP_ICON}}
@@ -1235,6 +1223,12 @@ const ATTENDING_AN_EVENT_ICON_STYLE: React.CSSProperties = {
   height: '92px'
 };
 
+const LISTVIEW_CALENDAR_ICONS_STYLE: React.CSSProperties = {
+  width: '43px',
+  height: '20px',
+  marginLeft: '5px'
+};
+
 const RESTAURANT_ICON_STYLE: React.CSSProperties = {
   width: '90px',
   height: '82px'
@@ -1279,9 +1273,9 @@ const ANSWER_STYLE: React.CSSProperties = {
   padding: '0px',
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
-  fontWeight: 'normal',
+  fontWeight: 400,
   fontSize: '14px',
-  lineHeight: '20px',
+  lineHeight: '18px',
   color: '#000000',
   overflowWrap: 'break-word'
 };
@@ -1320,11 +1314,40 @@ const NO_SELECTION_STYLE: React.CSSProperties = {
 };
 
 const LINK_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 700,
+  fontSize: '14px',
+  lineHeight: '18px',
   textDecoration: 'none',
   color: '#F26B55',
   margin: '0',
   padding: '0',
   cursor: 'pointer'
+};
+
+const USER_SETTINGS_IMAGE_STYLE: React.CSSProperties = {
+  width: '468px',
+  minWidth: '468px',
+  height: '246px',
+  minHeight: '246px',
+  margin: '30px 0px',
+  padding: '0px'
+};
+
+const INVITE_FOODIE_BUTTON_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontWeight: 700,
+  fontSize: '14px',
+  lineHeight: '18px',
+  height: '18px'
+};
+
+const LOCATION_DROPDOWN_IMAGE_STYLE: React.CSSProperties = {
+  width: '134px',
+  minWidth: '134px',
+  height: '24px',
+  minHeight: '24px'
 };
 
 const styles = StyleSheet.create({ 

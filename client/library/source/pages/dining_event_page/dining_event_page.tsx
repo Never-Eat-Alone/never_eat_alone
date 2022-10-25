@@ -213,7 +213,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
           <Router.Link
               key={attendee.userId}
               style={ATTENDEE_CONTAINER_STYLE}
-              to={`/users/${attendee.userId}`}
+              to={`/users/profile/${attendee.userId}`}
               className={css(styles.profileLink)}
           >
             <div style={ATTENDEE_IMAGE_CONTAINER_STYLE} >
