@@ -118,14 +118,103 @@ export class HelpPage extends React.Component<Properties> {
             How do I join events?
           </h3>
           <div style={ANSWER_STYLE} >
-            Locate the event you are interested in. Hit the button 
-            “Join this Event” located at the top right corner of the event 
-            page. If you are not logged in, follow the instructions on the 
-            screen to login or sign-up. Once you’ve joined an event, it will 
-            appear on Your Upcoming Events and your&nbsp;
-            <Router.Link to='/users/profile/:id' style={LINK_STYLE} >
+            Log in and locate the event you are interested in. Hit the button 
+            “Join this Event” located on the right of the event page. (If you 
+            are not logged in, you need to first request an account. See&nbsp;
+            <HashLink
+                style={LINK_STYLE}
+                className={css(styles.linkStates)}
+                to='#sign_up'
+            >
+              How do I sign up for NEA?
+            </HashLink>){'\n'}
+            If the event has a fee, you’ll see a payment options window pop-up. 
+            You can checkout with Google Pay, Apple Pay, PayPal, or by adding a 
+            card to your account.{'\n'}
+            To learn how to add a card to your account, see&nbsp;
+            <HashLink
+                style={LINK_STYLE}
+                className={css(styles.linkStates)}
+                to='#add_payment'
+            >
+              How do I add a payment method to my account?
+            </HashLink>
+            {'\n'}
+            Select the payment option you would like to use and follow the 
+            steps on-screen. You may be asked to log in to your Google 
+            Pay/Apple Pay/PayPal account if you’re using one of those options.
+            {'\n'}
+            Once the payment is approved, you’ll see a Payment Complete screen. 
+            You can now close this pop-up, or hit the “Back to Event” button.
+            {'\n'}
+            Once you’ve joined an event, it will appear on your&nbsp;
+            <Router.Link
+                to='/'
+                style={LINK_STYLE}
+                className={css(styles.linkStates)}
+            >
+              Homepage
+            </Router.Link>&nbsp;and your&nbsp;
+            <Router.Link
+                to='/users/profile/:id'
+                style={LINK_STYLE}
+                className={css(styles.linkStates)}
+            >
               Profile page
-            </Router.Link>.
+            </Router.Link>. You can also check your&nbsp;
+            <Router.Link
+                to='/users/settings'
+                style={LINK_STYLE}
+                className={css(styles.linkStates)}
+            >
+              Payment History
+            </Router.Link>&nbsp;
+            for a record of your events and fees.
+          </div>
+          <div style={DIVIDER_LINE_STYLE} />
+          <h3 style={QUESTION_STYLE} >
+            How do I sign up for NEA?
+          </h3>
+          <div style={ANSWER_STYLE} >
+            From the Homepage, hit the “Become a Member” or the “Join Us” 
+            button at the top of the page. You can also hit the “Request an 
+            Account” button from an event page. You’ll see a form asking for 
+            your name and email, and if you have it, the name or username of 
+            the member who told you about NEA. The email you use here will be 
+            the one you use to log in to your account.{'\n'}
+            Fill in the information and hit the “Request to Join!” button. 
+            We’ll send you an email once your account is approved.
+          </div>
+          <div style={DIVIDER_LINE_STYLE} />
+          <h3 style={QUESTION_STYLE} >
+            How much do events cost?
+          </h3>
+          <div style={ANSWER_STYLE} >
+            The price of every event is determined by the restaurant, menu, and 
+            seating availability. You can find the price of each event on the 
+            event page.{'\n'}
+            Here are some examples of fees for events:{'\n\n'}
+            Event Fee{'\n'}
+            In order to ensure a good experience for both you and the 
+            restaurants we host at, we may charge a small fee to reserve your 
+            seat for certain events. Typically $2-5 CAD, this charge helps us 
+            fill our events with people who are committed to attending.{'\n'}
+            This fee is refundable if you remove your seat more than 24 hours 
+            in advance of an event.{'\n'}
+            Cancellation Fee{'\n'}
+            Some restaurants may charge a no-show fee for last-minute 
+            cancellations. For the events we host at these restaurants, 
+            NeverEatAlone puts a hold on your payment method for the 
+            restaurant’s cancellation rate. This may be charged if you don’t 
+            attend your seat.{'\n\n'}
+            For more information, see&nbsp;
+            <HashLink
+                style={LINK_STYLE}
+                className={css(styles.linkStates)}
+                to='#are_events_refundable'
+            >
+              Are event fees refundable?
+            </HashLink>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
@@ -145,54 +234,65 @@ export class HelpPage extends React.Component<Properties> {
             How do I see events I joined?
           </h3>
           <div style={ANSWER_STYLE} >
-            Events that you’re attending will appear on Your Upcoming Events 
-            and your Profile page.
+            Once you’re logged in, you’ll see a list of events that you’re 
+            attending on your&nbsp;
+            <Router.Link
+                to='/'
+                style={LINK_STYLE}
+                className={css(styles.linkStates)}
+            >
+              Homepage
+            </Router.Link>. You can also find it on your&nbsp;
+            <Router.Link
+                to='/users/profile/:id'
+                style={LINK_STYLE}
+                className={css(styles.linkStates)}
+            >
+              Profile page
+            </Router.Link>.
             <div style={NEW_LINE_STYLE} >{'\n'}</div>
-            Your Upcoming Events:{'\n'}
+            Profile:{'\n'}
             <ul style={UL_STYLE} >
               <li>
-                Follow the “Your Events” link in the header to see a list of 
-                your upcoming events. You must be logged in to access this link
+                Click on your profile picture in the header on the top right 
+                of the screen. You must be logged in to see your profile
               </li>
+              <li>On the following dropdown, select “Profile”</li>
+              <li>View a list of your upcoming events and past events</li>
               <li>
-                You can view your events in a listview or a calendar view by 
-                selecting the appropriate icons
-                <img
-                  style={LISTVIEW_CALENDAR_ICONS_STYLE}
-                  src='resources/help_page/icons/listview_calendar_icons.svg'
-                  alt='Listview Calendar Icons'
-                />
+                You can choose to hide these from other users. For more 
+                information, see&nbsp;
+                <HashLink
+                    style={LINK_STYLE}
+                    className={css(styles.linkStates)}
+                    to='#hide_activity'
+                >
+                  How do I hide my event activity?
+                </HashLink>
               </li>
-              {'\n'}
-              Only future events will appear on this page. To see a list of 
-              your past events, navigate to your Profile page
-              {'\n'}
-              Profile:{'\n'}
-              <ul style={UL_STYLE} >
-                <li>View a list of your upcoming events and past events</li>
-                <li>
-                  You can choose to hide these from other users. For more 
-                  information, see&nbsp;
-                  <HashLink
-                      style={LINK_STYLE}
-                      className={css(styles.linkStates)}
-                      to='#hide_activity'
-                  >
-                    How do I hide my event activity?
-                  </HashLink>
-                </li>
-              </ul>
             </ul>
+          </div>
+          <div style={DIVIDER_LINE_STYLE} />
+          <h3 style={QUESTION_STYLE} >
+            How do I add events to my collection?
+          </h3>
+          <div style={ANSWER_STYLE} >
+            Once you start attending events, the coloured flags corresponding 
+            to your events will appear in your flag collection after the events 
+            pass. Your flag collection resets at the start of every month. 
+            We’re working on special surprises for users who can collect them 
+            all!
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How to see an event’s attendees?
           </h3>
           <div style={ANSWER_STYLE} >
-            Once you are logged in, head to an event page. If anyone has joined 
-            the event, their name and profile picture will appear under the 
-            “Attendees” section of the page. If there are more than 5 
-            attendees, click on the last option (See All) to see a full list of 
+            You can see the attendees of an event on the event page. If anyone 
+            has joined the event, their name and profile picture will appear 
+            under the “Attendees” section of the page. If you’re not logged in, 
+            you’ll just see the number of attendees. If many people have joined 
+            the event, click on the last option (See All) to see a full list of 
             attendees.
           </div>
           <div style={DIVIDER_LINE_STYLE} />
@@ -234,21 +334,15 @@ export class HelpPage extends React.Component<Properties> {
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
-            How do I hide my event activity?
+            How do I find events that have passed?
           </h3>
           <div style={ANSWER_STYLE} >
-            You will always appear on the attendees section of an event page 
-            you’re attending, but you can hide the events you are attending or 
-            your past events from your user profile.
-            <img
-              style={USER_SETTINGS_IMAGE_STYLE}
-              src='resources/help_page/images/settings.jpg'
-              alt='Settings Image'
-            />
-            Once you are logged in, head to your profile and hit the button 
-            “Edit Profile” on the bottom part of your user card. On the 
-            following page, find the “Events” section and hit the eye icon 
-            beside the section that you want to hide from other users.
+            To view events that you attended in the past, you can go to your 
+            profile page and look under “Past Events''. You can also visit 
+            another user’s profile to do the same. Currently, there is no way 
+            to filter by past events on the homepage, but let us know by 
+            submitting feedback if this is a feature you want to see in the 
+            future!
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
@@ -257,7 +351,19 @@ export class HelpPage extends React.Component<Properties> {
           <div style={ANSWER_STYLE} >
             You can remove your seat from the event anytime before the event 
             happens. Once you are logged in, head to the event page and hit the 
-            button “Remove my Seat” on the top right corner.
+            button “Remove my Seat” on the top right corner.{'\n\n'}
+            For events with a fee, you will see a window pup-up with 
+            information on your refund eligibility once you click 
+            “Remove my Seat”. Click “Remove Seat” in this pop-up to finish 
+            removing your seat.{'\n\n'}
+            For more information, see&nbsp;
+            <HashLink
+                style={LINK_STYLE}
+                className={css(styles.linkStates)}
+                to='#are_events_refundable'
+            >
+              Are fees for events refundable?
+            </HashLink>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
@@ -266,18 +372,9 @@ export class HelpPage extends React.Component<Properties> {
           <div style={ANSWER_STYLE} >
             We are currently focussing on events in Toronto, but you may be 
             able to find events in other cities in the Greater Toronto Area.
-            {'\n'}
-            Navigate to the Home Page or Explore Events page and click on the 
-            location dropdown&nbsp;
-            <img
-              style={LOCATION_DROPDOWN_IMAGE_STYLE}
-              src='resources/help_page/images/location_dropdown.jpg'
-              alt='Dropdown Image'
-              draggable={false}
-            />
-            &nbsp;at the top of the page. If any other cities are available, 
-            you’ll be able to select them from this dropdown to view events in 
-            that area.
+            {'\n\n'}
+            If you want to see any neighbourhoods or venues featured, send us 
+            some feedback to let us know!
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
@@ -287,65 +384,17 @@ export class HelpPage extends React.Component<Properties> {
             We are currently working on user-hosted events and other community 
             features. If you’re interested in hosting an event, or if there’s a 
             restaurant you think we should host at, send us some feedback to 
-            info@nevereatalone.net.
+            support@nevereatalone.net.
             <div style={NEW_LINE_STYLE} >{'\n'}</div>
-            If you’re a restaurant owner, head to the partner with us page and 
-            send us a message. We would love to work with you.
-          </div>
-          <div style={DIVIDER_LINE_STYLE} />
-          <h3 style={QUESTION_STYLE} >
-            How can I delete a photo from an event?
-          </h3>
-          <div style={ANSWER_STYLE} >
-            You can remove photos uploaded by yourself and for photos uploaded 
-            by someone else that tags you, you can remove your tag.{'\n\n'}
-            To remove a photo you uploaded login and head to the event page. 
-            Once there scroll down to the “Gallery” section, locate your photo 
-            and click on the More Actions button <span 
-            style={NO_WORD_BREAK_STYLE} >(<span style={ORANGE_TEXT_STYLE} >
-            • • •</span>)</span> and select “Delete”.{'\n'}
-            To remove your tag from a photo, please see&nbsp;
-            <HashLink
+            If you’re a restaurant owner, head to the&nbsp;
+            <Router.Link
+                to='/partner_with_us'
                 style={LINK_STYLE}
                 className={css(styles.linkStates)}
-                to='#tagged_in_photo_without_permission'
             >
-              I was tagged in photo without my permission
-            </HashLink>
-            .
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
-          </div>
-          <div style={DIVIDER_LINE_STYLE} />
-          <h3 style={QUESTION_STYLE} >
-            Where can I find the events that I am following?
-          </h3>
-          <div style={ANSWER_STYLE} >
-            Once you are logged in, select Your Events from the top navigation. 
-            You can see events you are attending this week or click the “Next 
-            Week And Beyond” tab to see what’s coming up in the future. All 
-            events you are following are located on the right side within each 
-            tab.{'\n\n'}
-            If an event has already passed, you can find them under the “Past 
-            Events” tab in your&nbsp;
-            <HashLink
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-                to='#my_profile'
-            >
-              User Profile
-            </HashLink>
-            .
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
-          </div>
-          <div style={DIVIDER_LINE_STYLE} />
-          <h3 style={QUESTION_STYLE} >
-            I won’t be able to attend an event I joined
-          </h3>
-          <div style={ANSWER_STYLE} >
-            You can remove your seat from the event anytime before the event 
-            happens. Once you are logged in, head to the event page and hit the 
-            button “Remove my Seat” on the top right corner.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
+              partner with us
+            </Router.Link>&nbsp;
+            page and send us a message. We'd love to hear from you.
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h2
@@ -354,198 +403,68 @@ export class HelpPage extends React.Component<Properties> {
           >
             Restaurant
           </h2>
-          <h3 id='fix_restaurant_info' style={QUESTION_STYLE} >
-            How to fix incorrect information about a Restaurant?
-          </h3>
-          <div style={ANSWER_STYLE} >
-            Once you are logged in, head to the 
-            restaurant page and hit the edit button&nbsp;
-            <img
-              style={{...NO_SELECTION_STYLE, ...ICON_STYLE, ...SUB_ICON_STYLE}}
-              src='resources/help_page/icons/edit.svg'
-              alt='Edit Icon'
-              draggable={false}
-            />
-            &nbsp;beside the restaurant title. On the following popup allow you 
-            to edit:{'\n'}
-            <ul style={UL_STYLE} >
-              <li>Restaurant name</li>
-              <li>Cuisine Type</li>
-              <li>Price Estimate</li>
-              <li>Venue Description</li>
-            </ul>
-            {'\n'}
-            You can edit the following by clicking “Submit an Edit” within the 
-            About section:{'\n'}
-            <ul style={UL_STYLE} >
-              <li>Address</li>
-              <li>Contact information</li>
-              <li>Hours of operation</li>
-            </ul>
-            {'\n'}
-            You can edit the header image by clicking 
-            the edit button&nbsp;
-            <img
-              style={{...NO_SELECTION_STYLE, ...ICON_STYLE, ...SUB_ICON_STYLE}}
-              src='resources/help_page/icons/edit.svg'
-              alt='Edit Icon'
-              draggable={false}
-            />
-            &nbsp;on the top right corner of the image.{'\n\n'}
-            Once you are done, hit the button “Submit Edit”.{'\n\n'}
-            If a restaurant has the “&nbsp;
-            <img
-              style={{...NO_SELECTION_STYLE, ...ICON_STYLE}}
-              src='resources/help_page/icons/listed-by-nea.svg'
-              alt='Listed By NEA Icon'
-              draggable={false}
-            />
-            &nbsp;Listed by NEA” tag underneath its name, the information has 
-            been verified by us and you will not be able to submit any edits at 
-            this time.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
-          </div>
-          <div style={DIVIDER_LINE_STYLE} />
-          <h3 style={QUESTION_STYLE} >
+          <h3 id='find_restaurant' style={QUESTION_STYLE} >
             I want to find a restaurant in my neighbourhood
           </h3>
           <div style={ANSWER_STYLE} >
-            Once you are logged in, head to Explore Restaurants. You can search 
-            for a restaurant using the search bar at the top or clicking on the 
-            map view&nbsp;
-            <img
-              style={{...NO_SELECTION_STYLE, ...ICON_STYLE}}
-              src='resources/help_page/icons/map.svg'
-              alt='Map Icon'
-              draggable={false}
-            />
-            &nbsp;and navigate to your neighborhood.{'\n\n'}
-            Additionally, you can also hit the filter button&nbsp;
-            <img
-              style={{...NO_SELECTION_STYLE, ...ICON_STYLE}}
-              src='resources/help_page/icons/filter.svg'
-              alt='Filter Icon'
-              draggable={false}
-            />
-            &nbsp;to filter the results (like cuisines).
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
+            We’re currently working on browsing and filtering for restaurants. 
+            For now, you can check the location of an event to find out what 
+            neighbourhood the venue is in.
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
-            I can’t find a restaurant
+            Can you host an event at a specific restaurant
           </h3>
           <div style={ANSWER_STYLE} >
-            If after searching for a specific restaurant you ultimately 
-            couldn’t find it, you can add it yourself.{'\n\n'}
-            Once you are logged in, from the Explore Restaurant page, click the 
-            tab “List a Restaurant” and hit the button “List a Restaurant”.
-            {'\n'}
-            The next page will have the following fields:{'\n'}
-            <ul style={UL_STYLE} >
-              <li>
-                <b>Restaurant Name</b>: Name of the business, including 
-                neighbourhood or major intersection if this is a chain or 
-                franchise.
-              </li>
-              <li><b>Address</b></li>
-              <li>
-                <b>Cuisine type</b>: Select one or more cuisines from a 
-                predefined list.
-              </li>
-              <li>
-                <b>Price estimate</b>: Specify the overall price of this 
-                restaurant’s menu.
-              </li>
-              <li><b>Venue description</b>: A blurb about the location.</li>
-              <li><b>Phone number</b></li>
-              <li><b>Website</b></li>
-              <li><b>Hours of operation</b></li>
-              <li>
-                <b>Menu photo</b>: You can upload photos of the restaurant’s 
-                menu.
-              </li>
-              <li>
-                <b>Header photo</b>: You can upload a photo of the 
-                restaurant’s cuisine to be featured on the head of the 
-                restaurant’s page.
-              </li>
-            </ul>
-            {'\n'}
-            Hit the button “List Restaurant on NEA” once you are done.{'\n\n'}
-            You can stop filling this form anytime and resume it from the 
-            “Explore Restaurant” and under the tab “List a Restaurant” in a new 
-            section called “Draft”.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
+            We are always working on expanding our features. If there’s a 
+            restaurant you think we should host at, send us some feedback to 
+            let us know.{'\n\n'}
+            If you’re a restaurant owner, head to&nbsp;
+            <Router.Link
+                to='/partner_with_us'
+                style={LINK_STYLE}
+                className={css(styles.linkStates)}
+            >
+              partner with us
+            </Router.Link>&nbsp;
+            page and send us a message. We’d love to hear from you!
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
-            How to edit working hours from a restaurant?
+            Information on a restaurant page is wrong?
           </h3>
           <div style={ANSWER_STYLE} >
-            Within a restaurant page, you can click the “Submit an Edit” link 
-            under the Hours of Operation section to edit the restaurant’s 
-            working hours.{'\n\n'}
-            Once you are done, hit the button “Submit Edit”.{'\n\n'}
-            If a restaurant has the “&nbsp;
-            <img
-              style={{...NO_SELECTION_STYLE, ...ICON_STYLE}}
-              src='resources/help_page/icons/listed-by-nea.svg'
-              alt='Listed By NEA Icon'
-              draggable={false}
-            />
-            &nbsp;Listed by NEA” tag underneath its name, the information has 
-            been verified by us and you will not be able to submit any edits at 
-            this time.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
+            Let us know about any incorrect or outdated information by sending 
+            us some feedback or emailing us at support@nevereatalone.net.
+            {'\n\n'}
+            If you’re a restaurant owner, head to the&nbsp;
+            <Router.Link
+                to='/partner_with_us'
+                style={LINK_STYLE}
+                className={css(styles.linkStates)}
+            >
+              partner with us
+            </Router.Link>&nbsp;
+            page and send us a message. We’d love to hear from you!
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How to see if a restaurant has a patio?
           </h3>
           <div style={ANSWER_STYLE} >
-            We are still building NEAs database so the information for seating 
-            options isn’t available at the moment. We appreciate your patience 
-            and please look forward to updates in the near future.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
+            We are still building NeverEatAlone’s database so the information 
+            for seating options isn’t available on the restaurant page at the 
+            moment. You can see seating arrangements for each event on the 
+            event page, within the about section.
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             Is the restaurant page managed by the restaurant owner?
           </h3>
           <div style={ANSWER_STYLE} >
-            Restaurants are listed by NEA users and staff. We are currently 
-            working on a partnership solution with restaurant owners so please 
-            look forward to updates about this in the near future.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
-          </div>
-          <div style={DIVIDER_LINE_STYLE} />
-          <h3 style={QUESTION_STYLE} >
-            How do I change my review for a restaurant?
-          </h3>
-          <div style={ANSWER_STYLE} >
-            Once you are logged in, head to the restaurant page, scroll down to 
-            the “Reviews” section and hit the button “Edit Review” to trigger 
-            the review popup. Once you are done with your changes hit the 
-            button “Submit” to apply the changes.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
-          </div>
-          <div style={DIVIDER_LINE_STYLE} />
-          <h3 style={QUESTION_STYLE} >
-            How to leave a review on a restaurant?
-          </h3>
-          <div style={ANSWER_STYLE} >
-            Once you are logged in, head to the restaurant page, scroll down to 
-            the “Reviews” section and hit the button “Add a Review” to trigger 
-            the review popup. On the following screen you can add:
-            {'\n'}
-            <ul style={UL_STYLE} >
-              <li>A rating</li>
-              <li>Labels to illustrate the restaurant’s atmosphere</li>
-              <li>A written review</li>
-            </ul>
-            {'\n'}
-            At the end, hit the button “Submit” to publish your review.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
+            Restaurants are listed by NEA staff. We are currently working on a 
+            partnership solution with restaurant owners so please look forward 
+            to updates about this in the near future.
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h2
@@ -1348,6 +1267,13 @@ const LOCATION_DROPDOWN_IMAGE_STYLE: React.CSSProperties = {
   minWidth: '134px',
   height: '24px',
   minHeight: '24px'
+};
+
+const JOIN_EVENT_BUTTON_IMAGE_STYLE: React.CSSProperties = {
+  width: '',
+  minWidth: '',
+  height: '',
+  minHeight: ''
 };
 
 const styles = StyleSheet.create({ 
