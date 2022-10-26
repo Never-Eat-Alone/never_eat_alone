@@ -163,7 +163,7 @@ export class HelpPage extends React.Component<Properties> {
               Profile page
             </Router.Link>. You can also check your&nbsp;
             <Router.Link
-                to='/users/settings'
+                to='/users/settings/:id'
                 style={LINK_STYLE}
                 className={css(styles.linkStates)}
             >
@@ -383,8 +383,17 @@ export class HelpPage extends React.Component<Properties> {
           <div style={ANSWER_STYLE} >
             We are currently working on user-hosted events and other community 
             features. If you’re interested in hosting an event, or if there’s a 
-            restaurant you think we should host at, send us some feedback to 
-            support@nevereatalone.net.
+            restaurant you think we should host at, send us some feedback to
+            &nbsp;
+            <a
+                style={LINK_STYLE}
+                className={css(styles.linkStates)}
+                href='mailto:support@nevereatalone.net'
+                target='_blank'
+                rel='noopener noreferrer'
+            >
+              support@nevereatalone.net
+            </a>.
             <div style={NEW_LINE_STYLE} >{'\n'}</div>
             If you’re a restaurant owner, head to the&nbsp;
             <Router.Link
@@ -435,7 +444,16 @@ export class HelpPage extends React.Component<Properties> {
           </h3>
           <div style={ANSWER_STYLE} >
             Let us know about any incorrect or outdated information by sending 
-            us some feedback or emailing us at support@nevereatalone.net.
+            us some feedback or emailing us at&nbsp;
+            <a
+                style={LINK_STYLE}
+                className={css(styles.linkStates)}
+                href='mailto:support@nevereatalone.net'
+                target='_blank'
+                rel='noopener noreferrer'
+            >
+              support@nevereatalone.net
+            </a>.
             {'\n\n'}
             If you’re a restaurant owner, head to the&nbsp;
             <Router.Link
@@ -481,113 +499,68 @@ export class HelpPage extends React.Component<Properties> {
             <a
                 style={LINK_STYLE}
                 className={css(styles.linkStates)}
-                href='mailto:info@nevereatalone.net'
+                href='mailto:support@nevereatalone.net'
                 target='_blank'
                 rel='noopener noreferrer'
             >
-              info@nevereatalone.net
-            </a>
-            .
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
+              support@nevereatalone.net
+            </a>.
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
-            Someone used my photo without my consent
+            My restaurant is listed on NEA
           </h3>
           <div style={ANSWER_STYLE} >
-            Click the photo to open the popup, locate the More Actions 
-            button <span style={NO_WORD_BREAK_STYLE} >(<span 
-            style={ORANGE_TEXT_STYLE} >• • •</span>)</span> on the right side 
-            and hit “report”.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
-          </div>
-          <div style={DIVIDER_LINE_STYLE} />
-          <h3 style={QUESTION_STYLE} >
-            Someone listed my restaurant on NEA
-          </h3>
-          <div style={ANSWER_STYLE} >
-            NEA allows users to attend events at restaurants. We boost 
-            local businesses while connecting with people who are genuinely 
+            NEA allows users to attend events at restaurants. We boost local 
+            businesses while connecting with people who are genuinely 
             interested in having a gastronomic experience with others.
-            If any information regarding your restaurant is incorrect, please 
-            see&nbsp;
-            <HashLink
+            If any information regarding your restaurant is incorrect, or if 
+            you want to partner with us, please reach out through&nbsp;
+            <Router.Link
+                to='/partner_with_us'
                 style={LINK_STYLE}
                 className={css(styles.linkStates)}
-                to='#fix_restaurant_info'
             >
-              How to fix incorrect information about a restaurant?
-            </HashLink>
-            . If you want to partner with us, please reach out through this 
-            link.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
+              this link
+            </Router.Link>.
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How to report a harmful profile picture?
           </h3>
           <div style={ANSWER_STYLE} >
-            Once you are logged in, head to the user profile and locate the 
-            More Actions button <span style={NO_WORD_BREAK_STYLE} >(<span 
-            style={ORANGE_TEXT_STYLE} >• • •</span>)</span> at the right side 
+            Once you are logged in, head to the user profile you’d like to 
+            report and locate the More Actions icon (• • •) at the right side 
             of the user card and click on Report. On the following popup fill 
-            out the reason and hit the button “Report”. We will then 
+            out the reason and hit the button “Report”. Select the reason this 
+            user is being reported, fill in any additional comments, and hit 
+            the “Report” button  in the following window. We will then 
             investigate the issue and act accordingly.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
-          </div>
-          <div style={DIVIDER_LINE_STYLE} />
-          <h3 style={QUESTION_STYLE} >
-            Someone left a bad testimonial on my profile
-          </h3>
-          <div style={ANSWER_STYLE} >
-            If there’s a harmful, offensive or untruthful testimonial, you can 
-            always report it.{'\n\n'}
-            Or you can set all your testimonials to private.{'\n\n'}
-            To report it, once you are logged in, head to your profile, locate 
-            the testimonial and click the Report icon&nbsp;
-            <img
-              style={{...NO_SELECTION_STYLE, ...ICON_STYLE}}
-              src='resources/help_page/icons/report.svg'
-              alt='Report Icon'
-              draggable={false}
-            />
-            .{'\n\n'}
-            To set your testimonial to private, once you are logged in, head to 
-            your profile and hit the button “Edit Profile”. On the following 
-            screen, scroll down to the “Tabs” section and hit the eye 
-            icon&nbsp;
-            <img
-              style={{...NO_SELECTION_STYLE, ...ICON_STYLE, ...EYE_ICON_STYLE}}
-              src='resources/help_page/icons/eye.svg'
-              alt='Share Icon'
-              draggable={false}
-            />
-            &nbsp;next to Testimonials to hide it to others.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How to change my email?
           </h3>
           <div style={ANSWER_STYLE} >
-            You can find the email associated with your account in the settings 
-            page, under the “Account Information” tab. To get to your settings 
-            page, you must first be logged in to NeverEatAlone. When logged in, 
-            click on your profile icon on the top right of the header, and 
-            select “Settings” from the dropdown menu.{'\n\n'}
-            From here, navigate to the “Account Information” tab.{'\n\n'}
-            If you signed up with an email, or already have set an email, you 
-            can change it by clicking the EDIT button next to your existing 
-            email. You’ll be prompted to enter a new email and verify your 
-            password.{'\n\n'}
-            If you signed up with a Google or Facebook account and want to add 
-            an email, click the ADD button under the “Email & Password” 
-            heading. You’ll need to set a new password at the same time.{'\n\n'}
-            <b>Your new email must be verified before it replaces the existing 
-            email.</b> Until it is verified, you must still use your old email 
-            or a linked social account to log in. To verify your email, simply 
+            You can find the email associated with your account in the&nbsp;
+            <Router.Link
+                to='/users/settings/:id'
+                style={LINK_STYLE}
+                className={css(styles.linkStates)}
+            >
+              settings page
+            </Router.Link>. To get to your settings page, you must first be 
+            logged in to NeverEatAlone. When logged in, click on your profile 
+            icon on the top right of the header, and select “Settings” from the 
+            dropdown menu.{'\n\n'}
+            You will be taken to the “Account Information” section.{'\n\n'}
+            You can change your email by clicking the EDIT button next to your 
+            existing email. You’ll be prompted to enter a new email and verify 
+            your password.{'\n\n'}
+            Your new email must be verified before it replaces the existing 
+            email. Until it is verified, you must still use your old email or a 
+            linked social account to log in. To verify your email, simply 
             follow the link we send to your new email address.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
@@ -596,12 +569,12 @@ export class HelpPage extends React.Component<Properties> {
           <div style={ANSWER_STYLE} >
             When logged in, click on your profile icon in the top right of the 
             header, and select “Settings” from the dropdown menu.{'\n\n'}
-            Under the Account Information tab, locate the button related to the 
-            account you want to link. Regardless of which account you want to 
-            link, once you click on the button a popup will show up with the 
-            login. Make sure your browser is not blocking any popups from NEA 
-            otherwise you won’t be able to finish this process.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
+            Under the Account Information section, locate and click the button 
+            related to the account you want to link. A popup will appear and 
+            take you through the process of linking your accounts. Once your 
+            Google or Facebook account is linked, it will appear in your Linked 
+            Accounts. Make sure your browser is not blocking any popups from 
+            NEA otherwise you won’t be able to finish this process.
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
@@ -610,123 +583,189 @@ export class HelpPage extends React.Component<Properties> {
           <div style={ANSWER_STYLE} >
             When logged in, click on your profile icon in the top right of the 
             header, and select “Settings” from the dropdown menu.{'\n\n'}
-            If you’ve signed up to NEA with a linked Facebook or Google 
-            account, you’ll be prompted  to set an email and password to use as 
-            your login before you can unlink it. You can also set an email and 
-            password anytime you want by simply clicking the ADD button 
-            underneath the “Email & Password” heading.{'\n\n'}
-            Under the Account Information tab, locate the button related to the 
-            account you want to unlink and hit the remove button.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
+            Under the Account Information section, locate the button related to 
+            the account you want to unlink and hit the remove button. Confirm 
+            that you are removing the correct account in the following popup 
+            window, and select “Remove Account.” The linked social account 
+            should then be removed from your Linked Accounts.
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
-            Someone listed a restaurant that doesn’t exist
+            How do I add a payment method to my account?
           </h3>
           <div style={ANSWER_STYLE} >
-            If there's incorrect information about this restaurant, please 
-            see&nbsp;
+            You can either add a payment method during the checkout process 
+            when you join an event with a fee, or by adding a card to the 
+            Payment Methods tab of your settings page.{'\n\n'}
+            If this is the first time you’re adding a card to your NEA account, 
+            you can do so directly through the event checkout process once 
+            you’re logged in.{'\n\n'}
+            To add a card during the checkout process, simply click 
+            “Join Event” on the page of an event you’re interested in. If there 
+            is a fee for this event, you’ll see a payment options window pop 
+            up. Select the “Add a Card” button, and fill in your card 
+            information on the following screen. Click continue when you’re 
+            done. NeverEatAlone will check to see if your information is 
+            correct. If it is, you’ll be taken back to the payment options 
+            window where you’ll see your new card appear as your default 
+            payment method. To check out using this card, simply click the 
+            orange “Checkout” button.{'\n\n'}
+            You can also navigate to the Settings page to add a payment method. 
+            Once logged in, click on your profile picture in the header at the 
+            top right of the page and select “Settings” from the dropdown menu.
+            {'\n\n'}
+            Once you’re there, click on the “Payment Methods” tab to see the 
+            payment methods you have added to your account.{'\n\n'}
+            To add a new payment method, click on “Add a payment method” and 
+            fill in your information on the following screen. Click on the 
+            “Save” button on the bottom of the screen once you’re done. 
+            NeverEatAlone will run a check to make sure your information is 
+            correct. If everything is correct, you’ll be taken back to the 
+            previous page, and you’ll see your newly added payment method 
+            listed.
+          </div>
+          <div style={DIVIDER_LINE_STYLE} />
+          <h3 style={QUESTION_STYLE} >
+            How do I edit card details?
+          </h3>
+          <div style={ANSWER_STYLE} >
+            You can edit the information on a card you’ve added to your account 
+            anytime. Once logged in, click on your profile picture in the 
+            header at the top right of the page and select “Settings” from the 
+            dropdown menu.{'\n\n'}
+            Then navigate to the Payment Methods tab in your Settings page.
+            {'\n\n'}
+            Here, you’ll see a list of all the cards you’ve added to your 
+            account. If you haven’t added any cards yet, see&nbsp;
             <HashLink
                 style={LINK_STYLE}
                 className={css(styles.linkStates)}
-                to='#fix_restaurant_info'
+                to='#add_payment'
             >
-              How to fix incorrect information about a restaurant?
+              How do I add a payment method to my account?
+            </HashLink>{'\n\n'}
+            Click on one of your added cards to be taken to a card details 
+            page. Here, you can edit your name, expiration date, security code 
+            and postal code. You can also delete a card or set it as default.
+            {'\n\n'}
+            Once you’re happy with the information, click “Save” on the bottom 
+            of the screen, or click “Discard Changes” to return to the previous 
+            page without making changes.
+          </div>
+          <div style={DIVIDER_LINE_STYLE} />
+          <h3 style={QUESTION_STYLE} >
+            How do I select a default payment method?
+          </h3>
+          <div style={ANSWER_STYLE} >
+            You can set one of your saved cards as your default payment 
+            method. Once logged in, click on your profile picture in the header 
+            at the top right of the page and select “Settings” from the 
+            dropdown menu.{'\n\n'}
+            Then navigate to the “Payment Methods” tab in your Settings page.
+            {'\n\n'}
+            If you’ve already added cards to your account, they’ll be listed 
+            here. If you have no payment methods, the first card you add will 
+            automatically be marked as default. For more information, see&nbsp;
+            <HashLink
+                style={LINK_STYLE}
+                className={css(styles.linkStates)}
+                to='#add_payment'
+            >
+              How do I add a payment method to my account?
+            </HashLink>{'\n\n'}
+            To make a card your default payment method, click on it to be taken 
+            to its details page. Click the checkbox labeled “Make this my 
+            default card”, and then click the “Save” button on the bottom of 
+            the page to save your changes.{'\n\n'}
+            You’ll see a label marking the card as your default on the Payment 
+            Methods page.
+          </div>
+          <div style={DIVIDER_LINE_STYLE} />
+          <h3 style={QUESTION_STYLE} >
+            How do I delete a card from my account?
+          </h3>
+          <div style={ANSWER_STYLE} >
+            You can remove any card you added previously. Once logged in, click 
+            on your profile picture in the header at the top right of the page 
+            and select “Settings” from the dropdown menu.{'\n\n'}
+            Then navigate to the Payment Methods tab in your Settings page.
+            {'\n\n'}
+            Select the card you’d like to delete. On the following page, hit 
+            the "Delete" button beneath the card image. You’ll get a popup 
+            asking you to confirm the deletion. Select “Delete Card” to finish 
+            removing it from your account.
+          </div>
+          <div style={DIVIDER_LINE_STYLE} />
+          <h3 style={QUESTION_STYLE} >
+            Where can I find my payment records and receipts?
+          </h3>
+          <div style={ANSWER_STYLE} >
+            You can find your purchase history on the Payment History tab of 
+            your Settings page. Once logged in, navigate to the settings page 
+            by clicking on your profile picture in the header on the top right 
+            of the screen. On the ensuing dropdown menu, select “Settings”.
+            {'\n\n'}
+            Once there, select the “Payment History” tab to see a list of your 
+            purchases on NEA.{'\n\n'}
+            All of the events you’ve joined will be listed here from most 
+            recent to oldest, along with any fees associated with the event.
+            {'\n\n'}
+            To see more details, click the “View Receipt” button on to the 
+            right of the purchase you’d like to view, or click the tile if 
+            you’re viewing on a mobile device.{'\n\n'}
+            You’ll see a receipt window with details on the event, your payment 
+            method, the amount paid and refund status(es) if applicable. You’ll 
+            also find links to print, save PDF, and get help with your payment 
+            at the bottom of this window.
+          </div>
+          <div style={DIVIDER_LINE_STYLE} />
+          <h3 style={QUESTION_STYLE} >
+            My cancellation fee is “On Hold” or “Charged” - what does that mean?
+          </h3>
+          <div style={ANSWER_STYLE} >
+            NeverEatAlone charges a cancellation fee for certain events, if the 
+            restaurant we are hosting at has a policy that requires payment for 
+            cancellations. We put a hold on your payment method for this 
+            amount, but we don’t charge it unless our records indicate that you 
+            did not attend your seat.  You can find the status for this hold on 
+            the Payment History tab of your Settings page.{'\n\n'}
+            Here’s a breakdown of what the status of your cancellation means:
+            {'\n\n'}
+            On Hold{'\n'}
+            NeverEatAlone is holding your cancellation charge until the event 
+            ends. Once the event has passed and our records indicate that you 
+            have attended your seat, this hold on your payment method will be 
+            released.{'\n\n'}
+            Charged{'\n'}
+            Our records indicate that you were a no-show at the event, or 
+            perhaps you canceled your seat without enough notice and the 
+            restaurant charged your seat a no-show fee. This means that 
+            NeverEatAlone charged your payment method for the amount that was 
+            on hold for the event. If you feel this fee was charged to you in 
+            error, feel free to reach out through the link in your payment 
+            history, or send us an email at&nbsp;
+            <a
+                style={LINK_STYLE}
+                className={css(styles.linkStates)}
+                href='mailto:support@nevereatalone.net'
+                target='_blank'
+                rel='noopener noreferrer'
+            >
+              support@nevereatalone.net
+            </a>.{'\n\n'}
+            For information on how to find your payment details, see&nbsp;
+            <HashLink
+                style={LINK_STYLE}
+                className={css(styles.linkStates)}
+                to='#find_payment_records'
+            >
+              Where can I find my payment records and receipts?
             </HashLink>
-            . If this business is no longer open or didn’t exists in the first 
-            place please reach out to us using the email&nbsp;
-            <a
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-                href='mailto:info@nevereatalone.net'
-                target='_blank'
-                rel='noopener noreferrer'
-            >
-              info@nevereatalone.net
-            </a>
-            .
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
-          <div style={DIVIDER_LINE_STYLE} />
-          <h3 style={QUESTION_STYLE} >
-            How do I report a toxic user?
-          </h3>
-          <div style={ANSWER_STYLE} >
-            Once logged in, head to the user’s profile and hit the More Actions 
-            button <span style={NO_WORD_BREAK_STYLE} >(<span 
-            style={ORANGE_TEXT_STYLE} >• • •</span>)</span> in the top corner 
-            of the user’s card and select “Report”. In the following popup 
-            select the reason for the report and hit “Report”.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
-          </div>
-          <div style={DIVIDER_LINE_STYLE} />
-          <h3 id='tagged_in_photo_without_permission' style={QUESTION_STYLE} >
-            I was tagged in photo without my permission
-          </h3>
-          <div style={ANSWER_STYLE} >
-            You can remove your tag from someone else’s photo or you can hide 
-            all tagged photos from your profile.{'\n\n'}
-            <b>To remove a tag</b>{'\n'}
-            Once logged in, open the said photo (in the photo overlay), hit the 
-            “More Actions” button <span style={NO_WORD_BREAK_STYLE} >(<span 
-            style={ORANGE_TEXT_STYLE} >• • •</span>)</span> and select “Untag 
-            Myself”.{'\n\n'}
-            <b>To hide all tagged photos</b>{'\n'}
-            Once logged in, open the Profile Settings page, scroll down to the 
-            “Tabs” section and click on the eye icon&nbsp;
-            <img
-              style={{...NO_SELECTION_STYLE, ...ICON_STYLE, ...EYE_ICON_STYLE}}
-              src='resources/help_page/icons/eye.svg'
-              alt='Share Icon'
-              draggable={false}
-            />
-            &nbsp;right beside the “Tagged Photos”. Hit the button “Save”.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
-          </div>
-          <div style={DIVIDER_LINE_STYLE} />
-          <h3 style={QUESTION_STYLE} >
-            How can I deactivate or delete my account? :(
-          </h3>
-          <div style={ANSWER_STYLE} >
-            If you want to take a break from NEA, you can deactivate or delete 
-            your account. Go to the Settings page by clicking on your profile 
-            icon in the top right of the header and selecting “Settings” from 
-            the dropdown menu.{'\n\n'}
-            From here, you can find the account deactivation or deletion 
-            options in the “Deactivate or Delete” tab. Please read the 
-            instructions carefully.{'\n\n'}
-            <b>Deactivate</b>{'\n'}
-            Deactivating your account will temporarily disable all links to 
-            your profile, and hide your profile from public access. When you’re 
-            ready to log back in, all links will be restored and you can pick 
-            up where you left off.{'\n\n'}
-            <b>Delete</b>{'\n'}
-            Deleting your account is a permanent action and cannot be undone.
-            {'\n\n'}
-            If you created your account with email and password or if you set 
-            these later on, you will be prompted to type your password as an 
-            additional security measure when deleting your account.{'\n\n'}
-            NeverEatAlone deletes your account immediately once your request is 
-            submitted, and your account <b>will not be recoverable</b>. Please 
-            only delete your account if you are sure you won’t be returning to 
-            the account. Your email and handle associated with a deleted 
-            account are recycled, and can be used to create a new account.
-            {'\n\n'}
-            If your account was deleted by accident and you want it back, there 
-            may be a chance of recovery within 15 days of deletion. Reach out 
-            to us at&nbsp;
-            <a
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-                href='mailto:info@nevereatalone.net'
-                target='_blank'
-                rel='noopener noreferrer'
-            >
-              info@nevereatalone.net
-            </a>
-            .
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
-          </div>
+
+
+
+          
           <div style={DIVIDER_LINE_STYLE} />
           <h2
               style={{...HEADING_STYLE, ...H2_STYLE, ...ORANGE_TEXT_STYLE}}
@@ -757,7 +796,6 @@ export class HelpPage extends React.Component<Properties> {
             </ul>
             {'\n'}
             Changes on this page are automatically saved.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
@@ -789,7 +827,6 @@ export class HelpPage extends React.Component<Properties> {
             .{'\n\n'}
             To edit photos you upload a restaurant, login and head to the 
             restaurant‘s page.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
@@ -858,9 +895,7 @@ export class HelpPage extends React.Component<Properties> {
                 to='#tagged_in_photo_without_permission'
             >
               I was tagged in photo without my permission
-            </HashLink>
-            .
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
+            </HashLink>.
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h2
@@ -876,7 +911,6 @@ export class HelpPage extends React.Component<Properties> {
             We are currently working on a user directory and also integration 
             with other social media (bring your friends from Facebook, for 
             example). So please look forward to future updates.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
@@ -885,7 +919,6 @@ export class HelpPage extends React.Component<Properties> {
           <div style={ANSWER_STYLE} >
             From the person’s profile, hit the button “Follow” located on the 
             user card.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
@@ -895,7 +928,6 @@ export class HelpPage extends React.Component<Properties> {
             When uploading a photo to an event you can tag attendee’s by typing 
             “@” to show a dropdown with a list of people who attended the 
             event. That person will be notified.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
@@ -918,7 +950,6 @@ export class HelpPage extends React.Component<Properties> {
             style={NO_WORD_BREAK_STYLE} >(<span style={ORANGE_TEXT_STYLE} >
             • • •</span>)</span> on the top right corner of the chat window and 
             select “Archive Chat/Group”. Archived chats can be searchable.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
@@ -946,7 +977,6 @@ export class HelpPage extends React.Component<Properties> {
             Hit the “More Actions” button <span style={NO_WORD_BREAK_STYLE} >(
             <span style={ORANGE_TEXT_STYLE} >• • •</span>)</span> and select 
             “Block User”. On the following popup hit the button “Yes”.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
@@ -964,7 +994,6 @@ export class HelpPage extends React.Component<Properties> {
             . On the following screen, use the search field to locate the user 
             you want and hit the link “Unblock”. Confirm the unblock on the 
             popup.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 id='blocked_list' style={QUESTION_STYLE} >
@@ -973,7 +1002,6 @@ export class HelpPage extends React.Component<Properties> {
           <div style={ANSWER_STYLE} >
             Once you are logged in, head to Settings and click on the tab 
             “Blocked Users”.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
         </div>
         <HashLink
@@ -1142,12 +1170,6 @@ const ATTENDING_AN_EVENT_ICON_STYLE: React.CSSProperties = {
   height: '92px'
 };
 
-const LISTVIEW_CALENDAR_ICONS_STYLE: React.CSSProperties = {
-  width: '43px',
-  height: '20px',
-  marginLeft: '5px'
-};
-
 const RESTAURANT_ICON_STYLE: React.CSSProperties = {
   width: '90px',
   height: '82px'
@@ -1187,6 +1209,11 @@ const QUESTION_STYLE: React.CSSProperties = {
 };
 
 const ANSWER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  flexWrap: 'wrap',
   width: '100%',
   margin: '0px 0px 30px 0px',
   padding: '0px',
@@ -1216,10 +1243,6 @@ const EYE_ICON_STYLE: React.CSSProperties = {
   verticalAlign: 'bottom'
 };
 
-const SUB_ICON_STYLE: React.CSSProperties = {
-  verticalAlign: 'sub'
-};
-
 const NO_WORD_BREAK_STYLE: React.CSSProperties = {
   whiteSpace: 'nowrap'
 };
@@ -1245,35 +1268,12 @@ const LINK_STYLE: React.CSSProperties = {
   cursor: 'pointer'
 };
 
-const USER_SETTINGS_IMAGE_STYLE: React.CSSProperties = {
-  width: '468px',
-  minWidth: '468px',
-  height: '246px',
-  minHeight: '246px',
-  margin: '30px 0px',
-  padding: '0px'
-};
-
 const INVITE_FOODIE_BUTTON_STYLE: React.CSSProperties = {
   fontFamily: 'Source Sans Pro',
   fontWeight: 700,
   fontSize: '14px',
   lineHeight: '18px',
   height: '18px'
-};
-
-const LOCATION_DROPDOWN_IMAGE_STYLE: React.CSSProperties = {
-  width: '134px',
-  minWidth: '134px',
-  height: '24px',
-  minHeight: '24px'
-};
-
-const JOIN_EVENT_BUTTON_IMAGE_STYLE: React.CSSProperties = {
-  width: '',
-  minWidth: '',
-  height: '',
-  minHeight: ''
 };
 
 const styles = StyleSheet.create({ 
