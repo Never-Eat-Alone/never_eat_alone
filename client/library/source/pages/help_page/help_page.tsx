@@ -14,9 +14,27 @@ interface Properties {
 
 export class HelpPage extends React.Component<Properties> {
   public render(): JSX.Element {
+    const { containerStyle, contentStyle } = (() => {
+      if (this.props.displayMode === DisplayMode.DESKTOP) {
+        return {
+          containerStyle: DESKTOP_CONTAINER_STYLE,
+          contentStyle: DESKTOP_CONTENT_CONTAINER_STYLE
+        };
+      }
+      if (this.props.displayMode === DisplayMode.TABLET) {
+        return {
+          containerStyle: TABLET_CONTAINER_STYLE,
+          contentStyle: TABLET_CONTENT_CONTAINER_STYLE
+        };
+      }
+      return {
+        containerStyle: MOBILE_CONTAINER_STYLE,
+        contentStyle: MOBILE_CONTENT_CONTAINER_STYLE
+      };
+    })();
     return (
-      <div id='top' style={CONTAINER_STYLE} >
-        <div style={CONTENT_CONTAINER_STYLE} >
+      <div id='top' style={containerStyle} >
+        <div style={contentStyle} >
           <h1 style={{...HEADING_STYLE, ...H1_STYLE}} >Help</h1>
           <div style={SEARCH_TITLE_STYLE} >
             What do you need help with? Search within this page or click on a 
@@ -118,58 +136,77 @@ export class HelpPage extends React.Component<Properties> {
             How do I join events?
           </h3>
           <div style={ANSWER_STYLE} >
-            Log in and locate the event you are interested in. Hit the button 
-            “Join this Event” located on the right of the event page. (If you 
-            are not logged in, you need to first request an account. See&nbsp;
-            <HashLink
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-                to='#sign_up'
-            >
-              How do I sign up for NEA?
-            </HashLink>){'\n'}
-            If the event has a fee, you’ll see a payment options window pop-up. 
-            You can checkout with Google Pay, Apple Pay, PayPal, or by adding a 
-            card to your account.{'\n'}
-            To learn how to add a card to your account, see&nbsp;
-            <HashLink
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-                to='#add_payment'
-            >
-              How do I add a payment method to my account?
-            </HashLink>
-            {'\n'}
-            Select the payment option you would like to use and follow the 
-            steps on-screen. You may be asked to log in to your Google 
-            Pay/Apple Pay/PayPal account if you’re using one of those options.
-            {'\n'}
-            Once the payment is approved, you’ll see a Payment Complete screen. 
-            You can now close this pop-up, or hit the “Back to Event” button.
-            {'\n'}
-            Once you’ve joined an event, it will appear on your&nbsp;
-            <Router.Link
-                to='/'
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-            >
-              Homepage
-            </Router.Link>&nbsp;and your&nbsp;
-            <Router.Link
-                to='/users/profile/:id'
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-            >
-              Profile page
-            </Router.Link>. You can also check your&nbsp;
-            <Router.Link
-                to='/users/settings/:id'
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-            >
-              Payment History
-            </Router.Link>&nbsp;
-            for a record of your events and fees.
+            <p style={P_STYLE} >
+              Log in and locate the event you are interested in. Hit the button 
+              “Join this Event” located on the right of the event page. (If you 
+              are not logged in, you need to first request an account. See&nbsp;
+            </p>
+            <span style={LINK_SPAN_STYLE} >
+              <HashLink
+                  style={LINK_STYLE}
+                  className={css(styles.linkStates)}
+                  to='#sign_up'
+              >
+                How do I sign up for NEA?
+              </HashLink>)
+            </span>
+            <p style={P_STYLE} >
+              {'\n\n'}
+              If the event has a fee, you’ll see a payment options window 
+              pop-up. You can checkout with Google Pay, Apple Pay, PayPal, or 
+              by adding a card to your account.{'\n\n'}
+              To learn how to add a card to your account, see&nbsp;
+            </p>
+            <span style={LINK_SPAN_STYLE} >
+              <HashLink
+                  style={LINK_STYLE}
+                  className={css(styles.linkStates)}
+                  to='#add_payment'
+              >
+                How do I add a payment method to my account?
+              </HashLink>
+            </span>
+            <p style={P_STYLE} >
+              {'\n\n'}
+              Select the payment option you would like to use and follow the 
+              steps on-screen. You may be asked to log in to your Google 
+              Pay/Apple Pay/PayPal account if you’re using one of those 
+              options.{'\n\n'}
+              Once the payment is approved, you’ll see a Payment Complete 
+              screen. You can now close this pop-up, or hit the “Back to Event” 
+              button.{'\n\n'}
+              Once you’ve joined an event, it will appear on your&nbsp;
+            </p>
+            <span style={LINK_SPAN_STYLE} >
+              <Router.Link
+                  to='/'
+                  style={LINK_STYLE}
+                  className={css(styles.linkStates)}
+              >
+                Homepage
+              </Router.Link>
+            </span>
+            <p style={P_STYLE} >&nbsp;and your&nbsp;</p>
+            <span style={LINK_SPAN_STYLE} >
+              <Router.Link
+                  to='/users/profile/:id'
+                  style={LINK_STYLE}
+                  className={css(styles.linkStates)}
+              >
+                Profile page
+              </Router.Link>
+            </span>
+            <p style={P_STYLE} >. You can also check your&nbsp;</p>
+            <span style={LINK_SPAN_STYLE} >
+              <Router.Link
+                  to='/users/settings/:id'
+                  style={LINK_STYLE}
+                  className={css(styles.linkStates)}
+              >
+                Payment History
+              </Router.Link>
+            </span>
+            <p style={P_STYLE} >&nbsp;for a record of your events and fees.</p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
@@ -765,7 +802,7 @@ export class HelpPage extends React.Component<Properties> {
 
 
 
-          
+
           <div style={DIVIDER_LINE_STYLE} />
           <h2
               style={{...HEADING_STYLE, ...H2_STYLE, ...ORANGE_TEXT_STYLE}}
@@ -1032,8 +1069,22 @@ const CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'center',
   width: '100%',
-  backgroundColor: '#FFFFFF',
-  padding: '50px 10px 80px 60px'
+  backgroundColor: '#FFFFFF'
+};
+
+const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTAINER_STYLE,
+  padding: '50px 20px'
+};
+
+const TABLET_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTAINER_STYLE,
+  padding: '50px 20px'
+};
+
+const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTAINER_STYLE,
+  padding: '50px 20px 30px 20px'
 };
 
 const BACK_TO_TOP_BUTTON_STYLE: React.CSSProperties = {
@@ -1064,9 +1115,34 @@ const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
-  alignItems: 'flex-start',
-  width: '1006px',
-  whiteSpace: 'pre-wrap'
+  alignItems: 'flex-start'
+};
+
+const DESKTOP_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTENT_CONTAINER_STYLE,
+  width: '1060px'
+};
+
+const TABLET_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTENT_CONTAINER_STYLE,
+  width: '702px'
+};
+
+const MOBILE_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTENT_CONTAINER_STYLE,
+  width: '100%'
+};
+
+const P_STYLE: React.CSSProperties = {
+  margin: '0px',
+  padding: '0px',
+  display: 'inline'
+};
+
+const LINK_SPAN_STYLE: React.CSSProperties = {
+  margin: '0px',
+  padding: '0px',
+  display: 'inline-flex'
 };
 
 const NEW_LINE_STYLE: React.CSSProperties = {
@@ -1209,11 +1285,7 @@ const QUESTION_STYLE: React.CSSProperties = {
 };
 
 const ANSWER_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'flex-start',
-  alignItems: 'flex-start',
-  flexWrap: 'wrap',
+  display: 'inline',
   width: '100%',
   margin: '0px 0px 30px 0px',
   padding: '0px',
@@ -1223,7 +1295,8 @@ const ANSWER_STYLE: React.CSSProperties = {
   fontSize: '14px',
   lineHeight: '18px',
   color: '#000000',
-  overflowWrap: 'break-word'
+  overflowWrap: 'break-word',
+  whiteSpace: 'pre-line'
 };
 
 const UL_STYLE: React.CSSProperties = {
@@ -1239,10 +1312,6 @@ const ICON_STYLE: React.CSSProperties = {
   verticalAlign: 'baseline'
 };
 
-const EYE_ICON_STYLE: React.CSSProperties = {
-  verticalAlign: 'bottom'
-};
-
 const NO_WORD_BREAK_STYLE: React.CSSProperties = {
   whiteSpace: 'nowrap'
 };
@@ -1256,6 +1325,12 @@ const NO_SELECTION_STYLE: React.CSSProperties = {
 };
 
 const LINK_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  flexWrap: 'wrap',
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
   fontWeight: 700,
@@ -1265,6 +1340,7 @@ const LINK_STYLE: React.CSSProperties = {
   color: '#F26B55',
   margin: '0',
   padding: '0',
+  whiteSpace: 'pre-wrap',
   cursor: 'pointer'
 };
 
