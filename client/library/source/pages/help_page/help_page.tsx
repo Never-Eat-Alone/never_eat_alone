@@ -49,8 +49,7 @@ export class HelpPage extends React.Component<Properties> {
             >
               <div style={TOPICS_ICON_CONTAINER_STYLE} >
                 <img
-                  style={{...NO_SELECTION_STYLE,
-                    ...ATTENDING_AN_EVENT_ICON_STYLE}}
+                  style={ATTENDING_AN_EVENT_ICON_STYLE}
                   src='resources/help_page/icons/attending_an_event.svg'
                   alt='Attending An Event'
                   draggable={false}
@@ -66,7 +65,7 @@ export class HelpPage extends React.Component<Properties> {
             >
               <div style={TOPICS_ICON_CONTAINER_STYLE} >
                 <img
-                  style={{...NO_SELECTION_STYLE, ...RESTAURANT_ICON_STYLE}}
+                  style={RESTAURANT_ICON_STYLE}
                   src='resources/help_page/icons/restaurant.svg'
                   alt='Restaurant'
                   draggable={false}
@@ -84,7 +83,7 @@ export class HelpPage extends React.Component<Properties> {
             >
               <div style={TOPICS_ICON_CONTAINER_STYLE} >
                 <img
-                  style={{...NO_SELECTION_STYLE, ...SETTINGS_ICON_STYLE}}
+                  style={SETTINGS_ICON_STYLE}
                   src='resources/help_page/icons/settings_and_support.svg'
                   alt='Settings and Support'
                   draggable={false}
@@ -100,7 +99,7 @@ export class HelpPage extends React.Component<Properties> {
             >
               <div style={TOPICS_ICON_CONTAINER_STYLE} >
                 <img
-                  style={{...NO_SELECTION_STYLE, ...MY_PROFILE_ICON_STYLE}}
+                  style={MY_PROFILE_ICON_STYLE}
                   src='resources/help_page/icons/my_profile.svg'
                   alt='My Profile'
                   draggable={false}
@@ -116,7 +115,7 @@ export class HelpPage extends React.Component<Properties> {
             >
               <div style={TOPICS_ICON_CONTAINER_STYLE} >
                 <img
-                  style={{...NO_SELECTION_STYLE, ...COMMUNITY_ICON_STYLE}}
+                  style={COMMUNITY_ICON_STYLE}
                   src='resources/help_page/icons/community.svg'
                   alt='Community'
                   draggable={false}
@@ -144,7 +143,7 @@ export class HelpPage extends React.Component<Properties> {
             <span style={LINK_SPAN_STYLE} >
               <HashLink
                   style={LINK_STYLE}
-                  className={css(styles.linkStates)}
+                  className={css(styles.link)}
                   to='#sign_up'
               >
                 How do I sign up for NEA?
@@ -160,7 +159,7 @@ export class HelpPage extends React.Component<Properties> {
             <span style={LINK_SPAN_STYLE} >
               <HashLink
                   style={LINK_STYLE}
-                  className={css(styles.linkStates)}
+                  className={css(styles.link)}
                   to='#add_payment'
               >
                 How do I add a payment method to my account?
@@ -181,7 +180,7 @@ export class HelpPage extends React.Component<Properties> {
               <Router.Link
                   to='/'
                   style={LINK_STYLE}
-                  className={css(styles.linkStates)}
+                  className={css(styles.link)}
               >
                 Homepage
               </Router.Link>
@@ -191,7 +190,7 @@ export class HelpPage extends React.Component<Properties> {
               <Router.Link
                   to='/users/profile/:id'
                   style={LINK_STYLE}
-                  className={css(styles.linkStates)}
+                  className={css(styles.link)}
               >
                 Profile page
               </Router.Link>
@@ -201,7 +200,7 @@ export class HelpPage extends React.Component<Properties> {
               <Router.Link
                   to='/users/settings/:id'
                   style={LINK_STYLE}
-                  className={css(styles.linkStates)}
+                  className={css(styles.link)}
               >
                 Payment History
               </Router.Link>
@@ -213,82 +212,102 @@ export class HelpPage extends React.Component<Properties> {
             How do I sign up for NEA?
           </h3>
           <div style={ANSWER_STYLE} >
-            From the Homepage, hit the “Become a Member” or the “Join Us” 
-            button at the top of the page. You can also hit the “Request an 
-            Account” button from an event page. You’ll see a form asking for 
-            your name and email, and if you have it, the name or username of 
-            the member who told you about NEA. The email you use here will be 
-            the one you use to log in to your account.{'\n'}
-            Fill in the information and hit the “Request to Join!” button. 
-            We’ll send you an email once your account is approved.
+            <p style={P_STYLE} >
+              From the Homepage, hit the “Become a Member” or the “Join Us” 
+              button at the top of the page. You can also hit the “Request an 
+              Account” button from an event page. You’ll see a form asking for 
+              your name and email, and if you have it, the name or username of 
+              the member who told you about NEA. The email you use here will be 
+              the one you use to log in to your account.{'\n\n'}
+              Fill in the information and hit the “Request to Join!” button. 
+              We’ll send you an email once your account is approved.
+            </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How much do events cost?
           </h3>
           <div style={ANSWER_STYLE} >
-            The price of every event is determined by the restaurant, menu, and 
-            seating availability. You can find the price of each event on the 
-            event page.{'\n'}
-            Here are some examples of fees for events:{'\n\n'}
-            Event Fee{'\n'}
-            In order to ensure a good experience for both you and the 
-            restaurants we host at, we may charge a small fee to reserve your 
-            seat for certain events. Typically $2-5 CAD, this charge helps us 
-            fill our events with people who are committed to attending.{'\n'}
-            This fee is refundable if you remove your seat more than 24 hours 
-            in advance of an event.{'\n'}
-            Cancellation Fee{'\n'}
-            Some restaurants may charge a no-show fee for last-minute 
-            cancellations. For the events we host at these restaurants, 
-            NeverEatAlone puts a hold on your payment method for the 
-            restaurant’s cancellation rate. This may be charged if you don’t 
-            attend your seat.{'\n\n'}
-            For more information, see&nbsp;
-            <HashLink
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-                to='#are_events_refundable'
-            >
-              Are event fees refundable?
-            </HashLink>
+            <p style={P_STYLE} >
+              The price of every event is determined by the restaurant, menu, 
+              and seating availability. You can find the price of each event on 
+              the event page.{'\n\n'}
+              Here are some examples of fees for events:{'\n\n'}
+              <b style={GREY_BOLD_STYLE} >Event Fee</b>{'\n'}
+              In order to ensure a good experience for both you and the 
+              restaurants we host at, we may charge a small fee to reserve your 
+              seat for certain events. Typically $2-5 CAD, this charge helps us 
+              fill our events with people who are committed to attending.
+              {'\n\n'}
+              This fee is refundable if you remove your seat more than 24 hours 
+              in advance of an event.{'\n\n'}
+              <b style={GREY_BOLD_STYLE} >Cancellation Fee</b>{'\n'}
+              Some restaurants may charge a no-show fee for last-minute 
+              cancellations. For the events we host at these restaurants, 
+              NeverEatAlone puts a hold on your payment method for the 
+              restaurant’s cancellation rate. This may be charged if you don’t 
+              attend your seat.{'\n\n'}
+              For more information, see&nbsp;
+            </p>
+            <span style={LINK_SPAN_STYLE} >
+              <HashLink
+                  style={LINK_STYLE}
+                  className={css(styles.link)}
+                  to='#are_events_refundable'
+              >
+                Are event fees refundable?
+              </HashLink>
+            </span>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             I want to join an event, but it’s full
           </h3>
           <div style={ANSWER_STYLE} >
-            Currently, there is no way to join an event if it is full. If an 
-            attendee drops out of an event, a seat will open up and the option 
-            to join will become available. Please check back on an event you’re 
-            interested in to see if there are any last-minute changes.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
-            We’re working on a follow system and other community features. 
-            Please look forward to updates in the near future.
+            <p style={P_STYLE} >
+              Currently, there is no way to join an event if it is full. If an 
+              attendee drops out of an event, a seat will open up and the 
+              option to join will become available. Please check back on an 
+              event you’re interested in to see if there are any last-minute 
+              changes.
+            </p>{'\n\n'}
+            <p style={P_STYLE} >
+              We’re working on a follow system and other community features. 
+              Please look forward to updates in the near future.
+            </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How do I see events I joined?
           </h3>
           <div style={ANSWER_STYLE} >
-            Once you’re logged in, you’ll see a list of events that you’re 
-            attending on your&nbsp;
-            <Router.Link
-                to='/'
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-            >
-              Homepage
-            </Router.Link>. You can also find it on your&nbsp;
-            <Router.Link
-                to='/users/profile/:id'
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-            >
-              Profile page
-            </Router.Link>.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
-            Profile:{'\n'}
+            <p style={P_STYLE} >
+              Once you’re logged in, you’ll see a list of events that you’re 
+              attending on your&nbsp;
+            </p>
+            <span style={LINK_SPAN_STYLE} >
+              <Router.Link
+                  to='/'
+                  style={LINK_STYLE}
+                  className={css(styles.link)}
+              >
+                Homepage
+              </Router.Link>
+            </span>
+            <p style={P_STYLE} >. You can also find it on your&nbsp;</p>
+            <span style={LINK_SPAN_STYLE} >
+              <Router.Link
+                  to='/users/profile/:id'
+                  style={LINK_STYLE}
+                  className={css(styles.link)}
+              >
+                Profile page
+              </Router.Link>
+            </span>
+            <p style={P_STYLE} >
+              .{'\n\n'}
+              Profile:{'\n'}
+            </p>
             <ul style={UL_STYLE} >
               <li>
                 Click on your profile picture in the header on the top right 
@@ -299,148 +318,180 @@ export class HelpPage extends React.Component<Properties> {
               <li>
                 You can choose to hide these from other users. For more 
                 information, see&nbsp;
-                <HashLink
-                    style={LINK_STYLE}
-                    className={css(styles.linkStates)}
-                    to='#hide_activity'
-                >
-                  How do I hide my event activity?
-                </HashLink>
+                <span style={LINK_SPAN_STYLE} >
+                  <HashLink
+                      style={LINK_STYLE}
+                      className={css(styles.link)}
+                      to='#hide_activity'
+                  >
+                    How do I hide my event activity?
+                  </HashLink>
+                </span>
               </li>
             </ul>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
-            How do I add events to my collection?
+            What are the flags appearing on my homepage?
           </h3>
           <div style={ANSWER_STYLE} >
-            Once you start attending events, the coloured flags corresponding 
-            to your events will appear in your flag collection after the events 
-            pass. Your flag collection resets at the start of every month. 
-            We’re working on special surprises for users who can collect them 
-            all!
+            <p style={P_STYLE} >
+              Once you start attending events, the coloured flags corresponding 
+              to your events will appear in your flag collection after the 
+              events pass. Your flag collection resets at the start of every 
+              month. We’re working on special surprises for users who can 
+              collect them all!
+            </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How to see an event’s attendees?
           </h3>
           <div style={ANSWER_STYLE} >
-            You can see the attendees of an event on the event page. If anyone 
-            has joined the event, their name and profile picture will appear 
-            under the “Attendees” section of the page. If you’re not logged in, 
-            you’ll just see the number of attendees. If many people have joined 
-            the event, click on the last option (See All) to see a full list of 
-            attendees.
+            <p style={P_STYLE} >
+              You can see the attendees of an event on the event page. If 
+              anyone has joined the event, their name and profile picture will 
+              appear under the “Attendees” section of the page. If you’re not 
+              logged in, you’ll just see the number of attendees. If many 
+              people have joined the event, click on the last option (See All) 
+              to see a full list of attendees.
+            </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How to invite a friend to an event?
           </h3>
           <div style={ANSWER_STYLE} >
-            Navigate to the event page of any event that you would like to 
-            share. You can share the URL of this page with your friend. They 
-            will be able to view the event details, restaurant, and attendees 
-            without an account, and they will be asked to log in or sign up 
-            once they click on “Join This Event.”
+            <p style={P_STYLE} >
+              Navigate to the event page of any event that you would like to 
+              share. You can share the URL of this page with your friend. They 
+              will be able to view the event details, restaurant, and attendees 
+              without an account, and they will be asked to log in or sign up 
+              once they click on “Join This Event.”
+            </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How to invite a friend to NeverEatAlone?
           </h3>
           <div style={ANSWER_STYLE} >
-            To share the NeverEatAlone app with a friend, make sure you are 
-            logged in and scroll to the bottom of any page to find the&nbsp;
-            <InviteAFoodieButton
-              style={INVITE_FOODIE_BUTTON_STYLE}
-              onInviteAFoodie={this.props.onInviteAFoodieClick}
-            />&nbsp;
-            link in the footer. A popup will appear where you can type 
-            in a friend’s email address and write them a personalized message. 
-            They will receive an email invitation to create and account, along 
-            with the username and profile picture of the account who invited 
-            them.{'\n'}
-            Additionally you can share NeverEatAlone without logging in by 
-            using the social media icons on the bottom part of the popup:{'\n'}
+            <p style={P_STYLE} >
+              To share the NeverEatAlone app with a friend, make sure you are 
+              logged in and scroll to the bottom of any page to find the&nbsp;
+            </p>
+            <span style={LINK_SPAN_STYLE} >
+              <InviteAFoodieButton
+                style={INVITE_FOODIE_BUTTON_STYLE}
+                onInviteAFoodie={this.props.onInviteAFoodieClick}
+              />
+            </span>
+            <p style={P_STYLE} >
+              &nbsp;
+              link in the footer. A popup will appear where you can type 
+              in a friend’s email address and write them a personalized 
+              message. They will receive an email invitation to create and 
+              account, along with the username and profile picture of the 
+              account who invited them.{'\n\n'}
+              Additionally you can share NeverEatAlone without logging in by 
+              using the social media icons on the bottom part of the popup:
+              {'\n'}
+            </p>
             <ul style={UL_STYLE} >
               <li>Twitter</li>
               <li>Facebook</li>
               <li>Reddit</li>
               <li>Or any other channel, using the link</li>
             </ul>
-            {'\n'}
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How do I find events that have passed?
           </h3>
           <div style={ANSWER_STYLE} >
-            To view events that you attended in the past, you can go to your 
-            profile page and look under “Past Events''. You can also visit 
-            another user’s profile to do the same. Currently, there is no way 
-            to filter by past events on the homepage, but let us know by 
-            submitting feedback if this is a feature you want to see in the 
-            future!
+            <p style={P_STYLE} >
+              To view events that you attended in the past, you can go to your 
+              profile page and look under “Past Events''. You can also visit 
+              another user’s profile to do the same. Currently, there is no way 
+              to filter by past events on the homepage, but let us know by 
+              submitting feedback if this is a feature you want to see in the 
+              future!
+            </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             I won’t be able to attend an event I joined
           </h3>
           <div style={ANSWER_STYLE} >
-            You can remove your seat from the event anytime before the event 
-            happens. Once you are logged in, head to the event page and hit the 
-            button “Remove my Seat” on the top right corner.{'\n\n'}
-            For events with a fee, you will see a window pup-up with 
-            information on your refund eligibility once you click 
-            “Remove my Seat”. Click “Remove Seat” in this pop-up to finish 
-            removing your seat.{'\n\n'}
-            For more information, see&nbsp;
-            <HashLink
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-                to='#are_events_refundable'
-            >
-              Are fees for events refundable?
-            </HashLink>
+            <p style={P_STYLE} >
+              You can remove your seat from the event anytime before the event 
+              happens. Once you are logged in, head to the event page and hit 
+              the button “Remove my Seat” on the top right corner.{'\n\n'}
+              For events with a fee, you will see a window pup-up with 
+              information on your refund eligibility once you click 
+              “Remove my Seat”. Click “Remove Seat” in this pop-up to finish 
+              removing your seat.{'\n\n'}
+              For more information, see&nbsp;
+            </p>
+            <span style={LINK_SPAN_STYLE} >
+              <HashLink
+                  style={LINK_STYLE}
+                  className={css(styles.link)}
+                  to='#are_events_refundable'
+              >
+                Are fees for events refundable?
+              </HashLink>
+            </span>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             I can’t find any events near me?
           </h3>
           <div style={ANSWER_STYLE} >
-            We are currently focussing on events in Toronto, but you may be 
-            able to find events in other cities in the Greater Toronto Area.
-            {'\n\n'}
-            If you want to see any neighbourhoods or venues featured, send us 
-            some feedback to let us know!
+            <p style={P_STYLE} >
+              We are currently focussing on events in Toronto, but you may be 
+              able to find events in other cities in the Greater Toronto Area.
+              {'\n\n'}
+              If you want to see any neighbourhoods or venues featured, send us 
+              some feedback to let us know!
+            </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             Can I host an event of my own?
           </h3>
           <div style={ANSWER_STYLE} >
-            We are currently working on user-hosted events and other community 
-            features. If you’re interested in hosting an event, or if there’s a 
-            restaurant you think we should host at, send us some feedback to
-            &nbsp;
-            <a
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-                href='mailto:support@nevereatalone.net'
-                target='_blank'
-                rel='noopener noreferrer'
-            >
-              support@nevereatalone.net
-            </a>.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
-            If you’re a restaurant owner, head to the&nbsp;
-            <Router.Link
-                to='/partner_with_us'
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-            >
-              partner with us
-            </Router.Link>&nbsp;
-            page and send us a message. We'd love to hear from you.
+            <p style={P_STYLE} >
+              We are currently working on user-hosted events and other 
+              community features. If you’re interested in hosting an event, or 
+              if there’s a restaurant you think we should host at, send us some 
+              feedback to&nbsp;
+            </p>
+            <span style={LINK_SPAN_STYLE} >
+              <a
+                  style={LINK_STYLE}
+                  className={css(styles.link)}
+                  href='mailto:support@nevereatalone.net'
+                  target='_blank'
+                  rel='noopener noreferrer'
+              >
+                support@nevereatalone.net
+              </a>
+            </span>
+            <p style={P_STYLE} >
+              .{'\n\n'}If you’re a restaurant owner, head to the&nbsp;
+            </p>
+            <span style={LINK_SPAN_STYLE} >
+              <Router.Link
+                  to='/partner_with_us'
+                  style={LINK_STYLE}
+                  className={css(styles.link)}
+              >
+                partner with us
+              </Router.Link>
+            </span>
+            <p style={P_STYLE} >
+              &nbsp;page and send us a message. We'd love to hear from you.
+            </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h2
@@ -453,73 +504,93 @@ export class HelpPage extends React.Component<Properties> {
             I want to find a restaurant in my neighbourhood
           </h3>
           <div style={ANSWER_STYLE} >
-            We’re currently working on browsing and filtering for restaurants. 
-            For now, you can check the location of an event to find out what 
-            neighbourhood the venue is in.
+            <p style={P_STYLE} >
+              We’re currently working on browsing and filtering for 
+              restaurants. For now, you can check the location of an event to 
+              find out what neighbourhood the venue is in.
+            </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             Can you host an event at a specific restaurant
           </h3>
           <div style={ANSWER_STYLE} >
-            We are always working on expanding our features. If there’s a 
-            restaurant you think we should host at, send us some feedback to 
-            let us know.{'\n\n'}
-            If you’re a restaurant owner, head to&nbsp;
-            <Router.Link
-                to='/partner_with_us'
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-            >
-              partner with us
-            </Router.Link>&nbsp;
-            page and send us a message. We’d love to hear from you!
+            <p style={P_STYLE} >
+              We are always working on expanding our features. If there’s a 
+              restaurant you think we should host at, send us some feedback to 
+              let us know.{'\n\n'}If you’re a restaurant owner, head to&nbsp;
+            </p>
+            <span style={LINK_SPAN_STYLE} >
+              <Router.Link
+                  to='/partner_with_us'
+                  style={LINK_STYLE}
+                  className={css(styles.link)}
+              >
+                partner with us
+              </Router.Link>
+            </span>
+            <p style={P_STYLE} >
+              &nbsp;page and send us a message. We’d love to hear from you!
+            </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
-            Information on a restaurant page is wrong?
+            Information on a restaurant page is wrong
           </h3>
           <div style={ANSWER_STYLE} >
-            Let us know about any incorrect or outdated information by sending 
-            us some feedback or emailing us at&nbsp;
-            <a
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-                href='mailto:support@nevereatalone.net'
-                target='_blank'
-                rel='noopener noreferrer'
-            >
-              support@nevereatalone.net
-            </a>.
-            {'\n\n'}
-            If you’re a restaurant owner, head to the&nbsp;
-            <Router.Link
-                to='/partner_with_us'
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-            >
-              partner with us
-            </Router.Link>&nbsp;
-            page and send us a message. We’d love to hear from you!
+            <p style={P_STYLE} >
+              Let us know about any incorrect or outdated information by 
+              sending us some feedback or emailing us at&nbsp;
+            </p>
+            <span style={LINK_SPAN_STYLE} >
+              <a
+                  style={LINK_STYLE}
+                  className={css(styles.link)}
+                  href='mailto:support@nevereatalone.net'
+                  target='_blank'
+                  rel='noopener noreferrer'
+              >
+                support@nevereatalone.net
+              </a>
+            </span>
+            <p style={P_STYLE} >
+              .{'\n\n'}If you’re a restaurant owner, head to the&nbsp;
+            </p>
+            <span style={LINK_SPAN_STYLE} >
+              <Router.Link
+                  to='/partner_with_us'
+                  style={LINK_STYLE}
+                  className={css(styles.link)}
+              >
+                partner with us
+              </Router.Link>
+            </span>
+            <p style={P_STYLE} >
+              &nbsp;page and send us a message. We’d love to hear from you!
+            </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How to see if a restaurant has a patio?
           </h3>
           <div style={ANSWER_STYLE} >
-            We are still building NeverEatAlone’s database so the information 
-            for seating options isn’t available on the restaurant page at the 
-            moment. You can see seating arrangements for each event on the 
-            event page, within the about section.
+            <p style={P_STYLE} >
+              We are still building NeverEatAlone’s database so the information 
+              for seating options isn’t available on the restaurant page at the 
+              moment. You can see seating arrangements for each event on the 
+              event page, within the about section.
+            </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             Is the restaurant page managed by the restaurant owner?
           </h3>
           <div style={ANSWER_STYLE} >
-            Restaurants are listed by NEA staff. We are currently working on a 
-            partnership solution with restaurant owners so please look forward 
-            to updates about this in the near future.
+            <p style={P_STYLE} >
+              Restaurants are listed by NEA staff. We are currently working on 
+              a partnership solution with restaurant owners so please look 
+              forward to updates about this in the near future.
+            </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h2
@@ -532,277 +603,403 @@ export class HelpPage extends React.Component<Properties> {
             I can’t sign in to my account
           </h3>
           <div style={ANSWER_STYLE} >
-            Please reach out to us using the email&nbsp;
-            <a
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-                href='mailto:support@nevereatalone.net'
-                target='_blank'
-                rel='noopener noreferrer'
-            >
-              support@nevereatalone.net
-            </a>.
+            <p style={P_STYLE} >Please reach out to us using the email&nbsp;</p>
+            <span style={LINK_SPAN_STYLE} >
+              <a
+                  style={LINK_STYLE}
+                  className={css(styles.link)}
+                  href='mailto:support@nevereatalone.net'
+                  target='_blank'
+                  rel='noopener noreferrer'
+              >
+                support@nevereatalone.net
+              </a>
+            </span>
+            <p style={P_STYLE}>.</p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             My restaurant is listed on NEA
           </h3>
           <div style={ANSWER_STYLE} >
-            NEA allows users to attend events at restaurants. We boost local 
-            businesses while connecting with people who are genuinely 
-            interested in having a gastronomic experience with others.
-            If any information regarding your restaurant is incorrect, or if 
-            you want to partner with us, please reach out through&nbsp;
-            <Router.Link
-                to='/partner_with_us'
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-            >
-              this link
-            </Router.Link>.
+            <p style={P_STYLE}>
+              NEA allows users to attend events at restaurants. We boost local 
+              businesses while connecting with people who are genuinely 
+              interested in having a gastronomic experience with others.
+              If any information regarding your restaurant is incorrect, or if 
+              you want to partner with us, please reach out through&nbsp;
+            </p>
+            <span style={LINK_SPAN_STYLE} >
+              <Router.Link
+                  to='/partner_with_us'
+                  style={LINK_STYLE}
+                  className={css(styles.link)}
+              >
+                this link
+              </Router.Link>
+            </span>
+            <p style={P_STYLE} >.</p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How to report a harmful profile picture?
           </h3>
           <div style={ANSWER_STYLE} >
-            Once you are logged in, head to the user profile you’d like to 
-            report and locate the More Actions icon (• • •) at the right side 
-            of the user card and click on Report. On the following popup fill 
-            out the reason and hit the button “Report”. Select the reason this 
-            user is being reported, fill in any additional comments, and hit 
-            the “Report” button  in the following window. We will then 
-            investigate the issue and act accordingly.
+            <p style={P_STYLE} >
+              Once you are logged in, head to the user profile you’d like to 
+              report and locate the More Actions icon (
+              <span style={ORANGE_TEXT_STYLE} >• • •</span>) at the right side 
+              of the user card and click on Report. On the following popup fill 
+              out the reason and hit the button “Report”. Select the reason 
+              this user is being reported, fill in any additional comments, and 
+              hit the “Report” button  in the following window. We will then 
+              investigate the issue and act accordingly.
+            </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How to change my email?
           </h3>
           <div style={ANSWER_STYLE} >
-            You can find the email associated with your account in the&nbsp;
-            <Router.Link
-                to='/users/settings/:id'
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-            >
-              settings page
-            </Router.Link>. To get to your settings page, you must first be 
-            logged in to NeverEatAlone. When logged in, click on your profile 
-            icon on the top right of the header, and select “Settings” from the 
-            dropdown menu.{'\n\n'}
-            You will be taken to the “Account Information” section.{'\n\n'}
-            You can change your email by clicking the EDIT button next to your 
-            existing email. You’ll be prompted to enter a new email and verify 
-            your password.{'\n\n'}
-            Your new email must be verified before it replaces the existing 
-            email. Until it is verified, you must still use your old email or a 
-            linked social account to log in. To verify your email, simply 
-            follow the link we send to your new email address.
+            <p style={P_STYLE} >
+              You can find the email associated with your account in the&nbsp;
+            </p>
+            <span style={LINK_SPAN_STYLE} >
+              <Router.Link
+                  to='/users/settings/:id'
+                  style={LINK_STYLE}
+                  className={css(styles.link)}
+              >
+                settings page
+              </Router.Link>
+            </span>
+            <p style={P_STYLE} >
+              . To get to your settings page, you must first be 
+              logged in to NeverEatAlone. When logged in, click on your profile 
+              icon on the top right of the header, and select “Settings” from 
+              the dropdown menu.{'\n\n'}
+              You will be taken to the “Account Information” section.{'\n\n'}
+              You can change your email by clicking the EDIT button next to 
+              your existing email. You’ll be prompted to enter a new email and 
+              verify your password.{'\n\n'}
+              Your new email must be verified before it replaces the existing 
+              email. Until it is verified, you must still use your old email or 
+              a linked social account to log in. To verify your email, simply 
+              follow the link we send to your new email address.
+            </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How can I link my Google or Facebook Account?
           </h3>
           <div style={ANSWER_STYLE} >
-            When logged in, click on your profile icon in the top right of the 
-            header, and select “Settings” from the dropdown menu.{'\n\n'}
-            Under the Account Information section, locate and click the button 
-            related to the account you want to link. A popup will appear and 
-            take you through the process of linking your accounts. Once your 
-            Google or Facebook account is linked, it will appear in your Linked 
-            Accounts. Make sure your browser is not blocking any popups from 
-            NEA otherwise you won’t be able to finish this process.
+            <p style={P_STYLE} >
+              When logged in, click on your profile icon in the top right of 
+              the header, and select “Settings” from the dropdown menu.{'\n\n'}
+              Under the Account Information section, locate and click the 
+              button related to the account you want to link. A popup will 
+              appear and take you through the process of linking your accounts. 
+              Once your Google or Facebook account is linked, it will appear in 
+              your Linked Accounts. Make sure your browser is not blocking any 
+              popups from NEA otherwise you won’t be able to finish this 
+              process.
+            </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How can I unlink or remove my Google or Facebook Account from NEA?
           </h3>
           <div style={ANSWER_STYLE} >
-            When logged in, click on your profile icon in the top right of the 
-            header, and select “Settings” from the dropdown menu.{'\n\n'}
-            Under the Account Information section, locate the button related to 
-            the account you want to unlink and hit the remove button. Confirm 
-            that you are removing the correct account in the following popup 
-            window, and select “Remove Account.” The linked social account 
-            should then be removed from your Linked Accounts.
+            <p style={P_STYLE} >
+              When logged in, click on your profile icon in the top right of 
+              the header, and select “Settings” from the dropdown menu.{'\n\n'}
+              Under the Account Information section, locate the button related 
+              to the account you want to unlink and hit the remove button. 
+              Confirm that you are removing the correct account in the 
+              following popup window, and select “Remove Account.” The linked 
+              social account should then be removed from your Linked Accounts.
+            </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How do I add a payment method to my account?
           </h3>
           <div style={ANSWER_STYLE} >
-            You can either add a payment method during the checkout process 
-            when you join an event with a fee, or by adding a card to the 
-            Payment Methods tab of your settings page.{'\n\n'}
-            If this is the first time you’re adding a card to your NEA account, 
-            you can do so directly through the event checkout process once 
-            you’re logged in.{'\n\n'}
-            To add a card during the checkout process, simply click 
-            “Join Event” on the page of an event you’re interested in. If there 
-            is a fee for this event, you’ll see a payment options window pop 
-            up. Select the “Add a Card” button, and fill in your card 
-            information on the following screen. Click continue when you’re 
-            done. NeverEatAlone will check to see if your information is 
-            correct. If it is, you’ll be taken back to the payment options 
-            window where you’ll see your new card appear as your default 
-            payment method. To check out using this card, simply click the 
-            orange “Checkout” button.{'\n\n'}
-            You can also navigate to the Settings page to add a payment method. 
-            Once logged in, click on your profile picture in the header at the 
-            top right of the page and select “Settings” from the dropdown menu.
-            {'\n\n'}
-            Once you’re there, click on the “Payment Methods” tab to see the 
-            payment methods you have added to your account.{'\n\n'}
-            To add a new payment method, click on “Add a payment method” and 
-            fill in your information on the following screen. Click on the 
-            “Save” button on the bottom of the screen once you’re done. 
-            NeverEatAlone will run a check to make sure your information is 
-            correct. If everything is correct, you’ll be taken back to the 
-            previous page, and you’ll see your newly added payment method 
-            listed.
+            <p style={P_STYLE} >
+              You can either add a payment method during the checkout process 
+              when you join an event with a fee, or by adding a card to the 
+              Payment Methods tab of your settings page.{'\n\n'}
+              If this is the first time you’re adding a card to your NEA 
+              account, you can do so directly through the event checkout 
+              process once you’re logged in.{'\n\n'}
+              To add a card during the checkout process, simply click 
+              “Join Event” on the page of an event you’re interested in. If 
+              there is a fee for this event, you’ll see a payment options 
+              window pop up. Select the “Add a Card” button, and fill in your 
+              card information on the following screen. Click continue when 
+              you’re done. NeverEatAlone will check to see if your information 
+              is correct. If it is, you’ll be taken back to the payment options 
+              window where you’ll see your new card appear as your default 
+              payment method. To check out using this card, simply click the 
+              orange “Checkout” button.{'\n\n'}
+              You can also navigate to the Settings page to add a payment 
+              method. Once logged in, click on your profile picture in the 
+              header at the top right of the page and select “Settings” from 
+              the dropdown menu.{'\n\n'}
+              Once you’re there, click on the “Payment Methods” tab to see the 
+              payment methods you have added to your account.{'\n\n'}
+              To add a new payment method, click on “Add a payment method” and 
+              fill in your information on the following screen. Click on the 
+              “Save” button on the bottom of the screen once you’re done. 
+              NeverEatAlone will run a check to make sure your information is 
+              correct. If everything is correct, you’ll be taken back to the 
+              previous page, and you’ll see your newly added payment method 
+              listed.
+            </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How do I edit card details?
           </h3>
           <div style={ANSWER_STYLE} >
-            You can edit the information on a card you’ve added to your account 
-            anytime. Once logged in, click on your profile picture in the 
-            header at the top right of the page and select “Settings” from the 
-            dropdown menu.{'\n\n'}
-            Then navigate to the Payment Methods tab in your Settings page.
-            {'\n\n'}
-            Here, you’ll see a list of all the cards you’ve added to your 
-            account. If you haven’t added any cards yet, see&nbsp;
-            <HashLink
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-                to='#add_payment'
-            >
-              How do I add a payment method to my account?
-            </HashLink>{'\n\n'}
-            Click on one of your added cards to be taken to a card details 
-            page. Here, you can edit your name, expiration date, security code 
-            and postal code. You can also delete a card or set it as default.
-            {'\n\n'}
-            Once you’re happy with the information, click “Save” on the bottom 
-            of the screen, or click “Discard Changes” to return to the previous 
-            page without making changes.
+            <p style={P_STYLE} >
+              You can edit the information on a card you’ve added to your 
+              account anytime. Once logged in, click on your profile picture in 
+              the header at the top right of the page and select “Settings” 
+              from the dropdown menu.{'\n\n'}
+              Then navigate to the Payment Methods tab in your Settings page.
+              {'\n\n'}
+              Here, you’ll see a list of all the cards you’ve added to your 
+              account. If you haven’t added any cards yet, see&nbsp;
+            </p>
+            <span style={LINK_SPAN_STYLE} >
+              <HashLink
+                  style={LINK_STYLE}
+                  className={css(styles.link)}
+                  to='#add_payment'
+              >
+                How do I add a payment method to my account?
+              </HashLink>
+            </span>
+            <p style={P_STYLE} >
+              {'\n\n'}
+              Click on one of your added cards to be taken to a card details 
+              page. Here, you can edit your name, expiration date, security 
+              code and postal code. You can also delete a card or set it as 
+              default.{'\n\n'}
+              Once you’re happy with the information, click “Save” on the 
+              bottom of the screen, or click “Discard Changes” to return to the 
+              previous page without making changes.
+            </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How do I select a default payment method?
           </h3>
           <div style={ANSWER_STYLE} >
-            You can set one of your saved cards as your default payment 
-            method. Once logged in, click on your profile picture in the header 
-            at the top right of the page and select “Settings” from the 
-            dropdown menu.{'\n\n'}
-            Then navigate to the “Payment Methods” tab in your Settings page.
-            {'\n\n'}
-            If you’ve already added cards to your account, they’ll be listed 
-            here. If you have no payment methods, the first card you add will 
-            automatically be marked as default. For more information, see&nbsp;
-            <HashLink
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-                to='#add_payment'
-            >
-              How do I add a payment method to my account?
-            </HashLink>{'\n\n'}
-            To make a card your default payment method, click on it to be taken 
-            to its details page. Click the checkbox labeled “Make this my 
-            default card”, and then click the “Save” button on the bottom of 
-            the page to save your changes.{'\n\n'}
-            You’ll see a label marking the card as your default on the Payment 
-            Methods page.
+            <p style={P_STYLE} >
+              You can set one of your saved cards as your default payment 
+              method. Once logged in, click on your profile picture in the 
+              header at the top right of the page and select “Settings” from 
+              the dropdown menu.{'\n\n'}
+              Then navigate to the “Payment Methods” tab in your Settings page.
+              {'\n\n'}
+              If you’ve already added cards to your account, they’ll be listed 
+              here. If you have no payment methods, the first card you add will 
+              automatically be marked as default. For more information, 
+              see&nbsp;
+            </p>
+            <span style={LINK_SPAN_STYLE} >
+              <HashLink
+                  style={LINK_STYLE}
+                  className={css(styles.link)}
+                  to='#add_payment'
+              >
+                How do I add a payment method to my account?
+              </HashLink>
+            </span>
+            <p style={P_STYLE} >
+              {'\n\n'}To make a card your default payment method, click on it 
+              to be taken to its details page. Click the checkbox labeled 
+              “Make this my default card”, and then click the “Save” button on 
+              the bottom of the page to save your changes.{'\n\n'}
+              You’ll see a label marking the card as your default on the 
+              Payment Methods page.
+            </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How do I delete a card from my account?
           </h3>
           <div style={ANSWER_STYLE} >
-            You can remove any card you added previously. Once logged in, click 
-            on your profile picture in the header at the top right of the page 
-            and select “Settings” from the dropdown menu.{'\n\n'}
-            Then navigate to the Payment Methods tab in your Settings page.
-            {'\n\n'}
-            Select the card you’d like to delete. On the following page, hit 
-            the "Delete" button beneath the card image. You’ll get a popup 
-            asking you to confirm the deletion. Select “Delete Card” to finish 
-            removing it from your account.
+            <p style={P_STYLE} >
+              You can remove any card you added previously. Once logged in, 
+              click on your profile picture in the header at the top right of 
+              the page and select “Settings” from the dropdown menu.{'\n\n'}
+              Then navigate to the Payment Methods tab in your Settings page.
+              {'\n\n'}
+              Select the card you’d like to delete. On the following page, hit 
+              the "Delete" button beneath the card image. You’ll get a popup 
+              asking you to confirm the deletion. Select “Delete Card” to 
+              finish removing it from your account.
+            </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             Where can I find my payment records and receipts?
           </h3>
           <div style={ANSWER_STYLE} >
-            You can find your purchase history on the Payment History tab of 
-            your Settings page. Once logged in, navigate to the settings page 
-            by clicking on your profile picture in the header on the top right 
-            of the screen. On the ensuing dropdown menu, select “Settings”.
-            {'\n\n'}
-            Once there, select the “Payment History” tab to see a list of your 
-            purchases on NEA.{'\n\n'}
-            All of the events you’ve joined will be listed here from most 
-            recent to oldest, along with any fees associated with the event.
-            {'\n\n'}
-            To see more details, click the “View Receipt” button on to the 
-            right of the purchase you’d like to view, or click the tile if 
-            you’re viewing on a mobile device.{'\n\n'}
-            You’ll see a receipt window with details on the event, your payment 
-            method, the amount paid and refund status(es) if applicable. You’ll 
-            also find links to print, save PDF, and get help with your payment 
-            at the bottom of this window.
+            <p style={P_STYLE} >
+              You can find your purchase history on the Payment History tab of 
+              your Settings page. Once logged in, navigate to the settings page 
+              by clicking on your profile picture in the header on the top 
+              right of the screen. On the ensuing dropdown menu, select 
+              “Settings”.{'\n\n'}
+              Once there, select the “Payment History” tab to see a list of 
+              your purchases on NEA.{'\n\n'}
+              All of the events you’ve joined will be listed here from most 
+              recent to oldest, along with any fees associated with the event.
+              {'\n\n'}
+              To see more details, click the “View Receipt” button on to the 
+              right of the purchase you’d like to view, or click the tile if 
+              you’re viewing on a mobile device.{'\n\n'}
+              You’ll see a receipt window with details on the event, your 
+              payment method, the amount paid and refund status(es) if 
+              applicable. You’ll also find links to print, save PDF, and get 
+              help with your payment at the bottom of this window.
+            </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             My cancellation fee is “On Hold” or “Charged” - what does that mean?
           </h3>
           <div style={ANSWER_STYLE} >
-            NeverEatAlone charges a cancellation fee for certain events, if the 
-            restaurant we are hosting at has a policy that requires payment for 
-            cancellations. We put a hold on your payment method for this 
-            amount, but we don’t charge it unless our records indicate that you 
-            did not attend your seat.  You can find the status for this hold on 
-            the Payment History tab of your Settings page.{'\n\n'}
-            Here’s a breakdown of what the status of your cancellation means:
-            {'\n\n'}
-            On Hold{'\n'}
-            NeverEatAlone is holding your cancellation charge until the event 
-            ends. Once the event has passed and our records indicate that you 
-            have attended your seat, this hold on your payment method will be 
-            released.{'\n\n'}
-            Charged{'\n'}
-            Our records indicate that you were a no-show at the event, or 
-            perhaps you canceled your seat without enough notice and the 
-            restaurant charged your seat a no-show fee. This means that 
-            NeverEatAlone charged your payment method for the amount that was 
-            on hold for the event. If you feel this fee was charged to you in 
-            error, feel free to reach out through the link in your payment 
-            history, or send us an email at&nbsp;
-            <a
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-                href='mailto:support@nevereatalone.net'
-                target='_blank'
-                rel='noopener noreferrer'
-            >
-              support@nevereatalone.net
-            </a>.{'\n\n'}
-            For information on how to find your payment details, see&nbsp;
-            <HashLink
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-                to='#find_payment_records'
-            >
-              Where can I find my payment records and receipts?
-            </HashLink>
+            <p style={P_STYLE} >
+              NeverEatAlone charges a cancellation fee for certain events, if 
+              the restaurant we are hosting at has a policy that requires 
+              payment for cancellations. We put a hold on your payment method 
+              for this amount, but we don’t charge it unless our records 
+              indicate that you did not attend your seat.  You can find the 
+              status for this hold on the Payment History tab of your Settings 
+              page.{'\n\n'}
+              Here’s a breakdown of what the status of your cancellation means:
+              {'\n\n'}
+              <b style={GREY_BOLD_STYLE} >On Hold</b>{'\n'}
+              NeverEatAlone is holding your cancellation charge until the event 
+              ends. Once the event has passed and our records indicate that you 
+              have attended your seat, this hold on your payment method will be 
+              released.{'\n\n'}
+              <b style={GREY_BOLD_STYLE} >Charged</b>{'\n'}
+              Our records indicate that you were a no-show at the event, or 
+              perhaps you canceled your seat without enough notice and the 
+              restaurant charged your seat a no-show fee. This means that 
+              NeverEatAlone charged your payment method for the amount that was 
+              on hold for the event. If you feel this fee was charged to you in 
+              error, feel free to reach out through the link in your payment 
+              history, or send us an email at&nbsp;
+            </p>
+            <span style={LINK_SPAN_STYLE} >
+              <a
+                  style={LINK_STYLE}
+                  className={css(styles.link)}
+                  href='mailto:support@nevereatalone.net'
+                  target='_blank'
+                  rel='noopener noreferrer'
+              >
+                support@nevereatalone.net
+              </a>
+            </span>
+            <p style={P_STYLE} >
+              .{'\n\n'}For information on how to find your payment details, 
+              see&nbsp;
+            </p>
+            <span style={LINK_SPAN_STYLE} >
+              <HashLink
+                  style={LINK_STYLE}
+                  className={css(styles.link)}
+                  to='#find_payment_records'
+              >
+                Where can I find my payment records and receipts?
+              </HashLink>
+            </span>
           </div>
-
-
-
-
+          <div style={DIVIDER_LINE_STYLE} />
+          <h3 style={QUESTION_STYLE} >
+            How do I report a toxic user?
+          </h3>
+          <div style={ANSWER_STYLE} >
+            <p style={P_STYLE} >
+              Once logged in, head to the user’s profile and hit the More 
+              Actions button (<span style={ORANGE_TEXT_STYLE} >• • •</span>) in 
+              the top corner of the user’s card and select “Report”. In the 
+              following popup select the reason for the report and hit “Report”.
+            </p>
+          </div>
+          <div style={DIVIDER_LINE_STYLE} />
+          <h3 style={QUESTION_STYLE} >
+            Are fees for events refundable?
+          </h3>
+          <div style={ANSWER_STYLE} >
+            <p style={P_STYLE} >
+              If the event you joined has an event fee, it will be refunded if 
+              you remove your seat with more than 24 hours of notice. The event 
+              fee <b>will not</b> be refunded if you remove your seat within 24 
+              hours of an event.{'\n\n'}
+              If the event you joined has a cancellation fee, the cancellation 
+              fee may not be charged subject to the venue’s cancellation 
+              policy. Typically, cancellation fees will not be charged for 
+              seats removed with more than 48-24 hours of notice.{'\n\n'}
+              If you think you’ve been charged a fee in error, or if you need 
+              support with any payment-related issues, reach out to us using 
+              the email support@nevereatalone.net and we’ll try to help you 
+              resolve your issue.
+            </p>
+          </div>
+          <div style={DIVIDER_LINE_STYLE} />
+          <h3 style={QUESTION_STYLE} >
+            How can I deactivate or delete my account? :(
+          </h3>
+          <div style={ANSWER_STYLE} >
+            <p style={P_STYLE} >
+              If you want to take a break from NEA, you can deactivate or 
+              delete your account. Go to the Settings page by clicking on your 
+              profile icon in the top right of the header and selecting 
+              “Settings” from the dropdown menu.{'\n\n'}
+              Scroll down to the bottom of the Account Information tab and 
+              follow the link to “Deactivate or Delete your account.” Please 
+              read the instructions carefully.{'\n\n'}
+              <b>Deactivate</b>{'\n'}
+              Deactivating your account will temporarily disable all links to 
+              your profile, and hide your profile from public access. When 
+              you’re ready to log back in, all links will be restored and you 
+              can pick up where you left off.{'\n\n'}
+              <b>Delete</b>{'\n'}
+              Deleting your account is a permanent action and cannot be undone. 
+              You will be prompted to type your password as an additional 
+              security measure when deleting your account.{'\n\n'}
+              NeverEatAlone deletes your account within 15 days of when your 
+              request is submitted, and your account <b>will not be recoverable
+              </b>. Please only delete your account if you are sure you won’t 
+              be returning to the account. Your email and handle associated 
+              with a deleted account are recycled, and can be used to create a 
+              new account.{'\n\n'}
+              If your account was deleted by accident and you want it back, 
+              there may be a chance of recovery within 15 days of deletion. 
+              Reach out to us at&nbsp;
+              <span style={LINK_SPAN_STYLE} >
+                <a
+                    style={LINK_STYLE}
+                    className={css(styles.link)}
+                    href='mailto:support@nevereatalone.net'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                >
+                  support@nevereatalone.net
+                </a>
+              </span>
+              <p style={P_STYLE} >.</p>
+            </p>
+          </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h2
               style={{...HEADING_STYLE, ...H2_STYLE, ...ORANGE_TEXT_STYLE}}
@@ -811,128 +1008,87 @@ export class HelpPage extends React.Component<Properties> {
             My Profile
           </h2>
           <h3 style={QUESTION_STYLE} >
-            How to change the badges on my profile?
+            How do I change my display name or user ID?
           </h3>
           <div style={ANSWER_STYLE} >
-            Once logged in, head to your Profile and click on any badge in your 
-            user card to open the Badges Dashboard. On the following page, 
-            locate the section “Your Badges” and:{'\n'}
-            <ul style={UL_STYLE} >
-              <li>Deselect a badge to remove it from your user card.</li>
-              <li>
-                Select a badge (up to 4) to have it added to your user card.
-              </li>
-              <li>
-                The order they will show in your user profile will follow the 
-                order you selected them.
-              </li>
-              <li>
-                Partially unlocked badges won’t be selectable, only the badges 
-                in the “Your Badges” section.
-              </li>
-            </ul>
-            {'\n'}
-            Changes on this page are automatically saved.
+            <p style={P_STYLE} >
+              To change your display name or user ID, first make sure you’re 
+              logged in and then navigate to the Settings page by clicking on 
+              your profile icon on the top right of the header and selecting 
+              “Settings.”{'\n\n'}
+              On the following page, under the “Account Information” section, 
+              click the edit button below your display name. You can set your 
+              display name to anything you prefer, but your user ID is unique 
+              and must be available for you to change it. Once you’re happy 
+              with your changes, and if your new user ID is displaying as 
+              “available,” you can hit the save button on that section to 
+              confirm your changes.{'\n\n'}
+              Please give the website a few moments to update with your new 
+              information.
+            </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
-            How do I edit my photos?
+            How do I change my profile picture and cover photo?
           </h3>
           <div style={ANSWER_STYLE} >
-            Photos published in an event cannot be changed.  You can remove the 
-            photo from a specific event, untag yourself or upload a new one.
-            {'\n\n'}
-            You can change photos uploaded to a restaurant page (menu or 
-            header).{'\n\n'}
-            To remove your photos, please see&nbsp;
-            <HashLink
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-                to='#delete_photo_from_event'
-            >
-              How can I delete a photo from an event?
-            </HashLink>
-            .{'\n\n'}
-            You can remove your tag from someone else’s photo, please see&nbsp;
-            <HashLink
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-                to='#tagged_in_photo_without_permission'
-            >
-              I was tagged in photo without my permission
-            </HashLink>
-            .{'\n\n'}
-            To edit photos you upload a restaurant, login and head to the 
-            restaurant‘s page.
+            <p style={P_STYLE} >
+              Once logged in, head to your Profile and hit the button “Edit 
+              Profile” at the bottom of your profile card.{'\n\n'}
+              On the following page, you can change your profile picture and 
+              cover photo.{'\n\n'}
+              To change your profile picture: locate your profile picture and 
+              click on the Replace Image (
+              <img
+                style={ICON_STYLE}
+                src='resources/help_page/icons/replace-image.svg'
+                alt='Replace Image Icon'
+                draggable={false}
+              />) icon and upload a new profile picture or choose one from our 
+              default avatars.{'\n\n'}
+              To change your banner image: click the Change Cover Photo button 
+              at the top of the page and upload your new banner image.
+            </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
-            How do I change my profile picture?
+            How do I hide my event activity?
           </h3>
           <div style={ANSWER_STYLE} >
-            Once logged in, head to your Profile and hit the button “Edit 
-            Profile”. On the following page, locate your profile picture and 
-            click on the icon Replace Image&nbsp;
+            You will always appear on the attendees section of an event page 
+            you’re attending, but you can hide the events you are attending or 
+            your past events from your user profile.{'\n\n'}
+            Once you are logged in, head to your profile and hit the button 
+            “Edit Profile” on the bottom part of your user card. On the 
+            following page, find the “Events” section and hit the eye icon&nbsp;
             <img
-              style={{...NO_SELECTION_STYLE, ...ICON_STYLE}}
-              src='resources/help_page/icons/replace-image.svg'
-              alt='Replace Image Icon'
+              style={EYE_ICON_STYLE}
+              src='resources/help_page/icons/eye.svg'
+              alt='Eye Icon'
               draggable={false}
             />
-            &nbsp;and upload your new profile picture.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
-          </div>
-          <div style={DIVIDER_LINE_STYLE} />
-          <h3 style={QUESTION_STYLE} >
-            I want to collect more badges
-          </h3>
-          <div style={ANSWER_STYLE} >
-            You can check your badge progress on the Badges Dashboard. Once 
-            logged in, head to your Profile and click on any badge in your user 
-            card to open the Badges Dashboard. On the following page, locate 
-            the section “In Progress” and click on any badge from there to open 
-            a popup that shows what tasks are required to unlock that badge.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
+            &nbsp;beside the section that you want to hide from other users.
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How do I delete my photos?
           </h3>
           <div style={ANSWER_STYLE} >
-            To remove your photos from a specific event, please see&nbsp;
-            <HashLink
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-                to='#delete_photo_from_event'
-            >
-              How can I delete a photo from an event?
-            </HashLink>
-            .{'\n\n'}
-            To remove your profile picture, login, head to your Profile and hit 
-            the button “Edit Profile”. On the following page, locate your 
-            profile picture and click on the icon Replace Image&nbsp;
-            <img
-              style={{...NO_SELECTION_STYLE, ...ICON_STYLE}}
-              src='resources/help_page/icons/replace-image.svg'
-              alt='Replace Image Icon'
-              draggable={false}
-            />
-            &nbsp;and choose one of our avatars.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
-          </div>
-          <div style={DIVIDER_LINE_STYLE} />
-          <h3 style={QUESTION_STYLE} >
-            How do I untag myself from photos?
-          </h3>
-          <div style={ANSWER_STYLE} >
-            Please see&nbsp;
-            <HashLink
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-                to='#tagged_in_photo_without_permission'
-            >
-              I was tagged in photo without my permission
-            </HashLink>.
+            <p style={P_STYLE} >
+              Hit the “Edit Profile” button on the bottom of your user card. On 
+              the following page, locate your profile picture and click on the 
+              Replace Image (
+              <img
+                style={ICON_STYLE}
+                src='resources/help_page/icons/replace-image.svg'
+                alt='Replace Image Icon'
+                draggable={false}
+              />) icon and choose one of our default avatars.{'\n\n'}
+              To remove your banner image, head to head to your Profile and hit 
+              the button “Edit Profile”. On the following page, locate your 
+              cover photo and click on the “Change Cover Photo” button and 
+              choose the default image.
+            </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h2
@@ -942,111 +1098,37 @@ export class HelpPage extends React.Component<Properties> {
             Community
           </h2>
           <h3 style={QUESTION_STYLE} >
-            How do I find someone on NEA?
+            How do I find or follow someone on NEA?
           </h3>
           <div style={ANSWER_STYLE} >
-            We are currently working on a user directory and also integration 
-            with other social media (bring your friends from Facebook, for 
-            example). So please look forward to future updates.
-          </div>
-          <div style={DIVIDER_LINE_STYLE} />
-          <h3 style={QUESTION_STYLE} >
-            How to follow someone?
-          </h3>
-          <div style={ANSWER_STYLE} >
-            From the person’s profile, hit the button “Follow” located on the 
-            user card.
-          </div>
-          <div style={DIVIDER_LINE_STYLE} />
-          <h3 style={QUESTION_STYLE} >
-            How do I tag someone in a photo?
-          </h3>
-          <div style={ANSWER_STYLE} >
-            When uploading a photo to an event you can tag attendee’s by typing 
-            “@” to show a dropdown with a list of people who attended the 
-            event. That person will be notified.
-          </div>
-          <div style={DIVIDER_LINE_STYLE} />
-          <h3 style={QUESTION_STYLE} >
-            How to have my photo featured in the Live Album?
-          </h3>
-          <div style={ANSWER_STYLE} >
-            Photos from the Live Album are selected randomly from all our 
-            event’s photos (uploaded by the users). The Live Album will always 
-            bring different images whenever you load the home page and 
-            different users will see different albums.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
-          </div>
-          <div style={DIVIDER_LINE_STYLE} />
-          <h3 style={QUESTION_STYLE} >
-            How do I archive messages?
-          </h3>
-          <div style={ANSWER_STYLE} >
-            Once you are logged in, head to Messages. Select a chat or group 
-            chat and hit the “More Actions” button <span 
-            style={NO_WORD_BREAK_STYLE} >(<span style={ORANGE_TEXT_STYLE} >
-            • • •</span>)</span> on the top right corner of the chat window and 
-            select “Archive Chat/Group”. Archived chats can be searchable.
+            <p style={P_STYLE} >
+              We are currently working on a user directory and other community 
+              features. Please look forward to updates in the future.
+            </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             What to do if someone is bothering me?
           </h3>
           <div style={ANSWER_STYLE} >
-            You can block someone from contacting you. Blocked contact:{'\n'}
-            <ul style={UL_STYLE} >
-              <li>Can’t message you.</li>
-              <li>Can’t leave a testimonial for you.</li>
-              <li>Can’t see your profile.</li>
-              <li>Can’t see your name on an attendee’s list from an event.</li>
-              <li><b>Can still join events you are attending.</b></li>
-            </ul>
-            {'\n'}
-            You can block someone from the user profile or directly from a chat.
-            {'\n\n'}
-            <b>To block someone from a user profile</b>{'\n'}
-            Once you are logged in, head to the user’s profile. Hit the “More 
-            Actions” button <span style={NO_WORD_BREAK_STYLE} >(<span 
-            style={ORANGE_TEXT_STYLE} >• • •</span>)</span> and select “Block”. 
-            On the following popup hit the button “Yes”.{'\n\n'}
-            <b>To block someone from the Message center</b>
-            Once you are logged in, head to Message and select the user’s chat. 
-            Hit the “More Actions” button <span style={NO_WORD_BREAK_STYLE} >(
-            <span style={ORANGE_TEXT_STYLE} >• • •</span>)</span> and select 
-            “Block User”. On the following popup hit the button “Yes”.
+            <p style={P_STYLE} >
+              If someone is bothering you on NEA or at one of our events, you 
+              can report them. Once logged in, head to the user’s profile and 
+              hit the More Actions button (<span style={ORANGE_TEXT_STYLE} >
+              • • •</span>) in the top corner of the user’s card and select 
+              “Report”. In the following popup select the reason for the report 
+              and hit “Report”.{'\n\n'}
+              We will look into the issue and take appropriate actions.
+            </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
-          <h3 style={QUESTION_STYLE} >
-            How do I unblock someone?
-          </h3>
-          <div style={ANSWER_STYLE} >
-            Please see&nbsp;
-            <HashLink
-                style={LINK_STYLE}
-                className={css(styles.linkStates)}
-                to='#blocked_list'
-            >
-              Where can I see all my blocked users?
-            </HashLink>
-            . On the following screen, use the search field to locate the user 
-            you want and hit the link “Unblock”. Confirm the unblock on the 
-            popup.
-          </div>
-          <div style={DIVIDER_LINE_STYLE} />
-          <h3 id='blocked_list' style={QUESTION_STYLE} >
-            Where can I see all my blocked users?
-          </h3>
-          <div style={ANSWER_STYLE} >
-            Once you are logged in, head to Settings and click on the tab 
-            “Blocked Users”.
-          </div>
         </div>
         <HashLink
             style={BACK_TO_TOP_BUTTON_STYLE}
             to='#top'
         >
           <img
-            style={{...NO_SELECTION_STYLE, ...BACK_TO_TOP_ICON}}
+            style={BACK_TO_TOP_ICON}
             src='resources/help_page/icons/back_to_top.svg'
             alt='Back To Top'
             draggable={false}
@@ -1097,7 +1179,9 @@ const BACK_TO_TOP_BUTTON_STYLE: React.CSSProperties = {
   justifyContent: 'center',
   alignItems: 'center',
   width: '60px',
+  minWidth: '60px',
   height: '50px',
+  minHeight: '50px',
   padding: '10px',
   backgroundColor: '#FFFFFF',
   boxShadow: '0px 1px 4px rgba(0, 0, 0, 0.25)',
@@ -1145,10 +1229,6 @@ const LINK_SPAN_STYLE: React.CSSProperties = {
   display: 'inline-flex'
 };
 
-const NEW_LINE_STYLE: React.CSSProperties = {
-  whiteSpace: 'pre'
-};
-
 const HEADING_STYLE: React.CSSProperties = {
   fontFamily: 'Oswald',
   fontStyle: 'normal',
@@ -1194,15 +1274,17 @@ const DIVIDER_LINE_STYLE: React.CSSProperties = {
 const TOPICS_ROW: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
+  flexWrap: 'wrap',
   justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
-  height: '250px',
+  minHeight: '250px',
+  gap: '55px',
   marginBottom: '30px'
 };
 
 const TOPICS_SECOND_ROW_STYLE: React.CSSProperties = {
-  height: '205px'
+  minHeight: '205px'
 };
 
 const TOPICS_BUTTON_STYLE: React.CSSProperties = {
@@ -1211,7 +1293,9 @@ const TOPICS_BUTTON_STYLE: React.CSSProperties = {
   border: 'none',
   outline: 'none',
   width: '140px',
+  minWidth: '14px',
   height: '180px',
+  minHeight: '180px',
   textDecoration: 'none'
 };
 
@@ -1241,27 +1325,40 @@ const TOPICS_BUTTON_TEXT_STYLE: React.CSSProperties = {
   marginTop: '2px'
 };
 
+const NO_SELECTION_STYLE: React.CSSProperties = {
+  WebkitTouchCallout: 'none',
+  MozUserSelect: 'none',
+  WebkitUserSelect: 'none',
+  KhtmlUserSelect: 'none',
+  userSelect: 'none'
+};
+
 const ATTENDING_AN_EVENT_ICON_STYLE: React.CSSProperties = {
+  ...NO_SELECTION_STYLE,
   width: '102px',
   height: '92px'
 };
 
 const RESTAURANT_ICON_STYLE: React.CSSProperties = {
+  ...NO_SELECTION_STYLE,
   width: '90px',
   height: '82px'
 };
 
 const SETTINGS_ICON_STYLE: React.CSSProperties = {
+  ...NO_SELECTION_STYLE,
   width: '108px',
   height: '98px'
 };
 
 const MY_PROFILE_ICON_STYLE: React.CSSProperties = {
+  ...NO_SELECTION_STYLE,
   width: '66px',
   height: '107px'
 };
 
 const COMMUNITY_ICON_STYLE: React.CSSProperties = {
+  ...NO_SELECTION_STYLE,
   width: '89px',
   height: '90px'
 };
@@ -1279,7 +1376,6 @@ const QUESTION_STYLE: React.CSSProperties = {
   lineHeight: '30px',
   textTransform: 'uppercase',
   color: '#969696',
-  height: '30px',
   margin: '0px 0px 30px 0px',
   padding: '0px'
 };
@@ -1299,6 +1395,10 @@ const ANSWER_STYLE: React.CSSProperties = {
   whiteSpace: 'pre-line'
 };
 
+const GREY_BOLD_STYLE: React.CSSProperties = {
+  color: '#969696'
+};
+
 const UL_STYLE: React.CSSProperties = {
   margin: '0px',
   paddingLeft: '25px',
@@ -1307,21 +1407,11 @@ const UL_STYLE: React.CSSProperties = {
 };
 
 const ICON_STYLE: React.CSSProperties = {
+  ...NO_SELECTION_STYLE,
   width: '22px',
   height: '22px',
-  verticalAlign: 'baseline'
-};
-
-const NO_WORD_BREAK_STYLE: React.CSSProperties = {
-  whiteSpace: 'nowrap'
-};
-
-const NO_SELECTION_STYLE: React.CSSProperties = {
-  WebkitTouchCallout: 'none',
-  MozUserSelect: 'none',
-  WebkitUserSelect: 'none',
-  KhtmlUserSelect: 'none',
-  userSelect: 'none'
+  verticalAlign: 'baseline',
+  display: 'inline'
 };
 
 const LINK_STYLE: React.CSSProperties = {
@@ -1349,7 +1439,17 @@ const INVITE_FOODIE_BUTTON_STYLE: React.CSSProperties = {
   fontWeight: 700,
   fontSize: '14px',
   lineHeight: '18px',
-  height: '18px'
+  height: '18px',
+  minHeight: '18px',
+  width: 'fit-content',
+  minWidth: 'fit-content',
+  margin: '0px'
+};
+
+const EYE_ICON_STYLE: React.CSSProperties = {
+  ...ICON_STYLE,
+  ...NO_SELECTION_STYLE,
+  marginBottom: '-6px'
 };
 
 const styles = StyleSheet.create({ 
@@ -1373,7 +1473,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#FFE2CA'
     }
   },
-  linkStates: {
+  link: {
     ':hover': {
       textDecoration: 'underline',
 	    textDecorationColor: '#F26B55',
