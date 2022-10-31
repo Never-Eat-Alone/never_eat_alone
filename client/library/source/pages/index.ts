@@ -1,3 +1,4 @@
+export * from './cookie_policy_page';
 export * from './dining_event_page';
 export * from './edit_profile_page';
 export * from './forgot_password_link_sent_page';

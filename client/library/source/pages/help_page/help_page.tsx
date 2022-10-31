@@ -14,30 +14,31 @@ interface Properties {
 
 export class HelpPage extends React.Component<Properties> {
   public render(): JSX.Element {
-    const { containerStyle, contentStyle, backToTopButtonStyle } = (() => {
+    const { containerStyle, contentContainerStyle, backToTopButtonStyle
+        } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
           containerStyle: DESKTOP_CONTAINER_STYLE,
-          contentStyle: DESKTOP_CONTENT_CONTAINER_STYLE,
+          contentContainerStyle: DESKTOP_CONTENT_CONTAINER_STYLE,
           backToTopButtonStyle: BACK_TO_TOP_BUTTON_STYLE
         };
       }
       if (this.props.displayMode === DisplayMode.TABLET) {
         return {
           containerStyle: TABLET_CONTAINER_STYLE,
-          contentStyle: TABLET_CONTENT_CONTAINER_STYLE,
+          contentContainerStyle: TABLET_CONTENT_CONTAINER_STYLE,
           backToTopButtonStyle: BACK_TO_TOP_BUTTON_STYLE
         };
       }
       return {
         containerStyle: MOBILE_CONTAINER_STYLE,
-        contentStyle: MOBILE_CONTENT_CONTAINER_STYLE,
+        contentContainerStyle: MOBILE_CONTENT_CONTAINER_STYLE,
         backToTopButtonStyle: MOBILE_BACK_TO_TOP_BUTTON_STYLE
       };
     })();
     return (
       <div id='top' style={containerStyle} >
-        <div style={contentStyle} >
+        <div style={contentContainerStyle} >
           <h1 style={{...HEADING_STYLE, ...H1_STYLE}} >Help</h1>
           <div style={SEARCH_TITLE_STYLE} >
             What do you need help with? Search within this page or click on a 
@@ -1394,7 +1395,7 @@ const QUESTION_STYLE: React.CSSProperties = {
 };
 
 const ANSWER_STYLE: React.CSSProperties = {
-  display: 'inline',
+  display: 'inline-block',
   width: '100%',
   margin: '0px 0px 30px 0px',
   padding: '0px',

@@ -10,21 +10,39 @@ interface Properties {
 
 export class CookiesPolicyPage extends React.Component<Properties> {
   public render(): JSX.Element {
+    const { containerStyle, contentContainerStyle, backToTopButtonStyle
+        } = (() => {
+      if (this.props.displayMode === DisplayMode.DESKTOP) {
+        return {
+          containerStyle: DESKTOP_CONTAINER_STYLE,
+          contentContainerStyle: DESKTOP_CONTENT_CONTAINER_STYLE,
+          backToTopButtonStyle: BACK_TO_TOP_BUTTON_STYLE
+        };
+      }
+      if (this.props.displayMode === DisplayMode.TABLET) {
+        return {
+          containerStyle: TABLET_CONTAINER_STYLE,
+          contentContainerStyle: TABLET_CONTENT_CONTAINER_STYLE,
+          backToTopButtonStyle: BACK_TO_TOP_BUTTON_STYLE
+        };
+      }
+      return {
+        containerStyle: MOBILE_CONTAINER_STYLE,
+        contentContainerStyle: MOBILE_CONTENT_CONTAINER_STYLE,
+        backToTopButtonStyle: MOBILE_BACK_TO_TOP_BUTTON_STYLE
+      };
+    })();
     return (
-      <div id='top' style={CONTAINER_STYLE} >
-        <div style={CONTENT_CONTAINER_STYLE} >
-          <h1 style={{...HEADING_STYLE, ...H1_STYLE}} >Cookies Policy</h1>
+      <div id='top' style={containerStyle} >
+        <div style={contentContainerStyle} >
+          <h1 style={H1_STYLE} >Cookies Policy</h1>
           <div style={ANSWER_STYLE} >
-            Last updated Oct 5th, 2021
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
-          </div>
-          <div style={ANSWER_STYLE} >
+            Last updated January 28, 2022{'\n\n'}
             As described in our&nbsp;
             <Router.Link
                 style={LINK_STYLE}
-                className={css(styles.linkStates)}
+                className={css(styles.link)}
                 to='/privacy_policy'
-                draggable={false}
             >
               Privacy Policy
             </Router.Link>
@@ -34,10 +52,9 @@ export class CookiesPolicyPage extends React.Component<Properties> {
             technologies on NEA, which includes any website, application, or 
             service we offer. By using our NEA, you consent to storage and 
             access to cookies and other technologies on your device, in 
-            accordance with this Cookies Policy.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
+            accordance with this Cookies Policy.{'\n\n'}
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             What Are Cookies?
           </h2>
           <div style={ANSWER_STYLE} >
@@ -57,10 +74,9 @@ export class CookiesPolicyPage extends React.Component<Properties> {
             similar purposes as cookies. They are often used in conjunction 
             with cookies, though they are not stored on your computer in the 
             same way. As a result, if you disable cookies, web beacons may 
-            still load, but their functionality will be restricted.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
+            still load, but their functionality will be restricted.{'\n\n'}
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             How We Use Cookies
           </h2>
           <div style={ANSWER_STYLE} >
@@ -68,29 +84,27 @@ export class CookiesPolicyPage extends React.Component<Properties> {
             necessary for technical reasons; some enable a personalized 
             experience for both visitors and registered users. Some of these 
             cookies may be set when a page is loaded, or when a visitor takes a 
-            particular action (clicking the "follow" button on an event, for 
+            particular action (clicking the "Join" button on an event, for 
             example). Many of the cookies we use are only set if you are a 
             registered NEA user (so you don’t have to log in every time, for 
             example), while others are set whenever you visit our website, 
             irrespective of whether you have an account. For more information 
             on the choices you have about the cookies we use, please see the 
-            Controlling Cookies section below.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
+            Controlling Cookies section below.{'\n\n'}
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             Where We Place Cookies
           </h2>
           <div style={ANSWER_STYLE} >
             We set cookies in a number of different locations across our 
-            services.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
+            services.{'\n\n'}
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             Type Of Cookies
           </h2>
           <div style={ANSWER_STYLE} >
             The table below explains the type of cookies we use on our websites 
-            and why we use them.{'\n\n'}
+            and why we use them.{'\n\n\n'}
             <table style={TABLE_STYLE} >
               <thead style={TABLE_HEADER_STYLE} >
                 <tr>
@@ -128,9 +142,9 @@ export class CookiesPolicyPage extends React.Component<Properties> {
                 </tr>
               </tbody>
             </table>
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
+            {'\n\n'}
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             User Sites
           </h2>
           <div style={ANSWER_STYLE} >
@@ -141,7 +155,7 @@ export class CookiesPolicyPage extends React.Component<Properties> {
             the first time in a given period.
             <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             Controlling Cookies
           </h2>
           <div style={ANSWER_STYLE} >
@@ -154,10 +168,9 @@ export class CookiesPolicyPage extends React.Component<Properties> {
             to manage and delete cookies, visit&nbsp;
             <a
                 style={LINK_STYLE}
-                className={css(styles.linkStates)}
+                className={css(styles.link)}
                 href='https://aboutcookies.org'
                 target='_blank'
-                draggable={false}
             >
               aboutcookies.org
             </a>
@@ -169,37 +182,33 @@ export class CookiesPolicyPage extends React.Component<Properties> {
             example, you can opt out of Google Analytics by installing&nbsp;
             <a
                 style={LINK_STYLE}
-                className={css(styles.linkStates)}
+                className={css(styles.link)}
                 href='https://tools.google.com/dlpage/gaoptout'
                 target='_blank'
-                draggable={false}
             >
               Google’s opt-out browser add-on
             </a>
             , from Hotjar by using the&nbsp;
             <a
                 style={LINK_STYLE}
-                className={css(styles.linkStates)}
+                className={css(styles.link)}
                 href='https://www.hotjar.com/legal/policies/do-not-track'
                 target='_blank'
-                draggable={false}
             >
               Do Not Track header
             </a>
             , and from Nielsen by clicking the opt out link found within&nbsp;
             <a
                 style={LINK_STYLE}
-                className={css(styles.linkStates)}
+                className={css(styles.link)}
                 href='https://www.nielsen.com/us/en/legal/privacy-statement/digital-measurement/'
                 target='_blank'
-                draggable={false}
             >
               Nielsen's Privacy Statement
             </a>
-            .
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
+            .{'\n\n'}
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             Our Internal Analytics Tool
           </h2>
           <div style={ANSWER_STYLE} >
@@ -220,10 +229,9 @@ export class CookiesPolicyPage extends React.Component<Properties> {
             we track - for example, if you publish an event or list a 
             restaurant, we will still have record of that, but for an event or 
             action after you opt out, we will not have other data associated 
-            with that action or event in the analytics tool.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
+            with that action or event in the analytics tool.{'\n\n'}
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             Revisions To This Policy
           </h2>
           <div style={ANSWER_STYLE} >
@@ -234,10 +242,9 @@ export class CookiesPolicyPage extends React.Component<Properties> {
             notice to you, such as by sending you an email, or displaying a 
             prominent notice on our Platform. By continuing to use NEA after 
             any changes come into effect, you agree to the revised Cookie 
-            Policy.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
+            Policy.{'\n\n'}
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             Contact Us
           </h2>
           <div style={ANSWER_STYLE} >
@@ -245,20 +252,17 @@ export class CookiesPolicyPage extends React.Component<Properties> {
             the most relevant contact details in our&nbsp;
             <Router.Link
                 style={LINK_STYLE}
-                className={css(styles.linkStates)}
+                className={css(styles.link)}
                 to='/privacy_policy'
-                draggable={false}
             >
               Privacy Policy
             </Router.Link>
             .
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
         </div>
         <HashLink
-            style={BACK_TO_TOP_BUTTON_STYLE}
+            style={backToTopButtonStyle}
             to='#top'
-            draggable='false'
         >
           <img
             style={{...NO_SELECTION_STYLE, ...BACK_TO_TOP_ICON}}
@@ -289,6 +293,21 @@ const CONTAINER_STYLE: React.CSSProperties = {
   width: '100%',
   backgroundColor: '#FFFFFF',
   padding: '50px 10px 80px 60px'
+};
+
+const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTAINER_STYLE,
+  padding: '50px 20px'
+};
+
+const TABLET_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTAINER_STYLE,
+  padding: '50px 20px'
+};
+
+const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTAINER_STYLE,
+  padding: '50px 20px 30px 20px'
 };
 
 const TABLE_STYLE: React.CSSProperties = {
@@ -360,6 +379,12 @@ const BACK_TO_TOP_BUTTON_STYLE: React.CSSProperties = {
   outline: 'none'
 };
 
+const MOBILE_BACK_TO_TOP_BUTTON_STYLE: React.CSSProperties = {
+  ...BACK_TO_TOP_BUTTON_STYLE,
+  right: '20px',
+  bottom: '20px'
+};
+
 const BACK_TO_TOP_ICON: React.CSSProperties = {
   width: '20px',
   height: '20px'
@@ -369,9 +394,22 @@ const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
-  alignItems: 'flex-start',
-  width: '1006px',
-  whiteSpace: 'pre-wrap'
+  alignItems: 'flex-start'
+};
+
+const DESKTOP_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTENT_CONTAINER_STYLE,
+  width: '1060px'
+};
+
+const TABLET_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTENT_CONTAINER_STYLE,
+  width: '702px'
+};
+
+const MOBILE_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTENT_CONTAINER_STYLE,
+  width: '100%'
 };
 
 const NEW_LINE_STYLE: React.CSSProperties = {
@@ -381,7 +419,7 @@ const NEW_LINE_STYLE: React.CSSProperties = {
 const HEADING_STYLE: React.CSSProperties = {
   fontFamily: 'Oswald',
   fontStyle: 'normal',
-  fontWeight: 'normal',
+  fontWeight: '400',
   textTransform: 'uppercase',
   color: '#969696',
   padding: '0px',
@@ -389,24 +427,27 @@ const HEADING_STYLE: React.CSSProperties = {
 };
 
 const H1_STYLE: React.CSSProperties = {
+  ...HEADING_STYLE,
   fontSize: '26px',
   lineHeight: '39px'
 };
 
 const H2_STYLE: React.CSSProperties = {
+  ...HEADING_STYLE,
   fontSize: '23px',
   lineHeight: '34px'
 };
 
 const ANSWER_STYLE: React.CSSProperties = {
+  display: 'inline-block',
   width: '100%',
   margin: '0px 0px 30px 0px',
   padding: '0px',
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
-  fontWeight: 'normal',
+  fontWeight: '300',
   fontSize: '14px',
-  lineHeight: '20px',
+  lineHeight: '18px',
   color: '#000000',
   overflowWrap: 'break-word'
 };
@@ -420,15 +461,22 @@ const NO_SELECTION_STYLE: React.CSSProperties = {
 };
 
 const LINK_STYLE: React.CSSProperties = {
+  display: 'inline',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 700,
+  fontSize: '14px',
+  lineHeight: '18px',
   textDecoration: 'none',
   color: '#F26B55',
   margin: '0',
   padding: '0',
+  whiteSpace: 'pre-wrap',
   cursor: 'pointer'
 };
 
 const styles = StyleSheet.create({
-  linkStates: {
+  link: {
     ':hover': {
       textDecoration: 'underline',
 	    textDecorationColor: '#F26B55',
