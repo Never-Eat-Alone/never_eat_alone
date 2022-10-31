@@ -208,7 +208,7 @@ export class HelpPage extends React.Component<Properties> {
             <p style={P_STYLE} >&nbsp;for a record of your events and fees.</p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
-          <h3 style={QUESTION_STYLE} >
+          <h3 id='sign_up' style={QUESTION_STYLE} >
             How do I sign up for NEA?
           </h3>
           <div style={ANSWER_STYLE} >
@@ -255,7 +255,7 @@ export class HelpPage extends React.Component<Properties> {
                   className={css(styles.link)}
                   to='#are_events_refundable'
               >
-                Are event fees refundable?
+                Are fees for events refundable?
               </HashLink>
             </span>
           </div>
@@ -721,7 +721,7 @@ export class HelpPage extends React.Component<Properties> {
             </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
-          <h3 style={QUESTION_STYLE} >
+          <h3 id='add_payment' style={QUESTION_STYLE} >
             How do I add a payment method to my account?
           </h3>
           <div style={ANSWER_STYLE} >
@@ -845,7 +845,7 @@ export class HelpPage extends React.Component<Properties> {
             </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
-          <h3 style={QUESTION_STYLE} >
+          <h3 id='find_payment_records' style={QUESTION_STYLE} >
             Where can I find my payment records and receipts?
           </h3>
           <div style={ANSWER_STYLE} >
@@ -936,7 +936,7 @@ export class HelpPage extends React.Component<Properties> {
             </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
-          <h3 style={QUESTION_STYLE} >
+          <h3 id='are_events_refundable' style={QUESTION_STYLE} >
             Are fees for events refundable?
           </h3>
           <div style={ANSWER_STYLE} >
@@ -1051,7 +1051,7 @@ export class HelpPage extends React.Component<Properties> {
             </p>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
-          <h3 style={QUESTION_STYLE} >
+          <h3 id='hide_activity' style={QUESTION_STYLE} >
             How do I hide my event activity?
           </h3>
           <div style={ANSWER_STYLE} >
