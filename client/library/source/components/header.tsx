@@ -58,7 +58,7 @@ export class Header extends React.Component<Properties> {
           {...this.props}
           key='DisplayName'
           label={this.props.account.name}
-          to='/user_profile/:id'
+          to={`/users/profile/${this.props.account.id}`}
           style={USER_DISPLAYNAME_STYLE}
         />);
     } else {

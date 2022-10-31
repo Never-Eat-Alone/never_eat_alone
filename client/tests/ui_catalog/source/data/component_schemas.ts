@@ -1662,6 +1662,10 @@ export function loadComponentSchemas(): ComponentSchema[] {
       new SignalSchema('onSendEmailClick', '', []),
       new SignalSchema('onHelpClick', '', [])],
     NeverEatAlone.PaymentReceiptModal);
+  const helpPageSchema = new ComponentSchema('HelpPage', [
+    new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
+      DisplayModeInput)], [new SignalSchema('onInviteAFoodieClick', '', [])],
+    NeverEatAlone.HelpPage);
   return [
     accentTextButtonSchema,
     albumCardSchema,
@@ -1685,6 +1689,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     googlePayButtonSchema,
     headerLoggedInSchema,
     headerNotLoggedInSchema,
+    helpPageSchema,
     heroLoggedInNoEventSchema,
     heroLoggedInWithEventSchema,
     heroNotLoggedInSchema,

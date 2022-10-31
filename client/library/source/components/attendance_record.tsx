@@ -126,7 +126,10 @@ export class AttendanceRecord extends React.Component<Properties> {
                 You attended {this.props.pastEventList.length} events this{" "}
                 month.
               </div>
-            <Router.Link to='/users/profile/:id' style={LINK_STYLE} >
+            <Router.Link
+                to={`/users/profile/${this.props.account.id}`}
+                style={LINK_STYLE}
+            >
               See your events
             </Router.Link>
             </div>
