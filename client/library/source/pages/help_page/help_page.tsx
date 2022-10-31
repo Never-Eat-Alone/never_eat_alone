@@ -14,22 +14,25 @@ interface Properties {
 
 export class HelpPage extends React.Component<Properties> {
   public render(): JSX.Element {
-    const { containerStyle, contentStyle } = (() => {
+    const { containerStyle, contentStyle, backToTopButtonStyle } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
           containerStyle: DESKTOP_CONTAINER_STYLE,
-          contentStyle: DESKTOP_CONTENT_CONTAINER_STYLE
+          contentStyle: DESKTOP_CONTENT_CONTAINER_STYLE,
+          backToTopButtonStyle: BACK_TO_TOP_BUTTON_STYLE
         };
       }
       if (this.props.displayMode === DisplayMode.TABLET) {
         return {
           containerStyle: TABLET_CONTAINER_STYLE,
-          contentStyle: TABLET_CONTENT_CONTAINER_STYLE
+          contentStyle: TABLET_CONTENT_CONTAINER_STYLE,
+          backToTopButtonStyle: BACK_TO_TOP_BUTTON_STYLE
         };
       }
       return {
         containerStyle: MOBILE_CONTAINER_STYLE,
-        contentStyle: MOBILE_CONTENT_CONTAINER_STYLE
+        contentStyle: MOBILE_CONTENT_CONTAINER_STYLE,
+        backToTopButtonStyle: MOBILE_BACK_TO_TOP_BUTTON_STYLE
       };
     })();
     return (
@@ -135,11 +138,11 @@ export class HelpPage extends React.Component<Properties> {
             How do I join events?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               Log in and locate the event you are interested in. Hit the button 
               “Join this Event” located on the right of the event page. (If you 
               are not logged in, you need to first request an account. See&nbsp;
-            </p>
+            </div>
             <span style={LINK_SPAN_STYLE} >
               <HashLink
                   style={LINK_STYLE}
@@ -149,13 +152,13 @@ export class HelpPage extends React.Component<Properties> {
                 How do I sign up for NEA?
               </HashLink>)
             </span>
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               {'\n\n'}
               If the event has a fee, you’ll see a payment options window 
               pop-up. You can checkout with Google Pay, Apple Pay, PayPal, or 
               by adding a card to your account.{'\n\n'}
               To learn how to add a card to your account, see&nbsp;
-            </p>
+            </div>
             <span style={LINK_SPAN_STYLE} >
               <HashLink
                   style={LINK_STYLE}
@@ -165,7 +168,7 @@ export class HelpPage extends React.Component<Properties> {
                 How do I add a payment method to my account?
               </HashLink>
             </span>
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               {'\n\n'}
               Select the payment option you would like to use and follow the 
               steps on-screen. You may be asked to log in to your Google 
@@ -175,7 +178,7 @@ export class HelpPage extends React.Component<Properties> {
               screen. You can now close this pop-up, or hit the “Back to Event” 
               button.{'\n\n'}
               Once you’ve joined an event, it will appear on your&nbsp;
-            </p>
+            </div>
             <span style={LINK_SPAN_STYLE} >
               <Router.Link
                   to='/'
@@ -185,7 +188,7 @@ export class HelpPage extends React.Component<Properties> {
                 Homepage
               </Router.Link>
             </span>
-            <p style={P_STYLE} >&nbsp;and your&nbsp;</p>
+            <div style={P_STYLE} >&nbsp;and your&nbsp;</div>
             <span style={LINK_SPAN_STYLE} >
               <Router.Link
                   to='/users/profile/:id'
@@ -195,7 +198,7 @@ export class HelpPage extends React.Component<Properties> {
                 Profile page
               </Router.Link>
             </span>
-            <p style={P_STYLE} >. You can also check your&nbsp;</p>
+            <div style={P_STYLE} >. You can also check your&nbsp;</div>
             <span style={LINK_SPAN_STYLE} >
               <Router.Link
                   to='/users/settings/:id'
@@ -205,14 +208,16 @@ export class HelpPage extends React.Component<Properties> {
                 Payment History
               </Router.Link>
             </span>
-            <p style={P_STYLE} >&nbsp;for a record of your events and fees.</p>
+            <div style={P_STYLE} >
+              &nbsp;for a record of your events and fees.
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 id='sign_up' style={QUESTION_STYLE} >
             How do I sign up for NEA?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               From the Homepage, hit the “Become a Member” or the “Join Us” 
               button at the top of the page. You can also hit the “Request an 
               Account” button from an event page. You’ll see a form asking for 
@@ -221,14 +226,14 @@ export class HelpPage extends React.Component<Properties> {
               the one you use to log in to your account.{'\n\n'}
               Fill in the information and hit the “Request to Join!” button. 
               We’ll send you an email once your account is approved.
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How much do events cost?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               The price of every event is determined by the restaurant, menu, 
               and seating availability. You can find the price of each event on 
               the event page.{'\n\n'}
@@ -248,7 +253,7 @@ export class HelpPage extends React.Component<Properties> {
               restaurant’s cancellation rate. This may be charged if you don’t 
               attend your seat.{'\n\n'}
               For more information, see&nbsp;
-            </p>
+            </div>
             <span style={LINK_SPAN_STYLE} >
               <HashLink
                   style={LINK_STYLE}
@@ -264,27 +269,27 @@ export class HelpPage extends React.Component<Properties> {
             I want to join an event, but it’s full
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               Currently, there is no way to join an event if it is full. If an 
               attendee drops out of an event, a seat will open up and the 
               option to join will become available. Please check back on an 
               event you’re interested in to see if there are any last-minute 
               changes.
-            </p>{'\n\n'}
-            <p style={P_STYLE} >
+            </div>{'\n\n'}
+            <div style={P_STYLE} >
               We’re working on a follow system and other community features. 
               Please look forward to updates in the near future.
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How do I see events I joined?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               Once you’re logged in, you’ll see a list of events that you’re 
               attending on your&nbsp;
-            </p>
+            </div>
             <span style={LINK_SPAN_STYLE} >
               <Router.Link
                   to='/'
@@ -294,7 +299,7 @@ export class HelpPage extends React.Component<Properties> {
                 Homepage
               </Router.Link>
             </span>
-            <p style={P_STYLE} >. You can also find it on your&nbsp;</p>
+            <div style={P_STYLE} >. You can also find it on your&nbsp;</div>
             <span style={LINK_SPAN_STYLE} >
               <Router.Link
                   to='/users/profile/:id'
@@ -304,10 +309,10 @@ export class HelpPage extends React.Component<Properties> {
                 Profile page
               </Router.Link>
             </span>
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               .{'\n\n'}
               Profile:{'\n'}
-            </p>
+            </div>
             <ul style={UL_STYLE} >
               <li>
                 Click on your profile picture in the header on the top right 
@@ -335,57 +340,57 @@ export class HelpPage extends React.Component<Properties> {
             What are the flags appearing on my homepage?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               Once you start attending events, the coloured flags corresponding 
               to your events will appear in your flag collection after the 
               events pass. Your flag collection resets at the start of every 
               month. We’re working on special surprises for users who can 
               collect them all!
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How to see an event’s attendees?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               You can see the attendees of an event on the event page. If 
               anyone has joined the event, their name and profile picture will 
               appear under the “Attendees” section of the page. If you’re not 
               logged in, you’ll just see the number of attendees. If many 
               people have joined the event, click on the last option (See All) 
               to see a full list of attendees.
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How to invite a friend to an event?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               Navigate to the event page of any event that you would like to 
               share. You can share the URL of this page with your friend. They 
               will be able to view the event details, restaurant, and attendees 
               without an account, and they will be asked to log in or sign up 
               once they click on “Join This Event.”
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How to invite a friend to NeverEatAlone?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               To share the NeverEatAlone app with a friend, make sure you are 
               logged in and scroll to the bottom of any page to find the&nbsp;
-            </p>
+            </div>
             <span style={LINK_SPAN_STYLE} >
               <InviteAFoodieButton
                 style={INVITE_FOODIE_BUTTON_STYLE}
                 onInviteAFoodie={this.props.onInviteAFoodieClick}
               />
             </span>
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               &nbsp;
               link in the footer. A popup will appear where you can type 
               in a friend’s email address and write them a personalized 
@@ -395,7 +400,7 @@ export class HelpPage extends React.Component<Properties> {
               Additionally you can share NeverEatAlone without logging in by 
               using the social media icons on the bottom part of the popup:
               {'\n'}
-            </p>
+            </div>
             <ul style={UL_STYLE} >
               <li>Twitter</li>
               <li>Facebook</li>
@@ -408,21 +413,21 @@ export class HelpPage extends React.Component<Properties> {
             How do I find events that have passed?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               To view events that you attended in the past, you can go to your 
               profile page and look under “Past Events''. You can also visit 
               another user’s profile to do the same. Currently, there is no way 
               to filter by past events on the homepage, but let us know by 
               submitting feedback if this is a feature you want to see in the 
               future!
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             I won’t be able to attend an event I joined
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               You can remove your seat from the event anytime before the event 
               happens. Once you are logged in, head to the event page and hit 
               the button “Remove my Seat” on the top right corner.{'\n\n'}
@@ -431,7 +436,7 @@ export class HelpPage extends React.Component<Properties> {
               “Remove my Seat”. Click “Remove Seat” in this pop-up to finish 
               removing your seat.{'\n\n'}
               For more information, see&nbsp;
-            </p>
+            </div>
             <span style={LINK_SPAN_STYLE} >
               <HashLink
                   style={LINK_STYLE}
@@ -447,25 +452,25 @@ export class HelpPage extends React.Component<Properties> {
             I can’t find any events near me?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               We are currently focussing on events in Toronto, but you may be 
               able to find events in other cities in the Greater Toronto Area.
               {'\n\n'}
               If you want to see any neighbourhoods or venues featured, send us 
               some feedback to let us know!
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             Can I host an event of my own?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               We are currently working on user-hosted events and other 
               community features. If you’re interested in hosting an event, or 
               if there’s a restaurant you think we should host at, send us some 
               feedback to&nbsp;
-            </p>
+            </div>
             <span style={LINK_SPAN_STYLE} >
               <a
                   style={LINK_STYLE}
@@ -477,9 +482,9 @@ export class HelpPage extends React.Component<Properties> {
                 support@nevereatalone.net
               </a>
             </span>
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               .{'\n\n'}If you’re a restaurant owner, head to the&nbsp;
-            </p>
+            </div>
             <span style={LINK_SPAN_STYLE} >
               <Router.Link
                   to='/partner_with_us'
@@ -489,9 +494,9 @@ export class HelpPage extends React.Component<Properties> {
                 partner with us
               </Router.Link>
             </span>
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               &nbsp;page and send us a message. We'd love to hear from you.
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h2
@@ -504,22 +509,22 @@ export class HelpPage extends React.Component<Properties> {
             I want to find a restaurant in my neighbourhood
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               We’re currently working on browsing and filtering for 
               restaurants. For now, you can check the location of an event to 
               find out what neighbourhood the venue is in.
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             Can you host an event at a specific restaurant
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               We are always working on expanding our features. If there’s a 
               restaurant you think we should host at, send us some feedback to 
               let us know.{'\n\n'}If you’re a restaurant owner, head to&nbsp;
-            </p>
+            </div>
             <span style={LINK_SPAN_STYLE} >
               <Router.Link
                   to='/partner_with_us'
@@ -529,19 +534,19 @@ export class HelpPage extends React.Component<Properties> {
                 partner with us
               </Router.Link>
             </span>
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               &nbsp;page and send us a message. We’d love to hear from you!
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             Information on a restaurant page is wrong
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               Let us know about any incorrect or outdated information by 
               sending us some feedback or emailing us at&nbsp;
-            </p>
+            </div>
             <span style={LINK_SPAN_STYLE} >
               <a
                   style={LINK_STYLE}
@@ -553,9 +558,9 @@ export class HelpPage extends React.Component<Properties> {
                 support@nevereatalone.net
               </a>
             </span>
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               .{'\n\n'}If you’re a restaurant owner, head to the&nbsp;
-            </p>
+            </div>
             <span style={LINK_SPAN_STYLE} >
               <Router.Link
                   to='/partner_with_us'
@@ -565,32 +570,32 @@ export class HelpPage extends React.Component<Properties> {
                 partner with us
               </Router.Link>
             </span>
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               &nbsp;page and send us a message. We’d love to hear from you!
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How to see if a restaurant has a patio?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               We are still building NeverEatAlone’s database so the information 
               for seating options isn’t available on the restaurant page at the 
               moment. You can see seating arrangements for each event on the 
               event page, within the about section.
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             Is the restaurant page managed by the restaurant owner?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               Restaurants are listed by NEA staff. We are currently working on 
               a partnership solution with restaurant owners so please look 
               forward to updates about this in the near future.
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h2
@@ -603,7 +608,9 @@ export class HelpPage extends React.Component<Properties> {
             I can’t sign in to my account
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >Please reach out to us using the email&nbsp;</p>
+            <div style={P_STYLE} >
+              Please reach out to us using the email&nbsp;
+            </div>
             <span style={LINK_SPAN_STYLE} >
               <a
                   style={LINK_STYLE}
@@ -615,20 +622,20 @@ export class HelpPage extends React.Component<Properties> {
                 support@nevereatalone.net
               </a>
             </span>
-            <p style={P_STYLE}>.</p>
+            <div style={P_STYLE} >.</div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             My restaurant is listed on NEA
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE}>
+            <div style={P_STYLE} >
               NEA allows users to attend events at restaurants. We boost local 
               businesses while connecting with people who are genuinely 
               interested in having a gastronomic experience with others.
               If any information regarding your restaurant is incorrect, or if 
               you want to partner with us, please reach out through&nbsp;
-            </p>
+            </div>
             <span style={LINK_SPAN_STYLE} >
               <Router.Link
                   to='/partner_with_us'
@@ -638,14 +645,14 @@ export class HelpPage extends React.Component<Properties> {
                 this link
               </Router.Link>
             </span>
-            <p style={P_STYLE} >.</p>
+            <div style={P_STYLE} >.</div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How to report a harmful profile picture?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               Once you are logged in, head to the user profile you’d like to 
               report and locate the More Actions icon (
               <span style={ORANGE_TEXT_STYLE} >• • •</span>) at the right side 
@@ -654,16 +661,16 @@ export class HelpPage extends React.Component<Properties> {
               this user is being reported, fill in any additional comments, and 
               hit the “Report” button  in the following window. We will then 
               investigate the issue and act accordingly.
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How to change my email?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               You can find the email associated with your account in the&nbsp;
-            </p>
+            </div>
             <span style={LINK_SPAN_STYLE} >
               <Router.Link
                   to='/users/settings/:id'
@@ -673,7 +680,7 @@ export class HelpPage extends React.Component<Properties> {
                 settings page
               </Router.Link>
             </span>
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               . To get to your settings page, you must first be 
               logged in to NeverEatAlone. When logged in, click on your profile 
               icon on the top right of the header, and select “Settings” from 
@@ -686,14 +693,14 @@ export class HelpPage extends React.Component<Properties> {
               email. Until it is verified, you must still use your old email or 
               a linked social account to log in. To verify your email, simply 
               follow the link we send to your new email address.
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How can I link my Google or Facebook Account?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               When logged in, click on your profile icon in the top right of 
               the header, and select “Settings” from the dropdown menu.{'\n\n'}
               Under the Account Information section, locate and click the 
@@ -703,14 +710,14 @@ export class HelpPage extends React.Component<Properties> {
               your Linked Accounts. Make sure your browser is not blocking any 
               popups from NEA otherwise you won’t be able to finish this 
               process.
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How can I unlink or remove my Google or Facebook Account from NEA?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               When logged in, click on your profile icon in the top right of 
               the header, and select “Settings” from the dropdown menu.{'\n\n'}
               Under the Account Information section, locate the button related 
@@ -718,14 +725,14 @@ export class HelpPage extends React.Component<Properties> {
               Confirm that you are removing the correct account in the 
               following popup window, and select “Remove Account.” The linked 
               social account should then be removed from your Linked Accounts.
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 id='add_payment' style={QUESTION_STYLE} >
             How do I add a payment method to my account?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               You can either add a payment method during the checkout process 
               when you join an event with a fee, or by adding a card to the 
               Payment Methods tab of your settings page.{'\n\n'}
@@ -755,14 +762,14 @@ export class HelpPage extends React.Component<Properties> {
               correct. If everything is correct, you’ll be taken back to the 
               previous page, and you’ll see your newly added payment method 
               listed.
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How do I edit card details?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               You can edit the information on a card you’ve added to your 
               account anytime. Once logged in, click on your profile picture in 
               the header at the top right of the page and select “Settings” 
@@ -771,7 +778,7 @@ export class HelpPage extends React.Component<Properties> {
               {'\n\n'}
               Here, you’ll see a list of all the cards you’ve added to your 
               account. If you haven’t added any cards yet, see&nbsp;
-            </p>
+            </div>
             <span style={LINK_SPAN_STYLE} >
               <HashLink
                   style={LINK_STYLE}
@@ -781,7 +788,7 @@ export class HelpPage extends React.Component<Properties> {
                 How do I add a payment method to my account?
               </HashLink>
             </span>
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               {'\n\n'}
               Click on one of your added cards to be taken to a card details 
               page. Here, you can edit your name, expiration date, security 
@@ -790,14 +797,14 @@ export class HelpPage extends React.Component<Properties> {
               Once you’re happy with the information, click “Save” on the 
               bottom of the screen, or click “Discard Changes” to return to the 
               previous page without making changes.
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How do I select a default payment method?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               You can set one of your saved cards as your default payment 
               method. Once logged in, click on your profile picture in the 
               header at the top right of the page and select “Settings” from 
@@ -808,7 +815,7 @@ export class HelpPage extends React.Component<Properties> {
               here. If you have no payment methods, the first card you add will 
               automatically be marked as default. For more information, 
               see&nbsp;
-            </p>
+            </div>
             <span style={LINK_SPAN_STYLE} >
               <HashLink
                   style={LINK_STYLE}
@@ -818,21 +825,21 @@ export class HelpPage extends React.Component<Properties> {
                 How do I add a payment method to my account?
               </HashLink>
             </span>
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               {'\n\n'}To make a card your default payment method, click on it 
               to be taken to its details page. Click the checkbox labeled 
               “Make this my default card”, and then click the “Save” button on 
               the bottom of the page to save your changes.{'\n\n'}
               You’ll see a label marking the card as your default on the 
               Payment Methods page.
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How do I delete a card from my account?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               You can remove any card you added previously. Once logged in, 
               click on your profile picture in the header at the top right of 
               the page and select “Settings” from the dropdown menu.{'\n\n'}
@@ -842,14 +849,14 @@ export class HelpPage extends React.Component<Properties> {
               the "Delete" button beneath the card image. You’ll get a popup 
               asking you to confirm the deletion. Select “Delete Card” to 
               finish removing it from your account.
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 id='find_payment_records' style={QUESTION_STYLE} >
             Where can I find my payment records and receipts?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               You can find your purchase history on the Payment History tab of 
               your Settings page. Once logged in, navigate to the settings page 
               by clicking on your profile picture in the header on the top 
@@ -867,14 +874,14 @@ export class HelpPage extends React.Component<Properties> {
               payment method, the amount paid and refund status(es) if 
               applicable. You’ll also find links to print, save PDF, and get 
               help with your payment at the bottom of this window.
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             My cancellation fee is “On Hold” or “Charged” - what does that mean?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               NeverEatAlone charges a cancellation fee for certain events, if 
               the restaurant we are hosting at has a policy that requires 
               payment for cancellations. We put a hold on your payment method 
@@ -897,7 +904,7 @@ export class HelpPage extends React.Component<Properties> {
               on hold for the event. If you feel this fee was charged to you in 
               error, feel free to reach out through the link in your payment 
               history, or send us an email at&nbsp;
-            </p>
+            </div>
             <span style={LINK_SPAN_STYLE} >
               <a
                   style={LINK_STYLE}
@@ -909,10 +916,10 @@ export class HelpPage extends React.Component<Properties> {
                 support@nevereatalone.net
               </a>
             </span>
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               .{'\n\n'}For information on how to find your payment details, 
               see&nbsp;
-            </p>
+            </div>
             <span style={LINK_SPAN_STYLE} >
               <HashLink
                   style={LINK_STYLE}
@@ -928,19 +935,19 @@ export class HelpPage extends React.Component<Properties> {
             How do I report a toxic user?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               Once logged in, head to the user’s profile and hit the More 
               Actions button (<span style={ORANGE_TEXT_STYLE} >• • •</span>) in 
               the top corner of the user’s card and select “Report”. In the 
               following popup select the reason for the report and hit “Report”.
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 id='are_events_refundable' style={QUESTION_STYLE} >
             Are fees for events refundable?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               If the event you joined has an event fee, it will be refunded if 
               you remove your seat with more than 24 hours of notice. The event 
               fee <b>will not</b> be refunded if you remove your seat within 24 
@@ -953,14 +960,14 @@ export class HelpPage extends React.Component<Properties> {
               support with any payment-related issues, reach out to us using 
               the email support@nevereatalone.net and we’ll try to help you 
               resolve your issue.
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How can I deactivate or delete my account? :(
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               If you want to take a break from NEA, you can deactivate or 
               delete your account. Go to the Settings page by clicking on your 
               profile icon in the top right of the header and selecting 
@@ -997,8 +1004,8 @@ export class HelpPage extends React.Component<Properties> {
                   support@nevereatalone.net
                 </a>
               </span>
-              <p style={P_STYLE} >.</p>
-            </p>
+              <div style={P_STYLE} >.</div>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h2
@@ -1011,7 +1018,7 @@ export class HelpPage extends React.Component<Properties> {
             How do I change my display name or user ID?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               To change your display name or user ID, first make sure you’re 
               logged in and then navigate to the Settings page by clicking on 
               your profile icon on the top right of the header and selecting 
@@ -1025,14 +1032,14 @@ export class HelpPage extends React.Component<Properties> {
               confirm your changes.{'\n\n'}
               Please give the website a few moments to update with your new 
               information.
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             How do I change my profile picture and cover photo?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               Once logged in, head to your Profile and hit the button “Edit 
               Profile” at the bottom of your profile card.{'\n\n'}
               On the following page, you can change your profile picture and 
@@ -1048,7 +1055,7 @@ export class HelpPage extends React.Component<Properties> {
               default avatars.{'\n\n'}
               To change your banner image: click the Change Cover Photo button 
               at the top of the page and upload your new banner image.
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 id='hide_activity' style={QUESTION_STYLE} >
@@ -1074,7 +1081,7 @@ export class HelpPage extends React.Component<Properties> {
             How do I delete my photos?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               Hit the “Edit Profile” button on the bottom of your user card. On 
               the following page, locate your profile picture and click on the 
               Replace Image (
@@ -1088,7 +1095,7 @@ export class HelpPage extends React.Component<Properties> {
               the button “Edit Profile”. On the following page, locate your 
               cover photo and click on the “Change Cover Photo” button and 
               choose the default image.
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h2
@@ -1101,17 +1108,17 @@ export class HelpPage extends React.Component<Properties> {
             How do I find or follow someone on NEA?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               We are currently working on a user directory and other community 
               features. Please look forward to updates in the future.
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
           <h3 style={QUESTION_STYLE} >
             What to do if someone is bothering me?
           </h3>
           <div style={ANSWER_STYLE} >
-            <p style={P_STYLE} >
+            <div style={P_STYLE} >
               If someone is bothering you on NEA or at one of our events, you 
               can report them. Once logged in, head to the user’s profile and 
               hit the More Actions button (<span style={ORANGE_TEXT_STYLE} >
@@ -1119,12 +1126,12 @@ export class HelpPage extends React.Component<Properties> {
               “Report”. In the following popup select the reason for the report 
               and hit “Report”.{'\n\n'}
               We will look into the issue and take appropriate actions.
-            </p>
+            </div>
           </div>
           <div style={DIVIDER_LINE_STYLE} />
         </div>
         <HashLink
-            style={BACK_TO_TOP_BUTTON_STYLE}
+            style={backToTopButtonStyle}
             to='#top'
         >
           <img
@@ -1190,6 +1197,12 @@ const BACK_TO_TOP_BUTTON_STYLE: React.CSSProperties = {
   outline: 'none'
 };
 
+const MOBILE_BACK_TO_TOP_BUTTON_STYLE: React.CSSProperties = {
+  ...BACK_TO_TOP_BUTTON_STYLE,
+  right: '20px',
+  bottom: '20px'
+};
+
 const BACK_TO_TOP_ICON: React.CSSProperties = {
   width: '20px',
   height: '20px'
@@ -1226,7 +1239,7 @@ const P_STYLE: React.CSSProperties = {
 const LINK_SPAN_STYLE: React.CSSProperties = {
   margin: '0px',
   padding: '0px',
-  display: 'inline-flex'
+  display: 'inline'
 };
 
 const HEADING_STYLE: React.CSSProperties = {
@@ -1410,17 +1423,12 @@ const ICON_STYLE: React.CSSProperties = {
   ...NO_SELECTION_STYLE,
   width: '22px',
   height: '22px',
-  verticalAlign: 'baseline',
-  display: 'inline'
+  verticalAlign: 'baseline'
 };
 
 const LINK_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'flex-start',
-  alignItems: 'flex-start',
-  flexWrap: 'wrap',
+  display: 'inline',
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
   fontWeight: 700,
@@ -1435,6 +1443,7 @@ const LINK_STYLE: React.CSSProperties = {
 };
 
 const INVITE_FOODIE_BUTTON_STYLE: React.CSSProperties = {
+  display: 'inline-block',
   fontFamily: 'Source Sans Pro',
   fontWeight: 700,
   fontSize: '14px',
