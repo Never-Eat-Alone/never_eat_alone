@@ -38,7 +38,7 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
           <h1 style={H1_STYLE} >
             Policy Page (E.g. Privacy Policy)
           </h1>
-          <p
+          <div
               style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
               ...PAGE_DESCRIPTION_STYLE}}
           >
@@ -49,16 +49,17 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
             right to privacy. If you have any questions or concerns about 
             this privacy notice, or our practices with regards to your 
             personal information, please contact us at&nbsp;
-            <a
-                style={LINK_STYLE}
-                className={css(styles.link)}
-                href='mailto:info@nevereatalone.net'
-                target='_blank'
-                rel='noopener noreferrer'
-            >
-              info@nevereatalone.net
-            </a>
-            .{'\n\n'}
+            <span style={LINK_SPAN_STYLE} >
+              <a
+                  style={LINK_STYLE}
+                  className={css(styles.link)}
+                  href='mailto:info@nevereatalone.net'
+                  target='_blank'
+                  rel='noopener noreferrer'
+              >
+                info@nevereatalone.net
+              </a>
+            </span>.{'\n\n'}
             When you visit our website&nbsp;
             <Router.Link
                 style={LINK_STYLE}
@@ -85,8 +86,8 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               Please read this privacy notice carefully as it will help you 
               understand what we do with the information that we collect.
             </b>
-          </p>
-          <h2 style={{...HEADING_STYLE, ...CONTENT_LIST_HEADING_STYLE}} >
+          </div>
+          <h2 style={CONTENT_LIST_HEADING_STYLE} >
             table of contents
           </h2>
           <ol style={{...CONTENT_LIST_STYLE, ...OL_STYLE}} >
@@ -221,11 +222,11 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
           <ol style={OL_STYLE} >
             <li
                 id='collected_info'
-                style={{...HEADING_STYLE, ...QUESTION_STYLE}}
+                style={QUESTION_STYLE}
             >
               What information do we collect?
             </li>
-            <p
+            <div
                 style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
                 ...DISCLOSE_OF_INFO_STYLE}}
             >
@@ -260,11 +261,11 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               All personal information that you provide to us must be true, 
               complete and accurate, and you must notify us of any changes to 
               such personal information.
-            </p>
-            <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+            </div>
+            <h2 style={H2_STYLE} >
               Information automatically collected
             </h2>
-            <p
+            <div
                 style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
                 ...INFO_COLLECTED_PARAGRAPH_STYLE}}
             >
@@ -307,11 +308,11 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
                   and hardware settings).
                 </li>
               </ul>
-            </p>
-            <li id='use_info' style={{...HEADING_STYLE, ...QUESTION_STYLE}} >
+            </div>
+            <li id='use_info' style={QUESTION_STYLE} >
               How do we use your information?
             </li>
-            <p
+            <div
                 style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
                 ...USE_OF_INFO_STYLE}}
             >
@@ -353,16 +354,17 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
                   will obtain your consent to use your name and the content 
                   of the testimonial. If you wish to update, or delete your 
                   testimonial, please contact us at&nbsp;
-                  <a
-                      style={LINK_STYLE}
-                      className={css(styles.link)}
-                      href='mailto:info@nevereatalone.net'
-                      target='_blank'
-                      rel='noopener noreferrer'
-                  >
-                    info@nevereatalone.net
-                  </a>
-                  &nbsp;and be sure to include your name, testimonial 
+                  <span style={LINK_SPAN_STYLE} >
+                    <a
+                        style={LINK_STYLE}
+                        className={css(styles.link)}
+                        href='mailto:info@nevereatalone.net'
+                        target='_blank'
+                        rel='noopener noreferrer'
+                    >
+                      info@nevereatalone.net
+                    </a>
+                  </span>&nbsp;and be sure to include your name, testimonial 
                   location, and contact information.
                 </li>
                 <li>
@@ -428,14 +430,14 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
                   location and to measure its effectiveness.
                 </li>
               </ul>
-            </p>
+            </div>
             <li
                 id='shared_info'
-                style={{...HEADING_STYLE, ...QUESTION_STYLE}}
+                style={QUESTION_STYLE}
             >
               Will your information be shared with anyone?
             </li>
-            <p
+            <div
                 style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
                 ...SHARE_INFO_STYLE}}
             >
@@ -483,10 +485,8 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
                   and illegal activities, or as evidence in litigation in 
                   which we are involved.
                 </li>
-                <span style={SPAN_STYLE} >
-                  More specifically, we may need to process your data or share 
-                  your personal information in the following situations:{'\n'}
-                </span>
+                More specifically, we may need to process your data or share 
+                your personal information in the following situations:{'\n'}
                 <li>
                   <b>Business Transfers.&nbsp;</b>We may share or transfer 
                   your information in connection with, or during 
@@ -517,14 +517,11 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
                   profile.
                 </li>
               </ul>
-            </p>
-            <li
-                id='use_cookies'
-                style={{...HEADING_STYLE, ...QUESTION_STYLE}}
-            >
+            </div>
+            <li id='use_cookies' style={QUESTION_STYLE} >
               Do we use cookies and other tracking technologies?
             </li>
-            <p
+            <div
                 style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
                 ...COOKIE_INFO_STYLE}}
             >
@@ -539,14 +536,11 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               beacons and pixels) to access or store information. Specific 
               information about how we use such technologies and how you can 
               refuse certain cookies is set out in our Cookie Notice.
-            </p>
-            <li
-                id='social_logins'
-                style={{...HEADING_STYLE, ...QUESTION_STYLE}}
-            >
+            </div>
+            <li id='social_logins' style={QUESTION_STYLE} >
               How do we handle your social logins?
             </li>
-            <p
+            <div
                 style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
                 ...SOCIAL_LOGIN_INFO_STYLE}}
             >
@@ -576,11 +570,11 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               privacy notice to understand how they collect, use and share 
               your personal information, and how you can set your privacy 
               preferences on their sites and apps.
-            </p>
-            <li id='keep_info' style={{...HEADING_STYLE, ...QUESTION_STYLE}} >
+            </div>
+            <li id='keep_info' style={QUESTION_STYLE} >
               How long do we keep your information?
             </li>
-            <p
+            <div
                 style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
                 ...KEEPING_DATA_STYLE}}
             >
@@ -606,14 +600,11 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               archives), then we will securely store your personal 
               information and isolate it from any further processing until 
               deletion is possible.
-            </p>
-            <li
-                id='keep_info_safe'
-                style={{...HEADING_STYLE, ...QUESTION_STYLE}}
-            >
+            </div>
+            <li id='keep_info_safe' style={QUESTION_STYLE} >
               How do we keep your information safe?
             </li>
-            <p
+            <div
                 style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
                 ...INFO_SAFETY_STYLE}}
             >
@@ -638,14 +629,11 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               personal information, transmission of personal information to 
               and from our Website is at your own risk. You should only 
               access the Website within a secure environment.
-            </p>
-            <li
-                id='minors_info'
-                style={{...HEADING_STYLE, ...QUESTION_STYLE}}
-            >
+            </div>
+            <li id='minors_info' style={QUESTION_STYLE} >
               Do we collect information from minors?
             </li>
-            <p
+            <div
                 style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
                 ...MINORS_INFO_STYLE}}
             >
@@ -666,24 +654,22 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               such data from our records. If you become aware of any data we 
               may have collected from children under age 18, please contact 
               us at&nbsp;
-              <a
-                  style={LINK_STYLE}
-                  className={css(styles.link)}
-                  href='mailto:info@nevereatalone.net'
-                  target='_blank'
-                  rel='noopener noreferrer'
-              >
-                info@nevereatalone.net
-              </a>
-              .
-            </p>
-            <li
-                id='privacy_rights'
-                style={{...HEADING_STYLE, ...QUESTION_STYLE}}
-            >
+              <span style={LINK_SPAN_STYLE} >
+                <a
+                    style={LINK_STYLE}
+                    className={css(styles.link)}
+                    href='mailto:info@nevereatalone.net'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                >
+                  info@nevereatalone.net
+                </a>
+              </span>.
+            </div>
+            <li id='privacy_rights' style={QUESTION_STYLE} >
               What are your privacy rights?
             </li>
-            <p
+            <div
                 style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
                 ...PRIVACY_RIGHTS_STYLE}}
             >
@@ -699,43 +685,46 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               the right to complain to your local data protection 
               supervisory authority. You can find their contact details 
               here:&nbsp;
-              <a
-                  style={LINK_STYLE}
-                  className={css(styles.link)}
-                  href='https://ec.europa.eu/newsroom/article29/items/612080'
-                  target='_blank'
-              >
-                https://ec.europa.eu/newsroom/article29/items/612080
-              </a>
-              .{'\n\n'}
+              <span style={LINK_SPAN_STYLE} >
+                <a
+                    style={LINK_STYLE}
+                    className={css(styles.link)}
+                    href='https://ec.europa.eu/newsroom/article29/items/612080'
+                    target='_blank'
+                >
+                  https://ec.europa.eu/newsroom/article29/items/612080
+                </a>
+              </span>.{'\n\n'}
               If you are a resident in Switzerland, the contact details for 
               the data protection authorities are available here:&nbsp;
-              <a
-                  style={LINK_STYLE}
-                  className={css(styles.link)}
-                  href='https://www.edoeb.admin.ch/edoeb/en/home.html'
-                  target='_blank'
-              >
-                https://www.edoeb.admin.ch/edoeb/en/home.html
-              </a>
-              .{'\n\n'}
+              <span style={LINK_SPAN_STYLE} >
+                <a
+                    style={LINK_STYLE}
+                    className={css(styles.link)}
+                    href='https://www.edoeb.admin.ch/edoeb/en/home.html'
+                    target='_blank'
+                >
+                  https://www.edoeb.admin.ch/edoeb/en/home.html
+                </a>
+              </span>.{'\n\n'}
               If you have questions or comments about your privacy rights, 
               you may email us at&nbsp;
-              <a
-                  style={LINK_STYLE}
-                  className={css(styles.link)}
-                  href='mailto:info@nevereatalone.net'
-                  target='_blank'
-                  rel='noopener noreferrer'
-              >
-                info@nevereatalone.net
-              </a>
-              .
-            </p>
-            <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+              <span style={LINK_SPAN_STYLE} >
+                <a
+                    style={LINK_STYLE}
+                    className={css(styles.link)}
+                    href='mailto:info@nevereatalone.net'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                >
+                  info@nevereatalone.net
+                </a>
+              </span>.
+            </div>
+            <h2 style={H2_STYLE} >
               ACCount information
             </h2>
-            <p
+            <div
                 style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
                 ...ACCOUNT_INFO_STYLE}}
             >
@@ -764,15 +753,16 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               cookies, this could affect certain features or services of our 
               Website. To opt-out of interest-based advertising by 
               advertisers on our Website visit&nbsp;
-              <a
-                  style={LINK_STYLE}
-                  className={css(styles.link)}
-                  href='http://www.aboutads.info/choices'
-                  target='_blank'
-              >
-                http://www.aboutads.info/choices
-              </a>
-              .{'\n\n'}
+              <span style={LINK_SPAN_STYLE} >
+                <a
+                    style={LINK_STYLE}
+                    className={css(styles.link)}
+                    href='http://www.aboutads.info/choices'
+                    target='_blank'
+                >
+                  http://www.aboutads.info/choices
+                </a>
+              </span>.{'\n\n'}
               <b>Opting out of email marketing</b>: You can unsubscribe from 
               our marketing email list at any time by clicking on the 
               unsubscribe link in the emails that we send or by contacting us 
@@ -787,14 +777,11 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
                   Access your account settings and update your preferences.
                 </li>
               </ul>
-            </p>
-            <li
-                id='do_not_track_features'
-                style={{...HEADING_STYLE, ...QUESTION_STYLE}}
-            >
+            </div>
+            <li id='do_not_track_features' style={QUESTION_STYLE} >
               Controls For DO-NOT-TRACK features
             </li>
-            <p
+            <div
                 style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
                 ...TRACK_STYLE}}
             >
@@ -809,14 +796,11 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               to be tracked online. If a standard for online tracking is 
               adopted that we must follow in the future, we will inform you 
               about that practice in a revised version of this privacy notice.
-            </p>
-            <li
-                id='california_privacy_rights'
-                style={{...HEADING_STYLE, ...QUESTION_STYLE}}
-            >
+            </div>
+            <li id='california_privacy_rights' style={QUESTION_STYLE} >
               Do California residents have specific privacy rights?
             </li>
-            <p
+            <div
                 style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
                 ...CALIFORNIA_STYLE}}
             >
@@ -848,14 +832,11 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               publicly displayed on the Website, but please be aware that the 
               data may not be completely or comprehensively removed from all 
               our systems (e.g. backups, etc.).
-            </p>
-            <li
-                id='update_notice'
-                style={{...HEADING_STYLE, ...QUESTION_STYLE}}
-            >
+            </div>
+            <li id='update_notice' style={QUESTION_STYLE} >
               Do we make updates to this notice?
             </li>
-            <p
+            <div
                 style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
                 ...NOTICE_STYLE}}
             >
@@ -874,43 +855,39 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               such changes or by directly sending you a notification. We 
               encourage you to review this privacy notice frequently to be 
               informed of how we are protecting your information.
-            </p>
-            <li
-                id='contact_about_notice'
-                style={{...HEADING_STYLE, ...QUESTION_STYLE}}
-            >
+            </div>
+            <li id='contact_about_notice' style={QUESTION_STYLE} >
               How can you contact us about this notice?
             </li>
-            <p
+            <div
                 style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
                 ...CONTACT_STYLE}}
             >
               If you have questions or comments about this notice, you may 
               email us at&nbsp;
-              <a
-                  style={LINK_STYLE}
-                  className={css(styles.link)}
-                  href='mailto:info@nevereatalone.net'
-                  target='_blank'
-                  rel='noopener noreferrer'
-              >
-                info@nevereatalone.net
-              </a>
+              <span style={LINK_SPAN_STYLE} >
+                <a
+                    style={LINK_STYLE}
+                    className={css(styles.link)}
+                    href='mailto:info@nevereatalone.net'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                >
+                  info@nevereatalone.net
+                </a>
+              </span>
               &nbsp;or by post to:{'\n\n'}
               <b>Never Eat Alone Inc.</b>{'\n'}
               55 Eglinton Ave E{'\n'}
               Suite 710{'\n'}
               Toronto, Ontario M4P 1G8{'\n'}
               Canada
-            </p>
-            <li
-                id='update_collected_data'
-                style={{...HEADING_STYLE, ...QUESTION_STYLE}}
-            >
+            </div>
+            <li id='update_collected_data' style={QUESTION_STYLE} >
               How can you review, update or delete the data we collect from 
               you?
             </li>
-            <p
+            <div
                 style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
                 ...DATA_STYLE}}
             >
@@ -927,7 +904,7 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
                 Help
               </Router.Link>
               .
-            </p>
+            </div>
           </ol>
         </div>
         <HashLink
@@ -1079,6 +1056,7 @@ const PAGE_DESCRIPTION_STYLE: React.CSSProperties = {
 };
 
 const CONTENT_LIST_HEADING_STYLE: React.CSSProperties = {
+  ...HEADING_STYLE,
   height: '34px',
   minWidth: '172px',
   fontSize: '23px',
@@ -1099,6 +1077,7 @@ const CONTENT_LIST_STYLE: React.CSSProperties = {
 };
 
 const QUESTION_STYLE: React.CSSProperties = {
+  ...HEADING_STYLE,
   fontSize: '23px',
   lineHeight: '34px'
 };

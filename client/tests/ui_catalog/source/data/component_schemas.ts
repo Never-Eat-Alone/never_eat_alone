@@ -1672,6 +1672,9 @@ export function loadComponentSchemas(): ComponentSchema[] {
   const termsOfUSePageSchema = new ComponentSchema('TermsOfUsePage', [
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
       DisplayModeInput)], [], NeverEatAlone.TermsOfUsePage);
+  const privacyPolicyPageSchema = new ComponentSchema('PrivacyPolicyPage', [
+    new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
+      DisplayModeInput)], [], NeverEatAlone.PrivacyPolicyPage);
   return [
     accentTextButtonSchema,
     albumCardSchema,
@@ -1718,6 +1721,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     payPalButtonSchema,
     primaryButtonWithArrowSchema,
     primaryTextButtonSchema,
+    privacyPolicyPageSchema,
     privateButtonSchema,
     profileBoxSchema,
     profilePageSchema,
