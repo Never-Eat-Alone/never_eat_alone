@@ -9,6 +9,7 @@ IF NOT EXIST build.bat (
   ECHO @ECHO OFF > build.bat
   ECHO CALL "%~dp0build.bat" %%* >> build.bat
 )
+CALL:configure demo %*
 CALL:configure scratch %*
 CALL:configure ui_catalog %*
 ENDLOCAL

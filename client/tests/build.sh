@@ -28,6 +28,7 @@ export -f build_function
 export directory
 export root
 
+targets+=" demo"
 targets+=" scratch"
 targets+=" ui_catalog"
 
