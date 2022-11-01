@@ -10,26 +10,39 @@ interface Properties {
 
 export class CookiesPolicyPage extends React.Component<Properties> {
   public render(): JSX.Element {
-    const { containerStyle, contentContainerStyle, backToTopButtonStyle
-        } = (() => {
+    const { containerStyle, contentContainerStyle, backToTopButtonStyle,
+        categoryColumnStyle, useCookiesColumnStyle, categoryHeadStyle,
+        useCookiesHeadStyle } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
           containerStyle: DESKTOP_CONTAINER_STYLE,
           contentContainerStyle: DESKTOP_CONTENT_CONTAINER_STYLE,
-          backToTopButtonStyle: BACK_TO_TOP_BUTTON_STYLE
+          backToTopButtonStyle: BACK_TO_TOP_BUTTON_STYLE,
+          categoryColumnStyle: CATEGORY_COLUMN_STYLE,
+          useCookiesColumnStyle: USE_COOKIES_COLUMN_STYLE,
+          categoryHeadStyle: CATEGORY_HEAD_STYLE,
+          useCookiesHeadStyle: USE_COOKIES_HEAD_STYLE
         };
       }
       if (this.props.displayMode === DisplayMode.TABLET) {
         return {
           containerStyle: TABLET_CONTAINER_STYLE,
           contentContainerStyle: TABLET_CONTENT_CONTAINER_STYLE,
-          backToTopButtonStyle: BACK_TO_TOP_BUTTON_STYLE
+          backToTopButtonStyle: BACK_TO_TOP_BUTTON_STYLE,
+          categoryColumnStyle: CATEGORY_COLUMN_STYLE,
+          useCookiesColumnStyle: USE_COOKIES_COLUMN_STYLE,
+          categoryHeadStyle: CATEGORY_HEAD_STYLE,
+          useCookiesHeadStyle: USE_COOKIES_HEAD_STYLE
         };
       }
       return {
         containerStyle: MOBILE_CONTAINER_STYLE,
         contentContainerStyle: MOBILE_CONTENT_CONTAINER_STYLE,
-        backToTopButtonStyle: MOBILE_BACK_TO_TOP_BUTTON_STYLE
+        backToTopButtonStyle: MOBILE_BACK_TO_TOP_BUTTON_STYLE,
+        categoryColumnStyle: MOBILE_CATEGORY_COLUMN_STYLE,
+        useCookiesColumnStyle: MOBILE_USE_COOKIES_COLUMN_STYLE,
+        categoryHeadStyle: MOBILE_CATEGORY_HEAD_STYLE,
+        useCookiesHeadStyle: MOBILE_USE_COOKIES_HEAD_STYLE
       };
     })();
     return (
@@ -104,20 +117,20 @@ export class CookiesPolicyPage extends React.Component<Properties> {
           </h2>
           <div style={ANSWER_STYLE} >
             The table below explains the type of cookies we use on our websites 
-            and why we use them.{'\n\n\n'}
+            and why we use them.
             <table style={TABLE_STYLE} >
               <thead style={TABLE_HEADER_STYLE} >
                 <tr>
-                    <th style={CATEGORY_HEAD_STYLE} >Category of cookies</th>
-                    <th style={USE_COOKIES_HEAD_STYLE} >
+                    <th style={categoryHeadStyle} >Category of cookies</th>
+                    <th style={useCookiesHeadStyle} >
                       Why we use these cookies
                     </th>
                 </tr>
               </thead>
               <tbody>
                 <tr style={TABLE_ROW_STYLE} >
-                  <td style={CATEGORY_COLUMN_STYLE} >Required</td>
-                  <td style={USE_COOKIES_COLUMN_STYLE} >
+                  <td style={categoryColumnStyle} >Required</td>
+                  <td style={useCookiesColumnStyle} >
                     These cookies are essential for our websites and services 
                     to perform basic functions and are necessary for us to 
                     operate certain features. These include those required to 
@@ -128,10 +141,10 @@ export class CookiesPolicyPage extends React.Component<Properties> {
                   </td>
                 </tr>
                 <tr style={TABLE_ROW_STYLE} >
-                  <td style={CATEGORY_COLUMN_STYLE} >
+                  <td style={categoryColumnStyle} >
                     Analytics and Performance
                   </td>
-                  <td style={USE_COOKIES_COLUMN_STYLE} >
+                  <td style={useCookiesColumnStyle} >
                     These cookies allow us to optimize performance by 
                     collecting information on how users interact with our 
                     websites, including which pages are visited most, as well 
@@ -152,8 +165,55 @@ export class CookiesPolicyPage extends React.Component<Properties> {
             for our Site Stats feature. This tallies the unique numbers of 
             visitors to a site, as well as the number from specific geographic 
             locations. A visitor is counted when we see a user or browser for 
-            the first time in a given period.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
+            the first time in a given period.{'\n\n'}
+          </div>
+          <h2 style={H2_STYLE} >
+            EXAMPLES
+          </h2>
+          <div style={ANSWER_STYLE} >
+            Below are examples of the cookies, with explanations of their 
+            purpose. Some of these cookies are set across our whole platform, 
+            whereas some are specific to individual services. Please note that 
+            this is not an exhaustive list, but rather aims to be 
+            representative.
+            <h3 style={H3_STYLE} >Required</h3>
+            <table style={TABLE_STYLE} >
+              <thead style={TABLE_HEADER_STYLE} >
+                <tr>
+                    <th style={categoryHeadStyle} >Cookie</th>
+                    <th style={useCookiesHeadStyle} >
+                      Purpose
+                    </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style={TABLE_ROW_STYLE} >
+                  <td style={categoryColumnStyle} >cookie_name</td>
+                  <td style={useCookiesColumnStyle} >
+                    List all the cookies used
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <h3 style={H3_STYLE} >Analytics and Performance</h3>
+            <table style={TABLE_STYLE} >
+              <thead style={TABLE_HEADER_STYLE} >
+                <tr>
+                    <th style={categoryHeadStyle} >Cookie</th>
+                    <th style={useCookiesHeadStyle} >
+                      Purpose
+                    </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style={TABLE_ROW_STYLE} >
+                  <td style={categoryColumnStyle} >cookie_name</td>
+                  <td style={useCookiesColumnStyle} >
+                    List all the cookies used
+                  </td>
+                </tr>
+              </tbody>
+            </table>{'\n\n'}
           </div>
           <h2 style={H2_STYLE} >
             Controlling Cookies
@@ -273,14 +333,6 @@ export class CookiesPolicyPage extends React.Component<Properties> {
         </HashLink>
       </div>);
   }
-
-  public componentDidMount(): void {
-    const header = document.getElementById('shell-header');
-    header.style.backgroundColor = '#F26B55';
-    header.style.position = 'relative';
-    const footer = document.getElementById('shell-footer');
-    footer.style.backgroundColor = '#EFEFEF';
-  }
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {
@@ -324,39 +376,65 @@ const TABLE_STYLE: React.CSSProperties = {
   lineHeight: '20px',
   color: '#000000',
   verticalAlign: 'center',
-  textAlign: 'left'
+  textAlign: 'left',
+  marginTop: '30px'
 };
 
 const TABLE_HEADER_STYLE: React.CSSProperties = {
   backgroundColor: '#F6F6F6',
-  height: '48px'
+  minHeight: '48px'
 };
 
 const CATEGORY_HEAD_STYLE: React.CSSProperties = {
-  padding: '0px 0px 0px 40px',
+  padding: '15px 15px 15px 40px',
   fontWeight: 300,
   fontStyle: 'normal',
-  width: '211px'
+  width: '156px'
+};
+
+const MOBILE_CATEGORY_HEAD_STYLE: React.CSSProperties = {
+  padding: '15px 15px 15px 10px',
+  fontWeight: 300,
+  fontStyle: 'normal',
+  width: '90px'
 };
 
 const USE_COOKIES_HEAD_STYLE: React.CSSProperties = {
-  padding: '0px 0px 0px 19px',
+  padding: '15px 15px 15px 19px',
   fontWeight: 300,
-  fontStyle: 'normal'
+  fontStyle: 'normal',
+  width: '100%'
+};
+
+const MOBILE_USE_COOKIES_HEAD_STYLE: React.CSSProperties = {
+  padding: '15px 15px 15px 15px',
+  fontWeight: 300,
+  fontStyle: 'normal',
+  width: '100%'
 };
 
 const TABLE_ROW_STYLE: React.CSSProperties = {
-  height: '84px',
+  minHeight: '48px',
   border: '1px solid #F6F6F6'
 };
 
 const CATEGORY_COLUMN_STYLE: React.CSSProperties = {
-  padding: '0px 0px 0px 40px',
+  padding: '15px 15px 15px 40px',
+  border: '1px solid #F6F6F6'
+};
+
+const MOBILE_CATEGORY_COLUMN_STYLE: React.CSSProperties = {
+  padding: '15px 15px 15px 10px',
   border: '1px solid #F6F6F6'
 };
 
 const USE_COOKIES_COLUMN_STYLE: React.CSSProperties = {
-  padding: '0px 0px 0px 19px',
+  padding: '15px 15px 15px 19px',
+  border: '1px solid #F6F6F6'
+};
+
+const MOBILE_USE_COOKIES_COLUMN_STYLE: React.CSSProperties = {
+  padding: '15px 15px 15px 15px',
   border: '1px solid #F6F6F6'
 };
 
@@ -412,10 +490,6 @@ const MOBILE_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
   width: '100%'
 };
 
-const NEW_LINE_STYLE: React.CSSProperties = {
-  whiteSpace: 'pre'
-};
-
 const HEADING_STYLE: React.CSSProperties = {
   fontFamily: 'Oswald',
   fontStyle: 'normal',
@@ -436,6 +510,14 @@ const H2_STYLE: React.CSSProperties = {
   ...HEADING_STYLE,
   fontSize: '23px',
   lineHeight: '34px'
+};
+
+const H3_STYLE: React.CSSProperties = {
+  ...HEADING_STYLE,
+  fontSize: '20px',
+  lineHeight: '30px',
+  color: '#CCCCCC',
+  margin: '30px 0px'
 };
 
 const ANSWER_STYLE: React.CSSProperties = {
@@ -478,6 +560,16 @@ const LINK_STYLE: React.CSSProperties = {
 const styles = StyleSheet.create({
   link: {
     ':hover': {
+      textDecoration: 'underline',
+	    textDecorationColor: '#F26B55',
+	    '-webkit-text-decoration-color': '#F26B55'
+    },
+    ':focus': {
+      textDecoration: 'underline',
+	    textDecorationColor: '#F26B55',
+	    '-webkit-text-decoration-color': '#F26B55'
+    },
+    ':focus-within': {
       textDecoration: 'underline',
 	    textDecorationColor: '#F26B55',
 	    '-webkit-text-decoration-color': '#F26B55'

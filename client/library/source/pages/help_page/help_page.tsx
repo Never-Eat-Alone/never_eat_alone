@@ -1489,6 +1489,16 @@ const styles = StyleSheet.create({
 	    textDecorationColor: '#F26B55',
 	    '-webkit-text-decoration-color': '#F26B55'
     },
+    ':focus': {
+      textDecoration: 'underline',
+	    textDecorationColor: '#F26B55',
+	    '-webkit-text-decoration-color': '#F26B55'
+    },
+    ':focus-within': {
+      textDecoration: 'underline',
+	    textDecorationColor: '#F26B55',
+	    '-webkit-text-decoration-color': '#F26B55'
+    },
     ':active': {
       textDecoration: 'underline',
 	    textDecorationColor: '#F26B55',
