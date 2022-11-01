@@ -1,5 +1,6 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
+import * as Router from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
 import { DisplayMode } from '../../definitions';
 
@@ -9,15 +10,36 @@ interface Properties {
 
 export class TermsOfUsePage extends React.Component<Properties> {
   public render(): JSX.Element {
+    const { containerStyle, contentContainerStyle, backToTopButtonStyle } = (
+        () => {
+      if (this.props.displayMode === DisplayMode.DESKTOP) {
+        return {
+          containerStyle: DESKTOP_CONTAINER_STYLE,
+          contentContainerStyle: DESKTOP_CONTENT_CONTAINER_STYLE,
+          backToTopButtonStyle: BACK_TO_TOP_BUTTON_STYLE
+        };
+      }
+      if (this.props.displayMode === DisplayMode.TABLET) {
+        return {
+          containerStyle: TABLET_CONTAINER_STYLE,
+          contentContainerStyle: TABLET_CONTENT_CONTAINER_STYLE,
+          backToTopButtonStyle: BACK_TO_TOP_BUTTON_STYLE
+        };
+      }
+      return {
+        containerStyle: MOBILE_CONTAINER_STYLE,
+        contentContainerStyle: MOBILE_CONTENT_CONTAINER_STYLE,
+        backToTopButtonStyle: MOBILE_BACK_TO_TOP_BUTTON_STYLE
+      };
+    })();
     return (
-      <div id='top' style={CONTAINER_STYLE} >
-        <div style={CONTENT_CONTAINER_STYLE} >
-          <h1 style={{...HEADING_STYLE, ...H1_STYLE}} >Terms of Use</h1>
+      <div id='top' style={containerStyle} >
+        <div style={contentContainerStyle} >
+          <h1 style={H1_STYLE} >Terms of Use</h1>
           <div style={ANSWER_STYLE} >
-            Last updated Oct 5th, 2021
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
+            Last updated Oct 5th, 2022
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             Agreement to Terms
           </h2>
           <div style={ANSWER_STYLE} >
@@ -59,9 +81,8 @@ export class TermsOfUsePage extends React.Component<Properties> {
             The Site is intended for users who are at least 18 years old. 
             Persons under the age of 18 are not permitted to use or register 
             for the Site.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             Intelectual Property Rights
           </h2>
           <div style={ANSWER_STYLE} >
@@ -87,9 +108,8 @@ export class TermsOfUsePage extends React.Component<Properties> {
             gained access solely for your personal, non-commercial use. We 
             reserve all rights not expressly granted to you in and to the Site, 
             the Content and the Marks.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             User Representations
           </h2>
           <div style={ANSWER_STYLE} >
@@ -108,9 +128,8 @@ export class TermsOfUsePage extends React.Component<Properties> {
             current, or incomplete, we have the right to suspend or terminate 
             your account and refuse any and all current or future use of the 
             Site (or any portion thereof).
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             User Registration
           </h2>
           <div style={ANSWER_STYLE} >
@@ -120,22 +139,20 @@ export class TermsOfUsePage extends React.Component<Properties> {
             or change a username you select if we determine, in our sole 
             discretion, that such username is inappropriate, obscene, or 
             otherwise objectionable.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
-            Prohibited Activities
+          <h2 style={H2_STYLE} >
+            Prohibited activities
           </h2>
           <div style={ANSWER_STYLE} >
             You may not access or use the Site for any purpose other than that 
             for which we make the Site available. The Site may not be used in 
             connection with any commercial endeavors except those that are 
             specifically endorsed or approved by us.{'\n\n'}
-
             As a user of the Site, you agree not to:{'\n\n'}
             <ol style={OL_STYLE} >
               <li>
-                Systematically retrieve data or other content from the Site to 
-                create or compile, directly or indirectly, a collection, 
+                Systematically retrieve data or other content from the Site 
+                to create or compile, directly or indirectly, a collection, 
                 compilation, database, or directory without written permission 
                 from us.
               </li>
@@ -144,7 +161,8 @@ export class TermsOfUsePage extends React.Component<Properties> {
                 any attempt to learn sensitive account information such as user 
                 passwords.
               </li>
-              <li>Circumvent, disable, or otherwise interfere with 
+              <li>
+                Circumvent, disable, or otherwise interfere with 
                 security-related features of the Site, including features that 
                 prevent or restrict the use or copying of any Content or 
                 enforce limitations on the use of the Site and/or the Content 
@@ -169,9 +187,7 @@ export class TermsOfUsePage extends React.Component<Properties> {
               <li>
                 Use the Site to advertise or offer to sell goods and services.
               </li>
-              <li>
-                Engage in unauthorized framing of or linking to the Site.
-              </li>
+              <li>Engage in unauthorized framing of or linking to the Site.</li>
               <li>
                 Upload or transmit (or attempt to upload or to transmit) 
                 viruses, Trojan horses, or other material, including excessive 
@@ -194,9 +210,7 @@ export class TermsOfUsePage extends React.Component<Properties> {
                 Attempt to impersonate another user or person or use the 
                 username of another user.
               </li>
-              <li>
-                Sell or otherwise transfer your profile.
-              </li>
+              <li>Sell or otherwise transfer your profile.</li>
               <li>
                 Upload or transmit (or attempt to upload or to transmit) any 
                 material that acts as a passive or active information 
@@ -236,10 +250,6 @@ export class TermsOfUsePage extends React.Component<Properties> {
                 other software.
               </li>
               <li>
-                Use a buying agent or purchasing agent to make purchases on the 
-                Site.
-              </li>
-              <li>
                 Make any unauthorized use of the Site, including collecting 
                 usernames and/or email addresses of users by electronic or 
                 other means for the purpose of sending unsolicited email, or 
@@ -256,176 +266,8 @@ export class TermsOfUsePage extends React.Component<Properties> {
                 business.
               </li>
             </ol>
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
-            User Generated Contributions
-          </h2>
-          <div style={ANSWER_STYLE} >
-            The Site may invite you to chat, contribute to, or participate in 
-            blogs, message boards, online forums, and other functionality, and 
-            may provide you with the opportunity to create, submit, post, 
-            display, transmit, perform, publish, distribute, or broadcast 
-            content and materials to us or on the Site, including but not 
-            limited to text, writings, video, audio, photographs, graphics, 
-            comments, suggestions, or personal information or other material 
-            (collectively, "Contributions"). Contributions may be viewable by 
-            other users of the Site and through third-party websites. As such, 
-            any Contributions you transmit may be treated as non-confidential 
-            and non-proprietary. When you create or make available any 
-            Contributions, you thereby represent and warrant that:{'\n\n'}
-            <ol>
-              <li>
-                The creation, distribution, transmission, public display, or 
-                performance, and the accessing, downloading, or copying of your 
-                Contributions do not and will not infringe the proprietary 
-                rights, including but not limited to the copyright, patent, 
-                trademark, trade secret, or moral rights of any third party.
-              </li>
-              <li>
-                You are the creator and owner of or have the necessary 
-                licenses, rights, consents, releases, and permissions to use 
-                and to authorize us, the Site, and other users of the Site to 
-                use your Contributions in any manner contemplated by the Site 
-                and these Terms of Use.
-              </li>
-              <li>
-                You have the written consent, release, and/or permission of 
-                each and every identifiable individual person in your 
-                Contributions to use the name or likeness of each and every 
-                such identifiable individual person to enable inclusion and use 
-                of your Contributions in any manner contemplated by the Site 
-                and these Terms of Use.
-              </li>
-              <li>
-                Your Contributions are not false, inaccurate, or misleading.
-              </li>
-              <li>
-                Your Contributions are not unsolicited or unauthorized 
-                advertising, promotional materials, pyramid schemes, chain 
-                letters, spam, mass mailings, or other forms of solicitation.
-              </li>
-              <li>
-                Your Contributions are not obscene, lewd, lascivious, filthy, 
-                violent, harassing, libelous, slanderous, or otherwise 
-                objectionable (as determined by us).
-              </li>
-              <li>
-                Your Contributions do not ridicule, mock, disparage, 
-                intimidate, or abuse anyone.
-              </li>
-              <li>
-                Your Contributions are not used to harass or threaten (in the 
-                legal sense of those terms) any other person and to promote 
-                violence against a specific person or class of people.
-              </li>
-              <li>
-                Your Contributions do not violate any applicable law, 
-                regulation, or rule.
-              </li>
-              <li>
-                Your Contributions do not violate the privacy or publicity 
-                rights of any third party.
-              </li>
-              <li>
-                Your Contributions do not violate any applicable law concerning 
-                child pornography, or otherwise intended to protect the health 
-                or well-being of minors.
-              </li>
-              <li>
-                Your Contributions do not include any offensive comments that 
-                are connected to race, national origin, gender, sexual 
-                preference, or physical handicap.
-              </li>
-              <li>
-                Your Contributions do not otherwise violate, or link to 
-                material that violates, any provision of these Terms of Use, or 
-                any applicable law or regulation.
-              </li>
-            </ol>
-            {'\n'}
-            Any use of the Site in violation of the foregoing violates these 
-            Terms of Use and may result in, among other things, termination 
-            or suspension of your rights to use the Site.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
-          </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
-            Contribution License
-          </h2>
-          <div style={ANSWER_STYLE} >
-            By posting your Contributions to any part of the Site or making 
-            Contributions accessible to the Site by linking your account from 
-            the Site to any of your social networking accounts, you 
-            automatically grant, and you represent and warrant that you have 
-            the right to grant, to us an unrestricted, unlimited, irrevocable, 
-            perpetual, non-exclusive, transferable, royalty-free, fully-paid, 
-            worldwide right, and license to host, use, copy, reproduce, 
-            disclose, sell, resell, publish, broadcast, retitle, archive, 
-            store, cache, publicly perform, publicly display, reformat, 
-            translate, transmit, excerpt (in whole or in part), and distribute 
-            such Contributions (including, without limitation, your image and 
-            voice) for any purpose, commercial, advertising, or otherwise, and 
-            to prepare derivative works of, or incorporate into other works, 
-            such Contributions, and grant and authorize sublicenses of the 
-            foregoing. The use and distribution may occur in any media formats 
-            and through any media channels.{'\n\n'}
-            This license will apply to any form, media, or technology now known 
-            or hereafter developed, and includes our use of your name, company 
-            name, and franchise name, as applicable, and any of the trademarks, 
-            service marks, trade names, logos, and personal and commercial 
-            images you provide. You waive all moral rights in your 
-            Contributions, and you warrant that moral rights have not otherwise 
-            been asserted in your Contributions.{'\n\n'}
-            We do not assert any ownership over your Contributions. You retain 
-            full ownership of all of your Contributions and any intellectual 
-            property rights or other proprietary rights associated with your 
-            Contributions. We are not liable for any statements or 
-            representations in your Contributions provided by you in any area 
-            on the Site. You are solely responsible for your Contributions to 
-            the Site and you expressly agree to exonerate us from any and all 
-            responsibility and to refrain from any legal action against us 
-            regarding your Contributions.{'\n\n'}
-            We have the right, in our sole and absolute discretion, (1) to 
-            edit, redact, or otherwise change any Contributions; (2) to 
-            re-categorize any Contributions to place them in more appropriate 
-            locations on the Site; and (3) to pre-screen or delete any 
-            Contributions at any time and for any reason, without notice. We 
-            have no obligation to monitor your Contributions.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
-          </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
-            Guidelines For Reviews
-          </h2>
-          <div style={ANSWER_STYLE} >
-            We may provide you areas on the Site to leave reviews or ratings. 
-            When posting a review, you must comply with the following criteria: 
-            (1) you should have firsthand experience with the person/entity 
-            being reviewed; (2) your reviews should not contain offensive 
-            profanity, or abusive, racist, offensive, or hate language; (3) 
-            your reviews should not contain discriminatory references based on 
-            religion, race, gender, national origin, age, marital status, 
-            sexual orientation, or disability; (4) your reviews should not 
-            contain references to illegal activity; (5) you should not be 
-            affiliated with competitors if posting negative reviews; (6) you 
-            should not make any conclusions as to the legality of conduct; (7) 
-            you may not post any false or misleading statements; and (8) you 
-            may not organize a campaign encouraging others to post reviews, 
-            whether positive or negative.{'\n\n'}
-            We may accept, reject, or remove reviews in our sole discretion. We 
-            have absolutely no obligation to screen reviews or to delete 
-            reviews, even if anyone considers reviews objectionable or 
-            inaccurate. Reviews are not endorsed by us, and do not necessarily 
-            represent our opinions or the views of any of our affiliates or 
-            partners. We do not assume liability for any review or for any 
-            claims, liabilities, or losses resulting from any review. By 
-            posting a review, you hereby grant to us a perpetual, 
-            non-exclusive, worldwide, royalty-free, fully-paid, assignable, and 
-            sublicensable right and license to reproduce, modify, translate, 
-            transmit by any means, display, perform, and/or distribute all 
-            content relating to reviews.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
-          </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             Social Media
           </h2>
           <div style={ANSWER_STYLE} >
@@ -477,9 +319,62 @@ export class TermsOfUsePage extends React.Component<Properties> {
             attempt to delete any information stored on our servers that was 
             obtained through such Third-Party Account, except the username and 
             profile picture that become associated with your account.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
+            fees and refunds
+          </h2>
+          <div style={ANSWER_STYLE} >
+            Access to the Site is free, but in some cases we charge fees for 
+            certain events on the Site. These fees may vary based on individual 
+            arrangements between the Company and certain restaurants, or based 
+            on our choice of menu and seating options. The fees charged to you 
+            upon joining such an event may include without limitation: event 
+            fees, cancellation fees, taxes and processing fees. The Company 
+            does not control (and thus cannot disclose) fees levied by your 
+            bank and/or credit card company, including fees for registrations 
+            in foreign currencies or from foreign persons. Be sure to check 
+            with your bank or credit card company prior to engaging in a 
+            transaction to understand all applicable fees, credit card 
+            surcharges and currency conversion rates.{'\n\n'}
+            Never Eat Alone Inc. puts a hold for the amount of a restaurant’s 
+            cancellation fee in advance of events in cases where the restaurant 
+            in question requires such a fee for canceled reservations. This fee 
+            is typically not charged if an event ends and the restaurant 
+            confirms that you have attended the event. To assist us in 
+            maintaining a consistently high level of service for you and for 
+            the restaurants, users must remove any seats that they will be 
+            unable to attend at least 48 hours in advance of the event start 
+            time. In the cases where you cancel your seat less than 48 hours in 
+            advance of the event start time, or if you are unable to attend 
+            such an event and you fail to cancel at least 48 hours in advance 
+            of the event start time, we will send you an email letting you know 
+            that our records indicate that you were a no-show. Never Eat Alone 
+            Inc. reserves the right to charge your payment method for the 
+            amount of the cancellation fee in such cases subject to the 
+            restaurant’s cancellation and no-show policies.{'\n\n'}
+            Some event fees charged for joining certain events are 
+            non-refundable fees meant, on average, to defray certain costs 
+            incurred by the Company. By paying this fee and joining such an 
+            event, you acknowledge that the event fee may not be refunded if 
+            you decide to remove your seat with less than 24 hours’ notice. 
+            Certain other event fees may cover the cost of a set menu at an 
+            event. The Company may process cancellations and refunds for these 
+            events on a case-by-case scenario, subject to the restaurant’s 
+            cancellation and no-show policies. If you need additional 
+            information or assistance with an event fee or charge, please&nbsp;
+            <span style={LINK_SPAN_STYLE} >
+              <a
+                  style={LINK_STYLE}
+                  className={css(styles.link)}
+                  href='mailto:support@nevereatalone.net'
+                  target='_blank'
+                  rel='noopener noreferrer'
+              >
+                click here
+              </a>
+            </span>&nbsp;to send us an email.
+          </div>
+          <h2 style={H2_STYLE} >
             Submissions
           </h2>
           <div style={ANSWER_STYLE} >
@@ -496,9 +391,8 @@ export class TermsOfUsePage extends React.Component<Properties> {
             Submissions. You agree there shall be no recourse against us for 
             any alleged or actual infringement or misappropriation of any 
             proprietary right in your Submissions.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             Third-Party Website And Content
           </h2>
           <div style={ANSWER_STYLE} >
@@ -535,10 +429,9 @@ export class TermsOfUsePage extends React.Component<Properties> {
             by you or harm caused to you relating to or resulting in any way 
             from any Third-Party Content or any contact with Third-Party 
             Websites.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
-          Site Management
+          <h2 style={H2_STYLE} >
+            Site Management
           </h2>
           <div style={ANSWER_STYLE} >
             We reserve the right, but not the obligation, to: (1) monitor the 
@@ -555,14 +448,22 @@ export class TermsOfUsePage extends React.Component<Properties> {
             burdensome to our systems; and (5) otherwise manage the Site in a 
             manner designed to protect our rights and property and to 
             facilitate the proper functioning of the Site.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             Privacy Policy
           </h2>
           <div style={ANSWER_STYLE} >
             We care about data privacy and security. Please review our Privacy 
-            Policy: https://www.nevereatalone.net/privacy-policy. By using the 
+            Policy:&nbsp;
+            <span style={LINK_SPAN_STYLE} >
+              <Router.Link
+                  to='/privacy-policy'
+                  style={LINK_STYLE}
+                  className={css(styles.link)}
+              >
+                https://www.nevereatalone.net/privacy-policy
+              </Router.Link>
+            </span>. By using the 
             Site, you agree to be bound by our Privacy Policy, which is 
             incorporated into these Terms of Use. Please be advised the Site is 
             hosted in Canada. If you access the Site from any other region of 
@@ -571,9 +472,8 @@ export class TermsOfUsePage extends React.Component<Properties> {
             Canada, then through your continued use of the Site, you are 
             transferring your data to Canada, and you agree to have your data 
             transferred to and processed in Canada.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             Copyright Infringements
           </h2>
           <div style={ANSWER_STYLE} >
@@ -588,9 +488,8 @@ export class TermsOfUsePage extends React.Component<Properties> {
             misrepresentations in a Notification. Thus, if you are not sure 
             that material located on or linked to by the Site infringes your 
             copyright, you should consider first contacting an attorney.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             Term And Termination
           </h2>
           <div style={ANSWER_STYLE} >
@@ -612,9 +511,8 @@ export class TermsOfUsePage extends React.Component<Properties> {
             terminating or suspending your account, we reserve the right to 
             take appropriate legal action, including without limitation 
             pursuing civil, criminal, and injunctive redress.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             Modifications And Interruptions
           </h2>
           <div style={ANSWER_STYLE} >
@@ -637,9 +535,8 @@ export class TermsOfUsePage extends React.Component<Properties> {
             construed to obligate us to maintain and support the Site or to 
             supply any corrections, updates, or releases in connection 
             therewith.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             Governing Law
           </h2>
           <div style={ANSWER_STYLE} >
@@ -647,9 +544,8 @@ export class TermsOfUsePage extends React.Component<Properties> {
             Canada. Never Eat Alone Inc. and yourself irrevocably consent that 
             the courts of Canada shall have exclusive jurisdiction to resolve 
             any dispute which may arise in connection with these terms.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             Dispute Resolution
           </h2>
           <div style={ANSWER_STYLE} >
@@ -660,9 +556,8 @@ export class TermsOfUsePage extends React.Component<Properties> {
             courts of the country where you reside or, if these Terms are 
             entered into in the course of your trade or profession, the state 
             of your principal place of business.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             Corrections
           </h2>
           <div style={ANSWER_STYLE} >
@@ -672,9 +567,8 @@ export class TermsOfUsePage extends React.Component<Properties> {
             the right to correct any errors, inaccuracies, or omissions and to 
             change or update the information on the Site at any time, without 
             prior notice.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             Disclaimer
           </h2>
           <div style={ANSWER_STYLE} >
@@ -708,9 +602,8 @@ export class TermsOfUsePage extends React.Component<Properties> {
             products or services. As with the purchase of a product or service 
             through any medium or in any environment, you should use your best 
             judgment and exercise caution where appropriate.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             limitations Of Liability
           </h2>
           <div style={ANSWER_STYLE} >
@@ -720,9 +613,8 @@ export class TermsOfUsePage extends React.Component<Properties> {
             including lost profit, lost revenue, loss of data, or other damages 
             arising from your use of the site, even if we have been advised of 
             the possibility of such damages.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             Indemnification
           </h2>
           <div style={ANSWER_STYLE} >
@@ -743,9 +635,8 @@ export class TermsOfUsePage extends React.Component<Properties> {
             expense, with our defense of such claims. We will use reasonable 
             efforts to notify you of any such claim, action, or proceeding 
             which is subject to this indemnification upon becoming aware of it.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             User Data
           </h2>
           <div style={ANSWER_STYLE} >
@@ -758,9 +649,8 @@ export class TermsOfUsePage extends React.Component<Properties> {
             liability to you for any loss or corruption of any such data, and 
             you hereby waive any right of action against us arising from any 
             such loss or corruption of such data.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             Electronic Communications, Transactions, And Signatures
           </h2>
           <div style={ANSWER_STYLE} >
@@ -778,9 +668,8 @@ export class TermsOfUsePage extends React.Component<Properties> {
             jurisdiction which require an original signature or delivery or 
             retention of non-electronic records, or to payments or the granting 
             of credits by any means other than electronic means.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             Miscellaneous
           </h2>
           <div style={ANSWER_STYLE} >
@@ -805,9 +694,8 @@ export class TermsOfUsePage extends React.Component<Properties> {
             and all defenses you may have based on the electronic form of these 
             Terms of Use and the lack of signing by the parties hereto to 
             execute these Terms of Use.
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
-          <h2 style={{...HEADING_STYLE, ...H2_STYLE}} >
+          <h2 style={H2_STYLE} >
             Contact Us
           </h2>
           <div style={ANSWER_STYLE} >
@@ -821,38 +709,26 @@ export class TermsOfUsePage extends React.Component<Properties> {
             Canada{'\n'}
             <a
                 style={LINK_STYLE}
-                className={css(styles.linkStates)}
+                className={css(styles.link)}
                 href='mailto:info@nevereatalone.net'
                 target='_blank'
                 rel='noopener noreferrer'
-                draggable={false}
             >
               info@nevereatalone.net
             </a>
-            <div style={NEW_LINE_STYLE} >{'\n'}</div>
           </div>
         </div>
         <HashLink
-            style={BACK_TO_TOP_BUTTON_STYLE}
+            style={backToTopButtonStyle}
             to='#top'
-            draggable='false'
         >
           <img
-            style={{...NO_SELECTION_STYLE, ...BACK_TO_TOP_ICON}}
+            style={BACK_TO_TOP_ICON}
             src='resources/help_page/icons/back_to_top.svg'
             alt='Back To Top'
-            draggable={false}
           />
         </HashLink>
       </div>);
-  }
-
-  public componentDidMount(): void {
-    const header = document.getElementById('shell-header');
-    header.style.backgroundColor = '#F26B55';
-    header.style.position = 'relative';
-    const footer = document.getElementById('shell-footer');
-    footer.style.backgroundColor = '#EFEFEF';
   }
 }
 
@@ -866,6 +742,21 @@ const CONTAINER_STYLE: React.CSSProperties = {
   width: '100%',
   backgroundColor: '#FFFFFF',
   padding: '50px 10px 80px 60px'
+};
+
+const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTAINER_STYLE,
+  padding: '50px 20px'
+};
+
+const TABLET_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTAINER_STYLE,
+  padding: '50px 20px'
+};
+
+const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTAINER_STYLE,
+  padding: '50px 20px 30px 20px'
 };
 
 const BACK_TO_TOP_BUTTON_STYLE: React.CSSProperties = {
@@ -887,6 +778,12 @@ const BACK_TO_TOP_BUTTON_STYLE: React.CSSProperties = {
   outline: 'none'
 };
 
+const MOBILE_BACK_TO_TOP_BUTTON_STYLE: React.CSSProperties = {
+  ...BACK_TO_TOP_BUTTON_STYLE,
+  right: '20px',
+  bottom: '20px'
+};
+
 const BACK_TO_TOP_ICON: React.CSSProperties = {
   width: '20px',
   height: '20px'
@@ -901,14 +798,25 @@ const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
   whiteSpace: 'pre-wrap'
 };
 
-const NEW_LINE_STYLE: React.CSSProperties = {
-  whiteSpace: 'pre'
+const DESKTOP_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTENT_CONTAINER_STYLE,
+  width: '1060px'
+};
+
+const TABLET_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTENT_CONTAINER_STYLE,
+  width: '702px'
+};
+
+const MOBILE_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTENT_CONTAINER_STYLE,
+  width: '100%'
 };
 
 const HEADING_STYLE: React.CSSProperties = {
   fontFamily: 'Oswald',
   fontStyle: 'normal',
-  fontWeight: 'normal',
+  fontWeight: 400,
   textTransform: 'uppercase',
   color: '#969696',
   padding: '0px',
@@ -916,40 +824,35 @@ const HEADING_STYLE: React.CSSProperties = {
 };
 
 const H1_STYLE: React.CSSProperties = {
+  ...HEADING_STYLE,
   fontSize: '26px',
   lineHeight: '39px'
 };
 
 const H2_STYLE: React.CSSProperties = {
+  ...HEADING_STYLE,
   fontSize: '23px',
   lineHeight: '34px'
 };
 
 const ANSWER_STYLE: React.CSSProperties = {
+  display: 'inline-block',
   width: '100%',
   margin: '0px 0px 30px 0px',
   padding: '0px',
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
-  fontWeight: 'normal',
+  fontWeight: 300,
   fontSize: '14px',
-  lineHeight: '20px',
+  lineHeight: '18px',
   color: '#000000',
   overflowWrap: 'break-word'
 };
 
 const OL_STYLE: React.CSSProperties = {
   margin: '0px',
-  paddingLeft: '25px',
-  listStylePosition: 'outside'
-};
-
-const NO_SELECTION_STYLE: React.CSSProperties = {
-  WebkitTouchCallout: 'none',
-  MozUserSelect: 'none',
-  WebkitUserSelect: 'none',
-  KhtmlUserSelect: 'none',
-  userSelect: 'none'
+  listStylePosition: 'outside',
+  paddingLeft: '20px'
 };
 
 const LINK_STYLE: React.CSSProperties = {
@@ -960,9 +863,25 @@ const LINK_STYLE: React.CSSProperties = {
   cursor: 'pointer'
 };
 
+const LINK_SPAN_STYLE: React.CSSProperties = {
+  margin: '0px',
+  padding: '0px',
+  display: 'inline'
+};
+
 const styles = StyleSheet.create({
-  linkStates: {
+  link: {
     ':hover': {
+      textDecoration: 'underline',
+	    textDecorationColor: '#F26B55',
+	    '-webkit-text-decoration-color': '#F26B55'
+    },
+    ':focus': {
+      textDecoration: 'underline',
+	    textDecorationColor: '#F26B55',
+	    '-webkit-text-decoration-color': '#F26B55'
+    },
+    ':focus-within': {
       textDecoration: 'underline',
 	    textDecorationColor: '#F26B55',
 	    '-webkit-text-decoration-color': '#F26B55'
