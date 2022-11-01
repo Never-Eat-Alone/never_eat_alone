@@ -1666,6 +1666,9 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
       DisplayModeInput)], [new SignalSchema('onInviteAFoodieClick', '', [])],
     NeverEatAlone.HelpPage);
+  const cookiesPolicyPageSchema = new ComponentSchema('CookiesPolicyPage', [
+    new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
+      DisplayModeInput)], [], NeverEatAlone.CookiesPolicyPage);
   return [
     accentTextButtonSchema,
     albumCardSchema,
@@ -1674,6 +1677,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     avatarWithCheckMarkSchema,
     checkBoxSchema,
     closeButtonSchema,
+    cookiesPolicyPageSchema,
     creditCardDropdownMenu,
     diningEventCardSchema,
     diningEventPageSchema,
