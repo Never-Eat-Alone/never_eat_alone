@@ -38,10 +38,7 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
           <h1 style={H1_STYLE} >
             Policy Page (E.g. Privacy Policy)
           </h1>
-          <div
-              style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
-              ...PAGE_DESCRIPTION_STYLE}}
-          >
+          <div style={ANSWER_STYLE} >
             Last updated Oct 5th, 2021{'\n\n'}
             Thank you for choosing to be part of our community at Never Eat 
             Alone Inc., doing business as NEA ("NEA", "we", "us", "our"). We 
@@ -87,7 +84,7 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               understand what we do with the information that we collect.
             </b>
           </div>
-          <h2 style={CONTENT_LIST_HEADING_STYLE} >
+          <h2 style={H2_STYLE} >
             table of contents
           </h2>
           <ol style={{...CONTENT_LIST_STYLE, ...OL_STYLE}} >
@@ -226,10 +223,7 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
             >
               What information do we collect?
             </li>
-            <div
-                style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
-                ...DISCLOSE_OF_INFO_STYLE}}
-            >
+            <div style={ANSWER_STYLE} >
               <b>Personal information you disclose to us{'\n\n'}</b>
               <b style={IN_SHORT_BOLD_STYLE} >
                 In Short
@@ -265,10 +259,7 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
             <h2 style={H2_STYLE} >
               Information automatically collected
             </h2>
-            <div
-                style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
-                ...INFO_COLLECTED_PARAGRAPH_STYLE}}
-            >
+            <div style={ANSWER_STYLE} >
               <b style={IN_SHORT_BOLD_STYLE} >
                 In Short
               </b>
@@ -312,10 +303,7 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
             <li id='use_info' style={QUESTION_STYLE} >
               How do we use your information?
             </li>
-            <div
-                style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
-                ...USE_OF_INFO_STYLE}}
-            >
+            <div style={ANSWER_STYLE} >
               <b style={IN_SHORT_BOLD_STYLE} >
                 In Short
               </b>
@@ -437,10 +425,7 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
             >
               Will your information be shared with anyone?
             </li>
-            <div
-                style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
-                ...SHARE_INFO_STYLE}}
-            >
+            <div style={ANSWER_STYLE} >
               <b style={IN_SHORT_BOLD_STYLE} >
                 In Short
               </b>
@@ -521,10 +506,7 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
             <li id='use_cookies' style={QUESTION_STYLE} >
               Do we use cookies and other tracking technologies?
             </li>
-            <div
-                style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
-                ...COOKIE_INFO_STYLE}}
-            >
+            <div style={ANSWER_STYLE} >
               <b style={IN_SHORT_BOLD_STYLE} >
                 In Short
               </b>
@@ -540,10 +522,7 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
             <li id='social_logins' style={QUESTION_STYLE} >
               How do we handle your social logins?
             </li>
-            <div
-                style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
-                ...SOCIAL_LOGIN_INFO_STYLE}}
-            >
+            <div style={ANSWER_STYLE} >
               <b style={IN_SHORT_BOLD_STYLE} >
                 In Short
               </b>
@@ -574,10 +553,7 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
             <li id='keep_info' style={QUESTION_STYLE} >
               How long do we keep your information?
             </li>
-            <div
-                style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
-                ...KEEPING_DATA_STYLE}}
-            >
+            <div style={ANSWER_STYLE} >
               <b style={IN_SHORT_BOLD_STYLE} >
                 In Short
               </b>
@@ -604,10 +580,7 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
             <li id='keep_info_safe' style={QUESTION_STYLE} >
               How do we keep your information safe?
             </li>
-            <div
-                style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
-                ...INFO_SAFETY_STYLE}}
-            >
+            <div style={ANSWER_STYLE} >
               <b style={IN_SHORT_BOLD_STYLE} >
                 In Short
               </b>
@@ -633,10 +606,7 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
             <li id='minors_info' style={QUESTION_STYLE} >
               Do we collect information from minors?
             </li>
-            <div
-                style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
-                ...MINORS_INFO_STYLE}}
-            >
+            <div style={ANSWER_STYLE} >
               <b style={IN_SHORT_BOLD_STYLE} >
                 In Short
               </b>
@@ -669,10 +639,7 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
             <li id='privacy_rights' style={QUESTION_STYLE} >
               What are your privacy rights?
             </li>
-            <div
-                style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
-                ...PRIVACY_RIGHTS_STYLE}}
-            >
+            <div style={ANSWER_STYLE} >
               <b style={IN_SHORT_BOLD_STYLE} >
                 In Short
               </b>
@@ -724,10 +691,7 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
             <h2 style={H2_STYLE} >
               ACCount information
             </h2>
-            <div
-                style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
-                ...ACCOUNT_INFO_STYLE}}
-            >
+            <div style={ANSWER_STYLE} >
               If you would at any time like to review or change the 
               information in your account or terminate your account, you 
               can:{'\n'}
@@ -781,10 +745,7 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
             <li id='do_not_track_features' style={QUESTION_STYLE} >
               Controls For DO-NOT-TRACK features
             </li>
-            <div
-                style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
-                ...TRACK_STYLE}}
-            >
+            <div style={ANSWER_STYLE} >
               Most web browsers and some mobile operating systems and mobile 
               applications include a Do-Not-Track ("DNT") feature or setting 
               you can activate to signal your privacy preference not to have 
@@ -800,10 +761,7 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
             <li id='california_privacy_rights' style={QUESTION_STYLE} >
               Do California residents have specific privacy rights?
             </li>
-            <div
-                style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
-                ...CALIFORNIA_STYLE}}
-            >
+            <div style={ANSWER_STYLE} >
               <b style={IN_SHORT_BOLD_STYLE} >
                 In Short
               </b>
@@ -837,8 +795,7 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               Do we make updates to this notice?
             </li>
             <div
-                style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
-                ...NOTICE_STYLE}}
+                style={ANSWER_STYLE}
             >
               <b style={IN_SHORT_BOLD_STYLE} >
                 In Short
@@ -859,10 +816,7 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
             <li id='contact_about_notice' style={QUESTION_STYLE} >
               How can you contact us about this notice?
             </li>
-            <div
-                style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
-                ...CONTACT_STYLE}}
-            >
+            <div style={ANSWER_STYLE} >
               If you have questions or comments about this notice, you may 
               email us at&nbsp;
               <span style={LINK_SPAN_STYLE} >
@@ -887,10 +841,7 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               How can you review, update or delete the data we collect from 
               you?
             </li>
-            <div
-                style={{...P_STYLE, ...DESCRIPTION_CONTAINER_STYLE,
-                ...DATA_STYLE}}
-            >
+            <div style={ANSWER_STYLE} >
               Based on the applicable laws of your country, you may have the 
               right to request access to the personal information we collect 
               from you, change that information, or delete it in some 
@@ -1010,8 +961,8 @@ const ANSWER_STYLE: React.CSSProperties = {
 
 const OL_STYLE: React.CSSProperties = {
   margin: '0px',
-  listStylePosition: 'outside',
-  paddingLeft: '20px'
+  listStyle: 'decimal inside none',
+  paddingLeft: '0px'
 };
 
 const LINK_STYLE: React.CSSProperties = {
@@ -1035,34 +986,6 @@ const UL_STYLE: React.CSSProperties = {
   listStylePosition: 'outside'
 };
 
-const P_STYLE: React.CSSProperties = {
-  padding: '0px',
-  margin: '0px'
-};
-
-const DESCRIPTION_CONTAINER_STYLE: React.CSSProperties = {
-  width: '100%',
-  fontFamily: 'Source Sans Pro',
-  fontStyle: 'normal',
-  fontWeight: 'normal',
-  fontSize: '14px',
-  lineHeight: '20px',
-  color: '#000000',
-  marginBottom: '30px'
-};
-
-const PAGE_DESCRIPTION_STYLE: React.CSSProperties = {
-  height: '320px'
-};
-
-const CONTENT_LIST_HEADING_STYLE: React.CSSProperties = {
-  ...HEADING_STYLE,
-  height: '34px',
-  minWidth: '172px',
-  fontSize: '23px',
-  lineHeight: '34px'
-};
-
 const CONTENT_LIST_STYLE: React.CSSProperties = {
   height: '300px',
   minWidth: '946px',
@@ -1080,71 +1003,6 @@ const QUESTION_STYLE: React.CSSProperties = {
   ...HEADING_STYLE,
   fontSize: '23px',
   lineHeight: '34px'
-};
-
-const DISCLOSE_OF_INFO_STYLE: React.CSSProperties = {
-  height: '378px'
-};
-
-const INFO_COLLECTED_PARAGRAPH_STYLE: React.CSSProperties = {
-  height: '320px'
-};
-
-const USE_OF_INFO_STYLE: React.CSSProperties = {
-  height: '614px'
-};
-
-const SHARE_INFO_STYLE: React.CSSProperties = {
-  height: '440px'
-};
-
-const COOKIE_INFO_STYLE: React.CSSProperties = {
-  height: '96px'
-};
-
-const SOCIAL_LOGIN_INFO_STYLE: React.CSSProperties = {
-  height: '236px'
-};
-
-const KEEPING_DATA_STYLE: React.CSSProperties = {
-  height: '200px'
-};
-
-const INFO_SAFETY_STYLE: React.CSSProperties = {
-  height: '156px'
-};
-
-const MINORS_INFO_STYLE: React.CSSProperties = {
-  height: '136px'
-};
-
-const PRIVACY_RIGHTS_STYLE: React.CSSProperties = {
-  height: '160px'
-};
-
-const ACCOUNT_INFO_STYLE: React.CSSProperties = {
-  height: '360px'
-};
-
-const TRACK_STYLE: React.CSSProperties = {
-  height: '120px'
-};
-
-const CALIFORNIA_STYLE: React.CSSProperties = {
-  height: '236px'
-};
-
-const NOTICE_STYLE: React.CSSProperties = {
-  height: '116px'
-};
-
-const CONTACT_STYLE: React.CSSProperties = {
-  height: '144px'
-};
-
-const DATA_STYLE: React.CSSProperties = {
-  height: '60px',
-  marginBottom: '0px'
 };
 
 const IN_SHORT_BOLD_STYLE: React.CSSProperties = {

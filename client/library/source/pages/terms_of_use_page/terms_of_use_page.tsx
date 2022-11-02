@@ -851,8 +851,8 @@ const ANSWER_STYLE: React.CSSProperties = {
 
 const OL_STYLE: React.CSSProperties = {
   margin: '0px',
-  listStylePosition: 'outside',
-  paddingLeft: '20px'
+  listStyle: 'decimal outside none',
+  paddingLeft: '30px'
 };
 
 const LINK_STYLE: React.CSSProperties = {
