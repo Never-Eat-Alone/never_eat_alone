@@ -39,13 +39,13 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
             Policy Page (E.g. Privacy Policy)
           </h1>
           <div style={ANSWER_STYLE} >
-            Last updated Oct 5th, 2021{'\n\n'}
+            Last updated Oct 5th, 2022{'\n\n'}
             Thank you for choosing to be part of our community at Never Eat 
             Alone Inc., doing business as NEA ("NEA", "we", "us", "our"). We 
             are committed to protecting your personal information and your 
-            right to privacy. If you have any questions or concerns about 
-            this privacy notice, or our practices with regards to your 
-            personal information, please contact us at&nbsp;
+            right to privacy. If you have any questions or concerns about this 
+            privacy notice, or our practices with regards to your personal 
+            information, please contact us at&nbsp;
             <span style={LINK_SPAN_STYLE} >
               <a
                   style={LINK_STYLE}
@@ -63,7 +63,7 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
                 className={css(styles.link)}
                 to='/'
             >
-              nevereatalone.net
+              https://www.nevereatalone.net
             </Router.Link>
             &nbsp;(the "Website"), and more generally, use any of our 
             services (the "Services", which include the Website), we 
@@ -87,7 +87,7 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
           <h2 style={H2_STYLE} >
             table of contents
           </h2>
-          <ol style={{...CONTENT_LIST_STYLE, ...OL_STYLE}} >
+          <ol style={CONTENT_LIST_STYLE} >
             <li>
               <HashLink
                   style={LINK_STYLE}
@@ -225,10 +225,10 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
             </li>
             <div style={ANSWER_STYLE} >
               <b>Personal information you disclose to us{'\n\n'}</b>
-              <b style={IN_SHORT_BOLD_STYLE} >
+              <b style={ITALIC_BOLD_STYLE} >
                 In Short
               </b>
-              <span style={IN_SHORT_LINE_STYLE} >
+              <span style={THIN_ITALIC_STYLE} >
                 :&nbsp;&nbsp;We collect personal information that you provide 
                 to us.{'\n\n'}
               </span>
@@ -238,11 +238,10 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               when you participate in activities on the Website (such as by 
               posting messages in our online forums or entering competitions, 
               contests or giveaways) or otherwise when you contact us.{'\n\n'}
-              The personal information that we collect 
-              depends on the context of your interactions with us and the 
-              Website, the choices you make and the products and features you 
-              use. The personal information we collect may include the 
-              following:{'\n\n'}
+              The personal information that we collect depends on the context 
+              of your interactions with us and the Website, the choices you 
+              make and the products and features you use. The personal 
+              information we collect may include the following:{'\n\n'}
               <b>Personal Information Provided by You</b>.&nbsp;We collect 
               email addresses; usernames; passwords; and other similar 
               information.{'\n\n'}
@@ -260,10 +259,10 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               Information automatically collected
             </h2>
             <div style={ANSWER_STYLE} >
-              <b style={IN_SHORT_BOLD_STYLE} >
+              <b style={ITALIC_BOLD_STYLE} >
                 In Short
               </b>
-              <span style={IN_SHORT_LINE_STYLE} >
+              <span style={THIN_ITALIC_STYLE} >
                 :&nbsp;&nbsp;Some information — such as your Internet 
                 Protocol (IP) address and/or browser and device 
                 characteristics — is collected automatically when you visit 
@@ -304,10 +303,10 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               How do we use your information?
             </li>
             <div style={ANSWER_STYLE} >
-              <b style={IN_SHORT_BOLD_STYLE} >
+              <b style={ITALIC_BOLD_STYLE} >
                 In Short
               </b>
-              <span style={IN_SHORT_LINE_STYLE} >
+              <span style={THIN_ITALIC_STYLE} >
                 :&nbsp;&nbsp;We process your information for purposes based 
                 on legitimate business interests, the fulfillment of our 
                 contract with you, compliance with our legal obligations, 
@@ -336,34 +335,9 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
                   LOGINS?" for further information.
                 </li>
                 <li>
-                  <b>To post testimonials.&nbsp;</b>
-                  We post testimonials on our Website that may contain 
-                  personal information. Prior to posting a testimonial, we 
-                  will obtain your consent to use your name and the content 
-                  of the testimonial. If you wish to update, or delete your 
-                  testimonial, please contact us at&nbsp;
-                  <span style={LINK_SPAN_STYLE} >
-                    <a
-                        style={LINK_STYLE}
-                        className={css(styles.link)}
-                        href='mailto:info@nevereatalone.net'
-                        target='_blank'
-                        rel='noopener noreferrer'
-                    >
-                      info@nevereatalone.net
-                    </a>
-                  </span>&nbsp;and be sure to include your name, testimonial 
-                  location, and contact information.
-                </li>
-                <li>
                   <b>Request feedback.&nbsp;</b>
                   We may use your information to request feedback and to 
                   contact you about your use of our Website.
-                </li>
-                <li>
-                  <b>To enable user-to-user communications.&nbsp;</b>
-                  We may use your information in order to enable 
-                  user-to-user communications with each user's consent.
                 </li>
                 <li>
                   <b>To manage user accounts.&nbsp;</b>
@@ -371,10 +345,13 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
                   our account and keeping it in working order.
                 </li>
                 <li>
+                  <b>Authenticate your credit or debit card information.</b>
+                </li>
+                <li>
                   <b>To send administrative information to you.&nbsp;</b>
                   We may use your personal information to send you product, 
-                  service and new feature information and/or information 
-                  about changes to our terms, conditions, and policies.
+                  service and new feature information and/or information about 
+                  changes to our terms, conditions, and policies.
                 </li>
                 <li>
                   <b>To protect our Services.&nbsp;</b>
@@ -426,10 +403,10 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               Will your information be shared with anyone?
             </li>
             <div style={ANSWER_STYLE} >
-              <b style={IN_SHORT_BOLD_STYLE} >
+              <b style={ITALIC_BOLD_STYLE} >
                 In Short
               </b>
-              <span style={IN_SHORT_LINE_STYLE} >
+              <span style={THIN_ITALIC_STYLE} >
                 :&nbsp;&nbsp;We only share information with your consent, to 
                 comply with laws, to provide you with services, to protect 
                 your rights, or to fulfill business obligations.{'\n\n'}
@@ -473,6 +450,24 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
                 More specifically, we may need to process your data or share 
                 your personal information in the following situations:{'\n'}
                 <li>
+                  <b>With Restaurants and Restaurant Affiliates.&nbsp;</b>We 
+                  may share your information with restaurants and their 
+                  affiliates to provide the Services (such as booking events 
+                  and sharing your preferences, restrictions, history, 
+                  attendance, and other information with the restaurant) and 
+                  for the restaurant or restaurant group’s own purposes, which 
+                  may include marketing or advertising purposes.
+                </li>
+                <li>
+                  <b>To Process Payments.&nbsp;</b>We require credit and debit 
+                  information to process payments for certain events, in which 
+                  case we may share your payment information with third-party 
+                  payment processors and other third-party service providers 
+                  (such as fraud detection services). These third parties may 
+                  store your credit or debit card account information so you 
+                  can use our Services in the future.
+                </li>
+                <li>
                   <b>Business Transfers.&nbsp;</b>We may share or transfer 
                   your information in connection with, or during 
                   negotiations of, any merger, sale of company assets, 
@@ -483,7 +478,17 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
                   <b>Google Maps Platform APIs.</b>We may share your 
                   information with certain Google Maps Platform APIs (e.g., 
                   Google Maps API, Place API). To find out more about 
-                  Google’s Privacy Policy, please refer to this link.
+                  Google’s Privacy Policy, please refer to this&nbsp;
+                  <span style={LINK_SPAN_STYLE} >
+                    <a
+                        style={LINK_STYLE}
+                        className={css(styles.link)}
+                        href='https://policies.google.com/privacy'
+                        target='_blank'
+                    >
+                      https://policies.google.com/privacy
+                    </a>
+                  </span>.
                 </li>
                 <li>
                   <b>Other Users.&nbsp;</b>When you share personal 
@@ -507,10 +512,10 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               Do we use cookies and other tracking technologies?
             </li>
             <div style={ANSWER_STYLE} >
-              <b style={IN_SHORT_BOLD_STYLE} >
+              <b style={ITALIC_BOLD_STYLE} >
                 In Short
               </b>
-              <span style={IN_SHORT_LINE_STYLE} >
+              <span style={THIN_ITALIC_STYLE} >
                 :&nbsp;&nbsp;We may use cookies and other tracking 
                 technologies to collect and store your information.{'\n\n'}
               </span>
@@ -523,10 +528,10 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               How do we handle your social logins?
             </li>
             <div style={ANSWER_STYLE} >
-              <b style={IN_SHORT_BOLD_STYLE} >
+              <b style={ITALIC_BOLD_STYLE} >
                 In Short
               </b>
-              <span style={IN_SHORT_LINE_STYLE} >
+              <span style={THIN_ITALIC_STYLE} >
                 :&nbsp;&nbsp;If you choose to register or log in to our 
                 services using a social media account, we may have access to 
                 certain information about you.{'\n\n'}
@@ -554,10 +559,10 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               How long do we keep your information?
             </li>
             <div style={ANSWER_STYLE} >
-              <b style={IN_SHORT_BOLD_STYLE} >
+              <b style={ITALIC_BOLD_STYLE} >
                 In Short
               </b>
-              <span style={IN_SHORT_LINE_STYLE} >
+              <span style={THIN_ITALIC_STYLE} >
                 :&nbsp;&nbsp;We keep your information for as long as 
                 necessary to fulfill the purposes outlined in this privacy 
                 notice unless otherwise required by law.{'\n\n'}
@@ -581,10 +586,10 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               How do we keep your information safe?
             </li>
             <div style={ANSWER_STYLE} >
-              <b style={IN_SHORT_BOLD_STYLE} >
+              <b style={ITALIC_BOLD_STYLE} >
                 In Short
               </b>
-              <span style={IN_SHORT_LINE_STYLE} >
+              <span style={THIN_ITALIC_STYLE} >
                 :&nbsp;&nbsp;We aim to protect your personal information 
                 through a system of organizational and technical security 
                 measures.{'\n\n'}
@@ -607,10 +612,10 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               Do we collect information from minors?
             </li>
             <div style={ANSWER_STYLE} >
-              <b style={IN_SHORT_BOLD_STYLE} >
+              <b style={ITALIC_BOLD_STYLE} >
                 In Short
               </b>
-              <span style={IN_SHORT_LINE_STYLE} >
+              <span style={THIN_ITALIC_STYLE} >
                 :&nbsp;&nbsp;We do not knowingly collect data from or market 
                 to children under 18 years of age.{'\n\n'}
               </span>
@@ -640,10 +645,10 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               What are your privacy rights?
             </li>
             <div style={ANSWER_STYLE} >
-              <b style={IN_SHORT_BOLD_STYLE} >
+              <b style={ITALIC_BOLD_STYLE} >
                 In Short
               </b>
-              <span style={IN_SHORT_LINE_STYLE} >
+              <span style={THIN_ITALIC_STYLE} >
                 :&nbsp;&nbsp;You may review, change, or terminate your 
                 account at any time.{'\n\n'}
               </span>
@@ -659,7 +664,7 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
                     href='https://ec.europa.eu/newsroom/article29/items/612080'
                     target='_blank'
                 >
-                  https://ec.europa.eu/newsroom/article29/items/612080
+                  http://ec.europa.eu/justice/data-protection/bodies/authorities/index_en.htm
                 </a>
               </span>.{'\n\n'}
               If you are a resident in Switzerland, the contact details for 
@@ -689,12 +694,12 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               </span>.
             </div>
             <h2 style={H2_STYLE} >
-              ACCount information
+              Account information
             </h2>
             <div style={ANSWER_STYLE} >
               If you would at any time like to review or change the 
               information in your account or terminate your account, you 
-              can:{'\n'}
+              can:{'\n\n'}
               <ul style={UL_STYLE} >
                 <li>
                   Log in to your account settings and update your user 
@@ -710,7 +715,7 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               our files to prevent fraud, troubleshoot problems, assist with 
               any investigations, enforce our Terms of Use and/or comply with 
               applicable legal requirements.{'\n\n'}
-              <b>Cookies and similar technologies</b>: Most Web browsers are 
+              <b>Cookies and similar technologies:</b> Most Web browsers are 
               set to accept cookies by default. If you prefer, you can 
               usually choose to set your browser to remove cookies and to 
               reject cookies. If you choose to remove cookies or reject 
@@ -727,7 +732,7 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
                   http://www.aboutads.info/choices
                 </a>
               </span>.{'\n\n'}
-              <b>Opting out of email marketing</b>: You can unsubscribe from 
+              <b>Opting out of email marketing:</b> You can unsubscribe from 
               our marketing email list at any time by clicking on the 
               unsubscribe link in the emails that we send or by contacting us 
               using the details provided below. You will then be removed from 
@@ -762,10 +767,10 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               Do California residents have specific privacy rights?
             </li>
             <div style={ANSWER_STYLE} >
-              <b style={IN_SHORT_BOLD_STYLE} >
+              <b style={ITALIC_BOLD_STYLE} >
                 In Short
               </b>
-              <span style={IN_SHORT_LINE_STYLE} >
+              <span style={THIN_ITALIC_STYLE} >
                 :&nbsp;&nbsp;Yes, if you are a resident of California, you 
                 are granted specific rights regarding access to your personal 
                 information.{'\n\n'}
@@ -797,10 +802,10 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
             <div
                 style={ANSWER_STYLE}
             >
-              <b style={IN_SHORT_BOLD_STYLE} >
+              <b style={ITALIC_BOLD_STYLE} >
                 In Short
               </b>
-              <span style={IN_SHORT_LINE_STYLE} >
+              <span style={THIN_ITALIC_STYLE} >
                 :&nbsp;&nbsp;Yes, we will update this notice as necessary to 
                 stay compliant with relevant laws.{'\n\n'}
               </span>
@@ -952,7 +957,7 @@ const ANSWER_STYLE: React.CSSProperties = {
   padding: '0px',
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
-  fontWeight: 300,
+  fontWeight: 400,
   fontSize: '14px',
   lineHeight: '18px',
   color: '#000000',
@@ -987,6 +992,7 @@ const UL_STYLE: React.CSSProperties = {
 };
 
 const CONTENT_LIST_STYLE: React.CSSProperties = {
+  ...OL_STYLE,
   height: '300px',
   minWidth: '946px',
   fontFamily: 'Source Sans Pro',
@@ -1005,12 +1011,12 @@ const QUESTION_STYLE: React.CSSProperties = {
   lineHeight: '34px'
 };
 
-const IN_SHORT_BOLD_STYLE: React.CSSProperties = {
+const ITALIC_BOLD_STYLE: React.CSSProperties = {
   fontWeight: 700,
   fontStyle: 'italic'
 };
 
-const IN_SHORT_LINE_STYLE: React.CSSProperties = {
+const THIN_ITALIC_STYLE: React.CSSProperties = {
   fontWeight: 200,
   fontStyle: 'italic'
 };
