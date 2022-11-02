@@ -58,13 +58,15 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               </a>
             </span>.{'\n\n'}
             When you visit our website&nbsp;
-            <Router.Link
-                style={LINK_STYLE}
-                className={css(styles.link)}
-                to='/'
-            >
-              https://www.nevereatalone.net
-            </Router.Link>
+            <span style={LINK_SPAN_STYLE} >
+              <Router.Link
+                  style={LINK_STYLE}
+                  className={css(styles.link)}
+                  to='/'
+              >
+                https://www.nevereatalone.net
+              </Router.Link>
+            </span>
             &nbsp;(the "Website"), and more generally, use any of our 
             services (the "Services", which include the Website), we 
             appreciate that you are trusting us with your personal 
@@ -852,14 +854,15 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
               from you, change that information, or delete it in some 
               circumstances. To request to review, update, or delete your 
               personal information, please visit&nbsp;
-              <Router.Link
-                  style={LINK_STYLE}
-                  className={css(styles.link)}
-                  to='/help'
-              >
-                Help
-              </Router.Link>
-              .
+              <span style={LINK_SPAN_STYLE} >
+                <Router.Link
+                    style={LINK_STYLE}
+                    className={css(styles.link)}
+                    to='/help'
+                >
+                  Help
+                </Router.Link>
+              </span>.
             </div>
           </ol>
         </div>
@@ -909,7 +912,6 @@ const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  width: '1006px',
   whiteSpace: 'pre-wrap'
 };
 
@@ -929,6 +931,7 @@ const MOBILE_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
 };
 
 const HEADING_STYLE: React.CSSProperties = {
+  display: 'inline-block',
   fontFamily: 'Oswald',
   fontStyle: 'normal',
   fontWeight: 400,
@@ -981,7 +984,7 @@ const LINK_STYLE: React.CSSProperties = {
 const LINK_SPAN_STYLE: React.CSSProperties = {
   margin: '0px',
   padding: '0px',
-  display: 'inline'
+  display: 'inline-block'
 };
 
 const UL_STYLE: React.CSSProperties = {
@@ -993,8 +996,6 @@ const UL_STYLE: React.CSSProperties = {
 
 const CONTENT_LIST_STYLE: React.CSSProperties = {
   ...OL_STYLE,
-  height: '300px',
-  minWidth: '946px',
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
   fontWeight: 700,
