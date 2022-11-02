@@ -8,6 +8,6 @@ const model = new DemoApplicationModel();
 
 ReactDOM.render(
   <Router.HashRouter>
-    <NeverEatAlone.ApplicationController model={model} />
+    <NeverEatAlone.ApplicationController model={model} to='/' />
   </Router.HashRouter>,
   document.getElementById('main'));
