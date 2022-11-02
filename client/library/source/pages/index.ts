@@ -1,3 +1,5 @@
+export * from './application_controller';
+export * from './application_model';
 export * from './cookie_policy_page';
 export * from './dining_event_page';
 export * from './edit_profile_page';
