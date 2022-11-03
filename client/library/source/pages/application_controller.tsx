@@ -4,9 +4,12 @@ import { DisplayMode, getDisplayMode } from '../definitions';
 import { ApplicationModel } from './application_model';
 import { CookiesPolicyPage } from './cookie_policy_page';
 import { HelpPage } from './help_page';
+import { PrivacyPolicyPage } from './privacy_policy_page';
 import { Shell } from './shell';
+import { TermsOfUsePage } from './terms_of_use_page';
 
-interface Properties {
+type TParams = { id?: string, userId?: string };
+interface Properties extends Router.RouteComponentProps<TParams> {
   model: ApplicationModel;
 }
 
@@ -17,8 +20,6 @@ interface State {
   redirect: string;
   lastPage: string;
 }
-
-type TParams = { id?: string, userId?: string };
 
 export class ApplicationController extends React.Component<Properties, State> {
   constructor(props: Properties) {
@@ -39,7 +40,7 @@ export class ApplicationController extends React.Component<Properties, State> {
     if (!this.state.isLoaded) {
       return <div />;
     }
-    const pathname = window.location.pathname;
+    const pathname = this.props.location.pathname;
     const { headerBackgroundColor } = this.handleHeaderAndFooter(pathname);
     return (
       <div id='app_top' style={CONTAINER_STYLE} >
@@ -225,11 +226,11 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private renderPrivacyPolicy = () => {
-    return <div>Privacy policy page</div>;
+    return <PrivacyPolicyPage displayMode={this.state.displayMode} />;
   }
 
   private renderTermsOfUse = () => {
-    return <div>Terms of Use page</div>;
+    return <TermsOfUsePage displayMode={this.state.displayMode} />;
   }
 
   private renderHelp = () => {

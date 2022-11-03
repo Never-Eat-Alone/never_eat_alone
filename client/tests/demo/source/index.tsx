@@ -5,9 +5,11 @@ import * as NeverEatAlone from 'never_eat_alone';
 import { DemoApplicationModel } from './demo_application_model';
 
 const model = new DemoApplicationModel();
+const ApplicationControllerWithRouting = Router.withRouter(
+  NeverEatAlone.ApplicationController);
 
 ReactDOM.render(
   <Router.HashRouter>
-    <NeverEatAlone.ApplicationController model={model} />
+    <ApplicationControllerWithRouting model={model} />
   </Router.HashRouter>,
   document.getElementById('main'));

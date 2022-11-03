@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as Router from 'react-router-dom';
 import { DisplayMode, User } from '../definitions';
 import { HeaderLogo } from './header_logo';
 import { WhiteNavLink } from './nav_link';
@@ -15,6 +14,8 @@ interface Properties {
 
   /** Represents the user profile image source. */
   profileImageSrc?: string;
+
+  backgroundColor?: string;
 
   /** Indicates the menu item inside the dropdown is clicked. */
   onMenuClick: (path: string) => void;
@@ -129,36 +130,55 @@ export class Header extends React.Component<Properties> {
       }
     }
     return (
-      <div style={{...HEADER_CONTAINER_STYLE, ...headerMode}} >
-        <HeaderLogo displayMode={this.props.displayMode} />
-        <div style={RIGHT_CONTAINER_STYLE} >{rightSideButtons}</div>
+      <div
+          style={{...HEADER_CONTAINER_STYLE,
+            backgroundColor: this.props.backgroundColor}}
+      >
+        <div style={headerMode} >
+          <HeaderLogo displayMode={this.props.displayMode} />
+          <div style={RIGHT_CONTAINER_STYLE} >{rightSideButtons}</div>
+        </div>
       </div>);
   }
 }
 
 const HEADER_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '54px',
+  width: '100%'
+};
+
+const HEADER_DESKTOP_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
-  backgroundColor: 'transparent',
-  height: '54px'
-};
-
-const HEADER_DESKTOP_STYLE: React.CSSProperties = {
   width: '1200px',
   paddingLeft: '20px',
   paddingRight: '20px'
 };
 
 const HEADER_TABLET_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
   width: '100%',
   paddingLeft: '30px',
   paddingRight: '30px'
 };
 
 const HEADER_MOBILE_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
   width: '100%',
   paddingLeft: '15px',
   paddingRight: '15px'
