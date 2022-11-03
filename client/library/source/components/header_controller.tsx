@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as Router from 'react-router-dom';
 import { DisplayMode, User } from '../definitions';
 import { Header } from './header';
 import { HeaderModel } from './header_model';

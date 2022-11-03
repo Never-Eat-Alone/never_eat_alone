@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as Router from 'react-router-dom';
 import { Footer, HeaderController, HeaderModel } from '../../components';
 import { DisplayMode, User } from '../../definitions';
 
@@ -52,7 +51,6 @@ export class Shell extends React.Component<Properties> {
     return (
       <div style={CONTAINER_STYLE} >
         <HeaderController
-          {...this.props}
           account={this.props.account}
           displayMode={this.props.displayMode}
           model={this.props.headerModel}
@@ -65,7 +63,6 @@ export class Shell extends React.Component<Properties> {
         />
           {this.props.children}
         <Footer
-          {...this.props}
           displayMode={this.props.displayMode}
           isBackgroundImage={this.props.isFooterBackgroundImage}
           backgroundColor={this.props.footerBackgroundColor}

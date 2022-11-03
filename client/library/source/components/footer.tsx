@@ -157,7 +157,7 @@ export class Footer extends React.Component<Properties> {
           <div style={{...FOOTER_CONTAINER_STYLE, ...footerContainerMode}} >
             <div
                 style={{...LEFT_CONTAINER_STYLE, ...backgroundStyle}} >
-              <FooterLogo {...this.props} style={logoStyle} />
+              <FooterLogo style={logoStyle} />
             </div>
             <div style={RIGHT_CONTAINER_STYLE} >
               <div
@@ -214,21 +214,18 @@ export class Footer extends React.Component<Properties> {
           </div>
           <div style={LINK_ROW_STYLE} >
             <FooterLink
-              {...this.props}
               displayMode={this.props.displayMode}
               to='/help'
               label='Help'
             />
             <div style={DOT_STYLE} >&nbsp;.&nbsp;</div>
             <FooterLink
-              {...this.props}
               displayMode={this.props.displayMode}
               to='/sitemap'
               label='Sitemap'
             />
             <div style={DOT_STYLE} >&nbsp;.&nbsp;</div>
             <FooterLink
-              {...this.props}
               displayMode={this.props.displayMode}
               to='/terms_of_use'
               label='Terms of Use'
@@ -236,14 +233,12 @@ export class Footer extends React.Component<Properties> {
           </div>
           <div style={LINK_ROW_STYLE} >
             <FooterLink
-              {...this.props}
               displayMode={this.props.displayMode}
               to='/privacy_policy'
               label='Privacy Policy'
             />
             <div style={DOT_STYLE} >&nbsp;.&nbsp;</div>
             <FooterLink
-              {...this.props}
               displayMode={this.props.displayMode}
               to='/cookies_policy'
               label='Cookies Policy'
@@ -251,7 +246,6 @@ export class Footer extends React.Component<Properties> {
           </div>
           <div style={{...LINK_ROW_STYLE, ...LINK_MARGIN_BOTTOM_STYLE}} >
             <FooterLink
-              {...this.props}
               displayMode={this.props.displayMode}
               to='/partner_with_us'
               label='Partner With Us'
