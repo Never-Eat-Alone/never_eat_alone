@@ -8,7 +8,7 @@ import { InstagramButton } from './instagram_button';
 import { InviteAFoodieButton } from './invite_a_foodie_button';
 import { TwitterButton } from './twitter_button';
 
-interface Properties extends Router.LinkProps {
+interface Properties {
   /** The display mode. */
   displayMode: DisplayMode;
 
@@ -47,42 +47,36 @@ export class Footer extends React.Component<Properties> {
             rows.push(
               <div key='pagesRow' style={PAGES_ROW_CONTAINER_STYLE} >
                 <FooterLink
-                  {...this.props}
                   displayMode={this.props.displayMode}
                   to='/partner_with_us'
                   label='Partner With Us'
                   style={PAGES_MARGIN_LEFT_STYLE}
                 />
                 <FooterLink
-                  {...this.props}
                   displayMode={this.props.displayMode}
                   to='/cookies_policy'
                   label='Cookies Policy'
                   style={PAGES_MARGIN_LEFT_STYLE}
                 />
                 <FooterLink
-                  {...this.props}
                   displayMode={this.props.displayMode}
                   to='/privacy_policy'
                   label='Privacy Policy'
                   style={PAGES_MARGIN_LEFT_STYLE}
                 />
                 <FooterLink
-                  {...this.props}
                   displayMode={this.props.displayMode}
                   to='/terms_of_use'
                   label='Terms of Use'
                   style={PAGES_MARGIN_LEFT_STYLE}
                 />
                 <FooterLink
-                  {...this.props}
                   displayMode={this.props.displayMode}
                   to='/sitemap'
                   label='Sitemap'
                   style={PAGES_MARGIN_LEFT_STYLE}
                 />
                 <FooterLink
-                  {...this.props}
                   displayMode={this.props.displayMode}
                   to='/help'
                   label='Help'
@@ -93,35 +87,30 @@ export class Footer extends React.Component<Properties> {
             rows.push(
               <div key='pagesRow1' style={PAGES_ROW_CONTAINER_STYLE} >
                 <FooterLink
-                  {...this.props}
                   displayMode={this.props.displayMode}
                   to='/cookies_policy'
                   label='Cookies Policy'
                   style={PAGES_MARGIN_LEFT_STYLE}
                 />
                 <FooterLink
-                  {...this.props}
                   displayMode={this.props.displayMode}
                   to='/privacy_policy'
                   label='Privacy Policy'
                   style={PAGES_MARGIN_LEFT_STYLE}
                 />
                 <FooterLink
-                  {...this.props}
                   displayMode={this.props.displayMode}
                   to='/terms_of_use'
                   label='Terms of Use'
                   style={PAGES_MARGIN_LEFT_STYLE}
                 />
                 <FooterLink
-                  {...this.props}
                   displayMode={this.props.displayMode}
                   to='/sitemap'
                   label='Sitemap'
                   style={PAGES_MARGIN_LEFT_STYLE}
                 />
                 <FooterLink
-                  {...this.props}
                   displayMode={this.props.displayMode}
                   to='/help'
                   label='Help'
@@ -131,7 +120,6 @@ export class Footer extends React.Component<Properties> {
             rows.push(
               <div key='pagesRow2' style={PAGES_ROW_CONTAINER_STYLE} >
                 <FooterLink
-                  {...this.props}
                   displayMode={this.props.displayMode}
                   to='/partner_with_us'
                   label='Partner With Us'

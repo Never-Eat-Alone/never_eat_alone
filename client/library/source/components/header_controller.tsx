@@ -4,7 +4,7 @@ import { DisplayMode, User } from '../definitions';
 import { Header } from './header';
 import { HeaderModel } from './header_model';
 
-interface Properties extends Router.LinkProps {
+interface Properties {
   /** Current session user. */
   account: User;
 

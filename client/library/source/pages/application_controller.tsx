@@ -6,7 +6,7 @@ import { CookiesPolicyPage } from './cookie_policy_page';
 import { HelpPage } from './help_page';
 import { Shell } from './shell';
 
-interface Properties extends Router.LinkProps {
+interface Properties {
   model: ApplicationModel;
 }
 
@@ -39,13 +39,15 @@ export class ApplicationController extends React.Component<Properties, State> {
     if (!this.state.isLoaded) {
       return <div />;
     }
+    const pathname = window.location.pathname;
+    const { headerBackgroundColor } = this.handleHeaderAndFooter(pathname);
     return (
       <div id='app_top' style={CONTAINER_STYLE} >
         <Shell
-          {...this.props}
           displayMode={this.state.displayMode}
           account={this.props.model.getAccount()}
           headerModel={this.props.model.getHeaderModel()}
+          headerBackgroundColor={headerBackgroundColor}
           onLogOut={() => {}}
           onMenuClick={this.handleMenuClick}
           onLogInButton={() => {}}
@@ -247,6 +249,21 @@ export class ApplicationController extends React.Component<Properties, State> {
     return <div>Page Not Found</div>;
   }
 
+  private handleHeaderAndFooter = (pathname: string) => {
+    if (pathname === '/what_is_nea') {
+      return ({
+        headerBackgroundColor: 'transparent'
+      });
+    }
+    if (pathname === '/') {
+      return ({
+        headerBackgroundColor: 'transparent'
+      });
+    }
+    return ({
+      headerBackgroundColor: '#F26B55'
+    });
+  }
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {

@@ -3,7 +3,7 @@ import * as Router from 'react-router-dom';
 import { Footer, HeaderController, HeaderModel } from '../../components';
 import { DisplayMode, User } from '../../definitions';
 
-interface Properties extends Router.LinkProps {
+interface Properties {
   /** The display mode. */
   displayMode: DisplayMode;
 

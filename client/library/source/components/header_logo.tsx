@@ -3,8 +3,9 @@ import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { DisplayMode } from '../definitions';
 
-interface Properties extends Router.LinkProps {
+interface Properties {
   displayMode: DisplayMode;
+  style?: React.CSSProperties
 }
 
 export function HeaderLogo(props: Properties) {
@@ -16,7 +17,6 @@ export function HeaderLogo(props: Properties) {
   })();
   return (
     <Router.Link
-        {...props}
         to='/'
         style={{...CONTAINER_STYLE, ...props.style}}
         className={css(styles.whiteTextContainer)}
