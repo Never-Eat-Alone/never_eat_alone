@@ -4,7 +4,9 @@ import { DisplayMode, getDisplayMode } from '../definitions';
 import { ApplicationModel } from './application_model';
 import { CookiesPolicyPage } from './cookie_policy_page';
 import { HelpPage } from './help_page';
+import { PrivacyPolicyPage } from './privacy_policy_page';
 import { Shell } from './shell';
+import { TermsOfUsePage } from './terms_of_use_page';
 
 interface Properties {
   model: ApplicationModel;
@@ -225,11 +227,11 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private renderPrivacyPolicy = () => {
-    return <div>Privacy policy page</div>;
+    return <PrivacyPolicyPage displayMode={this.state.displayMode} />;
   }
 
   private renderTermsOfUse = () => {
-    return <div>Terms of Use page</div>;
+    return <TermsOfUsePage displayMode={this.state.displayMode} />;
   }
 
   private renderHelp = () => {

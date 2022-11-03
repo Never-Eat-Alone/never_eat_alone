@@ -33,7 +33,7 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
       };
     })();
     return (
-      <div style={containerStyle} >
+      <div id='top' style={containerStyle} >
         <div style={contentContainerStyle} >
           <h1 style={H1_STYLE} >
             Policy Page (E.g. Privacy Policy)
