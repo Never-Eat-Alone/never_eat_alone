@@ -1,3 +1,5 @@
+export * from './application_controller';
+export * from './application_model';
 export * from './cookie_policy_page';
 export * from './dining_event_page';
 export * from './edit_profile_page';
@@ -9,4 +11,5 @@ export * from './privacy_policy_page';
 export * from './profile_page';
 export * from './reset_password_page';
 export * from './settings_page';
+export * from './shell';
 export * from './terms_of_use_page';

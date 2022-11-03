@@ -2,10 +2,13 @@ import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 
-export function FooterLogo(props: Router.LinkProps) {
+interface Properties {
+  style?: React.CSSProperties
+}
+
+export function FooterLogo(props: Properties) {
   return (
     <Router.Link
-        {...props}
         to='/'
         style={{...CONTAINER_STYLE, ...props.style}}
         className={css(styles.container)}

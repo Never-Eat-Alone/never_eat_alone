@@ -6,7 +6,7 @@ import { WhiteNavLink } from './nav_link';
 import { ProfileMenu } from './profile_menu';
 import { AccentTextButton, InvertedSecondaryTextButton } from './text_button';
 
-interface Properties extends Router.LinkProps {
+interface Properties {
   /** The display mode based on the user's display dimensions. */
   displayMode: DisplayMode;
 
@@ -55,7 +55,6 @@ export class Header extends React.Component<Properties> {
         />);
       rightSideButtons.push(
         <WhiteNavLink
-          {...this.props}
           key='DisplayName'
           label={this.props.account.name}
           to={`/users/profile/${this.props.account.id}`}
@@ -81,7 +80,6 @@ export class Header extends React.Component<Properties> {
           />);
         rightSideButtons.push(
           <WhiteNavLink
-            {...this.props}
             key='What is NEA?'
             label='What is NEA?'
             to='/what_is_nea'
@@ -106,7 +104,6 @@ export class Header extends React.Component<Properties> {
           />);
         rightSideButtons.push(
           <WhiteNavLink
-            {...this.props}
             key='What is NEA?'
             label='What is NEA?'
             to='/what_is_nea'
@@ -133,7 +130,7 @@ export class Header extends React.Component<Properties> {
     }
     return (
       <div style={{...HEADER_CONTAINER_STYLE, ...headerMode}} >
-        <HeaderLogo {...this.props} />
+        <HeaderLogo displayMode={this.props.displayMode} />
         <div style={RIGHT_CONTAINER_STYLE} >{rightSideButtons}</div>
       </div>);
   }
