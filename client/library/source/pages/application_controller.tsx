@@ -8,7 +8,8 @@ import { PrivacyPolicyPage } from './privacy_policy_page';
 import { Shell } from './shell';
 import { TermsOfUsePage } from './terms_of_use_page';
 
-interface Properties {
+type TParams = { id?: string, userId?: string };
+interface Properties extends Router.RouteComponentProps<TParams> {
   model: ApplicationModel;
 }
 
@@ -19,8 +20,6 @@ interface State {
   redirect: string;
   lastPage: string;
 }
-
-type TParams = { id?: string, userId?: string };
 
 export class ApplicationController extends React.Component<Properties, State> {
   constructor(props: Properties) {
@@ -41,7 +40,7 @@ export class ApplicationController extends React.Component<Properties, State> {
     if (!this.state.isLoaded) {
       return <div />;
     }
-    const pathname = window.location.pathname;
+    const pathname = this.props.location.pathname;
     const { headerBackgroundColor } = this.handleHeaderAndFooter(pathname);
     return (
       <div id='app_top' style={CONTAINER_STYLE} >
