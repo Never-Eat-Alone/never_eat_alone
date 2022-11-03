@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as Router from 'react-router-dom';
 import { DisplayMode, User } from '../definitions';
 import { HeaderLogo } from './header_logo';
 import { WhiteNavLink } from './nav_link';

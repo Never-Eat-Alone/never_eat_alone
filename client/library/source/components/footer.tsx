@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as Router from 'react-router-dom';
 import { DisplayMode } from '../definitions';
 import { FacebookButton } from './facebook_button';
 import { FooterLink } from './footer_link';
