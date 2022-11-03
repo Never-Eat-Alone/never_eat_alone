@@ -325,10 +325,9 @@ export class CookiesPolicyPage extends React.Component<Properties> {
             to='#top'
         >
           <img
-            style={{...NO_SELECTION_STYLE, ...BACK_TO_TOP_ICON}}
+            style={BACK_TO_TOP_ICON}
             src='resources/help_page/icons/back_to_top.svg'
             alt='Back To Top'
-            draggable={false}
           />
         </HashLink>
       </div>);
@@ -532,14 +531,6 @@ const ANSWER_STYLE: React.CSSProperties = {
   lineHeight: '18px',
   color: '#000000',
   overflowWrap: 'break-word'
-};
-
-const NO_SELECTION_STYLE: React.CSSProperties = {
-  WebkitTouchCallout: 'none',
-  MozUserSelect: 'none',
-  WebkitUserSelect: 'none',
-  KhtmlUserSelect: 'none',
-  userSelect: 'none'
 };
 
 const LINK_STYLE: React.CSSProperties = {
