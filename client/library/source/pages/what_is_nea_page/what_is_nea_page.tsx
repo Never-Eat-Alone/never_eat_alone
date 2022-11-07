@@ -10,45 +10,72 @@ interface Properties {
 
 export class WhatIsNeaPage extends React.Component<Properties> {
   public render(): JSX.Element {
+    const { heroContainerStyle, contentContainerStyle, contentFrameStyle,
+        imageContainerStyle, imageStyle, teamContainerStyle } = (() => {
+      if (this.props.displayMode === DisplayMode.DESKTOP) {
+        return {
+          heroContainerStyle: DESKTOP_HERO_CONTAINER_STYLE,
+          contentContainerStyle: DESKTOP_CONTENT_CONTAINER_STYLE,
+          contentFrameStyle: DESKTOP_CONTENT_FRAME_STYLE,
+          imageContainerStyle: DESKTOP_IMAGE_CONTAINER_STYLE,
+          imageStyle: DESKTOP_IMAGE_STYLE,
+          teamContainerStyle: DESKTOP_TEAM_CONTAINER_STYLE
+        };
+      }
+      if (this.props.displayMode === DisplayMode.TABLET) {
+        return {
+          heroContainerStyle: TABLET_HERO_CONTAINER_STYLE,
+          contentContainerStyle: TABLET_CONTENT_CONTAINER_STYLE,
+          contentFrameStyle: TABLET_CONTENT_FRAME_STYLE,
+          imageContainerStyle: TABLET_IMAGE_CONTAINER_STYLE,
+          imageStyle: TABLET_IMAGE_STYLE,
+          teamContainerStyle: TABLET_TEAM_CONTAINER_STYLE
+        };
+      }
+      return {
+        heroContainerStyle: MOBILE_HERO_CONTAINER_STYLE,
+        contentContainerStyle: MOBILE_CONTENT_CONTAINER_STYLE,
+        contentFrameStyle: MOBILE_CONTENT_FRAME_STYLE,
+        imageContainerStyle: MOBILE_IMAGE_CONTAINER_STYLE,
+        imageStyle: MOBILE_IMAGE_STYLE,
+        teamContainerStyle: MOBILE_TEAM_CONTAINER_STYLE
+      };
+    })();
+
     return (
       <div style={CONTAINER_STYLE} >
-        <div style={HERO_CONTAINER_STYLE} >
+        <div style={heroContainerStyle} >
           <div style={SCROLL_TEXT_CONTAINER_STYLE} >
             <div>Scroll down</div>
             <div>↓</div>
           </div>
           <div style={HERO_SUB_SECTION_CONTAINER_STYLE} >
-            <div style={TEAM_CONTAINER_STYLE} >
-              <div
-                  style={{...IMAGE_CONTAINER_STYLE,
-                  ...HERO_IMAGE_CONTAINER_STYLE}}
-              >
+            <div style={teamContainerStyle} >
+              <div style={imageContainerStyle} >
                 <img
-                  style={IMAGE_STYLE}
+                  style={imageStyle}
                   src='resources/what_is_nea_page/jessica.svg'
                   alt='Jessica'
                   draggable={false}
                 />
               </div>
               <div
-                  style={{...IMAGE_CONTAINER_STYLE,
-                  ...HERO_IMAGE_CONTAINER_STYLE,
-                  ...ARTHUR_IMAGE_CONTAINER_STYLE}}
+                  style={{...imageContainerStyle,
+                    ...ARTHUR_IMAGE_CONTAINER_STYLE}}
               >
                 <img
-                  style={{...IMAGE_STYLE, ...ARTHUR_IMAGE_STYLE}}
+                  style={{...imageStyle, ...ARTHUR_IMAGE_STYLE}}
                   src='resources/what_is_nea_page/arthur.png'
                   alt='Arthur'
                   draggable={false}
                 />
               </div>
               <div
-                  style={{...IMAGE_CONTAINER_STYLE,
-                  ...HERO_IMAGE_CONTAINER_STYLE,
-                  ...SHAHRZAD_IMAGE_CONTAINER_STYLE}}
+                  style={{...imageContainerStyle,
+                    ...SHAHRZAD_IMAGE_CONTAINER_STYLE}}
               >
                 <img
-                  style={{...IMAGE_STYLE, ...SHAHRZAD_IMAGE_STYLE}}
+                  style={{...imageStyle, ...SHAHRZAD_IMAGE_STYLE}}
                   src='resources/what_is_nea_page/shahrzad.svg'
                   alt='Shahrzad'
                   draggable={false}
@@ -70,8 +97,8 @@ export class WhatIsNeaPage extends React.Component<Properties> {
             </div>
           </div>
         </div>
-        <div style={CONTENT_CONTAINER_STYLE} >
-          <div style={CONTENT_FRAME_STYLE} >
+        <div style={contentContainerStyle} >
+          <div style={contentFrameStyle} >
             <div style={FIRST_ROW_CONTAINER_STYLE} >
               <div style={FIRST_TEXT_BOX_STYLE} >
                 <div style={TEXT_BOX_HEADER} >
@@ -156,13 +183,27 @@ const HERO_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  height: '450px',
   width: '100%',
   backgroundImage: "url('resources/what_is_nea_page/synesthesia.png')",
   backgroundColor: '#F26B55',
   backgroundSize: 'cover',
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'top right'
+};
+
+const DESKTOP_HERO_CONTAINER_STYLE: React.CSSProperties = {
+  ...HERO_CONTAINER_STYLE,
+  height: '450px'
+};
+
+const TABLET_HERO_CONTAINER_STYLE: React.CSSProperties = {
+  ...HERO_CONTAINER_STYLE,
+  height: '450px'
+};
+
+const MOBILE_HERO_CONTAINER_STYLE: React.CSSProperties = {
+  ...HERO_CONTAINER_STYLE,
+  height: '575px'
 };
 
 const SCROLL_TEXT_CONTAINER_STYLE: React.CSSProperties = {
@@ -201,7 +242,25 @@ const IMAGE_CONTAINER_STYLE: React.CSSProperties = {
   alignItems: 'center'
 };
 
-const IMAGE_STYLE: React.CSSProperties = {
+const DESKTOP_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  ...IMAGE_CONTAINER_STYLE,
+  width: '376px',
+  height: '224px'
+};
+
+const TABLET_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  ...IMAGE_CONTAINER_STYLE,
+  width: '209px',
+  height: '125px'
+};
+
+const MOBILE_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  ...IMAGE_CONTAINER_STYLE,
+  width: '189px',
+  height: '113px'
+};
+
+const DESKTOP_IMAGE_STYLE: React.CSSProperties = {
   minWidth: '376px',
   minHeight: '224px',
   width: '100%',
@@ -209,9 +268,20 @@ const IMAGE_STYLE: React.CSSProperties = {
   backgroundColor: 'transparent'
 };
 
-const HERO_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
-  width: '376px',
-  height: '224px'
+const TABLET_IMAGE_STYLE: React.CSSProperties = {
+  minWidth: '209px',
+  minHeight: '125px',
+  width: '100%',
+  height: '100%',
+  backgroundColor: 'transparent'
+};
+
+const MOBILE_IMAGE_STYLE: React.CSSProperties = {
+  minWidth: '189px',
+  minHeight: '113px',
+  width: '100%',
+  height: '100%',
+  backgroundColor: 'transparent'
 };
 
 const TEAM_CONTAINER_STYLE: React.CSSProperties = {
@@ -220,18 +290,38 @@ const TEAM_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'flex-end',
+  backgroundColor: 'transparent'
+};
+
+const DESKTOP_TEAM_CONTAINER_STYLE: React.CSSProperties = {
+  ...TEAM_CONTAINER_STYLE,
   width: '717px',
   height: '421px',
-  backgroundColor: 'transparent',
   right: '22px',
-  top: '50px'
+  top: '54px'
+};
+
+const TABLET_TEAM_CONTAINER_STYLE: React.CSSProperties = {
+  ...TEAM_CONTAINER_STYLE,
+  width: '305px',
+  height: '340px',
+  right: '25px',
+  top: '59px'
+};
+
+const MOBILE_TEAM_CONTAINER_STYLE: React.CSSProperties = {
+  ...TEAM_CONTAINER_STYLE,
+  width: '430px',
+  height: '171px',
+  right: '-22px',
+  top: '54px'
 };
 
 const ARTHUR_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
   marginTop: '-167px',
   marginRight: '341px',
   width: 'auto',
-  height: '225px'
+  //height: '225px'
 };
 
 const ARTHUR_IMAGE_STYLE: React.CSSProperties = {
@@ -243,11 +333,11 @@ const SHAHRZAD_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
   marginTop: '-85px',
   marginRight: '98px',
   height: 'auto',
-  width: '377px'
+  //width: '377px'
 };
 
 const SHAHRZAD_IMAGE_STYLE: React.CSSProperties = {
-  minWidth: '377px',
+  //minWidth: '377px',
   minHeight: 'auto'
 };
 
@@ -297,8 +387,6 @@ const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'center',
   width: '100%',
-  maxWidth: '1206px',
-  maxHeight: '2146px',
   backgroundImage: "url('resources/what_is_nea_page/background-image.png')",
   backgroundColor: '#FFFFFF',
   backgroundSize: 'cover',
@@ -307,15 +395,51 @@ const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
   overflow: 'visible'
 };
 
+const DESKTOP_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTENT_CONTAINER_STYLE,
+  maxWidth: '1206px',
+  maxHeight: '1655px'
+};
+
+const TABLET_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTENT_CONTAINER_STYLE,
+  maxWidth: '1206px',
+  maxHeight: '1655px'
+};
+
+const MOBILE_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTENT_CONTAINER_STYLE,
+  maxWidth: '1206px',
+  maxHeight: '1655px'
+};
+
 const CONTENT_FRAME_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'center',
+  padding: '0px'
+};
+
+const DESKTOP_CONTENT_FRAME_STYLE: React.CSSProperties = {
+  ...CONTENT_FRAME_STYLE,
   width: '1143px',
   marginTop: '100px',
-  marginBottom: '220px',
-  padding: '0px'
+  marginBottom: '325px'
+};
+
+const TABLET_CONTENT_FRAME_STYLE: React.CSSProperties = {
+  ...CONTENT_FRAME_STYLE,
+  width: '768px',
+  marginTop: '100px',
+  marginBottom: '245px'
+};
+
+const MOBILE_CONTENT_FRAME_STYLE: React.CSSProperties = {
+  ...CONTENT_FRAME_STYLE,
+  width: '100%',
+  marginTop: '100px',
+  marginBottom: '271px'
 };
 
 const FIRST_ROW_CONTAINER_STYLE: React.CSSProperties = {
