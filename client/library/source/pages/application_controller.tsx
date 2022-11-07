@@ -7,6 +7,7 @@ import { HelpPage } from './help_page';
 import { PrivacyPolicyPage } from './privacy_policy_page';
 import { Shell } from './shell';
 import { TermsOfUsePage } from './terms_of_use_page';
+import { WhatIsNeaPage } from './what_is_nea_page';
 
 type TParams = { id?: string, userId?: string };
 interface Properties extends Router.RouteComponentProps<TParams> {
@@ -41,14 +42,13 @@ export class ApplicationController extends React.Component<Properties, State> {
       return <div />;
     }
     const pathname = this.props.location.pathname;
-    const { headerBackgroundColor } = this.handleHeaderAndFooter(pathname);
     return (
       <div id='app_top' style={CONTAINER_STYLE} >
         <Shell
           displayMode={this.state.displayMode}
           account={this.props.model.getAccount()}
           headerModel={this.props.model.getHeaderModel()}
-          headerBackgroundColor={headerBackgroundColor}
+          headerStyle={this.handleHeaderAndFooter(pathname).headerStyle}
           onLogOut={() => {}}
           onMenuClick={this.handleMenuClick}
           onLogInButton={() => {}}
@@ -206,7 +206,8 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private renderWhatIsNea = () => {
-    return <div>What is NEA Page</div>;
+    return <WhatIsNeaPage displayMode={this.state.displayMode}
+      onCreateAccount={() => {}} />;
   }
 
   private renderPartnerWithUs = () => {
@@ -253,16 +254,29 @@ export class ApplicationController extends React.Component<Properties, State> {
   private handleHeaderAndFooter = (pathname: string) => {
     if (pathname === '/what_is_nea') {
       return ({
-        headerBackgroundColor: 'transparent'
+        headerStyle: {
+          position: 'absolute',
+          top: '0px',
+          backgroundColor: 'transparent',
+          zIndex: 2
+        } as React.CSSProperties
       });
     }
     if (pathname === '/') {
       return ({
-        headerBackgroundColor: 'transparent'
+        headerStyle: {
+          backgroundColor: 'transparent',
+          position: 'relative',
+          zIndex: 'auto'
+        } as React.CSSProperties
       });
     }
     return ({
-      headerBackgroundColor: '#F26B55'
+      headerStyle: {
+        backgroundColor: '#F26B55',
+        position: 'relative',
+        zIndex: 'auto'
+      } as React.CSSProperties
     });
   }
 }

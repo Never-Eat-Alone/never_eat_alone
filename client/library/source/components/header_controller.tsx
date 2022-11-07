@@ -14,7 +14,7 @@ interface Properties {
   model: HeaderModel;
 
   /** The background color for the header. */
-  backgroundColor?: string;
+  headerStyle?: React.CSSProperties;
 
   /** Indicates the menu item is clicked. */
   onMenuClick: (path: string) => void;
@@ -43,7 +43,7 @@ interface State {
 /** Implements the HeaderController on the customer side. */
 export class HeaderController extends React.Component<Properties, State> {
   private static defaultProps: Partial<Properties> = {
-    backgroundColor: '#F26B55'
+    headerStyle: { backgroundColor: '#F26B55' }
   };
   constructor(props: Properties) {
     super(props);

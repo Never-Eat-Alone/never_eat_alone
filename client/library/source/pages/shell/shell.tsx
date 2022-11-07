@@ -13,7 +13,7 @@ interface Properties {
   headerModel: HeaderModel;
 
   /** The background color for the header. */
-  headerBackgroundColor?: string;
+  headerStyle?: React.CSSProperties;
 
   /** Whether the footer has a background image or not. */
   isFooterBackgroundImage?: boolean;
@@ -42,7 +42,7 @@ interface Properties {
 
 export class Shell extends React.Component<Properties> {
   private static defaultProps: Partial<Properties> = {
-    headerBackgroundColor: '#F26B55',
+    headerStyle: { backgroundColor: '#F26B55' },
     isFooterBackgroundImage: true,
     footerBackgroundColor: '#EFEFEF'
   };
@@ -59,7 +59,7 @@ export class Shell extends React.Component<Properties> {
           onLogInButton={this.props.onLogInButton}
           onJoinButton={this.props.onJoinButton}
           onButtonClick={this.props.onButtonWithDropDownClick}
-          backgroundColor={this.props.headerBackgroundColor}
+          headerStyle={this.props.headerStyle}
         />
           {this.props.children}
         <Footer
