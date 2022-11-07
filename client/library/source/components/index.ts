@@ -41,6 +41,7 @@ export * from './privacy_button';
 export * from './profile_menu';
 export * from './profile_round_button';
 export * from './profile_set_up_page';
+export * from './scroll_to_top';
 export * from './see_all_less_button';
 export * from './show_all_button';
 export * from './show_less_button';
