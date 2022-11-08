@@ -13,13 +13,16 @@ interface Properties {
 /** Displays the What is NEA page. */
 export class WhatIsNeaPage extends React.Component<Properties> {
   public render(): JSX.Element {
-    const { heroContainerStyle, contentContainerStyle, contentFrameStyle,
-        imageContainerStyle, imageStyle, teamContainerStyle,
+    const { heroContainerStyle, imageHeroSubSectionContainerStyle,
+        textHeroSubSectionContainerStyle, contentContainerStyle,
+        contentFrameStyle, imageContainerStyle, imageStyle, teamContainerStyle,
         jessicaImageContainerStyle, arthurImageContainerStyle,
-        shahrzadImageContainerStyle } = (() => {
+        shahrzadImageContainerStyle, textContainerStyle } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
           heroContainerStyle: DESKTOP_HERO_CONTAINER_STYLE,
+          imageHeroSubSectionContainerStyle: IMAGE_HERO_SUB_SECTION_CONTAINER_STYLE,
+          textHeroSubSectionContainerStyle: TEXT_HERO_SUB_SECTION_CONTAINER_STYLE,
           contentContainerStyle: DESKTOP_CONTENT_CONTAINER_STYLE,
           contentFrameStyle: DESKTOP_CONTENT_FRAME_STYLE,
           imageContainerStyle: DESKTOP_IMAGE_CONTAINER_STYLE,
@@ -27,12 +30,15 @@ export class WhatIsNeaPage extends React.Component<Properties> {
           teamContainerStyle: DESKTOP_TEAM_CONTAINER_STYLE,
           jessicaImageContainerStyle: DESKTOP_JESSICA_IMAGE_CONTAINER_STYLE,
           arthurImageContainerStyle: DESKTOP_ARTHUR_IMAGE_CONTAINER_STYLE,
-          shahrzadImageContainerStyle: DESKTOP_SHAHRZAD_IMAGE_CONTAINER_STYLE
+          shahrzadImageContainerStyle: DESKTOP_SHAHRZAD_IMAGE_CONTAINER_STYLE,
+          textContainerStyle: DESKTOP_TEXT_CONTAINER_STYLE
         };
       }
       if (this.props.displayMode === DisplayMode.TABLET) {
         return {
           heroContainerStyle: TABLET_HERO_CONTAINER_STYLE,
+          imageHeroSubSectionContainerStyle: IMAGE_HERO_SUB_SECTION_CONTAINER_STYLE,
+          textHeroSubSectionContainerStyle: TEXT_HERO_SUB_SECTION_CONTAINER_STYLE,
           contentContainerStyle: TABLET_CONTENT_CONTAINER_STYLE,
           contentFrameStyle: TABLET_CONTENT_FRAME_STYLE,
           imageContainerStyle: TABLET_IMAGE_CONTAINER_STYLE,
@@ -40,11 +46,14 @@ export class WhatIsNeaPage extends React.Component<Properties> {
           teamContainerStyle: TABLET_TEAM_CONTAINER_STYLE,
           jessicaImageContainerStyle: TABLET_JESSICA_IMAGE_CONTAINER_STYLE,
           arthurImageContainerStyle: TABLET_ARTHUR_IMAGE_CONTAINER_STYLE,
-          shahrzadImageContainerStyle: TABLET_SHAHRZAD_IMAGE_CONTAINER_STYLE
+          shahrzadImageContainerStyle: TABLET_SHAHRZAD_IMAGE_CONTAINER_STYLE,
+          textContainerStyle: TABLET__TEXT_CONTAINER_STYLE
         };
       }
       return {
         heroContainerStyle: MOBILE_HERO_CONTAINER_STYLE,
+        imageHeroSubSectionContainerStyle: MOBILE_HERO_SUB_SECTION_CONTAINER_STYLE,
+        textHeroSubSectionContainerStyle: MOBILE_HERO_SUB_SECTION_CONTAINER_STYLE,
         contentContainerStyle: MOBILE_CONTENT_CONTAINER_STYLE,
         contentFrameStyle: MOBILE_CONTENT_FRAME_STYLE,
         imageContainerStyle: MOBILE_IMAGE_CONTAINER_STYLE,
@@ -52,7 +61,8 @@ export class WhatIsNeaPage extends React.Component<Properties> {
         teamContainerStyle: MOBILE_TEAM_CONTAINER_STYLE,
         jessicaImageContainerStyle: MOBILE_JESSICA_IMAGE_CONTAINER_STYLE,
         arthurImageContainerStyle: MOBILE_ARTHUR_IMAGE_CONTAINER_STYLE,
-        shahrzadImageContainerStyle: MOBILE_SHAHRZAD_IMAGE_CONTAINER_STYLE
+        shahrzadImageContainerStyle: MOBILE_SHAHRZAD_IMAGE_CONTAINER_STYLE,
+        textContainerStyle: MOBILE_TEXT_CONTAINER_STYLE
       };
     })();
 
@@ -63,7 +73,7 @@ export class WhatIsNeaPage extends React.Component<Properties> {
             <div>Scroll down</div>
             <div>↓</div>
           </div>
-          <div style={HERO_SUB_SECTION_CONTAINER_STYLE} >
+          <div style={imageHeroSubSectionContainerStyle} >
             <div style={teamContainerStyle} >
               <div
                   style={{...imageContainerStyle,
@@ -100,15 +110,15 @@ export class WhatIsNeaPage extends React.Component<Properties> {
               </div>
             </div>
           </div>
-          <div style={HERO_SUB_SECTION_CONTAINER_STYLE} >
-            <div style={TEXT_CONTAINER_STYLE} >
+          <div style={textHeroSubSectionContainerStyle} >
+            <div style={textContainerStyle} >
               <div style={HEADER_STYLE} >WHAT IS NEA?</div>
-              <div style={{...PARAGRAPH_STYLE, ...FIRST_LINES_STYLE}} >
+              <div style={PARAGRAPH_STYLE} >
                 We’re a little startup passionate about food and 
                 connections. It all started 3 years ago as a MeetUp Group 
                 called Never Eat Alone.
               </div>
-              <div style={{...PARAGRAPH_STYLE, ...LAST_LINE_STYLE}} >
+              <div style={PARAGRAPH_STYLE} >
                 Find out what you can achieve on NEA!
               </div>
             </div>
@@ -198,7 +208,7 @@ const HERO_CONTAINER_STYLE: React.CSSProperties = {
   position: 'relative',
   display: 'flex',
   flexDirection: 'row',
-  justifyContent: 'flex-start',
+  justifyContent: 'center',
   alignItems: 'flex-start',
   width: '100%',
   backgroundImage: "url('resources/what_is_nea_page/synesthesia.png')",
@@ -220,13 +230,17 @@ const TABLET_HERO_CONTAINER_STYLE: React.CSSProperties = {
 
 const MOBILE_HERO_CONTAINER_STYLE: React.CSSProperties = {
   ...HERO_CONTAINER_STYLE,
-  height: '575px'
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  width: '100%'
 };
 
 const SCROLL_TEXT_CONTAINER_STYLE: React.CSSProperties = {
   position: 'absolute',
   bottom: '0',
-  left: 'calc(50% - 83px/2)',
+  left: 'calc(50% - 41px)',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
@@ -242,48 +256,67 @@ const SCROLL_TEXT_CONTAINER_STYLE: React.CSSProperties = {
   backgroundColor: 'transparent'
 };
 
-const HERO_SUB_SECTION_CONTAINER_STYLE: React.CSSProperties = {
+const TEXT_HERO_SUB_SECTION_CONTAINER_STYLE: React.CSSProperties = {
   position: 'relative',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
   width: '50%',
-  height: '100%',
-  overflow: 'hidden'
+  height: '100%'
 };
 
-const TEAM_CONTAINER_STYLE: React.CSSProperties = {
-  position: 'absolute',
+const IMAGE_HERO_SUB_SECTION_CONTAINER_STYLE: React.CSSProperties = {
+  position: 'relative',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'flex-end',
-  backgroundColor: 'transparent'
+  width: '50%',
+  height: '100%'
+};
+
+const MOBILE_HERO_SUB_SECTION_CONTAINER_STYLE: React.CSSProperties = {
+  position: 'relative',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  width: '100%',
+  height: 'auto'
+};
+
+const TEAM_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-end',
+  backgroundColor: 'transparent',
+  overflow: 'hidden'
 };
 
 const DESKTOP_TEAM_CONTAINER_STYLE: React.CSSProperties = {
   ...TEAM_CONTAINER_STYLE,
   width: '717px',
   height: '421px',
-  right: '22px',
-  top: '54px'
+  marginRight: '22px',
+  marginTop: '54px'
 };
 
 const TABLET_TEAM_CONTAINER_STYLE: React.CSSProperties = {
   ...TEAM_CONTAINER_STYLE,
   width: '305px',
   height: '340px',
-  right: '25px',
-  top: '59px'
+  marginRight: '25px',
+  marginTop: '59px'
 };
 
 const MOBILE_TEAM_CONTAINER_STYLE: React.CSSProperties = {
   ...TEAM_CONTAINER_STYLE,
-  width: '430px',
-  height: '171px',
-  right: '-22px',
-  top: '54px'
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  width: '100%',
+  height: '225px'
 };
 
 const IMAGE_CONTAINER_STYLE: React.CSSProperties = {
@@ -350,8 +383,7 @@ const TABLET_JESSICA_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
 
 const MOBILE_JESSICA_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
   position: 'relative',
-  marginTop: '58px',
-  marginRight: 'calc(50% - 95px)',
+  marginTop: '112px',
   zIndex: 1
 };
 
@@ -369,13 +401,13 @@ const TABLET_ARTHUR_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
 
 const MOBILE_ARTHUR_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
   position: 'relative',
-  marginTop: '-58px',
-  marginRight: '128px',
+  marginTop: '-170px',
+  marginRight: '254px',
   zIndex: 0
 };
 
 const DESKTOP_SHAHRZAD_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
-  marginTop: '-85px',
+  marginTop: '-97px',
   marginRight: '98px'
 };
 
@@ -388,15 +420,44 @@ const TABLET_SHAHRZAD_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
 
 const MOBILE_SHAHRZAD_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
   position: 'relative',
-  marginTop: '8px',
-  marginRight: 'calc(190px + 51px)',
+  marginTop: '-111px',
+  marginRight: '-220px',
   zIndex: 2
 };
 
 const TEXT_CONTAINER_STYLE: React.CSSProperties = {
-  position: 'absolute',
-  top: '154px',
-  left: '121px'
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  gap: '23px',
+  flexWrap: 'wrap',
+  marginTop: '122px',
+  marginLeft: '86px',
+  backgroundColor: 'transparent'
+};
+
+const DESKTOP_TEXT_CONTAINER_STYLE: React.CSSProperties = {
+  ...TEXT_CONTAINER_STYLE,
+  maxWidth: '370px'
+};
+
+const TABLET__TEXT_CONTAINER_STYLE: React.CSSProperties = {
+  ...TEXT_CONTAINER_STYLE,
+  boxSizing: 'border-box',
+  maxWidth: '370px',
+  marginLeft: '0px',
+  paddingRight: '20px'
+};
+
+const MOBILE_TEXT_CONTAINER_STYLE: React.CSSProperties = {
+  ...TEXT_CONTAINER_STYLE,
+  boxSizing: 'border-box',
+  marginTop: '15px',
+  width: '100%',
+  padding: '0px 50px',
+  marginBottom: '73px',
+  marginLeft: '0px'
 };
 
 const HEADER_STYLE: React.CSSProperties = {
@@ -405,11 +466,8 @@ const HEADER_STYLE: React.CSSProperties = {
   fontWeight: 'normal',
   fontSize: '26px',
   lineHeight: '39px',
-  height: '39px',
-  minWidth: '137px',
   textTransform: 'uppercase',
-  color: '#FFFFFF',
-  overflow: 'hidden'
+  color: '#FFFFFF'
 };
 
 const PARAGRAPH_STYLE: React.CSSProperties = {
@@ -417,20 +475,10 @@ const PARAGRAPH_STYLE: React.CSSProperties = {
   fontStyle: 'normal',
   fontWeight: 'normal',
   fontSize: '20px',
-  lineHeight: '28px',
+  lineHeight: '25px',
   color: '#FFFFFF',
-  textShadow: '0px 1px 4px rgba(0, 0, 0, 0.25)',
-  width: '370px',
+  textShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
   whiteSpace: 'pre-wrap'
-};
-
-const FIRST_LINES_STYLE: React.CSSProperties = {
-  height: '80px',
-  marginTop: '23px'
-};
-
-const LAST_LINE_STYLE: React.CSSProperties = {
-  marginTop: '28px'
 };
 
 const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
