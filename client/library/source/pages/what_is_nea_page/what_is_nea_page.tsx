@@ -5,13 +5,18 @@ import { DisplayMode } from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
+
+  /** Indicates the request your account button is clicked. */
   onCreateAccount: () => void;
 }
 
+/** Displays the What is NEA page. */
 export class WhatIsNeaPage extends React.Component<Properties> {
   public render(): JSX.Element {
     const { heroContainerStyle, contentContainerStyle, contentFrameStyle,
-        imageContainerStyle, imageStyle, teamContainerStyle } = (() => {
+        imageContainerStyle, imageStyle, teamContainerStyle,
+        jessicaImageContainerStyle, arthurImageContainerStyle,
+        shahrzadImageContainerStyle } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
           heroContainerStyle: DESKTOP_HERO_CONTAINER_STYLE,
@@ -19,7 +24,10 @@ export class WhatIsNeaPage extends React.Component<Properties> {
           contentFrameStyle: DESKTOP_CONTENT_FRAME_STYLE,
           imageContainerStyle: DESKTOP_IMAGE_CONTAINER_STYLE,
           imageStyle: DESKTOP_IMAGE_STYLE,
-          teamContainerStyle: DESKTOP_TEAM_CONTAINER_STYLE
+          teamContainerStyle: DESKTOP_TEAM_CONTAINER_STYLE,
+          jessicaImageContainerStyle: DESKTOP_JESSICA_IMAGE_CONTAINER_STYLE,
+          arthurImageContainerStyle: DESKTOP_ARTHUR_IMAGE_CONTAINER_STYLE,
+          shahrzadImageContainerStyle: DESKTOP_SHAHRZAD_IMAGE_CONTAINER_STYLE
         };
       }
       if (this.props.displayMode === DisplayMode.TABLET) {
@@ -29,7 +37,10 @@ export class WhatIsNeaPage extends React.Component<Properties> {
           contentFrameStyle: TABLET_CONTENT_FRAME_STYLE,
           imageContainerStyle: TABLET_IMAGE_CONTAINER_STYLE,
           imageStyle: TABLET_IMAGE_STYLE,
-          teamContainerStyle: TABLET_TEAM_CONTAINER_STYLE
+          teamContainerStyle: TABLET_TEAM_CONTAINER_STYLE,
+          jessicaImageContainerStyle: TABLET_JESSICA_IMAGE_CONTAINER_STYLE,
+          arthurImageContainerStyle: TABLET_ARTHUR_IMAGE_CONTAINER_STYLE,
+          shahrzadImageContainerStyle: TABLET_SHAHRZAD_IMAGE_CONTAINER_STYLE
         };
       }
       return {
@@ -38,7 +49,10 @@ export class WhatIsNeaPage extends React.Component<Properties> {
         contentFrameStyle: MOBILE_CONTENT_FRAME_STYLE,
         imageContainerStyle: MOBILE_IMAGE_CONTAINER_STYLE,
         imageStyle: MOBILE_IMAGE_STYLE,
-        teamContainerStyle: MOBILE_TEAM_CONTAINER_STYLE
+        teamContainerStyle: MOBILE_TEAM_CONTAINER_STYLE,
+        jessicaImageContainerStyle: MOBILE_JESSICA_IMAGE_CONTAINER_STYLE,
+        arthurImageContainerStyle: MOBILE_ARTHUR_IMAGE_CONTAINER_STYLE,
+        shahrzadImageContainerStyle: MOBILE_SHAHRZAD_IMAGE_CONTAINER_STYLE
       };
     })();
 
@@ -51,7 +65,10 @@ export class WhatIsNeaPage extends React.Component<Properties> {
           </div>
           <div style={HERO_SUB_SECTION_CONTAINER_STYLE} >
             <div style={teamContainerStyle} >
-              <div style={imageContainerStyle} >
+              <div
+                  style={{...imageContainerStyle,
+                    ...jessicaImageContainerStyle}}
+              >
                 <img
                   style={imageStyle}
                   src='resources/what_is_nea_page/jessica.svg'
@@ -61,10 +78,10 @@ export class WhatIsNeaPage extends React.Component<Properties> {
               </div>
               <div
                   style={{...imageContainerStyle,
-                    ...ARTHUR_IMAGE_CONTAINER_STYLE}}
+                    ...arthurImageContainerStyle}}
               >
                 <img
-                  style={{...imageStyle, ...ARTHUR_IMAGE_STYLE}}
+                  style={imageStyle}
                   src='resources/what_is_nea_page/arthur.png'
                   alt='Arthur'
                   draggable={false}
@@ -72,10 +89,10 @@ export class WhatIsNeaPage extends React.Component<Properties> {
               </div>
               <div
                   style={{...imageContainerStyle,
-                    ...SHAHRZAD_IMAGE_CONTAINER_STYLE}}
+                    ...shahrzadImageContainerStyle}}
               >
                 <img
-                  style={{...imageStyle, ...SHAHRZAD_IMAGE_STYLE}}
+                  style={imageStyle}
                   src='resources/what_is_nea_page/shahrzad.svg'
                   alt='Shahrzad'
                   draggable={false}
@@ -220,8 +237,9 @@ const SCROLL_TEXT_CONTAINER_STYLE: React.CSSProperties = {
   fontStyle: 'normal',
   fontWeight: 'normal',
   fontSize: '14px',
-  lineHeight: '20px',
-  color: '#FFFFFF'
+  lineHeight: '18px',
+  color: '#FFFFFF',
+  backgroundColor: 'transparent'
 };
 
 const HERO_SUB_SECTION_CONTAINER_STYLE: React.CSSProperties = {
@@ -235,11 +253,45 @@ const HERO_SUB_SECTION_CONTAINER_STYLE: React.CSSProperties = {
   overflow: 'hidden'
 };
 
+const TEAM_CONTAINER_STYLE: React.CSSProperties = {
+  position: 'absolute',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-end',
+  backgroundColor: 'transparent'
+};
+
+const DESKTOP_TEAM_CONTAINER_STYLE: React.CSSProperties = {
+  ...TEAM_CONTAINER_STYLE,
+  width: '717px',
+  height: '421px',
+  right: '22px',
+  top: '54px'
+};
+
+const TABLET_TEAM_CONTAINER_STYLE: React.CSSProperties = {
+  ...TEAM_CONTAINER_STYLE,
+  width: '305px',
+  height: '340px',
+  right: '25px',
+  top: '59px'
+};
+
+const MOBILE_TEAM_CONTAINER_STYLE: React.CSSProperties = {
+  ...TEAM_CONTAINER_STYLE,
+  width: '430px',
+  height: '171px',
+  right: '-22px',
+  top: '54px'
+};
+
 const IMAGE_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
-  alignItems: 'center'
+  alignItems: 'center',
+  backgroundColor: 'transparent'
 };
 
 const DESKTOP_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
@@ -284,61 +336,61 @@ const MOBILE_IMAGE_STYLE: React.CSSProperties = {
   backgroundColor: 'transparent'
 };
 
-const TEAM_CONTAINER_STYLE: React.CSSProperties = {
-  position: 'absolute',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'flex-start',
-  alignItems: 'flex-end',
-  backgroundColor: 'transparent'
+const DESKTOP_JESSICA_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  marginTop: '0px',
+  marginRight: '0px'
 };
 
-const DESKTOP_TEAM_CONTAINER_STYLE: React.CSSProperties = {
-  ...TEAM_CONTAINER_STYLE,
-  width: '717px',
-  height: '421px',
-  right: '22px',
-  top: '54px'
+const TABLET_JESSICA_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  position: 'relative',
+  marginTop: '114px',
+  marginRight: '29px',
+  zIndex: 1
 };
 
-const TABLET_TEAM_CONTAINER_STYLE: React.CSSProperties = {
-  ...TEAM_CONTAINER_STYLE,
-  width: '305px',
-  height: '340px',
-  right: '25px',
-  top: '59px'
+const MOBILE_JESSICA_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  position: 'relative',
+  marginTop: '58px',
+  marginRight: 'calc(50% - 95px)',
+  zIndex: 1
 };
 
-const MOBILE_TEAM_CONTAINER_STYLE: React.CSSProperties = {
-  ...TEAM_CONTAINER_STYLE,
-  width: '430px',
-  height: '171px',
-  right: '-22px',
-  top: '54px'
+const DESKTOP_ARTHUR_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  marginTop: 'calc(57px - 224px)',
+  marginRight: '341px'
 };
 
-const ARTHUR_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
-  marginTop: '-167px',
-  marginRight: '341px',
-  width: 'auto',
-  //height: '225px'
+const TABLET_ARTHUR_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  position: 'relative',
+  marginTop: '-234px',
+  marginRight: '96px',
+  zIndex: 0
 };
 
-const ARTHUR_IMAGE_STYLE: React.CSSProperties = {
-  minHeight: '225px',
-  minWidth: 'auto'
+const MOBILE_ARTHUR_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  position: 'relative',
+  marginTop: '-58px',
+  marginRight: '128px',
+  zIndex: 0
 };
 
-const SHAHRZAD_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+const DESKTOP_SHAHRZAD_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
   marginTop: '-85px',
-  marginRight: '98px',
-  height: 'auto',
-  //width: '377px'
+  marginRight: '98px'
 };
 
-const SHAHRZAD_IMAGE_STYLE: React.CSSProperties = {
-  //minWidth: '377px',
-  minHeight: 'auto'
+const TABLET_SHAHRZAD_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  position: 'relative',
+  marginTop: '90px',
+  marginRight: '72px',
+  zIndex: 2
+};
+
+const MOBILE_SHAHRZAD_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  position: 'relative',
+  marginTop: '8px',
+  marginRight: 'calc(190px + 51px)',
+  zIndex: 2
 };
 
 const TEXT_CONTAINER_STYLE: React.CSSProperties = {
