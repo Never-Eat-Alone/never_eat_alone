@@ -2,6 +2,7 @@ import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { DisplayMode } from '../../definitions';
+import { PrimaryTextButton } from '../../components';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -17,7 +18,8 @@ export class WhatIsNeaPage extends React.Component<Properties> {
         textHeroSubSectionContainerStyle, contentContainerStyle,
         contentFrameStyle, imageContainerStyle, imageStyle, teamContainerStyle,
         jessicaImageContainerStyle, arthurImageContainerStyle,
-        shahrzadImageContainerStyle, textContainerStyle } = (() => {
+        shahrzadImageContainerStyle, textContainerStyle,
+        createAccountBoxContainerStyle } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
           heroContainerStyle: DESKTOP_HERO_CONTAINER_STYLE,
@@ -31,7 +33,8 @@ export class WhatIsNeaPage extends React.Component<Properties> {
           jessicaImageContainerStyle: DESKTOP_JESSICA_IMAGE_CONTAINER_STYLE,
           arthurImageContainerStyle: DESKTOP_ARTHUR_IMAGE_CONTAINER_STYLE,
           shahrzadImageContainerStyle: DESKTOP_SHAHRZAD_IMAGE_CONTAINER_STYLE,
-          textContainerStyle: DESKTOP_TEXT_CONTAINER_STYLE
+          textContainerStyle: DESKTOP_TEXT_CONTAINER_STYLE,
+          createAccountBoxContainerStyle: DESKTOP_CREATE_ACCOUNT_BOX_CONTAINER_STYLE
         };
       }
       if (this.props.displayMode === DisplayMode.TABLET) {
@@ -47,7 +50,8 @@ export class WhatIsNeaPage extends React.Component<Properties> {
           jessicaImageContainerStyle: TABLET_JESSICA_IMAGE_CONTAINER_STYLE,
           arthurImageContainerStyle: TABLET_ARTHUR_IMAGE_CONTAINER_STYLE,
           shahrzadImageContainerStyle: TABLET_SHAHRZAD_IMAGE_CONTAINER_STYLE,
-          textContainerStyle: TABLET__TEXT_CONTAINER_STYLE
+          textContainerStyle: TABLET__TEXT_CONTAINER_STYLE,
+          createAccountBoxContainerStyle: TABLET_CREATE_ACCOUNT_BOX_CONTAINER_STYLE
         };
       }
       return {
@@ -62,7 +66,8 @@ export class WhatIsNeaPage extends React.Component<Properties> {
         jessicaImageContainerStyle: MOBILE_JESSICA_IMAGE_CONTAINER_STYLE,
         arthurImageContainerStyle: MOBILE_ARTHUR_IMAGE_CONTAINER_STYLE,
         shahrzadImageContainerStyle: MOBILE_SHAHRZAD_IMAGE_CONTAINER_STYLE,
-        textContainerStyle: MOBILE_TEXT_CONTAINER_STYLE
+        textContainerStyle: MOBILE_TEXT_CONTAINER_STYLE,
+        createAccountBoxContainerStyle: MOBILE_CREATE_ACCOUNT_BOX_CONTAINER_STYLE
       };
     })();
 
@@ -140,7 +145,7 @@ export class WhatIsNeaPage extends React.Component<Properties> {
                 <Router.Link
                     style={{...BUTTON_STYLE, ...EXPLORE_EVENTS_BUTTON_STYLE}}
                     className={css(styles.link)}
-                    to='/explore_events'
+                    to='/'
                     draggable={false}
                 >
                   Explore Events
@@ -180,15 +185,13 @@ export class WhatIsNeaPage extends React.Component<Properties> {
                 />
               </div>
             </div>
-            <div style={CREATE_ACCOUNT_BOX_CONTAINER_STYLE} >
+            <div style={createAccountBoxContainerStyle} >
               <div style={CREATE_ACCOUNT_HEADER_STYLE} >Ready To Start?</div>
-              <button
+              <PrimaryTextButton
                   style={CREATE_ACCOUNT_BUTTON_STYLE}
-                  className={css(styles.createAccountButton)}
+                  label='Create Your Account'
                   onClick={this.props.onCreateAccount}
-              >
-                Create Your Account
-              </button>
+              />
             </div>
           </div>
         </div>
@@ -680,8 +683,26 @@ const CREATE_ACCOUNT_BOX_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'center',
   backgroundColor: 'transparent',
+  padding: '0px',
+  gap: '30px'
+};
+
+const DESKTOP_CREATE_ACCOUNT_BOX_CONTAINER_STYLE: React.CSSProperties = {
+  ...CREATE_ACCOUNT_BOX_CONTAINER_STYLE,
+  width: '205px',
+  marginTop: '180px'
+};
+
+const TABLET_CREATE_ACCOUNT_BOX_CONTAINER_STYLE: React.CSSProperties = {
+  ...CREATE_ACCOUNT_BOX_CONTAINER_STYLE,
   width: '196px',
-  padding: '0px'
+  marginTop: '100px'
+};
+
+const MOBILE_CREATE_ACCOUNT_BOX_CONTAINER_STYLE: React.CSSProperties = {
+  ...CREATE_ACCOUNT_BOX_CONTAINER_STYLE,
+  width: '196px',
+  marginTop: '100px'
 };
 
 const CREATE_ACCOUNT_HEADER_STYLE: React.CSSProperties = {
@@ -690,37 +711,17 @@ const CREATE_ACCOUNT_HEADER_STYLE: React.CSSProperties = {
   fontWeight: 'normal',
   fontSize: '26px',
   lineHeight: '39px',
-  height: '39px',
   textAlign: 'center',
   textTransform: 'uppercase',
   color: '#4F4F4F',
-  marginBottom: '30px',
-  minWidth: '173px',
-  maxWidth: '100%',
-  overflow: 'hidden'
+  backgroundColor: 'transparent'
 };
 
 const CREATE_ACCOUNT_BUTTON_STYLE: React.CSSProperties = {
-  boxSizing: 'border-box',
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'center',
-  padding: '10px 36px',
   width: '100%',
   height: '35px',
-  background: '#F26B55',
-  borderRadius: '4px',
-  border: 'none',
-  textDecoration: 'none',
-  fontFamily: 'Source Sans Pro',
-  fontStyle: 'normal',
-  fontWeight: 600,
   fontSize: '12px',
-  lineHeight: '15px',
-  textTransform: 'uppercase',
-  color: '#FFFFFF',
-  cursor: 'pointer'
+  lineHeight: '15px'
 };
 
 const styles = StyleSheet.create({
@@ -736,14 +737,6 @@ const styles = StyleSheet.create({
     ':active': {
       textDecoration: 'none',
       outline: 'none'
-    }
-  },
-  createAccountButton: {
-    ':hover': {
-      backgroundColor: '#F26B55'
-    },
-    ':active': {
-      backgroundColor: '#F26B55'
     }
   }
 });
