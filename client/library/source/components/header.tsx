@@ -15,7 +15,7 @@ interface Properties {
   /** Represents the user profile image source. */
   profileImageSrc?: string;
 
-  backgroundColor?: string;
+  headerStyle?: React.CSSProperties;
 
   /** Indicates the menu item inside the dropdown is clicked. */
   onMenuClick: (path: string) => void;
@@ -129,11 +129,9 @@ export class Header extends React.Component<Properties> {
           />);
       }
     }
+
     return (
-      <div
-          style={{...HEADER_CONTAINER_STYLE,
-            backgroundColor: this.props.backgroundColor}}
-      >
+      <div style={{...HEADER_CONTAINER_STYLE, ...this.props.headerStyle}} >
         <div style={headerMode} >
           <HeaderLogo displayMode={this.props.displayMode} />
           <div style={RIGHT_CONTAINER_STYLE} >{rightSideButtons}</div>

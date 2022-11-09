@@ -13,3 +13,4 @@ export * from './reset_password_page';
 export * from './settings_page';
 export * from './shell';
 export * from './terms_of_use_page';
+export * from './what_is_nea_page';
