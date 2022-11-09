@@ -5,7 +5,13 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
   public load(): Promise<void> {
     this._headerModel = new NeverEatAlone.LocalHeaderModel();
     this._account = NeverEatAlone.User.makeGuest();
-    this._homePageModel = new NeverEatAlone.localHomePageModel();
+    const imageList: NeverEatAlone.SocialMediaImage[] = [];
+    const eventList: NeverEatAlone.EventCardSummary[] = [];
+    const eventTagList: NeverEatAlone.EventTag[] = [];
+    const userFutureEventList: NeverEatAlone.EventCardSummary[] = [];
+    const totalEventsThisMonth: number = 0;
+    this._homePageModel = new NeverEatAlone.LocalHomePageModel(imageList,
+      eventList, eventTagList, userFutureEventList, totalEventsThisMonth);
     return;
   }
 
