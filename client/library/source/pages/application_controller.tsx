@@ -207,7 +207,7 @@ export class ApplicationController extends React.Component<Properties, State> {
 
   private renderWhatIsNea = () => {
     return <WhatIsNeaPage displayMode={this.state.displayMode}
-      onCreateAccount={() => {}} />;
+      onCreateAccountClick={() => {}} onGetInTouchClick={() => {}} />;
   }
 
   private renderPartnerWithUs = () => {

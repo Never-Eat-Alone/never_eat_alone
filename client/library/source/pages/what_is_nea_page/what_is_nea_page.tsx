@@ -1,14 +1,16 @@
-import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
-import * as Router from 'react-router-dom';
+import { PrimaryTextButton, SecondaryTextButton, SecondaryButtonNavLink
+} from '../../components';
 import { DisplayMode } from '../../definitions';
-import { PrimaryTextButton } from '../../components';
 
 interface Properties {
   displayMode: DisplayMode;
 
   /** Indicates the request your account button is clicked. */
-  onCreateAccount: () => void;
+  onCreateAccountClick: () => void;
+
+  /** Indicates the get in touch button is clicked. */
+  onGetInTouchClick: () => void;
 }
 
 /** Displays the What is NEA page. */
@@ -19,7 +21,10 @@ export class WhatIsNeaPage extends React.Component<Properties> {
         contentFrameStyle, imageContainerStyle, imageStyle, teamContainerStyle,
         jessicaImageContainerStyle, arthurImageContainerStyle,
         shahrzadImageContainerStyle, textContainerStyle,
-        createAccountBoxContainerStyle } = (() => {
+        createAccountBoxContainerStyle, contentImageContainerStyle,
+        contentImageStyle, eventParagraphStyle, partnerParagraphStyle,
+        eventTextBoxStyle, partnerTextBoxStyle, eventContainerStyle,
+        partnerContainerStyle, partnerImageContainerStyle } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
           heroContainerStyle: DESKTOP_HERO_CONTAINER_STYLE,
@@ -34,7 +39,16 @@ export class WhatIsNeaPage extends React.Component<Properties> {
           arthurImageContainerStyle: DESKTOP_ARTHUR_IMAGE_CONTAINER_STYLE,
           shahrzadImageContainerStyle: DESKTOP_SHAHRZAD_IMAGE_CONTAINER_STYLE,
           textContainerStyle: DESKTOP_TEXT_CONTAINER_STYLE,
-          createAccountBoxContainerStyle: DESKTOP_CREATE_ACCOUNT_BOX_CONTAINER_STYLE
+          createAccountBoxContainerStyle: DESKTOP_CREATE_ACCOUNT_BOX_CONTAINER_STYLE,
+          contentImageContainerStyle: DESKTOP_CONTENT_IMAGE_CONTAINER_STYLE,
+          contentImageStyle: DESKTOP_CONTENT_IMAGE_STYLE,
+          eventParagraphStyle: EVENT_PARAGRAPH_STYLE,
+          partnerParagraphStyle: PARTNER_PARAGRAPH_STYLE,
+          eventTextBoxStyle: DESKTOP_EVENT_TEXT_BOX_STYLE,
+          partnerTextBoxStyle: DESKTOP_PARTNER_TEXT_BOX_STYLE,
+          eventContainerStyle: EVENT_CONTAINER_STYLE,
+          partnerContainerStyle: PARTNER_CONTAINER_STYLE,
+          partnerImageContainerStyle: DESKTOP_PARTNER_IMAGE_CONTAINER_STYLE
         };
       }
       if (this.props.displayMode === DisplayMode.TABLET) {
@@ -51,7 +65,16 @@ export class WhatIsNeaPage extends React.Component<Properties> {
           arthurImageContainerStyle: TABLET_ARTHUR_IMAGE_CONTAINER_STYLE,
           shahrzadImageContainerStyle: TABLET_SHAHRZAD_IMAGE_CONTAINER_STYLE,
           textContainerStyle: TABLET__TEXT_CONTAINER_STYLE,
-          createAccountBoxContainerStyle: TABLET_CREATE_ACCOUNT_BOX_CONTAINER_STYLE
+          createAccountBoxContainerStyle: TABLET_CREATE_ACCOUNT_BOX_CONTAINER_STYLE,
+          contentImageContainerStyle: TABLET_CONTENT_IMAGE_CONTAINER_STYLE,
+          contentImageStyle: TABLET_CONTENT_IMAGE_STYLE,
+          eventParagraphStyle: EVENT_PARAGRAPH_STYLE,
+          partnerParagraphStyle: PARTNER_PARAGRAPH_STYLE,
+          eventTextBoxStyle: TABLET_EVENT_TEXT_BOX_STYLE,
+          partnerTextBoxStyle: TABLET_PARTNER_TEXT_BOX_STYLE,
+          eventContainerStyle: EVENT_CONTAINER_STYLE,
+          partnerContainerStyle: PARTNER_CONTAINER_STYLE,
+          partnerImageContainerStyle: TABLET_PARTNER_IMAGE_CONTAINER_STYLE
         };
       }
       return {
@@ -67,7 +90,16 @@ export class WhatIsNeaPage extends React.Component<Properties> {
         arthurImageContainerStyle: MOBILE_ARTHUR_IMAGE_CONTAINER_STYLE,
         shahrzadImageContainerStyle: MOBILE_SHAHRZAD_IMAGE_CONTAINER_STYLE,
         textContainerStyle: MOBILE_TEXT_CONTAINER_STYLE,
-        createAccountBoxContainerStyle: MOBILE_CREATE_ACCOUNT_BOX_CONTAINER_STYLE
+        createAccountBoxContainerStyle: MOBILE_CREATE_ACCOUNT_BOX_CONTAINER_STYLE,
+        contentImageContainerStyle: MOBILE_CONTENT_IMAGE_CONTAINER_STYLE,
+        contentImageStyle: MOBILE_CONTENT_IMAGE_STYLE,
+        eventParagraphStyle: {...EVENT_PARAGRAPH_STYLE, ...MOBILE_CONTENT_PARAGRAPH_STYLE},
+        partnerParagraphStyle: {...PARTNER_PARAGRAPH_STYLE, ...MOBILE_PARTNER_PARAGRAPH_STYLE},
+        eventTextBoxStyle: MOBILE_EVENT_TEXT_BOX_STYLE,
+        partnerTextBoxStyle: MOBILE_PARTNER_TEXT_BOX_STYLE,
+        eventContainerStyle: MOBILE_EVENT_CONTAINER_STYLE,
+        partnerContainerStyle: MOBILE_PARTNER_CONTAINER_STYLE,
+        partnerImageContainerStyle: MOBILE_PARTNER_IMAGE_CONTAINER_STYLE
       };
     })();
 
@@ -118,12 +150,12 @@ export class WhatIsNeaPage extends React.Component<Properties> {
           <div style={textHeroSubSectionContainerStyle} >
             <div style={textContainerStyle} >
               <div style={HEADER_STYLE} >WHAT IS NEA?</div>
-              <div style={PARAGRAPH_STYLE} >
+              <div style={HEADER_PARAGRAPH_STYLE} >
                 We’re a little startup passionate about food and 
                 connections. It all started 3 years ago as a MeetUp Group 
                 called Never Eat Alone.
               </div>
-              <div style={PARAGRAPH_STYLE} >
+              <div style={HEADER_PARAGRAPH_STYLE} >
                 Find out what you can achieve on NEA!
               </div>
             </div>
@@ -131,55 +163,49 @@ export class WhatIsNeaPage extends React.Component<Properties> {
         </div>
         <div style={contentContainerStyle} >
           <div style={contentFrameStyle} >
-            <div style={FIRST_ROW_CONTAINER_STYLE} >
-              <div style={FIRST_TEXT_BOX_STYLE} >
-                <div style={TEXT_BOX_HEADER} >
+            <div style={eventContainerStyle} >
+              <div style={eventTextBoxStyle} >
+                <div style={EVENT_HEADER_STYLE} >
                   Attend Culinary Events
                 </div>
-                <div style={TEXT_BOX_PARAGRAPH_STYLE} >
+                <div style={eventParagraphStyle} >
                   Would love to check that new restaurant close to your place? 
                   Or are you feeling adventurous and want to try something 
                   entirely new, but know no one to recommend you? That’s why 
                   we are here.
                 </div>
-                <Router.Link
-                    style={{...BUTTON_STYLE, ...EXPLORE_EVENTS_BUTTON_STYLE}}
-                    className={css(styles.link)}
-                    to='/'
-                    draggable={false}
-                >
-                  Explore Events
-                </Router.Link>
+                <SecondaryButtonNavLink
+                  style={EXPLORE_EVENTS_BUTTON_STYLE}
+                  to='/'
+                  label='Explore Events'
+                />
               </div>
-              <div style={CONTENT_IMAGE_CONTAINER_STYLE} >
+              <div style={contentImageContainerStyle} >
                 <img
-                  style={CONTENT_IMAGE_STYLE}
+                  style={contentImageStyle}
                   src='resources/what_is_nea_page/explore-events.png'
                   alt='Explore events'
                 />
               </div>
             </div>
-            <div style={THIRD_ROW_CONTAINER_STYLE} >
-              <div style={THIRD_TEXT_BOX_STYLE} >
-                <div style={TEXT_BOX_HEADER} >Partner With Us</div>
-                <div style={TEXT_BOX_PARAGRAPH_STYLE} >
-                  Want to manage and promote your restaurant so we can 
-                  create events at your venue and bring lots of customers to 
-                  you? Or did you find your venue here and want to add more 
-                  information to make it interesting?
+            <div style={partnerContainerStyle} >
+              <div style={partnerTextBoxStyle} >
+                <div style={PARTNER_HEADER_STYLE} >Partner With Us</div>
+                <div style={partnerParagraphStyle} >
+                  Want to manage and promote your restaurant, or host events 
+                  directly for your customers? Or did you find your venue here 
+                  and want to add more information to make it interesting? Get 
+                  in touch and keep up with our updates!
                 </div>
-                <Router.Link
-                    style={{...BUTTON_STYLE, ...PARTNER_WITH_US_BUTTON_STYLE}}
-                    className={css(styles.link)}
-                    to='/partner_with_us'
-                    draggable={false}
-                >
-                  Partner With Us
-                </Router.Link>
+                <SecondaryTextButton
+                  style={PARTNER_WITH_US_BUTTON_STYLE}
+                  label='Get in touch'
+                  onClick={this.props.onGetInTouchClick}
+                />
               </div>
-              <div style={CONTENT_IMAGE_CONTAINER_STYLE} >
+              <div style={partnerImageContainerStyle} >
                 <img
-                  style={CONTENT_IMAGE_STYLE}
+                  style={contentImageStyle}
                   src='resources/what_is_nea_page/partner-with-us.png'
                   alt='Partner with us'
                 />
@@ -190,7 +216,7 @@ export class WhatIsNeaPage extends React.Component<Properties> {
               <PrimaryTextButton
                   style={CREATE_ACCOUNT_BUTTON_STYLE}
                   label='Create Your Account'
-                  onClick={this.props.onCreateAccount}
+                  onClick={this.props.onCreateAccountClick}
               />
             </div>
           </div>
@@ -473,7 +499,7 @@ const HEADER_STYLE: React.CSSProperties = {
   color: '#FFFFFF'
 };
 
-const PARAGRAPH_STYLE: React.CSSProperties = {
+const HEADER_PARAGRAPH_STYLE: React.CSSProperties = {
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
   fontWeight: 'normal',
@@ -506,17 +532,17 @@ const DESKTOP_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
 
 const TABLET_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
   ...CONTENT_CONTAINER_STYLE,
-  maxWidth: '1206px',
-  maxHeight: '1655px'
+  maxWidth: '768px',
+  maxHeight: '1435px'
 };
 
 const MOBILE_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
   ...CONTENT_CONTAINER_STYLE,
-  maxWidth: '1206px',
-  maxHeight: '1655px'
+  maxWidth: '100%'
 };
 
 const CONTENT_FRAME_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
@@ -528,153 +554,274 @@ const DESKTOP_CONTENT_FRAME_STYLE: React.CSSProperties = {
   ...CONTENT_FRAME_STYLE,
   width: '1143px',
   marginTop: '100px',
-  marginBottom: '325px'
+  marginBottom: '325px',
+  gap: '180px'
 };
 
 const TABLET_CONTENT_FRAME_STYLE: React.CSSProperties = {
   ...CONTENT_FRAME_STYLE,
   width: '768px',
   marginTop: '100px',
-  marginBottom: '245px'
+  marginBottom: '245px',
+  gap: '100px'
 };
 
 const MOBILE_CONTENT_FRAME_STYLE: React.CSSProperties = {
   ...CONTENT_FRAME_STYLE,
   width: '100%',
   marginTop: '100px',
-  marginBottom: '271px'
+  marginBottom: '271px',
+  gap: '30px'
 };
 
-const FIRST_ROW_CONTAINER_STYLE: React.CSSProperties = {
+const EVENT_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row-reverse',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  width: '100%',
-  height: '396px'
+  width: '100%'
 };
 
-const FIRST_TEXT_BOX_STYLE: React.CSSProperties = {
+const MOBILE_EVENT_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column-reverse',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  width: '100%'
+};
+
+const EVENT_TEXT_BOX_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
+  justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  padding: '40px 40px 50px 100px',
   backgroundColor: '#F6F6F6',
-  opacity: 0.8,
-  width: '633px',
-  height: '350px',
-  marginLeft: '-40px',
-  marginTop: '46px',
-  textAlign: 'left'
+  opacity: 0.8
 };
 
-const CONTENT_IMAGE_CONTAINER_STYLE : React.CSSProperties = {
+const DESKTOP_EVENT_TEXT_BOX_STYLE: React.CSSProperties = {
+  ...EVENT_TEXT_BOX_STYLE,
+  width: '633px',
+  height: '350px',
+  padding: '40px 40px 50px 100px',
+  marginLeft: '-40px',
+  marginTop: '46px'
+};
+
+const TABLET_EVENT_TEXT_BOX_STYLE: React.CSSProperties = {
+  ...EVENT_TEXT_BOX_STYLE,
+  width: '490px',
+  height: '370px',
+  padding: '40px 40px 50px 100px',
+  marginLeft: '-52px',
+  marginTop: '46px'
+};
+
+const MOBILE_EVENT_TEXT_BOX_STYLE: React.CSSProperties = {
+  ...EVENT_TEXT_BOX_STYLE,
+  width: '335px',
+  height: '428px',
+  padding: '30px',
+  marginLeft: '20px',
+  marginTop: '-10px'
+};
+
+const CONTENT_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
-  flexDirection: 'row',
+  flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
-  width: '550px',
-  height: '350px',
-  filter: 'drop-shadow(0px 1px 4px rgba(0, 0, 0, 0.25))',
+  filter: 'drop-shadow(0px 1px 4px rgba(86, 70, 40, 0.25))',
   borderRadius: '4px',
   overflow: 'hidden'
+};
+
+const DESKTOP_CONTENT_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTENT_IMAGE_CONTAINER_STYLE,
+  width: '550px',
+  height: '350px',
+};
+
+const DESKTOP_PARTNER_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  ...DESKTOP_CONTENT_IMAGE_CONTAINER_STYLE,
+  marginTop: '20px',
+  marginLeft: '0px'
+};
+
+const TABLET_CONTENT_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTENT_IMAGE_CONTAINER_STYLE,
+  width: '330px',
+  height: '350px',
+};
+
+const TABLET_PARTNER_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  ...TABLET_CONTENT_IMAGE_CONTAINER_STYLE,
+  marginTop: '20px',
+  marginLeft: '0px'
+};
+
+const MOBILE_CONTENT_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTENT_IMAGE_CONTAINER_STYLE,
+  width: '330px',
+  height: '350px',
+};
+
+const MOBILE_PARTNER_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  ...MOBILE_CONTENT_IMAGE_CONTAINER_STYLE,
+  marginTop: '0px',
+  marginLeft: '45px'
 };
 
 const CONTENT_IMAGE_STYLE: React.CSSProperties = {
   width: '100%',
   height: '100%',
-  minWidth: '550px',
-  minHeight: '350px',
   backgroundColor: 'transparent',
   objectFit: 'cover',
   padding: '0',
   margin: '0'
 };
 
-const TEXT_BOX_HEADER: React.CSSProperties = {
+const DESKTOP_CONTENT_IMAGE_STYLE: React.CSSProperties = {
+  ...CONTENT_IMAGE_STYLE,
+  minWidth: '550px',
+  minHeight: '350px'
+};
+
+const TABLET_CONTENT_IMAGE_STYLE: React.CSSProperties = {
+  ...CONTENT_IMAGE_STYLE,
+  minWidth: '330px',
+  minHeight: '350px'
+};
+
+const MOBILE_CONTENT_IMAGE_STYLE: React.CSSProperties = {
+  ...CONTENT_IMAGE_STYLE,
+  minWidth: '330px',
+  minHeight: '350px'
+};
+
+const EVENT_HEADER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  flexWrap: 'wrap',
   fontFamily: 'Oswald',
   fontStyle: 'normal',
-  fontWeight: 'normal',
+  fontWeight: 400,
   fontSize: '32px',
   lineHeight: '47px',
   textTransform: 'uppercase',
   color: '#4F4F4F',
   width: '100%',
-  height: '47px',
-  backgroundColor: 'transparent'
+  backgroundColor: 'transparent',
+  whiteSpace: 'pre-wrap',
+  textAlign: 'left'
 };
 
-const TEXT_BOX_PARAGRAPH_STYLE: React.CSSProperties = {
+const PARTNER_HEADER_STYLE: React.CSSProperties = {
+  ...EVENT_HEADER_STYLE,
+  textAlign: 'right'
+};
+
+const EVENT_PARAGRAPH_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  flexWrap: 'wrap',
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
   fontWeight: 600,
   fontSize: '20px',
   lineHeight: '25px',
   color: '#000000',
+  backgroundColor: 'transparent',
+  whiteSpace: 'pre-wrap',
   width: '100%',
-  height: '100px',
   marginTop: '16px',
-  marginBottom: '32px',
-  backgroundColor: 'transparent',
-  whiteSpace: 'pre-wrap'
+  textAlign: 'left'
 };
 
-const BUTTON_STYLE: React.CSSProperties = {
-  boxSizing: 'border-box',
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'center',
-  border: '1px solid #F26B55',
-  borderRadius: '4px',
-  fontFamily: 'Source Sans Pro',
-  fontStyle: 'normal',
-  fontWeight: 600,
-  fontSize: '12px',
-  lineHeight: '15px',
-  textTransform: 'uppercase',
-  color: '#F26B55',
-  backgroundColor: 'transparent',
-  outline: 'none',
-  textDecoration: 'none',
-  height: '35px',
-  cursor: 'pointer'
+const PARTNER_PARAGRAPH_STYLE: React.CSSProperties = {
+  ...EVENT_PARAGRAPH_STYLE,
+  textAlign: 'right'
 };
 
-const PARTNER_WITH_US_BUTTON_STYLE: React.CSSProperties = {
-  width: '167px'
+const MOBILE_CONTENT_PARAGRAPH_STYLE: React.CSSProperties = {
+  marginTop: '32px'
+};
+
+const MOBILE_PARTNER_PARAGRAPH_STYLE: React.CSSProperties = {
+  marginTop: '32px',
+  textAlign: 'left'
 };
 
 const EXPLORE_EVENTS_BUTTON_STYLE: React.CSSProperties = {
-  width: '162px'
+  width: '162px',
+  height: '35px',
+  marginTop: '32px'
 };
 
-const THIRD_ROW_CONTAINER_STYLE: React.CSSProperties = {
+const PARTNER_WITH_US_BUTTON_STYLE: React.CSSProperties = {
+  width: '146px',
+  height: '35px',
+  marginTop: '32px'
+};
+
+const PARTNER_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
-  flexDirection: 'row-reverse',
+  flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  width: '100%',
-  height: '416px',
-  marginBottom: '180px'
+  width: '100%'
 };
 
-const THIRD_TEXT_BOX_STYLE: React.CSSProperties = {
+const MOBILE_PARTNER_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column-reverse',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  width: '100%'
+};
+
+const PARTNER_TEXT_BOX_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
-  alignItems: 'flex-start',
-  padding: '40px 40px 50px 100px',
-  backgroundColor: '#FFF2CC',
-  opacity: 0.8,
+  alignItems: 'flex-end',
+  backgroundColor: '#FFE2CA',
+  opacity: 0.8
+};
+
+const DESKTOP_PARTNER_TEXT_BOX_STYLE: React.CSSProperties = {
+  ...PARTNER_TEXT_BOX_STYLE,
+  padding: '40px 100px 50px 40px',
   width: '633px',
   height: '350px',
-  marginTop: '66px',
-  marginLeft: '-40px',
-  textAlign: 'left'
+  marginTop: '0px',
+  marginRight: '-40px'
+};
+
+const TABLET_PARTNER_TEXT_BOX_STYLE: React.CSSProperties = {
+  ...PARTNER_TEXT_BOX_STYLE,
+  padding: '40px 100px 40px 40px',
+  width: '490px',
+  height: '360px',
+  marginTop: '0px',
+  marginRight: '-52px'
+};
+
+const MOBILE_PARTNER_TEXT_BOX_STYLE: React.CSSProperties = {
+  ...PARTNER_TEXT_BOX_STYLE,
+  alignItems: 'flex-start',
+  padding: '30px',
+  width: '335px',
+  height: '406px',
+  marginTop: '-11px',
+  marginRight: '20px'
 };
 
 const CREATE_ACCOUNT_BOX_CONTAINER_STYLE: React.CSSProperties = {
@@ -689,14 +836,12 @@ const CREATE_ACCOUNT_BOX_CONTAINER_STYLE: React.CSSProperties = {
 
 const DESKTOP_CREATE_ACCOUNT_BOX_CONTAINER_STYLE: React.CSSProperties = {
   ...CREATE_ACCOUNT_BOX_CONTAINER_STYLE,
-  width: '205px',
-  marginTop: '180px'
+  width: '205px'
 };
 
 const TABLET_CREATE_ACCOUNT_BOX_CONTAINER_STYLE: React.CSSProperties = {
   ...CREATE_ACCOUNT_BOX_CONTAINER_STYLE,
-  width: '196px',
-  marginTop: '100px'
+  width: '196px'
 };
 
 const MOBILE_CREATE_ACCOUNT_BOX_CONTAINER_STYLE: React.CSSProperties = {
@@ -723,20 +868,3 @@ const CREATE_ACCOUNT_BUTTON_STYLE: React.CSSProperties = {
   fontSize: '12px',
   lineHeight: '15px'
 };
-
-const styles = StyleSheet.create({
-  link: {
-    ':hover': {
-      textDecoration: 'none',
-      outline: 'none'
-    },
-    ':focus': {
-      textDecoration: 'none',
-      outline: 'none'
-    },
-    ':active': {
-      textDecoration: 'none',
-      outline: 'none'
-    }
-  }
-});
