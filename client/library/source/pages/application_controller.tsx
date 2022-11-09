@@ -8,6 +8,7 @@ import { PrivacyPolicyPage } from './privacy_policy_page';
 import { Shell } from './shell';
 import { TermsOfUsePage } from './terms_of_use_page';
 import { WhatIsNeaPage } from './what_is_nea_page';
+import { HomePageController } from './home_page';
 
 type TParams = { id?: string, userId?: string };
 interface Properties extends Router.RouteComponentProps<TParams> {
@@ -171,6 +172,8 @@ export class ApplicationController extends React.Component<Properties, State> {
     this.setState({ redirect: path });
   }
 
+  private handleJoinButtonClick = () => {};
+
   private handleButtonWithDropDownClick = (label: string) => {}
 
   private renderSettings = (
@@ -198,7 +201,12 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private renderHomePage = () => {
-    return <div>Home Page Controller</div>;
+    return <HomePageController
+      displayMode={this.state.displayMode}
+      account={this.props.model.getAccount()}
+      model={this.props.model.getHomePageModel()}
+      onJoinButton={this.handleJoinButtonClick}
+    />;
   }
 
   private renderSignUp = () => {
