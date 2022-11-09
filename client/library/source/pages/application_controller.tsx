@@ -273,9 +273,10 @@ export class ApplicationController extends React.Component<Properties, State> {
     if (pathname === '/') {
       return ({
         headerStyle: {
+          position: 'absolute',
+          top: '0px',
           backgroundColor: 'transparent',
-          position: 'relative',
-          zIndex: 'auto'
+          zIndex: 2
         } as React.CSSProperties
       });
     }
