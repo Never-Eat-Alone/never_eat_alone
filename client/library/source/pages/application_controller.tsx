@@ -4,11 +4,11 @@ import { DisplayMode, getDisplayMode } from '../definitions';
 import { ApplicationModel } from './application_model';
 import { CookiesPolicyPage } from './cookie_policy_page';
 import { HelpPage } from './help_page';
+import { HomePageController } from './home_page';
 import { PrivacyPolicyPage } from './privacy_policy_page';
 import { Shell } from './shell';
 import { TermsOfUsePage } from './terms_of_use_page';
 import { WhatIsNeaPage } from './what_is_nea_page';
-import { HomePageController } from './home_page';
 
 type TParams = { id?: string, userId?: string };
 interface Properties extends Router.RouteComponentProps<TParams> {
