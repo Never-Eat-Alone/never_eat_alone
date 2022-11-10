@@ -11,5 +11,4 @@ node_modules/
 client/tests/**/application/
 client/application/application/
 client/library/library/
-client/resources/images/
 client/tests/ui_catalog/library
