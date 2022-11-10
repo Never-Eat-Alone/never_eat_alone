@@ -226,10 +226,8 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       NeverEatAlone.Seating.STANDARD, new NeverEatAlone.Location(7,
       '432 Wellington St W', '', 'Toronto', 'ON', 'CA', 'M5V 1E3',
       'Financial District'), 'Sheryl Miller', new Date(2023, 6, 12, 19, 0, 0),
-      new Date(2023, 6, 13, 1, 0, 0), attendeeList1, 8, '', false, false, true);
+      new Date(2023, 6, 13, 1, 0, 0), [], 8, '', false, false, true);
     this._diningEventModelMap.set(7, localDiningEventModel7);
-    // Dining event model 8
-
     return;
   }
 

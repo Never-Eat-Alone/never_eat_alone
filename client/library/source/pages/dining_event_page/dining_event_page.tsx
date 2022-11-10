@@ -244,7 +244,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
       if (this.props.startTime) {
         const startTime = (this.props.isLoggedIn &&
           format(this.props.startTime, 'eeee, MMMM d, yyyy') ||
-          'Lon in to see the date');
+          'Log in to see the date');
         details.push(
           <div key='event-start-date' style={detailIconTextContainerStyle} >
             <div style={ICON_CONTAINER_STYLE} >
