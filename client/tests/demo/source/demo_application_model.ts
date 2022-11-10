@@ -134,6 +134,41 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       imageListSample, eventListSample, eventTagListEmpty,
       userFutureEventListEmpty, totalEventsThisMonth);
     this._homePageModel = homePageModelGuestUser;
+    const attendeeList: NeverEatAlone.Attendee[] = [
+      new NeverEatAlone.Attendee(1, 1, 'Greg', 0,
+        NeverEatAlone.AttendeeStatus.GOING, 'resources/images/profileguy2.jpeg',
+        new Date()),
+      new NeverEatAlone.Attendee(2, 1, 'Princess', 0,
+        NeverEatAlone.AttendeeStatus.GOING, 'resources/images/profile1.jpeg',
+        new Date()),
+      new NeverEatAlone.Attendee(3, 1, 'tofu55', 0,
+        NeverEatAlone.AttendeeStatus.GOING, 'resources/images/10.jpg',
+        new Date()),
+      new NeverEatAlone.Attendee(4, 1, 'MarkTheFoodie', 0,
+        NeverEatAlone.AttendeeStatus.GOING, 'resources/images/profileguy3.jpeg',
+        new Date()),
+      new NeverEatAlone.Attendee(5, 1, 'Riley', 0,
+        NeverEatAlone.AttendeeStatus.GOING, 'resources/images/profile2.jpeg',
+        new Date()),
+      new NeverEatAlone.Attendee(6, 1, 'Lili', 0,
+        NeverEatAlone.AttendeeStatus.GOING, 'resources/images/profile3.jpeg',
+        new Date()),
+      new NeverEatAlone.Attendee(7, 1, 'Elena', 0,
+        NeverEatAlone.AttendeeStatus.NOT_GOING,
+        'resources/images/profile4.jpeg', new Date()),
+      new NeverEatAlone.Attendee(8, 1, 'John', 0,
+        NeverEatAlone.AttendeeStatus.GOING, 'resources/images/profileguy4.jpeg',
+        new Date()),
+      new NeverEatAlone.Attendee(9, 1, 'Jess', 2,
+        NeverEatAlone.AttendeeStatus.NOT_GOING,
+        'resources/images/profile5.jpeg', new Date()),
+      new NeverEatAlone.Attendee(10, 1, 'Arthur', 1,
+        NeverEatAlone.AttendeeStatus.GOING, 'resources/images/profileguy5.jpeg',
+        new Date())
+    ];
+    const eventStartTime = new Date(2023, 6, 12, 19, 0, 0);
+    const eventEndTime = new Date(2023, 6, 13, 1, 0, 0);
+    const isRSVPOpen = new Date(Date.now()) <= eventStartTime;
     this._diningEventPageModel = new NeverEatAlone.LocalDiningEventPageModel(
       '#6A8716', 5.00, 'resources/images/7.jpg', 'Calling all the french food \
       lovers', new NeverEatAlone.Restaurant(1, 'Le Select Bistro', new Date(),
@@ -145,8 +180,8 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       NeverEatAlone.DressCode.BUSINESS_CASUAL,
       NeverEatAlone.Seating.STANDARD, new NeverEatAlone.Location(1,
       '432 Wellington St W', '', 'Toronto', 'ON', 'CA', 'M5V 1E3',
-      'Financial District'), 'Sheryl Miller', new Date(2022, 6, 12, 19, 0, 0),
-      new Date(2022, 6, 13, 1, 0, 0), [], 8, '', false, false, true);
+      'Financial District'), 'Sheryl Miller', eventStartTime, eventEndTime,
+      attendeeList, 8, '', false, false, isRSVPOpen);
     return;
   }
 
