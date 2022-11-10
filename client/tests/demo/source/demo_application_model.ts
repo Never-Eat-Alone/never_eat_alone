@@ -169,9 +169,11 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const eventStartTime = new Date(2023, 6, 12, 19, 0, 0);
     const eventEndTime = new Date(2023, 6, 13, 1, 0, 0);
     const isRSVPOpen = new Date(Date.now()) <= eventStartTime;
-    this._diningEventPageModel = new NeverEatAlone.LocalDiningEventPageModel(
-      '#6A8716', 5.00, 'resources/images/7.jpg', 'Calling all the french food \
-      lovers', new NeverEatAlone.Restaurant(1, 'Le Select Bistro', new Date(),
+    this._diningEventModelMap = new Map();
+    this._diningEventModelMap.set(1,
+      new NeverEatAlone.LocalDiningEventPageModel('#6A8716', 5.00,
+      'resources/images/7.jpg', 'Calling all the french food lovers',
+      new NeverEatAlone.Restaurant(1, 'Le Select Bistro', new Date(),
       1, 'Classic French food & a wine list of over 1,000 bottles, with \
       vintage posters lining the walls.', 'Go upstairs.', '(416) 626-6262',
       NeverEatAlone.PriceRange.MODERATELY_PRICED, [new NeverEatAlone.Cuisine(9,
@@ -181,7 +183,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       NeverEatAlone.Seating.STANDARD, new NeverEatAlone.Location(1,
       '432 Wellington St W', '', 'Toronto', 'ON', 'CA', 'M5V 1E3',
       'Financial District'), 'Sheryl Miller', eventStartTime, eventEndTime,
-      attendeeList, 8, '', false, false, isRSVPOpen);
+      attendeeList, 8, '', false, false, isRSVPOpen));
     return;
   }
 
@@ -197,12 +199,13 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return this._homePageModel;
   }
 
-  public getDiningEventPageModel(): NeverEatAlone.DiningEventPageModel {
-    return this._diningEventPageModel;
+  public getDiningEventPageModel(id: number):
+      NeverEatAlone.DiningEventPageModel {
+    return this._diningEventModelMap.get(id);
   }
 
-  _headerModel: NeverEatAlone.HeaderModel;
-  _account: NeverEatAlone.User;
-  _homePageModel: NeverEatAlone.HomePageModel;
-  _diningEventPageModel: NeverEatAlone.DiningEventPageModel;
+  private _headerModel: NeverEatAlone.HeaderModel;
+  private _account: NeverEatAlone.User;
+  private _homePageModel: NeverEatAlone.HomePageModel;
+  private _diningEventModelMap: Map<number, NeverEatAlone.DiningEventPageModel>;
 }

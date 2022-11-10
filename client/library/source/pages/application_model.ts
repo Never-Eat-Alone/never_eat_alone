@@ -8,5 +8,5 @@ export abstract class ApplicationModel {
   public abstract getAccount(): User;
   public abstract getHeaderModel(): HeaderModel;
   public abstract getHomePageModel(): HomePageModel;
-  public abstract getDiningEventPageModel(): DiningEventPageModel;
+  public abstract getDiningEventPageModel(id: number): DiningEventPageModel;
 }

@@ -185,12 +185,13 @@ export class ApplicationController extends React.Component<Properties, State> {
 
   private renderDiningEvents = (
       {match}: Router.RouteComponentProps<TParams>) => {
-    const id = match.params.id;
+    const id = Number(match.params.id);
+    const model = this.props.model.getDiningEventPageModel(id);
     return <DiningEventPageController
-        displayMode={this.state.displayMode}
-        model={this.props.model.getDiningEventPageModel()}
-        onRemoveSeat={() => {}}
-        onJoinEvent={() => {}}
+      displayMode={this.state.displayMode}
+      model={model}
+      onRemoveSeat={() => {}}
+      onJoinEvent={() => {}}
     />;
   }
 
