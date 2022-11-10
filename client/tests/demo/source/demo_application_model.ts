@@ -134,6 +134,19 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       imageListSample, eventListSample, eventTagListEmpty,
       userFutureEventListEmpty, totalEventsThisMonth);
     this._homePageModel = homePageModelGuestUser;
+    this._diningEventPageModel = new NeverEatAlone.LocalDiningEventPageModel(
+      '#6A8716', 5.00, 'resources/images/7.jpg', 'Calling all the french food \
+      lovers', new NeverEatAlone.Restaurant(1, 'Le Select Bistro', new Date(),
+      1, 'Classic French food & a wine list of over 1,000 bottles, with \
+      vintage posters lining the walls.', 'Go upstairs.', '(416) 626-6262',
+      NeverEatAlone.PriceRange.MODERATELY_PRICED, [new NeverEatAlone.Cuisine(9,
+      'French', '#98160C'), new NeverEatAlone.Cuisine(10, 'Traditional',
+      '#6A8716')], 'https://www.leselectbistro.com/'),
+      NeverEatAlone.DressCode.BUSINESS_CASUAL,
+      NeverEatAlone.Seating.STANDARD, new NeverEatAlone.Location(1,
+      '432 Wellington St W', '', 'Toronto', 'ON', 'CA', 'M5V 1E3',
+      'Financial District'), 'Sheryl Miller', new Date(2022, 6, 12, 19, 0, 0),
+      new Date(2022, 6, 13, 1, 0, 0), [], 8, '', false, false, true);
     return;
   }
 
@@ -149,7 +162,12 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return this._homePageModel;
   }
 
+  public getDiningEventPageModel(): NeverEatAlone.DiningEventPageModel {
+    return this._diningEventPageModel;
+  }
+
   _headerModel: NeverEatAlone.HeaderModel;
   _account: NeverEatAlone.User;
   _homePageModel: NeverEatAlone.HomePageModel;
+  _diningEventPageModel: NeverEatAlone.DiningEventPageModel;
 }

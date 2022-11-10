@@ -9,6 +9,7 @@ import { PrivacyPolicyPage } from './privacy_policy_page';
 import { Shell } from './shell';
 import { TermsOfUsePage } from './terms_of_use_page';
 import { WhatIsNeaPage } from './what_is_nea_page';
+import { DiningEventPageController } from './dining_event_page';
 
 type TParams = { id?: string, userId?: string };
 interface Properties extends Router.RouteComponentProps<TParams> {
@@ -185,7 +186,12 @@ export class ApplicationController extends React.Component<Properties, State> {
   private renderDiningEvents = (
       {match}: Router.RouteComponentProps<TParams>) => {
     const id = match.params.id;
-    return <div>Dining Event Page for id: {id}</div>;
+    return <DiningEventPageController
+        displayMode={this.state.displayMode}
+        model={this.props.model.getDiningEventPageModel()}
+        onRemoveSeat={() => {}}
+        onJoinEvent={() => {}}
+    />;
   }
 
   private renderRestaurants = (
