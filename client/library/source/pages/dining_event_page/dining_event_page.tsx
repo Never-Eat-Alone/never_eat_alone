@@ -2,7 +2,7 @@ import { css, StyleSheet } from 'aphrodite';
 import { format } from 'date-fns';
 import * as React from 'react';
 import * as Router from 'react-router-dom';
-import { PrimaryTextButton, SeeAllButton, SeeLessButton, SecondaryTextButton
+import { PrimaryTextButton, SecondaryTextButton, SeeAllButton, SeeLessButton
 } from '../../components';
 import { Attendee, DisplayMode, DressCode, getDressCodeIconSrc,
   getDressCodeName, getSeatingIconSrc, getSeatingName, Location, Restaurant,
@@ -244,7 +244,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
       if (this.props.startTime) {
         const startTime = (this.props.isLoggedIn &&
           format(this.props.startTime, 'eeee, MMMM d, yyyy') ||
-          'Lon in to see the date');
+          'Log in to see the date');
         details.push(
           <div key='event-start-date' style={detailIconTextContainerStyle} >
             <div style={ICON_CONTAINER_STYLE} >
@@ -512,6 +512,13 @@ export class DiningEventPage extends React.Component<Properties, State> {
 
   private handleSeeAll = () => {
     this.setState({ isSeeAllAttendees: true });
+  }
+}
+
+export namespace DiningEventPage {
+  export enum ErrorCode {
+    NONE,
+    NO_CONNECTION
   }
 }
 
