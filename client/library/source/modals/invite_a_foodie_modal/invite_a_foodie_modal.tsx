@@ -113,7 +113,7 @@ export class InviteAFoodieModal extends React.Component<Properties, State> {
             value={this.props.emailList}
             hasError={this.props.emailInputFieldErrorCode !==
               EmailInputField.ErrorCode.NONE}
-            onChange={() => this.props.onEmailListChange}
+            onChange={this.handleEmailListChange}
             onFocus={this.props.onEmailListFocus}
             onBlur={this.props.onEmailListBlur}
           />
@@ -134,7 +134,7 @@ export class InviteAFoodieModal extends React.Component<Properties, State> {
               style={TEXT_AREA_STYLE}
               className={css(styles.textarea)}
               value={this.props.content}
-              onChange={this.onContentChange}
+              onChange={this.handleContentChange}
             />
             <div style={COUNTER_ROW_STYLE} >
               <CircularCounterWithCounterOutside
@@ -229,7 +229,13 @@ export class InviteAFoodieModal extends React.Component<Properties, State> {
     }
   }
 
-  private onContentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  private handleEmailListChange = (event: React.ChangeEvent<HTMLInputElement>
+      ) => {
+    this.props.onEmailListChange(event.target.value);
+  }
+
+  private handleContentChange = (event: React.ChangeEvent<HTMLTextAreaElement>
+      ) => {
     this.props.onContentChange(event.target.value);
   }
 
