@@ -43,6 +43,25 @@ export class InviteAFoodieModal extends React.Component<Properties, State> {
   }
 
   public render(): JSX.Element {
+    const { containerStyle, closeButtonStyle, shareContainerStyle,
+        linksContainerStyle, socialMediaButtonStyle } = (() => {
+      if (this.props.displayMode === DisplayMode.MOBILE) {
+        return {
+          containerStyle: MOBILE_CONTAINER_STYLE,
+          closeButtonStyle:  MOBILE_CLOSE_BUTTON_STYLE,
+          shareContainerStyle: MOBILE_SHARE_CONTAINER_STYLE,
+          linksContainerStyle: MOBILE_LINKS_CONTAINER_STYLE,
+          socialMediaButtonStyle:  MOBILE_SOCIAL_MEDIA_BUTTON_STYLE
+        };
+      }
+      return {
+        containerStyle: CONTAINER_STYLE,
+        closeButtonStyle: CLOSE_BUTTON_STYLE,
+        shareContainerStyle: SHARE_CONTAINER_STYLE,
+        linksContainerStyle: LINKS_CONTAINER_STYLE,
+        socialMediaButtonStyle: SOCIAL_MEDIA_BUTTON_STYLE
+      };
+    })();
     const emailErrorMessage = (() => {
       if (this.props.emailInputFieldErrorCode ===
           EmailInputField.ErrorCode.INVALID_EMAIL) {
@@ -78,10 +97,11 @@ export class InviteAFoodieModal extends React.Component<Properties, State> {
     })();
     return (
       <div style={FORM_STYLE} >
-        <div ref={this._containerRef} style={CONTAINER_STYLE} >
+        <div ref={this._containerRef} style={containerStyle} >
           <CloseButton
             displayMode={this.props.displayMode}
             onClick={this.props.onClose}
+            style={closeButtonStyle}
           />
           <h1 style={HEADER_STYLE} >Invite a Foodie</h1>
           <p style={INVITE_LINE_STYLE} >
@@ -145,34 +165,36 @@ export class InviteAFoodieModal extends React.Component<Properties, State> {
             </button>
             {pageError}
           </div>
-          <div style={SOCIAL_MEDIA_ROW_STYLE} >
+          <div style={shareContainerStyle} >
             <h2 style={SHARE_TEXT_STYLE} >Or Share Via:</h2>
-            <TwitterButton style={SOCIAL_MEDIA_MARGIN} />
-            <InstagramButton style={SOCIAL_MEDIA_MARGIN} />
-            <FacebookButton style={SOCIAL_MEDIA_MARGIN} />
-            <RedditLinkButton style={SOCIAL_MEDIA_MARGIN} />
-            <div
-                style={{...COPY_CONTAINER_STYLE,
-                  border: this.state.borderStyle}}
-                className={css(styles.copyContainer)}
-            >
-              <button
-                  style={COPY_ICON_CONTAINER_STYLE}
-                  onClick={this.handleCopy}
+            <div style={linksContainerStyle} >
+              <TwitterButton style={socialMediaButtonStyle} />
+              <InstagramButton style={socialMediaButtonStyle} />
+              <FacebookButton style={socialMediaButtonStyle} />
+              <RedditLinkButton style={socialMediaButtonStyle} />
+              <div
+                  style={{...COPY_CONTAINER_STYLE,
+                    border: this.state.borderStyle}}
+                  className={css(styles.copyContainer)}
               >
-                <img
-                  style={COPY_ICON_STYLE}
-                  src='resources/icons/copy.svg'
-                  alt='Copy Icon'
-                  draggable={false}
+                <button
+                    style={COPY_ICON_CONTAINER_STYLE}
+                    onClick={this.handleCopy}
+                >
+                  <img
+                    style={COPY_ICON_STYLE}
+                    src='resources/icons/copy.svg'
+                    alt='Copy Icon'
+                    draggable={false}
+                  />
+                </button>
+                <input
+                  ref={this._inviteCodeTextArea}
+                  style={INVITE_LINK_TEXT_STYLE}
+                  value={this.state.invitationLink}
+                  readOnly
                 />
-              </button>
-              <input
-                ref={this._inviteCodeTextArea}
-                style={INVITE_LINK_TEXT_STYLE}
-                value={this.state.invitationLink}
-                readOnly
-              />
+              </div>
             </div>
           </div>
         </div>
@@ -261,10 +283,28 @@ const CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
+  backgroundColor: '#FFFFFF',
   width: '702px',
   height: '534px',
-  backgroundColor: '#FFFFFF',
   padding: '30px'
+};
+
+const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTAINER_STYLE,
+  width: '100%',
+  height: 'auto',
+  padding: '30px 20px'
+};
+
+const CLOSE_BUTTON_STYLE: React.CSSProperties = {
+  position: 'absolute',
+  top: '20px',
+  right: '20px'
+};
+
+const MOBILE_CLOSE_BUTTON_STYLE: React.CSSProperties = {
+  ...CLOSE_BUTTON_STYLE,
+  right: '8px'
 };
 
 const HEADER_STYLE: React.CSSProperties = {
@@ -316,7 +356,7 @@ const CONTENT_TITLE_STYLE: React.CSSProperties = {
   color: '#000000',
   height: '18px',
   padding: '0px',
-  margin: '0px 0px 2px 0px'
+  margin: '20px 0px 2px 0px'
 };
 
 const CONTENT_DESCRIPTION_STYLE: React.CSSProperties = {
@@ -337,7 +377,7 @@ const TEXT_AREA_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'space-between',
   alignItems: 'flex-end',
   width: '100%',
-  height: '146px',
+  minHeight: '146px',
   marginBottom: '20px',
   border: '1px solid #CCCCCC',
   borderRadius: '4px',
@@ -362,7 +402,7 @@ const TEXT_AREA_STYLE: React.CSSProperties = {
   resize: 'none',
   whiteSpace: 'pre-line',
   width: '100%',
-  height: 'calc(144px - 18px)',
+  minHeight: 'calc(144px - 18px)',
   padding: '10px 2px 0px 10px',
   outline: 'none',
   border: 'none',
@@ -389,20 +429,6 @@ const COUNTER_ROW_STYLE: React.CSSProperties = {
   paddingRight: '10px'
 };
 
-const BUTTON_TEXT_STYLE: React.CSSProperties = {
-  color: '#FFFFFF',
-  fontFamily: 'Source Sans Pro',
-  fontStyle: 'normal',
-  fontWeight: 600,
-  fontSize: '10px',
-  lineHeight: '13px',
-  textTransform: 'uppercase',
-  padding: '0px',
-  margin: '0px',
-  minWidth: '52px',
-  height: '13px'
-};
-
 const SEND_BUTTON_STYLE: React.CSSProperties = {
   boxSizing: 'content-box',
   display: 'flex',
@@ -411,7 +437,9 @@ const SEND_BUTTON_STYLE: React.CSSProperties = {
   alignItems: 'center',
   padding: '0px',
   width: '112px',
-  height: '30px',
+  minWidth: '112px',
+  height: '100%',
+  minHeight: '30px',
   margin: '0px',
   outline: 'none',
   border: 'none',
@@ -429,6 +457,18 @@ const SEND_BUTTON_ROW_STYLE: React.CSSProperties = {
   marginBottom: '30px'
 };
 
+const BUTTON_TEXT_STYLE: React.CSSProperties = {
+  color: '#FFFFFF',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '10px',
+  lineHeight: '13px',
+  textTransform: 'uppercase',
+  padding: '0px',
+  margin: '0px'
+};
+
 const EMAIL_ICON_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
@@ -436,23 +476,43 @@ const EMAIL_ICON_CONTAINER_STYLE: React.CSSProperties = {
   alignItems: 'center',
   width: '15px',
   height: '15px',
-  margin: '0px 5px'
+  marginRight: '5px'
 };
 
 const EMAIL_ICON_STYLE: React.CSSProperties = {
   objectFit: 'cover'
 };
 
-const SOCIAL_MEDIA_MARGIN: React.CSSProperties = {
-  marginRight: '20px'
-};
-
-const SOCIAL_MEDIA_ROW_STYLE: React.CSSProperties = {
+const SHARE_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'center',
-  height: '38px',
+  width: '100%',
+  gap: '20px'
+};
+
+const MOBILE_SHARE_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  width: '100%',
+  gap: '10px'
+};
+
+const LINKS_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  flexWrap: 'wrap',
+  gap: '20px',
+  maxWidth: '100%'
+};
+
+const MOBILE_LINKS_CONTAINER_STYLE: React.CSSProperties = {
+  ...LINKS_CONTAINER_STYLE,
   width: '100%'
 };
 
@@ -463,20 +523,21 @@ const SHARE_TEXT_STYLE: React.CSSProperties = {
   fontSize: '18px',
   lineHeight: '27px',
   color: '#000000',
-  margin: '0px 20px 0px 0px',
-  padding: '0px'
+  padding: '0px',
+  margin: '0px'
 };
 
 const COPY_CONTAINER_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'center',
   backgroundColor: '#FFFFFF',
   border: '1px solid #CCCCCC',
-  boxSizing: 'border-box',
   borderRadius: '4px',
-  height: '100%',
+  height: '38px',
+  minHeight: '38px',
   width: '224px',
   padding: '9px 10px'
 };
@@ -516,6 +577,20 @@ const INVITE_LINK_TEXT_STYLE: React.CSSProperties = {
   overflow: 'hidden',
   outline: 'none',
   border: 'none'
+};
+
+const SOCIAL_MEDIA_BUTTON_STYLE: React.CSSProperties = {
+  width: '28px',
+  height: '28px',
+  minWidth: '28px',
+  minHeight: '28px'
+};
+
+const MOBILE_SOCIAL_MEDIA_BUTTON_STYLE: React.CSSProperties = {
+  width: '21px',
+  height: '21px',
+  minWidth: '21px',
+  minHeight: '21px'
 };
 
 const styles = StyleSheet.create({

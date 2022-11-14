@@ -14,10 +14,15 @@ export class SuccessPage extends React.Component<Properties> {
   }
 
   public render(): JSX.Element {
+    const containerStyle = (this.props.displayMode === DisplayMode.MOBILE && 
+      MOBILE_CONTAINER_STYLE || CONTAINER_STYLE);
+    const closeButtonStyle = (this.props.displayMode === DisplayMode.MOBILE &&
+      MOBILE_CLOSE_BUTTON_STYLE || CLOSE_BUTTON_STYLE);
     return (
       <div style={FORM_STYLE} >
-        <div ref={this._containerRef} style={CONTAINER_STYLE} >
+        <div ref={this._containerRef} style={containerStyle} >
           <CloseButton
+            style={closeButtonStyle}
             displayMode={this.props.displayMode}
             onClick={this.props.onClose}
           />
@@ -27,7 +32,7 @@ export class SuccessPage extends React.Component<Properties> {
           <div style={IMAGE_CONTAINER_STYLE} >
             <img
               style={CELEBRATION_IMAGE_STYLE}
-              src='resources/celebration.jpg'
+              src='resources/icons/celebration.jpg'
               alt='Celebration image'
               draggable={false}
             />
@@ -79,10 +84,28 @@ const CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'center',
+  backgroundColor: '#FFFFFF',
   width: '702px',
   height: '287px',
-  backgroundColor: '#FFFFFF',
   padding: '30px'
+};
+
+const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTAINER_STYLE,
+  width: '100%',
+  height: 'auto',
+  padding: '30px'
+};
+
+const CLOSE_BUTTON_STYLE: React.CSSProperties = {
+  position: 'absolute',
+  top: '20px',
+  right: '20px'
+};
+
+const MOBILE_CLOSE_BUTTON_STYLE: React.CSSProperties = {
+  ...CLOSE_BUTTON_STYLE,
+  right: '8px'
 };
 
 const HEADER_STYLE: React.CSSProperties = {
