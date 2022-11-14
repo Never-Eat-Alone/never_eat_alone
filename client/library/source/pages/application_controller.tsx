@@ -1,19 +1,20 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
-import { EmailInputField, Modal } from '../components';
+import { Modal } from '../components';
 import { DisplayMode, getDisplayMode } from '../definitions';
-import { InviteAFoodieModal, InviteAFoodieModalController } from '../modals';
+import { InviteAFoodieModalController } from '../modals';
 import { ApplicationModel } from './application_model';
 import { CookiesPolicyPage } from './cookie_policy_page';
+import { DiningEventPageController } from './dining_event_page';
 import { HelpPage } from './help_page';
 import { HomePageController } from './home_page';
 import { PrivacyPolicyPage } from './privacy_policy_page';
 import { Shell } from './shell';
 import { TermsOfUsePage } from './terms_of_use_page';
 import { WhatIsNeaPage } from './what_is_nea_page';
-import { DiningEventPageController } from './dining_event_page';
 
 type TParams = { id?: string, userId?: string };
+
 interface Properties extends Router.RouteComponentProps<TParams> {
   model: ApplicationModel;
 }
@@ -270,7 +271,7 @@ export class ApplicationController extends React.Component<Properties, State> {
 
   private renderHelp = () => {
     return <HelpPage displayMode={this.state.displayMode} 
-      onInviteAFoodieClick={()=> {}} />;
+      onInviteAFoodieClick={this.onInviteAFoodieButton} />;
   }
 
   private renderSiteMap = () => {
