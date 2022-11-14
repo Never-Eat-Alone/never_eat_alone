@@ -136,12 +136,11 @@ export class InviteAFoodieModal extends React.Component<Properties, State> {
               value={this.props.content}
               onChange={this.handleContentChange}
             />
-            <div style={COUNTER_ROW_STYLE} >
-              <CircularCounterWithCounterOutside
-                value={this.props.content.length}
-                maxValue={this.props.maxContentLength}
-              />
-            </div>
+            <CircularCounterWithCounterOutside
+              style={COUNTER_STYLE}
+              value={this.props.content.length}
+              maxValue={this.props.maxContentLength}
+            />
           </div>
           <div style={SEND_BUTTON_ROW_STYLE} >
             <button
@@ -377,6 +376,7 @@ const CONTENT_DESCRIPTION_STYLE: React.CSSProperties = {
 };
 
 const TEXT_AREA_CONTAINER_STYLE: React.CSSProperties = {
+  position: 'relative',
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
@@ -424,15 +424,11 @@ const TEXT_AREA_STYLE: React.CSSProperties = {
   borderRadius: '4px'
 };
 
-const COUNTER_ROW_STYLE: React.CSSProperties = {
-  position: 'sticky',
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'flex-end',
-  alignItems: 'center',
-  width: '100%',
-  height: '20px',
-  paddingRight: '10px'
+const COUNTER_STYLE: React.CSSProperties = {
+  position: 'absolute',
+  right: '10px',
+  bottom: '5px',
+  height: 'auto'
 };
 
 const SEND_BUTTON_STYLE: React.CSSProperties = {

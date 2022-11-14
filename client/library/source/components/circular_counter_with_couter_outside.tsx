@@ -3,6 +3,7 @@ import * as React from 'react';
 interface Properties {
   value: number;
   maxValue: number;
+  style?: React.CSSProperties;
 }
 
 export class CircularCounterWithCounterOutside extends React.Component<
@@ -25,7 +26,7 @@ export class CircularCounterWithCounterOutside extends React.Component<
       return text;
     })();
     return (
-      <div style={CONTAINER_STYLE} >
+      <div style={{...CONTAINER_STYLE, ...this.props.style}} >
         <div style={TEXT_STYLE} >{text}</div>
         <canvas width='40px' height='40px' ref={this._canvasRef} />
       </div>);
