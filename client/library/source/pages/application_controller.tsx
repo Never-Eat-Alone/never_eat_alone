@@ -1,6 +1,8 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
+import { EmailInputField, Modal } from '../components';
 import { DisplayMode, getDisplayMode } from '../definitions';
+import { InviteAFoodieModal, InviteAFoodieModalController } from '../modals';
 import { ApplicationModel } from './application_model';
 import { CookiesPolicyPage } from './cookie_policy_page';
 import { HelpPage } from './help_page';
@@ -22,6 +24,7 @@ interface State {
   hasError: boolean;
   redirect: string;
   lastPage: string;
+  isInviteAFoodieButtonClicked: boolean;
 }
 
 export class ApplicationController extends React.Component<Properties, State> {
@@ -32,7 +35,8 @@ export class ApplicationController extends React.Component<Properties, State> {
       isLoaded: false,
       hasError: false,
       redirect: null,
-      lastPage: '/'
+      lastPage: '/',
+      isInviteAFoodieButtonClicked: false
     };
   }
 
@@ -44,6 +48,20 @@ export class ApplicationController extends React.Component<Properties, State> {
       return <div />;
     }
     const pathname = this.props.location.pathname;
+    const inviteAFoodiePopUp = (() => {
+      if (this.state.isInviteAFoodieButtonClicked) {
+        return (
+          <Modal>
+            <InviteAFoodieModalController
+              displayMode={this.state.displayMode}
+              model={this.props.model.getInviteAFoodieModel()}
+              maxContentLength={280}
+              onClose={this.handleInviteAFoodiePopUpClose}
+            />
+          </Modal>);
+      }
+      return null;
+    })();
     return (
       <div id='app_top' style={CONTAINER_STYLE} >
         <Shell
@@ -56,8 +74,9 @@ export class ApplicationController extends React.Component<Properties, State> {
           onLogInButton={() => {}}
           onJoinButton={() => {}}
           onButtonWithDropDownClick={this.handleButtonWithDropDownClick}
-          onInviteAFoodieButton={() => {}}
+          onInviteAFoodieButton={this.onInviteAFoodieButton}
         >
+          {inviteAFoodiePopUp}
           <Router.Switch>
             <Router.Route
               path='/cookies_policy'
@@ -77,7 +96,7 @@ export class ApplicationController extends React.Component<Properties, State> {
             />
             <Router.Route
               path='/invite_a_foodie'
-              render={this.renderInviteFoodie}
+              render={this.renderInviteAFoodie}
             />
             <Router.Route
               path='/log_in'
@@ -173,7 +192,7 @@ export class ApplicationController extends React.Component<Properties, State> {
     this.setState({ redirect: path });
   }
 
-  private handleJoinButtonClick = () => {};
+  private handleJoinButtonClick = () => {}
 
   private handleButtonWithDropDownClick = (label: string) => {}
 
@@ -233,7 +252,7 @@ export class ApplicationController extends React.Component<Properties, State> {
     return <div>Forgot Password Page</div>;
   }
 
-  private renderInviteFoodie = () => {
+  private renderInviteAFoodie = () => {
     return <div>Invite a Foodie</div>;
   }
 
@@ -264,6 +283,14 @@ export class ApplicationController extends React.Component<Properties, State> {
 
   private renderPageNotFound = () => {
     return <div>Page Not Found</div>;
+  }
+
+  private onInviteAFoodieButton = () => {
+    this.setState({ isInviteAFoodieButtonClicked: true });
+  }
+
+  private handleInviteAFoodiePopUpClose = () => {
+    this.setState({ isInviteAFoodieButtonClicked: false });
   }
 
   private handleHeaderAndFooter = (pathname: string) => {

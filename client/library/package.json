@@ -27,6 +27,7 @@
   "dependencies": {
     "aphrodite": "2.4.0",
     "date-fns": "^2.29.2",
+    "email-validator": "^2.0.4",
     "path-to-regexp": "6.2.0",
     "react-router-hash-link": "^2.4.3",
     "react-transition-group": "4.4.2",
