@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { CloseButton } from '../components';
-import { DisplayMode } from '../definitions';
+import { CloseButton } from '../../components';
+import { DisplayMode } from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;

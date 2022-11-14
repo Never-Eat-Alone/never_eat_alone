@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CloseButton, EmailInputField, InputField, NameInputField,
-  PrimaryTextButton } from '../components';
-import { DisplayMode } from '../definitions';
+  PrimaryTextButton } from '../../components';
+import { DisplayMode } from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -31,7 +31,7 @@ interface Properties {
   onClose: () => void;
 
   /** Indicates the Request Join button is clicked. */
-  onRequestJoin: () => void;
+  onRequestJoin: (name: string, email: string, referralCode: string) => void;
 }
 
 interface State {
@@ -149,8 +149,12 @@ export class JoinModal extends React.Component<Properties , State> {
             placeholder='Name/Username of person who invited you? (optional)'
             onChange={this.handleReferralCodeChange}
           />
-          <PrimaryTextButton style={requestButtonStyle}
-            label='Request to join!' onClick={this.props.onRequestJoin} />
+          <PrimaryTextButton
+            style={requestButtonStyle}
+            label='Request to join!'
+            onClick={() => this.props.onRequestJoin(this.state.name,
+              this.state.email, this.state.referralCode)}
+          />
         </div>
       </div>);
   }
