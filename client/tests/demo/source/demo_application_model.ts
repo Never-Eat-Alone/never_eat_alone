@@ -2,7 +2,7 @@ import * as NeverEatAlone from 'never_eat_alone';
 
 /** Implements the ApplicationModel for demo purposes. */
 export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
-  public load(): Promise<void> {
+  public async load(): Promise<void> {
     this._headerModel = new NeverEatAlone.LocalHeaderModel();
     this._account = NeverEatAlone.User.makeGuest();
     const imageListEmpty: NeverEatAlone.SocialMediaImage[] = [];
@@ -228,6 +228,10 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       'Financial District'), 'Sheryl Miller', new Date(2023, 6, 12, 19, 0, 0),
       new Date(2023, 6, 13, 1, 0, 0), [], 8, '', false, false, true);
     this._diningEventModelMap.set(7, localDiningEventModel7);
+    this._inviteAFoodieModel = new NeverEatAlone.LocalInviteAFoodieModel(
+      new NeverEatAlone.UserInvitationCode(1, 1, 'AcFTHD$5Dg'));
+    await Promise.all([this._headerModel.load(), this._homePageModel.load(),
+      this._inviteAFoodieModel.load()]);
     return;
   }
 
@@ -248,8 +252,13 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return this._diningEventModelMap.get(id);
   }
 
+  public getInviteAFoodieModel(): NeverEatAlone.InviteAFoodieModel {
+    return this._inviteAFoodieModel;
+  }
+
   private _headerModel: NeverEatAlone.HeaderModel;
   private _account: NeverEatAlone.User;
   private _homePageModel: NeverEatAlone.HomePageModel;
   private _diningEventModelMap: Map<number, NeverEatAlone.DiningEventPageModel>;
+  private _inviteAFoodieModel: NeverEatAlone.InviteAFoodieModel;
 }

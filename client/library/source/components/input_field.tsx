@@ -57,6 +57,15 @@ export function EmailInputField(props: InputFieldWithIconProperties) {
     />);
 }
 
+export namespace EmailInputField {
+  export enum ErrorCode {
+    NONE,
+    EMPTY_FIELD,
+    INVALID_EMAIL,
+    INVALID_SEPARATOR
+  }
+}
+
 export function PaymentCardInputField(props: InputFieldWithIconProperties) {
   return (
     <InputFieldWithIcon
