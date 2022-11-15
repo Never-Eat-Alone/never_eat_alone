@@ -231,8 +231,9 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     this._inviteAFoodieModel = new NeverEatAlone.LocalInviteAFoodieModel(
       new NeverEatAlone.UserInvitationCode(1, 1, 'AcFTHD$5Dg'));
     this._joinModel = new NeverEatAlone.LocalJoinModel();
+    this._joinModel.load();
     await Promise.all([this._headerModel.load(), this._homePageModel.load(),
-      this._inviteAFoodieModel.load(), this._joinModel.load()]);
+      this._inviteAFoodieModel.load()]);
     return;
   }
 

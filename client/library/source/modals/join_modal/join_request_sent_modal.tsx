@@ -14,36 +14,76 @@ interface Properties {
 
 /** Displays the Join Request Sent modal. */
 export class JoinRequestSentModal extends React.Component<Properties> {
+  constructor(props: Properties) {
+    super(props);
+    this._containerRef = React.createRef();
+  }
+
   public render(): JSX.Element {
     const containerStyle = (this.props.displayMode === DisplayMode.MOBILE &&
-        {...CONTAINER_STYLE, ...MOBILE_CONTAINER_STYLE} || CONTAINER_STYLE);
+      MOBILE_CONTAINER_STYLE || CONTAINER_STYLE);
     return (
-      <div style={containerStyle} >
-        <CloseButton
-          style={CLOSE_BUTTON_STYLE}
-          displayMode={this.props.displayMode}
-          onClick={this.props.onClose}
-        />
-        <div style={CONTENT_CONTAINER_STYLE} >
-          <div style={EMAIL_SENT_ICON_CONTAINER_STYLE} >
-            <img
-              style={EMAIL_SENT_ICON_STYLE}
-              src='resources/join_request_sent_modal/icons/email_sent.svg'
-              alt='Email Sent Icon'
-            />
-          </div>
-          <div style={HEADING_TEXT_STYLE} >Request sent!</div>
-          <div style={TEXT_STYLE} >
-            You should receive an email confirmation to
-          </div>
-          <div style={EMAIL_TEXT_STYLE} >{this.props.email}</div>
-          <div style={LAST_LINE_TEXT_STYLE} >
-            We can’t wait to have you in the NEA community!
+      <div style={FORM_STYLE} >
+        <div ref={this._containerRef} style={containerStyle} >
+          <CloseButton
+            style={CLOSE_BUTTON_STYLE}
+            displayMode={this.props.displayMode}
+            onClick={this.props.onClose}
+          />
+          <div style={CONTENT_CONTAINER_STYLE} >
+            <div style={EMAIL_SENT_ICON_CONTAINER_STYLE} >
+              <img
+                style={EMAIL_SENT_ICON_STYLE}
+                src='resources/join_request_sent_modal/icons/email_sent.svg'
+                alt='Email Sent Icon'
+              />
+            </div>
+            <div style={HEADING_TEXT_STYLE} >Request sent!</div>
+            <div style={TEXT_STYLE} >
+              You should receive an email confirmation to
+            </div>
+            <div style={EMAIL_TEXT_STYLE} >{this.props.email}</div>
+            <div style={LAST_LINE_TEXT_STYLE} >
+              We can’t wait to have you in the NEA community!
+            </div>
           </div>
         </div>
       </div>);
   }
+
+  public componentDidMount(): void {
+    document.addEventListener('mousedown', this.handleClickOutside);
+  }
+
+  public componentWillUnmount(): void {
+    document.removeEventListener('mousedown', this.handleClickOutside);
+  }
+
+  private handleClickOutside: { (event: any): void } = (
+      event: React.MouseEvent) => {
+    if (!this._containerRef.current.contains(event.target as Node)) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.props.onClose();
+    }
+  }
+
+  private _containerRef: React.RefObject<HTMLDivElement>;
 }
+
+const FORM_STYLE: React.CSSProperties = {
+  position: 'fixed',
+  top: '0px',
+  left: '0px',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '100%',
+  height: '100%',
+  backgroundColor: 'rgb(150, 150, 150, 0.5)',
+  zIndex: 1000
+};
 
 const CONTAINER_STYLE: React.CSSProperties = {
   position: 'relative',
@@ -56,11 +96,12 @@ const CONTAINER_STYLE: React.CSSProperties = {
   boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
   borderRadius: '4px',
   width: '585px',
-  height: '360px'
+  minHeight: '360px'
 };
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
-  width: '335px'
+  ...CONTAINER_STYLE,
+  width: '100%'
 };
 
 const CLOSE_BUTTON_STYLE: React.CSSProperties = {

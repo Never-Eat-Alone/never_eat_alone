@@ -9,19 +9,18 @@ export class Modal extends React.Component<{}> {
     this.element = document.createElement('div');
   }
 
+  public render(): JSX.Element {
+    return ReactDOM.createPortal(
+      this.props.children,
+      this.element);
+  }
+
   public componentDidMount(): void {
     modalRoot.appendChild(this.element);
   }
 
   public componentWillUnmount(): void {
     modalRoot.removeChild(this.element);
-  }
-  
-  public render(): JSX.Element {
-    return ReactDOM.createPortal(
-      this.props.children,
-      this.element
-    );
   }
 
   private element: HTMLDivElement;

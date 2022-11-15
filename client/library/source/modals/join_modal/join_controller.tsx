@@ -1,8 +1,8 @@
 import * as React from 'react';
-import * as EmailValidator from 'email-validator';
 import { DisplayMode } from '../../definitions';
 import { JoinModel } from './join_model';
 import { JoinModal } from './join_modal';
+import { JoinRequestSentModal } from './join_request_sent_modal';
 
 interface Properties {
   /** The display mode. */
@@ -16,10 +16,11 @@ interface Properties {
 
 interface State {
   isLoaded: boolean;
-  hasError: boolean;
+  errorCode: JoinModal.ErrorCode;
   name: string;
   email: string;
   referralCode: string;
+  page: JoinModal.Page
 }
 
 export class JoinController extends React.Component<Properties, State> {
@@ -27,27 +28,32 @@ export class JoinController extends React.Component<Properties, State> {
     super(props);
     this.state = {
       isLoaded: false,
-      hasError: false,
       name: '',
       email: '',
-      referralCode: ''
+      referralCode: '',
+      errorCode: JoinModal.ErrorCode.NONE,
+      page: JoinModal.Page.INITIAL
     };
   }
 
   public render(): JSX.Element {
-    if (this.state.isLoaded && !this.state.hasError) {
-      return <JoinModal
+    if (this.state.isLoaded) {
+      if (this.state.page === JoinModal.Page.INITIAL) {
+        return <JoinModal
+          displayMode={this.props.displayMode}
+          name={this.state.name}
+          email={this.state.email}
+          referralCode={this.state.referralCode}
+          errorCode={this.state.errorCode}
+          onClose={this.props.onClose}
+          onRequestJoin={this.handleRequestJoin}
+        />;
+      }
+      return <JoinRequestSentModal
         displayMode={this.props.displayMode}
-        name={this.state.name}
         email={this.state.email}
-        referralCode={this.state.referralCode}
-        nameErrorMessage=''
-        emailErrorMessage=''
-        nameHasError={false}
-        emailHasError={false}
         onClose={this.props.onClose}
-        onRequestJoin={this.handleRequestJoin}
-      />
+      />;
     }
     return <div />;
   }
@@ -56,13 +62,12 @@ export class JoinController extends React.Component<Properties, State> {
     try {
       await this.props.model.load();
       this.setState({
-        isLoaded: true,
-        hasError: false
+        isLoaded: true
       });
     } catch {
       this.setState({
         isLoaded: true,
-        hasError: true
+        errorCode: JoinModal.ErrorCode.NO_CONNECTION
       });
     }
   }
@@ -71,8 +76,21 @@ export class JoinController extends React.Component<Properties, State> {
       referralCode: string) => {
     try {
       await this.props.model.requestSignUp(name, email, referralCode);
+      this.setState({
+        name: name,
+        email: email,
+        referralCode: referralCode,
+        errorCode: JoinModal.ErrorCode.NONE,
+        page: JoinModal.Page.REQUEST_SENT
+      });
     } catch {
-      this.setState({  });
+      this.setState({
+        name: name,
+        email: email,
+        referralCode: referralCode,
+        errorCode: JoinModal.ErrorCode.NO_CONNECTION,
+        page: JoinModal.Page.INITIAL
+      });
     }
   }
 }
