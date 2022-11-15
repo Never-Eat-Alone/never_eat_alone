@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { Modal } from '../components';
 import { DisplayMode, getDisplayMode } from '../definitions';
-import { InviteAFoodieModalController } from '../modals';
+import { InviteAFoodieModalController, JoinController } from '../modals';
 import { ApplicationModel } from './application_model';
 import { CookiesPolicyPage } from './cookie_policy_page';
 import { DiningEventPageController } from './dining_event_page';
@@ -25,6 +25,7 @@ interface State {
   hasError: boolean;
   redirect: string;
   lastPage: string;
+  isJoinButtonClicked: boolean;
   isInviteAFoodieButtonClicked: boolean;
 }
 
@@ -37,6 +38,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       hasError: false,
       redirect: null,
       lastPage: '/',
+      isJoinButtonClicked: false,
       isInviteAFoodieButtonClicked: false
     };
   }
@@ -49,7 +51,18 @@ export class ApplicationController extends React.Component<Properties, State> {
       return <div />;
     }
     const pathname = this.props.location.pathname;
-    const inviteAFoodiePopUp = (() => {
+    const JoinModal = (() => {
+      if (this.state.isJoinButtonClicked) {
+        return (
+          <JoinController
+            displayMode={this.state.displayMode}
+            model={this.props.model.getJoinModel()}
+            onClose={this.handleJoinModalClose}
+          />);
+      }
+      return null;
+    })();
+    const inviteAFoodieModal = (() => {
       if (this.state.isInviteAFoodieButtonClicked) {
         return (
           <Modal>
@@ -57,7 +70,7 @@ export class ApplicationController extends React.Component<Properties, State> {
               displayMode={this.state.displayMode}
               model={this.props.model.getInviteAFoodieModel()}
               maxContentLength={280}
-              onClose={this.handleInviteAFoodiePopUpClose}
+              onClose={this.handleInviteAFoodieModalClose}
             />
           </Modal>);
       }
@@ -73,11 +86,12 @@ export class ApplicationController extends React.Component<Properties, State> {
           onLogOut={() => {}}
           onMenuClick={this.handleMenuClick}
           onLogInButton={() => {}}
-          onJoinButton={() => {}}
+          onJoinButton={this.onJoinButton}
           onButtonWithDropDownClick={this.handleButtonWithDropDownClick}
           onInviteAFoodieButton={this.onInviteAFoodieButton}
         >
-          {inviteAFoodiePopUp}
+          {JoinModal}
+          {inviteAFoodieModal}
           <Router.Switch>
             <Router.Route
               path='/cookies_policy'
@@ -189,11 +203,17 @@ export class ApplicationController extends React.Component<Properties, State> {
     });
   }
 
+  private onJoinButton = () => {
+    this.setState({ isJoinButtonClicked: true });
+  }
+
+  private handleJoinModalClose = () => {
+    this.setState({ isJoinButtonClicked: false });
+  }
+
   private handleMenuClick = (path: string) => {
     this.setState({ redirect: path });
   }
-
-  private handleJoinButtonClick = () => {}
 
   private handleButtonWithDropDownClick = (label: string) => {}
 
@@ -232,7 +252,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       displayMode={this.state.displayMode}
       account={this.props.model.getAccount()}
       model={this.props.model.getHomePageModel()}
-      onJoinButton={this.handleJoinButtonClick}
+      onJoinButton={this.onJoinButton}
     />;
   }
 
@@ -290,7 +310,7 @@ export class ApplicationController extends React.Component<Properties, State> {
     this.setState({ isInviteAFoodieButtonClicked: true });
   }
 
-  private handleInviteAFoodiePopUpClose = () => {
+  private handleInviteAFoodieModalClose = () => {
     this.setState({ isInviteAFoodieButtonClicked: false });
   }
 

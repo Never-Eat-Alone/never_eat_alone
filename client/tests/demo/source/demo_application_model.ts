@@ -230,6 +230,8 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     this._diningEventModelMap.set(7, localDiningEventModel7);
     this._inviteAFoodieModel = new NeverEatAlone.LocalInviteAFoodieModel(
       new NeverEatAlone.UserInvitationCode(1, 1, 'AcFTHD$5Dg'));
+    this._joinModel = new NeverEatAlone.LocalJoinModel();
+    this._joinModel.load();
     await Promise.all([this._headerModel.load(), this._homePageModel.load(),
       this._inviteAFoodieModel.load()]);
     return;
@@ -256,9 +258,14 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return this._inviteAFoodieModel;
   }
 
+  public getJoinModel(): NeverEatAlone.JoinModel {
+    return this._joinModel;
+  }
+
   private _headerModel: NeverEatAlone.HeaderModel;
   private _account: NeverEatAlone.User;
   private _homePageModel: NeverEatAlone.HomePageModel;
   private _diningEventModelMap: Map<number, NeverEatAlone.DiningEventPageModel>;
   private _inviteAFoodieModel: NeverEatAlone.InviteAFoodieModel;
+  private _joinModel: NeverEatAlone.JoinModel;
 }

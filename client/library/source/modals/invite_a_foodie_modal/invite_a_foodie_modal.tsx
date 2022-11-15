@@ -278,7 +278,8 @@ const FORM_STYLE: React.CSSProperties = {
   alignItems: 'center',
   width: '100%',
   height: '100%',
-  backgroundColor: 'rgb(150, 150, 150, 0.5)'
+  backgroundColor: 'rgb(150, 150, 150, 0.5)',
+  zIndex: 1000
 };
 
 const CONTAINER_STYLE: React.CSSProperties = {
@@ -291,7 +292,8 @@ const CONTAINER_STYLE: React.CSSProperties = {
   backgroundColor: '#FFFFFF',
   width: '702px',
   height: '534px',
-  padding: '30px'
+  padding: '30px',
+  borderRadius: '4px'
 };
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {

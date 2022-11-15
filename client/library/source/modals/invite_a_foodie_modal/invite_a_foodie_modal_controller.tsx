@@ -77,7 +77,10 @@ export class InviteAFoodieModalController extends React.Component<Properties,
   public async componentDidMount(): Promise<void> {
     try {
       await this.props.model.load();
-      this.setState({ isLoaded: true });
+      this.setState({
+        isLoaded: true,
+        errorCode: InviteAFoodieModal.ErrorCode.NONE
+      });
     } catch {
       this.setState({
         isLoaded: true,
