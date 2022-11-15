@@ -215,8 +215,6 @@ export class ApplicationController extends React.Component<Properties, State> {
     this.setState({ redirect: path });
   }
 
-  private handleJoinButtonClick = () => {}
-
   private handleButtonWithDropDownClick = (label: string) => {}
 
   private renderSettings = (
@@ -254,7 +252,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       displayMode={this.state.displayMode}
       account={this.props.model.getAccount()}
       model={this.props.model.getHomePageModel()}
-      onJoinButton={this.handleJoinButtonClick}
+      onJoinButton={this.onJoinButton}
     />;
   }
 
