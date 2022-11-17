@@ -15,8 +15,11 @@ interface Properties {
   /** The url address to the restaurant profile on NEA. */
   profileLink: string;
 
+  message: string;
+
   /** Indicates the send email button is clicked. */
-  onSendEmail: () => void;
+  onSendEmail: (name: string, email: string, profileLink: string,
+    message: string) => void;
 }
 
 interface State {
@@ -150,26 +153,26 @@ const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
 };
 
 const DESKTOP_FORM_STYLE: React.CSSProperties = {
-  gap: '20px',
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'space-between',
+  gap: '20px 20px',
   marginTop: '50px',
   width: '1150px'
 };
 
 const TABLET_FORM_STYLE: React.CSSProperties = {
-  gap: '20px',
+  ...DESKTOP_FORM_STYLE,
   marginTop: '50px',
   width: '702px'
 };
 
 const MOBILE_FORM_STYLE: React.CSSProperties = {
-  boxSizing: 'border-box',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'flex-start',
-  alignItems: 'flex-start',
+  ...DESKTOP_FORM_STYLE,
   paddingLeft: '20px',
   paddingRight: '20px',
-  gap: '20px',
   marginTop: '30px',
   width: '100%'
 };
@@ -217,14 +220,6 @@ const H2_STYLE: React.CSSProperties = {
   fontSize: '18px',
   lineHeight: '27px',
   color: '#000000'
-};
-
-const INPUT_ROW_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'flex-start',
-  width: '100%'
 };
 
 const NAME_INPUT_STYLE: React.CSSProperties = {
