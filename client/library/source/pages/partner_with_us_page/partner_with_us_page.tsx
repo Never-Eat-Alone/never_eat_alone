@@ -1,6 +1,7 @@
 import * as EmailValidator from 'email-validator';
 import * as React from 'react';
-import { EmailInputField, InputFieldWithIcon, InputField, } from '../../components';
+import { EmailInputField, InputField, InputFieldWithIcon } from
+'../../components';
 import { DisplayMode } from '../../definitions';
 
 interface Properties {
@@ -44,39 +45,62 @@ export class PartnerWithUsPage extends React.Component<Properties, State> {
   }
 
   public render(): JSX.Element {
-    const { containerStyle, formStyle, imageStyle, inputStyle } = (() => {
+    const { containerStyle, headingFormStyle, textFormContainerStyle,
+        textContainerStyle, formStyle, imageContainerStyle, inputStyle } = (
+        () => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
           containerStyle: DESKTOP_CONTAINER_STYLE,
+          headingFormStyle: DESKTOP_HEADER_FORM_STYLE,
+          textFormContainerStyle: DESKTOP_TEXT_FORM_CONTAINER_STYLE,
+          textContainerStyle: DESKTOP_TEXT_CONTAINER_STYLE,
           formStyle: DESKTOP_FORM_STYLE,
-          imageStyle: DESKTOP_IMAGE_STYLE,
+          imageContainerStyle: DESKTOP_IMAGE_CONTAINER_STYLE,
           inputStyle: DESKTOP_INPUT_ROW_STYLE
         };
       }
       if (this.props.displayMode === DisplayMode.TABLET) {
         return {
           containerStyle: TABLET_CONTAINER_STYLE,
+          headingFormStyle: TABLET_HEADER_FORM_STYLE,
+          textFormContainerStyle: TABLET_TEXT_FORM_CONTAINER_STYLE,
+          textContainerStyle: TABLET_TEXT_CONTAINER_STYLE,
           formStyle: TABLET_FORM_STYLE,
-          imageStyle: TABLET_IMAGE_STYLE,
+          imageContainerStyle: TABLET_IMAGE_CONTAINER_STYLE,
           inputStyle: TABLET_INPUT_ROW_STYLE
         };
       }
       return {
         containerStyle: MOBILE_CONTAINER_STYLE,
+        headingFormStyle: MOBILE_HEADER_FORM_STYLE,
+        textFormContainerStyle: MOBILE_TEXT_FORM_CONTAINER_STYLE,
+        textContainerStyle: MOBILE_TEXT_CONTAINER_STYLE,
         formStyle: MOBILE_FORM_STYLE,
-        imageStyle: MOBILE_IMAGE_STYLE,
+        imageContainerStyle: MOBILE_IMAGE_CONTAINER_STYLE,
         inputStyle: MOBILE_INPUT_COLUMN_STYLE
       };
     })();
 
     return (
       <div style={containerStyle} >
-        <h1 style={H1_STYLE} >Partner With US</h1>
-        <img
-          style={imageStyle}
-          src='resources/partner_with_us_page/images/background.jpg'
-          alt='Partnership Image'
-        />
+        <div style={headingFormStyle} >
+          <h1 style={H1_STYLE} >Partner With US</h1>
+        </div>
+        <div style={imageContainerStyle} >
+          <div style={textFormContainerStyle} >
+            <div style={textContainerStyle} >
+              <div style={IMAGE_TITLE_STYLE} >
+                Take control of your listing on NeverEatAlone
+              </div>
+              <div style={IMAGE_DESCRIPTION_STYLE} >
+                Take control over the information and menus posted on your 
+                restaurant page. Partner with us and stay connected on our 
+                updates, such as hosting your own events and connecting directly 
+                with customers in the future!
+              </div>
+            </div>
+          </div>
+        </div>
         <div style={formStyle} >
           <h2 style={H2_STYLE} >Ready to get started?</h2>
           <div style={inputStyle} >
@@ -184,7 +208,7 @@ const DESKTOP_FORM_STYLE: React.CSSProperties = {
   alignItems: 'space-between',
   gap: '20px 20px',
   marginTop: '50px',
-  width: '1150px'
+  width: '740px'
 };
 
 const TABLET_FORM_STYLE: React.CSSProperties = {
@@ -201,6 +225,21 @@ const MOBILE_FORM_STYLE: React.CSSProperties = {
   width: '100%'
 };
 
+const DESKTOP_HEADER_FORM_STYLE: React.CSSProperties = {
+  ...DESKTOP_FORM_STYLE,
+  marginTop: '0px'
+};
+
+const TABLET_HEADER_FORM_STYLE: React.CSSProperties = {
+  ...TABLET_FORM_STYLE,
+  marginTop: '0px'
+};
+
+const MOBILE_HEADER_FORM_STYLE: React.CSSProperties = {
+  ...MOBILE_FORM_STYLE,
+  marginTop: '0px'
+};
+
 const H1_STYLE: React.CSSProperties = {
   fontFamily: 'Oswald',
   fontStyle: 'normal',
@@ -213,28 +252,92 @@ const H1_STYLE: React.CSSProperties = {
   margin: '0px'
 };
 
-const DESKTOP_IMAGE_STYLE: React.CSSProperties = {
+const DESKTOP_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  gap: '10px',
   width: '100%',
   minWidth: '100%',
-  height: '274px',
   minHeight: '274px',
-  marginTop: '50px'
+  marginTop: '50px',
+  backgroundImage: 'url(resources/partner_with_us_page/images/background.jpg)',
+  backgroundSize: 'cover',
+  backgroundColor: '#FFFFFF',
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'center bottom 38%'
 };
 
-const TABLET_IMAGE_STYLE: React.CSSProperties = {
-  width: '100%',
-  minWidth: '100%',
-  height: '245px',
-  minHeight: '245px',
-  marginTop: '50px'
+const TABLET_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  ...DESKTOP_IMAGE_CONTAINER_STYLE,
+  minHeight: '245px'
 };
 
-const MOBILE_IMAGE_STYLE: React.CSSProperties = {
-  width: '100%',
-  minWidth: '100%',
-  height: '300px',
+const MOBILE_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  ...DESKTOP_IMAGE_CONTAINER_STYLE,
   minHeight: '300px',
   marginTop: '30px'
+};
+
+const DESKTOP_TEXT_FORM_CONTAINER_STYLE: React.CSSProperties = {
+  ...DESKTOP_FORM_STYLE,
+  justifyContent: 'center',
+  alignItems: 'flex-start'
+};
+
+const TABLET_TEXT_FORM_CONTAINER_STYLE: React.CSSProperties = {
+  ...TABLET_FORM_STYLE,
+  justifyContent: 'center',
+  alignItems: 'flex-start'
+};
+
+const MOBILE_TEXT_FORM_CONTAINER_STYLE: React.CSSProperties = {
+  ...MOBILE_FORM_STYLE,
+  justifyContent: 'center',
+  alignItems: 'center'
+};
+
+const DESKTOP_TEXT_CONTAINER_STYLE: React.CSSProperties = {
+  ...DESKTOP_FORM_STYLE,
+  gap: '10px',
+  width: '360px',
+  marginTop: '0px'
+};
+
+const TABLET_TEXT_CONTAINER_STYLE: React.CSSProperties = {
+  ...TABLET_FORM_STYLE,
+  gap: '10px',
+  width: '360px',
+  marginTop: '0px'
+};
+
+const MOBILE_TEXT_CONTAINER_STYLE: React.CSSProperties = {
+  ...MOBILE_FORM_STYLE,
+  gap: '10px',
+  marginTop: '0px'
+};
+
+const IMAGE_TITLE_STYLE: React.CSSProperties = {
+  fontFamily: 'Oswald',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '24px',
+  lineHeight: '36px',
+  color: '#FFFFFF',
+  width: '100%'
+};
+
+const IMAGE_DESCRIPTION_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#FFFFFF',
+  width: '100%',
+  whiteSpace: 'pre-line',
+  marginBottom: '20px'
 };
 
 const H2_STYLE: React.CSSProperties = {
