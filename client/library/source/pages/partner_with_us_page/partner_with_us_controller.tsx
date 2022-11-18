@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { DisplayMode } from '../../definitions';
 import { PartnerWithUsModel } from './partner_with_us_model';
-import { PartnerWithUsMessageSentPage } from './partner_with_us_message_sent_page';
+import { PartnerWithUsMessageSentPage } from
+'./partner_with_us_message_sent_page';
 import { PartnerWithUsPage } from './partner_with_us_page';
 
 interface Properties {

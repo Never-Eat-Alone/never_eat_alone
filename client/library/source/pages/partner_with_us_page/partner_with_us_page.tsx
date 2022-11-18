@@ -1,6 +1,6 @@
 import * as EmailValidator from 'email-validator';
 import * as React from 'react';
-import { EmailInputField, InputFieldWithIcon, } from '../../components';
+import { EmailInputField, InputFieldWithIcon, InputField, } from '../../components';
 import { DisplayMode } from '../../definitions';
 
 interface Properties {
@@ -15,6 +15,7 @@ interface Properties {
   /** The url address to the restaurant profile on NEA. */
   profileLink: string;
 
+  /** The message user typed inside the form. */
   message: string;
 
   /** Indicates the send email button is clicked. */
@@ -26,6 +27,7 @@ interface State {
   name: string;
   email: string;
   profileLink: string;
+  message: string;
   emailErrorCode: PartnerWithUsPage.EmailErrorCode;
 }
 
@@ -36,30 +38,34 @@ export class PartnerWithUsPage extends React.Component<Properties, State> {
       name: '',
       email: '',
       profileLink: '',
+      message: '',
       emailErrorCode: PartnerWithUsPage.EmailErrorCode.NONE
     };
   }
 
   public render(): JSX.Element {
-    const { containerStyle, formStyle, imageStyle } = (() => {
+    const { containerStyle, formStyle, imageStyle, inputStyle } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
           containerStyle: DESKTOP_CONTAINER_STYLE,
           formStyle: DESKTOP_FORM_STYLE,
-          imageStyle: DESKTOP_IMAGE_STYLE
+          imageStyle: DESKTOP_IMAGE_STYLE,
+          inputStyle: DESKTOP_INPUT_ROW_STYLE
         };
       }
       if (this.props.displayMode === DisplayMode.TABLET) {
         return {
           containerStyle: TABLET_CONTAINER_STYLE,
           formStyle: TABLET_FORM_STYLE,
-          imageStyle: TABLET_IMAGE_STYLE
+          imageStyle: TABLET_IMAGE_STYLE,
+          inputStyle: TABLET_INPUT_ROW_STYLE
         };
       }
       return {
         containerStyle: MOBILE_CONTAINER_STYLE,
         formStyle: MOBILE_FORM_STYLE,
-        imageStyle: MOBILE_IMAGE_STYLE
+        imageStyle: MOBILE_IMAGE_STYLE,
+        inputStyle: MOBILE_INPUT_COLUMN_STYLE
       };
     })();
 
@@ -73,21 +79,34 @@ export class PartnerWithUsPage extends React.Component<Properties, State> {
         />
         <div style={formStyle} >
           <h2 style={H2_STYLE} >Ready to get started?</h2>
-          <InputFieldWithIcon
-            style={NAME_INPUT_STYLE}
-            placeholder='Your name / restaurant'
-            value={this.state.name}
-            onChange={this.handleNameChange}
+          <div style={inputStyle} >
+            <InputFieldWithIcon
+              style={NAME_INPUT_STYLE}
+              type='text'
+              placeholder='Your name / restaurant'
+              iconSrc='resources/partner_with_us_page/icons/name.svg'
+              iconStyle={ICON_STYLE}
+              value={this.state.name}
+              onChange={this.handleNameChange}
+            />
+            <EmailInputField
+              style={EMAIL_INPUT_STYLE}
+              placeholder='Your email address'
+              value={this.state.email}
+              onChange={this.handleEmailChange}
+              onBlur={this.checkEmail}
+              hasError={this.state.emailErrorCode !==
+                PartnerWithUsPage.EmailErrorCode.NONE}
+            />
+          </div>
+          <InputField
+            style={LINK_INPUT_STYLE}
+            placeholder='(Optional) Link to your restaurant on NEA'
+            value={this.state.profileLink}
+            onChange={this.handleProfileLinkChange}
+            type='url'
           />
-          <EmailInputField
-            style={EMAIL_INPUT_STYLE}
-            placeholder='Your email address'
-            value={this.state.email}
-            onChange={this.handleEmailChange}
-            onBlur={this.checkEmail}
-            hasError={this.state.emailErrorCode !==
-              PartnerWithUsPage.EmailErrorCode.NONE}
-          />
+          <p style={P_STYLE} >How can we work together?</p>
         </div>
       </div>);
   }
@@ -98,6 +117,11 @@ export class PartnerWithUsPage extends React.Component<Properties, State> {
 
   private handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ email: event.target.value.trim() });
+  }
+
+  private handleProfileLinkChange = (event: React.ChangeEvent<HTMLInputElement>
+      ) => {
+    this.setState({ profileLink: event.target.value.trim() });
   }
 
   private checkEmail = () => {
@@ -223,15 +247,60 @@ const H2_STYLE: React.CSSProperties = {
 };
 
 const NAME_INPUT_STYLE: React.CSSProperties = {
-  width: 'calc(100% - 10px)',
-  minWidth: 'calc(100% - 10px)',
+  width: '100%',
   height: '38px',
   minHeight: '38px'
 };
 
 const EMAIL_INPUT_STYLE: React.CSSProperties = {
-  width: 'calc(100% - 10px)',
-  minWidth: 'calc(100% - 10px)',
+  width: '100%',
   height: '38px',
   minHeight: '38px'
+};
+
+const DESKTOP_INPUT_ROW_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'flex-start',
+  width: '100%',
+  gap: '20px'
+};
+
+const TABLET_INPUT_ROW_STYLE: React.CSSProperties = {
+  ...DESKTOP_INPUT_ROW_STYLE
+};
+
+const MOBILE_INPUT_COLUMN_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  width: '100%',
+  gap: '20px'
+};
+
+const LINK_INPUT_STYLE: React.CSSProperties = {
+  width: '100%',
+  minWidth: '100%',
+  height: '38px',
+  minHeight: '38px'
+};
+
+const P_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#000000',
+  margin: '0px',
+  padding: '0px'
+};
+
+const ICON_STYLE: React.CSSProperties = {
+  width: '15px',
+  minWidth: '15px',
+  height: '15px',
+  minHeight: '15px'
 };
