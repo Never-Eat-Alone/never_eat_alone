@@ -56,12 +56,13 @@ export class PartnerWithUsModal extends React.Component<Properties, State> {
   }
 
   public render(): JSX.Element {
-    const { containerStyle, headingFormStyle, textFormContainerStyle,
-        textContainerStyle, formStyle, imageContainerStyle, inputStyle } = (
-        () => {
+    const { containerStyle, closeButtonStyle, headingFormStyle,
+        textFormContainerStyle, textContainerStyle, formStyle,
+        imageContainerStyle, inputStyle } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
           containerStyle: DESKTOP_CONTAINER_STYLE,
+          closeButtonStyle: CLOSE_BUTTON_STYLE,
           headingFormStyle: DESKTOP_HEADER_FORM_STYLE,
           textFormContainerStyle: DESKTOP_TEXT_FORM_CONTAINER_STYLE,
           textContainerStyle: DESKTOP_TEXT_CONTAINER_STYLE,
@@ -73,6 +74,7 @@ export class PartnerWithUsModal extends React.Component<Properties, State> {
       if (this.props.displayMode === DisplayMode.TABLET) {
         return {
           containerStyle: TABLET_CONTAINER_STYLE,
+          closeButtonStyle: CLOSE_BUTTON_STYLE,
           headingFormStyle: TABLET_HEADER_FORM_STYLE,
           textFormContainerStyle: TABLET_TEXT_FORM_CONTAINER_STYLE,
           textContainerStyle: TABLET_TEXT_CONTAINER_STYLE,
@@ -83,6 +85,7 @@ export class PartnerWithUsModal extends React.Component<Properties, State> {
       }
       return {
         containerStyle: MOBILE_CONTAINER_STYLE,
+        closeButtonStyle:  MOBILE_CLOSE_BUTTON_STYLE,
         headingFormStyle: MOBILE_HEADER_FORM_STYLE,
         textFormContainerStyle: MOBILE_TEXT_FORM_CONTAINER_STYLE,
         textContainerStyle: MOBILE_TEXT_CONTAINER_STYLE,
@@ -113,78 +116,85 @@ export class PartnerWithUsModal extends React.Component<Properties, State> {
       return '';
     })();
     return (
-      <div style={containerStyle} >
-        <div style={headingFormStyle} >
-          <h1 style={H1_STYLE} >Partner With US</h1>
-        </div>
-        <div style={imageContainerStyle} >
-          <div style={textFormContainerStyle} >
-            <div style={textContainerStyle} >
-              <div style={IMAGE_TITLE_STYLE} >
-                Take control of your listing on NeverEatAlone
-              </div>
-              <div style={IMAGE_DESCRIPTION_STYLE} >
-                Take control over the information and menus posted on your 
-                restaurant page. Partner with us and stay connected on our 
-                updates, such as hosting your own events and connecting 
-                directly with customers in the future!
+      <div style={FORM_STYLE} >
+        <div ref={this._containerRef} style={containerStyle} >
+          <CloseButton
+            displayMode={this.props.displayMode}
+            onClick={this.props.onClose}
+            style={closeButtonStyle}
+          />
+          <div style={headingFormStyle} >
+            <h1 style={H1_STYLE} >Partner With US</h1>
+          </div>
+          <div style={imageContainerStyle} >
+            <div style={textFormContainerStyle} >
+              <div style={textContainerStyle} >
+                <div style={IMAGE_TITLE_STYLE} >
+                  Take control of your listing on NeverEatAlone
+                </div>
+                <div style={IMAGE_DESCRIPTION_STYLE} >
+                  Take control over the information and menus posted on your 
+                  restaurant page. Partner with us and stay connected on our 
+                  updates, such as hosting your own events and connecting 
+                  directly with customers in the future!
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div style={formStyle} >
-          <h2 style={H2_STYLE} >Ready to get started?</h2>
-          <div style={inputStyle} >
-            <InputFieldWithIcon
-              style={NAME_INPUT_STYLE}
-              type='text'
-              placeholder='Your name / restaurant'
-              iconSrc='resources/partner_with_us_page/icons/name.svg'
-              iconStyle={ICON_STYLE}
-              value={this.state.name}
-              onChange={this.handleNameChange}
-              onBlur={this.handleNameBlur}
-              hasError={this.state.nameErrorCode !==
-                PartnerWithUsPage.NameErrorCode.NONE}
+          <div style={formStyle} >
+            <h2 style={H2_STYLE} >Ready to get started?</h2>
+            <div style={inputStyle} >
+              <InputFieldWithIcon
+                style={NAME_INPUT_STYLE}
+                type='text'
+                placeholder='Your name / restaurant'
+                iconSrc='resources/partner_with_us_page/icons/name.svg'
+                iconStyle={ICON_STYLE}
+                value={this.state.name}
+                onChange={this.handleNameChange}
+                onBlur={this.handleNameBlur}
+                hasError={this.state.nameErrorCode !==
+                  PartnerWithUsPage.NameErrorCode.NONE}
+              />
+              <EmailInputField
+                style={EMAIL_INPUT_STYLE}
+                placeholder='Your email address'
+                value={this.state.email}
+                onChange={this.handleEmailChange}
+                onBlur={this.checkEmail}
+                hasError={this.state.emailErrorCode !==
+                  PartnerWithUsPage.EmailErrorCode.NONE}
+              />
+            </div>
+            <div style={ERROR_MESSAGE_STYLE} >
+              {fieldErrorMessage}
+            </div>
+            <InputField
+              style={LINK_INPUT_STYLE}
+              placeholder='(Optional) Link to your restaurant on NEA'
+              value={this.state.profileLink}
+              onChange={this.handleProfileLinkChange}
+              type='url'
             />
-            <EmailInputField
-              style={EMAIL_INPUT_STYLE}
-              placeholder='Your email address'
-              value={this.state.email}
-              onChange={this.handleEmailChange}
-              onBlur={this.checkEmail}
-              hasError={this.state.emailErrorCode !==
-                PartnerWithUsPage.EmailErrorCode.NONE}
+            <p style={P_STYLE} >How can we work together?</p>
+            <textarea
+              style={TEXT_AREA_STYLE}
+              className={css(styles.textarea)}
+              placeholder='Enter your message'
+              value={this.state.message}
+              onChange={this.handleMessageChange}
+              onBlur={this.handleMessageBlur}
+            />
+            <div style={ERROR_MESSAGE_STYLE} >
+              {messageErrorMessage}
+            </div>
+            <PrimaryEmailButton
+              style={SEND_BUTTON_STYLE}
+              label='send'
+              disabled={this.isDisabled()}
+              onClick={this.handleSendClick}
             />
           </div>
-          <div style={ERROR_MESSAGE_STYLE} >
-            {fieldErrorMessage}
-          </div>
-          <InputField
-            style={LINK_INPUT_STYLE}
-            placeholder='(Optional) Link to your restaurant on NEA'
-            value={this.state.profileLink}
-            onChange={this.handleProfileLinkChange}
-            type='url'
-          />
-          <p style={P_STYLE} >How can we work together?</p>
-          <textarea
-            style={TEXT_AREA_STYLE}
-            className={css(styles.textarea)}
-            placeholder='Enter your message'
-            value={this.state.message}
-            onChange={this.handleMessageChange}
-            onBlur={this.handleMessageBlur}
-          />
-          <div style={ERROR_MESSAGE_STYLE} >
-            {messageErrorMessage}
-          </div>
-          <PrimaryEmailButton
-            style={SEND_BUTTON_STYLE}
-            label='send'
-            disabled={this.isDisabled()}
-            onClick={this.handleSendClick}
-          />
         </div>
       </div>);
   }
@@ -557,6 +567,17 @@ const ERROR_MESSAGE_STYLE: React.CSSProperties = {
   fontWeight: 400,
   fontSize: '14px',
   color: '#FF2C79'
+};
+
+const CLOSE_BUTTON_STYLE: React.CSSProperties = {
+  position: 'absolute',
+  top: '20px',
+  right: '20px'
+};
+
+const MOBILE_CLOSE_BUTTON_STYLE: React.CSSProperties = {
+  ...CLOSE_BUTTON_STYLE,
+  right: '8px'
 };
 
 const styles = StyleSheet.create({

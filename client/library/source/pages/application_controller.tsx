@@ -58,11 +58,13 @@ export class ApplicationController extends React.Component<Properties, State> {
     const JoinModal = (() => {
       if (this.state.isJoinButtonClicked) {
         return (
-          <JoinController
-            displayMode={this.state.displayMode}
-            model={this.props.model.getJoinModel()}
-            onClose={this.handleJoinModalClose}
-          />);
+          <Modal>
+            <JoinController
+              displayMode={this.state.displayMode}
+              model={this.props.model.getJoinModel()}
+              onClose={this.handleJoinModalClose}
+            />
+          </Modal>);
       }
       return null;
     })();
@@ -83,11 +85,13 @@ export class ApplicationController extends React.Component<Properties, State> {
     const partnerWithUsModal = (() => {
       if (this.state.isPartnerWithUsButtonClicked) {
         return (
-          <PartnerWithUsModalController
-            displayMode={this.state.displayMode}
-            model={this.props.model.getPartnerWithUsModel()}
-            onClose={this.handlePartnerWithUsModalClose}
-          />);
+          <Modal>
+            <PartnerWithUsModalController
+              displayMode={this.state.displayMode}
+              model={this.props.model.getPartnerWithUsModel()}
+              onClose={this.handlePartnerWithUsModalClose}
+            />
+          </Modal>);
       }
       return null;
     })();
