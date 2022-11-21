@@ -1,7 +1,8 @@
+import { css, StyleSheet } from 'aphrodite';
 import * as EmailValidator from 'email-validator';
 import * as React from 'react';
-import { EmailInputField, InputField, InputFieldWithIcon } from
-'../../components';
+import { EmailInputField, InputField, InputFieldWithIcon, PrimaryEmailButton
+} from '../../components';
 import { DisplayMode } from '../../definitions';
 
 interface Properties {
@@ -19,6 +20,8 @@ interface Properties {
   /** The message user typed inside the form. */
   message: string;
 
+  errorCode: PartnerWithUsPage.PageErrorCode;
+
   /** Indicates the send email button is clicked. */
   onSendEmail: (name: string, email: string, profileLink: string,
     message: string) => void;
@@ -26,21 +29,25 @@ interface Properties {
 
 interface State {
   name: string;
+  nameErrorCode: PartnerWithUsPage.NameErrorCode;
   email: string;
+  emailErrorCode: PartnerWithUsPage.EmailErrorCode;
   profileLink: string;
   message: string;
-  emailErrorCode: PartnerWithUsPage.EmailErrorCode;
+  messageErrorCode: PartnerWithUsPage.MessageErrorCode;
 }
 
 export class PartnerWithUsPage extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props);
     this.state = {
-      name: '',
-      email: '',
-      profileLink: '',
-      message: '',
-      emailErrorCode: PartnerWithUsPage.EmailErrorCode.NONE
+      name: this.props.name,
+      email: this.props.email,
+      profileLink: this.props.profileLink,
+      message: this.props.message,
+      nameErrorCode: PartnerWithUsPage.NameErrorCode.NONE,
+      emailErrorCode: PartnerWithUsPage.EmailErrorCode.NONE,
+      messageErrorCode: PartnerWithUsPage.MessageErrorCode.NONE
     };
   }
 
@@ -80,7 +87,27 @@ export class PartnerWithUsPage extends React.Component<Properties, State> {
         inputStyle: MOBILE_INPUT_COLUMN_STYLE
       };
     })();
-
+    const fieldErrorMessage = (() => {
+      if (this.state.emailErrorCode ===
+          PartnerWithUsPage.EmailErrorCode.NOT_AN_EMAIL) {
+        return 'Enter a valid email.';
+      }
+      if (this.state.emailErrorCode ===
+          PartnerWithUsPage.EmailErrorCode.EMPTY_EMAIL_FIELD) {
+        return 'Email is required.'
+      }
+      if (this.state.nameErrorCode === PartnerWithUsPage.NameErrorCode.EMPTY) {
+        return 'Name is required.'
+      }
+      return '';
+    })();
+    const messageErrorMessage = (() => {
+      if (this.state.messageErrorCode ===
+          PartnerWithUsPage.MessageErrorCode.EMPTY) {
+        return 'Message is required.'
+      }
+      return '';
+    })();
     return (
       <div style={containerStyle} >
         <div style={headingFormStyle} >
@@ -95,8 +122,8 @@ export class PartnerWithUsPage extends React.Component<Properties, State> {
               <div style={IMAGE_DESCRIPTION_STYLE} >
                 Take control over the information and menus posted on your 
                 restaurant page. Partner with us and stay connected on our 
-                updates, such as hosting your own events and connecting directly 
-                with customers in the future!
+                updates, such as hosting your own events and connecting 
+                directly with customers in the future!
               </div>
             </div>
           </div>
@@ -112,6 +139,9 @@ export class PartnerWithUsPage extends React.Component<Properties, State> {
               iconStyle={ICON_STYLE}
               value={this.state.name}
               onChange={this.handleNameChange}
+              onBlur={this.handleNameBlur}
+              hasError={this.state.nameErrorCode !==
+                PartnerWithUsPage.NameErrorCode.NONE}
             />
             <EmailInputField
               style={EMAIL_INPUT_STYLE}
@@ -123,6 +153,9 @@ export class PartnerWithUsPage extends React.Component<Properties, State> {
                 PartnerWithUsPage.EmailErrorCode.NONE}
             />
           </div>
+          <div style={ERROR_MESSAGE_STYLE} >
+            {fieldErrorMessage}
+          </div>
           <InputField
             style={LINK_INPUT_STYLE}
             placeholder='(Optional) Link to your restaurant on NEA'
@@ -131,16 +164,62 @@ export class PartnerWithUsPage extends React.Component<Properties, State> {
             type='url'
           />
           <p style={P_STYLE} >How can we work together?</p>
+          <textarea
+            style={TEXT_AREA_STYLE}
+            className={css(styles.textarea)}
+            placeholder='Enter your message'
+            value={this.state.message}
+            onChange={this.handleMessageChange}
+            onBlur={this.handleMessageBlur}
+          />
+          <div style={ERROR_MESSAGE_STYLE} >
+            {messageErrorMessage}
+          </div>
+          <PrimaryEmailButton
+            style={SEND_BUTTON_STYLE}
+            label='send'
+            disabled={this.isDisabled()}
+            onClick={this.handleSendClick}
+          />
         </div>
       </div>);
   }
 
+  private isDisabled = () => {
+    if (this.state.name.trim().length === 0) {
+      return true;
+    }
+    if (this.state.email.trim().length === 0) {
+      return true;
+    }
+    if (this.state.message.trim().length === 0) {
+      return true;
+    }
+    return false;
+  }
+
   private handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ name: event.target.value });
+    if (event.target.value != '') {
+      this.setState({
+        nameErrorCode: PartnerWithUsPage.NameErrorCode.NONE
+      });
+    }
+  }
+
+  private handleNameBlur = () => {
+    if (this.state.name.trim().length === 0) {
+      this.setState({ nameErrorCode: PartnerWithUsPage.NameErrorCode.EMPTY });
+    }
   }
 
   private handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ email: event.target.value.trim() });
+    if (event.target.value != '') {
+      this.setState({
+        emailErrorCode: PartnerWithUsPage.EmailErrorCode.NONE
+      });
+    }
   }
 
   private handleProfileLinkChange = (event: React.ChangeEvent<HTMLInputElement>
@@ -148,9 +227,36 @@ export class PartnerWithUsPage extends React.Component<Properties, State> {
     this.setState({ profileLink: event.target.value.trim() });
   }
 
+  private handleMessageChange = (event: React.ChangeEvent<HTMLTextAreaElement>
+      ) => {
+    this.setState({ message: event.target.value });
+    if (event.target.value != '') {
+      this.setState({
+        messageErrorCode: PartnerWithUsPage.MessageErrorCode.NONE
+      });
+    }
+  }
+
+  private handleMessageBlur = () => {
+    if (this.state.message.trim().length === 0) {
+      this.setState({
+        messageErrorCode: PartnerWithUsPage.MessageErrorCode.EMPTY
+      });
+    }
+  }
+
+  private handleSendClick = (event: React.MouseEvent) => {
+    if (this.checkEmail()) {
+      this.props.onSendEmail(this.state.name, this.state.email,
+        this.state.profileLink, this.state.message.trim());
+    }
+  }
+
   private checkEmail = () => {
     if (this.state.email.length === 0) {
-      this.setState({ emailErrorCode: PartnerWithUsPage.EmailErrorCode.EMPTY });
+      this.setState({
+        emailErrorCode: PartnerWithUsPage.EmailErrorCode.EMPTY_EMAIL_FIELD
+      });
       return false;
     } else if (!EmailValidator.validate(this.state.email)) {
       this.setState({
@@ -170,9 +276,24 @@ export namespace PartnerWithUsPage {
     MESSAGE_SENT
   }
 
-  export enum EmailErrorCode {
+  export enum PageErrorCode {
+    SEND_FAILED,
+    NONE
+  }
+  
+  export enum NameErrorCode {
     EMPTY,
+    NONE
+  }
+
+  export enum EmailErrorCode {
+    EMPTY_EMAIL_FIELD,
     NOT_AN_EMAIL,
+    NONE
+  }
+
+  export enum MessageErrorCode {
+    EMPTY,
     NONE
   }
 }
@@ -206,7 +327,6 @@ const DESKTOP_FORM_STYLE: React.CSSProperties = {
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'space-between',
-  gap: '20px 20px',
   marginTop: '50px',
   width: '740px'
 };
@@ -346,7 +466,8 @@ const H2_STYLE: React.CSSProperties = {
   fontWeight: 400,
   fontSize: '18px',
   lineHeight: '27px',
-  color: '#000000'
+  color: '#000000',
+  marginTop: '20px'
 };
 
 const NAME_INPUT_STYLE: React.CSSProperties = {
@@ -397,7 +518,7 @@ const P_STYLE: React.CSSProperties = {
   fontSize: '14px',
   lineHeight: '18px',
   color: '#000000',
-  margin: '0px',
+  margin: '20px 0px 0px 0px',
   padding: '0px'
 };
 
@@ -407,3 +528,84 @@ const ICON_STYLE: React.CSSProperties = {
   height: '15px',
   minHeight: '15px'
 };
+
+const TEXT_AREA_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  width: '100%',
+  minHeight: '146px',
+  height: '146px',
+  border: '1px solid #969696',
+  borderRadius: '4px',
+  backgroundColor: '#FFFFFF',
+  boxShadow: 'none',
+  padding: '10px',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  outline: 'none',
+  marginTop: '20px'
+};
+
+const SEND_BUTTON_STYLE: React.CSSProperties = {
+  fontWeight: 600,
+  fontSize: '12px',
+  lineHeight: '15px',
+  width: '121px',
+  minWidth: '121px',
+  height: '35px',
+  minHeight: '35px',
+  gap: '5px'
+};
+
+const ERROR_MESSAGE_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-end',
+  alignItems: 'flex-start',
+  flexWrap: 'wrap',
+  margin: '2px 0px 0px 0px',
+  width:' 100%',
+  lineHeight: '18px',
+  minHeight: '18px',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  color: '#FF2C79'
+};
+
+const styles = StyleSheet.create({
+  textarea: {
+    ':focus': {
+      border: '1px solid #969696',
+      boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.4)'
+    },
+    ':focus-within': {
+      border: '1px solid #969696',
+      boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.4)'
+    },
+    '::-webkit-scrollbar': {
+      width: '10px',
+      backgroundColor: 'transparent',
+      color: '#C4C4C4',
+      borderRadius: '4px'
+    },
+    '::-webkit-scrollbar-track': {
+      boxShadow: 'none',
+      background: 'transparent',
+      borderRadius: '4px'
+    },
+    '::-webkit-scrollbar-thumb': {
+      background: '#C4C4C4',
+      border: '3px solid rgba(0, 0, 0, 0)',
+      backgroundClip: 'padding-box',
+      borderRadius: '9999px'
+    }
+  }
+});

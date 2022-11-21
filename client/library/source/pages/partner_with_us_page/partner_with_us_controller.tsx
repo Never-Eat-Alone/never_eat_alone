@@ -21,6 +21,7 @@ interface State {
   profileLink: string;
   message: string;
   page: PartnerWithUsPage.Page
+  errorCode: PartnerWithUsPage.PageErrorCode;
 }
 
 export class PartnerWithUsController extends React.Component<Properties,
@@ -34,7 +35,8 @@ export class PartnerWithUsController extends React.Component<Properties,
       profileLink: '',
       hasError: false,
       message: '',
-      page: PartnerWithUsPage.Page.INITIAL
+      page: PartnerWithUsPage.Page.INITIAL,
+      errorCode: PartnerWithUsPage.PageErrorCode.NONE
     };
   }
 
@@ -47,6 +49,7 @@ export class PartnerWithUsController extends React.Component<Properties,
           email={this.state.email}
           message={this.state.message}
           profileLink={this.state.profileLink}
+          errorCode={this.state.errorCode}
           onSendEmail={this.handleEmailSendClick}
         />;
       }
@@ -78,7 +81,8 @@ export class PartnerWithUsController extends React.Component<Properties,
         name: name,
         email: email,
         profileLink: profileLink,
-        page: PartnerWithUsPage.Page.MESSAGE_SENT
+        page: PartnerWithUsPage.Page.MESSAGE_SENT,
+        errorCode: PartnerWithUsPage.PageErrorCode.NONE
       });
     } catch {
       this.setState({
@@ -86,7 +90,8 @@ export class PartnerWithUsController extends React.Component<Properties,
         email: email,
         profileLink: profileLink,
         message: message,
-        page: PartnerWithUsPage.Page.INITIAL
+        page: PartnerWithUsPage.Page.INITIAL,
+        errorCode: PartnerWithUsPage.PageErrorCode.SEND_FAILED
       });
     }
   }
