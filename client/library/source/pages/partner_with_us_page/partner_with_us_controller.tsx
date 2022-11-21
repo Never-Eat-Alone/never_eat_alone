@@ -81,6 +81,7 @@ export class PartnerWithUsController extends React.Component<Properties,
         name: name,
         email: email,
         profileLink: profileLink,
+        message: message,
         page: PartnerWithUsPage.Page.MESSAGE_SENT,
         errorCode: PartnerWithUsPage.PageErrorCode.NONE
       });
