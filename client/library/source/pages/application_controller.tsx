@@ -8,6 +8,7 @@ import { CookiesPolicyPage } from './cookie_policy_page';
 import { DiningEventPageController } from './dining_event_page';
 import { HelpPage } from './help_page';
 import { HomePageController } from './home_page';
+import { PartnerWithUsController } from './partner_with_us_page';
 import { PrivacyPolicyPage } from './privacy_policy_page';
 import { Shell } from './shell';
 import { TermsOfUsePage } from './terms_of_use_page';
@@ -266,7 +267,8 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private renderPartnerWithUs = () => {
-    return <div>Partner With Us</div>;
+    return <PartnerWithUsController displayMode={this.state.displayMode}
+      model={this.props.model.getPartnerWithUsModel()} />;
   }
 
   private renderForgotPassword = () => {

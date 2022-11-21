@@ -131,6 +131,32 @@ export function SecondaryTextButtonWithArrow(props: WithIconProperties) {
     />);
 }
 
+export function PrimaryEmailButton(props: Properties) {
+  return (
+    <button
+        {...props}
+        style={{...BUTTON_STYLE, ...PRIMARY_BUTTON_STYLE, ...props.style}}
+        className={css(styles.primaryTextButton)}
+    >
+      <svg
+          width='15px' height='16px' viewBox='0 0 15 16' fill='none'
+          xmlns='http://www.w3.org/2000/svg'
+      >
+        <path
+          d='M10.9275 8.06747L12.555 9.69497C12.7725 9.91247 12.7725 10.2725 12.555 10.49C12.4425 10.6025 12.3 10.655 12.1575 10.655C12.015 10.655 11.8725 10.6025 11.76 10.49L10.17 8.89997L9.5775 9.55247C9.045 10.1375 8.2875 10.475 7.5 10.475C6.7125 10.475 5.9475 10.13 5.4225 9.54497L4.83 8.89997L3.24 10.49C3.1275 10.6025 2.985 10.655 2.8425 10.655C2.7 10.655 2.5575 10.6025 2.445 10.49C2.2275 10.2725 2.2275 9.91247 2.445 9.69497L4.0725 8.06747L0.75 4.40747V11.75C0.75 12.575 1.425 13.25 2.25 13.25H12.75C13.575 13.25 14.25 12.575 14.25 11.75V4.40747L10.9275 8.06747Z'
+          fill='#FFFFFF'
+        />
+        <path
+          d='M6.24749 8.7875C6.89999 9.5 8.09999 9.5 8.75249 8.7875L13.83 3.2075C13.5525 2.9225 13.17 2.75 12.75 2.75H2.24999C1.82999 2.75 1.44749 2.9225 1.17749 3.2075L6.24749 8.7875Z'
+          fill='#FFFFFF'
+        />
+      </svg>
+      <p style={{...LABEL_STYLE, ...PRIMARY_LABEL_STYLE, ...props.labelStyle}} >
+        {props.label}
+      </p>
+    </button>);
+}
+
 const BUTTON_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
