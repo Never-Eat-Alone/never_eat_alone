@@ -41,22 +41,22 @@ export class PartnerWithUsController extends React.Component<Properties,
   }
 
   public render(): JSX.Element {
-    if (this.state.isLoaded) {
-      if (this.state.page === PartnerWithUsPage.Page.INITIAL) {
-        return <PartnerWithUsPage
-          displayMode={this.props.displayMode}
-          name={this.state.name}
-          email={this.state.email}
-          message={this.state.message}
-          profileLink={this.state.profileLink}
-          errorCode={this.state.errorCode}
-          onSendEmail={this.handleEmailSendClick}
-        />;
-      }
-      return <PartnerWithUsMessageSentPage
-        displayMode={this.props.displayMode} />;
+    if (!this.state.isLoaded || this.state.hasError) {
+      return <div />;
     }
-    return <div />;
+    if (this.state.page === PartnerWithUsPage.Page.INITIAL) {
+      return <PartnerWithUsPage
+        displayMode={this.props.displayMode}
+        name={this.state.name}
+        email={this.state.email}
+        message={this.state.message}
+        profileLink={this.state.profileLink}
+        errorCode={this.state.errorCode}
+        onSendEmail={this.handleEmailSendClick}
+      />;
+    }
+    return <PartnerWithUsMessageSentPage
+      displayMode={this.props.displayMode} />;
   }
 
   public async componentDidMount(): Promise<void> {

@@ -192,6 +192,9 @@ export class PartnerWithUsPage extends React.Component<Properties, State> {
     if (this.state.email.trim().length === 0) {
       return true;
     }
+    if (!EmailValidator.validate(this.state.email)) {
+      return true;
+    }
     if (this.state.message.trim().length === 0) {
       return true;
     }
