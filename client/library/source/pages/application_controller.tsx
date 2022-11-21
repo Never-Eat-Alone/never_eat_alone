@@ -2,7 +2,8 @@ import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { Modal } from '../components';
 import { DisplayMode, getDisplayMode } from '../definitions';
-import { InviteAFoodieModalController, JoinController } from '../modals';
+import { InviteAFoodieModalController, JoinController,
+  PartnerWithUsModalController } from '../modals';
 import { ApplicationModel } from './application_model';
 import { CookiesPolicyPage } from './cookie_policy_page';
 import { DiningEventPageController } from './dining_event_page';
@@ -28,6 +29,7 @@ interface State {
   lastPage: string;
   isJoinButtonClicked: boolean;
   isInviteAFoodieButtonClicked: boolean;
+  isPartnerWithUsButtonClicked: boolean;
 }
 
 export class ApplicationController extends React.Component<Properties, State> {
@@ -40,7 +42,8 @@ export class ApplicationController extends React.Component<Properties, State> {
       redirect: null,
       lastPage: '/',
       isJoinButtonClicked: false,
-      isInviteAFoodieButtonClicked: false
+      isInviteAFoodieButtonClicked: false,
+      isPartnerWithUsButtonClicked: false
     };
   }
 
@@ -77,6 +80,17 @@ export class ApplicationController extends React.Component<Properties, State> {
       }
       return null;
     })();
+    const partnerWithUsModal = (() => {
+      if (this.state.isPartnerWithUsButtonClicked) {
+        return (
+          <PartnerWithUsModalController
+            displayMode={this.state.displayMode}
+            model={this.props.model.getPartnerWithUsModel()}
+            onClose={this.handlePartnerWithUsModalClose}
+          />);
+      }
+      return null;
+    })();
     return (
       <div id='app_top' style={CONTAINER_STYLE} >
         <Shell
@@ -93,6 +107,7 @@ export class ApplicationController extends React.Component<Properties, State> {
         >
           {JoinModal}
           {inviteAFoodieModal}
+          {partnerWithUsModal}
           <Router.Switch>
             <Router.Route
               path='/cookies_policy'
@@ -208,6 +223,10 @@ export class ApplicationController extends React.Component<Properties, State> {
     this.setState({ isJoinButtonClicked: true });
   }
 
+  private onPartnerWithUsButton = () => {
+    this.setState({ isPartnerWithUsButtonClicked: true });
+  }
+
   private handleJoinModalClose = () => {
     this.setState({ isJoinButtonClicked: false });
   }
@@ -254,6 +273,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       account={this.props.model.getAccount()}
       model={this.props.model.getHomePageModel()}
       onJoinButton={this.onJoinButton}
+      onPartnerWithUsButton={this.onPartnerWithUsButton}
     />;
   }
 
@@ -314,6 +334,10 @@ export class ApplicationController extends React.Component<Properties, State> {
 
   private handleInviteAFoodieModalClose = () => {
     this.setState({ isInviteAFoodieButtonClicked: false });
+  }
+
+  private handlePartnerWithUsModalClose = () => {
+    this.setState({ isPartnerWithUsButtonClicked: false });
   }
 
   private handleHeaderAndFooter = (pathname: string) => {

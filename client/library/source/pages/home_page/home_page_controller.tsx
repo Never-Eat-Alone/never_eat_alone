@@ -15,6 +15,9 @@ interface Properties {
 
   /** Indicates the join button on home page is clicked. */
   onJoinButton: () => void;
+
+  /** Indicates the partner with us button is clicked. */
+  onPartnerWithUsButton: () => void;
 }
 
 interface State {
@@ -46,6 +49,7 @@ export class HomePageController extends React.Component<Properties, State> {
           totalEventsThisMonth={this.props.model.getTotalEventsThisMonth()}
           errorCode={this.state.errorCode}
           onJoinButton={this.props.onJoinButton}
+          onPartnerWithUsButton={this.props.onPartnerWithUsButton}
         />);
     }
     return <div />;

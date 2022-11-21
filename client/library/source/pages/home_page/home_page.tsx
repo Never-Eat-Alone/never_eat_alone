@@ -31,6 +31,9 @@ interface Properties {
 
   /** Indicates the join button is clicked. */
   onJoinButton: () => void;
+
+  /** Indicates the Partner with us button is clicked. */
+  onPartnerWithUsButton: () => void;
 }
 
 /** Displays the HomePage. */
@@ -51,7 +54,10 @@ export class HomePage extends React.Component<Properties> {
     })();
     const partnershipSection = (() => {
       if (!this.props.account || this.props.account.id === -1) {
-        return <PartnerWithUsSummary displayMode={this.props.displayMode} />;
+        return <PartnerWithUsSummary
+          displayMode={this.props.displayMode}
+          onPartnerWithUsButton={this.props.onPartnerWithUsButton}
+        />;
       }
       return null;
     })();

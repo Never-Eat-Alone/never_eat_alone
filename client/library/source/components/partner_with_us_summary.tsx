@@ -7,6 +7,8 @@ interface Properties {
 
   /** The display mode. */
   displayMode: DisplayMode;
+
+  onPartnerWithUsButton: () => void;
 }
 
 /** Displays the PartnerWithUsSummary section on the home page. */
@@ -49,9 +51,11 @@ export class PartnerWithUsSummary extends React.Component<Properties> {
               Have a venue or restaurant?<br/>
               We can help you host events directly for your customers.
             </div>
-            <Router.Link to='/partner_with_us' style={LINK_STYLE} >
-              <PrimaryTextButtonWithArrow label='Get in touch' />
-            </Router.Link>
+            <PrimaryTextButtonWithArrow
+              style={BUTTON_STYLE}
+              label='Get in touch'
+              onClick={this.props.onPartnerWithUsButton}
+            />
           </div>
         </div>
       </div>);
@@ -156,6 +160,9 @@ const TEXT_BOX_STYLE: React.CSSProperties = {
   marginBottom: '20px'
 };
 
-const LINK_STYLE: React.CSSProperties = {
-  textDecoration: 'none'
+const BUTTON_STYLE: React.CSSProperties = {
+  width: '161px',
+  minWidth: '161px',
+  height: '35px',
+  minHeight: '35px'
 };
