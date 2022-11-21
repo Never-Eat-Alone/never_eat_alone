@@ -37,6 +37,15 @@ export function RedNavLink(props: Properties) {
     />);
 }
 
+export function PrimaryButtonNavLink(props: Properties) {
+  return (
+    <NavLink
+      {...props}
+      style={{...PRIMARY_BUTTON_STYLE, ...props.style}}
+      className={css(styles.primaryButton)}
+    />);
+}
+
 export function SecondaryButtonNavLink(props: Properties) {
   return (
     <NavLink
@@ -136,6 +145,24 @@ const RED_LINK_STYLE: React.CSSProperties = {
   color: '#F26B55'
 };
 
+const PRIMARY_BUTTON_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '116px',
+  height: '35px',
+  backgroundColor: '#F26B55',
+  borderRadius: '4px',
+  textTransform: 'uppercase',
+  border: 'none',
+  color: '#FFFFFF',
+  cursor: 'pointer',
+  fontSize: '12px',
+  lineHeight: '15px'
+};
+
 const SECONDARY_BUTTON_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
@@ -205,6 +232,33 @@ const styles = StyleSheet.create({
     ':active': {
       textDecoration: 'underline solid #AA2F19 1px',
       color: '#AA2F19'
+    }
+  },
+  primaryButton: {
+    ':hover': {
+      boxShadow: '0px 1px 5px rgba(86, 70, 40, 0.4)',
+      backgroundColor: '#F26B55',
+      cursor: 'pointer'
+    },
+    ':focus': {
+      boxShadow: '0px 1px 5px rgba(86, 70, 40, 0.4)',
+      backgroundColor: '#F26B55',
+      cursor: 'pointer'
+    },
+    ':focus-within': {
+      boxShadow: '0px 1px 5px rgba(86, 70, 40, 0.4)',
+      backgroundColor: '#F26B55',
+      cursor: 'pointer'
+    },
+    ':active': {
+      backgroundColor: '#AA2F19',
+      boxShadow: 'none',
+      cursor: 'pointer'
+    },
+    ':disabled': {
+      backgroundColor: '#CCCCCC',
+      boxShadow: 'none',
+      cursor: 'default'
     }
   },
   secondaryButton: {
