@@ -234,6 +234,10 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     this._joinModel.load();
     this._partnerWithUsModel = new NeverEatAlone.LocalPartnerWithUsModel();
     this._partnerWithUsModel.load();
+    const userEmma = new NeverEatAlone.User(1, 'Emma',
+      'info+emma@nevereatalone.net', 'emma', NeverEatAlone.UserStatus.ACTIVE,
+      new Date(2022, 11, 1, 10, 20, 30));
+    this._logInModel = new NeverEatAlone.LocalLogInModel(userEmma);
     await Promise.all([this._headerModel.load(), this._homePageModel.load(),
       this._inviteAFoodieModel.load()]);
     return;
@@ -268,6 +272,10 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return this._partnerWithUsModel;
   }
 
+  public getLogInModel(): NeverEatAlone.LogInModel {
+    return this._logInModel;
+  }
+
   private _headerModel: NeverEatAlone.HeaderModel;
   private _account: NeverEatAlone.User;
   private _homePageModel: NeverEatAlone.HomePageModel;
@@ -275,4 +283,5 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
   private _inviteAFoodieModel: NeverEatAlone.InviteAFoodieModel;
   private _joinModel: NeverEatAlone.JoinModel;
   private _partnerWithUsModel: NeverEatAlone.PartnerWithUsModel;
+  private _logInModel: NeverEatAlone.LogInModel;
 }

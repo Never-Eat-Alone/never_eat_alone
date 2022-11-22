@@ -12,15 +12,11 @@ export class LocalLogInModel extends LogInModel {
     return this._user;
   }
 
-  public async forgotPassword(email: string): Promise<void> {
-    return;
-  }
-
-  public async googleLogIn(email: string, token: any): Promise<User> {
+  public async googleLogIn(): Promise<User> {
     return this._user;
   }
 
-  public async facebookLogIn(email: string, token: any): Promise<User> {
+  public async facebookLogIn(): Promise<User> {
     return this._user;
   }
 

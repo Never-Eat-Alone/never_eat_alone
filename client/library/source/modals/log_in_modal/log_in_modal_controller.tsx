@@ -12,85 +12,67 @@ interface Properties {
 
   /** Indicates the close button is clicked. */
   onClose: () => void;
+
+  /** Indicates the log in was successful. */
+  onLogInSuccess: (user: User) => void;
 }
 
 interface State {
-  isLoaded: boolean;
-  hasError: boolean;
   email: string;
   password: string;
   rememberMe: boolean;
-  googleEmail: string;
-  googgleToke: any;
-  facebookEmail: string;
-  facebookToken: any;
-  isForgotPass: boolean;
   errorCode: LogInModal.ErrorCode;
-  user: User;
 }
 
 export class LogInModalController extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props);
-    this._guest = User.makeGuest();
     this.state = {
-      isLoaded: false,
-      hasError: false,
       email: '',
       password: '',
       rememberMe: true,
-      googleEmail: '',
-      googgleToke: null,
-      facebookEmail: '',
-      facebookToken: null,
-      isForgotPass: false,
-      errorCode: LogInModal.ErrorCode.NONE,
-      user: this._guest
+      errorCode: LogInModal.ErrorCode.NONE
     };
   }
 
   public render(): JSX.Element {
-    if (!this.state.isLoaded || this.state.hasError) {
-      return <div />;
-    }
     return <LogInModal
       displayMode={this.props.displayMode}
-      onLogin={this.handleLogIn}
-      onForgotPassword={this.handleForgotPassword}
-      onGoogleLogInClick={this.props.model.googleLogIn(this.state.googleEmail,
-        this.state.googleToken)}
-      onFacebookLogInClick={this.props.model.facebookLogIn(
-        this.state.facebookEmail, this.state.facebookToken)}
+      errorCode={this.state.errorCode}
+      onLogIn={this.handleLogIn}
+      onGoogleLogInClick={this.handleGoogleLogIn}
+      onFacebookLogInClick={this.handleFacebookLogIn}
       onClose={this.props.onClose}
     />;
-  }
-
-  public componentDidMount(): void {
-    try {
-      this.setState({ isLoaded: true });
-    } catch {
-      this.setState({ isLoaded: true, hasError: true });
-    }
   }
 
   private handleLogIn = async () => {
     try {
       const user = await this.props.model.logIn(this.state.email,
         this.state.password, this.state.rememberMe);
-      this.setState({user});
+      this.props.onLogInSuccess(user);
     } catch {
-      this.setState({ user:  });
+      this.setState({
+        errorCode: LogInModal.ErrorCode.LOGIN_FAILED
+      });
     }
   }
 
-  private handleForgotPassword = async () => {
+  private handleGoogleLogIn = async () => {
     try {
-      await this.props.model.forgotPassword(this.state.email);
-      this.setState({ isForgotPass: true });
+      const user = await this.props.model.googleLogIn();
+      this.props.onLogInSuccess(user);
     } catch {
-      this.setState({ isForgotPass: false });
+      this.setState({ errorCode: LogInModal.ErrorCode.GOOGLE_LOGIN_FAILED });
     }
   }
 
-  private _guest: User;
+  private handleFacebookLogIn = async () => {
+    try {
+      const user = await this.props.model.facebookLogIn();
+      this.props.onLogInSuccess(user);
+    } catch {
+      this.setState({ errorCode: LogInModal.ErrorCode.FACEBOOK_LOGIN_FAILED });
+    }
+  }
 }

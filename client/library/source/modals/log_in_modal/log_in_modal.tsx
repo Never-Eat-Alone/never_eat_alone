@@ -1,39 +1,25 @@
 import * as React from 'react';
-import * as Router from 'react-router-dom';
 import { CheckBox, CloseButton, EmailInputField, FacebookLogInButton,
   GoogleLogInButton, PasswordInputField, PrimaryTextButton, RedNavLink
 } from '../../components';
-import { DisplayMode, User } from '../../definitions';
+import { DisplayMode } from '../../definitions';
 
-interface Properties extends Router.LinkProps {
+interface Properties {
   displayMode: DisplayMode;
 
-  /** represents the form error message regarding the inputfields. */
-  formErrorMessage?: string;
-
-  /** Represents the google login error message. */
-  googleErrorMessage?: string;
-
-  /** Represents the facebook login error message. */
-  facebookErrorMessage?: string;
-
-  /** Represents the error message regarding the modal as a whole. */
-  modalErrorMessage?: string;
+  errorCode: LogInModal.ErrorCode;
 
   /** Indicates the close button is clicked. */
   onClose: () => void;
 
   /** Indicates the Log In button is clicked. */
-  onLogIn: () => Promise<User>;
-
-  /** Indicates the Forgot password button is clicked. */
-  onForgotPassword: () => Promise<void>;
+  onLogIn: () => void;
 
   /** Indicates the google login button is clicked. */
-  onGoogleLogInClick: () => Promise<User>;
+  onGoogleLogInClick: () => void;
 
   /** Indicates the facebook login button is clicked. */
-  onFacebookLogInClick: () => Promise<User>;
+  onFacebookLogInClick: () => void;
 }
 
 interface State {
@@ -55,40 +41,30 @@ export class LogInModal extends React.Component<Properties, State> {
 
   public render(): JSX.Element {
     const formErrorMessage = (() => {
-      if (!this.props.formErrorMessage) {
-        return null;
+      if (this.props.errorCode === LogInModal.ErrorCode.LOGIN_FAILED) {
+        return "Your credentials didn't match our records.";
       }
-      return (
-        <div style={ERROR_MESSAGE_STYLE} >
-          {this.props.formErrorMessage}
-        </div>);
+      return '';
     })();
     const modalErrorMessage = (() => {
-      if (!this.props.modalErrorMessage) {
-        return null;
+      if (this.props.errorCode === LogInModal.ErrorCode.NO_CONNECTION) {
+        return 'Somethign went wrong. Please try again later.';
       }
-      return (
-        <p style={MODAL_ERROR_MESSAGE_STYLE} >
-          {this.props.modalErrorMessage}
-        </p>);
+      return '';
     })();
     const googleErrorMessage = (() => {
-      if (!this.props.googleErrorMessage) {
-        return null;
+      if (this.props.errorCode === LogInModal.ErrorCode.GOOGLE_LOGIN_FAILED) {
+        return `Google login failed. Please log in using your email. ${
+          <RedNavLink to='/help' label='Learn more...' />}`;
       }
-      return (
-        <div style={MEDIA_ERROR_MESSAGE_STYLE} >
-          {this.props.googleErrorMessage}
-        </div>);
+      return '';
     })();
     const facebookErrorMessage = (() => {
-      if (!this.props.facebookErrorMessage) {
-        return null;
+      if (this.props.errorCode === LogInModal.ErrorCode.FACEBOOK_LOGIN_FAILED) {
+        return `Facebook login failed. Please log in using your email. ${
+          <RedNavLink to='/help' label='Learn more...' />}`;
       }
-      return (
-        <div style={MEDIA_ERROR_MESSAGE_STYLE} >
-          {this.props.facebookErrorMessage}
-        </div>);
+      return '';
     })();
     const containerStyle = (this.props.displayMode === DisplayMode.MOBILE &&
       MOBILE_CONTAINER_STYLE || CONTAINER_STYLE);
@@ -183,7 +159,10 @@ export class LogInModal extends React.Component<Properties, State> {
 export namespace LogInModal {
   export enum ErrorCode {
     NONE,
-    NO_CONNECTION
+    NO_CONNECTION,
+    LOGIN_FAILED,
+    GOOGLE_LOGIN_FAILED,
+    FACEBOOK_LOGIN_FAILED
   }
 }
 
@@ -258,16 +237,6 @@ const LOG_IN_BUTTON_STYLE: React.CSSProperties = {
   marginBottom: '20px'
 };
 
-const ERROR_CONTAINER_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'flex-end',
-  alignItems: 'center',
-  flexWrap: 'wrap',
-  width: '100%',
-  minHeight: '40px'
-};
-
 const ERROR_MESSAGE_STYLE: React.CSSProperties = {
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
@@ -277,7 +246,22 @@ const ERROR_MESSAGE_STYLE: React.CSSProperties = {
   color: '#FF2C79',
   textAlign: 'center',
   padding: '0px',
-  margin: '17px 0px 0px 0px'
+  margin: '0px'
+};
+
+const ERROR_CONTAINER_STYLE: React.CSSProperties = {
+  ...ERROR_MESSAGE_STYLE,
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'flex-start',
+  flexWrap: 'wrap',
+  width: '100%',
+  minHeight: '40px',
+  paddingTop: '17px',
+  paddingBottom: '5px',
+  whiteSpace: 'pre-line'
 };
 
 const MODAL_ERROR_MESSAGE_STYLE: React.CSSProperties = {
