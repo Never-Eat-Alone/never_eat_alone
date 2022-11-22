@@ -255,7 +255,7 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private handleLogInSuccess = (user: User) => {
-    this.setState({ user });
+    this.setState({ user: user });
   }
 
   private handleLogOut = () => {

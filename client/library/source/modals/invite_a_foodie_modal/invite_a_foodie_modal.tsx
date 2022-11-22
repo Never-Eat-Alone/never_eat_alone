@@ -293,7 +293,9 @@ const CONTAINER_STYLE: React.CSSProperties = {
   width: '702px',
   height: '534px',
   padding: '30px',
-  borderRadius: '4px'
+  borderRadius: '4px',
+  overflow: 'hidden',
+  boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)'
 };
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {

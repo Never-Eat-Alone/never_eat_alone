@@ -9,17 +9,21 @@ interface Properties {
 
   errorCode: LogInModal.ErrorCode;
 
+  email: string;
+  password: string;
+  rememberMe: boolean;
+
   /** Indicates the close button is clicked. */
   onClose: () => void;
 
   /** Indicates the Log In button is clicked. */
-  onLogIn: () => void;
+  onLogIn: (email: string, password: string, rememberMe: boolean) => void;
 
   /** Indicates the google login button is clicked. */
-  onGoogleLogInClick: () => void;
+  onGoogleLogIn: () => void;
 
   /** Indicates the facebook login button is clicked. */
-  onFacebookLogInClick: () => void;
+  onFacebookLogIn: () => void;
 }
 
 interface State {
@@ -33,10 +37,11 @@ export class LogInModal extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props);
     this.state = {
-      email: '',
-      password: '',
-      isRememberMe: true
+      email: this.props.email,
+      password: this.props.password,
+      isRememberMe: this.props.rememberMe
     };
+    this._containerRef = React.createRef();
   }
 
   public render(): JSX.Element {
@@ -68,82 +73,103 @@ export class LogInModal extends React.Component<Properties, State> {
     })();
     const containerStyle = (this.props.displayMode === DisplayMode.MOBILE &&
       MOBILE_CONTAINER_STYLE || CONTAINER_STYLE);
+    const closeButtonStyle = (this.props.displayMode === DisplayMode.MOBILE &&
+      MOBILE_CLOSE_BUTTON_STYLE || CLOSE_BUTTON_STYLE);
     return (
-      <div style={containerStyle} >
-        <CloseButton
-          style={CLOSE_BUTTON_STYLE}
-          displayMode={this.props.displayMode}
-          onClick={this.props.onClose}
-        />
-        <div style={LOGO_CONTAINER_STYLE} >
-          <img
-            style={LOGO_STYLE}
-            src='resources/log_in_modal/icons/logo.svg'
-            alt='NEA Logo'
+      <div style={FORM_STYLE} >
+        <div ref={this._containerRef} style={containerStyle} >
+          <CloseButton
+            style={closeButtonStyle}
+            displayMode={this.props.displayMode}
+            onClick={this.props.onClose}
           />
-        </div>
-        <div style={TITLE_STYLE} >LOG IN</div>
-        <EmailInputField
-          style={INPUT_FIELD_STYLE}
-          placeholder='Your Email'
-          value={this.state.email}
-          onChange={this.handleEmailChange}
-        />
-        <PasswordInputField
-          style={INPUT_FIELD_STYLE}
-          placeholder='Your Password'
-          value={this.state.password}
-          onChange={this.handlePasswordChange}
-        />
-        <div style={ROW_CONTAINER_STYLE} >
-          <CheckBox
-            label='Remember Me'
-            checked={this.state.isRememberMe}
-            onBoxClick={this.handleRememberMe}
-          />
-          <RedNavLink
-            {...this.props}
-            label='Forgot password?'
-            to='/forgot_password'
-            style={FORGOT_LINK_STYLE}
-          />
-        </div>
-        <div style={ERROR_CONTAINER_STYLE} >{formErrorMessage}</div>
-        <PrimaryTextButton
-          style={LOG_IN_BUTTON_STYLE}
-          label='LOG IN'
-          onClick={this.props.onLogIn}
-        />
-        {modalErrorMessage}
-        <div style={OR_LINE_CONTAINER_STYLE} >
-          <div style={OR_LINE_STYLE} >
-            <span style={OR_SPAN_STYLE} >or</span>
+          <div style={LOGO_CONTAINER_STYLE} >
+            <img
+              style={LOGO_STYLE}
+              src='resources/log_in_modal/icons/logo.svg'
+              alt='NEA Logo'
+            />
           </div>
-        </div>
-        <GoogleLogInButton
-          label='Log in with Google'
-          onClick={this.props.onGoogleLogInClick}
-        />
-        <div style={SOCIAL_ERROR_CONTAINER_STYLE} >{googleErrorMessage}</div>
-        <FacebookLogInButton
-          label='Log in with Facebook'
-          onClick={this.props.onFacebookLogInClick}
-        />
-        <div style={SOCIAL_ERROR_CONTAINER_STYLE} >{facebookErrorMessage}</div>
-        <div style={REQUEST_ACCOUNT_ROW_STYLE} >
-          Haven’t joined yet? Let’s fix this and&nbsp;
-          <RedNavLink
-            {...this.props}
-            to='/join'
-            label='Request Your Account'
-            style={JOIN_LINK_STYLE}
+          <div style={TITLE_STYLE} >LOG IN</div>
+          <EmailInputField
+            style={INPUT_FIELD_STYLE}
+            placeholder='Your Email'
+            value={this.state.email}
+            onChange={this.handleEmailChange}
           />
+          <PasswordInputField
+            style={INPUT_FIELD_STYLE}
+            placeholder='Your Password'
+            value={this.state.password}
+            onChange={this.handlePasswordChange}
+          />
+          <div style={ROW_CONTAINER_STYLE} >
+            <CheckBox
+              label='Remember Me'
+              checked={this.state.isRememberMe}
+              onBoxClick={this.handleRememberMe}
+            />
+            <RedNavLink
+              {...this.props}
+              label='Forgot password?'
+              to='/forgot_password'
+              style={FORGOT_LINK_STYLE}
+            />
+          </div>
+          <div style={ERROR_CONTAINER_STYLE} >{formErrorMessage}</div>
+          <PrimaryTextButton
+            style={LOG_IN_BUTTON_STYLE}
+            label='LOG IN'
+            onClick={this.handleLogIn}
+          />
+          {modalErrorMessage}
+          <div style={OR_LINE_CONTAINER_STYLE} >
+            <div style={OR_LINE_STYLE} >
+              <span style={OR_SPAN_STYLE} >or</span>
+            </div>
+          </div>
+          <GoogleLogInButton
+            label='Log in with Google'
+            onClick={() => this.props.onGoogleLogIn}
+          />
+          <div style={SOCIAL_ERROR_CONTAINER_STYLE} >{googleErrorMessage}</div>
+          <FacebookLogInButton
+            label='Log in with Facebook'
+            onClick={() => this.props.onFacebookLogIn}
+          />
+          <div style={SOCIAL_ERROR_CONTAINER_STYLE} >{facebookErrorMessage}</div>
+          <div style={REQUEST_ACCOUNT_ROW_STYLE} >
+            Haven’t joined yet? Let’s fix this and&nbsp;
+            <RedNavLink
+              {...this.props}
+              to='/join'
+              label='Request Your Account'
+              style={JOIN_LINK_STYLE}
+            />
+          </div>
         </div>
       </div>);
   }
 
+  public componentDidMount(): void {
+    document.addEventListener('mousedown', this.handleClickOutside);
+  }
+
+  public componentWillUnmount(): void {
+    document.removeEventListener('mousedown', this.handleClickOutside);
+  }
+
+  private handleClickOutside: { (event: any): void } = (
+      event: React.MouseEvent) => {
+    if (!this._containerRef.current.contains(event.target as Node)) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.props.onClose();
+    }
+  }
+
   private handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ email: event.target.value });
+    this.setState({ email: event.target.value.trim() });
   }
 
   private handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>
@@ -154,6 +180,13 @@ export class LogInModal extends React.Component<Properties, State> {
   private handleRememberMe = () => {
     this.setState((prevState) => ({ isRememberMe: !prevState.isRememberMe }));
   }
+
+  private handleLogIn = (event: React.MouseEvent) => {
+    this.props.onLogIn(this.state.email, this.state.password,
+      this.state.isRememberMe);
+  }
+
+  private _containerRef: React.RefObject<HTMLDivElement>;
 }
 
 export namespace LogInModal {
@@ -165,6 +198,20 @@ export namespace LogInModal {
     FACEBOOK_LOGIN_FAILED
   }
 }
+
+const FORM_STYLE: React.CSSProperties = {
+  position: 'fixed',
+  top: '0px',
+  left: '0px',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '100%',
+  height: '100%',
+  backgroundColor: 'rgb(150, 150, 150, 0.5)',
+  zIndex: 1000
+};
 
 const CONTAINER_STYLE: React.CSSProperties = {
   position: 'relative',
@@ -182,24 +229,20 @@ const CONTAINER_STYLE: React.CSSProperties = {
 };
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
-  position: 'relative',
-  boxSizing: 'border-box',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
+  ...CONTAINER_STYLE,
   width: '375px',
-  padding: '50px 33px 60px 32px',
-  backgroundColor: '#FFFFFF',
-  borderRadius: '4px',
-  boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
-  overflow: 'hidden'
+  padding: '50px 33px 60px 32px'
 };
 
 const CLOSE_BUTTON_STYLE: React.CSSProperties = {
   position: 'absolute',
   top: '20px',
   right: '20px'
+};
+
+const MOBILE_CLOSE_BUTTON_STYLE: React.CSSProperties = {
+  ...CLOSE_BUTTON_STYLE,
+  right: '8px'
 };
 
 const LOGO_CONTAINER_STYLE: React.CSSProperties = {
@@ -264,13 +307,6 @@ const ERROR_CONTAINER_STYLE: React.CSSProperties = {
   whiteSpace: 'pre-line'
 };
 
-const MODAL_ERROR_MESSAGE_STYLE: React.CSSProperties = {
-  ...ERROR_CONTAINER_STYLE,
-  ...ERROR_MESSAGE_STYLE,
-  margin: '0px 0px 20px 0px',
-  minHeight: '18px'
-};
-
 const INPUT_FIELD_STYLE: React.CSSProperties = {
   marginTop: '20px'
 };
@@ -331,18 +367,6 @@ const SOCIAL_ERROR_CONTAINER_STYLE: React.CSSProperties = {
   flexWrap: 'wrap',
   width: '100%',
   minHeight: '20px'
-};
-
-const MEDIA_ERROR_MESSAGE_STYLE: React.CSSProperties = {
-  minHeight: '18px',
-  fontFamily: 'Source Sans Pro',
-  fontStyle: 'normal',
-  fontWeight: 400,
-  fontSize: '14px',
-  lineHeight: '18px',
-  color: '#FF2C79',
-  width: '100%',
-  textAlign: 'center'
 };
 
 const OR_LINE_CONTAINER_STYLE: React.CSSProperties = {

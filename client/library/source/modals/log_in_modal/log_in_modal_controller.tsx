@@ -38,21 +38,27 @@ export class LogInModalController extends React.Component<Properties, State> {
   public render(): JSX.Element {
     return <LogInModal
       displayMode={this.props.displayMode}
+      email={this.state.email}
+      password={this.state.password}
+      rememberMe={this.state.rememberMe}
       errorCode={this.state.errorCode}
       onLogIn={this.handleLogIn}
-      onGoogleLogInClick={this.handleGoogleLogIn}
-      onFacebookLogInClick={this.handleFacebookLogIn}
+      onGoogleLogIn={this.handleGoogleLogIn}
+      onFacebookLogIn={this.handleFacebookLogIn}
       onClose={this.props.onClose}
     />;
   }
 
-  private handleLogIn = async () => {
+  private handleLogIn = async (email: string, password: string,
+      rememberMe: boolean) => {
     try {
-      const user = await this.props.model.logIn(this.state.email,
-        this.state.password, this.state.rememberMe);
+      const user = await this.props.model.logIn(email, password, rememberMe);
       this.props.onLogInSuccess(user);
     } catch {
       this.setState({
+        email: email,
+        password: password,
+        rememberMe: rememberMe,
         errorCode: LogInModal.ErrorCode.LOGIN_FAILED
       });
     }
