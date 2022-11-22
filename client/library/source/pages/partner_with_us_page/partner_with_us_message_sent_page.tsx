@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as Router from 'react-router-dom';
 import { PrimaryButtonNavLink } from '../../components';
 import { DisplayMode } from '../../definitions';
 
@@ -6,8 +7,23 @@ interface Properties {
   displayMode: DisplayMode;
 }
 
-export class PartnerWithUsMessageSentPage extends React.Component<Properties> {
+interface State {
+  isRedirect: boolean;
+}
+
+export class PartnerWithUsMessageSentPage extends React.Component<Properties,
+    State> {
+  constructor(props: Properties) {
+    super(props);
+    this.state = {
+      isRedirect: false
+    };
+  }
+
   public render(): JSX.Element {
+    if (this.state.isRedirect) {
+      return <Router.Redirect to='/' />;
+    }
     const { containerStyle, headingFormStyle, textFormContainerStyle,
         textContainerStyle, formStyle, imageContainerStyle } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
@@ -80,6 +96,18 @@ export class PartnerWithUsMessageSentPage extends React.Component<Properties> {
         </div>
       </div>);
   }
+
+  public componentDidMount(): void {
+    this._timeOutId = setTimeout(() => {
+      this.setState({ isRedirect: true });
+    }, 1500);
+  }
+
+  public componentWillUnmount(): void {
+    clearTimeout(this._timeOutId);
+  }
+
+  private _timeOutId: NodeJS.Timeout;
 }
 
 const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
