@@ -2,8 +2,8 @@ import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { CheckBox, CloseButton, EmailInputField, FacebookLogInButton,
   GoogleLogInButton, PasswordInputField, PrimaryTextButton, RedNavLink
-} from '../components';
-import { DisplayMode } from '../definitions';
+} from '../../components';
+import { DisplayMode, User } from '../../definitions';
 
 interface Properties extends Router.LinkProps {
   displayMode: DisplayMode;
@@ -24,16 +24,16 @@ interface Properties extends Router.LinkProps {
   onClose: () => void;
 
   /** Indicates the Log In button is clicked. */
-  onLogIn: () => void;
+  onLogIn: () => Promise<User>;
 
   /** Indicates the Forgot password button is clicked. */
-  onForgotPassword: () => void;
+  onForgotPassword: () => Promise<void>;
 
   /** Indicates the google login button is clicked. */
-  onGoogleLogInClick: () => void;
+  onGoogleLogInClick: () => Promise<User>;
 
   /** Indicates the facebook login button is clicked. */
-  onFacebookLogInClick: () => void;
+  onFacebookLogInClick: () => Promise<User>;
 }
 
 interface State {
@@ -177,6 +177,13 @@ export class LogInModal extends React.Component<Properties, State> {
 
   private handleRememberMe = () => {
     this.setState((prevState) => ({ isRememberMe: !prevState.isRememberMe }));
+  }
+}
+
+export namespace LogInModal {
+  export enum ErrorCode {
+    NONE,
+    NO_CONNECTION
   }
 }
 
