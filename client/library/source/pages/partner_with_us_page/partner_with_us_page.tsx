@@ -320,6 +320,7 @@ const TABLET_CONTAINER_STYLE: React.CSSProperties = {
 };
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
+  ...DESKTOP_CONTAINER_STYLE,
   paddingTop: '30px',
   paddingBottom: '50px'
 };

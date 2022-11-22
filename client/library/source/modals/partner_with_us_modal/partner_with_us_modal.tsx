@@ -1,8 +1,8 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as EmailValidator from 'email-validator';
 import * as React from 'react';
-import { EmailInputField, InputField, InputFieldWithIcon, PrimaryEmailButton
-} from '../../components';
+import { CloseButton, EmailInputField, InputField, InputFieldWithIcon,
+  PrimaryEmailButton } from '../../components';
 import { DisplayMode } from '../../definitions';
 import { PartnerWithUsPage } from '../../pages';
 
@@ -53,6 +53,7 @@ export class PartnerWithUsModal extends React.Component<Properties, State> {
       emailErrorCode: PartnerWithUsPage.EmailErrorCode.NONE,
       messageErrorCode: PartnerWithUsPage.MessageErrorCode.NONE
     };
+    this._containerRef = React.createRef();
   }
 
   public render(): JSX.Element {
@@ -215,6 +216,23 @@ export class PartnerWithUsModal extends React.Component<Properties, State> {
     return false;
   }
 
+  public componentDidMount(): void {
+    document.addEventListener('mousedown', this.handleClickOutside);
+  }
+
+  public componentWillUnmount(): void {
+    document.removeEventListener('mousedown', this.handleClickOutside);
+  }
+
+  private handleClickOutside: { (event: any): void } = (
+      event: React.MouseEvent) => {
+    if (!this._containerRef.current.contains(event.target as Node)) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.props.onClose();
+    }
+  }
+
   private handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ name: event.target.value });
     if (event.target.value != '') {
@@ -285,29 +303,51 @@ export class PartnerWithUsModal extends React.Component<Properties, State> {
       return true;
     }
   }
+
+  private _containerRef: React.RefObject<HTMLDivElement>;
 }
 
+const FORM_STYLE: React.CSSProperties = {
+  position: 'fixed',
+  top: '0px',
+  left: '0px',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '100%',
+  height: '100%',
+  backgroundColor: 'rgb(150, 150, 150, 0.5)',
+  zIndex: 1000
+};
+
 const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
+  position: 'relative',
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'center',
-  width: '100%',
+  width: '830px',
   backgroundColor: '#FFFFFF',
-  paddingTop: '50px',
-  paddingBottom: '50px'
+  paddingTop: '30px',
+  paddingBottom: '30px',
+  borderRadius: '4px',
+  overflow: 'hidden'
 };
 
 const TABLET_CONTAINER_STYLE: React.CSSProperties = {
   ...DESKTOP_CONTAINER_STYLE,
-  paddingTop: '40px',
-  paddingBottom: '114px'
+  width: '375px',
+  paddingTop: '20px',
+  paddingBottom: '20px'
 };
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
-  paddingTop: '30px',
-  paddingBottom: '50px'
+  ...DESKTOP_CONTAINER_STYLE,
+  paddingTop: '20px',
+  paddingBottom: '20px',
+  width: '100%'
 };
 
 const DESKTOP_FORM_STYLE: React.CSSProperties = {
@@ -316,21 +356,25 @@ const DESKTOP_FORM_STYLE: React.CSSProperties = {
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'space-between',
-  marginTop: '50px',
-  width: '740px'
+  marginTop: '30px',
+  paddingLeft: '50px',
+  paddingRight: '50px',
+  width: '100%'
 };
 
 const TABLET_FORM_STYLE: React.CSSProperties = {
   ...DESKTOP_FORM_STYLE,
-  marginTop: '50px',
-  width: '702px'
+  paddingLeft: '20px',
+  paddingRight: '20px',
+  marginTop: '20px',
+  width: '100%'
 };
 
 const MOBILE_FORM_STYLE: React.CSSProperties = {
   ...DESKTOP_FORM_STYLE,
   paddingLeft: '20px',
   paddingRight: '20px',
-  marginTop: '30px',
+  marginTop: '20px',
   width: '100%'
 };
 
