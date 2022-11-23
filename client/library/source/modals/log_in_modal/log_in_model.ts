@@ -5,4 +5,5 @@ export abstract class LogInModel {
     ): Promise<User>;
   public abstract googleLogIn(): Promise<User>;
   public abstract facebookLogIn(): Promise<User>;
+  public abstract logOut(): Promise<boolean>;
 }

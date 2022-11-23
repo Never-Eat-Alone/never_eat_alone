@@ -263,18 +263,14 @@ export class ApplicationController extends React.Component<Properties, State> {
     this.setState({ account: user });
   }
 
-  private handleLogOut = () => {
-    this.setState({ account: User.makeGuest() });
+  private handleLogOut = async () => {
+    const isLoggedOut = await this.props.model.getLogInModel().logOut();
+    if (isLoggedOut) {
+      this.setState({ account: User.makeGuest() });
+    }
   }
 
   private handleMenuClick = (path: string) => {
-    this.setState({ redirect: path });
-  }
-
-  private handleLogInRedirect = (path: string) => {
-    if (this.state.isLogInButtonClicked) {
-      this.handleLogInModalClose();
-    }
     this.setState({ redirect: path });
   }
 

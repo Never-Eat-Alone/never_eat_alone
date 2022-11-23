@@ -26,5 +26,9 @@ export class DemoLogInModel extends NeverEatAlone.LogInModel {
     return NeverEatAlone.User.makeGuest();
   }
 
+  public async logOut(): Promise<boolean> {
+    return true;
+  }
+
   private _userList: NeverEatAlone.User[];
 }
