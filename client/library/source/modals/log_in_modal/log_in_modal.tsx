@@ -86,7 +86,7 @@ export class LogInModal extends React.Component<Properties, State> {
           <>
             Google login failed. Please log in using your email.&nbsp;
             <SecondaryTextLinkButton
-              style={FORGOT_LINK_STYLE}
+              labelStyle={FORGOT_LINK_STYLE}
               label='Learn more...'
               onClick={() => this.handleRedirect('/help')}
             />
@@ -100,7 +100,7 @@ export class LogInModal extends React.Component<Properties, State> {
           <>
             Facebook login failed. Please log in using your email.&nbsp;
             <SecondaryTextLinkButton
-              style={FORGOT_LINK_STYLE}
+              labelStyle={FORGOT_LINK_STYLE}
               label='Learn more...'
               onClick={() => this.handleRedirect('/help')}
             />
@@ -154,7 +154,7 @@ export class LogInModal extends React.Component<Properties, State> {
             />
             <SecondaryTextLinkButton
               label='Forgot password?'
-              style={FORGOT_LINK_STYLE}
+              labelStyle={FORGOT_LINK_STYLE}
               onClick={() => this.handleRedirect('/forgot_password')}
             />
           </div>
@@ -186,8 +186,8 @@ export class LogInModal extends React.Component<Properties, State> {
           <div style={REQUEST_ACCOUNT_ROW_STYLE} >
             Haven’t joined yet? Let’s fix this and&nbsp;
             <SecondaryTextLinkButton
-              style={JOIN_LINK_STYLE}
               label='Request Your Account'
+              labelStyle={JOIN_LINK_STYLE}
               onClick={() => this.handleRedirect('/join')}
             />
           </div>
