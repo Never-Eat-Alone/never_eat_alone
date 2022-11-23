@@ -1,4 +1,5 @@
 import * as NeverEatAlone from 'never_eat_alone';
+import { DemoLogInModel } from './demo_login_model';
 
 /** Implements the ApplicationModel for demo purposes. */
 export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
@@ -234,9 +235,12 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     this._partnerWithUsModel = new NeverEatAlone.LocalPartnerWithUsModel();
     this._partnerWithUsModel.load();
     const userEmma = new NeverEatAlone.User(1, 'Emma',
-      'info+emma@nevereatalone.net', 'emma', NeverEatAlone.UserStatus.ACTIVE,
+      'emma@gmail.com', 'Emma', NeverEatAlone.UserStatus.ACTIVE,
       new Date(2022, 11, 1, 10, 20, 30));
-    this._logInModel = new NeverEatAlone.LocalLogInModel(userEmma);
+    const userArthur = new NeverEatAlone.User(2, 'arthur',
+      'arthur@gmail.com', 'Arthur123', NeverEatAlone.UserStatus.ACTIVE,
+      new Date(2022, 10, 11, 1, 5, 35));
+    this._logInModel = new DemoLogInModel([userEmma, userArthur]);
     await Promise.all([this._headerModel.load(), this._homePageModel.load(),
       this._inviteAFoodieModel.load()]);
     return;

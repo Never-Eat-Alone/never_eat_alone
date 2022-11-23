@@ -1,8 +1,9 @@
 import * as EmailValidator from 'email-validator';
 import * as React from 'react';
+import * as Router from 'react-router-dom';
 import { CheckBox, CloseButton, EmailInputField, FacebookLogInButton,
-  GoogleLogInButton, PasswordInputField, PrimaryTextButton, RedNavLink
-} from '../../components';
+  GoogleLogInButton, PasswordInputField, PrimaryTextButton,
+  SecondaryTextLinkButton } from '../../components';
 import { DisplayMode } from '../../definitions';
 
 interface Properties {
@@ -33,6 +34,7 @@ interface State {
   isRememberMe: boolean;
   emailErrorCode: LogInModal.EmailErrorCode;
   passwordErrorCode: LogInModal.PasswordErrorCode;
+  redirect: string;
 }
 
 /** Displays the Log In Modal. */
@@ -44,17 +46,33 @@ export class LogInModal extends React.Component<Properties, State> {
       password: this.props.password,
       isRememberMe: this.props.rememberMe,
       emailErrorCode: LogInModal.EmailErrorCode.NONE,
-      passwordErrorCode: LogInModal.PasswordErrorCode.NONE
+      passwordErrorCode: LogInModal.PasswordErrorCode.NONE,
+      redirect: null
     };
     this._containerRef = React.createRef();
   }
 
   public render(): JSX.Element {
+    if (this.state.redirect) {
+      this.props.onClose();
+      return <Router.Redirect to={this.state.redirect} />;
+    }
     const formErrorMessage = (() => {
       if (this.props.errorCode === LogInModal.ErrorCode.LOGIN_FAILED) {
-        return "Your credentials didn't match our records.";
+        return "Your credentials didn't match our records or your account is \
+          not active.";
+      } else if (this.state.emailErrorCode ===
+          LogInModal.EmailErrorCode.NOT_AN_EMAIL) {
+        return 'Enter a valid email.';
+      } else if (this.state.emailErrorCode === LogInModal.EmailErrorCode.EMPTY
+          ) {
+        return 'Email is required.';
+      } else if (this.state.passwordErrorCode ===
+          LogInModal.PasswordErrorCode.EMPTY) {
+        return 'Password is required.';
+      } else {
+        return '';
       }
-      return '';
     })();
     const modalErrorMessage = (() => {
       if (this.props.errorCode === LogInModal.ErrorCode.NO_CONNECTION) {
@@ -64,15 +82,29 @@ export class LogInModal extends React.Component<Properties, State> {
     })();
     const googleErrorMessage = (() => {
       if (this.props.errorCode === LogInModal.ErrorCode.GOOGLE_LOGIN_FAILED) {
-        return `Google login failed. Please log in using your email. 
-          ${<RedNavLink to='/help' label='Learn more...' />}`;
+        return (
+          <>
+            Google login failed. Please log in using your email.&nbsp;
+            <SecondaryTextLinkButton
+              style={FORGOT_LINK_STYLE}
+              label='Learn more...'
+              onClick={() => this.handleRedirect('/help')}
+            />
+          </>);
       }
-      return '';
+      return null;
     })();
     const facebookErrorMessage = (() => {
       if (this.props.errorCode === LogInModal.ErrorCode.FACEBOOK_LOGIN_FAILED) {
-        return `Facebook login failed. Please log in using your email. 
-          ${<RedNavLink to='/help' label='Learn more...' />}`;
+        return (
+          <>
+            Facebook login failed. Please log in using your email.&nbsp;
+            <SecondaryTextLinkButton
+              style={FORGOT_LINK_STYLE}
+              label='Learn more...'
+              onClick={() => this.handleRedirect('/help')}
+            />
+          </>);
       }
       return '';
     })();
@@ -120,10 +152,10 @@ export class LogInModal extends React.Component<Properties, State> {
               checked={this.state.isRememberMe}
               onBoxClick={this.handleRememberMe}
             />
-            <RedNavLink
+            <SecondaryTextLinkButton
               label='Forgot password?'
-              to='/forgot_password'
               style={FORGOT_LINK_STYLE}
+              onClick={() => this.handleRedirect('/forgot_password')}
             />
           </div>
           <div style={ERROR_CONTAINER_STYLE} >{formErrorMessage}</div>
@@ -131,6 +163,7 @@ export class LogInModal extends React.Component<Properties, State> {
             style={LOG_IN_BUTTON_STYLE}
             label='LOG IN'
             onClick={this.handleLogIn}
+            disabled={this.isDisabled()}
           />
           {modalErrorMessage}
           <div style={OR_LINE_CONTAINER_STYLE} >
@@ -142,20 +175,20 @@ export class LogInModal extends React.Component<Properties, State> {
             label='Log in with Google'
             onClick={this.props.onGoogleLogIn}
           />
-          <div style={SOCIAL_ERROR_CONTAINER_STYLE} >{googleErrorMessage}</div>
+          <div style={ERROR_CONTAINER_STYLE} >{googleErrorMessage}</div>
           <FacebookLogInButton
             label='Log in with Facebook'
             onClick={this.props.onFacebookLogIn}
           />
-          <div style={SOCIAL_ERROR_CONTAINER_STYLE} >
+          <div style={ERROR_CONTAINER_STYLE} >
             {facebookErrorMessage}
           </div>
           <div style={REQUEST_ACCOUNT_ROW_STYLE} >
             Haven’t joined yet? Let’s fix this and&nbsp;
-            <RedNavLink
+            <SecondaryTextLinkButton
               style={JOIN_LINK_STYLE}
-              to='/join'
               label='Request Your Account'
+              onClick={() => this.handleRedirect('/join')}
             />
           </div>
         </div>
@@ -177,6 +210,10 @@ export class LogInModal extends React.Component<Properties, State> {
       event.stopPropagation();
       this.props.onClose();
     }
+  }
+
+  private handleRedirect = (path: string) => {
+    this.setState({ redirect: path });
   }
 
   private handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -206,7 +243,7 @@ export class LogInModal extends React.Component<Properties, State> {
   }
 
   private checkPasswordField = () => {
-    if (this.state.password.trim().length === 0) {
+    if (this.state.password.length === 0) {
       this.setState({ passwordErrorCode: LogInModal.PasswordErrorCode.EMPTY });
       return false;
     } else {
@@ -216,12 +253,25 @@ export class LogInModal extends React.Component<Properties, State> {
   }
 
   private handleLogIn = () => {
-    const isPasswordFieldValid = this.checkPasswordField();
-    const isEmailValid = this.checkEmail();
-    if (isPasswordFieldValid && isEmailValid) {
+    const isPass = this.checkPasswordField();
+    const isEmail = this.checkEmail();
+    if (isEmail && isPass) {
       this.props.onLogIn(this.state.email, this.state.password,
         this.state.isRememberMe);
     }
+  }
+
+  private isDisabled = () => {
+    if (this.state.password.length === 0) {
+      return true;
+    }
+    if (this.state.email.trim().length === 0) {
+      return true;
+    }
+    if (!EmailValidator.validate(this.state.email)) {
+      return true;
+    }
+    return false;
   }
 
   private _containerRef: React.RefObject<HTMLDivElement>;
@@ -372,13 +422,13 @@ const ROW_CONTAINER_STYLE: React.CSSProperties = {
 };
 
 const FORGOT_LINK_STYLE: React.CSSProperties = {
-  fontFamily: 'Source Sans Pro',
-  fontStyle: 'normal',
   fontWeight: 400,
   fontSize: '14px',
   lineHeight: '18px',
+  minHeight: '18px',
+  height: '100%',
   width: 'fit-content',
-  height: '18px'
+  minWidth: '104px'
 };
 
 const TEXT_STYLE: React.CSSProperties = {
@@ -404,18 +454,12 @@ const REQUEST_ACCOUNT_ROW_STYLE: React.CSSProperties = {
 };
 
 const JOIN_LINK_STYLE: React.CSSProperties = {
-  height: '100%',
-  width: 'fit-content'
-};
-
-const SOCIAL_ERROR_CONTAINER_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'flex-end',
-  alignItems: 'center',
-  flexWrap: 'wrap',
-  width: '100%',
-  minHeight: '20px'
+  fontSize: '12px',
+  lineHeight: '15px',
+  fontWeight: 400,
+  minHeight: '15px',
+  width: 'fit-content',
+  minWidth: 'fit-content'
 };
 
 const OR_LINE_CONTAINER_STYLE: React.CSSProperties = {

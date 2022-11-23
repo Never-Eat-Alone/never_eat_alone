@@ -194,6 +194,7 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   public componentDidUpdate(): void {
+    /** 
     if (this.state.redirect) {
       if (
         this.state.redirect === '/sign_up' ||
@@ -210,6 +211,7 @@ export class ApplicationController extends React.Component<Properties, State> {
         });
       }
     }
+    */
   }
 
   public componentWillUnmount(): void {
@@ -266,6 +268,13 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private handleMenuClick = (path: string) => {
+    this.setState({ redirect: path });
+  }
+
+  private handleLogInRedirect = (path: string) => {
+    if (this.state.isLogInButtonClicked) {
+      this.handleLogInModalClose();
+    }
     this.setState({ redirect: path });
   }
 

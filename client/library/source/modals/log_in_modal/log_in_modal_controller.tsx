@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DisplayMode, User } from '../../definitions';
+import { DisplayMode, User, UserStatus } from '../../definitions';
 import { LogInModal } from './log_in_modal';
 import { LogInModel } from './log_in_model';
 
@@ -55,13 +55,18 @@ export class LogInModalController extends React.Component<Properties, State> {
       const userResponse = await this.props.model.logIn(email, password,
         rememberMe);
       const userJson = await userResponse.toJson();
-      this.props.onLogInSuccess(User.fromJson(userJson));
+      const user = User.fromJson(userJson);
+      if (user.userStatus === UserStatus.ACTIVE) {
+        this.props.onLogInSuccess(user);
+      } else {
+        this.setState({ errorCode: LogInModal.ErrorCode.LOGIN_FAILED });
+      }
     } catch {
       this.setState({
         email: email,
         password: password,
         rememberMe: rememberMe,
-        errorCode: LogInModal.ErrorCode.LOGIN_FAILED
+        errorCode: LogInModal.ErrorCode.NO_CONNECTION
       });
     }
   }
@@ -70,9 +75,14 @@ export class LogInModalController extends React.Component<Properties, State> {
     try {
       const userResponse = await this.props.model.googleLogIn();
       const userJson = await userResponse.toJson();
-      this.props.onLogInSuccess(User.fromJson(userJson));
+      const user = User.fromJson(userJson);
+      if (user.userStatus === UserStatus.ACTIVE) {
+        this.props.onLogInSuccess(user);
+      } else {
+        this.setState({ errorCode: LogInModal.ErrorCode.GOOGLE_LOGIN_FAILED });
+      }
     } catch {
-      this.setState({ errorCode: LogInModal.ErrorCode.GOOGLE_LOGIN_FAILED });
+      this.setState({ errorCode: LogInModal.ErrorCode.NO_CONNECTION });
     }
   }
 
@@ -80,9 +90,16 @@ export class LogInModalController extends React.Component<Properties, State> {
     try {
       const userResponse = await this.props.model.facebookLogIn();
       const userJson = await userResponse.toJson();
-      this.props.onLogInSuccess(User.fromJson(userJson));
+      const user = User.fromJson(userJson);
+      if (user.userStatus === UserStatus.ACTIVE) {
+        this.props.onLogInSuccess(user);
+      } else {
+        this.setState({
+          errorCode: LogInModal.ErrorCode.FACEBOOK_LOGIN_FAILED
+        });
+      }
     } catch {
-      this.setState({ errorCode: LogInModal.ErrorCode.FACEBOOK_LOGIN_FAILED });
+      this.setState({ errorCode: LogInModal.ErrorCode.NO_CONNECTION });
     }
   }
 }
