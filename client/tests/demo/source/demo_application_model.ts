@@ -4,7 +4,6 @@ import * as NeverEatAlone from 'never_eat_alone';
 export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
   public async load(): Promise<void> {
     this._headerModel = new NeverEatAlone.LocalHeaderModel();
-    this._account = NeverEatAlone.User.makeGuest();
     const imageListEmpty: NeverEatAlone.SocialMediaImage[] = [];
     const imageListSample: NeverEatAlone.SocialMediaImage[] = [
       new NeverEatAlone.SocialMediaImage(1, 'resources/images/2.jpg'),
@@ -243,10 +242,6 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return;
   }
 
-  public getAccount(): NeverEatAlone.User {
-    return this._account;
-  }
-
   public getHeaderModel(): NeverEatAlone.HeaderModel {
     return this._headerModel;
   }
@@ -277,7 +272,6 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
   }
 
   private _headerModel: NeverEatAlone.HeaderModel;
-  private _account: NeverEatAlone.User;
   private _homePageModel: NeverEatAlone.HomePageModel;
   private _diningEventModelMap: Map<number, NeverEatAlone.DiningEventPageModel>;
   private _inviteAFoodieModel: NeverEatAlone.InviteAFoodieModel;

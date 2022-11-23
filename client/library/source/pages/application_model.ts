@@ -9,7 +9,6 @@ import { PartnerWithUsModel } from './partner_with_us_page';
 
 export abstract class ApplicationModel {
   public abstract load(): Promise<void>;
-  public abstract getAccount(): User;
   public abstract getHeaderModel(): HeaderModel;
   public abstract getHomePageModel(): HomePageModel;
   public abstract getDiningEventPageModel(id: number): DiningEventPageModel;

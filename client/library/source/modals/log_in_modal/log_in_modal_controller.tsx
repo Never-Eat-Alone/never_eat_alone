@@ -52,8 +52,10 @@ export class LogInModalController extends React.Component<Properties, State> {
   private handleLogIn = async (email: string, password: string,
       rememberMe: boolean) => {
     try {
-      const user = await this.props.model.logIn(email, password, rememberMe);
-      this.props.onLogInSuccess(user);
+      const userResponse = await this.props.model.logIn(email, password,
+        rememberMe);
+      const userJson = await userResponse.toJson();
+      this.props.onLogInSuccess(User.fromJson(userJson));
     } catch {
       this.setState({
         email: email,
@@ -66,8 +68,9 @@ export class LogInModalController extends React.Component<Properties, State> {
 
   private handleGoogleLogIn = async () => {
     try {
-      const user = await this.props.model.googleLogIn();
-      this.props.onLogInSuccess(user);
+      const userResponse = await this.props.model.googleLogIn();
+      const userJson = await userResponse.toJson();
+      this.props.onLogInSuccess(User.fromJson(userJson));
     } catch {
       this.setState({ errorCode: LogInModal.ErrorCode.GOOGLE_LOGIN_FAILED });
     }
@@ -75,8 +78,9 @@ export class LogInModalController extends React.Component<Properties, State> {
 
   private handleFacebookLogIn = async () => {
     try {
-      const user = await this.props.model.facebookLogIn();
-      this.props.onLogInSuccess(user);
+      const userResponse = await this.props.model.facebookLogIn();
+      const userJson = await userResponse.toJson();
+      this.props.onLogInSuccess(User.fromJson(userJson));
     } catch {
       this.setState({ errorCode: LogInModal.ErrorCode.FACEBOOK_LOGIN_FAILED });
     }

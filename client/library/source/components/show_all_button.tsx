@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { css, StyleSheet } from 'aphrodite';
+import * as React from 'react';
 
 interface Properties extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /** The label of the button. */
@@ -20,8 +20,8 @@ export function ShowAllButton(props: Properties) {
         xmlns='http://www.w3.org/2000/svg'
       >
         <path
-          d='M1 1L5 5L9 1' stroke='currentColor' stroke-miterlimit='10'
-          stroke-linecap='round' stroke-linejoin='round'
+          d='M1 1L5 5L9 1' stroke='currentColor' strokeMiterlimit='10'
+          strokeLinecap='round' strokeLinejoin='round'
         />
       </svg>
     </button>);

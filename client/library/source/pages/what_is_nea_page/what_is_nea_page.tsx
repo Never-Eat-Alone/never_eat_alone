@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PrimaryTextButton, SecondaryTextButton, SecondaryButtonNavLink
+import { PrimaryTextButton, SecondaryButtonNavLink, SecondaryTextButton
 } from '../../components';
 import { DisplayMode } from '../../definitions';
 
@@ -28,8 +28,10 @@ export class WhatIsNeaPage extends React.Component<Properties> {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
           heroContainerStyle: DESKTOP_HERO_CONTAINER_STYLE,
-          imageHeroSubSectionContainerStyle: IMAGE_HERO_SUB_SECTION_CONTAINER_STYLE,
-          textHeroSubSectionContainerStyle: TEXT_HERO_SUB_SECTION_CONTAINER_STYLE,
+          imageHeroSubSectionContainerStyle:
+            IMAGE_HERO_SUB_SECTION_CONTAINER_STYLE,
+          textHeroSubSectionContainerStyle:
+            TEXT_HERO_SUB_SECTION_CONTAINER_STYLE,
           contentContainerStyle: DESKTOP_CONTENT_CONTAINER_STYLE,
           contentFrameStyle: DESKTOP_CONTENT_FRAME_STYLE,
           imageContainerStyle: DESKTOP_IMAGE_CONTAINER_STYLE,
@@ -39,7 +41,8 @@ export class WhatIsNeaPage extends React.Component<Properties> {
           arthurImageContainerStyle: DESKTOP_ARTHUR_IMAGE_CONTAINER_STYLE,
           shahrzadImageContainerStyle: DESKTOP_SHAHRZAD_IMAGE_CONTAINER_STYLE,
           textContainerStyle: DESKTOP_TEXT_CONTAINER_STYLE,
-          createAccountBoxContainerStyle: DESKTOP_CREATE_ACCOUNT_BOX_CONTAINER_STYLE,
+          createAccountBoxContainerStyle:
+            DESKTOP_CREATE_ACCOUNT_BOX_CONTAINER_STYLE,
           contentImageContainerStyle: DESKTOP_CONTENT_IMAGE_CONTAINER_STYLE,
           contentImageStyle: DESKTOP_CONTENT_IMAGE_STYLE,
           eventParagraphStyle: EVENT_PARAGRAPH_STYLE,
@@ -54,8 +57,10 @@ export class WhatIsNeaPage extends React.Component<Properties> {
       if (this.props.displayMode === DisplayMode.TABLET) {
         return {
           heroContainerStyle: TABLET_HERO_CONTAINER_STYLE,
-          imageHeroSubSectionContainerStyle: IMAGE_HERO_SUB_SECTION_CONTAINER_STYLE,
-          textHeroSubSectionContainerStyle: TEXT_HERO_SUB_SECTION_CONTAINER_STYLE,
+          imageHeroSubSectionContainerStyle:
+            IMAGE_HERO_SUB_SECTION_CONTAINER_STYLE,
+          textHeroSubSectionContainerStyle:
+            TEXT_HERO_SUB_SECTION_CONTAINER_STYLE,
           contentContainerStyle: TABLET_CONTENT_CONTAINER_STYLE,
           contentFrameStyle: TABLET_CONTENT_FRAME_STYLE,
           imageContainerStyle: TABLET_IMAGE_CONTAINER_STYLE,
@@ -65,7 +70,8 @@ export class WhatIsNeaPage extends React.Component<Properties> {
           arthurImageContainerStyle: TABLET_ARTHUR_IMAGE_CONTAINER_STYLE,
           shahrzadImageContainerStyle: TABLET_SHAHRZAD_IMAGE_CONTAINER_STYLE,
           textContainerStyle: TABLET__TEXT_CONTAINER_STYLE,
-          createAccountBoxContainerStyle: TABLET_CREATE_ACCOUNT_BOX_CONTAINER_STYLE,
+          createAccountBoxContainerStyle:
+            TABLET_CREATE_ACCOUNT_BOX_CONTAINER_STYLE,
           contentImageContainerStyle: TABLET_CONTENT_IMAGE_CONTAINER_STYLE,
           contentImageStyle: TABLET_CONTENT_IMAGE_STYLE,
           eventParagraphStyle: EVENT_PARAGRAPH_STYLE,
@@ -79,8 +85,10 @@ export class WhatIsNeaPage extends React.Component<Properties> {
       }
       return {
         heroContainerStyle: MOBILE_HERO_CONTAINER_STYLE,
-        imageHeroSubSectionContainerStyle: MOBILE_HERO_SUB_SECTION_CONTAINER_STYLE,
-        textHeroSubSectionContainerStyle: MOBILE_HERO_SUB_SECTION_CONTAINER_STYLE,
+        imageHeroSubSectionContainerStyle:
+          MOBILE_HERO_SUB_SECTION_CONTAINER_STYLE,
+        textHeroSubSectionContainerStyle:
+          MOBILE_HERO_SUB_SECTION_CONTAINER_STYLE,
         contentContainerStyle: MOBILE_CONTENT_CONTAINER_STYLE,
         contentFrameStyle: MOBILE_CONTENT_FRAME_STYLE,
         imageContainerStyle: MOBILE_IMAGE_CONTAINER_STYLE,
@@ -90,11 +98,14 @@ export class WhatIsNeaPage extends React.Component<Properties> {
         arthurImageContainerStyle: MOBILE_ARTHUR_IMAGE_CONTAINER_STYLE,
         shahrzadImageContainerStyle: MOBILE_SHAHRZAD_IMAGE_CONTAINER_STYLE,
         textContainerStyle: MOBILE_TEXT_CONTAINER_STYLE,
-        createAccountBoxContainerStyle: MOBILE_CREATE_ACCOUNT_BOX_CONTAINER_STYLE,
+        createAccountBoxContainerStyle:
+          MOBILE_CREATE_ACCOUNT_BOX_CONTAINER_STYLE,
         contentImageContainerStyle: MOBILE_CONTENT_IMAGE_CONTAINER_STYLE,
         contentImageStyle: MOBILE_CONTENT_IMAGE_STYLE,
-        eventParagraphStyle: {...EVENT_PARAGRAPH_STYLE, ...MOBILE_CONTENT_PARAGRAPH_STYLE},
-        partnerParagraphStyle: {...PARTNER_PARAGRAPH_STYLE, ...MOBILE_PARTNER_PARAGRAPH_STYLE},
+        eventParagraphStyle: {...EVENT_PARAGRAPH_STYLE,
+          ...MOBILE_CONTENT_PARAGRAPH_STYLE},
+        partnerParagraphStyle: {...PARTNER_PARAGRAPH_STYLE,
+          ...MOBILE_PARTNER_PARAGRAPH_STYLE},
         eventTextBoxStyle: MOBILE_EVENT_TEXT_BOX_STYLE,
         partnerTextBoxStyle: MOBILE_PARTNER_TEXT_BOX_STYLE,
         eventContainerStyle: MOBILE_EVENT_CONTAINER_STYLE,
@@ -214,9 +225,9 @@ export class WhatIsNeaPage extends React.Component<Properties> {
             <div style={createAccountBoxContainerStyle} >
               <div style={CREATE_ACCOUNT_HEADER_STYLE} >Ready To Start?</div>
               <PrimaryTextButton
-                  style={CREATE_ACCOUNT_BUTTON_STYLE}
-                  label='Create Your Account'
-                  onClick={this.props.onCreateAccountClick}
+                style={CREATE_ACCOUNT_BUTTON_STYLE}
+                label='Create Your Account'
+                onClick={this.props.onCreateAccountClick}
               />
             </div>
           </div>

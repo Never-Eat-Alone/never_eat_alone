@@ -23,7 +23,7 @@ interface Properties extends Router.RouteComponentProps<TParams> {
 
 interface State {
   displayMode: DisplayMode;
-  user: User;
+  account: User;
   isLoaded: boolean;
   hasError: boolean;
   redirect: string;
@@ -39,7 +39,7 @@ export class ApplicationController extends React.Component<Properties, State> {
     super(props);
     this.state = {
       displayMode: DisplayMode.DESKTOP,
-      user: User.makeGuest(),
+      account: User.makeGuest(),
       isLoaded: false,
       hasError: false,
       redirect: null,
@@ -97,7 +97,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       <div id='app_top' style={CONTAINER_STYLE} >
         <Shell
           displayMode={this.state.displayMode}
-          account={this.props.model.getAccount()}
+          account={this.state.account}
           headerModel={this.props.model.getHeaderModel()}
           headerStyle={this.handleHeaderAndFooter(pathname).headerStyle}
           onLogOut={this.handleLogOut}
@@ -246,7 +246,7 @@ export class ApplicationController extends React.Component<Properties, State> {
     this.setState({ isInviteAFoodieButtonClicked: false });
   }
 
-  private onPartnerWithUsButton = () => {
+  private handlePartnerWithUsButton = () => {
     this.setState({ isPartnerWithUsButtonClicked: true });
   }
 
@@ -255,11 +255,14 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private handleLogInSuccess = (user: User) => {
-    this.setState({ user: user });
+    if (this.state.isLogInButtonClicked) {
+      this.handleLogInModalClose();
+    }
+    this.setState({ account: user });
   }
 
   private handleLogOut = () => {
-    this.setState({ user: User.makeGuest() });
+    this.setState({ account: User.makeGuest() });
   }
 
   private handleMenuClick = (path: string) => {
@@ -301,10 +304,10 @@ export class ApplicationController extends React.Component<Properties, State> {
   private renderHomePage = () => {
     return <HomePageController
       displayMode={this.state.displayMode}
-      account={this.props.model.getAccount()}
+      account={this.state.account}
       model={this.props.model.getHomePageModel()}
       onJoinButton={this.handleJoinButton}
-      onPartnerWithUsButton={this.onPartnerWithUsButton}
+      onPartnerWithUsButton={this.handlePartnerWithUsButton}
     />;
   }
 
@@ -313,13 +316,18 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private renderWhatIsNea = () => {
-    return <WhatIsNeaPage displayMode={this.state.displayMode}
-      onCreateAccountClick={() => {}} onGetInTouchClick={() => {}} />;
+    return <WhatIsNeaPage
+      displayMode={this.state.displayMode}
+      onCreateAccountClick={this.handleJoinButton}
+      onGetInTouchClick={this.handlePartnerWithUsButton}
+    />;
   }
 
   private renderPartnerWithUs = () => {
-    return <PartnerWithUsController displayMode={this.state.displayMode}
-      model={this.props.model.getPartnerWithUsModel()} />;
+    return <PartnerWithUsController
+      displayMode={this.state.displayMode}
+      model={this.props.model.getPartnerWithUsModel()}
+    />;
   }
 
   private renderForgotPassword = () => {
@@ -343,8 +351,10 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private renderHelp = () => {
-    return <HelpPage displayMode={this.state.displayMode} 
-      onInviteAFoodieClick={this.handleInviteAFoodieButton} />;
+    return <HelpPage
+      displayMode={this.state.displayMode} 
+      onInviteAFoodieClick={this.handleInviteAFoodieButton}
+    />;
   }
 
   private renderSiteMap = () => {

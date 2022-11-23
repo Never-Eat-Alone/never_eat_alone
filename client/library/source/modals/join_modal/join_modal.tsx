@@ -135,7 +135,8 @@ export class JoinModal extends React.Component<Properties , State> {
             <NameInputField
               style={nameFieldStyle}
               placeholder='Your Name'
-              hasError={this.state.nameErrorCode !== JoinModal.NameErrorCode.NONE}
+              hasError={this.state.nameErrorCode !==
+                JoinModal.NameErrorCode.NONE}
               value={this.state.name}
               onChange={this.handleNameChange}
               onBlur={this.checkName}
@@ -183,8 +184,6 @@ export class JoinModal extends React.Component<Properties , State> {
       this.props.onClose();
     }
   }
-
-  private _containerRef: React.RefObject<HTMLDivElement>;
 
   private handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ name: event.target.value });
@@ -236,6 +235,8 @@ export class JoinModal extends React.Component<Properties , State> {
         this.state.referralCode);
     }
   }
+
+  private _containerRef: React.RefObject<HTMLDivElement>;
 }
 
 export namespace JoinModal {

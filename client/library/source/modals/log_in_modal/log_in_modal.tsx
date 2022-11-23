@@ -1,3 +1,4 @@
+import * as EmailValidator from 'email-validator';
 import * as React from 'react';
 import { CheckBox, CloseButton, EmailInputField, FacebookLogInButton,
   GoogleLogInButton, PasswordInputField, PrimaryTextButton, RedNavLink
@@ -6,12 +7,12 @@ import { DisplayMode } from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
-
-  errorCode: LogInModal.ErrorCode;
-
   email: string;
   password: string;
   rememberMe: boolean;
+
+  /** The modal error code. */
+  errorCode: LogInModal.ErrorCode;
 
   /** Indicates the close button is clicked. */
   onClose: () => void;
@@ -30,6 +31,8 @@ interface State {
   email: string;
   password: string;
   isRememberMe: boolean;
+  emailErrorCode: LogInModal.EmailErrorCode;
+  passwordErrorCode: LogInModal.PasswordErrorCode;
 }
 
 /** Displays the Log In Modal. */
@@ -39,7 +42,9 @@ export class LogInModal extends React.Component<Properties, State> {
     this.state = {
       email: this.props.email,
       password: this.props.password,
-      isRememberMe: this.props.rememberMe
+      isRememberMe: this.props.rememberMe,
+      emailErrorCode: LogInModal.EmailErrorCode.NONE,
+      passwordErrorCode: LogInModal.PasswordErrorCode.NONE
     };
     this._containerRef = React.createRef();
   }
@@ -59,15 +64,15 @@ export class LogInModal extends React.Component<Properties, State> {
     })();
     const googleErrorMessage = (() => {
       if (this.props.errorCode === LogInModal.ErrorCode.GOOGLE_LOGIN_FAILED) {
-        return `Google login failed. Please log in using your email. ${
-          <RedNavLink to='/help' label='Learn more...' />}`;
+        return `Google login failed. Please log in using your email. 
+          ${<RedNavLink to='/help' label='Learn more...' />}`;
       }
       return '';
     })();
     const facebookErrorMessage = (() => {
       if (this.props.errorCode === LogInModal.ErrorCode.FACEBOOK_LOGIN_FAILED) {
-        return `Facebook login failed. Please log in using your email. ${
-          <RedNavLink to='/help' label='Learn more...' />}`;
+        return `Facebook login failed. Please log in using your email. 
+          ${<RedNavLink to='/help' label='Learn more...' />}`;
       }
       return '';
     })();
@@ -95,13 +100,19 @@ export class LogInModal extends React.Component<Properties, State> {
             style={INPUT_FIELD_STYLE}
             placeholder='Your Email'
             value={this.state.email}
+            hasError={this.state.emailErrorCode !==
+              LogInModal.EmailErrorCode.NONE}
             onChange={this.handleEmailChange}
+            onBlur={this.checkEmail}
           />
           <PasswordInputField
             style={INPUT_FIELD_STYLE}
             placeholder='Your Password'
             value={this.state.password}
+            hasError={this.state.passwordErrorCode !==
+              LogInModal.PasswordErrorCode.NONE}
             onChange={this.handlePasswordChange}
+            onBlur={this.checkPasswordField}
           />
           <div style={ROW_CONTAINER_STYLE} >
             <CheckBox
@@ -110,7 +121,6 @@ export class LogInModal extends React.Component<Properties, State> {
               onBoxClick={this.handleRememberMe}
             />
             <RedNavLink
-              {...this.props}
               label='Forgot password?'
               to='/forgot_password'
               style={FORGOT_LINK_STYLE}
@@ -130,21 +140,22 @@ export class LogInModal extends React.Component<Properties, State> {
           </div>
           <GoogleLogInButton
             label='Log in with Google'
-            onClick={() => this.props.onGoogleLogIn}
+            onClick={this.props.onGoogleLogIn}
           />
           <div style={SOCIAL_ERROR_CONTAINER_STYLE} >{googleErrorMessage}</div>
           <FacebookLogInButton
             label='Log in with Facebook'
-            onClick={() => this.props.onFacebookLogIn}
+            onClick={this.props.onFacebookLogIn}
           />
-          <div style={SOCIAL_ERROR_CONTAINER_STYLE} >{facebookErrorMessage}</div>
+          <div style={SOCIAL_ERROR_CONTAINER_STYLE} >
+            {facebookErrorMessage}
+          </div>
           <div style={REQUEST_ACCOUNT_ROW_STYLE} >
             Haven’t joined yet? Let’s fix this and&nbsp;
             <RedNavLink
-              {...this.props}
+              style={JOIN_LINK_STYLE}
               to='/join'
               label='Request Your Account'
-              style={JOIN_LINK_STYLE}
             />
           </div>
         </div>
@@ -181,9 +192,36 @@ export class LogInModal extends React.Component<Properties, State> {
     this.setState((prevState) => ({ isRememberMe: !prevState.isRememberMe }));
   }
 
-  private handleLogIn = (event: React.MouseEvent) => {
-    this.props.onLogIn(this.state.email, this.state.password,
-      this.state.isRememberMe);
+  private checkEmail = () => {
+    if (this.state.email.length === 0) {
+      this.setState({ emailErrorCode: LogInModal.EmailErrorCode.EMPTY });
+      return false;
+    } else if (!EmailValidator.validate(this.state.email)) {
+      this.setState({ emailErrorCode: LogInModal.EmailErrorCode.NOT_AN_EMAIL});
+      return false;
+    } else {
+      this.setState({ emailErrorCode: LogInModal.EmailErrorCode.NONE});
+      return true;
+    }
+  }
+
+  private checkPasswordField = () => {
+    if (this.state.password.trim().length === 0) {
+      this.setState({ passwordErrorCode: LogInModal.PasswordErrorCode.EMPTY });
+      return false;
+    } else {
+      this.setState({ passwordErrorCode: LogInModal.PasswordErrorCode.NONE });
+      return true;
+    }
+  }
+
+  private handleLogIn = () => {
+    const isPasswordFieldValid = this.checkPasswordField();
+    const isEmailValid = this.checkEmail();
+    if (isPasswordFieldValid && isEmailValid) {
+      this.props.onLogIn(this.state.email, this.state.password,
+        this.state.isRememberMe);
+    }
   }
 
   private _containerRef: React.RefObject<HTMLDivElement>;
@@ -196,6 +234,17 @@ export namespace LogInModal {
     LOGIN_FAILED,
     GOOGLE_LOGIN_FAILED,
     FACEBOOK_LOGIN_FAILED
+  }
+
+  export enum PasswordErrorCode {
+    EMPTY,
+    NONE
+  }
+
+  export enum EmailErrorCode {
+    EMPTY,
+    NOT_AN_EMAIL,
+    NONE
   }
 }
 
