@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DisplayMode } from '../../definitions';
+import { DisplayMode, User } from '../../definitions';
 import { DiningEventPage } from './dining_event_page';
 import { DiningEventPageModel } from './dining_event_page_model';
 
@@ -8,8 +8,8 @@ interface Properties {
   displayMode: DisplayMode;
   model: DiningEventPageModel;
 
-  isLoggedIn: boolean;
-  
+  account: User;
+
   /** Indicates the remove seat button is clicked. */
   onRemoveSeat: () => void;
 
@@ -34,33 +34,31 @@ export class DiningEventPageController extends React.Component<Properties,
   }
 
   public render(): JSX.Element {
-    if (this.state.isLoaded && this.state.errorCode ===
+    if (!this.state.isLoaded || this.state.errorCode !==
         DiningEventPage.ErrorCode.NONE) {
-      return (
-        <DiningEventPage
-          displayMode={this.props.displayMode}
-          eventColor={this.props.model.eventColor}
-          eventFee={this.props.model.eventFee}
-          coverImageSrc={this.props.model.coverImageSrc}
-          title={this.props.model.title}
-          restaurant={this.props.model.restaurant}
-          dressCode={this.props.model.dressCode}
-          seating={this.props.model.seating}
-          location={this.props.model.location}
-          reservationName={this.props.model.reservationName}
-          startTime={this.props.model.startTime}
-          endTime={this.props.model.endTime}
-          attendeeList={this.props.model.attendeeList}
-          totalCapacity={this.props.model.totalCapacity}
-          description={this.props.model.description}
-          isGoing={this.props.model.isGoing}
-          isLoggedIn={this.props.isLoggedIn}
-          isRSVPOpen={this.props.model.isRSVPOpen}
-          onJoinEvent={this.props.onJoinEvent}
-          onRemoveSeat={this.props.onRemoveSeat}
-        />);
+      return <div />;
     }
-    return <div />;
+    return <DiningEventPage
+      displayMode={this.props.displayMode}
+      eventColor={this.props.model.eventColor}
+      eventFee={this.props.model.eventFee}
+      coverImageSrc={this.props.model.coverImageSrc}
+      title={this.props.model.title}
+      restaurant={this.props.model.restaurant}
+      dressCode={this.props.model.dressCode}
+      seating={this.props.model.seating}
+      location={this.props.model.location}
+      reservationName={this.props.model.reservationName}
+      startTime={this.props.model.startTime}
+      endTime={this.props.model.endTime}
+      attendeeList={this.props.model.attendeeList}
+      totalCapacity={this.props.model.totalCapacity}
+      description={this.props.model.description}
+      account={this.props.account}
+      isRSVPOpen={this.props.model.isRSVPOpen}
+      onJoinEvent={this.props.onJoinEvent}
+      onRemoveSeat={this.props.onRemoveSeat}
+    />;
   }
 
   public async componentDidMount(): Promise<void> {

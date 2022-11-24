@@ -6,7 +6,7 @@ import { PrimaryTextButton, SecondaryTextButton, SeeAllButton, SeeLessButton
 } from '../../components';
 import { Attendee, DisplayMode, DressCode, getDressCodeIconSrc,
   getDressCodeName, getSeatingIconSrc, getSeatingName, Location, Restaurant,
-  Seating, toDollarSigns } from '../../definitions';
+  Seating, toDollarSigns, User, UserStatus, AttendeeStatus } from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -53,11 +53,7 @@ interface Properties {
   /** The event description. */
   description: string;
 
-  /** Whether the user is on the going list of the event or not. */
-  isGoing: boolean;
-
-  /** Whether the user is logged in or not. */
-  isLoggedIn: boolean;
+  account: User;
 
   /** Whether the rsvp to the event is open or not. */
   isRSVPOpen: boolean;
@@ -83,6 +79,31 @@ export class DiningEventPage extends React.Component<Properties, State> {
   }
 
   public render(): JSX.Element {
+    const isLoggedIn = (() => {
+      if (this.props.account && this.props.account.userStatus ===
+          UserStatus.ACTIVE) {
+        return true;
+      }
+      return false;
+    })();
+    const isGoing = (() => {
+      if (isLoggedIn) {
+        const index = this.props.attendeeList.findIndex((a) => 
+          a.userId === this.props.account.id && a.status ===
+          AttendeeStatus.GOING);
+        if (index !== -1) {
+          return true;
+        }
+      }
+      return false;
+    })();
+    const goingAttendeeList: Attendee[] = (() => {
+      if (!this.props.attendeeList) {
+        return [];
+      }
+      return this.props.attendeeList.filter((a) => a.status ===
+        AttendeeStatus.GOING);
+    })();
     const joinButton = (() => {
       const currentTime = new Date();
       const { joinButtonStyle, joinButtonLabelStyle } = (() => {
@@ -99,35 +120,34 @@ export class DiningEventPage extends React.Component<Properties, State> {
       })();
       if (currentTime > this.props.endTime) {
         return <PrimaryTextButton style={joinButtonStyle}
-                label='Past Event' labelStyle={joinButtonLabelStyle}
-                disabled />;
+          label='Past Event' labelStyle={joinButtonLabelStyle}
+          disabled />;
       }
       if (currentTime > this.props.startTime && currentTime <
           this.props.endTime) {
         return <PrimaryTextButton style={joinButtonStyle}
-                label='Happening Now' labelStyle={joinButtonLabelStyle}
-                disabled />;
+          label='Happening Now' labelStyle={joinButtonLabelStyle}
+          disabled />;
       }
-      if (this.props.isLoggedIn && this.props.isGoing) {
+      if (isLoggedIn && isGoing) {
         return <SecondaryTextButton style={joinButtonStyle}
-                label='Remove Seat' labelStyle={joinButtonLabelStyle}
-                onClick={this.props.onRemoveSeat} />;
+          label='Remove Seat' labelStyle={joinButtonLabelStyle}
+          onClick={this.props.onRemoveSeat} />;
       }
       if (!this.props.isRSVPOpen) {
         return <PrimaryTextButton style={joinButtonStyle}
-                label='RSVP Close' labelStyle={joinButtonLabelStyle}
-                disabled />;
+          label='RSVP Close' labelStyle={joinButtonLabelStyle}
+          disabled />;
       }
-      if (this.props.attendeeList.length >= this.props.totalCapacity) {
+      if (goingAttendeeList.length >= this.props.totalCapacity) {
         return <PrimaryTextButton style={joinButtonStyle}
-                label='Full' labelStyle={joinButtonLabelStyle}
-                disabled />;
+          label='Full' labelStyle={joinButtonLabelStyle}
+          disabled />;
       }
-      if (this.props.isRSVPOpen && (!this.props.isGoing ||
-          !this.props.isLoggedIn)) {
+      if (this.props.isRSVPOpen && (!isGoing || !isLoggedIn)) {
         return <PrimaryTextButton style={joinButtonStyle}
-                label='Join This Event' labelStyle={joinButtonLabelStyle}
-                onClick={this.props.onJoinEvent} />;
+          label='Join This Event' labelStyle={joinButtonLabelStyle}
+          onClick={this.props.onJoinEvent} />;
       }
     })();
     const { containerStyle, coverImageStyle, contentContainerStyle,
@@ -195,8 +215,8 @@ export class DiningEventPage extends React.Component<Properties, State> {
       }
       return null;
     })();
-    const attendees = (() => {
-      if (!this.props.attendeeList || this.props.attendeeList.length === 0) {
+    const goingAttendeesSection = (() => {
+      if (goingAttendeeList.length === 0) {
         return (
           <div style={ATTENDEES_ROW_STYLE} >
             <div style={TEXT_STYLE} >
@@ -206,9 +226,9 @@ export class DiningEventPage extends React.Component<Properties, State> {
       }
       const attendees = [];
       const total = (this.state.isSeeAllAttendees &&
-        this.props.attendeeList.length || Math.min(7,
-        this.props.attendeeList.length));
-      for (const attendee of this.props.attendeeList.slice(0, total)) {
+        goingAttendeeList.length || Math.min(7,
+          goingAttendeeList.length));
+      for (const attendee of goingAttendeeList.slice(0, total)) {
         attendees.push(
           <Router.Link
               key={attendee.userId}
@@ -226,11 +246,11 @@ export class DiningEventPage extends React.Component<Properties, State> {
             <div style={ATTENDEE_NAME_STYLE} >{attendee.name}</div>
           </Router.Link>);
       }
-      if (this.props.attendeeList.length > 7 && this.state.isSeeAllAttendees) {
+      if (goingAttendeeList.length > 7 && this.state.isSeeAllAttendees) {
         attendees.push(
           <SeeLessButton key='SeeLessButton' onClick={this.handleSeeLess} />);
       }
-      if (this.props.attendeeList.length > 7 && !this.state.isSeeAllAttendees) {
+      if (goingAttendeeList.length > 7 && !this.state.isSeeAllAttendees) {
         attendees.push(
           <SeeAllButton key='SeeAllButton' onClick={this.handleSeeAll} />);
       }
@@ -242,9 +262,12 @@ export class DiningEventPage extends React.Component<Properties, State> {
     const detailsSection = (() => {
       const details = [];
       if (this.props.startTime) {
-        const startTime = (this.props.isLoggedIn &&
-          format(this.props.startTime, 'eeee, MMMM d, yyyy') ||
-          'Log in to see the date');
+        const startTime = (() => {
+          if (!isLoggedIn) {
+            return 'Log in to see the date';
+          }
+          return format(this.props.startTime, 'eeee, MMMM d, yyyy');
+        })();
         details.push(
           <div key='event-start-date' style={detailIconTextContainerStyle} >
             <div style={ICON_CONTAINER_STYLE} >
@@ -262,7 +285,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
           </div>);
       }
       if (this.props.reservationName) {
-        const reservationName = (this.props.isLoggedIn && this.props.isGoing &&
+        const reservationName = (isLoggedIn && isGoing &&
           `Reservation: ${this.props.reservationName}` ||
           'Join to see the details');
         details.push(
@@ -289,9 +312,13 @@ export class DiningEventPage extends React.Component<Properties, State> {
           </div>);
       }
       if (this.props.startTime && this.props.endTime) {
-        const eventTime = (this.props.isLoggedIn &&
-          `${format(this.props.startTime, 'h:mm aa')} - ${format(
-            this.props.endTime, 'h:mm aa')}` || 'Log in to see the time');
+        const eventTime = (() => {
+          if (!isLoggedIn) {
+            return 'Log in to see the time';
+          }
+          return `${format(this.props.startTime, 'h:mm aa')} - ${format(
+            this.props.endTime, 'h:mm aa')}`;
+        })();
         details.push(
           <div key='event-hours' style={detailIconTextContainerStyle} >
             <div style={ICON_CONTAINER_STYLE} >
@@ -388,21 +415,25 @@ export class DiningEventPage extends React.Component<Properties, State> {
       </div> || null);
     const attendeesTitle = (() => {
       if (!this.props.totalCapacity) {
-        if (!this.props.attendeeList) {
+        if (goingAttendeeList.length === 0) {
           return 'Attendees (0)';
         } else {
-          return `Attendees (${this.props.attendeeList.length})`;
+          return `Attendees (${goingAttendeeList.length})`;
         }
       } else {
-        if (!this.props.attendeeList) {
+        if (goingAttendeeList.length === 0) {
           return `Attendees (0/${this.props.totalCapacity})`;
         }
         return (`Attendees (${
-          this.props.attendeeList.length}/${this.props.totalCapacity})`);
+          goingAttendeeList.length}/${this.props.totalCapacity})`);
       }
     })();
-    const eventDescription = (this.props.isLoggedIn && this.props.description ||
-      'Log in to see the event description.');
+    const eventDescription = (() => {
+      if (!isLoggedIn) {
+        return 'Log in to see the event description.'
+      }
+      return this.props.description;
+    })();
     return (
       <div style={{...CONTAINER_STYLE, ...containerStyle}} >
         <div
@@ -462,7 +493,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
             {detailsSection}
           </div>
           <div style={TITLE_STYLE} >{attendeesTitle}</div>
-          {attendees}
+          {goingAttendeesSection}
           <div style={TITLE_STYLE} >Description</div>
           <div style={DESCRIPTION_STYLE} >{eventDescription}</div>
         </div>

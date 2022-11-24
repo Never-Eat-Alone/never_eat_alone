@@ -272,7 +272,7 @@ export class ApplicationController extends React.Component<Properties, State> {
     return <DiningEventPageController
       displayMode={this.state.displayMode}
       model={model}
-      isLoggedIn={this.state.account.userStatus !== UserStatus.GUEST}
+      account={this.state.account}
       onRemoveSeat={() => {}}
       onJoinEvent={() => this.handleJoinEvent(id)}
     />;
@@ -280,7 +280,7 @@ export class ApplicationController extends React.Component<Properties, State> {
 
   private handleJoinEvent = (diningEventId: number) => {
     if (this.state.account.userStatus === UserStatus.GUEST) {
-      this.handleJoinButton();
+      this.handleLogInButton();
       this.handleJoinEvent(diningEventId);
     } else {
       this.props.model.getDiningEventPageModel(diningEventId).joinEvent(
