@@ -107,14 +107,14 @@ export class DemoDiningEventPageModel extends
     if (index !== -1) {
       if (this._attendeeList[index].status ===
           NeverEatAlone.AttendeeStatus.GOING) {
-        return;
+        return Promise.resolve();
       }
       this._attendeeList.splice(index, 1);
     }
     this._attendeeList.push(new NeverEatAlone.Attendee(account.id,
       this._eventId, account.name, 0, NeverEatAlone.AttendeeStatus.GOING,
       profileImageSrc, new Date()));
-    return;
+    return Promise.resolve();
   }
 
   public removeSeat(account: NeverEatAlone.User): Promise<void> {

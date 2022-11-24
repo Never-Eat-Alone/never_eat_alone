@@ -280,7 +280,9 @@ export class ApplicationController extends React.Component<Properties, State> {
       this.handleJoinEvent(diningEventId);
     } else {
       this.props.model.getDiningEventPageModel(diningEventId).joinEvent(
-        this.state.account, this.state.accountProfileImage.src);
+        this.state.account, this.state.accountProfileImage.src).then(() => {
+          this.forceUpdate();
+        });
     }
   }
 
