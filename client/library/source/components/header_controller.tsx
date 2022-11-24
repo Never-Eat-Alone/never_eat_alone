@@ -7,6 +7,8 @@ interface Properties {
   /** Current session user. */
   account: User;
 
+  profileImageSrc: string;
+
   /** The display mode based on the user's display dimensions. */
   displayMode: DisplayMode;
 

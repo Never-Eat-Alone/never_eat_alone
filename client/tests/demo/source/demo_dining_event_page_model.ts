@@ -1,6 +1,7 @@
 import * as NeverEatAlone from 'never_eat_alone';
 
-export class DemoDiningPageModel extends NeverEatAlone.DiningEventPageModel {
+export class DemoDiningEventPageModel extends
+    NeverEatAlone.DiningEventPageModel {
   constructor(eventId: number, eventColor: string, eventFee: number,
       coverImageSrc: string, title: string, restaurant:
       NeverEatAlone.Restaurant, dressCode: NeverEatAlone.DressCode,
@@ -100,7 +101,7 @@ export class DemoDiningPageModel extends NeverEatAlone.DiningEventPageModel {
     return this._isRSVPOpen;
   }
 
-  public joinEvent(account: NeverEatAlone.User, accountImageSrc: string
+  public joinEvent(account: NeverEatAlone.User, profileImageSrc: string
       ): Promise<void> {
     const index = this._attendeeList.findIndex((a) => a.userId === account.id);
     if (index !== -1) {
@@ -112,7 +113,7 @@ export class DemoDiningPageModel extends NeverEatAlone.DiningEventPageModel {
     }
     this._attendeeList.push(new NeverEatAlone.Attendee(account.id,
       this._eventId, account.name, 0, NeverEatAlone.AttendeeStatus.GOING,
-      accountImageSrc, new Date()));
+      profileImageSrc, new Date()));
     return;
   }
 

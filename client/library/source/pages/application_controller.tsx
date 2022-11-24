@@ -1,7 +1,8 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { Modal } from '../components';
-import { DisplayMode, getDisplayMode, User, UserStatus } from '../definitions';
+import { DisplayMode, getDisplayMode, User, UserProfileImage,
+  UserStatus } from '../definitions';
 import { InviteAFoodieModalController, JoinController, LogInModalController,
   PartnerWithUsModalController } from '../modals';
 import { ApplicationModel } from './application_model';
@@ -32,6 +33,7 @@ interface State {
   isLogInButtonClicked: boolean;
   isInviteAFoodieButtonClicked: boolean;
   isPartnerWithUsButtonClicked: boolean;
+  accountProfileImage: UserProfileImage;
 }
 
 export class ApplicationController extends React.Component<Properties, State> {
@@ -47,7 +49,8 @@ export class ApplicationController extends React.Component<Properties, State> {
       isJoinButtonClicked: false,
       isLogInButtonClicked: false,
       isInviteAFoodieButtonClicked: false,
-      isPartnerWithUsButtonClicked: false
+      isPartnerWithUsButtonClicked: false,
+      accountProfileImage: UserProfileImage.NoImage()
     };
   }
 
@@ -98,6 +101,7 @@ export class ApplicationController extends React.Component<Properties, State> {
         <Shell
           displayMode={this.state.displayMode}
           account={this.state.account}
+          profileImageSrc={this.state.accountProfileImage.src}
           headerModel={this.props.model.getHeaderModel()}
           headerStyle={this.handleHeaderAndFooter(pathname).headerStyle}
           onLogOut={this.handleLogOut}
@@ -235,11 +239,11 @@ export class ApplicationController extends React.Component<Properties, State> {
     this.setState({ isPartnerWithUsButtonClicked: false });
   }
 
-  private handleLogInSuccess = (user: User) => {
+  private handleLogInSuccess = (user: User, profileImage: UserProfileImage) => {
     if (this.state.isLogInButtonClicked) {
       this.handleLogInModalClose();
     }
-    this.setState({ account: user });
+    this.setState({ account: user, accountProfileImage: profileImage });
   }
 
   private handleLogOut = async () => {
@@ -280,7 +284,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       this.handleJoinEvent(diningEventId);
     } else {
       this.props.model.getDiningEventPageModel(diningEventId).joinEvent(
-        this.state.account);
+        this.state.account, this.state.accountProfileImage.src);
     }
   }
 
