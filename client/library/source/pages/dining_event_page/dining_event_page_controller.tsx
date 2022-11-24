@@ -7,6 +7,8 @@ interface Properties {
   /** The display mode. */
   displayMode: DisplayMode;
   model: DiningEventPageModel;
+
+  isLoggedIn: boolean;
   
   /** Indicates the remove seat button is clicked. */
   onRemoveSeat: () => void;
@@ -37,23 +39,23 @@ export class DiningEventPageController extends React.Component<Properties,
       return (
         <DiningEventPage
           displayMode={this.props.displayMode}
-          eventColor={this.props.model.getEventColor()}
-          eventFee={this.props.model.getEventFee()}
-          coverImageSrc={this.props.model.getCoverImageSrc()}
-          title={this.props.model.getTitle()}
-          restaurant={this.props.model.getRestaurant()}
-          dressCode={this.props.model.getDressCode()}
-          seating={this.props.model.getSeating()}
-          location={this.props.model.getLocation()}
-          reservationName={this.props.model.getReservationName()}
-          startTime={this.props.model.getStartTime()}
-          endTime={this.props.model.getEndTime()}
-          attendeeList={this.props.model.getAttendeeList()}
-          totalCapacity={this.props.model.getTotalCapacity()}
-          description={this.props.model.getDescription()}
-          isGoing={this.props.model.getIsGoing()}
-          isLoggedIn={this.props.model.getIsLoggedIn()}
-          isRSVPOpen={this.props.model.getIsRSVPOpen()}
+          eventColor={this.props.model.eventColor}
+          eventFee={this.props.model.eventFee}
+          coverImageSrc={this.props.model.coverImageSrc}
+          title={this.props.model.title}
+          restaurant={this.props.model.restaurant}
+          dressCode={this.props.model.dressCode}
+          seating={this.props.model.seating}
+          location={this.props.model.location}
+          reservationName={this.props.model.reservationName}
+          startTime={this.props.model.startTime}
+          endTime={this.props.model.endTime}
+          attendeeList={this.props.model.attendeeList}
+          totalCapacity={this.props.model.totalCapacity}
+          description={this.props.model.description}
+          isGoing={this.props.model.isGoing}
+          isLoggedIn={this.props.isLoggedIn}
+          isRSVPOpen={this.props.model.isRSVPOpen}
           onJoinEvent={this.props.onJoinEvent}
           onRemoveSeat={this.props.onRemoveSeat}
         />);

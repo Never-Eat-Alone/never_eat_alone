@@ -1,4 +1,4 @@
-import { Attendee, DressCode, Location, Restaurant, Seating
+import { Attendee, DressCode, Location, Restaurant, Seating, User
 } from '../../definitions';
 
 /** Base class for the model used by the DiningEventPage. */
@@ -7,21 +7,24 @@ export abstract class DiningEventPageModel {
    * must be called before calling any other method of this class.
    */
   public abstract load(): Promise<void>;
-  public abstract getEventColor(): string;
-  public abstract getEventFee(): number;
-  public abstract getCoverImageSrc(): string;
-  public abstract getTitle(): string;
-  public abstract getRestaurant(): Restaurant;
-  public abstract getDressCode(): DressCode;
-  public abstract getSeating(): Seating;
-  public abstract getLocation(): Location;
-  public abstract getReservationName(): string;
-  public abstract getStartTime(): Date;
-  public abstract getEndTime(): Date;
-  public abstract getAttendeeList(): Attendee[];
-  public abstract getTotalCapacity(): number;
-  public abstract getDescription(): string;
-  public abstract getIsGoing(): boolean;
-  public abstract getIsLoggedIn(): boolean;
-  public abstract getIsRSVPOpen(): boolean;
+  public abstract get eventId(): number;
+  public abstract get eventColor(): string;
+  public abstract get eventFee(): number;
+  public abstract get coverImageSrc(): string;
+  public abstract get title(): string;
+  public abstract get restaurant(): Restaurant;
+  public abstract get dressCode(): DressCode;
+  public abstract get seating(): Seating;
+  public abstract get location(): Location;
+  public abstract get reservationName(): string;
+  public abstract get startTime(): Date;
+  public abstract get endTime(): Date;
+  public abstract get attendeeList(): Attendee[];
+  public abstract get totalCapacity(): number;
+  public abstract get description(): string;
+  public abstract get isGoing(): boolean;
+  public abstract get isRSVPOpen(): boolean;
+  public abstract joinEvent(account: User, userProfileImageSrc: string):
+    Promise<void>;
+  public abstract removeSeat(account: User): Promise<void>;
 }

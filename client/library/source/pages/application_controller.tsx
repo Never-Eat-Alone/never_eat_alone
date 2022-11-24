@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { Modal } from '../components';
-import { DisplayMode, getDisplayMode, User } from '../definitions';
+import { DisplayMode, getDisplayMode, User, UserStatus } from '../definitions';
 import { InviteAFoodieModalController, JoinController, LogInModalController,
   PartnerWithUsModalController } from '../modals';
 import { ApplicationModel } from './application_model';
@@ -268,9 +268,20 @@ export class ApplicationController extends React.Component<Properties, State> {
     return <DiningEventPageController
       displayMode={this.state.displayMode}
       model={model}
+      isLoggedIn={this.state.account.userStatus !== UserStatus.GUEST}
       onRemoveSeat={() => {}}
-      onJoinEvent={() => {}}
+      onJoinEvent={() => this.handleJoinEvent(id)}
     />;
+  }
+
+  private handleJoinEvent = (diningEventId: number) => {
+    if (this.state.account.userStatus === UserStatus.GUEST) {
+      this.handleJoinButton();
+      this.handleJoinEvent(diningEventId);
+    } else {
+      this.props.model.getDiningEventPageModel(diningEventId).joinEvent(
+        this.state.account);
+    }
   }
 
   private renderRestaurants = (
