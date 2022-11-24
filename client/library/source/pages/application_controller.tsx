@@ -149,10 +149,6 @@ export class ApplicationController extends React.Component<Properties, State> {
               render={this.renderPrivacyPolicy}
             />
             <Router.Route
-              path='/restaurants/:id'
-              render={this.renderRestaurants}
-            />
-            <Router.Route
               path='/settings/:userId'
               render={this.renderSettings}
             />
@@ -286,12 +282,6 @@ export class ApplicationController extends React.Component<Properties, State> {
       this.props.model.getDiningEventPageModel(diningEventId).joinEvent(
         this.state.account, this.state.accountProfileImage.src);
     }
-  }
-
-  private renderRestaurants = (
-      {match}: Router.RouteComponentProps<TParams>) => {
-    const id = parseInt(match.params.id);
-    return (<div>Restaurant page {id.toString()}</div>);
   }
 
   private renderUserProfile = (

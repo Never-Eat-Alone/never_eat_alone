@@ -457,10 +457,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
             <div style={eventTitleStyle} >{this.props.title}</div>
             {headerJoinButton}
             <div style={ROW_STYLE} >
-              <div
-                  style={RESTAURANT_CONTAINER_STYLE}
-                  className={css(styles.restaurantLink)}
-              >
+              <div style={RESTAURANT_CONTAINER_STYLE} >
                 <svg style={RESTAURANT_ICON_STYLE} width='20' height='20'
                     viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'
                 >
@@ -472,12 +469,9 @@ export class DiningEventPage extends React.Component<Properties, State> {
                     fill='currentColor'
                   />
                 </svg>
-                <Router.Link
-                    style={RESTAURANT_NAME_TEXT_STYLE}
-                    to={`/restaurants/${this.props.restaurant.id}`}
-                >
+                <div style={RESTAURANT_NAME_TEXT_STYLE} >
                   {this.props.restaurant.name}
-                </Router.Link>
+                </div>
               </div>
               <div style={DOT_STYLE} >&nbsp;&nbsp;.&nbsp;&nbsp;</div>
               <div style={PRICE_RANGE_STYLE} >
@@ -1094,24 +1088,6 @@ const styles = StyleSheet.create({
     ':active': {
       color: '#C67E14',
       textDecoration: 'underline #C67E14'
-    }
-  },
-  restaurantLink: {
-    ':hover': {
-      color: '#F26B55',
-      textDecoration: 'underline #F26B55'
-    },
-    ':focus': {
-      color: '#F26B55',
-      textDecoration: 'underline #F26B55'
-    },
-    ':focus-within': {
-      color: '#F26B55',
-      textDecoration: 'underline #F26B55'
-    },
-    ':active': {
-      color: '#AA2F19',
-      textDecoration: 'none'
     }
   }
 });
