@@ -193,27 +193,6 @@ export class ApplicationController extends React.Component<Properties, State> {
     }
   }
 
-  public componentDidUpdate(): void {
-    /** 
-    if (this.state.redirect) {
-      if (
-        this.state.redirect === '/sign_up' ||
-        this.state.redirect === '/log_in'
-      ) {
-        this.setState({
-          redirect: null,
-          lastPage: '/'
-        });
-      } else {
-        this.setState({
-          redirect: null,
-          lastPage: this.state.redirect
-        });
-      }
-    }
-    */
-  }
-
   public componentWillUnmount(): void {
     window.removeEventListener('resize', this.handleSize);
   }
