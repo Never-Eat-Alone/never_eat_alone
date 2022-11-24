@@ -1,4 +1,5 @@
 import * as NeverEatAlone from 'never_eat_alone';
+import { DemoDiningEventPageModel } from './demo_dining_event_page_model';
 import { DemoLogInModel } from './demo_login_model';
 
 /** Implements the ApplicationModel for demo purposes. */
@@ -134,13 +135,20 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       imageListSample, eventListSample, eventTagListEmpty,
       userFutureEventListEmpty, totalEventsThisMonth);
     this._homePageModel = homePageModelGuestUser;
+    const userEmma = new NeverEatAlone.User(1, 'Emma', 'emma@gmail.com', 'Emma',
+      NeverEatAlone.UserStatus.ACTIVE, new Date(2022, 11, 1, 10, 20, 30));
+    const emmaProfileImage = new NeverEatAlone.UserProfileImage(1, 1,
+      'resources/images/profile5.jpeg');
+    const userArthur = new NeverEatAlone.User(2, 'arthur', 'arthur@gmail.com',
+      'Arthur123', NeverEatAlone.UserStatus.ACTIVE, new Date(2022, 10, 11, 1, 5,
+      35));
+    const arthurProfileImage = new NeverEatAlone.UserProfileImage(2, 2,
+      'resources/images/profileguy3.jpeg');
     const attendeeList1: NeverEatAlone.Attendee[] = [
-      new NeverEatAlone.Attendee(1, 1, 'Greg', 0,
-        NeverEatAlone.AttendeeStatus.GOING, 'resources/images/profileguy2.jpeg',
-        new Date()),
-      new NeverEatAlone.Attendee(2, 1, 'Princess', 0,
-        NeverEatAlone.AttendeeStatus.GOING, 'resources/images/profile1.jpeg',
-        new Date()),
+      new NeverEatAlone.Attendee(userEmma.id, 1, userEmma.name, 0,
+        NeverEatAlone.AttendeeStatus.GOING, emmaProfileImage.src, new Date()),
+      new NeverEatAlone.Attendee(userArthur.id, 1, userArthur.name, 0,
+        NeverEatAlone.AttendeeStatus.GOING, arthurProfileImage.src, new Date()),
       new NeverEatAlone.Attendee(3, 1, 'tofu55', 0,
         NeverEatAlone.AttendeeStatus.GOING, 'resources/images/10.jpg',
         new Date()),
@@ -167,6 +175,9 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
         new Date())
     ];
     const attendeeList2: NeverEatAlone.Attendee[] = [
+      new NeverEatAlone.Attendee(userEmma.id, 1, userEmma.name, 0,
+        NeverEatAlone.AttendeeStatus.NOT_GOING, emmaProfileImage.src,
+        new Date()),
       new NeverEatAlone.Attendee(3, 1, 'tofu55', 0,
         NeverEatAlone.AttendeeStatus.GOING, 'resources/images/10.jpg',
         new Date()),
@@ -186,11 +197,24 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
         NeverEatAlone.AttendeeStatus.GOING, 'resources/images/profileguy5.jpeg',
         new Date())
     ];
+    const attendeeList7: NeverEatAlone.Attendee[] = [];
     this._diningEventModelMap = new Map();
     // Dining event model 1
-    const localDiningEventModel1 = new NeverEatAlone.LocalDiningEventPageModel(
-      '#E1630D', 15, 'resources/images/3.jpg', 'A night to remmeber at the \
-      best sushi restaurant in town!', new NeverEatAlone.Restaurant(1,
+    const diningEventModel1Description = "Elevate your favourite Kibo Sushi \
+    experience with OMAKASE by Kibo (18 courses). \
+    \
+    Indulge yourself in the delicacy of modern style Omakase performed by our \
+    team. In addition to maintaining a Japanese traditional Omakase with \
+    carefully chosen seafood by our Executive Chef, we add some spirits of \
+    Kibo based on the freshest seasonal ingredients. You will be entertained \
+    by beautiful presentations, exquisite service, and heavenly taste. \
+    \
+    Dinner Menu: \
+    \
+    https://www.kiboomakase.com/";
+    const demoDiningEventModel1 = new DemoDiningEventPageModel(1, '#E1630D', 15,
+      'resources/images/3.jpg', 'A night to remmeber at the best sushi \
+      restaurant in town!', new NeverEatAlone.Restaurant(1,
       'Yukashi Japanese Restaurant', new Date(), 1, 'One Michelin Star 2022',
       '', '4167869809', NeverEatAlone.PriceRange.VERY_EXPENSIVE, [
       new NeverEatAlone.Cuisine(1, 'Japanese', '#F9C638'),
@@ -198,26 +222,35 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       NeverEatAlone.DressCode.BLACK_TIE, NeverEatAlone.Seating.PRIVATE_ROOM,
       new NeverEatAlone.Location(1, '643a Mt Pleasant Rd', '', 'Toronto', 'ON',
       'Canada', 'M4S 2M9', 'Midtown'), 'Alexa Perry', new Date(2022, 6, 12, 19,
-      0, 0), new Date(2022, 6, 13, 1, 0, 0), attendeeList2, 10, '', false,
-      false, false);
-    this._diningEventModelMap.set(1, localDiningEventModel1);
+      0, 0), new Date(2022, 6, 13, 1, 0, 0), attendeeList1, 10,
+      diningEventModel1Description , false, false);
+    this._diningEventModelMap.set(1, demoDiningEventModel1);
     // Dining event model 2
-    const localDiningEventModel2 = new NeverEatAlone.LocalDiningEventPageModel(
-      '#B2DFED', 20.00, 'resources/images/4.jpg', 'The best italian restaurant \
-      in town!', new NeverEatAlone.Restaurant(2, 'Piano Piano', new Date(), 2,
+    const diningEventModel2Description = "About the restaurant: \
+      A collaboration between the Mohyeddin siblings, this family-run Iranian \
+      eatery, bar and commissary, is a destination in Toronto’s Queen Street \
+      West neighbourhood. For more than a decade, Banu has been serving up the \
+      very best of Persian-inspired cocktails, cuisine and culture. \
+      \
+      Dinner Menu: \
+      \
+      https://banu.ca/menu";
+    const demoDiningEventModel2 = new DemoDiningEventPageModel(2, '#B2DFED',
+      20.00, 'resources/images/4.jpg', 'The best italian restaurant in town!',
+      new NeverEatAlone.Restaurant(2, 'Piano Piano', new Date(), 2,
       'Piano Piano is managed by a michelin chef from Italy.', '', '6756784354',
       NeverEatAlone.PriceRange.EXPENSIVE, [new NeverEatAlone.Cuisine(3,
       'Italian', '#B2DFED')], 'pianopiano.com'), NeverEatAlone.DressCode.CASUAL,
       NeverEatAlone.Seating.HIGH_TABLE, new NeverEatAlone.Location(2,
       '', '', 'Toronto', 'ON', 'Canada', '', 'Midtown'),
       'Alexa Perry', new Date(2023, 5, 22, 19, 30, 0), new Date(2023, 6, 13,
-      0, 30, 0), attendeeList1, 12, '', false, false, true);
-    this._diningEventModelMap.set(2, localDiningEventModel2);
+      0, 30, 0), attendeeList2, 12, diningEventModel2Description, false, true);
+    this._diningEventModelMap.set(2, demoDiningEventModel2);
     // Dining event model 7
-    const localDiningEventModel7 = new NeverEatAlone.LocalDiningEventPageModel(
-      '#6A8716', 5.00, 'resources/images/7.jpg', 'Calling all the french food \
-      lovers', new NeverEatAlone.Restaurant(7, 'Le Select Bistro', new Date(),
-      7, 'Classic French food & a wine list of over 1,000 bottles, with \
+    const demoDiningEventModel7 = new DemoDiningEventPageModel(7, '#6A8716',
+      5.00, 'resources/images/7.jpg', 'Calling all the french food lovers',
+      new NeverEatAlone.Restaurant(7, 'Le Select Bistro', new Date(), 7,
+      'Classic French food & a wine list of over 1,000 bottles, with \
       vintage posters lining the walls.', 'Go upstairs.', '(416) 626-6262',
       NeverEatAlone.PriceRange.MODERATELY_PRICED, [new NeverEatAlone.Cuisine(9,
       'French', '#98160C'), new NeverEatAlone.Cuisine(10, 'Traditional',
@@ -226,21 +259,16 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       NeverEatAlone.Seating.STANDARD, new NeverEatAlone.Location(7,
       '432 Wellington St W', '', 'Toronto', 'ON', 'CA', 'M5V 1E3',
       'Financial District'), 'Sheryl Miller', new Date(2023, 6, 12, 19, 0, 0),
-      new Date(2023, 6, 13, 1, 0, 0), [], 8, '', false, false, true);
-    this._diningEventModelMap.set(7, localDiningEventModel7);
+      new Date(2023, 6, 13, 1, 0, 0), attendeeList7, 8, 'Why not.', false, true);
+    this._diningEventModelMap.set(7, demoDiningEventModel7);
     this._inviteAFoodieModel = new NeverEatAlone.LocalInviteAFoodieModel(
       new NeverEatAlone.UserInvitationCode(1, 1, 'AcFTHD$5Dg'));
     this._joinModel = new NeverEatAlone.LocalJoinModel();
     this._joinModel.load();
     this._partnerWithUsModel = new NeverEatAlone.LocalPartnerWithUsModel();
     this._partnerWithUsModel.load();
-    const userEmma = new NeverEatAlone.User(1, 'Emma',
-      'emma@gmail.com', 'Emma', NeverEatAlone.UserStatus.ACTIVE,
-      new Date(2022, 11, 1, 10, 20, 30));
-    const userArthur = new NeverEatAlone.User(2, 'arthur',
-      'arthur@gmail.com', 'Arthur123', NeverEatAlone.UserStatus.ACTIVE,
-      new Date(2022, 10, 11, 1, 5, 35));
-    this._logInModel = new DemoLogInModel([userEmma, userArthur]);
+    this._logInModel = new DemoLogInModel([userEmma, userArthur], [
+      emmaProfileImage, arthurProfileImage]);
     await Promise.all([this._headerModel.load(), this._homePageModel.load(),
       this._inviteAFoodieModel.load()]);
     return;

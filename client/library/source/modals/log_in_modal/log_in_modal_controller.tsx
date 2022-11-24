@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DisplayMode, User, UserStatus } from '../../definitions';
+import { DisplayMode, User, UserProfileImage,
+  UserStatus } from '../../definitions';
 import { LogInModal } from './log_in_modal';
 import { LogInModel } from './log_in_model';
 
@@ -14,7 +15,7 @@ interface Properties {
   onClose: () => void;
 
   /** Indicates the log in was successful. */
-  onLogInSuccess: (user: User) => void;
+  onLogInSuccess: (user: User, profileImage: UserProfileImage) => void;
 }
 
 interface State {
@@ -54,10 +55,10 @@ export class LogInModalController extends React.Component<Properties, State> {
     try {
       const userResponse = await this.props.model.logIn(email, password,
         rememberMe);
-      const userJson = await userResponse.toJson();
-      const user = User.fromJson(userJson);
+      const user = User.fromJson(userResponse.user);
+      const profileImage = UserProfileImage.fromJson(userResponse.profileImage);
       if (user.userStatus === UserStatus.ACTIVE) {
-        this.props.onLogInSuccess(user);
+        this.props.onLogInSuccess(user, profileImage);
       } else {
         this.setState({ errorCode: LogInModal.ErrorCode.LOGIN_FAILED });
       }
@@ -74,10 +75,10 @@ export class LogInModalController extends React.Component<Properties, State> {
   private handleGoogleLogIn = async () => {
     try {
       const userResponse = await this.props.model.googleLogIn();
-      const userJson = await userResponse.toJson();
-      const user = User.fromJson(userJson);
+      const user = User.fromJson(userResponse.user);
+      const profileImage = UserProfileImage.fromJson(userResponse.profileImage);
       if (user.userStatus === UserStatus.ACTIVE) {
-        this.props.onLogInSuccess(user);
+        this.props.onLogInSuccess(user, profileImage);
       } else {
         this.setState({ errorCode: LogInModal.ErrorCode.GOOGLE_LOGIN_FAILED });
       }
@@ -89,10 +90,10 @@ export class LogInModalController extends React.Component<Properties, State> {
   private handleFacebookLogIn = async () => {
     try {
       const userResponse = await this.props.model.facebookLogIn();
-      const userJson = await userResponse.toJson();
-      const user = User.fromJson(userJson);
+      const user = User.fromJson(userResponse.user);
+      const profileImage = UserProfileImage.fromJson(userResponse.profileImage);
       if (user.userStatus === UserStatus.ACTIVE) {
-        this.props.onLogInSuccess(user);
+        this.props.onLogInSuccess(user, profileImage);
       } else {
         this.setState({
           errorCode: LogInModal.ErrorCode.FACEBOOK_LOGIN_FAILED
