@@ -1,10 +1,10 @@
 import * as NeverEatAlone from 'never_eat_alone';
+import { DemoLogInModel } from './demo_login_model';
 
 /** Implements the ApplicationModel for demo purposes. */
 export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
   public async load(): Promise<void> {
     this._headerModel = new NeverEatAlone.LocalHeaderModel();
-    this._account = NeverEatAlone.User.makeGuest();
     const imageListEmpty: NeverEatAlone.SocialMediaImage[] = [];
     const imageListSample: NeverEatAlone.SocialMediaImage[] = [
       new NeverEatAlone.SocialMediaImage(1, 'resources/images/2.jpg'),
@@ -234,13 +234,16 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     this._joinModel.load();
     this._partnerWithUsModel = new NeverEatAlone.LocalPartnerWithUsModel();
     this._partnerWithUsModel.load();
+    const userEmma = new NeverEatAlone.User(1, 'Emma',
+      'emma@gmail.com', 'Emma', NeverEatAlone.UserStatus.ACTIVE,
+      new Date(2022, 11, 1, 10, 20, 30));
+    const userArthur = new NeverEatAlone.User(2, 'arthur',
+      'arthur@gmail.com', 'Arthur123', NeverEatAlone.UserStatus.ACTIVE,
+      new Date(2022, 10, 11, 1, 5, 35));
+    this._logInModel = new DemoLogInModel([userEmma, userArthur]);
     await Promise.all([this._headerModel.load(), this._homePageModel.load(),
       this._inviteAFoodieModel.load()]);
     return;
-  }
-
-  public getAccount(): NeverEatAlone.User {
-    return this._account;
   }
 
   public getHeaderModel(): NeverEatAlone.HeaderModel {
@@ -268,11 +271,15 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return this._partnerWithUsModel;
   }
 
+  public getLogInModel(): NeverEatAlone.LogInModel {
+    return this._logInModel;
+  }
+
   private _headerModel: NeverEatAlone.HeaderModel;
-  private _account: NeverEatAlone.User;
   private _homePageModel: NeverEatAlone.HomePageModel;
   private _diningEventModelMap: Map<number, NeverEatAlone.DiningEventPageModel>;
   private _inviteAFoodieModel: NeverEatAlone.InviteAFoodieModel;
   private _joinModel: NeverEatAlone.JoinModel;
   private _partnerWithUsModel: NeverEatAlone.PartnerWithUsModel;
+  private _logInModel: NeverEatAlone.LogInModel;
 }

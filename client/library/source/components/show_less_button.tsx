@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { css, StyleSheet } from 'aphrodite';
+import * as React from 'react';
 
 export function ShowLessButton(props: React.ButtonHTMLAttributes<
     HTMLButtonElement>) {
@@ -15,8 +15,8 @@ export function ShowLessButton(props: React.ButtonHTMLAttributes<
           xmlns='http://www.w3.org/2000/svg'
       >
         <path
-          d='M9 5L5 1L1 5' stroke='currentColor' stroke-miterlimit='10'
-          stroke-linecap='round' stroke-linejoin='round'
+          d='M9 5L5 1L1 5' stroke='currentColor' strokeMiterlimit='10'
+          strokeLinecap='round' strokeLinejoin='round'
         />
       </svg>
     </button>);

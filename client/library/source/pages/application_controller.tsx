@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { Modal } from '../components';
-import { DisplayMode, getDisplayMode } from '../definitions';
-import { InviteAFoodieModalController, JoinController,
+import { DisplayMode, getDisplayMode, User } from '../definitions';
+import { InviteAFoodieModalController, JoinController, LogInModalController,
   PartnerWithUsModalController } from '../modals';
 import { ApplicationModel } from './application_model';
 import { CookiesPolicyPage } from './cookie_policy_page';
@@ -23,11 +23,13 @@ interface Properties extends Router.RouteComponentProps<TParams> {
 
 interface State {
   displayMode: DisplayMode;
+  account: User;
   isLoaded: boolean;
   hasError: boolean;
   redirect: string;
   lastPage: string;
   isJoinButtonClicked: boolean;
+  isLogInButtonClicked: boolean;
   isInviteAFoodieButtonClicked: boolean;
   isPartnerWithUsButtonClicked: boolean;
 }
@@ -37,11 +39,13 @@ export class ApplicationController extends React.Component<Properties, State> {
     super(props);
     this.state = {
       displayMode: DisplayMode.DESKTOP,
+      account: User.makeGuest(),
       isLoaded: false,
       hasError: false,
       redirect: null,
       lastPage: '/',
       isJoinButtonClicked: false,
+      isLogInButtonClicked: false,
       isInviteAFoodieButtonClicked: false,
       isPartnerWithUsButtonClicked: false
     };
@@ -55,61 +59,56 @@ export class ApplicationController extends React.Component<Properties, State> {
       return <div />;
     }
     const pathname = this.props.location.pathname;
-    const JoinModal = (() => {
-      if (this.state.isJoinButtonClicked) {
-        return (
-          <Modal>
-            <JoinController
-              displayMode={this.state.displayMode}
-              model={this.props.model.getJoinModel()}
-              onClose={this.handleJoinModalClose}
-            />
-          </Modal>);
-      }
-      return null;
-    })();
-    const inviteAFoodieModal = (() => {
-      if (this.state.isInviteAFoodieButtonClicked) {
-        return (
-          <Modal>
-            <InviteAFoodieModalController
-              displayMode={this.state.displayMode}
-              model={this.props.model.getInviteAFoodieModel()}
-              maxContentLength={280}
-              onClose={this.handleInviteAFoodieModalClose}
-            />
-          </Modal>);
-      }
-      return null;
-    })();
-    const partnerWithUsModal = (() => {
-      if (this.state.isPartnerWithUsButtonClicked) {
-        return (
-          <Modal>
-            <PartnerWithUsModalController
-              displayMode={this.state.displayMode}
-              model={this.props.model.getPartnerWithUsModel()}
-              onClose={this.handlePartnerWithUsModalClose}
-            />
-          </Modal>);
-      }
-      return null;
-    })();
+    const JoinModal = (this.state.isJoinButtonClicked &&
+      <Modal>
+        <JoinController
+          displayMode={this.state.displayMode}
+          model={this.props.model.getJoinModel()}
+          onClose={this.handleJoinModalClose}
+        />
+      </Modal> || null);
+    const logInModal = (this.state.isLogInButtonClicked &&
+      <Modal>
+        <LogInModalController
+          displayMode={this.state.displayMode}
+          model={this.props.model.getLogInModel()}
+          onClose={this.handleLogInModalClose}
+          onLogInSuccess={this.handleLogInSuccess}
+        />
+      </Modal> || null);
+    const inviteAFoodieModal = (this.state.isInviteAFoodieButtonClicked &&
+      <Modal>
+        <InviteAFoodieModalController
+          displayMode={this.state.displayMode}
+          model={this.props.model.getInviteAFoodieModel()}
+          maxContentLength={280}
+          onClose={this.handleInviteAFoodieModalClose}
+        />
+      </Modal> || null);
+    const partnerWithUsModal = (this.state.isPartnerWithUsButtonClicked &&
+      <Modal>
+        <PartnerWithUsModalController
+          displayMode={this.state.displayMode}
+          model={this.props.model.getPartnerWithUsModel()}
+          onClose={this.handlePartnerWithUsModalClose}
+        />
+      </Modal> || null);
     return (
       <div id='app_top' style={CONTAINER_STYLE} >
         <Shell
           displayMode={this.state.displayMode}
-          account={this.props.model.getAccount()}
+          account={this.state.account}
           headerModel={this.props.model.getHeaderModel()}
           headerStyle={this.handleHeaderAndFooter(pathname).headerStyle}
-          onLogOut={() => {}}
+          onLogOut={this.handleLogOut}
           onMenuClick={this.handleMenuClick}
-          onLogInButton={() => {}}
-          onJoinButton={this.onJoinButton}
+          onLogInButton={this.handleLogInButton}
+          onJoinButton={this.handleJoinButton}
           onButtonWithDropDownClick={this.handleButtonWithDropDownClick}
-          onInviteAFoodieButton={this.onInviteAFoodieButton}
+          onInviteAFoodieButton={this.handleInviteAFoodieButton}
         >
           {JoinModal}
+          {logInModal}
           {inviteAFoodieModal}
           {partnerWithUsModal}
           <Router.Switch>
@@ -194,25 +193,6 @@ export class ApplicationController extends React.Component<Properties, State> {
     }
   }
 
-  public componentDidUpdate(): void {
-    if (this.state.redirect) {
-      if (
-        this.state.redirect === '/sign_up' ||
-        this.state.redirect === '/log_in'
-      ) {
-        this.setState({
-          redirect: null,
-          lastPage: '/'
-        });
-      } else {
-        this.setState({
-          redirect: null,
-          lastPage: this.state.redirect
-        });
-      }
-    }
-  }
-
   public componentWillUnmount(): void {
     window.removeEventListener('resize', this.handleSize);
   }
@@ -223,16 +203,50 @@ export class ApplicationController extends React.Component<Properties, State> {
     });
   }
 
-  private onJoinButton = () => {
+  private handleJoinButton = () => {
     this.setState({ isJoinButtonClicked: true });
-  }
-
-  private onPartnerWithUsButton = () => {
-    this.setState({ isPartnerWithUsButtonClicked: true });
   }
 
   private handleJoinModalClose = () => {
     this.setState({ isJoinButtonClicked: false });
+  }
+
+  private handleLogInButton = () => {
+    this.setState({ isLogInButtonClicked: true });
+  }
+
+  private handleLogInModalClose = () => {
+    this.setState({ isLogInButtonClicked: false });
+  }
+
+  private handleInviteAFoodieButton = () => {
+    this.setState({ isInviteAFoodieButtonClicked: true });
+  }
+
+  private handleInviteAFoodieModalClose = () => {
+    this.setState({ isInviteAFoodieButtonClicked: false });
+  }
+
+  private handlePartnerWithUsButton = () => {
+    this.setState({ isPartnerWithUsButtonClicked: true });
+  }
+
+  private handlePartnerWithUsModalClose = () => {
+    this.setState({ isPartnerWithUsButtonClicked: false });
+  }
+
+  private handleLogInSuccess = (user: User) => {
+    if (this.state.isLogInButtonClicked) {
+      this.handleLogInModalClose();
+    }
+    this.setState({ account: user });
+  }
+
+  private handleLogOut = async () => {
+    const isLoggedOut = await this.props.model.getLogInModel().logOut();
+    if (isLoggedOut) {
+      this.setState({ account: User.makeGuest() });
+    }
   }
 
   private handleMenuClick = (path: string) => {
@@ -274,10 +288,10 @@ export class ApplicationController extends React.Component<Properties, State> {
   private renderHomePage = () => {
     return <HomePageController
       displayMode={this.state.displayMode}
-      account={this.props.model.getAccount()}
+      account={this.state.account}
       model={this.props.model.getHomePageModel()}
-      onJoinButton={this.onJoinButton}
-      onPartnerWithUsButton={this.onPartnerWithUsButton}
+      onJoinButton={this.handleJoinButton}
+      onPartnerWithUsButton={this.handlePartnerWithUsButton}
     />;
   }
 
@@ -286,13 +300,18 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private renderWhatIsNea = () => {
-    return <WhatIsNeaPage displayMode={this.state.displayMode}
-      onCreateAccountClick={() => {}} onGetInTouchClick={() => {}} />;
+    return <WhatIsNeaPage
+      displayMode={this.state.displayMode}
+      onCreateAccountClick={this.handleJoinButton}
+      onGetInTouchClick={this.handlePartnerWithUsButton}
+    />;
   }
 
   private renderPartnerWithUs = () => {
-    return <PartnerWithUsController displayMode={this.state.displayMode}
-      model={this.props.model.getPartnerWithUsModel()} />;
+    return <PartnerWithUsController
+      displayMode={this.state.displayMode}
+      model={this.props.model.getPartnerWithUsModel()}
+    />;
   }
 
   private renderForgotPassword = () => {
@@ -316,8 +335,10 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private renderHelp = () => {
-    return <HelpPage displayMode={this.state.displayMode} 
-      onInviteAFoodieClick={this.onInviteAFoodieButton} />;
+    return <HelpPage
+      displayMode={this.state.displayMode} 
+      onInviteAFoodieClick={this.handleInviteAFoodieButton}
+    />;
   }
 
   private renderSiteMap = () => {
@@ -330,18 +351,6 @@ export class ApplicationController extends React.Component<Properties, State> {
 
   private renderPageNotFound = () => {
     return <div>Page Not Found</div>;
-  }
-
-  private onInviteAFoodieButton = () => {
-    this.setState({ isInviteAFoodieButtonClicked: true });
-  }
-
-  private handleInviteAFoodieModalClose = () => {
-    this.setState({ isInviteAFoodieButtonClicked: false });
-  }
-
-  private handlePartnerWithUsModalClose = () => {
-    this.setState({ isPartnerWithUsButtonClicked: false });
   }
 
   private handleHeaderAndFooter = (pathname: string) => {

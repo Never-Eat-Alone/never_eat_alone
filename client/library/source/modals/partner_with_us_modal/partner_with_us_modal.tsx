@@ -333,7 +333,8 @@ const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
   paddingTop: '30px',
   paddingBottom: '30px',
   borderRadius: '4px',
-  overflow: 'hidden'
+  overflow: 'hidden',
+  boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)'
 };
 
 const TABLET_CONTAINER_STYLE: React.CSSProperties = {
