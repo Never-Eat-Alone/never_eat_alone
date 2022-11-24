@@ -29,7 +29,7 @@ export class DemoDiningEventPageModel extends
     this._isRSVPOpen = isRSVPOpen;
   }
 
-  public load(): Promise<void> {
+  public async load(): Promise<void> {
     return;
   }
 
@@ -101,23 +101,23 @@ export class DemoDiningEventPageModel extends
     return this._isRSVPOpen;
   }
 
-  public joinEvent(account: NeverEatAlone.User, profileImageSrc: string
+  public async joinEvent(account: NeverEatAlone.User, profileImageSrc: string
       ): Promise<void> {
     const index = this._attendeeList.findIndex((a) => a.userId === account.id);
     if (index !== -1) {
       if (this._attendeeList[index].status ===
           NeverEatAlone.AttendeeStatus.GOING) {
-        return Promise.resolve();
+        return;
       }
       this._attendeeList.splice(index, 1);
     }
     this._attendeeList.push(new NeverEatAlone.Attendee(account.id,
       this._eventId, account.name, 0, NeverEatAlone.AttendeeStatus.GOING,
       profileImageSrc, new Date()));
-    return Promise.resolve();
+    return;
   }
 
-  public removeSeat(account: NeverEatAlone.User): Promise<void> {
+  public async removeSeat(account: NeverEatAlone.User): Promise<void> {
     const index = this._attendeeList.findIndex((a) => a.userId === account.id);
     if (index !== -1) {
       this._attendeeList.splice(index, 1);

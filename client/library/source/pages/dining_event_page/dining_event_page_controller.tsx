@@ -74,5 +74,6 @@ export class DiningEventPageController extends React.Component<Properties,
         errorCode: DiningEventPage.ErrorCode.NO_CONNECTION
       });
     }
+    return;
   }
 }

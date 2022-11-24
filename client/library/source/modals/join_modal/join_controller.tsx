@@ -70,6 +70,7 @@ export class JoinController extends React.Component<Properties, State> {
         errorCode: JoinModal.ErrorCode.NO_CONNECTION
       });
     }
+    return;
   }
 
   private handleRequestJoin = async (name: string, email: string,

@@ -71,6 +71,7 @@ export class PartnerWithUsController extends React.Component<Properties,
         hasError: true
       });
     }
+    return;
   }
 
   private handleEmailSendClick = async (name: string, email: string,
