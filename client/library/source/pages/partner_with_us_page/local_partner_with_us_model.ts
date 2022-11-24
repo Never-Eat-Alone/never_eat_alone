@@ -5,7 +5,7 @@ export class LocalPartnerWithUsModel extends PartnerWithUsModel {
     return;
   }
 
-  public sendEmail(name: string, email: string, profileLink: string,
+  public async sendEmail(name: string, email: string, profileLink: string,
       message: string): Promise<void> {
     return;
   }
