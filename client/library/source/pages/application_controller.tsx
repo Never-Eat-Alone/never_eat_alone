@@ -191,6 +191,7 @@ export class ApplicationController extends React.Component<Properties, State> {
     } catch (error) {
       this.setState({ hasError: true, isLoaded: true });
     }
+    return;
   }
 
   public componentWillUnmount(): void {
@@ -269,7 +270,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       displayMode={this.state.displayMode}
       model={model}
       account={this.state.account}
-      onRemoveSeat={() => {}}
+      onRemoveSeat={() => this.handleRemoveSeat(id)}
       onJoinEvent={() => this.handleJoinEvent(id)}
     />;
   }
@@ -284,6 +285,13 @@ export class ApplicationController extends React.Component<Properties, State> {
           this.forceUpdate();
         });
     }
+  }
+
+  private handleRemoveSeat = (diningEventId: number) => {
+    this.props.model.getDiningEventPageModel(diningEventId).removeSeat(
+      this.state.account).then(() => {
+        this.forceUpdate();
+      });
   }
 
   private renderUserProfile = (

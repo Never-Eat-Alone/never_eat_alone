@@ -87,6 +87,7 @@ export class InviteAFoodieModalController extends React.Component<Properties,
         errorCode: InviteAFoodieModal.ErrorCode.NO_CONNECTION
       });
     }
+    return;
   }
 
   private handleContentChange = (value: string) => {

@@ -68,5 +68,6 @@ export class HomePageController extends React.Component<Properties, State> {
         errorCode: HomePage.ErrorCode.NO_CONNECTION
       });
     }
+    return;
   }
 }

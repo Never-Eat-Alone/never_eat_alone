@@ -5,8 +5,8 @@ export class LocalJoinModel extends JoinModel {
     return;
   }
 
-  public requestSignUp(name: string, email: string, password: string): Promise<
-      void> {
+  public async requestSignUp(name: string, email: string, password: string):
+      Promise<void> {
     return;
   }
 }
