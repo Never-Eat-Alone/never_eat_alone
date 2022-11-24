@@ -4,9 +4,9 @@ import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { PrimaryTextButton, SecondaryTextButton, SeeAllButton, SeeLessButton
 } from '../../components';
-import { Attendee, DisplayMode, DressCode, getDressCodeIconSrc,
+import { Attendee, AttendeeStatus, DisplayMode, DressCode, getDressCodeIconSrc,
   getDressCodeName, getSeatingIconSrc, getSeatingName, Location, Restaurant,
-  Seating, toDollarSigns, User, UserStatus, AttendeeStatus } from '../../definitions';
+  Seating, toDollarSigns, User, UserStatus } from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
