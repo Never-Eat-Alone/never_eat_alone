@@ -15,7 +15,7 @@ interface Properties {
   onClose: () => void;
 
   /** Indicates the log in was successful. */
-  onLogInSuccess: (user: User, prifleImage: UserProfileImage) => void;
+  onLogInSuccess: (user: User, profileImage: UserProfileImage) => void;
 }
 
 interface State {
