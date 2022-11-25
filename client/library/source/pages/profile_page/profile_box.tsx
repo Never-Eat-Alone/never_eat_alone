@@ -147,7 +147,7 @@ export class ProfileBox extends React.Component<Properties> {
         return <SecondaryButtonNavLink
           style={EDIT_BUTTON_STYLE}
           label='Edit Profile'
-          to={`/edit_profile/${this.props.profileId}`}
+          to={`/users/edit_profile/${this.props.profileId}`}
         />;
       }
       return null;

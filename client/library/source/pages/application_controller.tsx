@@ -126,7 +126,7 @@ export class ApplicationController extends React.Component<Properties, State> {
               render={this.renderDiningEvents}
             />
             <Router.Route
-              path='/edit_profile/:id'
+              path='/users/edit_profile/:id'
               render={this.renderEditProfilePage}
             />
             <Router.Route
@@ -170,7 +170,7 @@ export class ApplicationController extends React.Component<Properties, State> {
               render={this.renderTermsOfUse}
             />
             <Router.Route
-              path='/profile/:id'
+              path='/users/profile/:id'
               render={this.renderProfilePage}
             />
             <Router.Route
@@ -313,7 +313,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       displayMode={this.state.displayMode}
       isLoggedIn={this.isLoggedIn(this.state.account)}
       isAccountProfile={true}
-      model={this.props.model.profilePageModel}
+      model={this.props.model.getProfilePageModel(id)}
       onReportClick={() => {}}
     />;
   }
