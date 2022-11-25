@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CityProvince, Cuisine, DisplayMode, EventCardSummary, User, UserStatus
+import { CityProvince, Cuisine, DisplayMode, EventCardSummary, User
 } from '../../definitions';
 import { ProfileBox } from './profile_box';
 import { ProfilePastEvents } from './profile_past_events';
