@@ -1,12 +1,18 @@
 import * as React from 'react';
-import { CityProvince, Cuisine, DisplayMode, EventCardSummary
+import { CityProvince, Cuisine, DisplayMode, EventCardSummary, User
 } from '../../definitions';
 import { ProfileBox } from './profile_box';
-import { ProfileUpcomingEvents } from './profile_upcoming_events';
 import { ProfilePastEvents } from './profile_past_events';
+import { ProfileUpcomingEvents } from './profile_upcoming_events';
 
 interface Properties {
   displayMode: DisplayMode;
+
+  /** the user logged in user. */
+  account: User;
+
+  /** The profile page id. */
+  profileId: number;
 
   /** The source address of the user's cover image. */
   coverImageSrc: string;
@@ -24,28 +30,25 @@ interface Properties {
   memberSince: Date;
 
   /** The biography on user's profile written by the user. */
-  biography?: string;
+  biography: string;
 
   /** The user's location. */
-  location?: CityProvince;
+  location: CityProvince;
 
   /** List of the languages the user can speak. */
-  languageList?: string[];
+  languageList: string[];
 
   /** The url to user's profile on Facebook social platform. */
-  facebookLink?: string;
+  facebookLink: string;
 
   /** The url to user's profile on Twitter social platform. */
-  twitterLink?: string;
+  twitterLink: string;
 
   /** The url to user's profile on Instagram social platform. */
-  instagramLink?: string;
+  instagramLink: string;
 
   /** The list of the user's favorite cuisines. */
-  favoriteCuisineList?: Cuisine[];
-
-  /** Whether the user is logged in or not. */
-  isLoggedIn: boolean;
+  favoriteCuisineList: Cuisine[];
 
   /** List of the user upcoming events. */
   upcomingEventList: EventCardSummary[];
@@ -54,10 +57,7 @@ interface Properties {
   pastEventList: EventCardSummary[];
 
   /** Indicates the report option was clicked. */
-  onReportClick?: () => void;
-
-  /** Indicates the Edit button is clicked. */
-  onEditClick?: () => void;
+  onReportClick: () => void;
 }
 
 /** Displays the user's profile page. */
@@ -68,14 +68,14 @@ export class ProfilePage extends React.Component<Properties> {
       <ProfilePastEvents
         displayMode={this.props.displayMode}
         eventList={this.props.pastEventList}
-        isLoggedIn={this.props.isLoggedIn}
+        isLoggedIn={this.props.account && this.props.account.id !== -1}
       /> || null);
     const upcomingEvents = (this.props.upcomingEventList &&
       this.props.upcomingEventList.length !== 0 &&
       <ProfileUpcomingEvents
         displayMode={this.props.displayMode}
         eventList={this.props.upcomingEventList}
-        isLoggedIn={this.props.isLoggedIn}
+        isLoggedIn={this.props.account && this.props.account.id !== -1}
       /> || null);
     const { containerStyle, coverImageStyle, profileBoxStyle,
         eventsContainerStyle } = (() => {

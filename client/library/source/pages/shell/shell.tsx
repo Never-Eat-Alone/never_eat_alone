@@ -23,9 +23,6 @@ interface Properties {
   /** The color code for the footer background. */
   footerBackgroundColor?: string;
 
-  /** Indicates the menu button was clicked. */
-  onMenuClick: (path: string) => void;
-
   /** Indicates the log out button was clicked. */
   onLogOut: () => void;
 
@@ -58,7 +55,6 @@ export class Shell extends React.Component<Properties> {
           displayMode={this.props.displayMode}
           model={this.props.headerModel}
           onLogOut={this.props.onLogOut}
-          onMenuClick={this.props.onMenuClick}
           onLogInButton={this.props.onLogInButton}
           onJoinButton={this.props.onJoinButton}
           onButtonClick={this.props.onButtonWithDropDownClick}

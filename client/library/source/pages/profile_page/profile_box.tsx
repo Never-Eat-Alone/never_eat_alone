@@ -1,9 +1,16 @@
 import * as React from 'react';
-import { EllipsisDropdownMenu, FacebookButton, InstagramButton, TwitterButton,
-  SecondaryTextButton } from '../../components';
-import { CityProvince, Cuisine } from '../../definitions';
+import { EllipsisDropdownMenu, FacebookButton, InstagramButton,
+  SecondaryButtonNavLink, TwitterButton } from '../../components';
+import { CityProvince, Cuisine, User } from '../../definitions';
 
 interface Properties {
+
+  /** The current logged user. */
+  account: User;
+
+  /** The page id which is the same as the user's id who created the page. */
+  profileId: number;
+
   /** The address of the user's profile image. */
   profileImageSrc: string;
 
@@ -17,38 +24,36 @@ interface Properties {
   memberSince: Date;
 
   /** The biography on user's profile written by the user. */
-  biography?: string;
+  biography: string;
 
   /** The user's location. */
-  location?: CityProvince;
+  location: CityProvince;
 
   /** List of the languages the user can speak. */
-  languageList?: string[];
+  languageList: string[];
 
   /** The url to user's profile on Facebook social platform. */
-  facebookLink?: string;
+  facebookLink: string;
 
   /** The url to user's profile on Twitter social platform. */
-  twitterLink?: string;
+  twitterLink: string;
 
   /** The url to user's profile on Instagram social platform. */
-  instagramLink?: string;
+  instagramLink: string;
 
   /** The list of the user's favorite cuisines. */
-  favoriteCuisineList?: Cuisine[];
+  favoriteCuisineList: Cuisine[];
 
   /** Indicates the report option was clicked. */
-  onReportClick?: () => void;
-
-  /** Indicates the Edit button is clicked. */
-  onEditClick?: () => void;
+  onReportClick: () => void;
 }
 
 /** Displays the User Information Box on the User Profile Page. */
 export class ProfileBox extends React.Component<Properties> {
   public render(): JSX.Element {
     const profileActionButton = (() => {
-      if (!this.props.onReportClick) {
+      if (!this.props.account || this.props.account.id === -1 ||
+          this.props.account.id === this.props.profileId) {
         return null;
       }
       return <EllipsisDropdownMenu style={ACTION_BUTTON_STYLE}
@@ -141,9 +146,13 @@ export class ProfileBox extends React.Component<Properties> {
       return <div style={CUISINE_ROW_STYLE} >{cuisineList}</div>;
     })();
     const editProfileButton = (() => {
-      if (this.props.onEditClick) {
-        return <SecondaryTextButton style={EDIT_BUTTON_STYLE}
-          label='Edit Profile' onClick={this.props.onEditClick} />;
+      if (this.props.account && this.props.account.id !== -1 &&
+          this.props.account.id === this.props.profileId) {
+        return <SecondaryButtonNavLink
+          style={EDIT_BUTTON_STYLE}
+          label='Edit Profile'
+          to={`/users/edit_profile/${this.props.profileId}`}
+        />;
       }
       return null;
     })();

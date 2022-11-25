@@ -18,9 +18,6 @@ interface Properties {
   /** The background color for the header. */
   headerStyle?: React.CSSProperties;
 
-  /** Indicates the menu item is clicked. */
-  onMenuClick: (path: string) => void;
-
   /** Indicates the log out option is clicked. */
   onLogOut: () => void;
 
@@ -72,6 +69,7 @@ export class HeaderController extends React.Component<Properties, State> {
     } catch (error) {
       this.setState({ hasError: true, isLoaded: true });
     }
+    return;
   }
 }
 
