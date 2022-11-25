@@ -3,7 +3,7 @@ import * as React from 'react';
 import { CloseButton, InputField, InputFieldWithIcon,
   InvertedSecondaryTextButton, PublicButton, PrivateButton, RedNavLink,
   SaveCancelStickyMenu, TextareaWithCounter } from '../../components';
-import { CityProvince, Cuisine, DisplayMode, Language
+import { CityProvince, Cuisine, DisplayMode, Language, User
 } from '../../definitions';
 
 interface Properties {
@@ -15,11 +15,8 @@ interface Properties {
   /** The source address of the user's profile image. */
   profileImageSrc: string;
 
-  /** User's display name. */
-  displayName: string;
-
-  /** User's unique username. */
-  userName: string;
+  /** The current logged user. */
+  account: User;
 
   /** Whether user's upcoming events section is private or public. */
   isUpcomingEventsPrivate: boolean;
@@ -422,14 +419,14 @@ export class EditProfilePage extends React.Component<Properties, State> {
             </div>
             <div style={COLUMN_CONTAINER_STYLE} >
               <div style={DISPLAY_NAME_TEXT_STYLE} >
-                {this.props.displayName}
+                {this.props.account.name}
               </div>
-              <div style={USERNAME_STYLE} >{this.props.userName}</div>
+              <div style={USERNAME_STYLE} >{this.props.account.userName}</div>
               <div style={ACCOUNT_GUIDE_TEXT_STYLE} >
                 To change your display name or handle, go to&nbsp;
                 <RedNavLink
                   label='Account Information'
-                  to='/settings/account_information'
+                  to={`/users/settings/${this.props.account.id}`}
                   style={LINK_STYLE}
                 />
                 &nbsp;in your settings.

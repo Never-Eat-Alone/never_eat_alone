@@ -1,5 +1,6 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
+import * as Router from 'react-router-dom';
 import { DisplayMode } from '../definitions';
 import { ProfileRoundButton } from './profile_round_button';
 
@@ -15,9 +16,6 @@ interface Properties {
 
   /** Style that is applied to the container. */
   style?: React.CSSProperties;
-
-  /** Indicates the dropdown menu item is clicked. */
-  onMenuClick: (path: string) => void;
 
   /** Indicates the logout option is clicked. */
   onLogOut?: () => void;
@@ -52,32 +50,29 @@ export class ProfileMenu extends React.Component<Properties,
             <div
               style={{...ARROW_UP_STYLE, marginLeft: `-${marginLeft}px`}}
             />
-            <div
+            <Router.Link
                 style={MENU_ITEM_STYLE}
                 className={css(styles.menuItem)}
-                onClick={(event: any) => this.handleMenuClick(
-                  `/users/profile/${this.props.userId}`, event)}
+                to={`/users/profile/${this.props.userId}`}
             >
               Profile
-            </div>
+            </Router.Link>
             <div style={BOTTOM_BORDER_STYLE} />
-            <div
+            <Router.Link
                 style={MENU_ITEM_STYLE}
                 className={css(styles.menuItem)}
-                onClick={(event: any) => this.handleMenuClick(
-                  '/invite_a_foodie', event)}
+                to={'/invite_a_foodie'}
             >
               Invite A Foodie
-            </div>
+            </Router.Link>
             <div style={BOTTOM_BORDER_STYLE} />
-            <div
+            <Router.Link
                 style={MENU_ITEM_STYLE}
                 className={css(styles.menuItem)}
-                onClick={(event: any) => this.handleMenuClick(
-                  `/settings/${this.props.userId}`, event)}
+                to={`/users/settings/${this.props.userId}`}
             >
               Settings
-            </div>
+            </Router.Link>
             <div
                 style={{...MENU_ITEM_STYLE, marginTop: '0px'}}
                 className={css(styles.menuItem)}
@@ -109,12 +104,6 @@ export class ProfileMenu extends React.Component<Properties,
 
   public componentWillUnmount(): void {
     document.removeEventListener('mousedown', this.handleClickOutside);
-  }
-
-  private handleMenuClick = (path: string, event: any) => {
-    event.preventDefault();
-    event.stopPropagation();
-    this.props.onMenuClick(path);
   }
 
   private handleClickOutside: { (event: any): void } = (

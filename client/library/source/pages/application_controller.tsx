@@ -106,7 +106,6 @@ export class ApplicationController extends React.Component<Properties, State> {
           headerModel={this.props.model.headerModel}
           headerStyle={this.handleHeaderAndFooter(pathname).headerStyle}
           onLogOut={this.handleLogOut}
-          onMenuClick={this.handleMenuClick}
           onLogInButton={this.handleLogInButton}
           onJoinButton={this.handleJoinButton}
           onButtonWithDropDownClick={this.handleButtonWithDropDownClick}
@@ -154,7 +153,7 @@ export class ApplicationController extends React.Component<Properties, State> {
               render={this.renderPrivacyPolicy}
             />
             <Router.Route
-              path='/settings/:userId'
+              path='/users/settings/:userId'
               render={this.renderSettings}
             />
             <Router.Route
@@ -253,10 +252,6 @@ export class ApplicationController extends React.Component<Properties, State> {
     if (isLoggedOut) {
       this.setState({ account: User.makeGuest() });
     }
-  }
-
-  private handleMenuClick = (path: string) => {
-    this.setState({ redirect: path });
   }
 
   private handleButtonWithDropDownClick = (label: string) => {}

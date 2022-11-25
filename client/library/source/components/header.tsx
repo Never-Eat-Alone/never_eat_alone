@@ -17,9 +17,6 @@ interface Properties {
 
   headerStyle?: React.CSSProperties;
 
-  /** Indicates the menu item inside the dropdown is clicked. */
-  onMenuClick: (path: string) => void;
-
   /** Indicates the log in button is clicked. */
   onLogInButton: () => void;
 
@@ -50,7 +47,6 @@ export class Header extends React.Component<Properties> {
           userId={this.props.account.id}
           imageSrc={this.props.profileImageSrc ||
             'resources/header/icons/avatar_default.svg'}
-          onMenuClick={this.props.onMenuClick}
           onLogOut={this.props.onLogOut}
           style={PROFILE_MENU_STYLE}
         />);
