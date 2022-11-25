@@ -135,12 +135,12 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       imageListSample, eventListSample, eventTagListEmpty,
       userFutureEventListEmpty, totalEventsThisMonth);
     this._homePageModel = homePageModelGuestUser;
-    const userEmma = new NeverEatAlone.User(1, 'Emma', 'emma@gmail.com', 'Emma',
+    const userEmma = new NeverEatAlone.User(1, 'Emma', 'emma@gmail.com', 'emma',
       NeverEatAlone.UserStatus.ACTIVE, new Date(2022, 11, 1, 10, 20, 30));
     const emmaProfileImage = new NeverEatAlone.UserProfileImage(1, 1,
       'resources/images/profile5.jpeg');
-    const userArthur = new NeverEatAlone.User(2, 'arthur', 'arthur@gmail.com',
-      'Arthur123', NeverEatAlone.UserStatus.ACTIVE, new Date(2022, 10, 11, 1, 5,
+    const userArthur = new NeverEatAlone.User(2, 'Arthur', 'arthur@gmail.com',
+      'arthur123', NeverEatAlone.UserStatus.ACTIVE, new Date(2022, 10, 11, 1, 5,
       35));
     const arthurProfileImage = new NeverEatAlone.UserProfileImage(2, 2,
       'resources/images/profileguy3.jpeg');
@@ -259,7 +259,8 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       NeverEatAlone.Seating.STANDARD, new NeverEatAlone.Location(7,
       '432 Wellington St W', '', 'Toronto', 'ON', 'CA', 'M5V 1E3',
       'Financial District'), 'Sheryl Miller', new Date(2023, 6, 12, 19, 0, 0),
-      new Date(2023, 6, 13, 1, 0, 0), attendeeList7, 8, 'Why not.', false, true);
+      new Date(2023, 6, 13, 1, 0, 0), attendeeList7, 8, 'Why not.', false,
+      true);
     this._diningEventModelMap.set(7, demoDiningEventModel7);
     this._inviteAFoodieModel = new NeverEatAlone.LocalInviteAFoodieModel(
       new NeverEatAlone.UserInvitationCode(1, 1, 'AcFTHD$5Dg'));
@@ -269,16 +270,41 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     this._partnerWithUsModel.load();
     this._logInModel = new DemoLogInModel([userEmma, userArthur], [
       emmaProfileImage, arthurProfileImage]);
+    const toronto = new NeverEatAlone.CityProvince(1, 'Toronto', 'ON',
+      'Canada');
+    const vancouver = new NeverEatAlone.CityProvince(2, 'Vancouver', 'BC',
+      'Canada');
+    const barrie = new NeverEatAlone.CityProvince(3, 'Barrie', 'ON', 'Canada');
+    this._profilePageModelMap = new Map();
+    // User Profile Page Model for userEmma
+    const demoProfilePageModel1 = new NeverEatAlone.LocalProfilePageModel(1,
+      'resources/profile_page/images/default_banner_2.png',
+      emmaProfileImage.src, userEmma.name, userEmma.userName,
+      userEmma.createdAt, 'Hello everyone! My name is Emma and I would love to \
+      meet you all and try new foods.', );
+    this._profilePageModelMap.set(1, demoProfilePageModel1);
+    // User Profile Page Model for userArthur
+    const demoProfilePageModel2 = new NeverEatAlone.LocalProfilePageModel(2,
+      'resources/profile_page/images/default_banner_1.png',
+      arthurProfileImage.src, userArthur.name, userArthur.userName,
+      userArthur.createdAt, 'Ready to explore Toronto.');
+    this._profilePageModelMap.set(2, demoProfilePageModel2);
+    // User Profile Page Model for userLucy
+    const demoProfilePageModel3 = new NeverEatAlone.LocalProfilePageModel(3,
+      'resources/profile_page/images/default_banner_5.jpg',
+      'resources/images/profile2.jpeg', 'Lucy', 'lu2d3', new Date(2022, 4, 2, 2,
+      30, 40), 'Matcha everything!', toronto, );
+    this._profilePageModelMap.set(3, demoProfilePageModel3);
     await Promise.all([this._headerModel.load(), this._homePageModel.load(),
       this._inviteAFoodieModel.load()]);
     return;
   }
 
-  public getHeaderModel(): NeverEatAlone.HeaderModel {
+  public get headerModel(): NeverEatAlone.HeaderModel {
     return this._headerModel;
   }
 
-  public getHomePageModel(): NeverEatAlone.HomePageModel {
+  public get homePageModel(): NeverEatAlone.HomePageModel {
     return this._homePageModel;
   }
 
@@ -287,20 +313,24 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return this._diningEventModelMap.get(id);
   }
 
-  public getInviteAFoodieModel(): NeverEatAlone.InviteAFoodieModel {
+  public get inviteAFoodieModel(): NeverEatAlone.InviteAFoodieModel {
     return this._inviteAFoodieModel;
   }
 
-  public getJoinModel(): NeverEatAlone.JoinModel {
+  public get joinModel(): NeverEatAlone.JoinModel {
     return this._joinModel;
   }
 
-  public getPartnerWithUsModel(): NeverEatAlone.PartnerWithUsModel {
+  public get partnerWithUsModel(): NeverEatAlone.PartnerWithUsModel {
     return this._partnerWithUsModel;
   }
 
-  public getLogInModel(): NeverEatAlone.LogInModel {
+  public get logInModel(): NeverEatAlone.LogInModel {
     return this._logInModel;
+  }
+
+  public getProfilePageModel(id: number): NeverEatAlone.ProfilePageModel {
+    return this._profilePageModelMap.get(id);
   }
 
   private _headerModel: NeverEatAlone.HeaderModel;
@@ -310,4 +340,5 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
   private _joinModel: NeverEatAlone.JoinModel;
   private _partnerWithUsModel: NeverEatAlone.PartnerWithUsModel;
   private _logInModel: NeverEatAlone.LogInModel;
+  private _profilePageModelMap: Map<number, NeverEatAlone.ProfilePageModel>;
 }

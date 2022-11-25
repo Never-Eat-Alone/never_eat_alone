@@ -72,6 +72,7 @@ export class HeaderController extends React.Component<Properties, State> {
     } catch (error) {
       this.setState({ hasError: true, isLoaded: true });
     }
+    return;
   }
 }
 

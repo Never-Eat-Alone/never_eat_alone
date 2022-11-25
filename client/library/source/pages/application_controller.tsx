@@ -12,6 +12,7 @@ import { HelpPage } from './help_page';
 import { HomePageController } from './home_page';
 import { PartnerWithUsController } from './partner_with_us_page';
 import { PrivacyPolicyPage } from './privacy_policy_page';
+import { ProfilePageController } from './profile_page';
 import { Shell } from './shell';
 import { TermsOfUsePage } from './terms_of_use_page';
 import { WhatIsNeaPage } from './what_is_nea_page';
@@ -66,7 +67,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       <Modal>
         <JoinController
           displayMode={this.state.displayMode}
-          model={this.props.model.getJoinModel()}
+          model={this.props.model.joinModel}
           onClose={this.handleJoinModalClose}
         />
       </Modal> || null);
@@ -74,7 +75,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       <Modal>
         <LogInModalController
           displayMode={this.state.displayMode}
-          model={this.props.model.getLogInModel()}
+          model={this.props.model.logInModel}
           onClose={this.handleLogInModalClose}
           onLogInSuccess={this.handleLogInSuccess}
         />
@@ -83,7 +84,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       <Modal>
         <InviteAFoodieModalController
           displayMode={this.state.displayMode}
-          model={this.props.model.getInviteAFoodieModel()}
+          model={this.props.model.inviteAFoodieModel}
           maxContentLength={280}
           onClose={this.handleInviteAFoodieModalClose}
         />
@@ -92,7 +93,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       <Modal>
         <PartnerWithUsModalController
           displayMode={this.state.displayMode}
-          model={this.props.model.getPartnerWithUsModel()}
+          model={this.props.model.partnerWithUsModel}
           onClose={this.handlePartnerWithUsModalClose}
         />
       </Modal> || null);
@@ -102,7 +103,7 @@ export class ApplicationController extends React.Component<Properties, State> {
           displayMode={this.state.displayMode}
           account={this.state.account}
           profileImageSrc={this.state.accountProfileImage.src}
-          headerModel={this.props.model.getHeaderModel()}
+          headerModel={this.props.model.headerModel}
           headerStyle={this.handleHeaderAndFooter(pathname).headerStyle}
           onLogOut={this.handleLogOut}
           onMenuClick={this.handleMenuClick}
@@ -123,6 +124,10 @@ export class ApplicationController extends React.Component<Properties, State> {
             <Router.Route
               path='/dining_events/:id'
               render={this.renderDiningEvents}
+            />
+            <Router.Route
+              path='/edit_profile/:id'
+              render={this.renderEditProfilePage}
             />
             <Router.Route
               path='/forgot_password'
@@ -165,8 +170,8 @@ export class ApplicationController extends React.Component<Properties, State> {
               render={this.renderTermsOfUse}
             />
             <Router.Route
-              path='/users/profile/:id'
-              render={this.renderUserProfile}
+              path='/profile/:id'
+              render={this.renderProfilePage}
             />
             <Router.Route
               path='/what_is_nea'
@@ -244,7 +249,7 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private handleLogOut = async () => {
-    const isLoggedOut = await this.props.model.getLogInModel().logOut();
+    const isLoggedOut = await this.props.model.logInModel.logOut();
     if (isLoggedOut) {
       this.setState({ account: User.makeGuest() });
     }
@@ -275,6 +280,12 @@ export class ApplicationController extends React.Component<Properties, State> {
     />;
   }
 
+  private renderEditProfilePage = ({match}: Router.RouteComponentProps<TParams>
+      ) => {
+    const id = Number(match.params.id);
+    return <div>Edit page</div>;
+  }
+
   private handleJoinEvent = (diningEventId: number) => {
     if (this.state.account.userStatus === UserStatus.GUEST) {
       this.handleLogInButton();
@@ -294,17 +305,29 @@ export class ApplicationController extends React.Component<Properties, State> {
       });
   }
 
-  private renderUserProfile = (
-      {match}: Router.RouteComponentProps<TParams>) => {
-    const id = match.params.id;
-    return <div>User Profile Page for id: {id}</div>;
+  private renderProfilePage = ({match}: Router.RouteComponentProps<TParams>
+      ) => {
+    const id = Number(match.params.id);
+    return <ProfilePageController
+      profileId={id}
+      displayMode={this.state.displayMode}
+      isLoggedIn={this.isLoggedIn(this.state.account)}
+      isAccountProfile={true}
+      model={this.props.model.profilePageModel}
+      onReportClick={() => {}}
+    />;
+  }
+
+  private isLoggedIn = (account: User): boolean => {
+    return (account && account.id !== -1 && account.userStatus ===
+      UserStatus.ACTIVE);
   }
 
   private renderHomePage = () => {
     return <HomePageController
       displayMode={this.state.displayMode}
       account={this.state.account}
-      model={this.props.model.getHomePageModel()}
+      model={this.props.model.homePageModel}
       onJoinButton={this.handleJoinButton}
       onPartnerWithUsButton={this.handlePartnerWithUsButton}
     />;
@@ -325,7 +348,7 @@ export class ApplicationController extends React.Component<Properties, State> {
   private renderPartnerWithUs = () => {
     return <PartnerWithUsController
       displayMode={this.state.displayMode}
-      model={this.props.model.getPartnerWithUsModel()}
+      model={this.props.model.partnerWithUsModel}
     />;
   }
 
