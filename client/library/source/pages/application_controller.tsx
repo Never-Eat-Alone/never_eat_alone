@@ -1,7 +1,8 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { Modal } from '../components';
-import { DisplayMode, getDisplayMode, User } from '../definitions';
+import { DisplayMode, getDisplayMode, User, UserProfileImage,
+  UserStatus } from '../definitions';
 import { InviteAFoodieModalController, JoinController, LogInModalController,
   PartnerWithUsModalController } from '../modals';
 import { ApplicationModel } from './application_model';
@@ -32,6 +33,7 @@ interface State {
   isLogInButtonClicked: boolean;
   isInviteAFoodieButtonClicked: boolean;
   isPartnerWithUsButtonClicked: boolean;
+  accountProfileImage: UserProfileImage;
 }
 
 export class ApplicationController extends React.Component<Properties, State> {
@@ -47,7 +49,8 @@ export class ApplicationController extends React.Component<Properties, State> {
       isJoinButtonClicked: false,
       isLogInButtonClicked: false,
       isInviteAFoodieButtonClicked: false,
-      isPartnerWithUsButtonClicked: false
+      isPartnerWithUsButtonClicked: false,
+      accountProfileImage: UserProfileImage.NoImage()
     };
   }
 
@@ -98,6 +101,7 @@ export class ApplicationController extends React.Component<Properties, State> {
         <Shell
           displayMode={this.state.displayMode}
           account={this.state.account}
+          profileImageSrc={this.state.accountProfileImage.src}
           headerModel={this.props.model.getHeaderModel()}
           headerStyle={this.handleHeaderAndFooter(pathname).headerStyle}
           onLogOut={this.handleLogOut}
@@ -145,10 +149,6 @@ export class ApplicationController extends React.Component<Properties, State> {
               render={this.renderPrivacyPolicy}
             />
             <Router.Route
-              path='/restaurants/:id'
-              render={this.renderRestaurants}
-            />
-            <Router.Route
               path='/settings/:userId'
               render={this.renderSettings}
             />
@@ -191,6 +191,7 @@ export class ApplicationController extends React.Component<Properties, State> {
     } catch (error) {
       this.setState({ hasError: true, isLoaded: true });
     }
+    return;
   }
 
   public componentWillUnmount(): void {
@@ -235,11 +236,11 @@ export class ApplicationController extends React.Component<Properties, State> {
     this.setState({ isPartnerWithUsButtonClicked: false });
   }
 
-  private handleLogInSuccess = (user: User) => {
+  private handleLogInSuccess = (user: User, profileImage: UserProfileImage) => {
     if (this.state.isLogInButtonClicked) {
       this.handleLogInModalClose();
     }
-    this.setState({ account: user });
+    this.setState({ account: user, accountProfileImage: profileImage });
   }
 
   private handleLogOut = async () => {
@@ -268,15 +269,29 @@ export class ApplicationController extends React.Component<Properties, State> {
     return <DiningEventPageController
       displayMode={this.state.displayMode}
       model={model}
-      onRemoveSeat={() => {}}
-      onJoinEvent={() => {}}
+      account={this.state.account}
+      onRemoveSeat={() => this.handleRemoveSeat(id)}
+      onJoinEvent={() => this.handleJoinEvent(id)}
     />;
   }
 
-  private renderRestaurants = (
-      {match}: Router.RouteComponentProps<TParams>) => {
-    const id = parseInt(match.params.id);
-    return (<div>Restaurant page {id.toString()}</div>);
+  private handleJoinEvent = (diningEventId: number) => {
+    if (this.state.account.userStatus === UserStatus.GUEST) {
+      this.handleLogInButton();
+      this.handleJoinEvent(diningEventId);
+    } else {
+      this.props.model.getDiningEventPageModel(diningEventId).joinEvent(
+        this.state.account, this.state.accountProfileImage.src).then(() => {
+          this.forceUpdate();
+        });
+    }
+  }
+
+  private handleRemoveSeat = (diningEventId: number) => {
+    this.props.model.getDiningEventPageModel(diningEventId).removeSeat(
+      this.state.account).then(() => {
+        this.forceUpdate();
+      });
   }
 
   private renderUserProfile = (

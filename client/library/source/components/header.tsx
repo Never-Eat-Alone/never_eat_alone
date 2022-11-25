@@ -13,7 +13,7 @@ interface Properties {
   account: User;
 
   /** Represents the user profile image source. */
-  profileImageSrc?: string;
+  profileImageSrc: string;
 
   headerStyle?: React.CSSProperties;
 
