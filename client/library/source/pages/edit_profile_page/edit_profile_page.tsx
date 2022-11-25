@@ -8,18 +8,15 @@ import { CityProvince, Cuisine, DisplayMode, Language
 
 interface Properties {
   displayMode: DisplayMode;
+  displayName: string;
+  userName: string;
+  profileUserId: number;
 
   /** The source address of the user's cover image. */
   coverImageSrc: string;
 
   /** The source address of the user's profile image. */
   profileImageSrc: string;
-
-  displayName: string;
-
-  userName: string;
-
-  profileUserId: number;
 
   /** Whether user's upcoming events section is private or public. */
   isUpcomingEventsPrivate: boolean;

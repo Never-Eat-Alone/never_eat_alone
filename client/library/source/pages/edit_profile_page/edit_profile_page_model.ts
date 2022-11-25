@@ -15,11 +15,6 @@ export abstract class EditProfilePageModel {
   public abstract get isLanguagePrivate(): boolean;
   public abstract getSuggestedLanguageList(value: string): Promise<Language[]>;
   public abstract get biographyValue(): string;
-  public abstract get isPastEventsPrivate(): boolean;
-  public abstract get isPastEventsPrivate(): boolean;
-  public abstract get isPastEventsPrivate(): boolean;
-  public abstract get isPastEventsPrivate(): boolean;
-
-
+  public abstract get isBiographyPrivate(): boolean;
   public abstract save(): Promise<void>;
 }
