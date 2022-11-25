@@ -1,4 +1,4 @@
-import { CityProvince, Language } from '../../definitions';
+import { CityProvince, Language, Cuisine } from '../../definitions';
 
 export abstract class EditProfilePageModel {
   public abstract load(): Promise<void>;
@@ -16,5 +16,16 @@ export abstract class EditProfilePageModel {
   public abstract getSuggestedLanguageList(value: string): Promise<Language[]>;
   public abstract get biographyValue(): string;
   public abstract get isBiographyPrivate(): boolean;
+  public abstract get suggestedLanguageList(): Language[];
+  public abstract get suggestedCuisineList(): Cuisine[];
+  public abstract get selectedCuisineList(): Cuisine[];
+  public abstract get isCuisinePrivate(): boolean;
+  public abstract get isFacebookPrivate(): boolean;
+  public abstract get isTwitterPrivate(): boolean;
+  public abstract get isInstagramPrivate(): boolean;
+  public abstract get facebookLink(): string;
+  public abstract get twitterLink(): string;
+  public abstract get instagramLink(): string;
+  
   public abstract save(): Promise<void>;
 }
