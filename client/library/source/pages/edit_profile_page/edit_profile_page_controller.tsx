@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
-import { CityProvince, DisplayMode, Language, User, arrayFromJson } from '../../definitions';
+import { CityProvince, DisplayMode, Language, User } from '../../definitions';
+import { EditProfilePage } from './edit_profile_page';
 import { EditProfilePageModel } from './edit_profile_page_model';
 
 interface Properties {
