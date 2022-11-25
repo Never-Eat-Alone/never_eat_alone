@@ -304,18 +304,12 @@ export class ApplicationController extends React.Component<Properties, State> {
       ) => {
     const id = Number(match.params.id);
     return <ProfilePageController
+      account={this.state.account}
       profileId={id}
       displayMode={this.state.displayMode}
-      isLoggedIn={this.isLoggedIn(this.state.account)}
-      isAccountProfile={true}
       model={this.props.model.getProfilePageModel(id)}
       onReportClick={() => {}}
     />;
-  }
-
-  private isLoggedIn = (account: User): boolean => {
-    return (account && account.id !== -1 && account.userStatus ===
-      UserStatus.ACTIVE);
   }
 
   private renderHomePage = () => {

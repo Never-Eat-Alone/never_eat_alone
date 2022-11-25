@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CityProvince, Cuisine, DisplayMode, EventCardSummary
+import { CityProvince, Cuisine, DisplayMode, EventCardSummary, User, UserStatus
 } from '../../definitions';
 import { ProfileBox } from './profile_box';
 import { ProfilePastEvents } from './profile_past_events';
@@ -7,6 +7,9 @@ import { ProfileUpcomingEvents } from './profile_upcoming_events';
 
 interface Properties {
   displayMode: DisplayMode;
+
+  /** the user logged in user. */
+  account: User;
 
   /** The profile page id. */
   profileId: number;
@@ -47,12 +50,6 @@ interface Properties {
   /** The list of the user's favorite cuisines. */
   favoriteCuisineList: Cuisine[];
 
-  /** Whether the user is logged in or not. */
-  isLoggedIn: boolean;
-
-  /** Whether this is the profile page of the logged in user or not. */
-  isAccountProfile: boolean;
-
   /** List of the user upcoming events. */
   upcomingEventList: EventCardSummary[];
 
@@ -71,14 +68,14 @@ export class ProfilePage extends React.Component<Properties> {
       <ProfilePastEvents
         displayMode={this.props.displayMode}
         eventList={this.props.pastEventList}
-        isLoggedIn={this.props.isLoggedIn}
+        isLoggedIn={this.props.account && this.props.account.id !== -1}
       /> || null);
     const upcomingEvents = (this.props.upcomingEventList &&
       this.props.upcomingEventList.length !== 0 &&
       <ProfileUpcomingEvents
         displayMode={this.props.displayMode}
         eventList={this.props.upcomingEventList}
-        isLoggedIn={this.props.isLoggedIn}
+        isLoggedIn={this.props.account && this.props.account.id !== -1}
       /> || null);
     const { containerStyle, coverImageStyle, profileBoxStyle,
         eventsContainerStyle } = (() => {

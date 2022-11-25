@@ -1,22 +1,19 @@
 import * as React from 'react';
-import { DisplayMode } from '../../definitions';
+import { DisplayMode, User } from '../../definitions';
 import { ProfilePage } from './profile_page';
 import { ProfilePageModel } from './profile_page_model';
 
 interface Properties {
   displayMode: DisplayMode;
 
+  /** The current logged user. */
+  account: User;
+
   /** The profile page id. */
   profileId: number;
 
   /** The profilepage model. */
   model: ProfilePageModel;
-
-  /** Indicates if the user is logged in. */
-  isLoggedIn: boolean;
-
-  /** Indicates the profile page belongs to the current logged in account. */
-  isAccountProfile: boolean;
 
   /** Indicates the report button is clicked. */
   onReportClick: () => void;
@@ -41,6 +38,7 @@ export class ProfilePageController extends React.Component<Properties, State> {
       return <div />;
     }
     return <ProfilePage
+      account={this.props.account}
       displayMode={this.props.displayMode}
       profileId={this.props.model.profileId}
       coverImageSrc={this.props.model.coverImageSrc}
@@ -55,8 +53,6 @@ export class ProfilePageController extends React.Component<Properties, State> {
       twitterLink={this.props.model.twitterLink}
       instagramLink={this.props.model.instagramLink}
       favoriteCuisineList={this.props.model.favoriteCuisineList}
-      isLoggedIn={this.props.isLoggedIn}
-      isAccountProfile={this.props.isAccountProfile}
       upcomingEventList={this.props.model.upcomingEventList}
       pastEventList={this.props.model.pastEventList}
       onReportClick={this.props.onReportClick}

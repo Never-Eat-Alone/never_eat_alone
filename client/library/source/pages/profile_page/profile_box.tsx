@@ -1,9 +1,14 @@
 import * as React from 'react';
 import { EllipsisDropdownMenu, FacebookButton, InstagramButton,
   SecondaryButtonNavLink, TwitterButton } from '../../components';
-import { CityProvince, Cuisine } from '../../definitions';
+import { CityProvince, Cuisine, User } from '../../definitions';
 
 interface Properties {
+
+  /** The current logged user. */
+  account: User;
+
+  /** The page id which is the same as the user's id who created the page. */
   profileId: number;
 
   /** The address of the user's profile image. */
@@ -39,18 +44,16 @@ interface Properties {
   /** The list of the user's favorite cuisines. */
   favoriteCuisineList: Cuisine[];
 
-  /** Whether this is the profile page of the logged in user or not. */
-  isAccountProfile: boolean;
-
   /** Indicates the report option was clicked. */
-  onReportClick?: () => void;
+  onReportClick: () => void;
 }
 
 /** Displays the User Information Box on the User Profile Page. */
 export class ProfileBox extends React.Component<Properties> {
   public render(): JSX.Element {
     const profileActionButton = (() => {
-      if (!this.props.onReportClick) {
+      if (!this.props.account || this.props.account.id === -1 ||
+          this.props.account.id === this.props.profileId) {
         return null;
       }
       return <EllipsisDropdownMenu style={ACTION_BUTTON_STYLE}
@@ -143,7 +146,8 @@ export class ProfileBox extends React.Component<Properties> {
       return <div style={CUISINE_ROW_STYLE} >{cuisineList}</div>;
     })();
     const editProfileButton = (() => {
-      if (this.props.isAccountProfile) {
+      if (this.props.account && this.props.account.id !== -1 &&
+          this.props.account.id === this.props.profileId) {
         return <SecondaryButtonNavLink
           style={EDIT_BUTTON_STYLE}
           label='Edit Profile'
