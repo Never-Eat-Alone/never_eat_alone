@@ -293,8 +293,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     this._profilePageModelMap = new Map();
     // User Profile Page Model for userEmma
     const emmaCoverImageSrc = 'resources/profile_page/images/default_banner_2.png';
-    const emmaBio = 'Hello everyone! My name is Emma and I would love to meet \
-      you all and try new foods.';
+    const emmaBio = 'Hello everyone! My name is Emma and I would love to meet you all and try new foods.';
     const emmaInstagramLink = 'www.instagram.com/@emma12';
     const emmaLocation = barrie;
     const demoProfilePageModel1 = new NeverEatAlone.LocalProfilePageModel(1,

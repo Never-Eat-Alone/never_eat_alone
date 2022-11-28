@@ -312,7 +312,15 @@ export class EditProfilePageController extends React.Component<Properties,
 
   private handleSave = async () => {
     try {
-      await this.props.model.save();
+      await this.props.model.save(this.state.coverImageSrc,
+        this.state.profileImageSrc, this.state.isUpcomingEventsPrivate,
+        this.state.isPastEventsPrivate, this.state.isLocationPrivate,
+        this.state.isLanguagePrivate, this.state.biographyValue,
+        this.state.isBiographyPrivate, this.state.selectedLanguageList,
+        this.state.selectedCuisineList, this.state.isCuisinePrivate,
+        this.state.isFacebookPrivate, this.state.isTwitterPrivate,
+        this.state.isInstagramPrivate, this.state.facebookLink,
+        this.state.twitterLink, this.state.instagramLink);
       this.setState({
         redirect: `/users/profile/${this.props.model.profileUserId}`
       });

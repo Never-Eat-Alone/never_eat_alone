@@ -143,7 +143,33 @@ export class DemoEditProfilePageModel extends
     return '';
   }
 
-  public async save(): Promise<void> {
+  public async save(coverImageSrc: string, profileImageSrc: string,
+      isUpcomingEventsPrivate: boolean, isPastEventsPrivate: boolean,
+      isLocationPrivate: boolean, isLanguagePrivate: boolean,
+      biographyValue: string, isBiographyPrivate: boolean,
+      selectedLanguageList: NeverEatAlone.Language[],
+      selectedCuisineList: NeverEatAlone.Cuisine[], isCuisinePrivate: boolean,
+      isFacebookPrivate: boolean, isTwitterPrivate: boolean,
+      isInstagramPrivate: boolean, facebookLink: string, twitterLink: string,
+      instagramLink: string): Promise<void> {
+    this._coverImageSrc = coverImageSrc;
+    this._profileImageSrc = profileImageSrc;
+    this._isUpcomingEventsPrivate = isUpcomingEventsPrivate;
+    this._isPastEventsPrivate = isPastEventsPrivate;
+    this._isLocationPrivate = isLocationPrivate;
+    this._isLanguagePrivate = isLanguagePrivate;
+    this._biographyValue = biographyValue;
+    this._isBiographyPrivate = isBiographyPrivate;
+    this._selectedLanguageList = selectedLanguageList;
+    this._selectedCuisineList = selectedCuisineList;
+    this._isCuisinePrivate = isCuisinePrivate;
+    this._isFacebookPrivate = isFacebookPrivate;
+    this._isTwitterPrivate = isTwitterPrivate;
+    this._isInstagramPrivate = isInstagramPrivate;
+    this._isFacebookPrivate = isFacebookPrivate;
+    this._facebookLink = facebookLink;
+    this._twitterLink = twitterLink;
+    this._instagramLink = instagramLink;
     return;
   }
 

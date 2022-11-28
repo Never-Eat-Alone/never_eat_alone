@@ -28,5 +28,13 @@ export abstract class EditProfilePageModel {
   public abstract get instagramLink(): string;
   public abstract uploadProfileImage(): Promise<string>;
   public abstract uploadCoverImage(): Promise<string>;
-  public abstract save(): Promise<void>;
+  public abstract save(coverImageSrc: string, profileImageSrc: string,
+    isUpcomingEventsPrivate: boolean, isPastEventsPrivate: boolean,
+    isLocationPrivate: boolean, isLanguagePrivate: boolean,
+    biographyValue: string, isBiographyPrivate: boolean,
+    selectedLanguageList: Language[], selectedCuisineList: Cuisine[],
+    isCuisinePrivate: boolean, isFacebookPrivate: boolean,
+    isTwitterPrivate: boolean, isInstagramPrivate: boolean,
+    facebookLink: string, twitterLink: string, instagramLink: string): Promise<
+    void>;
 }
