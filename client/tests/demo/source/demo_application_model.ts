@@ -1,6 +1,7 @@
 import * as NeverEatAlone from 'never_eat_alone';
 import { DemoDiningEventPageModel } from './demo_dining_event_page_model';
 import { DemoLogInModel } from './demo_login_model';
+import { DemoEditProfilePageModel } from './demo_edit_profile_page_model';
 
 /** Implements the ApplicationModel for demo purposes. */
 export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
@@ -273,9 +274,17 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const vancouver = new NeverEatAlone.CityProvince(2, 'Vancouver', 'BC',
       'Canada');
     const barrie = new NeverEatAlone.CityProvince(3, 'Barrie', 'ON', 'Canada');
-    const emmaLanguageList = ['English'];
-    const arthurLanguageList = ['English', 'French'];
-    const lucyLanguageList = ['Mandarin', 'English', 'Spanish', 'German'];
+    const englishLanguage = new NeverEatAlone.Language(1, 'English');
+    const spanishLanguage = new NeverEatAlone.Language(2, 'Spanish');
+    const mandarinLanguage = new NeverEatAlone.Language(3, 'Mandarin');
+    const germanLanguage = new NeverEatAlone.Language(4, 'German');
+    const frenchLanguage = new NeverEatAlone.Language(5, 'French');
+    const farsiLanguage = new NeverEatAlone.Language(6, 'Farsi');
+    const emmaLanguageList = [englishLanguage];
+    const emmaLanguageNameList = [englishLanguage.name];
+    const arthurLanguageList = [englishLanguage.name, frenchLanguage.name];
+    const lucyLanguageList = [mandarinLanguage.name, englishLanguage.name,
+      spanishLanguage.name, germanLanguage.name];
     const emmaFavoriteCuisines = [frenchCuisine, canadianCuisine, modernCuisine
     ];
     const arthurFavoriteCuisines = [traditionalCuisine, steakhouseCuisine];
@@ -283,12 +292,15 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const eventCardSummaryList = [];
     this._profilePageModelMap = new Map();
     // User Profile Page Model for userEmma
+    const emmaCoverImageSrc = 'resources/profile_page/images/default_banner_2.png';
+    const emmaBio = 'Hello everyone! My name is Emma and I would love to meet \
+      you all and try new foods.';
+    const emmaInstagramLink = 'www.instagram.com/@emma12';
+    const emmaLocation = barrie;
     const demoProfilePageModel1 = new NeverEatAlone.LocalProfilePageModel(1,
-      'resources/profile_page/images/default_banner_2.png',
-      emmaProfileImage.src, userEmma.name, userEmma.userName,
-      userEmma.createdAt, 'Hello everyone! My name is Emma and I would love to \
-      meet you all and try new foods.', barrie, emmaLanguageList, '', '',
-      'www.instagram.com/@emma12', emmaFavoriteCuisines, [], [
+      emmaCoverImageSrc, emmaProfileImage.src, userEmma.name, userEmma.userName,
+      userEmma.createdAt, emmaBio, emmaLocation, emmaLanguageNameList, '', '',
+      emmaInstagramLink, emmaFavoriteCuisines, [], [
       new NeverEatAlone.EventCardSummary(1, 'A night to remmeber at the best \
       sushi restaurant in town!', new Date(2022, 6, 12, 19, 0, 0), new Date(
       2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
@@ -329,6 +341,14 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       [steakhouseCuisine, seafoodCuisine], 'resources/images/5.jpg', 6, 6,
       false, '#AC4519')], []);
     this._profilePageModelMap.set(3, demoProfilePageModel3);
+    // Setting up the _editProfilePageModel map.
+    this._editProfilePageModel = new Map();
+    // EditProfilePageModel for user1
+    const demoEditProfilePageModel1 = new DemoEditProfilePageModel(
+      emmaCoverImageSrc, emmaProfileImage.src, 'Emma', 'emma', 1, false, false,
+      false, false, emmaBio, false, emmaLanguageList, emmaFavoriteCuisines,
+      false, false, false, false, '', '', emmaInstagramLink);
+    this._editProfilePageModel.set(1, demoEditProfilePageModel1);
     await Promise.all([this._headerModel.load(), this._homePageModel.load(),
       this._inviteAFoodieModel.load()]);
     return;
@@ -367,6 +387,11 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return this._profilePageModelMap.get(id);
   }
 
+  public getEditProfilePageModel(id: number):
+      NeverEatAlone.EditProfilePageModel {
+    return this._editProfilePageModel.get(id);
+  }
+
   private _headerModel: NeverEatAlone.HeaderModel;
   private _homePageModel: NeverEatAlone.HomePageModel;
   private _diningEventModelMap: Map<number, NeverEatAlone.DiningEventPageModel>;
@@ -375,4 +400,6 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
   private _partnerWithUsModel: NeverEatAlone.PartnerWithUsModel;
   private _logInModel: NeverEatAlone.LogInModel;
   private _profilePageModelMap: Map<number, NeverEatAlone.ProfilePageModel>;
+  private _editProfilePageModel: Map<number,
+    NeverEatAlone.EditProfilePageModel>;
 }

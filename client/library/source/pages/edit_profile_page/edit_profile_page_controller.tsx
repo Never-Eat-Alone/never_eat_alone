@@ -42,7 +42,6 @@ interface State {
   facebookInputIsValid: boolean;
   twitterInputIsValid: boolean;
   instagramInputIsValid: boolean;
-
 }
 
 export class EditProfilePageController extends React.Component<Properties,
@@ -79,8 +78,7 @@ export class EditProfilePageController extends React.Component<Properties,
       instagramLink: '',
       facebookInputIsValid: true,
       twitterInputIsValid: true,
-      instagramInputIsValid: true,
-
+      instagramInputIsValid: true
     };
   }
   public render(): JSX.Element {
@@ -94,7 +92,7 @@ export class EditProfilePageController extends React.Component<Properties,
       displayMode={this.props.displayMode}
       displayName={this.props.model.displayName}
       userName={this.props.model.userName}
-      prodileUserId={this.props.model.profileUserId}
+      profileUserId={this.props.model.profileUserId}
       coverImageSrc={this.state.coverImageSrc}
       profileImageSrc={this.state.profileImageSrc}
       isUpcomingEventsPrivate={this.state.isUpcomingEventsPrivate}
@@ -122,24 +120,24 @@ export class EditProfilePageController extends React.Component<Properties,
       twitterInputIsValid={this.state.twitterInputIsValid}
       instagramInputIsValid={this.state.instagramInputIsValid}
       onLocationInputChange={this.handleLocationInputChange}
-      onLocationPrivacyClick={}
-      onLocationDropdownClick={}
-      onChangeProfileImageClick={}
-      onChangeBanner={}
-      onUpcomingEventPrivacyClick={}
-      onPastEventPrivacyClick={}
-      onLanguagePrivacyClick={}
-      onLanguageInputChange={}
-      onBiographyPrivacyClick={}
-      onBiographyInputChange={}
-      onCuisinePrivacyClick={}
-      onCuisineInputChange={}
-      onFacebookPrivacyClick={}
-      onFacebookInputChange={}
-      onTwitterPrivacyClick={}
-      onTwitterInputChange={}
-      onInstagramPrivacyClick={}
-      onInstagramInputChange={}
+      onLocationPrivacyClick={this.handleLocationPrivacyClick}
+      onLocationDropdownClick={this.handleLocationDropdownClick}
+      onChangeProfileImageClick={this.handleChangeProfileImageClick}
+      onChangeBanner={this.handleChangeBanner}
+      onUpcomingEventPrivacyClick={this.handleUpcomingEventPrivacyClick}
+      onPastEventPrivacyClick={this.handlePastEventPrivacyClick}
+      onLanguagePrivacyClick={this.handleLanguagePrivacyClick}
+      onLanguageInputChange={this.handleLanguageInputChange}
+      onBiographyPrivacyClick={this.handleBiographyPrivacyClick}
+      onBiographyInputChange={this.handleBiographyInputChange}
+      onCuisinePrivacyClick={this.handleCuisinePrivacyClick}
+      onCuisineInputChange={this.handleCuisineInputChange}
+      onFacebookPrivacyClick={this.handleFacebookPrivacyClick}
+      onFacebookInputChange={this.handleFacebookInputChange}
+      onTwitterPrivacyClick={this.handleTwitterPrivacyClick}
+      onTwitterInputChange={this.handleTwitterInputChange}
+      onInstagramPrivacyClick={this.handleInstagramPrivacyClick}
+      onInstagramInputChange={this.handleInstagramInputChange}
       onSaveClick={this.handleSave}
       onCancelClick={this.handleCancel}
     />;
@@ -158,8 +156,7 @@ export class EditProfilePageController extends React.Component<Properties,
         isLocationPrivate: this.props.model.isLocationPrivate,
         isBiographyPrivate: this.props.model.isBiographyPrivate,
         isLanguagePrivate: this.props.model.isLanguagePrivate,
-        suggestedLanguageList: this.props.model.suggestedLanguageList,
-        suggestedCuisineList: this.props.model.suggestedCuisineList,
+        selectedLanguageList: this.props.model.selectedLanguageList,
         selectedCuisineList: this.props.model.selectedCuisineList,
         isFacebookPrivate: this.props.model.isFacebookPrivate,
         isTwitterPrivate: this.props.model.isTwitterPrivate,
@@ -167,30 +164,144 @@ export class EditProfilePageController extends React.Component<Properties,
         facebookLink: this.props.model.facebookLink,
         twitterLink: this.props.model.twitterLink,
         instagramLink: this.props.model.instagramLink
-
       });
     } catch {
       this.setState({ isLoaded: true, hasError: true });
     }
   }
 
-  private handleSuggestedLocationList = async (value: string) => {
-    if (!value || value.trim().length === 0) {
-      return;
-    }
+  private handleLocationInputChange = async (newValue: string) => {
     try {
       const response = await this.props.model.getSuggestedLocationList(
-        this.state.locationValue);
-      this.setState({ suggestedLocationList: response });
+        newValue);
+      this.setState({
+        locationValue: newValue,
+        suggestedLocationList: response
+      });
     } catch {
-
+      this.setState({ locationValue: newValue, suggestedLocationList: [] });
     }
-    return;
   }
 
-  private handleLocationInputChange = (event: React.ChangeEvent<
-      HTMLInputElement>) => {
-    this.setState({ locationValue: event.currentTarget.value });
+  private handleLanguageInputChange = async (newValue: string) => {
+    try {
+      const response = await this.props.model.getSuggestedLanguageList(
+        newValue);
+      this.setState({
+        languageValue: newValue,
+        suggestedLanguageList: response
+      });
+    } catch {
+      this.setState({ languageValue: newValue, suggestedLanguageList: [] });
+    }
+  }
+
+  private handleBiographyPrivacyClick = () => {
+    this.setState((prevState) => ({
+      isBiographyPrivate: !prevState.isBiographyPrivate
+    }));
+  }
+
+  private handleBiographyInputChange = (newBio: string) => {
+    this.setState({ biographyValue: newBio });
+  }
+
+  private handleLanguagePrivacyClick = () => {
+    this.setState((prevState) => ({
+      isLanguagePrivate: !prevState.isLanguagePrivate
+    }));
+  }
+
+  private handlePastEventPrivacyClick = () => {
+    this.setState((prevState) => ({
+      isPastEventsPrivate: !prevState.isPastEventsPrivate
+    }));
+  }
+
+  private handleCuisinePrivacyClick = () => {
+    this.setState((prevState) => ({
+      isCuisinePrivate: !prevState.isCuisinePrivate
+    }));
+  }
+
+  private handleCuisineInputChange = async (newValue: string) => {
+    try {
+      const response = await this.props.model.getSuggestedCuisineList(newValue);
+      this.setState({
+        cuisineValue: newValue,
+        suggestedCuisineList: response
+      });
+    } catch {
+      this.setState({ cuisineValue: newValue, suggestedCuisineList: [] });
+    }
+  }
+
+  private handleLocationPrivacyClick = () => {
+    this.setState((prevState) => ({
+      isLocationPrivate: !prevState.isLocationPrivate
+    }));
+  }
+
+  private handleUpcomingEventPrivacyClick = () => {
+    this.setState((prevState) => ({
+      isUpcomingEventsPrivate: !prevState.isUpcomingEventsPrivate
+    }));
+  }
+
+  private handleLocationDropdownClick = (selectedLocation: CityProvince) => {
+    this.setState({
+      selectedLocation: selectedLocation,
+      locationValue: `${selectedLocation.city}, ${selectedLocation.province}, 
+        ${selectedLocation.country}`
+    });
+  }
+
+  private handleChangeProfileImageClick = async () => {
+    try {
+      const profileImageSrc = await this.props.model.uploadProfileImage();
+      this.setState({ profileImageSrc: profileImageSrc });
+    } catch {
+      //pass
+    }
+  }
+
+  private handleFacebookPrivacyClick = () => {
+    this.setState((prevState) => ({
+      isFacebookPrivate: !prevState.isFacebookPrivate
+    }));
+  }
+
+  private handleFacebookInputChange = (newValue: string) => {
+    this.setState({ facebookLink: newValue });
+  }
+
+  private handleInstagramPrivacyClick = () => {
+    this.setState((prevState) => ({
+      isInstagramPrivate: !prevState.isInstagramPrivate
+    }));
+  }
+
+  private handleInstagramInputChange = (newValue: string) => {
+    this.setState({ instagramLink: newValue });
+  }
+
+  private handleTwitterPrivacyClick = () => {
+    this.setState((prevState) => ({
+      isTwitterPrivate: !prevState.isTwitterPrivate
+    }));
+  }
+
+  private handleTwitterInputChange = (newValue: string) => {
+    this.setState({ twitterLink: newValue });
+  }
+
+  private handleChangeBanner = async () => {
+    try {
+      const coverImageSrc = await this.props.model.uploadCoverImage();
+      this.setState({ coverImageSrc: coverImageSrc });
+    } catch {
+      //pass
+    }
   }
 
   private handleCancel = () => {
