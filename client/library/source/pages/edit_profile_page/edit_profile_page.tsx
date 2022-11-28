@@ -240,7 +240,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
       INPUT_WITH_DROPDOWN_STYLE || INPUT_FIELD_STYLE);
     const cuisineInputFieldStyle = (this.state.isCuisineDropdownDisplayed &&
       INPUT_WITH_DROPDOWN_STYLE || INPUT_FIELD_STYLE);
-    const locationDropdown = (() => {
+    const locationDropdownRows = (() => {
       if (this.state.isLocationDropdownDisplayed &&
           this.props.suggestedLocationList &&
           this.props.suggestedLocationList.length !== 0) {
@@ -251,24 +251,17 @@ export class EditProfilePage extends React.Component<Properties, State> {
                 key={location.id}
                 style={DROPDOWN_ROW_STYLE}
                 className={css(styles.dropdownRow)}
-                onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-                  this.props.onLocationDropdownClick(location)
-                }}
+                onClick={() => this.handleLocationDropdownClick(location)}
             >
               {location.city}, {location.province}, {location.country}
             </div>);
         });
-        return (
-          <div
-              tabIndex={0}
-              ref={this._locationDropdownRef}
-              style={DROPDOWN_CONTAINER_STYLE}
-          >
-            {rows}
-          </div>);
+        return rows;
       }
       return null;
     })();
+    const locationDropdownStyle = (locationDropdownRows &&
+      DROPDOWN_CONTAINER_STYLE || {});
     const languageDropdown = (() => {
       if (this.state.isLanguageDropdownDisplayed &&
           this.props.suggestedLanguageList &&
@@ -493,7 +486,13 @@ export class EditProfilePage extends React.Component<Properties, State> {
             onFocus={this.handleDisplayLocationDropdown}
             onBlur={this.handleHideLocationDropdown}
           />
-          {locationDropdown}
+          <div
+              tabIndex={0}
+              ref={this._locationDropdownRef}
+              style={locationDropdownStyle}
+          >
+            {locationDropdownRows}
+          </div>
           <div style={ROW_CONTAINER_STYLE} >
             {languagesPrivacyButton}
             <div style={TITLE_STYLE} >Languages</div>
@@ -688,6 +687,11 @@ export class EditProfilePage extends React.Component<Properties, State> {
     const isCuisineDropdownDisplayed = event.relatedTarget &&
       this._cuisineDropdownRef.current.contains(event.relatedTarget);
     this.setState({ isCuisineDropdownDisplayed });
+  }
+
+  private handleLocationDropdownClick = (location: CityProvince) => {
+    console.log('location clicked');
+    this.props.onLocationDropdownClick(location);
   }
 
   private _languageDropdownRef: React.RefObject<HTMLDivElement>;

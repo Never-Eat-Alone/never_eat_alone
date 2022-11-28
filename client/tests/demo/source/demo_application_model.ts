@@ -274,6 +274,15 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const vancouver = new NeverEatAlone.CityProvince(2, 'Vancouver', 'BC',
       'Canada');
     const barrie = new NeverEatAlone.CityProvince(3, 'Barrie', 'ON', 'Canada');
+    const ottawa = new NeverEatAlone.CityProvince(3, 'Ottawa', 'ON', 'Canada');
+    const montreal = new NeverEatAlone.CityProvince(4, 'Montreal', 'QB',
+      'Canada');
+    const hamilton = new NeverEatAlone.CityProvince(5, 'Hamilton', 'ON',
+      'Canada');
+    const burlington = new NeverEatAlone.CityProvince(6, 'Burlington', 'ON',
+      'Canada');
+    const vaughan = new NeverEatAlone.CityProvince(7, 'Vaughan', 'ON',
+      'Canada');
     const englishLanguage = new NeverEatAlone.Language(1, 'English');
     const spanishLanguage = new NeverEatAlone.Language(2, 'Spanish');
     const mandarinLanguage = new NeverEatAlone.Language(3, 'Mandarin');
@@ -343,10 +352,20 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     // Setting up the _editProfilePageModel map.
     this._editProfilePageModel = new Map();
     // EditProfilePageModel for user1
+    const locationList = [toronto, barrie, burlington, hamilton, vancouver,
+      montreal, vaughan];
+    const languageList = [englishLanguage, mandarinLanguage, spanishLanguage,
+      frenchLanguage, farsiLanguage, germanLanguage];
+    const cuisineList = [frenchCuisine, chineseCuisine, bbqCuisine,
+      breweryCuisine, canadianCuisine, fusionCuisine, grillCuisine,
+      italianCuisine, japaneseCuisine, middleEasternCuisine, modernCuisine,
+      omakaseCuisine, persianCuisine, seafoodCuisine, steakhouseCuisine,
+      traditionalCuisine];
     const demoEditProfilePageModel1 = new DemoEditProfilePageModel(
       emmaCoverImageSrc, emmaProfileImage.src, 'Emma', 'emma', 1, false, false,
       false, false, emmaBio, false, emmaLanguageList, emmaFavoriteCuisines,
-      false, false, false, false, '', '', emmaInstagramLink);
+      false, false, false, false, '', '', emmaInstagramLink, emmaLocation,
+      locationList, languageList, cuisineList);
     this._editProfilePageModel.set(1, demoEditProfilePageModel1);
     await Promise.all([this._headerModel.load(), this._homePageModel.load(),
       this._inviteAFoodieModel.load()]);

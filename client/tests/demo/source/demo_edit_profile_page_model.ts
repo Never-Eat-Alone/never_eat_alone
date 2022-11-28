@@ -11,7 +11,9 @@ export class DemoEditProfilePageModel extends
       selectedCuisineList: NeverEatAlone.Cuisine[], isCuisinePrivate: boolean,
       isFacebookPrivate: boolean, isTwitterPrivate: boolean,
       isInstagramPrivate: boolean, facebookLink: string, twitterLink: string,
-      instagramLink: string) {
+      instagramLink: string, selectedLocation: NeverEatAlone.CityProvince,
+      locationList: NeverEatAlone.CityProvince[], languageList:
+      NeverEatAlone.Language[], cuisineList: NeverEatAlone.Cuisine[]) {
     super();
     this._coverImageSrc = coverImageSrc;
     this._profileImageSrc = profileImageSrc;
@@ -33,6 +35,10 @@ export class DemoEditProfilePageModel extends
     this._facebookLink = facebookLink;
     this._twitterLink = twitterLink;
     this._instagramLink = instagramLink;
+    this._selectedLocation = selectedLocation;
+    this._locationList = locationList;
+    this._languageList = languageList;
+    this._cuisineList = cuisineList;
   }
 
   public async load(): Promise<void> {
@@ -55,6 +61,10 @@ export class DemoEditProfilePageModel extends
     return this._userName;
   }
 
+  public get selectedLocation(): NeverEatAlone.CityProvince {
+    return this._selectedLocation;
+  }
+
   public get profileUserId(): number {
     return this._profileUserId;
   }
@@ -73,8 +83,14 @@ export class DemoEditProfilePageModel extends
 
   public async getSuggestedLocationList(value: string): Promise<
       NeverEatAlone.CityProvince[]> {
-    const everyLocationList = [];
-    return [];
+    const temp: NeverEatAlone.CityProvince[] = [];
+    for (const location of this._locationList) {
+      if (location.city.indexOf(value) !== -1 || location.province.indexOf(
+          value) !== -1 || location.country.indexOf(value) !== -1) {
+        temp.push(location);
+      }
+    }
+    return temp;
   }
 
   public get isLanguagePrivate(): boolean {
@@ -193,4 +209,8 @@ export class DemoEditProfilePageModel extends
   private _facebookLink: string;
   private _twitterLink: string;
   private _instagramLink: string;
+  private _selectedLocation: NeverEatAlone.CityProvince;
+  private _locationList: NeverEatAlone.CityProvince[];
+  private _languageList: NeverEatAlone.Language[];
+  private _cuisineList: NeverEatAlone.Cuisine[];
 }

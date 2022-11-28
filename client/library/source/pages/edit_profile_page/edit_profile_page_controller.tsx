@@ -150,6 +150,8 @@ export class EditProfilePageController extends React.Component<Properties,
         isLoaded: true,
         coverImageSrc: this.props.model.coverImageSrc,
         profileImageSrc: this.props.model.profileImageSrc,
+        locationValue: `${this.props.model.selectedLocation.city}, ${
+          this.props.model.selectedLocation.province}`,
         biographyValue: this.props.model.biographyValue,
         isPastEventsPrivate: this.props.model.isPastEventsPrivate,
         isUpcomingEventsPrivate: this.props.model.isUpcomingEventsPrivate,
@@ -172,12 +174,19 @@ export class EditProfilePageController extends React.Component<Properties,
 
   private handleLocationInputChange = async (newValue: string) => {
     try {
-      const response = await this.props.model.getSuggestedLocationList(
-        newValue);
-      this.setState({
-        locationValue: newValue,
-        suggestedLocationList: response
-      });
+      if (newValue.trim().length === 0) {
+        this.setState({
+          locationValue: newValue.trim(),
+          suggestedLocationList: []
+        });
+      } else {
+        const response = await this.props.model.getSuggestedLocationList(
+          newValue);
+        this.setState({
+          locationValue: newValue,
+          suggestedLocationList: response
+        });
+      }
     } catch {
       this.setState({ locationValue: newValue, suggestedLocationList: [] });
     }
@@ -249,6 +258,7 @@ export class EditProfilePageController extends React.Component<Properties,
   }
 
   private handleLocationDropdownClick = (selectedLocation: CityProvince) => {
+    console.log('selected location', selectedLocation.city, selectedLocation.province);
     this.setState({
       selectedLocation: selectedLocation,
       locationValue: `${selectedLocation.city}, ${selectedLocation.province}, 

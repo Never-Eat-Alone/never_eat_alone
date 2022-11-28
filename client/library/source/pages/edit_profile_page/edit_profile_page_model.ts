@@ -6,6 +6,7 @@ export abstract class EditProfilePageModel {
   public abstract get profileImageSrc(): string;
   public abstract get displayName(): string;
   public abstract get userName(): string;
+  public abstract get selectedLocation(): CityProvince;
   public abstract get profileUserId(): number;
   public abstract get isUpcomingEventsPrivate(): boolean;
   public abstract get isPastEventsPrivate(): boolean;
