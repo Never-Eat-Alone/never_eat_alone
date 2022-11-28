@@ -165,7 +165,8 @@ export class EditProfilePageController extends React.Component<Properties,
         isInstagramPrivate: this.props.model.isInstagramPrivate,
         facebookLink: this.props.model.facebookLink,
         twitterLink: this.props.model.twitterLink,
-        instagramLink: this.props.model.instagramLink
+        instagramLink: this.props.model.instagramLink,
+        suggestedLocationList: [this.props.model.selectedLocation]
       });
     } catch {
       this.setState({ isLoaded: true, hasError: true });
@@ -258,11 +259,10 @@ export class EditProfilePageController extends React.Component<Properties,
   }
 
   private handleLocationDropdownClick = (selectedLocation: CityProvince) => {
-    console.log('selected location', selectedLocation.city, selectedLocation.province);
     this.setState({
       selectedLocation: selectedLocation,
-      locationValue: `${selectedLocation.city}, ${selectedLocation.province}, 
-        ${selectedLocation.country}`
+      locationValue: `${selectedLocation.city}, ${selectedLocation.province}`,
+      suggestedLocationList: [selectedLocation]
     });
   }
 

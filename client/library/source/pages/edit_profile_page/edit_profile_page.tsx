@@ -253,7 +253,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
                 className={css(styles.dropdownRow)}
                 onClick={() => this.handleLocationDropdownClick(location)}
             >
-              {location.city}, {location.province}, {location.country}
+              {location.city}, {location.province}
             </div>);
         });
         return rows;
@@ -484,7 +484,6 @@ export class EditProfilePage extends React.Component<Properties, State> {
             type='text'
             onChange={this.handleLocationInputChange}
             onFocus={this.handleDisplayLocationDropdown}
-            onBlur={this.handleHideLocationDropdown}
           />
           <div
               tabIndex={0}
@@ -594,6 +593,24 @@ export class EditProfilePage extends React.Component<Properties, State> {
       </div>);
   }
 
+  public componentDidMount(): void {
+    document.addEventListener('mousedown', this.handleClickOutside);
+  }
+
+  public componentWillUnmount(): void {
+    document.removeEventListener('mousedown', this.handleClickOutside);
+  }
+
+  private handleClickOutside: { (event: any): void } = (
+      event: React.MouseEvent) => {
+    if (this.state.isLocationDropdownDisplayed &&
+        !this._locationDropdownRef.current.contains(event.target as Node)) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.handleHideLocationDropdown();
+    }
+  }
+
   private handleAddLanguageTag = (selectedLanguage: Language) => {
     this.setState({ isLanguageDropdownDisplayed: false });
     if (this.state.selectedLanguageList.findIndex(language => language.id
@@ -690,8 +707,8 @@ export class EditProfilePage extends React.Component<Properties, State> {
   }
 
   private handleLocationDropdownClick = (location: CityProvince) => {
-    console.log('location clicked');
     this.props.onLocationDropdownClick(location);
+    this.handleHideLocationDropdown();
   }
 
   private _languageDropdownRef: React.RefObject<HTMLDivElement>;
@@ -1062,7 +1079,8 @@ const DROPDOWN_ROW_STYLE: React.CSSProperties = {
   backgroundColor: '#FFFFFF',
   width: '100%',
   minHeight: '38px',
-  cursor: 'pointer'
+  cursor: 'pointer',
+  whiteSpace: 'pre'
 };
 
 const INPUT_WITH_DROPDOWN_STYLE: React.CSSProperties = {

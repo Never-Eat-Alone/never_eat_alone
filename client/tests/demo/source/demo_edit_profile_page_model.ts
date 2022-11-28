@@ -84,9 +84,11 @@ export class DemoEditProfilePageModel extends
   public async getSuggestedLocationList(value: string): Promise<
       NeverEatAlone.CityProvince[]> {
     const temp: NeverEatAlone.CityProvince[] = [];
+    const searchValue = value.toLowerCase();
     for (const location of this._locationList) {
-      if (location.city.indexOf(value) !== -1 || location.province.indexOf(
-          value) !== -1 || location.country.indexOf(value) !== -1) {
+      if (location.city.toLowerCase().indexOf(searchValue) !== -1 ||
+          location.province.toLowerCase().indexOf(searchValue) !== -1 ||
+          location.country.toLowerCase().indexOf(searchValue) !== -1) {
         temp.push(location);
       }
     }
