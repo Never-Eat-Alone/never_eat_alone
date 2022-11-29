@@ -87,8 +87,7 @@ export class DemoEditProfilePageModel extends
     const searchValue = value.toLowerCase();
     for (const location of this._locationList) {
       if (location.city.toLowerCase().indexOf(searchValue) !== -1 ||
-          location.province.toLowerCase().indexOf(searchValue) !== -1 ||
-          location.country.toLowerCase().indexOf(searchValue) !== -1) {
+          location.province.toLowerCase().indexOf(searchValue) !== -1) {
         temp.push(location);
       }
     }

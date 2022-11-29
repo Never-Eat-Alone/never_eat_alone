@@ -155,6 +155,7 @@ interface Properties {
 }
 
 interface State {
+  isLocationInputFocused: boolean;
   isLocationDropdownDisplayed: boolean;
   isLanguageDropdownDisplayed: boolean;
   isCuisineDropdownDisplayed: boolean;
@@ -171,7 +172,8 @@ export class EditProfilePage extends React.Component<Properties, State> {
       isLanguageDropdownDisplayed: false,
       isCuisineDropdownDisplayed: false,
       selectedCuisineList: this.props.selectedCuisineList,
-      selectedLanguageList: this.props.selectedLanguageList
+      selectedLanguageList: this.props.selectedLanguageList,
+      isLocationInputFocused: false
     };
     this._languageDropdownRef = React.createRef<HTMLDivElement>();
     this._cuisineDropdownRef = React.createRef<HTMLDivElement>();
@@ -484,6 +486,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
             type='text'
             onChange={this.handleLocationInputChange}
             onFocus={this.handleDisplayLocationDropdown}
+            onBlur={this.handleLocationInputBlur}
           />
           <div
               tabIndex={0}
@@ -604,6 +607,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
   private handleClickOutside: { (event: any): void } = (
       event: React.MouseEvent) => {
     if (this.state.isLocationDropdownDisplayed &&
+        !this.state.isLocationInputFocused &&
         !this._locationDropdownRef.current.contains(event.target as Node)) {
       event.preventDefault();
       event.stopPropagation();
@@ -651,7 +655,14 @@ export class EditProfilePage extends React.Component<Properties, State> {
   }
 
   private handleDisplayLocationDropdown = () => {
-    this.setState({ isLocationDropdownDisplayed: true });
+    this.setState({
+      isLocationDropdownDisplayed: true,
+      isLocationInputFocused: true
+    });
+  }
+
+  private handleLocationInputBlur = () => {
+    this.setState({ isLocationInputFocused: false });
   }
 
   private handleHideLocationDropdown = () => {
