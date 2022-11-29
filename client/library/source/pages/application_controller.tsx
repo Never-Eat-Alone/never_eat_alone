@@ -8,6 +8,7 @@ import { InviteAFoodieModalController, JoinController, LogInModalController,
 import { ApplicationModel } from './application_model';
 import { CookiesPolicyPage } from './cookie_policy_page';
 import { DiningEventPageController } from './dining_event_page';
+import { EditProfilePageController } from './edit_profile_page';
 import { HelpPage } from './help_page';
 import { HomePageController } from './home_page';
 import { PartnerWithUsController } from './partner_with_us_page';
@@ -265,10 +266,9 @@ export class ApplicationController extends React.Component<Properties, State> {
   private renderDiningEvents = (
       {match}: Router.RouteComponentProps<TParams>) => {
     const id = Number(match.params.id);
-    const model = this.props.model.getDiningEventPageModel(id);
     return <DiningEventPageController
       displayMode={this.state.displayMode}
-      model={model}
+      model={this.props.model.getDiningEventPageModel(id)}
       account={this.state.account}
       onRemoveSeat={() => this.handleRemoveSeat(id)}
       onJoinEvent={() => this.handleJoinEvent(id)}
@@ -278,7 +278,11 @@ export class ApplicationController extends React.Component<Properties, State> {
   private renderEditProfilePage = ({match}: Router.RouteComponentProps<TParams>
       ) => {
     const id = Number(match.params.id);
-    return <div>Edit page</div>;
+    return <EditProfilePageController
+        displayMode={this.state.displayMode}
+        account={this.state.account}
+        model={this.props.model.getEditProfilePageModel(id)}
+    />;
   }
 
   private handleJoinEvent = (diningEventId: number) => {
