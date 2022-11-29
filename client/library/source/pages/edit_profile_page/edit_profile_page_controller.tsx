@@ -18,17 +18,17 @@ interface State {
   coverImageSrc: string;
   profileImageSrc: string;
   locationValue: string;
-  languageValue: string;
   selectedLocation: CityProvince;
   suggestedLocationList: CityProvince[];
-  selectedLanguageList: Language[];
+  isLocationPrivate: boolean;
   biographyValue: string;
   isUpcomingEventsPrivate: boolean;
   isPastEventsPrivate: boolean;
-  isLanguagePrivate: boolean;
-  isLocationPrivate: boolean;
-  isBiographyPrivate: boolean;
+  languageValue: string;
+  selectedLanguageList: Language[];
   suggestedLanguageList: Language[];
+  isLanguagePrivate: boolean;
+  isBiographyPrivate: boolean;
   cuisineValue: string;
   suggestedCuisineList: Cuisine[];
   selectedCuisineList: Cuisine[];
@@ -55,17 +55,17 @@ export class EditProfilePageController extends React.Component<Properties,
       coverImageSrc: '',
       profileImageSrc: '',
       locationValue: '',
-      languageValue: '',
-      selectedLocation: CityProvince.empty(),
-      selectedLanguageList: [],
       suggestedLocationList: [],
+      selectedLocation: CityProvince.empty(),
+      isLocationPrivate: false,
+      languageValue: '',
+      selectedLanguageList: [],
+      suggestedLanguageList: [],
+      isLanguagePrivate: false,
       biographyValue: '',
       isUpcomingEventsPrivate: false,
       isPastEventsPrivate: false,
-      isLanguagePrivate: false,
-      isLocationPrivate: false,
       isBiographyPrivate: false,
-      suggestedLanguageList: [],
       cuisineValue: '',
       suggestedCuisineList: [],
       selectedCuisineList: [],
@@ -128,10 +128,14 @@ export class EditProfilePageController extends React.Component<Properties,
       onPastEventPrivacyClick={this.handlePastEventPrivacyClick}
       onLanguagePrivacyClick={this.handleLanguagePrivacyClick}
       onLanguageInputChange={this.handleLanguageInputChange}
+      onLanguageDropdownClick={this.handleLanguageDropdownClick}
+      onRemoveLanguageClick={this.handleRemoveLanguageClick}
       onBiographyPrivacyClick={this.handleBiographyPrivacyClick}
       onBiographyInputChange={this.handleBiographyInputChange}
       onCuisinePrivacyClick={this.handleCuisinePrivacyClick}
       onCuisineInputChange={this.handleCuisineInputChange}
+      onCuisineDropdownClick={this.handleCuisineDropdownClick}
+      onRemoveCuisineClick={this.handleRemoveCuisineClick}
       onFacebookPrivacyClick={this.handleFacebookPrivacyClick}
       onFacebookInputChange={this.handleFacebookInputChange}
       onTwitterPrivacyClick={this.handleTwitterPrivacyClick}
@@ -159,6 +163,7 @@ export class EditProfilePageController extends React.Component<Properties,
         isBiographyPrivate: this.props.model.isBiographyPrivate,
         isLanguagePrivate: this.props.model.isLanguagePrivate,
         selectedLanguageList: this.props.model.selectedLanguageList,
+        isCuisinePrivate: this.props.model.isCuisinePrivate,
         selectedCuisineList: this.props.model.selectedCuisineList,
         isFacebookPrivate: this.props.model.isFacebookPrivate,
         isTwitterPrivate: this.props.model.isTwitterPrivate,
@@ -166,7 +171,9 @@ export class EditProfilePageController extends React.Component<Properties,
         facebookLink: this.props.model.facebookLink,
         twitterLink: this.props.model.twitterLink,
         instagramLink: this.props.model.instagramLink,
-        suggestedLocationList: [this.props.model.selectedLocation]
+        suggestedLocationList: this.props.model.locationList,
+        suggestedLanguageList: this.props.model.languageList,
+        suggestedCuisineList: this.props.model.cuisineList
       });
     } catch {
       this.setState({ isLoaded: true, hasError: true });
@@ -174,26 +181,33 @@ export class EditProfilePageController extends React.Component<Properties,
   }
 
   private handleLocationInputChange = async (newValue: string) => {
+    if (newValue.trim().length === 0) {
+      this.setState({
+        locationValue: newValue.trim(),
+        suggestedLocationList: this.props.model.locationList
+      });
+      return;
+    }
     try {
-      if (newValue.trim().length === 0) {
-        this.setState({
-          locationValue: newValue.trim(),
-          suggestedLocationList: []
-        });
-      } else {
-        const response = await this.props.model.getSuggestedLocationList(
-          newValue);
-        this.setState({
-          locationValue: newValue,
-          suggestedLocationList: response
-        });
-      }
+      const response = await this.props.model.getSuggestedLocationList(
+        newValue);
+      this.setState({
+        locationValue: newValue,
+        suggestedLocationList: response
+      });
     } catch {
       this.setState({ locationValue: newValue, suggestedLocationList: [] });
     }
   }
 
   private handleLanguageInputChange = async (newValue: string) => {
+    if (newValue.trim().length === 0) {
+      this.setState({
+        languageValue: newValue.trim(),
+        suggestedLanguageList: this.props.model.languageList
+      });
+      return;
+    }
     try {
       const response = await this.props.model.getSuggestedLanguageList(
         newValue);
@@ -235,6 +249,13 @@ export class EditProfilePageController extends React.Component<Properties,
   }
 
   private handleCuisineInputChange = async (newValue: string) => {
+    if (newValue.trim().length === 0) {
+      this.setState({
+        cuisineValue: newValue.trim(),
+        suggestedCuisineList: this.props.model.cuisineList
+      });
+      return;
+    }
     try {
       const response = await this.props.model.getSuggestedCuisineList(newValue);
       this.setState({
@@ -264,6 +285,56 @@ export class EditProfilePageController extends React.Component<Properties,
       locationValue: `${selectedLocation.city}, ${selectedLocation.province}`,
       suggestedLocationList: [selectedLocation]
     });
+  }
+
+  private handleLanguageDropdownClick = (selectedLanguage: Language) => {
+    const temp = [selectedLanguage];
+    for (const language of this.state.selectedLanguageList) {
+      if (language.id !== selectedLanguage.id) {
+        temp.push(language);
+      }
+    }
+    this.setState({
+      languageValue: '',
+      selectedLanguageList: temp,
+      suggestedLanguageList: this.props.model.languageList
+    });
+  }
+
+  private handleRemoveLanguageClick = (id: number) => {
+    const temp = [];
+    const selectedLanguageList = [...this.state.selectedLanguageList];
+    for (const language of selectedLanguageList) {
+      if (language.id !== id) {
+        temp.push(language);
+      }
+    }
+    this.setState({ selectedLanguageList: temp });
+  }
+
+  private handleCuisineDropdownClick = (selectedCuisine: Cuisine) => {
+    const temp = [selectedCuisine];
+    for (const cuisine of this.state.selectedCuisineList) {
+      if (cuisine.id !== selectedCuisine.id) {
+        temp.push(cuisine);
+      }
+    }
+    this.setState({
+      cuisineValue: '',
+      selectedCuisineList: temp,
+      suggestedCuisineList: this.props.model.cuisineList
+    });
+  }
+
+  private handleRemoveCuisineClick = (id: number) => {
+    const temp = [];
+    const selectedCuisineList = [...this.state.selectedCuisineList];
+    for (const cuisine of selectedCuisineList) {
+      if (cuisine.id !== id) {
+        temp.push(cuisine);
+      }
+    }
+    this.setState({ selectedCuisineList: temp });
   }
 
   private handleChangeProfileImageClick = async () => {

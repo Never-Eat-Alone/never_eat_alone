@@ -2,6 +2,9 @@ import { CityProvince, Cuisine, Language } from '../../definitions';
 
 export abstract class EditProfilePageModel {
   public abstract load(): Promise<void>;
+  public abstract get locationList(): CityProvince[];
+  public abstract get languageList(): Language[];
+  public abstract get cuisineList(): Cuisine[];
   public abstract get coverImageSrc(): string;
   public abstract get profileImageSrc(): string;
   public abstract get displayName(): string;

@@ -33,7 +33,7 @@ interface Properties {
   /** List of locations matched the location input field. */
   suggestedLocationList: CityProvince[];
 
-  /** Whether user's location information is private or public. */
+  /** Whether user's language information is private or public. */
   isLanguagePrivate: boolean;
 
   /** The value entered in the language input field. */
@@ -117,6 +117,12 @@ interface Properties {
   /** Indicates the language inputfield value changed. */
   onLanguageInputChange: (newValue: string) => void;
 
+  /** Indicates a language from the dropdwon is clicked. */
+  onLanguageDropdownClick: (language: Language) => void;
+
+  /** Indicates the close button on language tag is clicked. */
+  onRemoveLanguageClick: (id: number) => void;
+
   /** Indicates the biography's privacy button is clicked. */
   onBiographyPrivacyClick: () => void;
 
@@ -128,6 +134,12 @@ interface Properties {
 
   /** Indicates the cuisine input value changed. */
   onCuisineInputChange: (newValue: string) => void;
+
+  /** Indicates a cuisine is clicked from the dropdown menu.  */
+  onCuisineDropdownClick: (cuisine: Cuisine) => void;
+
+  /** Indicates the close button on a cuisine tag is clicked. */
+  onRemoveCuisineClick: (id: number) => void;
 
   /** Indicates the facebook's privacy button is clicked. */
   onFacebookPrivacyClick: () => void;
@@ -157,10 +169,10 @@ interface Properties {
 interface State {
   isLocationInputFocused: boolean;
   isLocationDropdownDisplayed: boolean;
+  isLanguageInputFocued: boolean;
   isLanguageDropdownDisplayed: boolean;
+  isCuisineInputFocued: boolean;
   isCuisineDropdownDisplayed: boolean;
-  selectedCuisineList: Cuisine[];
-  selectedLanguageList: Language[];
 }
 
 /** Displays the edit profile page. */
@@ -171,8 +183,8 @@ export class EditProfilePage extends React.Component<Properties, State> {
       isLocationDropdownDisplayed: false,
       isLanguageDropdownDisplayed: false,
       isCuisineDropdownDisplayed: false,
-      selectedCuisineList: this.props.selectedCuisineList,
-      selectedLanguageList: this.props.selectedLanguageList,
+      isLanguageInputFocued: false,
+      isCuisineInputFocued: false,
       isLocationInputFocused: false
     };
     this._languageDropdownRef = React.createRef<HTMLDivElement>();
@@ -264,7 +276,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
     })();
     const locationDropdownStyle = (locationDropdownRows &&
       DROPDOWN_CONTAINER_STYLE || {});
-    const languageDropdown = (() => {
+    const languageDropdownRows = (() => {
       if (this.state.isLanguageDropdownDisplayed &&
           this.props.suggestedLanguageList &&
           this.props.suggestedLanguageList.length !== 0) {
@@ -275,37 +287,28 @@ export class EditProfilePage extends React.Component<Properties, State> {
                 key={language.id}
                 style={DROPDOWN_ROW_STYLE}
                 className={css(styles.dropdownRow)}
-                onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-                  this.handleAddLanguageTag(language)
-                }}
+                onClick={() => this.handleLanguageClick(language)}
             >
               {language.name}
             </div>);
         });
-        return (
-          <div
-              tabIndex={0}
-              ref={this._languageDropdownRef}
-              style={DROPDOWN_CONTAINER_STYLE}
-          >
-            {rows}
-          </div>);
+        return rows;
       }
       return null;
     })();
+    const languageDropdownStyle = (languageDropdownRows &&
+      DROPDOWN_CONTAINER_STYLE || {});
     const selectedLanguages = (() => {
-      if (this.state.selectedLanguageList &&
-          this.state.selectedLanguageList.length !== 0) {
-        const languageTags = [...this.state.selectedLanguageList].map(
+      if (this.props.selectedLanguageList &&
+          this.props.selectedLanguageList.length !== 0) {
+        const languageTags = [...this.props.selectedLanguageList].map(
             language => {
           return (
             <div key={language.id} style={SELECTED_OPTION_TAG_STYLE} >
               {language.name}
               <CloseButton
                 displayMode={this.props.displayMode}
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-                  this.handleRemoveLanguageTag(language.id)
-                }}
+                onClick={() => this.props.onRemoveLanguageClick(language.id)}
               />
             </div>);
         });
@@ -317,17 +320,15 @@ export class EditProfilePage extends React.Component<Properties, State> {
       return null;
     })();
     const selectedCuisines = (() => {
-      if (this.state.selectedCuisineList &&
-          this.state.selectedCuisineList.length !== 0) {
-        const cuisineTags = [...this.state.selectedCuisineList].map(cuisine => {
+      if (this.props.selectedCuisineList &&
+          this.props.selectedCuisineList.length !== 0) {
+        const cuisineTags = [...this.props.selectedCuisineList].map(cuisine => {
           return (
             <div key={cuisine.id} style={SELECTED_OPTION_TAG_STYLE} >
               {cuisine.label}
               <CloseButton
                 displayMode={this.props.displayMode}
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-                  this.handleRemoveCuisineTag(cuisine.id)
-                }}
+                onClick={() => this.props.onRemoveCuisineClick(cuisine.id)}
               />
             </div>);
         });
@@ -338,7 +339,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
       }
       return null;
     })();
-    const cuisineDropdown = (() => {
+    const cuisineDropdownRows = (() => {
       if (this.state.isCuisineDropdownDisplayed &&
           this.props.suggestedCuisineList &&
           this.props.suggestedCuisineList.length !== 0) {
@@ -349,24 +350,17 @@ export class EditProfilePage extends React.Component<Properties, State> {
                 key={cuisine.id}
                 style={DROPDOWN_ROW_STYLE}
                 className={css(styles.dropdownRow)}
-                onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-                  this.handleAddCuisineTag(cuisine)
-                }}
+                onClick={() => this.handleCuisineClick(cuisine)}
             >
               {cuisine.label}
             </div>);
         });
-        return (
-          <div
-              tabIndex={0}
-              ref={this._cuisineDropdownRef}
-              style={DROPDOWN_CONTAINER_STYLE}
-          >
-            {rows}
-          </div>);
+        return rows;
       }
       return null;
     })();
+    const cuisineDropdownStyle = (cuisineDropdownRows &&
+      DROPDOWN_CONTAINER_STYLE || {});
     const facebookErrorMessage = (!this.props.facebookInputIsValid &&
       <div style={SOCIAL_MEDIA_ERROR_MESSAGE_STYLE} >
         Please enter a valid URL.
@@ -485,7 +479,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
             placeholder='City, Province'
             type='text'
             onChange={this.handleLocationInputChange}
-            onFocus={this.handleDisplayLocationDropdown}
+            onFocus={this.handleLocationInputFocus}
             onBlur={this.handleLocationInputBlur}
           />
           <div
@@ -508,10 +502,16 @@ export class EditProfilePage extends React.Component<Properties, State> {
             placeholder='Start typing to add a language...'
             type='text'
             onChange={this.handleLanguageInputChange}
-            onFocus={this.handleDisplayLanguageDropdown}
-            onBlur={this.handleHideLanguageDropdown}
+            onFocus={this.handleLanguageInputFocus}
+            onBlur={this.handleLanguageInputBlur}
           />
-          {languageDropdown}
+          <div
+              tabIndex={0}
+              ref={this._languageDropdownRef}
+              style={languageDropdownStyle}
+          >
+            {languageDropdownRows}
+          </div>
           {selectedLanguages}
           <div style={ROW_CONTAINER_STYLE} >
             {biographyPrivacyButton}
@@ -582,10 +582,16 @@ export class EditProfilePage extends React.Component<Properties, State> {
             placeholder='Start typing to add a cuisine...'
             type='text'
             onChange={this.handleCuisineInputChange}
-            onFocus={this.handleDisplayCuisineDropdown}
-            onBlur={this.handleHideCuisineDropdown}
+            onFocus={this.handleCuisineInputFocus}
+            onBlur={this.handleCuisineInputBlur}
           />
-          {cuisineDropdown}
+          <div
+              tabIndex={0}
+              ref={this._cuisineDropdownRef}
+              style={cuisineDropdownStyle}
+          >
+            {cuisineDropdownRows}
+          </div>
           {selectedCuisines}
         </div>
         <SaveCancelStickyMenu
@@ -613,40 +619,20 @@ export class EditProfilePage extends React.Component<Properties, State> {
       event.stopPropagation();
       this.handleHideLocationDropdown();
     }
-  }
-
-  private handleAddLanguageTag = (selectedLanguage: Language) => {
-    this.setState({ isLanguageDropdownDisplayed: false });
-    if (this.state.selectedLanguageList.findIndex(language => language.id
-        === selectedLanguage.id) === -1) {
-      this.setState((state) => ({
-        selectedLanguageList: [...state.selectedLanguageList, selectedLanguage]
-      }));
+    if (this.state.isLanguageDropdownDisplayed &&
+        !this.state.isLanguageInputFocued &&
+        !this._languageDropdownRef.current.contains(event.target as Node)) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.handleHideLanguageDropdown();
     }
-  }
-
-  private handleRemoveLanguageTag = (id: number) => {
-    this.setState((prevState) => ({
-      selectedLanguageList: prevState.selectedLanguageList.filter(
-        language => language.id !== id)
-      }));
-  }
-
-  private handleAddCuisineTag = (selectedCuisine: Cuisine) => {
-    this.setState({ isCuisineDropdownDisplayed: false });
-    if (this.state.selectedCuisineList.findIndex(cuisine => cuisine.id ===
-        selectedCuisine.id) === -1) {
-      this.setState((state) => ({
-        selectedCuisineList: [...state.selectedCuisineList, selectedCuisine]
-      }));
+    if (this.state.isCuisineDropdownDisplayed &&
+        !this.state.isCuisineInputFocued &&
+        !this._cuisineDropdownRef.current.contains(event.target as Node)) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.handleHideCuisineDropdown();
     }
-  }
-
-  private handleRemoveCuisineTag = (id: number) => {
-    this.setState((prevState) => ({
-      selectedCuisineList: prevState.selectedCuisineList.filter(
-        cuisine => cuisine.id !== id)
-      }));
   }
 
   private handleLocationInputChange = (event: React.ChangeEvent<
@@ -654,7 +640,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
     this.props.onLocationInputChange(event.target.value);
   }
 
-  private handleDisplayLocationDropdown = () => {
+  private handleLocationInputFocus = () => {
     this.setState({
       isLocationDropdownDisplayed: true,
       isLocationInputFocused: true
@@ -669,20 +655,34 @@ export class EditProfilePage extends React.Component<Properties, State> {
     this.setState({ isLocationDropdownDisplayed: false });
   }
 
+  private handleLocationDropdownClick = (location: CityProvince) => {
+    this.props.onLocationDropdownClick(location);
+    this.handleHideLocationDropdown();
+  }
+
   private handleLanguageInputChange = (event: React.ChangeEvent<
       HTMLInputElement>) => {
     this.props.onLanguageInputChange(event.target.value);
   }
 
-  private handleDisplayLanguageDropdown = () => {
-    this.setState({ isLanguageDropdownDisplayed: true });
+  private handleLanguageInputFocus = () => {
+    this.setState({
+      isLanguageDropdownDisplayed: true,
+      isLanguageInputFocued: true
+    });
   }
 
-  private handleHideLanguageDropdown = (event: React.FocusEvent<
-      HTMLInputElement>) => {
-    const isLanguageDropdownDisplayed = event.relatedTarget &&
-      this._languageDropdownRef.current.contains(event.relatedTarget);
-    this.setState({ isLanguageDropdownDisplayed });
+  private handleLanguageInputBlur = () => {
+    this.setState({ isLanguageInputFocued: false });
+  }
+
+  private handleHideLanguageDropdown = () => {
+    this.setState({ isLanguageDropdownDisplayed: false });
+  }
+
+  private handleLanguageClick = (selectedLanguage: Language) => {
+    this.props.onLanguageDropdownClick(selectedLanguage);
+    this.handleHideLanguageDropdown();
   }
 
   private handleFacebookInputChange = (event: React.ChangeEvent<
@@ -705,21 +705,24 @@ export class EditProfilePage extends React.Component<Properties, State> {
     this.props.onCuisineInputChange(event.target.value);
   }
 
-  private handleDisplayCuisineDropdown = (event: React.FocusEvent<
-      HTMLInputElement>) => {
-    this.setState({ isCuisineDropdownDisplayed: true });
+  private handleCuisineInputFocus = () => {
+    this.setState({
+      isCuisineDropdownDisplayed: true,
+      isCuisineInputFocued: true
+    });
   }
 
-  private handleHideCuisineDropdown = (event: React.FocusEvent<
-      HTMLInputElement>) => {
-    const isCuisineDropdownDisplayed = event.relatedTarget &&
-      this._cuisineDropdownRef.current.contains(event.relatedTarget);
-    this.setState({ isCuisineDropdownDisplayed });
+  private handleCuisineInputBlur = () => {
+    this.setState({ isCuisineInputFocued: false });
   }
 
-  private handleLocationDropdownClick = (location: CityProvince) => {
-    this.props.onLocationDropdownClick(location);
-    this.handleHideLocationDropdown();
+  private handleHideCuisineDropdown = () => {
+    this.setState({ isCuisineDropdownDisplayed: false });
+  }
+
+  private handleCuisineClick = (selectedCuisine: Cuisine) => {
+    this.props.onCuisineDropdownClick(selectedCuisine);
+    this.handleHideCuisineDropdown();
   }
 
   private _languageDropdownRef: React.RefObject<HTMLDivElement>;

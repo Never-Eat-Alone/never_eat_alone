@@ -45,6 +45,18 @@ export class DemoEditProfilePageModel extends
     return;
   }
 
+  public get locationList(): NeverEatAlone.CityProvince[] {
+    return this._locationList;
+  }
+
+  public get languageList(): NeverEatAlone.Language[] {
+    return this._languageList;
+  }
+
+  public get cuisineList(): NeverEatAlone.Cuisine[] {
+    return this._cuisineList;
+  }
+
   public get coverImageSrc(): string {
     return this._coverImageSrc;
   }
@@ -100,12 +112,14 @@ export class DemoEditProfilePageModel extends
 
   public async getSuggestedLanguageList(value: string): Promise<
       NeverEatAlone.Language[]> {
-    return [];
+    return this._languageList.filter((language) =>
+      language.name.toLowerCase().indexOf(value.toLocaleLowerCase()) !== -1);
   }
 
   public async getSuggestedCuisineList(value: string): Promise<
       NeverEatAlone.Cuisine[]> {
-    return [];
+    return this._cuisineList.filter((cuisine) =>
+      cuisine.label.toLowerCase().indexOf(value.toLocaleLowerCase()) !== -1);
   }
 
   public get biographyValue(): string {
