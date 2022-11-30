@@ -2,6 +2,7 @@ export * from './array_json';
 export * from './attendee';
 export * from './attendee_status';
 export * from './city_province';
+export * from './cover_image';
 export * from './credit_card_type';
 export * from './cuisine';
 export * from './display_mode';
