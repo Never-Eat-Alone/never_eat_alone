@@ -2,7 +2,8 @@ import * as NeverEatAlone from 'never_eat_alone';
 
 export class DemoEditProfilePageModel extends
     NeverEatAlone.EditProfilePageModel {
-  constructor(coverImageSrc: string, profileImageSrc: string,
+  constructor(coverImage: NeverEatAlone.CoverImage, coverImageList:
+      NeverEatAlone.CoverImage[], profileImageSrc: string,
       displayName: string, userName: string, profileUserId: number,
       isUpcomingEventsPrivate: boolean, isPastEventsPrivate: boolean,
       isLocationPrivate: boolean, isLanguagePrivate: boolean,
@@ -15,7 +16,8 @@ export class DemoEditProfilePageModel extends
       locationList: NeverEatAlone.CityProvince[], languageList:
       NeverEatAlone.Language[], cuisineList: NeverEatAlone.Cuisine[]) {
     super();
-    this._coverImageSrc = coverImageSrc;
+    this._coverImage = coverImage;
+    this._coverImageList = coverImageList;
     this._profileImageSrc = profileImageSrc;
     this._displayName = displayName;
     this._userName = userName;
@@ -57,8 +59,12 @@ export class DemoEditProfilePageModel extends
     return this._cuisineList;
   }
 
-  public get coverImageSrc(): string {
-    return this._coverImageSrc;
+  public get coverImage(): NeverEatAlone.CoverImage {
+    return this._coverImage;
+  }
+
+  public get coverImageList(): NeverEatAlone.CoverImage[] {
+    return this._coverImageList;
   }
 
   public get profileImageSrc(): string {
@@ -166,24 +172,26 @@ export class DemoEditProfilePageModel extends
     return this._instagramLink;
   }
 
-  public async uploadProfileImage(): Promise<string> {
-    return '';
+  public async uploadProfileImage(): Promise<void> {
+    return;
   }
 
-  public async uploadCoverImage(): Promise<string> {
-    return '';
+  public async saveCoverImage(newImage: NeverEatAlone.CoverImage): Promise<
+      void> {
+    this._coverImage = newImage;
+    return;
   }
 
-  public async save(coverImageSrc: string, profileImageSrc: string,
-      isUpcomingEventsPrivate: boolean, isPastEventsPrivate: boolean,
-      isLocationPrivate: boolean, isLanguagePrivate: boolean,
-      biographyValue: string, isBiographyPrivate: boolean,
-      selectedLanguageList: NeverEatAlone.Language[],
-      selectedCuisineList: NeverEatAlone.Cuisine[], isCuisinePrivate: boolean,
-      isFacebookPrivate: boolean, isTwitterPrivate: boolean,
-      isInstagramPrivate: boolean, facebookLink: string, twitterLink: string,
-      instagramLink: string): Promise<void> {
-    this._coverImageSrc = coverImageSrc;
+  public async save(coverImage: NeverEatAlone.CoverImage,
+      profileImageSrc: string, isUpcomingEventsPrivate: boolean,
+      isPastEventsPrivate: boolean, isLocationPrivate: boolean,
+      isLanguagePrivate: boolean, biographyValue: string,
+      isBiographyPrivate: boolean, selectedLanguageList:
+      NeverEatAlone.Language[], selectedCuisineList: NeverEatAlone.Cuisine[],
+      isCuisinePrivate: boolean, isFacebookPrivate: boolean, isTwitterPrivate:
+      boolean, isInstagramPrivate: boolean, facebookLink: string, twitterLink:
+      string, instagramLink: string): Promise<void> {
+    this._coverImage = coverImage;
     this._profileImageSrc = profileImageSrc;
     this._isUpcomingEventsPrivate = isUpcomingEventsPrivate;
     this._isPastEventsPrivate = isPastEventsPrivate;
@@ -204,7 +212,8 @@ export class DemoEditProfilePageModel extends
     return;
   }
 
-  private _coverImageSrc: string;
+  private _coverImage: NeverEatAlone.CoverImage;
+  private _coverImageList: NeverEatAlone.CoverImage[];
   private _profileImageSrc: string;
   private _displayName: string;
   private _userName: string;

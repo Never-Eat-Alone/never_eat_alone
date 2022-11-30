@@ -1,16 +1,17 @@
 import { ProfilePageModel } from './profile_page_model';
-import { EventCardSummary, Cuisine, CityProvince } from '../../definitions';
+import { EventCardSummary, CoverImage, Cuisine, CityProvince
+} from '../../definitions';
 
 export class LocalProfilePageModel extends ProfilePageModel {
-  constructor(profileId: number, coverImageSrc: string, profileImageSrc: string,
-      name: string, userName: string, createdAt: Date, biography: string,
-      location: CityProvince, languageList: string[], facebookLink: string,
-      twitterLink: string, instagramLink: string, favoriteCuisineList:
+  constructor(profileId: number, coverImage: CoverImage, profileImageSrc:
+      string, name: string, userName: string, createdAt: Date, biography:
+      string, location: CityProvince, languageList: string[], facebookLink:
+      string, twitterLink: string, instagramLink: string, favoriteCuisineList:
       Cuisine[], upcomingEventList: EventCardSummary[], pastEventList:
       EventCardSummary[]) {
     super();
     this._profileId = profileId;
-    this._coverImageSrc = coverImageSrc;
+    this._coverImage = coverImage;
     this._profileImageSrc = profileImageSrc;
     this._name = name;
     this._userName = userName;
@@ -34,8 +35,8 @@ export class LocalProfilePageModel extends ProfilePageModel {
     return this._profileId;
   }
 
-  public get coverImageSrc(): string {
-    return this._coverImageSrc;
+  public get coverImage(): CoverImage {
+    return this._coverImage;
   }
 
   public get profileImageSrc(): string {
@@ -91,7 +92,7 @@ export class LocalProfilePageModel extends ProfilePageModel {
   }
 
   private _profileId: number;
-  private _coverImageSrc: string;
+  private _coverImage: CoverImage;
   private _profileImageSrc: string;
   private _name: string;
   private _userName: string;

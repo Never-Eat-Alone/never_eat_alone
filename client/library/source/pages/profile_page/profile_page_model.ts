@@ -1,4 +1,5 @@
-import { CityProvince, Cuisine, EventCardSummary } from '../../definitions';
+import { CityProvince, CoverImage, Cuisine, EventCardSummary
+} from '../../definitions';
 
 export abstract class ProfilePageModel {
   /** Loads the data displayed on the profile page. Must be called before other 
@@ -6,7 +7,7 @@ export abstract class ProfilePageModel {
    */
   public abstract load(): Promise<void>;
   public abstract get profileId(): number;
-  public abstract get coverImageSrc(): string;
+  public abstract get coverImage(): CoverImage;
   public abstract get profileImageSrc(): string;
   public abstract get name(): string;
   public abstract get userName(): string;
