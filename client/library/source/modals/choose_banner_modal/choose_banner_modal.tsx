@@ -33,9 +33,18 @@ export class ChooseBannerModal extends React.Component<Properties, State> {
   }
 
   public render(): JSX.Element {
-    const contentContainerStyle = (this.props.displayMode ===
-      DisplayMode.MOBILE && MOBILE_CONTENT_CONTAINER_STYLE ||
-      CONTENT_CONTAINER_STYLE);
+    const { containerStyle, contentContainerStyle } = (() => {
+      if (this.props.displayMode === DisplayMode.MOBILE) {
+        return {
+          containerStyle: MOBILE_CONTAINER_STYLE,
+          contentContainerStyle: MOBILE_CONTENT_CONTAINER_STYLE
+        };
+      }
+      return {
+        containerStyle: CONTAINER_STYLE,
+        contentContainerStyle: CONTENT_CONTAINER_STYLE
+      };
+    })();
     const imageList = [];
     for (const image of this.props.coverImageList) {
       const border = (image.id === this.state.selectedImage.id &&
@@ -45,10 +54,9 @@ export class ChooseBannerModal extends React.Component<Properties, State> {
           <img style={IMAGE_STYLE} src={image.src} alt={image.alt} />
         </div>);
     }
-
     return (
       <div style={FORM_STYLE} >
-        <div ref={this._containerRef}  >
+        <div ref={this._containerRef} style={containerStyle} >
           <CloseButton
             style={CLOSE_BUTTON_STYLE}
             displayMode={this.props.displayMode}
@@ -56,7 +64,7 @@ export class ChooseBannerModal extends React.Component<Properties, State> {
           />
           <div style={contentContainerStyle} >
             <h1 style={HEADING_STYLE} >CHOOSE A BANNER PATTERN:</h1>
-            <div>
+            <div style={IMAGE_SECTION_STYLE} >
               {imageList}
             </div>
             <PrimaryTextButton
@@ -162,6 +170,16 @@ const HEADING_STYLE: React.CSSProperties = {
   padding: '0px'
 };
 
+const IMAGE_SECTION_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'flex-start',
+  flexWrap: 'wrap',
+  width: '100%',
+  gap: '15px'
+};
+
 const IMAGE_CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
@@ -184,5 +202,7 @@ const DONE_BUTTON_STYLE: React.CSSProperties = {
   width: '102px',
   minWidth: '102px',
   height: '35px',
-  minHeight: '35px'
+  minHeight: '35px',
+  fontSize: '12px',
+  lineHeight: '15px'
 };
