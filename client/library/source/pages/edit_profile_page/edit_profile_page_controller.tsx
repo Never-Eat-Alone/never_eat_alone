@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
-import { CityProvince, Cuisine, DisplayMode, Language, User
+import { CityProvince, CoverImage, Cuisine, DisplayMode, Language, User
 } from '../../definitions';
 import { EditProfilePage } from './edit_profile_page';
 import { EditProfilePageModel } from './edit_profile_page_model';
@@ -15,7 +15,7 @@ interface State {
   isLoaded: boolean;
   hasError: boolean;
   redirect: string;
-  coverImageSrc: string;
+  coverImage: CoverImage;
   profileImageSrc: string;
   locationValue: string;
   selectedLocation: CityProvince;
@@ -52,7 +52,7 @@ export class EditProfilePageController extends React.Component<Properties,
       isLoaded: false,
       hasError: false,
       redirect: null,
-      coverImageSrc: '',
+      coverImage: CoverImage.default(),
       profileImageSrc: '',
       locationValue: '',
       suggestedLocationList: [],
@@ -93,7 +93,8 @@ export class EditProfilePageController extends React.Component<Properties,
       displayName={this.props.model.displayName}
       userName={this.props.model.userName}
       profileUserId={this.props.model.profileUserId}
-      coverImageSrc={this.state.coverImageSrc}
+      coverImage={this.state.coverImage}
+      coverImageList={this.props.model.coverImageList}
       profileImageSrc={this.state.profileImageSrc}
       isUpcomingEventsPrivate={this.state.isUpcomingEventsPrivate}
       isPastEventsPrivate={this.state.isPastEventsPrivate}
@@ -123,7 +124,7 @@ export class EditProfilePageController extends React.Component<Properties,
       onLocationPrivacyClick={this.handleLocationPrivacyClick}
       onLocationDropdownClick={this.handleLocationDropdownClick}
       onChangeProfileImageClick={this.handleChangeProfileImageClick}
-      onChangeBanner={this.handleChangeBanner}
+      onChangeBannerDone={this.handleChangeBannerDone}
       onUpcomingEventPrivacyClick={this.handleUpcomingEventPrivacyClick}
       onPastEventPrivacyClick={this.handlePastEventPrivacyClick}
       onLanguagePrivacyClick={this.handleLanguagePrivacyClick}
@@ -152,7 +153,7 @@ export class EditProfilePageController extends React.Component<Properties,
       await this.props.model.load();
       this.setState({
         isLoaded: true,
-        coverImageSrc: this.props.model.coverImageSrc,
+        coverImage: this.props.model.coverImage,
         profileImageSrc: this.props.model.profileImageSrc,
         locationValue: `${this.props.model.selectedLocation.city}, ${
           this.props.model.selectedLocation.province}`,
@@ -339,8 +340,7 @@ export class EditProfilePageController extends React.Component<Properties,
 
   private handleChangeProfileImageClick = async () => {
     try {
-      const profileImageSrc = await this.props.model.uploadProfileImage();
-      this.setState({ profileImageSrc: profileImageSrc });
+      await this.props.model.uploadProfileImage();
     } catch {
       //pass
     }
@@ -376,12 +376,12 @@ export class EditProfilePageController extends React.Component<Properties,
     this.setState({ twitterLink: newValue });
   }
 
-  private handleChangeBanner = async () => {
+  private handleChangeBannerDone = async (newImage: CoverImage) => {
     try {
-      const coverImageSrc = await this.props.model.uploadCoverImage();
-      this.setState({ coverImageSrc: coverImageSrc });
+      await this.props.model.saveCoverImage(newImage);
+      this.setState({ coverImage: newImage });
     } catch {
-      //pass
+      // pass
     }
   }
 
@@ -393,7 +393,7 @@ export class EditProfilePageController extends React.Component<Properties,
 
   private handleSave = async () => {
     try {
-      await this.props.model.save(this.state.coverImageSrc,
+      await this.props.model.save(this.state.coverImage,
         this.state.profileImageSrc, this.state.isUpcomingEventsPrivate,
         this.state.isPastEventsPrivate, this.state.isLocationPrivate,
         this.state.isLanguagePrivate, this.state.biographyValue,

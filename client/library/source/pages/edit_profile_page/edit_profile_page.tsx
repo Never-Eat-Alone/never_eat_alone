@@ -1,10 +1,11 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 import { CloseButton, InputField, InputFieldWithIcon,
-  InvertedSecondaryTextButton, PublicButton, PrivateButton, RedNavLink,
+  InvertedSecondaryTextButton, Modal, PublicButton, PrivateButton, RedNavLink,
   SaveCancelStickyMenu, TextareaWithCounter } from '../../components';
-import { CityProvince, Cuisine, DisplayMode, Language
+import { CityProvince, CoverImage, Cuisine, DisplayMode, Language
 } from '../../definitions';
+import { ChooseBannerModal } from '../../modals';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -13,7 +14,9 @@ interface Properties {
   profileUserId: number;
 
   /** The source address of the user's cover image. */
-  coverImageSrc: string;
+  coverImage: CoverImage;
+
+  coverImageList: CoverImage[];
 
   /** The source address of the user's profile image. */
   profileImageSrc: string;
@@ -102,8 +105,8 @@ interface Properties {
   /** Indicates the change profile image button is clicked. */
   onChangeProfileImageClick: () => void;
 
-  /** Indicates the change banner's button is clicked. */
-  onChangeBanner: () => void;
+  /** Indicates the change banner modal's Done button is clicked. */
+  onChangeBannerDone: (newImage: CoverImage) => void;
 
   /** Indicates the upcoming events's privacy button is clicked. */
   onUpcomingEventPrivacyClick: () => void;
@@ -173,6 +176,7 @@ interface State {
   isLanguageDropdownDisplayed: boolean;
   isCuisineInputFocued: boolean;
   isCuisineDropdownDisplayed: boolean;
+  isChangeBanner: boolean;
 }
 
 /** Displays the edit profile page. */
@@ -185,7 +189,8 @@ export class EditProfilePage extends React.Component<Properties, State> {
       isCuisineDropdownDisplayed: false,
       isLanguageInputFocued: false,
       isCuisineInputFocued: false,
-      isLocationInputFocused: false
+      isLocationInputFocused: false,
+      isChangeBanner: false
     };
     this._languageDropdownRef = React.createRef<HTMLDivElement>();
     this._cuisineDropdownRef = React.createRef<HTMLDivElement>();
@@ -193,6 +198,16 @@ export class EditProfilePage extends React.Component<Properties, State> {
   }
 
   public render(): JSX.Element {
+    const chooseBannerModal = (this.state.isChangeBanner &&
+      <Modal>
+        <ChooseBannerModal
+          displayMode={this.props.displayMode}
+          selectedImage={this.props.coverImage}
+          coverImageList={this.props.coverImageList}
+          onDone={this.props.onChangeBannerDone}
+          onClose={this.handleModalClose}
+        />
+      </Modal>);
     const { containerStyle, coverImageStyle, changeBannerButtonStyle,
         contentContainerStyle, imagePrivacyContainerStyle } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
@@ -373,19 +388,24 @@ export class EditProfilePage extends React.Component<Properties, State> {
       <div style={SOCIAL_MEDIA_ERROR_MESSAGE_STYLE} >
         Please enter a valid URL.
       </div> || null);
+    const backgroundImageStyle = (() => {
+      if (this.props.coverImage.id === -1) {
+        return { backgroundImage: 'none' };
+      }
+      return { backgroundImage: `url(${this.props.coverImage.src})` };
+    })();
     return (
       <div style={{...CONTAINER_STYLE, ...containerStyle}} >
+        {chooseBannerModal}
         <div
-          style={{...COVER_IMAGE_STYLE,
-            backgroundImage: `url(${this.props.coverImageSrc})`,
-            ...coverImageStyle
-          }}
+          style={{...COVER_IMAGE_STYLE, ...backgroundImageStyle,
+            ...coverImageStyle}}
         />
         <InvertedSecondaryTextButton
           style={changeBannerButtonStyle}
           label='Change Banner'
           labelStyle={CHANGE_BANNER_LABEL_STYLE}
-          onClick={this.props.onChangeBanner}
+          onClick={this.handleChangeBannerClick}
         />
         <div style={contentContainerStyle} >
           <div style={imagePrivacyContainerStyle} >
@@ -723,6 +743,14 @@ export class EditProfilePage extends React.Component<Properties, State> {
   private handleCuisineClick = (selectedCuisine: Cuisine) => {
     this.props.onCuisineDropdownClick(selectedCuisine);
     this.handleHideCuisineDropdown();
+  }
+
+  private handleChangeBannerClick = () => {
+    this.setState({ isChangeBanner: true });
+  }
+
+  private handleModalClose = () => {
+    this.setState({ isChangeBanner: false });
   }
 
   private _languageDropdownRef: React.RefObject<HTMLDivElement>;

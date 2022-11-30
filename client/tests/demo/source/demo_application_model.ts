@@ -299,28 +299,40 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const arthurFavoriteCuisines = [traditionalCuisine, steakhouseCuisine];
     const lucyFavoriteCuisines = [seafoodCuisine, chineseCuisine];
     const eventCardSummaryList = [];
+    const coverImage1 = new NeverEatAlone.CoverImage(1,
+      'resources/profile_page/images/default_banner_1.jpg', 'Taco Banner');
+    const coverImage2 = new NeverEatAlone.CoverImage(2,
+      'resources/profile_page/images/default_banner_2.jpg', 'Burger Banner');
+    const coverImage3 = new NeverEatAlone.CoverImage(3,
+      'resources/profile_page/images/default_banner_3.jpg', 'Sushi Banner');
+    const coverImage4 = new NeverEatAlone.CoverImage(4,
+      'resources/profile_page/images/default_banner_4.jpg', 'Wine Banner');
+    const coverImage5 = new NeverEatAlone.CoverImage(5,
+      'resources/profile_page/images/default_banner_5.jpg', 'Coffee Banner');
+    const coverImageList = [coverImage1, coverImage2, coverImage3, coverImage4,
+      coverImage5];
     this._profilePageModelMap = new Map();
     // User Profile Page Model for userEmma
-    const emmaCoverImageSrc = 'resources/profile_page/images/default_banner_2.png';
+    const emmaCoverImage = coverImage2;
     const emmaBio = 'Hello everyone! My name is Emma and I would love to meet you all and try new foods.';
     const emmaInstagramLink = 'www.instagram.com/@emma12';
     const emmaLocation = barrie;
     const demoProfilePageModel1 = new NeverEatAlone.LocalProfilePageModel(1,
-      emmaCoverImageSrc, emmaProfileImage.src, userEmma.name, userEmma.userName,
-      userEmma.createdAt, emmaBio, emmaLocation, emmaLanguageNameList, '', '',
-      emmaInstagramLink, emmaFavoriteCuisines, [], [
-      new NeverEatAlone.EventCardSummary(1, 'A night to remmeber at the best \
+      emmaCoverImage, emmaProfileImage.src, userEmma.name,
+      userEmma.userName, userEmma.createdAt, emmaBio, emmaLocation,
+      emmaLanguageNameList, '', '', emmaInstagramLink, emmaFavoriteCuisines, [],
+      [new NeverEatAlone.EventCardSummary(1, 'A night to remmeber at the best \
       sushi restaurant in town!', new Date(2022, 6, 12, 19, 0, 0), new Date(
       2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
       NeverEatAlone.PriceRange.VERY_EXPENSIVE, [japaneseCuisine,
       omakaseCuisine], 'resources/images/3.jpg', 6, 6, false, '#E1630D')]);
     this._profilePageModelMap.set(1, demoProfilePageModel1);
     // User Profile Page Model for userArthur
+    const arthurCoverImage = coverImage1;
     const demoProfilePageModel2 = new NeverEatAlone.LocalProfilePageModel(2,
-      'resources/profile_page/images/default_banner_1.png',
-      arthurProfileImage.src, userArthur.name, userArthur.userName,
-      userArthur.createdAt, 'Ready to explore Toronto.', vancouver,
-      arthurLanguageList, 'www.facebook.com/arthur_van',
+      arthurCoverImage, arthurProfileImage.src, userArthur.name,
+      userArthur.userName, userArthur.createdAt, 'Ready to explore Toronto.',
+      vancouver, arthurLanguageList, 'www.facebook.com/arthur_van',
       'www.twitter.com/@vanfan', '', arthurFavoriteCuisines, [
       new NeverEatAlone.EventCardSummary(7, 'Calling all the french food \
       lovers', new Date(2023, 1, 10, 19, 30, 0), new Date(2022, 6, 13, 1, 0,
@@ -339,15 +351,15 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       false, '#B3A870')]);
     this._profilePageModelMap.set(2, demoProfilePageModel2);
     // User Profile Page Model for userLucy
+    const lucyCoverImage = coverImage5;
     const demoProfilePageModel3 = new NeverEatAlone.LocalProfilePageModel(3,
-      'resources/profile_page/images/default_banner_5.jpg',
-      'resources/images/profile2.jpeg', 'Lucy', 'lu2d3', new Date(2022, 4, 2, 2,
-      30, 40), 'Matcha everything!', toronto, lucyLanguageList, '', '', '',
-      lucyFavoriteCuisines, [new NeverEatAlone.EventCardSummary(5,
-      'Steak night', new Date(2022, 6, 12, 19, 0, 0), new Date(2022, 6, 13, 1,
-      0, 0), "Hy's Steakhouse and bar", NeverEatAlone.PriceRange.VERY_EXPENSIVE,
-      [steakhouseCuisine, seafoodCuisine], 'resources/images/5.jpg', 6, 6,
-      false, '#AC4519')], []);
+      lucyCoverImage, 'resources/images/profile2.jpeg', 'Lucy', 'lu2d3',
+      new Date(2022, 4, 2, 2, 30, 40), 'Matcha everything!', toronto,
+      lucyLanguageList, '', '', '', lucyFavoriteCuisines, [
+      new NeverEatAlone.EventCardSummary(5, 'Steak night', new Date(2022, 6, 12,
+      19, 0, 0), new Date(2022, 6, 13, 1, 0, 0), "Hy's Steakhouse and bar",
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [steakhouseCuisine,
+      seafoodCuisine], 'resources/images/5.jpg', 6, 6, false, '#AC4519')], []);
     this._profilePageModelMap.set(3, demoProfilePageModel3);
     // Setting up the _editProfilePageModel map.
     this._editProfilePageModel = new Map();
@@ -362,10 +374,10 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       omakaseCuisine, persianCuisine, seafoodCuisine, steakhouseCuisine,
       traditionalCuisine];
     const demoEditProfilePageModel1 = new DemoEditProfilePageModel(
-      emmaCoverImageSrc, emmaProfileImage.src, 'Emma', 'emma', 1, false, false,
-      false, false, emmaBio, false, emmaLanguageList, emmaFavoriteCuisines,
-      false, false, false, false, '', '', emmaInstagramLink, emmaLocation,
-      locationList, languageList, cuisineList);
+      emmaCoverImage, coverImageList, emmaProfileImage.src, 'Emma', 'emma',
+      1, false, false, false, false, emmaBio, false, emmaLanguageList,
+      emmaFavoriteCuisines, false, false, false, false, '', '',
+      emmaInstagramLink, emmaLocation, locationList, languageList, cuisineList);
     this._editProfilePageModel.set(1, demoEditProfilePageModel1);
     await Promise.all([this._headerModel.load(), this._homePageModel.load(),
       this._inviteAFoodieModel.load()]);

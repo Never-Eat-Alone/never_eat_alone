@@ -50,10 +50,29 @@ export class ChooseBannerModal extends React.Component<Properties, State> {
       const border = (image.id === this.state.selectedImage.id &&
         '3px solid #5EC745' || 'none');
       imageList.push(
-        <div key={image.id} style={{...IMAGE_CONTAINER_STYLE, border: border}} >
+        <div
+            key={image.id}
+            style={{...IMAGE_CONTAINER_STYLE, border: border}}
+            onClick={() => this.handleCoverImageClick(image)}
+        >
           <img style={IMAGE_STYLE} src={image.src} alt={image.alt} />
         </div>);
     }
+    const noCoverImage = CoverImage.NoImage();
+    const greyCoverBorder = (this.state.selectedImage.id === noCoverImage.id &&
+      '3px solid #5EC745' || 'none');
+    imageList.push(
+      <div
+          key='No_Cover_Image'
+          style={{...IMAGE_CONTAINER_STYLE, border: greyCoverBorder}}
+          onClick={() => this.handleCoverImageClick(noCoverImage)}
+      >
+        <img
+          src={noCoverImage.src}
+          style={GREY_IMAGE_STYLE}
+          alt={noCoverImage.alt}
+        />
+      </div>);
     return (
       <div style={FORM_STYLE} >
         <div ref={this._containerRef} style={containerStyle} >
@@ -96,6 +115,11 @@ export class ChooseBannerModal extends React.Component<Properties, State> {
 
   private handleDoneClick = () => {
     this.props.onDone(this.state.selectedImage);
+    this.props.onClose();
+  }
+
+  private handleCoverImageClick = (newImage: CoverImage) => {
+    this.setState({ selectedImage: newImage });
   }
 
   private _containerRef: React.RefObject<HTMLDivElement>;
@@ -126,8 +150,7 @@ const CONTAINER_STYLE: React.CSSProperties = {
   boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
   borderRadius: '4px',
   overflow: 'hidden',
-  backgroundColor: '#FFFFFF',
-  gap: '30px'
+  backgroundColor: '#FFFFFF'
 };
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
@@ -143,8 +166,13 @@ const CLOSE_BUTTON_STYLE: React.CSSProperties = {
 
 const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
   padding: '50px',
-  width: '100%'
+  width: '100%',
+  gap: '30px'
 };
 
 const MOBILE_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
@@ -187,15 +215,22 @@ const IMAGE_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'center',
   alignItems: 'center',
   width: '100px',
-  height: '100px'
+  height: '100px',
+  backgroundColor: '#969696'
 };
 
 const IMAGE_STYLE: React.CSSProperties = {
   width: '100%',
   height: '100%',
-  minWidth: '100px',
-  minHeight: '100px',
   objectFit: 'cover'
+};
+
+const GREY_IMAGE_STYLE: React.CSSProperties = {
+  width: '50px',
+  minWidth: '50px',
+  height: '50px',
+  minHeight: '50px',
+  backgroundColor: 'transparent'
 };
 
 const DONE_BUTTON_STYLE: React.CSSProperties = {
