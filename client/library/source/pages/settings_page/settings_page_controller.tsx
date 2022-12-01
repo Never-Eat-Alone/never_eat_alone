@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { DisplayMode } from '../../definitions';
+import { AddCreditCardForm } from '../../components';
+import { DisplayMode, PaymentCard } from '../../definitions';
+import { CardDetailsForm } from './card_details_form';
 import { SettingsPage } from './settings_page';
 import { SettingsPageModel } from './settings_page_model';
 
@@ -18,7 +20,10 @@ interface State {
   isSomeoneJoinedNotificationOn: boolean;
   isFoodieAcceptedInviteNotificationOn: boolean;
   isAnnouncementNotificationOn: boolean;
-
+  addCardErrorCode: AddCreditCardForm.ErrorCode;
+  updateCardErrorCode: CardDetailsForm.ErrorCode;
+  paymentCards: PaymentCard[];
+  defaultCard: PaymentCard;
 }
 
 export class SettingPageController extends React.Component<Properties, State> {
@@ -34,6 +39,11 @@ export class SettingPageController extends React.Component<Properties, State> {
       isSomeoneJoinedNotificationOn: false,
       isFoodieAcceptedInviteNotificationOn: false,
       isAnnouncementNotificationOn: false,
+      addCardErrorCode: AddCreditCardForm.ErrorCode.NONE,
+      updateCardErrorCode: CardDetailsForm.ErrorCode.NONE,
+      paymentCards: [],
+      defaultCard: PaymentCard.noCard(),
+
     };
   }
 
@@ -53,18 +63,18 @@ export class SettingPageController extends React.Component<Properties, State> {
       isEventRemindersNotificationOn={this.state.isEventRemindersNotificationOn}
       isChangesNotificationOn={this.state.isChangesNotificationOn}
       isSomeoneJoinedNotificationOn={this.state.isSomeoneJoinedNotificationOn}
-      isFoodieAcceptedInviteNotificationOn={this.state.isFoodieAcceptedInviteNotificationOn}
+      isFoodieAcceptedInviteNotificationOn={
+        this.state.isFoodieAcceptedInviteNotificationOn}
       isAnnouncementNotificationOn={this.state.isAnnouncementNotificationOn}
       defaultCard={this.props.model.defaultCard}
-      otherPaymentCards={this.props.model.otherPaymentCards}
+      paymentCards={this.props.model.paymentCards}
       paymentRecords={this.props.model.paymentRecords}
-      addCardErrorMessage={}
+      addCardErrorMessage=''
       addCardErrorCode={this.state.addCardErrorCode}
-      updateCardErrorMessage={}
-      updateCardErrorCode={}
-      onAddCard={}
-      onUpdateCard={}
-      onMakeDefaultCard={}
+      updateCardErrorMessage=''
+      updateCardErrorCode={this.state.updateCardErrorCode}
+      onAddCard={this.handleAddCard}
+      onUpdateCard={this.handleUpdateCard}
       onDeleteCard={}
       onNewEventsToggle={this.handleNewEventsToggle}
       onEventJoinedToggle={this.handleEventJoinedToggle}
@@ -101,7 +111,9 @@ export class SettingPageController extends React.Component<Properties, State> {
           this.props.model.isFoodieAcceptedInviteNotificationOn,
         isAnnouncementNotificationOn:
           this.props.model.isAnnouncementNotificationOn,
-        
+        paymentCards: this.props.model.paymentCards,
+        defaultCard: this.props.model.defaultCard,
+
       });
     } catch {
       this.setState({ isLoaded: true, hasError: true });
@@ -143,5 +155,45 @@ export class SettingPageController extends React.Component<Properties, State> {
   private handleAnnouncementToggle = () => {
     this.setState((prevState) => ({ isAnnouncementNotificationOn:
       !prevState.isAnnouncementNotificationOn }));
+  }
+
+  private handleAddCard = async (cardNumber: number, nameOnCard: string,
+      month: number, year: number, securityCode: number, zipcode: string) => {
+    try {
+      const response = await this.props.model.addCard(cardNumber, nameOnCard,
+        month, year, securityCode, zipcode);
+      if (response.id !== -1) {
+        this.setState({
+          addCardErrorCode: AddCreditCardForm.ErrorCode.NONE,
+          paymentCards: this.props.model.paymentCards
+        });
+      }
+    } catch {
+      this.setState({
+        addCardErrorCode: AddCreditCardForm.ErrorCode.INVALID_CARD_INFO
+      });
+    }
+  }
+
+  private handleUpdateCard = async (newCard: PaymentCard, isMarkedAsDefault:
+      boolean) => {
+    try {
+      const response = await this.props.model.updateCard(newCard,
+        isMarkedAsDefault);
+      if (response.id !== -1) {
+        this.setState({
+          paymentCards: this.props.model.paymentCards,
+          defaultCard: this.props.model.defaultCard,
+          updateCardErrorCode: CardDetailsForm.ErrorCode.NONE
+        });
+      }
+      this.setState({
+        updateCardErrorCode: CardDetailsForm.ErrorCode.INVALID_UPDATE_CARD_INPUT
+      });
+    } catch {
+      this.setState({
+        updateCardErrorCode: CardDetailsForm.ErrorCode.NO_CONNECTION
+      });
+    }
   }
 }

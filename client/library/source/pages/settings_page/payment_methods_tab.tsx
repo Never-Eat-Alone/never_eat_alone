@@ -9,7 +9,7 @@ interface Properties {
   displayMode: DisplayMode;
 
   /** User's list of existing cards on file other than the default card. */
-  otherPaymentCards: PaymentCard[];
+  paymentCards: PaymentCard[];
 
   /** User's default payment card. */
   defaultCard: PaymentCard;
@@ -29,8 +29,6 @@ interface Properties {
   /** Indicates the Add card button is clicked. */
   onAddCard: (cardNumber: number, cardName: string, month: number, year: number,
     securityCode: number, zipcode: string) => void;
-
-  onMakeDefaultCard: (cardId: number) => void;
 
   /** Indicates the delete card button is clicked. */
   onDeleteCard: (cardId: number) => void;
@@ -72,10 +70,8 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
               errorMessage={this.props.updateCardErrorMessage}
               errorCode={this.props.updateCardErrorCode}
               onCancel={this.handleBackClick}
-              isDefault={this.state.selectedCard.id ===
+              isMarkedAsDefault={this.state.selectedCard.id ===
                 this.props.defaultCard.id}
-              onMakeDefault={() => this.props.onMakeDefaultCard(
-                this.state.selectedCard.id)}
               onDeleteCard={() => this.props.onDeleteCard(
                 this.state.selectedCard.id)}
             />
@@ -106,9 +102,11 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
           card={this.props.defaultCard}
           onClick={() => this.handleCardClick(this.props.defaultCard)} />);
       }
-      if (this.props.otherPaymentCards &&
-          this.props.otherPaymentCards.length !== 0) {
-        for (const card of this.props.otherPaymentCards) {
+      if (this.props.paymentCards && this.props.paymentCards.length !== 0) {
+        for (const card of this.props.paymentCards) {
+          if (card.id === this.props.defaultCard.id) {
+            continue;
+          }
           cards.push(<PaymentCardRow key={card.id} card={card}
             displayMode={this.props.displayMode}
             onClick={() => this.handleCardClick(card)} />);

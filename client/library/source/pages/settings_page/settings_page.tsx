@@ -52,7 +52,7 @@ interface Properties {
   defaultCard: PaymentCard;
 
   /** User's list of existing cards on file other than the default card. */
-  otherPaymentCards: PaymentCard[];
+  paymentCards: PaymentCard[];
 
   /** User's list of payment records. */
   paymentRecords: PaymentRecord[];
@@ -70,14 +70,11 @@ interface Properties {
   updateCardErrorCode: CardDetailsForm.ErrorCode;
 
   /** Indicates the Add card button is clicked. */
-  onAddCard: (cardNumber: number, cardName: string, month: number, year: number,
-    securityCode: number, zipcode: string) => void;
+  onAddCard: (cardNumber: number, nameOnCard: string, month: number,
+    year: number, securityCode: number, zipcode: string) => void;
 
   /** Indicates the update card details button is clicked. */
   onUpdateCard: (newCard: PaymentCard, isMarkedDefault: boolean) => void;
-
-  /** Indicates the make default card on card details is clicked. */
-  onMakeDefaultCard: (cardId: number) => void;
 
   /** Indicates the delete card button is clicked. */
   onDeleteCard: (cardId: number) => void;

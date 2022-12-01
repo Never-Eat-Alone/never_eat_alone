@@ -302,7 +302,8 @@ export namespace AddCreditCardForm {
     NONE,
     INVALID_CARD_INFO,
     EXPIRED_CARD,
-    INVALID_ADD_CARD_INPUT
+    INVALID_ADD_CARD_INPUT,
+    NO_CONNECTION
   }
 }
 

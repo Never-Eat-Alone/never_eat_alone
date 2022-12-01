@@ -15,7 +15,10 @@ export abstract class SettingsPageModel {
   public abstract get isFoodieAcceptedInviteNotificationOn(): boolean;
   public abstract get isAnnouncementNotificationOn(): boolean;
   public abstract get defaultCard(): PaymentCard;
-  public abstract get otherPaymentCards(): PaymentCard[];
+  public abstract get paymentCards(): PaymentCard[];
   public abstract get paymentRecords(): PaymentRecord[];
-  
+  public abstract addCard(cardNumber: number, nameOnCard: string, month: number,
+    year: number, securityCode: number, zipcode: string): Promise<PaymentCard>;
+  public abstract updateCard(newCard: PaymentCard, isMarkedAsDefault: boolean
+    ): Promise<PaymentCard>;
 }
