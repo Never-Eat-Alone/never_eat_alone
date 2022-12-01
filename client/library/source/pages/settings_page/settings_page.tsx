@@ -28,25 +28,25 @@ interface Properties {
   password: string;
 
   /** Whether the new events notification is checked or not. */
-  isNewEvents: boolean;
+  isNewEventsNotificationOn: boolean;
 
   /** Whether the event joined notification is checked or not. */
-  isEventJoined: boolean;
+  isEventJoinedNotificationOn: boolean;
 
   /** Whether the event reminders notification is checked or not. */
-  isEventReminders: boolean;
+  isEventRemindersNotificationOn: boolean;
 
   /** Whether the changes to attending events notification is checked or not. */
-  isChanges: boolean;
+  isChangesNotificationOn: boolean;
 
   /** Whether the someone joins event notification is checked or not. */
-  isSomeoneJoined: boolean;
+  isSomeoneJoinedNotificationOn: boolean;
 
   /** Whether the foodie accepts invite notification is checked or not. */
-  isFoodieAcceptedInvite: boolean;
+  isFoodieAcceptedInviteNotificationOn: boolean;
 
   /** Whether the announcement notification is checked or not. */
-  isAnnouncement: boolean;
+  isAnnouncementNotificationOn: boolean;
 
   /** User's default payment card. */
   defaultCard: PaymentCard;

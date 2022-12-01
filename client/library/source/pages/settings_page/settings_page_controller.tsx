@@ -11,6 +11,14 @@ interface Properties {
 interface State {
   isLoaded: boolean;
   hasError: boolean;
+  isNewEventsNotificationOn: boolean;
+  isEventJoinedNotificationOn: boolean;
+  isEventRemindersNotificationOn: boolean;
+  isChangesNotificationOn: boolean;
+  isSomeoneJoinedNotificationOn: boolean;
+  isFoodieAcceptedInviteNotificationOn: boolean;
+  isAnnouncementNotificationOn: boolean;
+
 }
 
 export class SettingPageController extends React.Component<Properties, State> {
@@ -18,7 +26,14 @@ export class SettingPageController extends React.Component<Properties, State> {
     super(props);
     this.state = {
       isLoaded: false,
-      hasError: false
+      hasError: false,
+      isNewEventsNotificationOn: false,
+      isEventJoinedNotificationOn: false,
+      isEventRemindersNotificationOn: false,
+      isChangesNotificationOn: false,
+      isSomeoneJoinedNotificationOn: false,
+      isFoodieAcceptedInviteNotificationOn: false,
+      isAnnouncementNotificationOn: false,
     };
   }
 
@@ -28,53 +43,105 @@ export class SettingPageController extends React.Component<Properties, State> {
     }
     return <SettingsPage
       displayMode={this.props.displayModel}
-      linkedSocialAccounts={}
-      displayName={}
-      profileId={}
-      email={}
-      password={}
-      isNewEvents={}
-      isEventJoined={}
-      isEventReminders={}
-      isChanges={}
-      isSomeoneJoined={}
-      isFoodieAcceptedInvite={}
-      isAnnouncement={}
-      defaultCard={}
-      otherPaymentCards={}
-      paymentRecords={}
+      linkedSocialAccounts={this.props.model.linkedSocialAccounts}
+      displayName={this.props.model.displayName}
+      profileId={this.props.model.profileId}
+      email={this.props.model.email}
+      password={this.props.model.password}
+      isNewEventsNotificationOn={this.state.isNewEventsNotificationOn}
+      isEventJoinedNotificationOn={this.state.isEventJoinedNotificationOn}
+      isEventRemindersNotificationOn={this.state.isEventRemindersNotificationOn}
+      isChangesNotificationOn={this.state.isChangesNotificationOn}
+      isSomeoneJoinedNotificationOn={this.state.isSomeoneJoinedNotificationOn}
+      isFoodieAcceptedInviteNotificationOn={this.state.isFoodieAcceptedInviteNotificationOn}
+      isAnnouncementNotificationOn={this.state.isAnnouncementNotificationOn}
+      defaultCard={this.props.model.defaultCard}
+      otherPaymentCards={this.props.model.otherPaymentCards}
+      paymentRecords={this.props.model.paymentRecords}
       addCardErrorMessage={}
-      addCardErrorCode={}
+      addCardErrorCode={this.state.addCardErrorCode}
       updateCardErrorMessage={}
       updateCardErrorCode={}
       onAddCard={}
       onUpdateCard={}
       onMakeDefaultCard={}
       onDeleteCard={}
-      onNewEventsToggle={}
-      onEventJoinedToggle={}
-      onEventRemindersToggle={}
-      onChangesToggle={}
-      onSomeoneJoinedToggle={}
-      onFoodieAcceptedInviteToggle={}
-      onAnnouncementToggle={}
-      onGoogleClick={}
-      onFacebookClick={}
-      onRemoveLinkedAccount={}
-      onEditDisplayNameClick={}
-      onEditEmailClick={}
-      onDeactivateAccount={}
-      onDeleteAccount={}
-      onViewReceiptClick={}
+      onNewEventsToggle={this.handleNewEventsToggle}
+      onEventJoinedToggle={this.handleEventJoinedToggle}
+      onEventRemindersToggle={this.handleEventRemindersToggle}
+      onChangesToggle={this.handleChangesToggle}
+      onSomeoneJoinedToggle={this.handleSomeoneJoinedToggle}
+      onFoodieAcceptedInviteToggle={this.handleFoodieAcceptedInviteToggle}
+      onAnnouncementToggle={this.handleAnnouncementToggle}
+      onGoogleClick={this.handleGoogleClick}
+      onFacebookClick={this.handleFacebookClick}
+      onRemoveLinkedAccount={this.handleRemoveLinkedAccount}
+      onEditDisplayNameClick={this.handleEditDisplayNameClick}
+      onEditEmailClick={this.handleEditEmailClick}
+      onDeactivateAccount={this.handleDeactivateAccount}
+      onDeleteAccount={this.handleDeleteAccount}
+      onViewReceiptClick={this.handleViewReceiptClick}
     />;
   }
 
   public async componentDidMount(): Promise<void> {
     try {
       await this.props.model.load();
-      this.setState({ isLoaded: true });
+      this.setState({
+        isLoaded: true,
+        isNewEventsNotificationOn: this.props.model.isNewEventsNotificationOn,
+        isEventJoinedNotificationOn:
+          this.props.model.isEventJoinedNotificationOn,
+        isEventRemindersNotificationOn:
+          this.props.model.isEventRemindersNotificationOn,
+        isChangesNotificationOn: this.props.model.isChangesNotificationOn,
+        isSomeoneJoinedNotificationOn:
+          this.props.model.isSomeoneJoinedNotificationOn,
+        isFoodieAcceptedInviteNotificationOn:
+          this.props.model.isFoodieAcceptedInviteNotificationOn,
+        isAnnouncementNotificationOn:
+          this.props.model.isAnnouncementNotificationOn,
+        
+      });
     } catch {
       this.setState({ isLoaded: true, hasError: true });
     }
+  }
+
+  private handleNewEventsToggle = () => {
+    this.setState((prevState) => ({
+      isNewEventsNotificationOn: !prevState.isNewEventsNotificationOn }));
+  }
+
+  private handleEventJoinedToggle = () => {
+    this.setState((prevState) => ({
+      isEventJoinedNotificationOn: !prevState.isEventJoinedNotificationOn }));
+  }
+
+  private handleEventRemindersToggle = () => {
+    this.setState((prevState) => ({
+      isEventRemindersNotificationOn: !prevState.isEventRemindersNotificationOn
+    }));
+  }
+
+  private handleChangesToggle = () => {
+    this.setState((prevState) => ({
+      isChangesNotificationOn: !prevState.isChangesNotificationOn }));
+  }
+
+  private handleSomeoneJoinedToggle = () => {
+    this.setState((prevState) => ({
+      isSomeoneJoinedNotificationOn: !prevState.isSomeoneJoinedNotificationOn
+    }));
+  }
+
+  private handleFoodieAcceptedInviteToggle = () => {
+    this.setState((prevState) => ({ isFoodieAcceptedInviteNotificationOn:
+      !prevState.isFoodieAcceptedInviteNotificationOn }));
+  }
+
+  private handleAnnouncementToggle = () => {
+    this.setState((prevState) => ({ isAnnouncementNotificationOn:
+      !prevState.isAnnouncementNotificationOn }));
   }
 }
