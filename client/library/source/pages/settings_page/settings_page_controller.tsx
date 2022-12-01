@@ -6,7 +6,7 @@ import { SettingsPage } from './settings_page';
 import { SettingsPageModel } from './settings_page_model';
 
 interface Properties {
-  displayModel: DisplayMode;
+  displayMode: DisplayMode;
   account: User;
   model: SettingsPageModel;
 }
@@ -52,7 +52,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
       return <div />;
     }
     return <SettingsPage
-      displayMode={this.props.displayModel}
+      displayMode={this.props.displayMode}
       linkedSocialAccounts={this.props.model.linkedSocialAccounts}
       displayName={this.props.model.displayName}
       profileId={this.props.model.profileId}

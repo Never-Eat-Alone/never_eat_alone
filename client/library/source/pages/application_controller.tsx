@@ -14,6 +14,7 @@ import { HomePageController } from './home_page';
 import { PartnerWithUsController } from './partner_with_us_page';
 import { PrivacyPolicyPage } from './privacy_policy_page';
 import { ProfilePageController } from './profile_page';
+import { SettingsPageController } from './settings_page';
 import { Shell } from './shell';
 import { TermsOfUsePage } from './terms_of_use_page';
 import { WhatIsNeaPage } from './what_is_nea_page';
@@ -154,7 +155,7 @@ export class ApplicationController extends React.Component<Properties, State> {
               render={this.renderPrivacyPolicy}
             />
             <Router.Route
-              path='/users/settings/:userId'
+              path='/users/settings/:id'
               render={this.renderSettings}
             />
             <Router.Route
@@ -257,14 +258,17 @@ export class ApplicationController extends React.Component<Properties, State> {
 
   private handleButtonWithDropDownClick = (label: string) => {}
 
-  private renderSettings = (
-      {match}: Router.RouteComponentProps<TParams>) => {
-    const userId = match.params.userId;
-    return <div>Settings Page for id: {userId}</div>;
+  private renderSettings = ({match}: Router.RouteComponentProps<TParams>) => {
+    const id = Number(match.params.id);
+    return <SettingsPageController
+      displayMode={this.state.displayMode}
+      model={this.props.model.getSettingsPageModel(id)}
+      account={this.state.account}
+    />;
   }
 
-  private renderDiningEvents = (
-      {match}: Router.RouteComponentProps<TParams>) => {
+  private renderDiningEvents = ({match}: Router.RouteComponentProps<TParams>
+      ) => {
     const id = Number(match.params.id);
     return <DiningEventPageController
       displayMode={this.state.displayMode}
