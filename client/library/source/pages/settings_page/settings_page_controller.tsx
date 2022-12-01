@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { AddCreditCardForm } from '../../components';
-import { DisplayMode, PaymentCard } from '../../definitions';
+import { DisplayMode, PaymentCard, User } from '../../definitions';
 import { CardDetailsForm } from './card_details_form';
 import { SettingsPage } from './settings_page';
 import { SettingsPageModel } from './settings_page_model';
 
 interface Properties {
   displayModel: DisplayMode;
+  account: User;
   model: SettingsPageModel;
 }
 
@@ -26,7 +27,7 @@ interface State {
   defaultCard: PaymentCard;
 }
 
-export class SettingPageController extends React.Component<Properties, State> {
+export class SettingsPageController extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props);
     this.state = {
@@ -42,8 +43,7 @@ export class SettingPageController extends React.Component<Properties, State> {
       addCardErrorCode: AddCreditCardForm.ErrorCode.NONE,
       updateCardErrorCode: CardDetailsForm.ErrorCode.NONE,
       paymentCards: [],
-      defaultCard: PaymentCard.noCard(),
-
+      defaultCard: PaymentCard.noCard()
     };
   }
 
@@ -75,7 +75,7 @@ export class SettingPageController extends React.Component<Properties, State> {
       updateCardErrorCode={this.state.updateCardErrorCode}
       onAddCard={this.handleAddCard}
       onUpdateCard={this.handleUpdateCard}
-      onDeleteCard={}
+      onDeleteCard={this.handleDeleteCard}
       onNewEventsToggle={this.handleNewEventsToggle}
       onEventJoinedToggle={this.handleEventJoinedToggle}
       onEventRemindersToggle={this.handleEventRemindersToggle}
@@ -88,6 +88,7 @@ export class SettingPageController extends React.Component<Properties, State> {
       onRemoveLinkedAccount={this.handleRemoveLinkedAccount}
       onEditDisplayNameClick={this.handleEditDisplayNameClick}
       onEditEmailClick={this.handleEditEmailClick}
+      onEditPasswordClick={this.handleEditPasswordClick}
       onDeactivateAccount={this.handleDeactivateAccount}
       onDeleteAccount={this.handleDeleteAccount}
       onViewReceiptClick={this.handleViewReceiptClick}
@@ -112,8 +113,7 @@ export class SettingPageController extends React.Component<Properties, State> {
         isAnnouncementNotificationOn:
           this.props.model.isAnnouncementNotificationOn,
         paymentCards: this.props.model.paymentCards,
-        defaultCard: this.props.model.defaultCard,
-
+        defaultCard: this.props.model.defaultCard
       });
     } catch {
       this.setState({ isLoaded: true, hasError: true });
@@ -195,5 +195,45 @@ export class SettingPageController extends React.Component<Properties, State> {
         updateCardErrorCode: CardDetailsForm.ErrorCode.NO_CONNECTION
       });
     }
+  }
+
+  private handleDeleteCard = () => {
+
+  }
+
+  private handleGoogleClick = () => {
+
+  }
+
+  private handleFacebookClick = () => {
+
+  }
+
+  private handleRemoveLinkedAccount = () => {
+
+  }
+
+  private handleEditDisplayNameClick = () => {
+
+  }
+
+  private handleEditEmailClick = () => {
+
+  }
+
+  private handleEditPasswordClick = () => {
+
+  }
+
+  private handleDeactivateAccount = () => {
+
+  }
+
+  private handleDeleteAccount = () => {
+
+  }
+
+  private handleViewReceiptClick = () => {
+
   }
 }

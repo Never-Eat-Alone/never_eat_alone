@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { CheckBox, InputField, NumberedDropdownMenu, PaymentCardInputField,
-  PrimaryTextButton, SecurityCodeInputField } from '../../components';
+import { CheckBox, InputField, Modal, NumberedDropdownMenu,
+  PaymentCardInputField, PrimaryTextButton, SecurityCodeInputField
+} from '../../components';
 import { CreditCardType, DisplayMode, getCreditCardTypeName, PaymentCard
 } from '../../definitions';
+import { DeleteCardModal } from '../../modals';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -64,6 +66,7 @@ interface State {
   cardInputHasChanged: boolean;
   errorCode: CardDetailsForm.ErrorCode;
   isMarkedAsDefault: boolean;
+  isDeleteCardClicked: boolean;
 }
 
 /** Displays the Card Details Form. */
@@ -83,11 +86,22 @@ export class CardDetailsForm extends React.Component<Properties, State> {
       isZipcodeInvalid: false,
       cardInputHasChanged: false,
       errorCode: this.props.errorCode,
-      isMarkedAsDefault: this.props.isMarkedAsDefault
+      isMarkedAsDefault: this.props.isMarkedAsDefault,
+      isDeleteCardClicked: false
     };
   }
 
   public render(): JSX.Element {
+    const deleteCardModal = (this.state.isDeleteCardClicked &&
+      <Modal>
+        <DeleteCardModal
+          displayMode={this.props.displayMode}
+          creditType={this.props.creditType}
+          cardLast4digits={this.props.cardNumber.toString().slice(-4)}
+          onDelete={this.props.onDeleteCard}
+          onClose={this.handleClose}
+        />
+      </Modal>);
     const containerStyle = (this.props.displayMode === DisplayMode.MOBILE &&
       MOBILE_CARD_DETAILS_CONTAINER_STYLE || CARD_DETAILS_CONTAINER_STYLE);
     const cardSrc = (() => {
@@ -172,6 +186,7 @@ export class CardDetailsForm extends React.Component<Properties, State> {
       if (this.props.displayMode === DisplayMode.MOBILE) {
         return (
           <div style={MOBILE_DELETE_CARD_CONTAINER_STYLE} >
+            {deleteCardModal}
             <img
               style={MOBILE_SUPER_BIG_CARD_IMAGE_STYLE}
               src={cardSrc}
@@ -185,7 +200,7 @@ export class CardDetailsForm extends React.Component<Properties, State> {
               {isDefault}
               <div
                   style={DELETE_BUTTON_STYLE}
-                  onClick={this.props.onDeleteCard}
+                  onClick={this.handleDeleteCard}
               >
                 <img
                   style={CROSS_ICON_STYLE}
@@ -199,6 +214,7 @@ export class CardDetailsForm extends React.Component<Properties, State> {
       }
       return (
         <div style={DELETE_CARD_ROW_CONTAINER_STYLE} >
+          {deleteCardModal}
           <img
             style={SUPER_BIG_CARD_IMAGE_STYLE}
             src={cardSrc}
@@ -213,7 +229,7 @@ export class CardDetailsForm extends React.Component<Properties, State> {
               {isDefault}
               <div
                   style={DELETE_BUTTON_STYLE}
-                  onClick={this.props.onDeleteCard}
+                  onClick={this.handleDeleteCard}
               >
                 <img
                   style={CROSS_ICON_STYLE}
@@ -332,6 +348,14 @@ export class CardDetailsForm extends React.Component<Properties, State> {
           disabled={isUpdateCardDisabled}
         />
       </form>);
+  }
+
+  private handleDeleteCard = () => {
+    this.setState({ isDeleteCardClicked: true });
+  }
+
+  private handleClose = () => {
+    this.setState({ isDeleteCardClicked: false });
   }
 
   private handleOnCardNumberChange = (event: React.ChangeEvent<HTMLInputElement>
