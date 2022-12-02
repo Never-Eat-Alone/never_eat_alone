@@ -7,9 +7,9 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
       isEventJoinedNotificationOn: boolean, isEventRemindersNotificationOn:
       boolean, isChangesNotificationOn: boolean,
       isFoodieAcceptedInviteNotificationOn: boolean,
-      isAnnouncementNotificationOn: boolean, paymentCards:
-      NeverEatAlone.PaymentCard[], paymentRecords:
-      NeverEatAlone.PaymentRecord[]) {
+      isAnnouncementNotificationOn: boolean, defaultCard:
+      NeverEatAlone.PaymentCard, paymentCards: NeverEatAlone.PaymentCard[],
+      paymentRecords: NeverEatAlone.PaymentRecord[]) {
     super();
     this._displayName = displayName;
     this._linkedSocialAccounts = linkedSocialAccounts;
@@ -23,6 +23,7 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
     this._isFoodieAcceptedInviteNotificationOn =
       isFoodieAcceptedInviteNotificationOn;
     this._isAnnouncementNotificationOn = isAnnouncementNotificationOn;
+    this._defaultCard = defaultCard;
     this._paymentCards = paymentCards;
     this._paymentRecords = paymentRecords;
   }
@@ -94,12 +95,22 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
   public async addCard(cardNumber: number, nameOnCard: string, month: number,
       year: number, securityCode: number, zipcode: string): Promise<
       NeverEatAlone.PaymentCard> {
-    return;
+    const newCard = new NeverEatAlone.PaymentCard(Date.now(), cardNumber,
+      nameOnCard, month, year, securityCode, zipcode,
+      NeverEatAlone.CreditCardType.VISA);
+    this._paymentCards = [...this._paymentCards, newCard];
+    return newCard;
   }
 
   public async updateCard(newCard: NeverEatAlone.PaymentCard,
       isMarkedAsDefault: boolean): Promise<NeverEatAlone.PaymentCard> {
-    return;
+    if (newCard.id === -1) {
+      return NeverEatAlone.PaymentCard.noCard();
+    }
+    if (isMarkedAsDefault) {
+      this._defaultCard = newCard;
+    }
+    return newCard;
   }
 
   private _displayName: string;

@@ -380,10 +380,14 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       NeverEatAlone.CreditCardType.VISA, '1234', '', new Date(2022, 12, 11, 12,
       30, 30), null, NeverEatAlone.PaymentStatus.WILL_BE_CHARGED, 13)]);
     const emmaPaymentRecords = [paymentRecord1];
+    // Setting up the settings page model.
+    this._settingsPageModel = new Map();
     const demoSettingsPageModel1 = new DemoSettingsPageModel(userEmma.name,
       emmaSocialLinks, userEmma.id, userEmma.email, emmaPassword, true, false,
-      true, true, false, true, emmaPaymentCards, emmaPaymentRecords);
-     // arthur settings model
+      true, true, false, true, emmaMastercard2222, emmaPaymentCards,
+      emmaPaymentRecords);
+    this._settingsPageModel.set(1, demoSettingsPageModel1);
+    // arthur settings model
     const arthurSocialLinks: NeverEatAlone.SocialAccount[] = [];
     const arthurPaymentRecords: NeverEatAlone.PaymentRecord[] = [
       new NeverEatAlone.PaymentRecord(2, eventCardSummary2, [
@@ -397,10 +401,8 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const arthurPassword = '123';
     const demoSettingsPageModel2 = new DemoSettingsPageModel(userArthur.name,
       arthurSocialLinks, userArthur.id, userArthur.email, arthurPassword, false,
-      false, false, false, false, true, arthurPaymentCards,
+      false, false, false, false, true, arthurVisa1234, arthurPaymentCards,
       arthurPaymentRecords);
-    this._settingsPageModel = new Map();
-    this._settingsPageModel.set(1, demoSettingsPageModel1);
     this._settingsPageModel.set(2, demoSettingsPageModel2);
     // Loading all models with load method.
     await Promise.all([this._headerModel.load(), this._homePageModel.load(),
