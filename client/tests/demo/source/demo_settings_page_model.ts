@@ -126,6 +126,36 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
     return;
   }
 
+  public async toggleNewEventsNotification(): Promise<void> {
+    this._isNewEventsNotificationOn = !this._isNewEventsNotificationOn;
+  }
+
+  public async toggleEventJoinedNotification(): Promise<void> {
+    this._isEventJoinedNotificationOn = !this._isEventJoinedNotificationOn;
+  }
+
+  public async toggleEventRemindersNotification(): Promise<void> {
+    this._isEventRemindersNotificationOn =
+      !this._isEventRemindersNotificationOn;
+  }
+
+  public async toggleChangesNotification(): Promise<void> {
+    this._isChangesNotificationOn = !this._isChangesNotificationOn;
+  }
+
+  public async toggleSomeoneJoinedNotification(): Promise<void> {
+    this._isSomeoneJoinedNotificationOn = !this._isSomeoneJoinedNotificationOn;
+  }
+
+  public async toggleFoodieAcceptedInviteNotification(): Promise<void> {
+    this._isFoodieAcceptedInviteNotificationOn =
+      !this._isFoodieAcceptedInviteNotificationOn;
+  }
+
+  public async toggleAnnouncementNotification(): Promise<void> {
+    this._isAnnouncementNotificationOn = !this._isAnnouncementNotificationOn;
+  }
+
   private _displayName: string;
   private _linkedSocialAccounts: NeverEatAlone.SocialAccount[];
   private _profileId: number;

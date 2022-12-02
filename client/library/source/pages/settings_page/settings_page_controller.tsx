@@ -130,41 +130,76 @@ export class SettingsPageController extends React.Component<Properties, State> {
     this.setState({ paymentMethodsTabPage: page });
   }
 
-  private handleNewEventsToggle = () => {
-    this.setState((prevState) => ({
-      isNewEventsNotificationOn: !prevState.isNewEventsNotificationOn }));
+  private handleNewEventsToggle = async () => {
+    try {
+      await this.props.model.toggleNewEventsNotification();
+      this.setState((prevState) => ({
+        isNewEventsNotificationOn: !prevState.isNewEventsNotificationOn }));
+    } catch {
+      // pass
+    }
   }
 
-  private handleEventJoinedToggle = () => {
-    this.setState((prevState) => ({
-      isEventJoinedNotificationOn: !prevState.isEventJoinedNotificationOn }));
+  private handleEventJoinedToggle = async () => {
+    try {
+      await this.props.model.toggleEventJoinedNotification();
+      this.setState((prevState) => ({
+        isEventJoinedNotificationOn: !prevState.isEventJoinedNotificationOn }));
+    } catch {
+      // pass
+    }
   }
 
-  private handleEventRemindersToggle = () => {
-    this.setState((prevState) => ({
-      isEventRemindersNotificationOn: !prevState.isEventRemindersNotificationOn
-    }));
+  private handleEventRemindersToggle = async () => {
+    try {
+      await this.props.model.toggleEventRemindersNotification();
+      this.setState((prevState) => ({
+        isEventRemindersNotificationOn: !prevState.isEventRemindersNotificationOn
+      }));
+    } catch {
+      // pass
+    }
   }
 
-  private handleChangesToggle = () => {
-    this.setState((prevState) => ({
-      isChangesNotificationOn: !prevState.isChangesNotificationOn }));
+  private handleChangesToggle = async () => {
+    try {
+      await this.props.model.toggleChangesNotification();
+      this.setState((prevState) => ({
+        isChangesNotificationOn: !prevState.isChangesNotificationOn }));
+    } catch {
+      // pass
+    }
   }
 
-  private handleSomeoneJoinedToggle = () => {
-    this.setState((prevState) => ({
-      isSomeoneJoinedNotificationOn: !prevState.isSomeoneJoinedNotificationOn
-    }));
+  private handleSomeoneJoinedToggle = async () => {
+    try {
+      await this.props.model.toggleSomeoneJoinedNotification();
+      this.setState((prevState) => ({
+        isSomeoneJoinedNotificationOn: !prevState.isSomeoneJoinedNotificationOn
+      }));
+    } catch {
+      // pass
+    }
   }
 
-  private handleFoodieAcceptedInviteToggle = () => {
-    this.setState((prevState) => ({ isFoodieAcceptedInviteNotificationOn:
-      !prevState.isFoodieAcceptedInviteNotificationOn }));
+  private handleFoodieAcceptedInviteToggle = async () => {
+    try {
+      await this.props.model.toggleFoodieAcceptedInviteNotification();
+      this.setState((prevState) => ({ isFoodieAcceptedInviteNotificationOn:
+        !prevState.isFoodieAcceptedInviteNotificationOn }));
+    } catch {
+      // pass
+    }
   }
 
-  private handleAnnouncementToggle = () => {
-    this.setState((prevState) => ({ isAnnouncementNotificationOn:
-      !prevState.isAnnouncementNotificationOn }));
+  private handleAnnouncementToggle = async () => {
+    try {
+      await this.props.model.toggleAnnouncementNotification();
+      this.setState((prevState) => ({ isAnnouncementNotificationOn:
+        !prevState.isAnnouncementNotificationOn }));
+    } catch {
+      // pass
+    }
   }
 
   private handleAddCard = async (cardNumber: number, nameOnCard: string,

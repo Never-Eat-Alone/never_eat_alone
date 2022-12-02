@@ -17,9 +17,18 @@ export abstract class SettingsPageModel {
   public abstract get defaultCard(): PaymentCard;
   public abstract get paymentCards(): PaymentCard[];
   public abstract get paymentRecords(): PaymentRecord[];
+  // Payment methods tab related methods
   public abstract addCard(cardNumber: number, nameOnCard: string, month: number,
     year: number, securityCode: number, zipcode: string): Promise<PaymentCard>;
   public abstract updateCard(newCard: PaymentCard, isMarkedAsDefault: boolean
     ): Promise<PaymentCard>;
   public abstract deleteCard(cardId: number): Promise<void>;
+  // Notification tab related methods
+  public abstract toggleNewEventsNotification(): Promise<void>;
+  public abstract toggleEventJoinedNotification(): Promise<void>;
+  public abstract toggleEventRemindersNotification(): Promise<void>;
+  public abstract toggleChangesNotification(): Promise<void>;
+  public abstract toggleSomeoneJoinedNotification(): Promise<void>;
+  public abstract toggleFoodieAcceptedInviteNotification(): Promise<void>;
+  public abstract toggleAnnouncementNotification(): Promise<void>;
 }
