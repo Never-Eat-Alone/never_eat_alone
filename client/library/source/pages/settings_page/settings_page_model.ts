@@ -21,4 +21,5 @@ export abstract class SettingsPageModel {
     year: number, securityCode: number, zipcode: string): Promise<PaymentCard>;
   public abstract updateCard(newCard: PaymentCard, isMarkedAsDefault: boolean
     ): Promise<PaymentCard>;
+  public abstract deleteCard(cardId: number): Promise<void>;
 }

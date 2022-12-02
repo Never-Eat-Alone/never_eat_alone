@@ -2,6 +2,7 @@ import * as React from 'react';
 import { AddCreditCardForm } from '../../components';
 import { DisplayMode, PaymentCard, User } from '../../definitions';
 import { CardDetailsForm } from './card_details_form';
+import { PaymentMethodsTab } from './payment_methods_tab';
 import { SettingsPage } from './settings_page';
 import { SettingsPageModel } from './settings_page_model';
 
@@ -25,6 +26,7 @@ interface State {
   updateCardErrorCode: CardDetailsForm.ErrorCode;
   paymentCards: PaymentCard[];
   defaultCard: PaymentCard;
+  paymentMethodsTabPage: PaymentMethodsTab.Page;
 }
 
 export class SettingsPageController extends React.Component<Properties, State> {
@@ -43,7 +45,8 @@ export class SettingsPageController extends React.Component<Properties, State> {
       addCardErrorCode: AddCreditCardForm.ErrorCode.NONE,
       updateCardErrorCode: CardDetailsForm.ErrorCode.NONE,
       paymentCards: [],
-      defaultCard: PaymentCard.noCard()
+      defaultCard: PaymentCard.noCard(),
+      paymentMethodsTabPage: PaymentMethodsTab.Page.INITIAL
     };
   }
 
@@ -73,6 +76,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
       addCardErrorCode={this.state.addCardErrorCode}
       updateCardErrorMessage=''
       updateCardErrorCode={this.state.updateCardErrorCode}
+      paymentMethodsTabPage={this.state.paymentMethodsTabPage}
       onAddCard={this.handleAddCard}
       onUpdateCard={this.handleUpdateCard}
       onDeleteCard={this.handleDeleteCard}
@@ -92,6 +96,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
       onDeactivateAccount={this.handleDeactivateAccount}
       onDeleteAccount={this.handleDeleteAccount}
       onViewReceiptClick={this.handleViewReceiptClick}
+      onChangePaymentMethodsTabPage={this.handleChangePaymentMethodsTabPage}
     />;
   }
 
@@ -118,6 +123,11 @@ export class SettingsPageController extends React.Component<Properties, State> {
     } catch {
       this.setState({ isLoaded: true, hasError: true });
     }
+  }
+
+  private handleChangePaymentMethodsTabPage = (page: PaymentMethodsTab.Page
+      ) => {
+    this.setState({ paymentMethodsTabPage: page });
   }
 
   private handleNewEventsToggle = () => {
@@ -165,12 +175,14 @@ export class SettingsPageController extends React.Component<Properties, State> {
       if (response.id !== -1) {
         this.setState({
           addCardErrorCode: AddCreditCardForm.ErrorCode.NONE,
-          paymentCards: this.props.model.paymentCards
+          paymentCards: this.props.model.paymentCards,
+          paymentMethodsTabPage: PaymentMethodsTab.Page.INITIAL
         });
       }
     } catch {
       this.setState({
-        addCardErrorCode: AddCreditCardForm.ErrorCode.INVALID_CARD_INFO
+        addCardErrorCode: AddCreditCardForm.ErrorCode.INVALID_CARD_INFO,
+        paymentMethodsTabPage: PaymentMethodsTab.Page.ADD_CARD
       });
     }
   }
@@ -184,21 +196,39 @@ export class SettingsPageController extends React.Component<Properties, State> {
         this.setState({
           paymentCards: this.props.model.paymentCards,
           defaultCard: this.props.model.defaultCard,
-          updateCardErrorCode: CardDetailsForm.ErrorCode.NONE
+          updateCardErrorCode: CardDetailsForm.ErrorCode.NONE,
+          paymentMethodsTabPage: PaymentMethodsTab.Page.INITIAL
+        });
+      } else {
+        this.setState({
+          updateCardErrorCode:
+            CardDetailsForm.ErrorCode.INVALID_UPDATE_CARD_INPUT,
+            paymentMethodsTabPage: PaymentMethodsTab.Page.CARD_DETAILS
         });
       }
-      this.setState({
-        updateCardErrorCode: CardDetailsForm.ErrorCode.INVALID_UPDATE_CARD_INPUT
-      });
     } catch {
       this.setState({
-        updateCardErrorCode: CardDetailsForm.ErrorCode.NO_CONNECTION
+        updateCardErrorCode: CardDetailsForm.ErrorCode.NO_CONNECTION,
+        paymentMethodsTabPage: PaymentMethodsTab.Page.CARD_DETAILS
       });
     }
   }
 
-  private handleDeleteCard = () => {
-
+  private handleDeleteCard = async (cardId: number) => {
+    try {
+      await this.props.model.deleteCard(cardId);
+      this.setState({
+        defaultCard: this.props.model.defaultCard,
+        paymentCards: this.props.model.paymentCards,
+        updateCardErrorCode: CardDetailsForm.ErrorCode.NONE,
+        paymentMethodsTabPage: PaymentMethodsTab.Page.INITIAL
+      });
+    } catch {
+      this.setState({
+        updateCardErrorCode: CardDetailsForm.ErrorCode.NO_CONNECTION,
+        paymentMethodsTabPage: PaymentMethodsTab.Page.CARD_DETAILS
+      });
+    }
   }
 
   private handleGoogleClick = () => {

@@ -69,6 +69,10 @@ interface Properties {
   /** Error code regarding updating an existing credit card. */
   updateCardErrorCode: CardDetailsForm.ErrorCode;
 
+  paymentMethodsTabPage: PaymentMethodsTab.Page;
+
+  onChangePaymentMethodsTabPage: (page: PaymentMethodsTab.Page) => void;
+
   /** Indicates the Add card button is clicked. */
   onAddCard: (cardNumber: number, nameOnCard: string, month: number,
     year: number, securityCode: number, zipcode: string) => void;
@@ -141,7 +145,7 @@ export class SettingsPage extends React.Component<Properties, State> {
     };
   }
 
-  render(): JSX.Element {
+  public render(): JSX.Element {
     const { containerStyle, contentStyle, headingStyle,
         pageContainerStyle, lastTabStyle } = (() => {
       if (this.props.displayMode === DisplayMode.MOBILE) {
@@ -176,7 +180,10 @@ export class SettingsPage extends React.Component<Properties, State> {
         case SettingsPage.Tab.NOTIFICATIONS:
           return <NotificationsTab {...this.props} />;
         case SettingsPage.Tab.PAYMENT_METHODS:
-          return <PaymentMethodsTab {...this.props} />;
+          return <PaymentMethodsTab {...this.props}
+            page={this.props.paymentMethodsTabPage}
+            onChangePage={this.props.onChangePaymentMethodsTabPage}
+          />;
         case SettingsPage.Tab.PAYMENT_HISTORY:
           return <PaymentHistoryTab {...this.props} />;
       }

@@ -21,6 +21,11 @@ interface Properties {
 
 /** Displays the Delete Card Modal. */
 export class DeleteCardModal extends React.Component<Properties> {
+  constructor(props: Properties) {
+    super(props);
+    this._containerRef = React.createRef();
+  }
+
   public render(): JSX.Element {
     const { containerStyle, contentContainerStyle } = (() => {
       if (this.props.displayMode === DisplayMode.MOBILE) {

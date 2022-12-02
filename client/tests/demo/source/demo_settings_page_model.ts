@@ -113,6 +113,19 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
     return newCard;
   }
 
+  public async deleteCard(cardId: number): Promise<void> {
+    if (cardId === -1) {
+      return;
+    }
+    const temp = [...this._paymentCards];
+    this._paymentCards = temp.filter((paymentCard) => paymentCard.id !==
+      cardId);
+    if (this._defaultCard.id === cardId) {
+      this._defaultCard = NeverEatAlone.PaymentCard.noCard();
+    }
+    return;
+  }
+
   private _displayName: string;
   private _linkedSocialAccounts: NeverEatAlone.SocialAccount[];
   private _profileId: number;
