@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AddCreditCardForm } from '../../components';
+import { AddCreditCardForm, Modal } from '../../components';
 import { DisplayMode, PaymentCard, PaymentRecord, SocialAccount
 } from '../../definitions';
 import { AccountInformationTab } from './account_information_tab';
@@ -134,6 +134,8 @@ interface Properties {
 
 interface State {
   activeTab: SettingsPage.Tab
+  isReceiptDisplayed: boolean;
+  paymentRecord: PaymentRecord;
 }
 
 /** Displays the Settings Page. */
@@ -141,7 +143,9 @@ export class SettingsPage extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props);
     this.state = {
-      activeTab: SettingsPage.Tab.ACCOUNT_INFORMATION
+      activeTab: SettingsPage.Tab.ACCOUNT_INFORMATION,
+      isReceiptDisplayed: false,
+      paymentRecord: PaymentRecord.noRecord()
     };
   }
 
@@ -188,9 +192,14 @@ export class SettingsPage extends React.Component<Properties, State> {
           return <PaymentHistoryTab {...this.props} />;
       }
     })();
+    const receiptModal = (this.state.isReceiptDisplayed &&
+      <Modal>
+        receipt
+      </Modal>);
     return (
       <div style={containerStyle} >
         <div style={contentStyle} >
+          {receiptModal}
           <h1 style={headingStyle} >Settings</h1>
           <div style={TABS_ROW_STYLE} >
             <Tab
@@ -244,6 +253,10 @@ export class SettingsPage extends React.Component<Properties, State> {
 
   private handleTabClick = (tab: SettingsPage.Tab) => {
     this.setState({ activeTab: tab });
+  }
+
+  private handleClose = () => {
+    this.setState({ isReceiptDisplayed: false });
   }
 }
 
