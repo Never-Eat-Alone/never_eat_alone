@@ -375,10 +375,14 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const emmaPaymentCards = [emmaVisaCard3333, emmaMastercard2222,
       emmaMastercard2589];
     const paymentRecord1 = new NeverEatAlone.PaymentRecord(1,
-      eventCardSummary1, [new NeverEatAlone.PaymentTransaction(1, '', 5.00,
+      eventCardSummary1, [new NeverEatAlone.PaymentTransaction(1, 'No-Show Fee',
+      25.00, NeverEatAlone.PaymentMethod.CREDIT_CARD,
+      NeverEatAlone.CreditCardType.VISA, '1234', '', new Date(2022, 12, 11, 13,
+      30, 30), null, NeverEatAlone.PaymentStatus.WILL_BE_CHARGED, 13),
+      new NeverEatAlone.PaymentTransaction(2, 'Event Fee', 5.00,
       NeverEatAlone.PaymentMethod.CREDIT_CARD,
-      NeverEatAlone.CreditCardType.VISA, '1234', '', new Date(2022, 12, 11, 12,
-      30, 30), null, NeverEatAlone.PaymentStatus.WILL_BE_CHARGED, 13)]);
+      NeverEatAlone.CreditCardType.VISA, '1234', '', null, new Date(
+      2022, 10, 11, 13, 30, 30), NeverEatAlone.PaymentStatus.CHARGED, 13)]);
     const emmaPaymentRecords = [paymentRecord1];
     // Setting up the settings page model.
     this._settingsPageModel = new Map();
@@ -391,7 +395,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const arthurSocialLinks: NeverEatAlone.SocialAccount[] = [];
     const arthurPaymentRecords: NeverEatAlone.PaymentRecord[] = [
       new NeverEatAlone.PaymentRecord(2, eventCardSummary2, [
-      new NeverEatAlone.PaymentTransaction(2, '', 15.00,
+      new NeverEatAlone.PaymentTransaction(3, 'Event Fee', 15.00,
       NeverEatAlone.PaymentMethod.CREDIT_CARD,
       NeverEatAlone.CreditCardType.VISA, '1234', '', new Date(2021, 11, 10, 12,
       30, 30), null, NeverEatAlone.PaymentStatus.CHARGED, 13)])];

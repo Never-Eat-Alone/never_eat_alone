@@ -2,6 +2,7 @@ import * as React from 'react';
 import { AddCreditCardForm, Modal } from '../../components';
 import { DisplayMode, PaymentCard, PaymentRecord, SocialAccount
 } from '../../definitions';
+import { PaymentReceiptModal } from '../../modals';
 import { AccountInformationTab } from './account_information_tab';
 import { CardDetailsForm } from './card_details_form'; 
 import { NotificationsTab } from './notifications_tab';
@@ -136,6 +137,7 @@ interface State {
   activeTab: SettingsPage.Tab
   isReceiptDisplayed: boolean;
   paymentRecord: PaymentRecord;
+  paymentReceiptModalPage: PaymentReceiptModal.Page;
 }
 
 /** Displays the Settings Page. */
@@ -145,7 +147,8 @@ export class SettingsPage extends React.Component<Properties, State> {
     this.state = {
       activeTab: SettingsPage.Tab.ACCOUNT_INFORMATION,
       isReceiptDisplayed: false,
-      paymentRecord: PaymentRecord.noRecord()
+      paymentRecord: PaymentRecord.noRecord(),
+      paymentReceiptModalPage: PaymentReceiptModal.Page.INITIAL
     };
   }
 
@@ -189,12 +192,25 @@ export class SettingsPage extends React.Component<Properties, State> {
             onChangePage={this.props.onChangePaymentMethodsTabPage}
           />;
         case SettingsPage.Tab.PAYMENT_HISTORY:
-          return <PaymentHistoryTab {...this.props} />;
+          return <PaymentHistoryTab
+            {...this.props}
+            onViewReceiptClick={this.handleViewReceipt}
+          />;
       }
     })();
     const receiptModal = (this.state.isReceiptDisplayed &&
       <Modal>
-        receipt
+        <PaymentReceiptModal
+          displayMode={this.props.displayMode}
+          paymentRecord={this.state.paymentRecord}
+          page={this.state.paymentReceiptModalPage}
+          onClose={this.handlePaymentReceiptClose}
+          onPrintClick={() => {}}
+          onDownloadPdfClick={() => {}}
+          onSendEmailClick={() => {}}
+          onHelpClick={this.handleHelpClick}
+          submitHelpEmail={() => {}}
+        />
       </Modal>);
     return (
       <div style={containerStyle} >
@@ -255,8 +271,19 @@ export class SettingsPage extends React.Component<Properties, State> {
     this.setState({ activeTab: tab });
   }
 
-  private handleClose = () => {
+  private handlePaymentReceiptClose = () => {
     this.setState({ isReceiptDisplayed: false });
+  }
+
+  private handleViewReceipt = (paymentRecord: PaymentRecord) => {
+    this.setState({
+      isReceiptDisplayed: true,
+      paymentRecord: paymentRecord
+    });
+  }
+
+  private handleHelpClick = () => {
+    this.setState({ paymentReceiptModalPage: PaymentReceiptModal.Page.HELP });
   }
 }
 
