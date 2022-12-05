@@ -2,6 +2,7 @@ import * as NeverEatAlone from 'never_eat_alone';
 import { DemoDiningEventPageModel } from './demo_dining_event_page_model';
 import { DemoLogInModel } from './demo_login_model';
 import { DemoEditProfilePageModel } from './demo_edit_profile_page_model';
+import { DemoSettingsPageModel } from './demo_settings_page_model';
 
 /** Implements the ApplicationModel for demo purposes. */
 export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
@@ -42,64 +43,77 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const grillCuisine = new NeverEatAlone.Cuisine(14, 'Grill', '#A8A160');
     const chineseCuisine = new NeverEatAlone.Cuisine(15, 'Chinese', '#957DAD');
     const fusionCuisine = new NeverEatAlone.Cuisine(16, 'Fusion', '#FFFED4');
+    const eventCardSummary1 = new NeverEatAlone.EventCardSummary(1,
+      'A night to remmeber at the best sushi restaurant in town!', new Date(
+      2022, 6, 12, 19, 0, 0), new Date(2022, 6, 13, 1, 0, 0),
+      'Yukashi Japanese Restaurant', NeverEatAlone.PriceRange.VERY_EXPENSIVE,
+      [japaneseCuisine, omakaseCuisine], 'resources/images/3.jpg', 6, 6, false,
+      '#E1630D');
+    const eventCardSummary2 = new NeverEatAlone.EventCardSummary(2,
+      'The best italian restaurant in town!', new Date(2022, 5, 22, 19, 30, 0),
+      new Date(2022, 6, 13, 0, 30, 0), 'Piano Piano Restaurant',
+      NeverEatAlone.PriceRange.EXPENSIVE, [italianCuisine],
+      'resources/images/4.jpg', 4, 6, false, '#B2DFED');
+    const eventCardSummary3 = new NeverEatAlone.EventCardSummary(3,
+      "Let's go to Yukashi", new Date(2022, 6, 12, 19, 0, 0), new Date(2022, 6,
+      13, 1, 0, 0), 'Yukashi Japanese Restaurant',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [japaneseCuisine,
+      omakaseCuisine], 'resources/images/3.jpg', 6, 6, false, '#F9C638');
+    const eventCardSummary4 = new NeverEatAlone.EventCardSummary(4,
+      'Who said Duck?!', new Date(2022, 6, 12, 19, 0, 0), new Date(2022, 6, 13,
+      1, 0, 0), 'Ration Restaurant', NeverEatAlone.PriceRange.VERY_EXPENSIVE,
+      [canadianCuisine, modernCuisine], 'resources/images/4.jpg', 6, 6, false,
+      '#DA78A5');
+    const eventCardSummary5 = new NeverEatAlone.EventCardSummary(5,
+      'Steak night', new Date(2022, 6, 12, 19, 0, 0), new Date(2022, 6, 13, 1,
+      0, 0), "Hy's Steakhouse and bar", NeverEatAlone.PriceRange.VERY_EXPENSIVE,
+      [steakhouseCuisine, seafoodCuisine], 'resources/images/5.jpg', 6, 6,
+      false, '#AC4519');
+    const eventCardSummary6 = new NeverEatAlone.EventCardSummary(6,
+      "Let's try the tasting menu at Azhar.", new Date(2022, 6, 12, 19, 0, 0),
+      new Date(2022, 6, 13, 1, 0, 0), 'Azhar Restaurant',
+      NeverEatAlone.PriceRange.EXPENSIVE, [middleEasternCuisine, modernCuisine],
+      'resources/images/6.jpg', 6, 6, false, '#B3A870');
+    const eventCardSummary7 = new NeverEatAlone.EventCardSummary(7,
+      'Calling all the french food lovers', new Date(2022, 6, 12, 19, 0, 0),
+      new Date(2022, 6, 13, 1, 0, 0), 'Le Select Bistro',
+      NeverEatAlone.PriceRange.MODERATELY_PRICED, [frenchCuisine,
+      traditionalCuisine], 'resources/images/7.jpg', 6, 6, false, '#6A8716');
+    const eventCardSummary8 = new NeverEatAlone.EventCardSummary(8,
+      'Shakshouka for life!', new Date(2022, 6, 12, 11, 30, 0), new Date(2022,
+      6, 13, 1, 0, 0), 'Amal Restaurant',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [middleEasternCuisine,
+      modernCuisine], 'resources/images/8.jpg', 6, 6, false, '#DA78A5');
+    const eventCardSummary9 = new NeverEatAlone.EventCardSummary(9,
+      'Exceptional view and drinks', new Date(2022, 6, 12, 19, 0, 0), new Date(
+      2022, 6, 13, 1, 0, 0), 'Canoe', NeverEatAlone.PriceRange.EXPENSIVE, [
+      modernCuisine, canadianCuisine], 'resources/images/9.jpg', 6, 6, false,
+      '#8EA142');
+    const eventCardSummary10 = new NeverEatAlone.EventCardSummary(10,
+      'Celebrating Oktoberfest', new Date(2022, 6, 12, 19, 0, 0), new Date(2022,
+      6, 13, 1, 0, 0), 'Liberty Commons Smokehouse',
+      NeverEatAlone.PriceRange.INEXPENSIVE, [bbqCuisine, breweryCuisine],
+      'resources/images/10.jpg', 6, 6, false, '#B27A49');
+    const eventCardSummary11 = new NeverEatAlone.EventCardSummary(11,
+      'Persian grill at its best', new Date(2022, 6, 12, 19, 0, 0), new Date(
+      2022, 6, 13, 1, 0, 0), 'Darbar Persian Grill',
+      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [persianCuisine, grillCuisine],
+      'resources/images/11.jpg', 6, 6, false, '#FCE1D8');
+    const eventCardSummary12 = new NeverEatAlone.EventCardSummary(12,
+      'Must try fusion food', new Date(2022, 6, 12, 19, 0, 0), new Date(2022, 6,
+      13, 1, 0, 0), 'R&D Restaurant', NeverEatAlone.PriceRange.EXPENSIVE, [
+      chineseCuisine, modernCuisine, fusionCuisine], 'resources/images/12.jpg',
+      6, 6, false, '#957DAD');
+    const eventCardSummary60 = new NeverEatAlone.EventCardSummary(60,
+      "Let's try the tasting menu at Azhar.", new Date(2022, 6, 12, 19, 0, 0),
+      new Date(2022, 6, 13, 1, 0, 0), 'Azhar Restaurant',
+      NeverEatAlone.PriceRange.EXPENSIVE, [middleEasternCuisine, modernCuisine],
+      'resources/images/6.jpg', 6, 6, false, '#B3A870');
     const eventListSample: NeverEatAlone.EventCardSummary[] = [
-      new NeverEatAlone.EventCardSummary(1, 'A night to remmeber at the best \
-        sushi restaurant in town!', new Date(2022, 6, 12, 19, 0, 0), new Date(
-        2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
-        NeverEatAlone.PriceRange.VERY_EXPENSIVE, [japaneseCuisine,
-        omakaseCuisine], 'resources/images/3.jpg', 6, 6, false, '#E1630D'),
-      new NeverEatAlone.EventCardSummary(2, 'The best italian restaurant in \
-        town!', new Date(2022, 5, 22, 19, 30, 0), new Date(2022, 6, 13, 0, 30,
-        0), 'Piano Piano Restaurant', NeverEatAlone.PriceRange.EXPENSIVE, [
-        italianCuisine], 'resources/images/4.jpg', 4, 6, false, '#B2DFED'),
-      new NeverEatAlone.EventCardSummary(3, "Let's go to Yukashi", new Date(
-        2022, 6, 12, 19, 0, 0), new Date(2022, 6, 13, 1, 0, 0), 'Yukashi \
-        Japanese Restaurant', NeverEatAlone.PriceRange.VERY_EXPENSIVE, [
-        japaneseCuisine, omakaseCuisine], 'resources/images/3.jpg', 6, 6, false,
-        '#F9C638'),
-      new NeverEatAlone.EventCardSummary(4, 'Who said Duck?!', new Date(2022,
-        6, 12, 19, 0, 0), new Date(2022, 6, 13, 1, 0, 0), 'Ration Restaurant',
-        NeverEatAlone.PriceRange.VERY_EXPENSIVE, [canadianCuisine,
-        modernCuisine], 'resources/images/4.jpg', 6, 6, false, '#DA78A5'),
-      new NeverEatAlone.EventCardSummary(5, 'Steak night', new Date(2022, 6,
-        12, 19, 0, 0), new Date(2022, 6, 13, 1, 0, 0), "Hy's Steakhouse and \
-        bar", NeverEatAlone.PriceRange.VERY_EXPENSIVE, [steakhouseCuisine,
-        seafoodCuisine], 'resources/images/5.jpg', 6, 6, false, '#AC4519'),
-      new NeverEatAlone.EventCardSummary(6, "Let's try the tasting menu at \
-        Azhar.", new Date(2022, 6, 12, 19, 0, 0), new Date(2022, 6, 13, 1, 0,
-        0), 'Azhar Restaurant', NeverEatAlone.PriceRange.EXPENSIVE, [
-        middleEasternCuisine, modernCuisine], 'resources/images/6.jpg', 6, 6,
-        false, '#B3A870'),
-      new NeverEatAlone.EventCardSummary(7, 'Calling all the french food \
-        lovers', new Date(2022, 6, 12, 19, 0, 0), new Date(2022, 6, 13, 1, 0,
-        0), 'Le Select Bistro', NeverEatAlone.PriceRange.MODERATELY_PRICED, [
-        frenchCuisine, traditionalCuisine], 'resources/images/7.jpg', 6, 6,
-        false, '#6A8716'),
-      new NeverEatAlone.EventCardSummary(8, 'Shakshouka for life!', new Date(
-        2022, 6, 12, 11, 30, 0), new Date(2022, 6, 13, 1, 0, 0),
-        'Amal Restaurant', NeverEatAlone.PriceRange.VERY_EXPENSIVE, [
-        middleEasternCuisine, modernCuisine], 'resources/images/8.jpg', 6, 6,
-        false, '#DA78A5'),
-      new NeverEatAlone.EventCardSummary(9, 'Exceptional view and drinks',
-        new Date(2022, 6, 12, 19, 0, 0), new Date(2022, 6, 13, 1, 0, 0),
-        'Canoe', NeverEatAlone.PriceRange.EXPENSIVE, [modernCuisine,
-        canadianCuisine], 'resources/images/9.jpg', 6, 6, false, '#8EA142'),
-      new NeverEatAlone.EventCardSummary(10, 'Celebrating Oktoberfest',
-        new Date(2022, 6, 12, 19, 0, 0), new Date(2022, 6, 13, 1, 0, 0),
-        'Liberty Commons Smokehouse', NeverEatAlone.PriceRange.INEXPENSIVE, [
-        bbqCuisine, breweryCuisine], 'resources/images/10.jpg', 6, 6, false,
-        '#B27A49'),
-      new NeverEatAlone.EventCardSummary(11, 'Persian grill at its best',
-        new Date(2022, 6, 12, 19, 0, 0), new Date(2022, 6, 13, 1, 0, 0),
-        'Darbar Persian Grill', NeverEatAlone.PriceRange.VERY_EXPENSIVE, [
-        persianCuisine, grillCuisine], 'resources/images/11.jpg', 6, 6, false,
-        '#FCE1D8'),
-      new NeverEatAlone.EventCardSummary(12, 'Must try fusion food', new Date(
-        2022, 6, 12, 19, 0, 0), new Date(2022, 6, 13, 1, 0, 0),
-        'R&D Restaurant', NeverEatAlone.PriceRange.EXPENSIVE, [chineseCuisine,
-        modernCuisine, fusionCuisine], 'resources/images/12.jpg', 6, 6, false,
-        '#957DAD')
-    ];
+      eventCardSummary1, eventCardSummary2, eventCardSummary3,
+      eventCardSummary4, eventCardSummary5, eventCardSummary6,
+      eventCardSummary7, eventCardSummary8, eventCardSummary9,
+      eventCardSummary10, eventCardSummary11, eventCardSummary12];
     const eventTagListEmpty: NeverEatAlone.EventTag[] = [];
     const eventTagListSample: NeverEatAlone.EventTag[] = [
       new NeverEatAlone.EventTag(1, 'A night to remmeber at the best sushi \
@@ -116,21 +130,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     ];
     const userFutureEventListEmpty: NeverEatAlone.EventCardSummary[] = [];
     const userFutureEventListSample: NeverEatAlone.EventCardSummary[] = [
-      new NeverEatAlone.EventCardSummary(5, 'Steak night', new Date(2022, 6,
-        12, 19, 0, 0), new Date(2022, 6, 13, 1, 0, 0), "Hy's Steakhouse and \
-        bar", NeverEatAlone.PriceRange.VERY_EXPENSIVE, [steakhouseCuisine,
-        seafoodCuisine], 'resources/images/5.jpg', 6, 6, false, '#AC4519'),
-      new NeverEatAlone.EventCardSummary(6, "Let's try the tasting menu at \
-        Azhar.", new Date(2023, 6, 12, 19, 0, 0), new Date(2022, 6, 13, 1, 0,
-        0), 'Azhar Restaurant', NeverEatAlone.PriceRange.EXPENSIVE, [
-        middleEasternCuisine, modernCuisine], 'resources/images/6.jpg', 6, 6,
-        false, '#B3A870'),
-      new NeverEatAlone.EventCardSummary(7, 'Calling all the french food \
-        lovers', new Date(2023, 1, 10, 19, 30, 0), new Date(2022, 6, 13, 1, 0,
-        0), 'Le Select Bistro', NeverEatAlone.PriceRange.MODERATELY_PRICED, [
-        frenchCuisine, traditionalCuisine], 'resources/images/7.jpg', 6, 6,
-        false, '#6A8716')
-    ];
+      eventCardSummary5, eventCardSummary6, eventCardSummary7];
     const totalEventsThisMonth: number = 10;
     const homePageModelGuestUser = new NeverEatAlone.LocalHomePageModel(
       imageListSample, eventListSample, eventTagListEmpty,
@@ -321,11 +321,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       emmaCoverImage, emmaProfileImage.src, userEmma.name,
       userEmma.userName, userEmma.createdAt, emmaBio, emmaLocation,
       emmaLanguageNameList, '', '', emmaInstagramLink, emmaFavoriteCuisines, [],
-      [new NeverEatAlone.EventCardSummary(1, 'A night to remmeber at the best \
-      sushi restaurant in town!', new Date(2022, 6, 12, 19, 0, 0), new Date(
-      2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
-      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [japaneseCuisine,
-      omakaseCuisine], 'resources/images/3.jpg', 6, 6, false, '#E1630D')]);
+      [eventCardSummary1]);
     this._profilePageModelMap.set(1, demoProfilePageModel1);
     // User Profile Page Model for userArthur
     const arthurCoverImage = coverImage1;
@@ -333,33 +329,16 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       arthurCoverImage, arthurProfileImage.src, userArthur.name,
       userArthur.userName, userArthur.createdAt, 'Ready to explore Toronto.',
       vancouver, arthurLanguageList, 'www.facebook.com/arthur_van',
-      'www.twitter.com/@vanfan', '', arthurFavoriteCuisines, [
-      new NeverEatAlone.EventCardSummary(7, 'Calling all the french food \
-      lovers', new Date(2023, 1, 10, 19, 30, 0), new Date(2022, 6, 13, 1, 0,
-      0), 'Le Select Bistro', NeverEatAlone.PriceRange.MODERATELY_PRICED, [
-      frenchCuisine, traditionalCuisine], 'resources/images/7.jpg', 6, 6,
-      false, '#6A8716')], [
-      new NeverEatAlone.EventCardSummary(1, 'A night to remmeber at the best \
-      sushi restaurant in town!', new Date(2022, 6, 12, 19, 0, 0), new Date(
-      2022, 6, 13, 1, 0, 0), 'Yukashi Japanese Restaurant',
-      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [japaneseCuisine,
-      omakaseCuisine], 'resources/images/3.jpg', 6, 6, false, '#E1630D'),
-      new NeverEatAlone.EventCardSummary(60, "Let's try the tasting menu at \
-      Azhar.", new Date(2022, 6, 12, 19, 0, 0), new Date(2022, 6, 13, 1, 0, 0),
-      'Azhar Restaurant', NeverEatAlone.PriceRange.EXPENSIVE, [
-      middleEasternCuisine, modernCuisine], 'resources/images/6.jpg', 6, 6,
-      false, '#B3A870')]);
+      'www.twitter.com/@vanfan', '', arthurFavoriteCuisines, [eventCardSummary7
+      ], [eventCardSummary1, eventCardSummary60]);
     this._profilePageModelMap.set(2, demoProfilePageModel2);
     // User Profile Page Model for userLucy
     const lucyCoverImage = coverImage5;
     const demoProfilePageModel3 = new NeverEatAlone.LocalProfilePageModel(3,
       lucyCoverImage, 'resources/images/profile2.jpeg', 'Lucy', 'lu2d3',
       new Date(2022, 4, 2, 2, 30, 40), 'Matcha everything!', toronto,
-      lucyLanguageList, '', '', '', lucyFavoriteCuisines, [
-      new NeverEatAlone.EventCardSummary(5, 'Steak night', new Date(2022, 6, 12,
-      19, 0, 0), new Date(2022, 6, 13, 1, 0, 0), "Hy's Steakhouse and bar",
-      NeverEatAlone.PriceRange.VERY_EXPENSIVE, [steakhouseCuisine,
-      seafoodCuisine], 'resources/images/5.jpg', 6, 6, false, '#AC4519')], []);
+      lucyLanguageList, '', '', '', lucyFavoriteCuisines, [eventCardSummary5],
+      []);
     this._profilePageModelMap.set(3, demoProfilePageModel3);
     // Setting up the _editProfilePageModel map.
     this._editProfilePageModel = new Map();
@@ -379,6 +358,57 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       emmaFavoriteCuisines, false, false, false, false, '', '',
       emmaInstagramLink, emmaLocation, locationList, languageList, cuisineList);
     this._editProfilePageModel.set(1, demoEditProfilePageModel1);
+    //emma settings model
+    const emmaSocialLinks = [new NeverEatAlone.SocialAccount(userEmma.id,
+      'emma@gmail.com', NeverEatAlone.SocialAccountType.GOOGLE),
+      new NeverEatAlone.SocialAccount(userEmma.id, 'emma@yahoo.com',
+      NeverEatAlone.SocialAccountType.FACEBOOK)];
+    const emmaPassword = '123';
+    const emmaVisaCard3333 = new NeverEatAlone.PaymentCard(1, 4520888855553333,
+      'Emma McM', 12, 2027, 123, 'm4y 0v0', NeverEatAlone.CreditCardType.VISA);
+    const emmaMastercard2222 = new NeverEatAlone.PaymentCard(2,
+      5047888855552222, 'Emma McM', 5, 2023, 548, 'm4y 0v0',
+      NeverEatAlone.CreditCardType.MASTERCARD);
+    const emmaMastercard2589 = new NeverEatAlone.PaymentCard(3,
+      303088855552589, 'Emma McM', 1, 2024, 6060, 'm4y 0v0',
+      NeverEatAlone.CreditCardType.AMEX);
+    const emmaPaymentCards = [emmaVisaCard3333, emmaMastercard2222,
+      emmaMastercard2589];
+    const paymentRecord1 = new NeverEatAlone.PaymentRecord(1,
+      eventCardSummary1, [new NeverEatAlone.PaymentTransaction(1, 'No-Show Fee',
+      25.00, NeverEatAlone.PaymentMethod.CREDIT_CARD,
+      NeverEatAlone.CreditCardType.VISA, '1234', '', new Date(2022, 12, 11, 13,
+      30, 30), null, NeverEatAlone.PaymentStatus.WILL_BE_CHARGED, 13),
+      new NeverEatAlone.PaymentTransaction(2, 'Event Fee', 5.00,
+      NeverEatAlone.PaymentMethod.CREDIT_CARD,
+      NeverEatAlone.CreditCardType.VISA, '1234', '', null, new Date(
+      2022, 10, 11, 13, 30, 30), NeverEatAlone.PaymentStatus.CHARGED, 13)]);
+    const emmaPaymentRecords = [paymentRecord1];
+    // Setting up the settings page model.
+    this._settingsPageModel = new Map();
+    const demoSettingsPageModel1 = new DemoSettingsPageModel(userEmma.name,
+      emmaSocialLinks, userEmma.id, userEmma.email, emmaPassword, true, false,
+      true, true, false, true, emmaMastercard2222, emmaPaymentCards,
+      emmaPaymentRecords);
+    this._settingsPageModel.set(1, demoSettingsPageModel1);
+    // arthur settings model
+    const arthurSocialLinks: NeverEatAlone.SocialAccount[] = [];
+    const arthurPaymentRecords: NeverEatAlone.PaymentRecord[] = [
+      new NeverEatAlone.PaymentRecord(2, eventCardSummary2, [
+      new NeverEatAlone.PaymentTransaction(3, 'Event Fee', 15.00,
+      NeverEatAlone.PaymentMethod.CREDIT_CARD,
+      NeverEatAlone.CreditCardType.VISA, '1234', '', new Date(2021, 11, 10, 12,
+      30, 30), null, NeverEatAlone.PaymentStatus.CHARGED, 13)])];
+    const arthurVisa1234 = new NeverEatAlone.PaymentCard(4, 4520888855551234,
+      'Emma McM', 12, 2027, 123, 'm4y 0v0', NeverEatAlone.CreditCardType.VISA);
+    const arthurPaymentCards:NeverEatAlone.PaymentCard[] = [arthurVisa1234];
+    const arthurPassword = '123';
+    const demoSettingsPageModel2 = new DemoSettingsPageModel(userArthur.name,
+      arthurSocialLinks, userArthur.id, userArthur.email, arthurPassword, false,
+      false, false, false, false, true, arthurVisa1234, arthurPaymentCards,
+      arthurPaymentRecords);
+    this._settingsPageModel.set(2, demoSettingsPageModel2);
+    // Loading all models with load method.
     await Promise.all([this._headerModel.load(), this._homePageModel.load(),
       this._inviteAFoodieModel.load()]);
     return;
@@ -422,6 +452,10 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return this._editProfilePageModel.get(id);
   }
 
+  public getSettingsPageModel(id: number): NeverEatAlone.SettingsPageModel {
+    return this._settingsPageModel.get(id);
+  }
+
   private _headerModel: NeverEatAlone.HeaderModel;
   private _homePageModel: NeverEatAlone.HomePageModel;
   private _diningEventModelMap: Map<number, NeverEatAlone.DiningEventPageModel>;
@@ -432,4 +466,5 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
   private _profilePageModelMap: Map<number, NeverEatAlone.ProfilePageModel>;
   private _editProfilePageModel: Map<number,
     NeverEatAlone.EditProfilePageModel>;
+  private _settingsPageModel: Map<number, NeverEatAlone.SettingsPageModel>;
 }

@@ -7,6 +7,7 @@ import { DiningEventPageModel } from './dining_event_page';
 import { HomePageModel } from './home_page';
 import { PartnerWithUsModel } from './partner_with_us_page';
 import { ProfilePageModel } from './profile_page';
+import { SettingsPageModel } from './settings_page';
 
 export abstract class ApplicationModel {
   public abstract load(): Promise<void>;
@@ -19,4 +20,5 @@ export abstract class ApplicationModel {
   public abstract get logInModel(): LogInModel;
   public abstract getProfilePageModel(id: number): ProfilePageModel;
   public abstract getEditProfilePageModel(id: number): EditProfilePageModel;
+  public abstract getSettingsPageModel(id: number): SettingsPageModel;
 }

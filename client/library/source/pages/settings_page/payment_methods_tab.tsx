@@ -9,7 +9,7 @@ interface Properties {
   displayMode: DisplayMode;
 
   /** User's list of existing cards on file other than the default card. */
-  otherPaymentCards: PaymentCard[];
+  paymentCards: PaymentCard[];
 
   /** User's default payment card. */
   defaultCard: PaymentCard;
@@ -26,22 +26,23 @@ interface Properties {
   /** Error code regarding updating an existing card. */
   updateCardErrorCode: CardDetailsForm.ErrorCode;
 
+  page: PaymentMethodsTab.Page;
+
   /** Indicates the Add card button is clicked. */
   onAddCard: (cardNumber: number, cardName: string, month: number, year: number,
     securityCode: number, zipcode: string) => void;
-
-  onMakeDefaultCard: (cardId: number) => void;
 
   /** Indicates the delete card button is clicked. */
   onDeleteCard: (cardId: number) => void;
 
   /** Indicates the card details is changed and save button is clicked. */
   onUpdateCard: (newCard: PaymentCard, isMarkedDefault: boolean) => void;
+
+  onChangePage: (page: PaymentMethodsTab.Page) => void;
 }
 
 interface State {
   selectedCard: PaymentCard;
-  page: PaymentMethodsTab.Page;
 }
 
 /** Displays the payment methods tab. */
@@ -49,13 +50,12 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props);
     this.state = {
-      selectedCard: PaymentCard.noCard(),
-      page: PaymentMethodsTab.Page.INITIAL
+      selectedCard: PaymentCard.noCard()
     };
   }
 
   public render(): JSX.Element {
-    if (this.state.page === PaymentMethodsTab.Page.CARD_DETAILS) {
+    if (this.props.page === PaymentMethodsTab.Page.CARD_DETAILS) {
       return (
         <React.Fragment>
           <h1 style={PAGE_HEADING_STYLE} >Payment Methods</h1>
@@ -72,15 +72,14 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
               errorMessage={this.props.updateCardErrorMessage}
               errorCode={this.props.updateCardErrorCode}
               onCancel={this.handleBackClick}
-              isDefault={this.state.selectedCard.id ===
+              isMarkedAsDefault={this.state.selectedCard.id ===
                 this.props.defaultCard.id}
-              onMakeDefault={() => this.props.onMakeDefaultCard(
-                this.state.selectedCard.id)}
               onDeleteCard={() => this.props.onDeleteCard(
                 this.state.selectedCard.id)}
+              onUpdateCard={this.props.onUpdateCard}
             />
         </React.Fragment>);
-    } else if (this.state.page === PaymentMethodsTab.Page.ADD_CARD) {
+    } else if (this.props.page === PaymentMethodsTab.Page.ADD_CARD) {
       const addCardContainerStyle = (this.props.displayMode ===
         DisplayMode.MOBILE && MOBILE_ADD_CARD_CONTAINER_STYLE ||
         ADD_CARD_CONTAINER_STYLE);
@@ -106,16 +105,19 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
           card={this.props.defaultCard}
           onClick={() => this.handleCardClick(this.props.defaultCard)} />);
       }
-      if (this.props.otherPaymentCards &&
-          this.props.otherPaymentCards.length !== 0) {
-        for (const card of this.props.otherPaymentCards) {
+      if (this.props.paymentCards && this.props.paymentCards.length !== 0) {
+        for (const card of this.props.paymentCards) {
+          if (card.id === this.props.defaultCard.id) {
+            continue;
+          }
           cards.push(<PaymentCardRow key={card.id} card={card}
             displayMode={this.props.displayMode}
             onClick={() => this.handleCardClick(card)} />);
         }
       }
       cards.push(<AddCardButton key='add_card'
-        displayMode={this.props.displayMode} onAddCard={this.handleAddCard} />);
+        displayMode={this.props.displayMode} onAddCard={
+        this.handleAddCardButton} />);
       return (
         <div style={COLUMN_STYLE} >
           {cards}
@@ -129,18 +131,18 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
   }
 
   private handleCardClick = (card: PaymentCard) => {
+    this.props.onChangePage(PaymentMethodsTab.Page.CARD_DETAILS);
     this.setState({
-      selectedCard: card,
-      page: PaymentMethodsTab.Page.CARD_DETAILS
+      selectedCard: card
     });
   }
 
   private handleBackClick = () => {
-    this.setState({ page: PaymentMethodsTab.Page.INITIAL });
+    this.props.onChangePage(PaymentMethodsTab.Page.INITIAL);
   }
 
-  private handleAddCard = () => {
-    this.setState({ page: PaymentMethodsTab.Page.ADD_CARD });
+  private handleAddCardButton = () => {
+    this.props.onChangePage(PaymentMethodsTab.Page.ADD_CARD);
   }
 }
 

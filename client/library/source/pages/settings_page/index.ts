@@ -5,3 +5,5 @@ export * from './notifications_tab';
 export * from './payment_history_tab';
 export * from './payment_methods_tab';
 export * from './settings_page';
+export * from './settings_page_controller';
+export * from './settings_page_model';

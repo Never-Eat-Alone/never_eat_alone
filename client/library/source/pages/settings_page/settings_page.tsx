@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { AddCreditCardForm } from '../../components';
+import { AddCreditCardForm, Modal } from '../../components';
 import { DisplayMode, PaymentCard, PaymentRecord, SocialAccount
 } from '../../definitions';
+import { PaymentReceiptModal } from '../../modals';
 import { AccountInformationTab } from './account_information_tab';
 import { CardDetailsForm } from './card_details_form'; 
 import { NotificationsTab } from './notifications_tab';
@@ -28,31 +29,31 @@ interface Properties {
   password: string;
 
   /** Whether the new events notification is checked or not. */
-  isNewEvents: boolean;
+  isNewEventsNotificationOn: boolean;
 
   /** Whether the event joined notification is checked or not. */
-  isEventJoined: boolean;
+  isEventJoinedNotificationOn: boolean;
 
   /** Whether the event reminders notification is checked or not. */
-  isEventReminders: boolean;
+  isEventRemindersNotificationOn: boolean;
 
   /** Whether the changes to attending events notification is checked or not. */
-  isChanges: boolean;
+  isChangesNotificationOn: boolean;
 
   /** Whether the someone joins event notification is checked or not. */
-  isSomeoneJoined: boolean;
+  isSomeoneJoinedNotificationOn: boolean;
 
   /** Whether the foodie accepts invite notification is checked or not. */
-  isFoodieAcceptedInvite: boolean;
+  isFoodieAcceptedInviteNotificationOn: boolean;
 
   /** Whether the announcement notification is checked or not. */
-  isAnnouncement: boolean;
+  isAnnouncementNotificationOn: boolean;
 
   /** User's default payment card. */
   defaultCard: PaymentCard;
 
   /** User's list of existing cards on file other than the default card. */
-  otherPaymentCards: PaymentCard[];
+  paymentCards: PaymentCard[];
 
   /** User's list of payment records. */
   paymentRecords: PaymentRecord[];
@@ -69,15 +70,16 @@ interface Properties {
   /** Error code regarding updating an existing credit card. */
   updateCardErrorCode: CardDetailsForm.ErrorCode;
 
+  paymentMethodsTabPage: PaymentMethodsTab.Page;
+
+  onChangePaymentMethodsTabPage: (page: PaymentMethodsTab.Page) => void;
+
   /** Indicates the Add card button is clicked. */
-  onAddCard: (cardNumber: number, cardName: string, month: number, year: number,
-    securityCode: number, zipcode: string) => void;
+  onAddCard: (cardNumber: number, nameOnCard: string, month: number,
+    year: number, securityCode: number, zipcode: string) => void;
 
   /** Indicates the update card details button is clicked. */
   onUpdateCard: (newCard: PaymentCard, isMarkedDefault: boolean) => void;
-
-  /** Indicates the make default card on card details is clicked. */
-  onMakeDefaultCard: (cardId: number) => void;
 
   /** Indicates the delete card button is clicked. */
   onDeleteCard: (cardId: number) => void;
@@ -133,6 +135,9 @@ interface Properties {
 
 interface State {
   activeTab: SettingsPage.Tab
+  isReceiptDisplayed: boolean;
+  paymentRecord: PaymentRecord;
+  paymentReceiptModalPage: PaymentReceiptModal.Page;
 }
 
 /** Displays the Settings Page. */
@@ -140,11 +145,14 @@ export class SettingsPage extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props);
     this.state = {
-      activeTab: SettingsPage.Tab.ACCOUNT_INFORMATION
+      activeTab: SettingsPage.Tab.ACCOUNT_INFORMATION,
+      isReceiptDisplayed: false,
+      paymentRecord: PaymentRecord.noRecord(),
+      paymentReceiptModalPage: PaymentReceiptModal.Page.INITIAL
     };
   }
 
-  render(): JSX.Element {
+  public render(): JSX.Element {
     const { containerStyle, contentStyle, headingStyle,
         pageContainerStyle, lastTabStyle } = (() => {
       if (this.props.displayMode === DisplayMode.MOBILE) {
@@ -179,14 +187,35 @@ export class SettingsPage extends React.Component<Properties, State> {
         case SettingsPage.Tab.NOTIFICATIONS:
           return <NotificationsTab {...this.props} />;
         case SettingsPage.Tab.PAYMENT_METHODS:
-          return <PaymentMethodsTab {...this.props} />;
+          return <PaymentMethodsTab {...this.props}
+            page={this.props.paymentMethodsTabPage}
+            onChangePage={this.props.onChangePaymentMethodsTabPage}
+          />;
         case SettingsPage.Tab.PAYMENT_HISTORY:
-          return <PaymentHistoryTab {...this.props} />;
+          return <PaymentHistoryTab
+            {...this.props}
+            onViewReceiptClick={this.handleViewReceipt}
+          />;
       }
     })();
+    const receiptModal = (this.state.isReceiptDisplayed &&
+      <Modal>
+        <PaymentReceiptModal
+          displayMode={this.props.displayMode}
+          paymentRecord={this.state.paymentRecord}
+          page={this.state.paymentReceiptModalPage}
+          onClose={this.handlePaymentReceiptClose}
+          onPrintClick={() => {}}
+          onDownloadPdfClick={() => {}}
+          onSendEmailClick={() => {}}
+          onHelpClick={this.handleHelpClick}
+          submitHelpEmail={() => {}}
+        />
+      </Modal>);
     return (
       <div style={containerStyle} >
         <div style={contentStyle} >
+          {receiptModal}
           <h1 style={headingStyle} >Settings</h1>
           <div style={TABS_ROW_STYLE} >
             <Tab
@@ -240,6 +269,21 @@ export class SettingsPage extends React.Component<Properties, State> {
 
   private handleTabClick = (tab: SettingsPage.Tab) => {
     this.setState({ activeTab: tab });
+  }
+
+  private handlePaymentReceiptClose = () => {
+    this.setState({ isReceiptDisplayed: false });
+  }
+
+  private handleViewReceipt = (paymentRecord: PaymentRecord) => {
+    this.setState({
+      isReceiptDisplayed: true,
+      paymentRecord: paymentRecord
+    });
+  }
+
+  private handleHelpClick = () => {
+    this.setState({ paymentReceiptModalPage: PaymentReceiptModal.Page.HELP });
   }
 }
 

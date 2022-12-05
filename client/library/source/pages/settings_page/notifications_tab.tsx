@@ -6,25 +6,25 @@ interface Properties {
   displayMode: DisplayMode;
 
   /** Whether the new events notification is checked or not. */
-  isNewEvents: boolean;
+  isNewEventsNotificationOn: boolean;
 
   /** Whether the event joined notification is checked or not. */
-  isEventJoined: boolean;
+  isEventJoinedNotificationOn: boolean;
 
   /** Whether the event reminders notification is checked or not. */
-  isEventReminders: boolean;
+  isEventRemindersNotificationOn: boolean;
 
   /** Whether the changes to attending events notification is checked or not. */
-  isChanges: boolean;
+  isChangesNotificationOn: boolean;
 
   /** Whether the someone joins event notification is checked or not. */
-  isSomeoneJoined: boolean;
+  isSomeoneJoinedNotificationOn: boolean;
 
   /** Whether the foodie accepts invite notification is checked or not. */
-  isFoodieAcceptedInvite: boolean;
+  isFoodieAcceptedInviteNotificationOn: boolean;
 
   /** Whether the announcement notification is checked or not. */
-  isAnnouncement: boolean;
+  isAnnouncementNotificationOn: boolean;
 
   /** Indicates the New Events toggle button is clicked. */
   onNewEventsToggle: () => void;
@@ -59,28 +59,28 @@ export class NotificationsTab extends React.Component<Properties> {
         </h2>
         <ToggleRow
           key='New Events'
-          checked={this.props.isNewEvents}
+          checked={this.props.isNewEventsNotificationOn}
           title='New Events'
           description='Get an email when new events are posted on NEA.'
           onToggleClick={this.props.onNewEventsToggle}
         />
         <ToggleRow
           key='Event Joined'
-          checked={this.props.isEventJoined}
+          checked={this.props.isEventJoinedNotificationOn}
           title='Event Joined'
           description='Get a confirmation email when you join an event.'
           onToggleClick={this.props.onEventJoinedToggle}
         />
         <ToggleRow
           key='Event reminders'
-          checked={this.props.isEventReminders}
+          checked={this.props.isEventRemindersNotificationOn}
           title='Event reminders'
           description='Get notifications leading up to an event.'
           onToggleClick={this.props.onEventRemindersToggle}
         />
         <ToggleRow
           key='Changes to events you’re attending'
-          checked={this.props.isChanges}
+          checked={this.props.isChangesNotificationOn}
           title='Changes to events you’re attending'
           description='Be notified of any event detail changes, including 
             cancellations.'
@@ -88,7 +88,7 @@ export class NotificationsTab extends React.Component<Properties> {
         />
         <ToggleRow
           key='Someone joins an event you’re attending'
-          checked={this.props.isSomeoneJoined}
+          checked={this.props.isSomeoneJoinedNotificationOn}
           title='Someone joins an event you’re attending'
           description="Be notified of when a new member joins an event you're 
             going to."
@@ -96,7 +96,7 @@ export class NotificationsTab extends React.Component<Properties> {
         />
         <ToggleRow
           key='A foodie accepts your invite'
-          checked={this.props.isFoodieAcceptedInvite}
+          checked={this.props.isFoodieAcceptedInviteNotificationOn}
           title='A foodie accepts your invite'
           description='Be notified when a friend you invited joins 
             NeverEatAlone.'
@@ -104,7 +104,7 @@ export class NotificationsTab extends React.Component<Properties> {
         />
         <ToggleRow
           key='Announcements'
-          checked={this.props.isAnnouncement}
+          checked={this.props.isAnnouncementNotificationOn}
           title='Announcements'
           description='Get emails about NEA news and announcements.'
           onToggleClick={this.props.onAnnouncementToggle}

@@ -34,7 +34,7 @@ export function PaymentHistoryTab(props: Properties) {
             For now, go&nbsp;
             <RedNavLink
                 style={EXPLORE_EVENT_LINK_STYLE}
-                to='/explore_events'
+                to='/'
                 label='join some events!'
             />
           </div>
@@ -186,7 +186,8 @@ function PaymentRecordCard(props: PaymentRecordCardProp) {
           />
           <Router.Link
             style={eventButtonStyle}
-            to={`events/${props.paymentRecord.eventCardSummary.eventId}`}
+            to={`/dining_events/${props.paymentRecord.eventCardSummary
+              .eventId}`}
             className={css(styles.eventLink)}
           >
             Event Page

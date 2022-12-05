@@ -3,13 +3,15 @@ import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { AccentTextButton, CloseButton, PrimaryTextLinkButton
 } from '../components';
-import { DisplayMode, PaymentRecord } from '../definitions';
+import { DisplayMode, PaymentRecord, PaymentStatus } from '../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
 
   /** Payment Record. */
   paymentRecord: PaymentRecord;
+
+  page: PaymentReceiptModal.Page;
 
   /** Indicates the close button is clicked. */
   onClose: () => void;
@@ -25,105 +27,116 @@ interface Properties {
 
   /** Indicates the help button is clicked. */
   onHelpClick: () => void;
+
+  /** Indicates the submit button on help page is clicked. */
+  submitHelpEmail: (receiptId: number, message: string) => void;
+}
+
+interface State {
+  message: string;
 }
 
 /** Displays the Payment Receipt Modal. */
-export function PaymentReceiptModal(props: Properties) {
-  const { containerStyle, logoRowStyle, contentContainerStyle, plateImageStyle,
-      eventTitleStyle, dateTimeSectionStyle, eventTagContainerStyle,
-      buttonContainerStyle } = (() => {
-    if (props.displayMode === DisplayMode.MOBILE) {
-      return {
-        containerStyle: MOBILE_CONTAINER_STYLE,
-        logoRowStyle: MOBILE_LOGO_ROW_STYLE,
-        contentContainerStyle: MOBILE_CONTENT_CONTAINER_STYLE,
-        plateImageStyle: MOBILE_PLATE_IMAGE_STYLE,
-        eventTitleStyle: MOBILE_EVENT_TITLE_STYLE,
-        dateTimeSectionStyle: MOBILE_DATE_TIME_SECTION_STYLE,
-        eventTagContainerStyle: MOBILE_EVENT_TAG_CONTAINER_STYLE,
-        buttonContainerStyle: MOBILE_BUTTON_CONTAINER_STYLE
-      };
-    }
-    return {
-      containerStyle: CONTAINER_STYLE,
-      logoRowStyle: LOGO_ROW_STYLE,
-      contentContainerStyle: CONTENT_CONTAINER_STYLE,
-      plateImageStyle: PLATE_IMAGE_STYLE,
-      eventTitleStyle: EVENT_TITLE_STYLE,
-      dateTimeSectionStyle: DATE_TIME_SECTION_STYLE,
-      eventTagContainerStyle: EVENT_TAG_CONTAINER_STYLE,
-      buttonContainerStyle: BUTTON_CONTAINER_STYLE
+export class PaymentReceiptModal extends React.Component<Properties, State> {
+  constructor(props: Properties) {
+    super(props);
+    this.state = {
+      message: ''
     };
-  })();
-  const buttons = (() => {
-    const temp = [];
-    if (props.displayMode === DisplayMode.MOBILE) {
-      temp.push(<AccentTextButton key='Print' label='Print'
-        style={MOBILE_BUTTON_STYLE} onClick={props.onPrintClick} />);
-      temp.push(<AccentTextButton key='PDF' label='Download PDF'
-        style={MOBILE_BUTTON_STYLE} onClick={props.onDownloadPdfClick} />);
-      temp.push(<AccentTextButton key='Email' label='Send Email'
-        style={MOBILE_BUTTON_STYLE} onClick={props.onSendEmailClick} />);
-      temp.push(<AccentTextButton key='Help' label='Help'
-        style={MOBILE_BUTTON_STYLE} onClick={props.onHelpClick} />);
-    } else {
-      temp.push(<PrimaryTextLinkButton key='Print' label='Print'
-        onClick={props.onPrintClick} />);
-      temp.push(<PrimaryTextLinkButton key='PDF' label='Download PDF'
-        onClick={props.onDownloadPdfClick} />);
-      temp.push(<PrimaryTextLinkButton key='Email' label='Send Email'
-        onClick={props.onSendEmailClick} />);
-      temp.push(<PrimaryTextLinkButton key='Help' label='Help'
-        onClick={props.onHelpClick} />);
-    }
-    return temp;
-  })();
-  let totalFee = 0, totalTax = 0, totalPayment = 0;
-  const feeRows = [];
-  if (props.paymentRecord.paymentTransactions &&
-      props.paymentRecord.paymentTransactions.length !== 0) {
-    for (const payment of props.paymentRecord.paymentTransactions) {
-      const newFee = payment.amount;
-      totalFee += newFee;
-      const newTaxAmount = newFee * payment.taxRate;
-      totalTax += newTaxAmount;
-      totalPayment += newFee + newTaxAmount;
-      feeRows.push(
-        <div key={payment.id} style={FEE_ROW_STYLE} >
-          <div style={BOLD_FEE_TEXT_STYLE} >{payment.title}</div>
-          <div style={AMOUNT_TEXT_STYLE} >CAD ${newFee}</div>
-        </div>);
-    }
+    this._containerRef = React.createRef();
   }
-  return (
-    <div style={containerStyle} >
-      <div style={BACKGROUND_IMAGE_CONTAINER_STYLE} >
-        <div style={logoRowStyle} >
-          <Router.Link to='/' style={LOGO_LINK_STYLE} >
-            <img
-              style={LOGO_STYLE}
-              src='resources/payment_receipt_modal/logo.svg'
-              alt='Receipt Image'
-            />
-          </Router.Link>
-          <CloseButton
-            style={CLOSE_BUTTON_STYLE}
-            displayMode={DisplayMode.MOBILE}
-            onClick={props.onClose}
-          />
-        </div>
-        <div style={contentContainerStyle} >
-          <div style={PLATE_IMAGE_CONTAINER_STYLE} >
-            <img
-              style={plateImageStyle}
-              src='resources/payment_receipt_modal/plate.svg'
-              alt='Plate Image'
-            />
-          </div>
+
+  public render(): JSX.Element {
+    const { containerStyle, logoRowStyle, contentContainerStyle,
+        plateImageStyle, eventTitleStyle, dateTimeSectionStyle,
+        eventTagContainerStyle, buttonContainerStyle } = (() => {
+      if (this.props.displayMode === DisplayMode.MOBILE) {
+        return {
+          containerStyle: MOBILE_CONTAINER_STYLE,
+          logoRowStyle: MOBILE_LOGO_ROW_STYLE,
+          contentContainerStyle: MOBILE_CONTENT_CONTAINER_STYLE,
+          plateImageStyle: MOBILE_PLATE_IMAGE_STYLE,
+          eventTitleStyle: MOBILE_EVENT_TITLE_STYLE,
+          dateTimeSectionStyle: MOBILE_DATE_TIME_SECTION_STYLE,
+          eventTagContainerStyle: MOBILE_EVENT_TAG_CONTAINER_STYLE,
+          buttonContainerStyle: MOBILE_BUTTON_CONTAINER_STYLE
+        };
+      }
+      return {
+        containerStyle: CONTAINER_STYLE,
+        logoRowStyle: LOGO_ROW_STYLE,
+        contentContainerStyle: CONTENT_CONTAINER_STYLE,
+        plateImageStyle: PLATE_IMAGE_STYLE,
+        eventTitleStyle: EVENT_TITLE_STYLE,
+        dateTimeSectionStyle: DATE_TIME_SECTION_STYLE,
+        eventTagContainerStyle: EVENT_TAG_CONTAINER_STYLE,
+        buttonContainerStyle: BUTTON_CONTAINER_STYLE
+      };
+    })();
+    const buttons = (() => {
+      const temp = [];
+      if (this.props.displayMode === DisplayMode.MOBILE) {
+        temp.push(<AccentTextButton key='Print' label='Print'
+          style={MOBILE_BUTTON_STYLE} onClick={this.props.onPrintClick} />);
+        temp.push(<AccentTextButton key='PDF' label='Download PDF'
+          style={MOBILE_BUTTON_STYLE} onClick={this.props.onDownloadPdfClick}
+        />);
+        temp.push(<AccentTextButton key='Email' label='Send Email'
+          style={MOBILE_BUTTON_STYLE} onClick={this.props.onSendEmailClick} />);
+        temp.push(<AccentTextButton key='Help' label='Help'
+          style={MOBILE_BUTTON_STYLE} onClick={this.props.onHelpClick} />);
+      } else {
+        temp.push(<PrimaryTextLinkButton key='Print' label='Print'
+          onClick={this.props.onPrintClick} />);
+        temp.push(<PrimaryTextLinkButton key='PDF' label='Download PDF'
+          onClick={this.props.onDownloadPdfClick} />);
+        temp.push(<PrimaryTextLinkButton key='Email' label='Send Email'
+          onClick={this.props.onSendEmailClick} />);
+        temp.push(<PrimaryTextLinkButton key='Help' label='Help'
+          onClick={this.props.onHelpClick} />);
+      }
+      return temp;
+    })();
+    let totalFee = 0, totalTax = 0, totalPayment = 0;
+    let processedAtDate = null;
+    const feeRows = [];
+    if (this.props.paymentRecord.paymentTransactions &&
+      this.props.paymentRecord.paymentTransactions.length !== 0) {
+      for (const payment of this.props.paymentRecord.paymentTransactions) {
+        if (payment.status !== PaymentStatus.CHARGED) {
+          continue;
+        }
+        if (!processedAtDate) {
+          processedAtDate = payment.processedAt;
+        } else {
+          processedAtDate = (processedAtDate > payment.processedAt &&
+            payment.processedAt || processedAtDate);
+        }
+        const newFee = payment.amount;
+        totalFee += newFee;
+        const newTaxAmount = (newFee * payment.taxRate / 100);
+        totalTax += newTaxAmount;
+        totalPayment += newFee + newTaxAmount;
+        feeRows.push(
+          <div key={payment.id} style={FEE_ROW_STYLE} >
+            <div style={BOLD_FEE_TEXT_STYLE} >{payment.title}</div>
+            <div style={AMOUNT_TEXT_STYLE} >CAD ${newFee}</div>
+          </div>);
+      }
+    }
+    const processedAt = (processedAtDate && format(processedAtDate,
+      'MM/dd/yy h:mm aa') || '');
+    const pageContent = (() => {
+      if (this.props.page === PaymentReceiptModal.Page.HELP) {
+        return <div>Submit Help</div>;
+      }
+      return (
+        <>
           <div style={eventTagContainerStyle} >
             <svg
                 style={{...EVENT_TAG_ICON_STYLE,
-                  color: props.paymentRecord.eventCardSummary.eventColor}}
+                  color: this.props.paymentRecord.eventCardSummary.eventColor
+                }}
                 width='18' height='31' viewBox='0 0 18 31'
                 xmlns='http://www.w3.org/2000/svg'
             >
@@ -131,7 +144,7 @@ export function PaymentReceiptModal(props: Properties) {
             </svg>
           </div>
           <h1 style={eventTitleStyle} >
-            {props.paymentRecord.eventCardSummary.eventTitle}
+            {this.props.paymentRecord.eventCardSummary.eventTitle}
           </h1>
           <div style={dateTimeSectionStyle} >
             <div style={TEXT_ICON_CONTAINER_STYLE} >
@@ -141,8 +154,9 @@ export function PaymentReceiptModal(props: Properties) {
                 alt='Date Icon'
               />
               <p style={DATE_TEXT_STYLE} >
-                {format(props.paymentRecord.eventCardSummary.eventStartTime,
-                'eeee, MMMM do')}
+                {format(
+                  this.props.paymentRecord.eventCardSummary.eventStartTime,
+                  'eeee, MMMM do')}
               </p>
             </div>
             <div style={TEXT_ICON_CONTAINER_STYLE} >
@@ -152,9 +166,11 @@ export function PaymentReceiptModal(props: Properties) {
                 alt='Time Icon'
               />
               <p style={TIME_TEXT_STYLE} >
-                {format(props.paymentRecord.eventCardSummary.eventStartTime,
-                'h:mm aa')} - {format(
-                props.paymentRecord.eventCardSummary.eventEndTime, 'h:mm aa')}
+                {format(
+                  this.props.paymentRecord.eventCardSummary.eventStartTime,
+                  'h:mm aa')} - {format(
+                  this.props.paymentRecord.eventCardSummary.eventEndTime,
+                  'h:mm aa')}
               </p>
             </div>
           </div>
@@ -165,13 +181,8 @@ export function PaymentReceiptModal(props: Properties) {
               alt='Location Icon'
             />
             <p style={TIME_TEXT_STYLE} >
-              {props.paymentRecord.eventCardSummary.restaurantName}
+              {this.props.paymentRecord.eventCardSummary.restaurantName}
             </p>
-          </div>
-          <div style={JOINED_TEXT_STYLE} >
-            You joined on {format(
-            props.paymentRecord.paymentTransactions[0].processedAt,
-            'eeee, MMMM do, yyyy, h:mm aa')}.
           </div>
           {feeRows}
           <div style={DIVIDER_STYLE} />
@@ -185,11 +196,13 @@ export function PaymentReceiptModal(props: Properties) {
           </div>
           <div style={FEE_ROW_STYLE} >
             <div style={BOLD_FEE_TEXT_STYLE} >Total Payment</div>
-            <div style={AMOUNT_TEXT_STYLE} >CAD ${totalPayment.toFixed(2)}</div>
+            <div style={AMOUNT_TEXT_STYLE} >
+              CAD ${totalPayment.toFixed(2)}
+            </div>
           </div>
           <div style={DIVIDER_STYLE} />
           <div style={RECEIPT_NUMBER_STYLE} >
-            Receipt #{props.paymentRecord.id}
+            Receipt #{this.props.paymentRecord.id}
           </div>
           <div style={BOLD_FEE_TEXT_STYLE} >Payment Method</div>
           <div style={CARD_AMOUNT_ROW_STYLE} >
@@ -201,25 +214,98 @@ export function PaymentReceiptModal(props: Properties) {
               />
               <div style={COLUMN_CONTAINER_STYLE} >
                 <div style={BOLD_FEE_TEXT_STYLE} >Ending in {
-                  props.paymentRecord.paymentTransactions[0].cardLast4digits}
+                  this.props.paymentRecord.paymentTransactions[0]
+                  .cardLast4digits}
                 </div>
                 <div style={GREY_TEXT_STYLE} >
-                  {format(
-                  props.paymentRecord.paymentTransactions[0].processedAt,
-                  'MM/dd/yy h:mm aa')}
+                  {processedAt}
                 </div>
               </div>
             </div>
+            <div style={AMOUNT_TEXT_STYLE} >CAD ${totalPayment.toFixed(2)}</div>
+          </div>
+        </>);
+    })();
+    return (
+      <div style={FORM_STYLE} >
+        <div ref={this._containerRef} style={containerStyle} >
+          <div style={BACKGROUND_IMAGE_CONTAINER_STYLE} >
+            <div style={logoRowStyle} >
+              <Router.Link to='/' style={LOGO_LINK_STYLE} >
+                <img
+                  style={LOGO_STYLE}
+                  src='resources/payment_receipt_modal/logo.svg'
+                  alt='Receipt Image'
+                />
+              </Router.Link>
+              <CloseButton
+                style={CLOSE_BUTTON_STYLE}
+                displayMode={DisplayMode.MOBILE}
+                onClick={this.props.onClose}
+              />
+            </div>
+            <div style={contentContainerStyle} >
+              <div style={PLATE_IMAGE_CONTAINER_STYLE} >
+                <img
+                  style={plateImageStyle}
+                  src='resources/payment_receipt_modal/plate.svg'
+                  alt='Plate Image'
+                />
+              </div>
+              {pageContent}
+            </div>
+            <div style={buttonContainerStyle} >
+              {buttons}
+            </div>
           </div>
         </div>
-        <div style={buttonContainerStyle} >
-          {buttons}
-        </div>
-      </div>
-    </div>);
+      </div>);
+  }
+
+  public componentDidMount(): void {
+    document.addEventListener('mousedown', this.handleClickOutside);
+  }
+
+  public componentWillUnmount(): void {
+    document.removeEventListener('mousedown', this.handleClickOutside);
+  }
+
+  private handleClickOutside: { (event: any): void } = (
+      event: React.MouseEvent) => {
+    if (!this._containerRef.current.contains(event.target as Node)) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.props.onClose();
+    }
+  }
+
+  private _containerRef: React.RefObject<HTMLDivElement>;
 }
 
+export namespace PaymentReceiptModal {
+  export enum Page {
+    INITIAL,
+    HELP
+  }
+}
+
+const FORM_STYLE: React.CSSProperties = {
+  position: 'fixed',
+  top: '0px',
+  left: '0px',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '100%',
+  height: '100%',
+  backgroundColor: 'rgb(150, 150, 150, 0.5)',
+  zIndex: 1000
+};
+
 const CONTAINER_STYLE: React.CSSProperties = {
+  position: 'relative',
+  boxSizing: 'border-box',
   width: '560px',
   minWidth: '560px',
   boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
@@ -248,6 +334,7 @@ const BACKGROUND_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
   backgroundSize: '290px 453px',
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'top -121px center',
+  backgroundColor: 'transparent',
   padding: '40px 20px 20px 20px'
 };
 
@@ -448,21 +535,6 @@ const LOCATION_ICON_CONTAINER_STYLE: React.CSSProperties = {
   ...TEXT_ICON_CONTAINER_STYLE,
   marginBottom: '40px',
   width: '100%'
-};
-
-const JOINED_TEXT_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'flex-start',
-  alignItems: 'flex-start',
-  marginBottom: '40px',
-  width: '100%',
-  fontFamily: 'Source Sans Pro',
-  fontStyle: 'normal',
-  fontWeight: 400,
-  fontSize: '16px',
-  lineHeight: '20px',
-  color: '#000000'
 };
 
 const LOCATION_ICON_STYLE: React.CSSProperties = {

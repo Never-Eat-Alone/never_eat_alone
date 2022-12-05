@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { CheckBox, InputField, NumberedDropdownMenu, PaymentCardInputField,
-  PrimaryTextButton, SecurityCodeInputField } from '../../components';
+import { CheckBox, InputField, Modal, NumberedDropdownMenu,
+  PaymentCardInputField, PrimaryTextButton, SecurityCodeInputField
+} from '../../components';
 import { CreditCardType, DisplayMode, getCreditCardTypeName, PaymentCard
 } from '../../definitions';
+import { DeleteCardModal } from '../../modals';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -38,13 +40,10 @@ interface Properties {
   errorCode: CardDetailsForm.ErrorCode;
 
   /** Whether this card is selected as the default payment card or not. */
-  isDefault?: boolean;
+  isMarkedAsDefault: boolean;
 
   /** Indicates the delete card button is clicked. */
   onDeleteCard: () => void;
-
-  /** Indicates the make default card button is clicked. */
-  onMakeDefault?: () => void;
 
   /** Indicates the cancel button is clicked. */
   onCancel: () => void;
@@ -66,7 +65,8 @@ interface State {
   isZipcodeInvalid: boolean;
   cardInputHasChanged: boolean;
   errorCode: CardDetailsForm.ErrorCode;
-  isMakeDefaultMarked: boolean;
+  isMarkedAsDefault: boolean;
+  isDeleteCardClicked: boolean;
 }
 
 /** Displays the Card Details Form. */
@@ -86,11 +86,22 @@ export class CardDetailsForm extends React.Component<Properties, State> {
       isZipcodeInvalid: false,
       cardInputHasChanged: false,
       errorCode: this.props.errorCode,
-      isMakeDefaultMarked: false
+      isMarkedAsDefault: this.props.isMarkedAsDefault,
+      isDeleteCardClicked: false
     };
   }
 
   public render(): JSX.Element {
+    const deleteCardModal = (this.state.isDeleteCardClicked &&
+      <Modal>
+        <DeleteCardModal
+          displayMode={this.props.displayMode}
+          creditType={this.props.creditType}
+          cardLast4digits={this.props.cardNumber.toString().slice(-4)}
+          onDelete={this.props.onDeleteCard}
+          onClose={this.handleClose}
+        />
+      </Modal>);
     const containerStyle = (this.props.displayMode === DisplayMode.MOBILE &&
       MOBILE_CARD_DETAILS_CONTAINER_STYLE || CARD_DETAILS_CONTAINER_STYLE);
     const cardSrc = (() => {
@@ -105,7 +116,7 @@ export class CardDetailsForm extends React.Component<Properties, State> {
       }
       return '';
     })();
-    const isDefault = (this.props.isDefault &&
+    const isDefault = (this.props.isMarkedAsDefault &&
       <div style={IS_DEFAULT_CONTAINER_STYLE} >
         <img
           style={GREY_MARK_ICON_STYLE}
@@ -175,6 +186,7 @@ export class CardDetailsForm extends React.Component<Properties, State> {
       if (this.props.displayMode === DisplayMode.MOBILE) {
         return (
           <div style={MOBILE_DELETE_CARD_CONTAINER_STYLE} >
+            {deleteCardModal}
             <img
               style={MOBILE_SUPER_BIG_CARD_IMAGE_STYLE}
               src={cardSrc}
@@ -188,7 +200,7 @@ export class CardDetailsForm extends React.Component<Properties, State> {
               {isDefault}
               <div
                   style={DELETE_BUTTON_STYLE}
-                  onClick={this.props.onDeleteCard}
+                  onClick={this.handleDeleteCard}
               >
                 <img
                   style={CROSS_ICON_STYLE}
@@ -202,6 +214,7 @@ export class CardDetailsForm extends React.Component<Properties, State> {
       }
       return (
         <div style={DELETE_CARD_ROW_CONTAINER_STYLE} >
+          {deleteCardModal}
           <img
             style={SUPER_BIG_CARD_IMAGE_STYLE}
             src={cardSrc}
@@ -216,7 +229,7 @@ export class CardDetailsForm extends React.Component<Properties, State> {
               {isDefault}
               <div
                   style={DELETE_BUTTON_STYLE}
-                  onClick={this.props.onDeleteCard}
+                  onClick={this.handleDeleteCard}
               >
                 <img
                   style={CROSS_ICON_STYLE}
@@ -229,11 +242,11 @@ export class CardDetailsForm extends React.Component<Properties, State> {
           </div>
         </div>);
     })();
-    const makeDefaultRow = (this.props.isDefault ? null :
+    const makeDefaultRow = (this.props.isMarkedAsDefault ? null :
       <div style={MAKE_DEFAULT_ROW_STYLE} >
         <CheckBox
           label='Make this my default card'
-          checked={this.state.isMakeDefaultMarked}
+          checked={this.state.isMarkedAsDefault}
           onBoxClick={this.handleCheckBox}
         />
       </div>);
@@ -337,6 +350,14 @@ export class CardDetailsForm extends React.Component<Properties, State> {
       </form>);
   }
 
+  private handleDeleteCard = () => {
+    this.setState({ isDeleteCardClicked: true });
+  }
+
+  private handleClose = () => {
+    this.setState({ isDeleteCardClicked: false });
+  }
+
   private handleOnCardNumberChange = (event: React.ChangeEvent<HTMLInputElement>
       ) => {
     this.setState({
@@ -363,7 +384,7 @@ export class CardDetailsForm extends React.Component<Properties, State> {
 
   private handleCheckBox = () => {
     this.setState((prevState) => ({
-      isMakeDefaultMarked: !prevState.isMakeDefaultMarked,
+      isMarkedAsDefault: !prevState.isMarkedAsDefault,
       cardInputHasChanged: true
     }));
   }
@@ -395,7 +416,7 @@ export class CardDetailsForm extends React.Component<Properties, State> {
     const newCard = new PaymentCard(this.props.cardId, this.state.cardNumber,
       this.state.nameOnCard, this.state.selectedMonth, this.state.selectedYear,
       this.state.securityCode, this.state.zipcode, this.props.creditType);
-    this.props.onUpdateCard(newCard, this.state.isMakeDefaultMarked);
+    this.props.onUpdateCard(newCard, this.state.isMarkedAsDefault);
   }
 
   private handleInvalidInput = (fieldName: string) => {
@@ -432,7 +453,8 @@ export namespace CardDetailsForm {
     NONE,
     INVALID_CARD_INFO,
     EXPIRED_CARD,
-    INVALID_UPDATE_CARD_INPUT
+    INVALID_UPDATE_CARD_INPUT,
+    NO_CONNECTION
   }
 }
 
