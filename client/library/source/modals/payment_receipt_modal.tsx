@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import * as React from 'react';
 import * as Router from 'react-router-dom';
-import { AccentTextButton, CloseButton, PrimaryTextLinkButton
+import { AccentTextButton, BackButton, CloseButton, PrimaryTextLinkButton
 } from '../components';
 import { DisplayMode, PaymentRecord, PaymentStatus } from '../definitions';
 
@@ -101,7 +101,7 @@ export class PaymentReceiptModal extends React.Component<Properties, State> {
     let processedAtDate = null;
     const feeRows = [];
     if (this.props.paymentRecord.paymentTransactions &&
-      this.props.paymentRecord.paymentTransactions.length !== 0) {
+        this.props.paymentRecord.paymentTransactions.length !== 0) {
       for (const payment of this.props.paymentRecord.paymentTransactions) {
         if (payment.status !== PaymentStatus.CHARGED) {
           continue;
@@ -128,7 +128,13 @@ export class PaymentReceiptModal extends React.Component<Properties, State> {
       'MM/dd/yy h:mm aa') || '');
     const pageContent = (() => {
       if (this.props.page === PaymentReceiptModal.Page.HELP) {
-        return <div>Submit Help</div>;
+        return (
+          <>
+            <div style={BACK_ROW_CONTAINER_STYLE} >
+              <BackButton />
+              <h1 style={HELP_H1_STYLE} >Get help with this receipt</h1>
+            </div>
+          </>);
       }
       return (
         <>
@@ -660,4 +666,25 @@ const MOBILE_BUTTON_STYLE: React.CSSProperties = {
   width: '100%',
   height: '35px',
   minHeight: '35px'
+};
+
+const BACK_ROW_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  width: '100%',
+  gap: '10px'
+};
+
+const HELP_H1_STYLE: React.CSSProperties = {
+  fontFamily: 'Oswald',
+  fontStyle: 'normal',
+  fontWeight: 500,
+  fontSize: '26px',
+  lineHeight: '39px',
+  textTransform: 'uppercase',
+  color: '#000000',
+  padding: '0px',
+  margin: '0px'
 };
