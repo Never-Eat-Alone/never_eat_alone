@@ -31,4 +31,7 @@ export abstract class SettingsPageModel {
   public abstract toggleSomeoneJoinedNotification(): Promise<void>;
   public abstract toggleFoodieAcceptedInviteNotification(): Promise<void>;
   public abstract toggleAnnouncementNotification(): Promise<void>;
+  public abstract emailReceipt(paymentRecord: PaymentRecord): Promise<void>;
+  public abstract SubmitHelpEmail(receiptId: number, message: string): Promise<
+    void>;
 }

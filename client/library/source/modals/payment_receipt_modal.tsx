@@ -14,17 +14,19 @@ interface Properties {
 
   page: PaymentReceiptModal.Page;
 
+  isReceiptEmailed: boolean;
+
   /** Indicates the close button is clicked. */
   onClose: () => void;
 
   /** Indicates the print button is clicked. */
-  onPrintClick: () => void;
+  onPrintClick: (paymentRecord: PaymentRecord) => void;
 
   /** Indicates the Download Pdf button is clicked. */
-  onDownloadPdfClick: () => void;
+  onDownloadPdfClick: (paymentRecord: PaymentRecord) => void;
 
   /** Indicates the send email button is clicked. */
-  onSendEmailClick: () => void;
+  onSendEmailClick: (paymentRecord: PaymentRecord) => void;
 
   /** Indicates the help button is clicked. */
   onHelpClick: () => void;
@@ -34,10 +36,13 @@ interface Properties {
 
   /** Indicates the submit button on help page is clicked. */
   submitHelpEmail: (receiptId: number, message: string) => void;
+
+  activateEmailButton: () => void;
 }
 
 interface State {
   message: string;
+  counter: number;
 }
 
 /** Displays the Payment Receipt Modal. */
@@ -45,7 +50,8 @@ export class PaymentReceiptModal extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props);
     this.state = {
-      message: ''
+      message: '',
+      counter: 5
     };
     this._containerRef = React.createRef();
   }
@@ -79,30 +85,6 @@ export class PaymentReceiptModal extends React.Component<Properties, State> {
         buttonContainerStyle: BUTTON_CONTAINER_STYLE,
         backgroundImageContainerStyle: BACKGROUND_IMAGE_CONTAINER_STYLE
       };
-    })();
-    const buttons = (() => {
-      const temp = [];
-      if (this.props.displayMode === DisplayMode.MOBILE) {
-        temp.push(<AccentTextButton key='Print' label='Print'
-          style={MOBILE_BUTTON_STYLE} onClick={this.props.onPrintClick} />);
-        temp.push(<AccentTextButton key='PDF' label='Download PDF'
-          style={MOBILE_BUTTON_STYLE} onClick={this.props.onDownloadPdfClick}
-        />);
-        temp.push(<AccentTextButton key='Email' label='Send Email'
-          style={MOBILE_BUTTON_STYLE} onClick={this.props.onSendEmailClick} />);
-        temp.push(<AccentTextButton key='Help' label='Help'
-          style={MOBILE_BUTTON_STYLE} onClick={this.props.onHelpClick} />);
-      } else {
-        temp.push(<PrimaryTextLinkButton key='Print' label='Print'
-          onClick={this.props.onPrintClick} />);
-        temp.push(<PrimaryTextLinkButton key='PDF' label='Download PDF'
-          onClick={this.props.onDownloadPdfClick} />);
-        temp.push(<PrimaryTextLinkButton key='Email' label='Send Email'
-          onClick={this.props.onSendEmailClick} />);
-        temp.push(<PrimaryTextLinkButton key='Help' label='Help'
-          onClick={this.props.onHelpClick} />);
-      }
-      return temp;
     })();
     let totalFee = 0, totalTax = 0, totalPayment = 0;
     let processedAtDate = null;
@@ -283,6 +265,44 @@ export class PaymentReceiptModal extends React.Component<Properties, State> {
           </div>
         </>);
     })();
+    const buttons = (() => {
+      const temp = [];
+      if (this.props.displayMode === DisplayMode.MOBILE) {
+        temp.push(<AccentTextButton key='Print' label='Print'
+          style={MOBILE_BUTTON_STYLE} onClick={() => this.props.onPrintClick(
+          this.props.paymentRecord)} />);
+        temp.push(<AccentTextButton key='PDF' label='Download PDF'
+          style={MOBILE_BUTTON_STYLE} onClick={() =>
+          this.props.onDownloadPdfClick(this.props.paymentRecord)}
+        />);
+        if (this.props.isReceiptEmailed) {
+          temp.push(<AccentTextButton key='Email'
+            label={`Sent(${this.state.counter}s)`}
+            style={MOBILE_BUTTON_STYLE} disabled />);
+        } else {
+          temp.push(<AccentTextButton key='Email' label='Send Email'
+          style={MOBILE_BUTTON_STYLE} onClick={this.handleSendEmail} />);
+        }
+        temp.push(<AccentTextButton key='Help' label='Help'
+          style={MOBILE_BUTTON_STYLE} onClick={this.props.onHelpClick} />);
+      } else {
+        temp.push(<PrimaryTextLinkButton key='Print' label='Print'
+          onClick={() => this.props.onPrintClick(this.props.paymentRecord)} />);
+        temp.push(<PrimaryTextLinkButton key='PDF' label='Download PDF'
+          onClick={() => this.props.onDownloadPdfClick(
+          this.props.paymentRecord)} />);
+        if (this.props.isReceiptEmailed) {
+          temp.push(<PrimaryTextLinkButton key='Email'
+            label={`Sent(${this.state.counter}s)`} disabled />);
+        } else {
+          temp.push(<PrimaryTextLinkButton key='Email' label='Send Email'
+            onClick={this.handleSendEmail} />);
+        }
+        temp.push(<PrimaryTextLinkButton key='Help' label='Help'
+          onClick={this.props.onHelpClick} />);
+      }
+      return temp;
+    })();
     const buttonsSection = (() => {
       if (this.props.page !== PaymentReceiptModal.Page.INITIAL) {
         return null;
@@ -347,7 +367,21 @@ export class PaymentReceiptModal extends React.Component<Properties, State> {
     this.setState({ message: newValue });
   }
 
+  private handleSendEmail = () => {
+    this.props.onSendEmailClick(this.props.paymentRecord);
+    this._emailTimerId = setInterval(() => {
+      if (this.state.counter > 0) {
+        this.setState((prevState) => ({ counter: prevState.counter - 1 }));
+      } else {
+        this.setState({ counter: 5 });
+        this.props.activateEmailButton();
+        clearInterval(this._emailTimerId);
+      }
+    }, 1000);
+  }
+
   private _containerRef: React.RefObject<HTMLDivElement>;
+  private _emailTimerId: NodeJS.Timeout;
 }
 
 export namespace PaymentReceiptModal {

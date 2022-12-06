@@ -156,6 +156,16 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
     this._isAnnouncementNotificationOn = !this._isAnnouncementNotificationOn;
   }
 
+  public async emailReceipt(paymentRecord: NeverEatAlone.PaymentRecord):
+      Promise<void> {
+    return;
+  }
+
+  public async SubmitHelpEmail(receiptId: number, message: string): Promise<
+      void> {
+    return;
+  }
+
   private _displayName: string;
   private _linkedSocialAccounts: NeverEatAlone.SocialAccount[];
   private _profileId: number;

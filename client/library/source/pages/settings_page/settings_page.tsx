@@ -74,6 +74,8 @@ interface Properties {
 
   paymentReceiptModalPage: PaymentReceiptModal.Page;
 
+  isReceiptEmailed: boolean;
+
   onChangePaymentMethodsTabPage: (page: PaymentMethodsTab.Page) => void;
 
   /** Indicates the Add card button is clicked. */
@@ -134,9 +136,9 @@ interface Properties {
   /** Indicates the view receipt button is clicked. */
   onViewReceiptClick: (record: PaymentRecord) => void;
 
-  onPrintClick: () => void;
+  onPrintClick: (paymentRecord: PaymentRecord) => void;
 
-  onDownloadPdfClick: () => void;
+  onDownloadPdfClick: (paymentRecord: PaymentRecord) => void;
 
   onBackClick: () => void;
 
@@ -144,7 +146,8 @@ interface Properties {
 
   onSubmitHelpEmail: (receiptId: number, message: string) => void;
 
-  onSendEmailClick: () => void;
+  onEmailReceiptClick: (paymentRecord: PaymentRecord) => void;
+  activateEmailButton: () => void;
 }
 
 interface State {
@@ -216,13 +219,15 @@ export class SettingsPage extends React.Component<Properties, State> {
           displayMode={this.props.displayMode}
           paymentRecord={this.state.paymentRecord}
           page={this.props.paymentReceiptModalPage}
+          isReceiptEmailed={this.props.isReceiptEmailed}
           onClose={this.handlePaymentReceiptClose}
           onPrintClick={this.props.onPrintClick}
           onDownloadPdfClick={this.props.onDownloadPdfClick}
-          onSendEmailClick={this.props.onSendEmailClick}
+          onSendEmailClick={this.props.onEmailReceiptClick}
           onHelpClick={this.props.onHelpButtonClick}
           submitHelpEmail={this.props.onSubmitHelpEmail}
           onBack={this.props.onBackClick}
+          activateEmailButton={this.props.activateEmailButton}
         />
       </Modal>);
     return (
