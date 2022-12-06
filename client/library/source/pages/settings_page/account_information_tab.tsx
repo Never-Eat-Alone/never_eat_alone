@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { InputField, SecondaryTextButton, SecondaryTextLinkButton
+import { InputField, SecondaryTextButton, SecondaryTextLinkButton, BackButton
 } from '../../components';
 import { DisplayMode, SocialAccount, SocialAccountType
 } from '../../definitions';
@@ -22,6 +22,8 @@ interface Properties {
 
   /** User's password. */
   password: string;
+
+  page: AccountInformationTab.Page;
 
   /** Indicates link Google account button is clicked. */
   onGoogleClick: () => void;
@@ -46,13 +48,14 @@ interface Properties {
 
   /** Indicates the delete account button is clicked. */
   onDeleteAccount: () => void;
+
+  onDeactivateAccountPageClick: () => void;
 }
 
 interface State {
   isEditDisplayName: boolean;
   isEditEmail: boolean;
   isEditPassword: boolean;
-  isDeactivate: boolean;
 }
 
 /** Dislays the account information tab content on the setting page. */
@@ -62,8 +65,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
     this.state = {
       isEditDisplayName: false,
       isEditEmail: false,
-      isEditPassword: false,
-      isDeactivate: false
+      isEditPassword: false
     };
   }
 
@@ -99,8 +101,19 @@ export class AccountInformationTab extends React.Component<Properties, State> {
         inputEditRowStyle: INPUT_EDIT_ROW_STYLE
       };
     })();
-    if (this.state.isDeactivate) {
-      return <div>Deactivate account page</div>;
+    if (this.props.page === AccountInformationTab.Page.DEACTIVATE) {
+      return (
+        <>
+          <div style={DEACTIVE_ROW_CONTAINER_STYLE} >
+            <BackButton />
+            <div style={DEACTIVE_COLUMN_CONTAINER_STYLE} >
+              <h1 style={DEACTIVATE_H1_STYLE} >
+                Deactivate or Delete Your Account
+              </h1>
+              <p style={DEACTIVATE_GREY_TEXT_STYLE} >Settings</p>
+            </div>
+          </div>
+        </>);
     }
     const socialAccountButtons = [];
     if (this.props.linkedSocialAccounts &&
@@ -192,7 +205,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
         />);
     }
     return (
-      <React.Fragment>
+      <>
         <h1 style={PAGE_HEADING_STYLE} >Account Information</h1>
         <h2 style={SUB_HEADING_STYLE} >Linked Accounts</h2>
         <h3 style={DESCRIPTION_STYLE} >
@@ -261,13 +274,16 @@ export class AccountInformationTab extends React.Component<Properties, State> {
         <SecondaryTextLinkButton
           labelStyle={DEACTIVE_LINK_STYLE}
           label='Deactivate or Delete your account'
-          onClick={this.handleDeactivateClick}
+          onClick={this.props.onDeactivateAccountPageClick}
         />
-      </React.Fragment>);
+      </>);
   }
+}
 
-  private handleDeactivateClick = () => {
-    this.setState({ isDeactivate: true });
+export namespace AccountInformationTab {
+  export enum Page {
+    INITIAL,
+    DEACTIVATE
   }
 }
 
@@ -451,4 +467,21 @@ const DEACTIVE_LINK_STYLE: React.CSSProperties = {
 const EDIT_DISPLAYNAME_BUTTON_STYLE: React.CSSProperties = {
   ...EDIT_BUTTON_STYLE,
   marginBottom: '30px'
+};
+
+const DEACTIVE_ROW_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  gap: '10px',
+  width: '100%'
+};
+
+const DEACTIVE_COLUMN_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  gap: '4px'
 };

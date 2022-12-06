@@ -52,7 +52,7 @@ interface Properties {
 export class NotificationsTab extends React.Component<Properties> {
   public render(): JSX.Element {
     return (
-      <React.Fragment>
+      <>
         <h1 style={PAGE_HEADING_STYLE} >Notifications</h1>
         <h2 style={SUB_HEADING_STYLE} >
           Change your email notification settings
@@ -109,7 +109,7 @@ export class NotificationsTab extends React.Component<Properties> {
           description='Get emails about NEA news and announcements.'
           onToggleClick={this.props.onAnnouncementToggle}
         />
-      </React.Fragment>);
+      </>);
   }
 }
 

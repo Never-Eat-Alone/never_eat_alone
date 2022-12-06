@@ -3,6 +3,7 @@ import { AddCreditCardForm } from '../../components';
 import { DisplayMode, PaymentCard, PaymentRecord, User
 } from '../../definitions';
 import { PaymentReceiptModal } from '../../modals';
+import { AccountInformationTab } from './account_information_tab';
 import { CardDetailsForm } from './card_details_form';
 import { PaymentMethodsTab } from './payment_methods_tab';
 import { SettingsPage } from './settings_page';
@@ -28,6 +29,7 @@ interface State {
   updateCardErrorCode: CardDetailsForm.ErrorCode;
   paymentCards: PaymentCard[];
   defaultCard: PaymentCard;
+  accountInformationTabPage: AccountInformationTab.Page;
   paymentMethodsTabPage: PaymentMethodsTab.Page;
   paymentReceiptModalPage: PaymentReceiptModal.Page;
   isReceiptEmailed: boolean;
@@ -50,6 +52,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
       updateCardErrorCode: CardDetailsForm.ErrorCode.NONE,
       paymentCards: [],
       defaultCard: PaymentCard.noCard(),
+      accountInformationTabPage: AccountInformationTab.Page.INITIAL,
       paymentMethodsTabPage: PaymentMethodsTab.Page.INITIAL,
       paymentReceiptModalPage: PaymentReceiptModal.Page.INITIAL,
       isReceiptEmailed: false
@@ -82,6 +85,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
       addCardErrorCode={this.state.addCardErrorCode}
       updateCardErrorMessage=''
       updateCardErrorCode={this.state.updateCardErrorCode}
+      accountInformationTabPage={this.state.accountInformationTabPage}
       paymentMethodsTabPage={this.state.paymentMethodsTabPage}
       paymentReceiptModalPage={this.state.paymentReceiptModalPage}
       isReceiptEmailed={this.state.isReceiptEmailed}
@@ -112,6 +116,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
       onSubmitHelpEmail={this.handleSubmitHelpEmail}
       onEmailReceiptClick={this.handleEmailReceipt}
       activateEmailButton={this.handleActivateEmailButton}
+      onDeactivateAccountPageClick={this.handleDeactivateAccountPageClick}
     />;
   }
 
@@ -317,6 +322,11 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   }
 
+  private handleDeactivateAccountPageClick = () => {
+    this.setState({
+      accountInformationTabPage: AccountInformationTab.Page.DEACTIVATE
+    });
+  }
 
   private handleHelpClick = () => {
     this.setState({ paymentReceiptModalPage: PaymentReceiptModal.Page.HELP });

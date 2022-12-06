@@ -57,34 +57,34 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
   public render(): JSX.Element {
     if (this.props.page === PaymentMethodsTab.Page.CARD_DETAILS) {
       return (
-        <React.Fragment>
+        <>
           <h1 style={PAGE_HEADING_STYLE} >Payment Methods</h1>
-            <CardDetailsForm
-              {...this.props}
-              cardId={this.state.selectedCard.id}
-              nameOnCard={this.state.selectedCard.nameOnCard}
-              cardNumber={this.state.selectedCard.cardNumber}
-              selectedMonth={this.state.selectedCard.month}
-              selectedYear={this.state.selectedCard.year}
-              securityCode={this.state.selectedCard.securityCode}
-              zipcode={this.state.selectedCard.zipcode}
-              creditType={this.state.selectedCard.creditType}
-              errorMessage={this.props.updateCardErrorMessage}
-              errorCode={this.props.updateCardErrorCode}
-              onCancel={this.handleBackClick}
-              isMarkedAsDefault={this.state.selectedCard.id ===
-                this.props.defaultCard.id}
-              onDeleteCard={() => this.props.onDeleteCard(
-                this.state.selectedCard.id)}
-              onUpdateCard={this.props.onUpdateCard}
-            />
-        </React.Fragment>);
+          <CardDetailsForm
+            {...this.props}
+            cardId={this.state.selectedCard.id}
+            nameOnCard={this.state.selectedCard.nameOnCard}
+            cardNumber={this.state.selectedCard.cardNumber}
+            selectedMonth={this.state.selectedCard.month}
+            selectedYear={this.state.selectedCard.year}
+            securityCode={this.state.selectedCard.securityCode}
+            zipcode={this.state.selectedCard.zipcode}
+            creditType={this.state.selectedCard.creditType}
+            errorMessage={this.props.updateCardErrorMessage}
+            errorCode={this.props.updateCardErrorCode}
+            onCancel={this.handleBackClick}
+            isMarkedAsDefault={this.state.selectedCard.id ===
+              this.props.defaultCard.id}
+            onDeleteCard={() => this.props.onDeleteCard(
+              this.state.selectedCard.id)}
+            onUpdateCard={this.props.onUpdateCard}
+          />
+        </>);
     } else if (this.props.page === PaymentMethodsTab.Page.ADD_CARD) {
       const addCardContainerStyle = (this.props.displayMode ===
         DisplayMode.MOBILE && MOBILE_ADD_CARD_CONTAINER_STYLE ||
         ADD_CARD_CONTAINER_STYLE);
       return (
-        <React.Fragment>
+        <>
           <h1 style={PAGE_HEADING_STYLE} >Payment Methods</h1>
           <AddCreditCardForm
             {...this.props}
@@ -95,7 +95,7 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
             onAddCard={this.props.onAddCard}
             onCancel={this.handleBackClick}
           />
-        </React.Fragment>);
+        </>);
     }
     const cardsOnFile = (() => {
       const cards = [];
@@ -124,10 +124,10 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
         </div>);
     })();
     return (
-      <React.Fragment>
+      <>
         <h1 style={INITIAL_PAGE_HEADING_STYLE} >Payment Methods</h1>
         {cardsOnFile}
-      </React.Fragment>);
+      </>);
   }
 
   private handleCardClick = (card: PaymentCard) => {

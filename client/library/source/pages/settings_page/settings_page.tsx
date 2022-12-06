@@ -70,6 +70,8 @@ interface Properties {
   /** Error code regarding updating an existing credit card. */
   updateCardErrorCode: CardDetailsForm.ErrorCode;
 
+  accountInformationTabPage: AccountInformationTab.Page;
+
   paymentMethodsTabPage: PaymentMethodsTab.Page;
 
   paymentReceiptModalPage: PaymentReceiptModal.Page;
@@ -148,6 +150,7 @@ interface Properties {
 
   onEmailReceiptClick: (paymentRecord: PaymentRecord) => void;
   activateEmailButton: () => void;
+  onDeactivateAccountPageClick: () => void;
 }
 
 interface State {
@@ -198,7 +201,8 @@ export class SettingsPage extends React.Component<Properties, State> {
     const tabContent = (() => {
       switch (this.state.activeTab) {
         case SettingsPage.Tab.ACCOUNT_INFORMATION:
-          return <AccountInformationTab {...this.props} />;
+          return <AccountInformationTab {...this.props}
+            page={this.props.accountInformationTabPage} />;
         case SettingsPage.Tab.NOTIFICATIONS:
           return <NotificationsTab {...this.props} />;
         case SettingsPage.Tab.PAYMENT_METHODS:
