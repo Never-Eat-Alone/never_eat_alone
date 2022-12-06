@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { AddCreditCardForm } from '../../components';
-import { DisplayMode, PaymentCard, User } from '../../definitions';
+import { DisplayMode, PaymentCard, PaymentRecord, User
+} from '../../definitions';
+import { PaymentReceiptModal } from '../../modals';
 import { CardDetailsForm } from './card_details_form';
 import { PaymentMethodsTab } from './payment_methods_tab';
 import { SettingsPage } from './settings_page';
@@ -27,6 +29,8 @@ interface State {
   paymentCards: PaymentCard[];
   defaultCard: PaymentCard;
   paymentMethodsTabPage: PaymentMethodsTab.Page;
+  paymentReceiptModalPage: PaymentReceiptModal.Page;
+  isReceiptEmailed: boolean;
 }
 
 export class SettingsPageController extends React.Component<Properties, State> {
@@ -46,7 +50,9 @@ export class SettingsPageController extends React.Component<Properties, State> {
       updateCardErrorCode: CardDetailsForm.ErrorCode.NONE,
       paymentCards: [],
       defaultCard: PaymentCard.noCard(),
-      paymentMethodsTabPage: PaymentMethodsTab.Page.INITIAL
+      paymentMethodsTabPage: PaymentMethodsTab.Page.INITIAL,
+      paymentReceiptModalPage: PaymentReceiptModal.Page.INITIAL,
+      isReceiptEmailed: false
     };
   }
 
@@ -77,6 +83,8 @@ export class SettingsPageController extends React.Component<Properties, State> {
       updateCardErrorMessage=''
       updateCardErrorCode={this.state.updateCardErrorCode}
       paymentMethodsTabPage={this.state.paymentMethodsTabPage}
+      paymentReceiptModalPage={this.state.paymentReceiptModalPage}
+      isReceiptEmailed={this.state.isReceiptEmailed}
       onAddCard={this.handleAddCard}
       onUpdateCard={this.handleUpdateCard}
       onDeleteCard={this.handleDeleteCard}
@@ -97,6 +105,13 @@ export class SettingsPageController extends React.Component<Properties, State> {
       onDeleteAccount={this.handleDeleteAccount}
       onViewReceiptClick={this.handleViewReceiptClick}
       onChangePaymentMethodsTabPage={this.handleChangePaymentMethodsTabPage}
+      onPrintClick={this.handlePrint}
+      onDownloadPdfClick={this.handleDownloadPdf}
+      onBackClick={this.handleBackButton}
+      onHelpButtonClick={this.handleHelpClick}
+      onSubmitHelpEmail={this.handleSubmitHelpEmail}
+      onEmailReceiptClick={this.handleEmailReceipt}
+      activateEmailButton={this.handleActivateEmailButton}
     />;
   }
 
@@ -300,5 +315,52 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleViewReceiptClick = () => {
 
+  }
+
+
+  private handleHelpClick = () => {
+    this.setState({ paymentReceiptModalPage: PaymentReceiptModal.Page.HELP });
+  }
+
+  private handleBackButton = () => {
+    if (this.state.paymentReceiptModalPage ===
+        PaymentReceiptModal.Page.REQUEST_SENT) {
+      this.setState({ paymentReceiptModalPage: PaymentReceiptModal.Page.HELP });
+    } else {
+      this.setState({
+        paymentReceiptModalPage: PaymentReceiptModal.Page.INITIAL
+      });
+    }
+  }
+
+  private handlePrint = (paymentRecord: PaymentRecord) => {
+  }
+
+  private handleDownloadPdf = (paymentRecord: PaymentRecord) => {
+  }
+
+  private handleSubmitHelpEmail = async (receiptId: number,
+      message: string) => {
+    try {
+      await this.props.model.SubmitHelpEmail(receiptId, message);
+      this.setState({
+        paymentReceiptModalPage: PaymentReceiptModal.Page.REQUEST_SENT
+      });
+    } catch {
+      //pass
+    }
+  }
+
+  private handleEmailReceipt = async (paymentRecord: PaymentRecord) => {
+    try {
+      await this.props.model.emailReceipt(paymentRecord);
+      this.setState({ isReceiptEmailed: true });
+    } catch {
+      this.setState({ isReceiptEmailed: false });
+    }
+  }
+
+  private handleActivateEmailButton = () => {
+    this.setState({ isReceiptEmailed: false });
   }
 }

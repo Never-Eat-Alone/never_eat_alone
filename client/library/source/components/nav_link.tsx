@@ -55,6 +55,15 @@ export function SecondaryButtonNavLink(props: Properties) {
     />);
 }
 
+export function AccentButtonNavLink(props: Properties) {
+  return (
+    <NavLink
+      {...props}
+      style={{...ACCENT_BUTTON_STYLE, ...props.style}}
+      className={css(styles.accentButton)}
+    />);
+}
+
 export function RedNavLinkWithArrow(props: Properties) {
   return (
     <Router.Link
@@ -145,40 +154,37 @@ const RED_LINK_STYLE: React.CSSProperties = {
   color: '#F26B55'
 };
 
-const PRIMARY_BUTTON_STYLE: React.CSSProperties = {
+const BUTTON_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'center',
+  textTransform: 'uppercase',
+  borderRadius: '4px',
+  cursor: 'pointer'
+};
+
+const PRIMARY_BUTTON_STYLE: React.CSSProperties = {
+  ...BUTTON_STYLE,
   width: '116px',
   height: '35px',
   backgroundColor: '#F26B55',
-  borderRadius: '4px',
-  textTransform: 'uppercase',
   border: 'none',
   color: '#FFFFFF',
-  cursor: 'pointer',
   fontSize: '12px',
   lineHeight: '15px'
 };
 
 const SECONDARY_BUTTON_STYLE: React.CSSProperties = {
-  boxSizing: 'border-box',
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'center',
+  ...BUTTON_STYLE,
   border: '1px solid #F26B55',
   width: '178px',
   height: '35px',
   fontSize: '12px',
   lineHeight: '15px',
   backgroundColor: 'transparent',
-  borderRadius: '4px',
-  textTransform: 'uppercase',
-  color: '#F26B55',
-  cursor: 'pointer'
+  color: '#F26B55'
 };
 
 const NAVLINK_WITH_ARROW_CONTAINER_STYLE: React.CSSProperties = {
@@ -195,6 +201,17 @@ const ARROW_ICON_STYLE: React.CSSProperties = {
   height: '8px',
   backgroundColor: 'transparent',
   color: 'inherit'
+};
+
+const ACCENT_BUTTON_STYLE: React.CSSProperties = {
+  width: '116px',
+  minWidth: '116px',
+  height: '35px',
+  minHeight: '35px',
+  background: '#FFFFFF',
+  fontSize: '12px',
+  lineHeight: '15px',
+  color: '#F26B55'
 };
 
 const styles = StyleSheet.create({
@@ -292,6 +309,38 @@ const styles = StyleSheet.create({
       boxShadow: 'none',
       border: '1px solid #969696',
       color: '#969696',
+      cursor: 'default'
+    }
+  },
+  accentButton: {
+    ':hover': {
+      backgroundColor: '#FFFFFF',
+      boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.4)',
+      color: '#F26B55',
+      cursor: 'pointer'
+    },
+    ':focus': {
+      backgroundColor: '#FFFFFF',
+      boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.4)',
+      color: '#F26B55',
+      cursor: 'pointer'
+    },
+    ':focus-within': {
+      backgroundColor: '#FFFFFF',
+      boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.4)',
+      color: '#F26B55',
+      cursor: 'pointer'
+    },
+    ':active': {
+      backgroundColor: '#F6F6F6',
+      boxShadow: 'none',
+      color: '#F24D3D',
+      cursor: 'pointer'
+    },
+    ':disabled': {
+      backgroundColor: '#CCCCCC',
+      boxShadow: 'none',
+      color: '#FFFFFF',
       cursor: 'default'
     }
   }

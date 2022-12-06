@@ -4,13 +4,40 @@ import { CircularCounterWithCounterInside
 } from './circular_counter_with_counter_inside';
 
 interface Properties extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-  maxCount: number;
   value: string;
   hasError?: boolean;
   onValueChange: (newValue: string) => void;
 }
 
-export class TextareaWithCounter extends React.Component<Properties> {
+export class Textarea extends React.Component<Properties> {
+  public render(): JSX.Element {
+    return (
+      <div
+          style={{...CONTAINER_STYLE, ...this.props.style}}
+          className={this.props.disabled && css(styles.disabled) ||
+            this.props.hasError && css(styles.hasError) ||
+            css(styles.container, styles.input)}
+      >
+        <textarea
+          {...this.props}
+          style={TEXTAREA_STYLE}
+          onChange={this.handleOnChange}
+        >
+          {this.props.value}
+        </textarea>
+      </div>);
+  }
+ 
+  private handleOnChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    this.props.onValueChange(event.target.value);
+  }
+}
+
+interface WithCounterProps extends Properties {
+  maxCount: number;
+}
+
+export class TextareaWithCounter extends React.Component<WithCounterProps> {
   public render(): JSX.Element {
     return (
       <div
