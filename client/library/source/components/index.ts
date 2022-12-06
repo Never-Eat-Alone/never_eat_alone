@@ -51,7 +51,7 @@ export * from './show_less_button';
 export * from './sign_up_page';
 export * from './sticky_menu';
 export * from './text_button';
-export * from './textarea_with_counter';
+export * from './textarea';
 export * from './toggle_button';
 export * from './twitter_button';
 export * from './user_upcoming_events_summary';

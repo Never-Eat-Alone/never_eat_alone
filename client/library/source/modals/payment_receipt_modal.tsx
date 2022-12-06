@@ -1,7 +1,8 @@
 import { format } from 'date-fns';
 import * as React from 'react';
 import * as Router from 'react-router-dom';
-import { AccentTextButton, BackButton, CloseButton, PrimaryTextLinkButton
+import { AccentTextButton, BackButton, CloseButton, InputField,
+  PrimaryTextLinkButton, Textarea, PrimaryTextButton, RedNavLink
 } from '../components';
 import { DisplayMode, PaymentRecord, PaymentStatus } from '../definitions';
 
@@ -28,6 +29,9 @@ interface Properties {
   /** Indicates the help button is clicked. */
   onHelpClick: () => void;
 
+  /** Indicates the back button is clicked. */
+  onBack: () => void;
+
   /** Indicates the submit button on help page is clicked. */
   submitHelpEmail: (receiptId: number, message: string) => void;
 }
@@ -49,7 +53,8 @@ export class PaymentReceiptModal extends React.Component<Properties, State> {
   public render(): JSX.Element {
     const { containerStyle, logoRowStyle, contentContainerStyle,
         plateImageStyle, eventTitleStyle, dateTimeSectionStyle,
-        eventTagContainerStyle, buttonContainerStyle } = (() => {
+        eventTagContainerStyle, buttonContainerStyle,
+        backgroundImageContainerStyle } = (() => {
       if (this.props.displayMode === DisplayMode.MOBILE) {
         return {
           containerStyle: MOBILE_CONTAINER_STYLE,
@@ -59,7 +64,8 @@ export class PaymentReceiptModal extends React.Component<Properties, State> {
           eventTitleStyle: MOBILE_EVENT_TITLE_STYLE,
           dateTimeSectionStyle: MOBILE_DATE_TIME_SECTION_STYLE,
           eventTagContainerStyle: MOBILE_EVENT_TAG_CONTAINER_STYLE,
-          buttonContainerStyle: MOBILE_BUTTON_CONTAINER_STYLE
+          buttonContainerStyle: MOBILE_BUTTON_CONTAINER_STYLE,
+          backgroundImageContainerStyle: MOBILE_BACKGROUND_IMAGE_CONTAINER_STYLE
         };
       }
       return {
@@ -70,7 +76,8 @@ export class PaymentReceiptModal extends React.Component<Properties, State> {
         eventTitleStyle: EVENT_TITLE_STYLE,
         dateTimeSectionStyle: DATE_TIME_SECTION_STYLE,
         eventTagContainerStyle: EVENT_TAG_CONTAINER_STYLE,
-        buttonContainerStyle: BUTTON_CONTAINER_STYLE
+        buttonContainerStyle: BUTTON_CONTAINER_STYLE,
+        backgroundImageContainerStyle: BACKGROUND_IMAGE_CONTAINER_STYLE
       };
     })();
     const buttons = (() => {
@@ -127,14 +134,58 @@ export class PaymentReceiptModal extends React.Component<Properties, State> {
     const processedAt = (processedAtDate && format(processedAtDate,
       'MM/dd/yy h:mm aa') || '');
     const pageContent = (() => {
+      if (this.props.page === PaymentReceiptModal.Page.REQUEST_SENT) {
+        return (
+          <div style={HELP_FORM_CONTAINER_STYLE} >
+            <div style={BACK_ROW_CONTAINER_STYLE} >
+              <BackButton onClick={this.props.onBack} />
+              <h1 style={HELP_H1_STYLE} >Request sent!</h1>
+            </div>
+            <p style={HELP_FORM_P_STYLE} >
+              Someone from our team will get back to you as soon as we can.
+            </p>
+            <div style={HELP_FORM_P_STYLE} >
+              Need a quick answer now? <RedNavLink to='/help'
+              label='See our Help Page' style={RED_LINK_STYLE} />.
+            </div>
+          </div>);
+      }
       if (this.props.page === PaymentReceiptModal.Page.HELP) {
         return (
-          <>
+          <div style={HELP_FORM_CONTAINER_STYLE} >
             <div style={BACK_ROW_CONTAINER_STYLE} >
-              <BackButton />
+              <BackButton onClick={this.props.onBack} />
               <h1 style={HELP_H1_STYLE} >Get help with this receipt</h1>
             </div>
-          </>);
+            <p style={HELP_FORM_P_STYLE} >
+              Fill in the form below or email <b>
+              support@nevereatalone.net</b> with your Receipt Number.
+            </p>
+            <InputField
+              style={HELP_INPUT_STYLE}
+              value={`Help with Receipt #${this.props.paymentRecord.id}`}
+              type='text'
+              disabled
+              readOnly
+            />
+            <Textarea
+              style={HELP_TEXTAREA_STYLE}
+              value={this.state.message}
+              placeholder='Tell us how we can help.'
+              onValueChange={this.handleMessageChange}
+            />
+            <PrimaryTextButton
+              style={SUBMIT_HELP_BUTTON_STYLE}
+              label='Submit'
+              disabled={this.state.message.trim() === ''}
+              onClick={() => this.props.submitHelpEmail(
+                this.props.paymentRecord.id, this.state.message.trim())}
+            />
+            <div style={HELP_FORM_P_STYLE} >
+              Need a quick answer now? <RedNavLink to='/help'
+              label='See our Help Page' style={RED_LINK_STYLE} />.
+            </div>
+          </div>);
       }
       return (
         <>
@@ -232,10 +283,19 @@ export class PaymentReceiptModal extends React.Component<Properties, State> {
           </div>
         </>);
     })();
+    const buttonsSection = (() => {
+      if (this.props.page !== PaymentReceiptModal.Page.INITIAL) {
+        return null;
+      }
+      return (
+        <div style={buttonContainerStyle} >
+          {buttons}
+        </div>);
+    })();
     return (
       <div style={FORM_STYLE} >
         <div ref={this._containerRef} style={containerStyle} >
-          <div style={BACKGROUND_IMAGE_CONTAINER_STYLE} >
+          <div style={backgroundImageContainerStyle} >
             <div style={logoRowStyle} >
               <Router.Link to='/' style={LOGO_LINK_STYLE} >
                 <img
@@ -260,9 +320,7 @@ export class PaymentReceiptModal extends React.Component<Properties, State> {
               </div>
               {pageContent}
             </div>
-            <div style={buttonContainerStyle} >
-              {buttons}
-            </div>
+            {buttonsSection}
           </div>
         </div>
       </div>);
@@ -285,13 +343,18 @@ export class PaymentReceiptModal extends React.Component<Properties, State> {
     }
   }
 
+  private handleMessageChange = (newValue: string) => {
+    this.setState({ message: newValue });
+  }
+
   private _containerRef: React.RefObject<HTMLDivElement>;
 }
 
 export namespace PaymentReceiptModal {
   export enum Page {
     INITIAL,
-    HELP
+    HELP,
+    REQUEST_SENT
   }
 }
 
@@ -306,7 +369,8 @@ const FORM_STYLE: React.CSSProperties = {
   width: '100%',
   height: '100%',
   backgroundColor: 'rgb(150, 150, 150, 0.5)',
-  zIndex: 1000
+  zIndex: 1000,
+  overflow: 'scroll'
 };
 
 const CONTAINER_STYLE: React.CSSProperties = {
@@ -318,7 +382,7 @@ const CONTAINER_STYLE: React.CSSProperties = {
   borderRadius: '4px',
   background: 'linear-gradient(180deg, #F26A54 54.18%, #F26A54 54.19%, \
     #F24D3D 100%, #F24D3D 100%)',
-  overflowY: 'initial'
+  overflow: 'initial'
 };
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
@@ -342,6 +406,11 @@ const BACKGROUND_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
   backgroundPosition: 'top -121px center',
   backgroundColor: 'transparent',
   padding: '40px 20px 20px 20px'
+};
+
+const MOBILE_BACKGROUND_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  ...BACKGROUND_IMAGE_CONTAINER_STYLE,
+  padding: '20px'
 };
 
 const LOGO_ROW_STYLE: React.CSSProperties = {
@@ -668,6 +737,15 @@ const MOBILE_BUTTON_STYLE: React.CSSProperties = {
   minHeight: '35px'
 };
 
+const HELP_FORM_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  gap: '20px',
+  width: '100%'
+};
+
 const BACK_ROW_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
@@ -687,4 +765,49 @@ const HELP_H1_STYLE: React.CSSProperties = {
   color: '#000000',
   padding: '0px',
   margin: '0px'
+};
+
+const HELP_FORM_P_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  flexWrap: 'wrap',
+  whiteSpace: 'pre',
+  width: '100%',
+  padding: '0px',
+  margin: '0px',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '16px',
+  lineHeight: '18px',
+  color: '#000000'
+};
+
+const HELP_INPUT_STYLE: React.CSSProperties = {
+  width: '100%',
+  minWidth: '100%',
+  height: '38px',
+  minHeight: '38px'
+};
+
+const HELP_TEXTAREA_STYLE: React.CSSProperties = {
+  height: '130px',
+  minHeight: '130px',
+  width: '100%'
+};
+
+const SUBMIT_HELP_BUTTON_STYLE: React.CSSProperties = {
+  width: '113px',
+  height: '35px'
+};
+
+const RED_LINK_STYLE: React.CSSProperties = {
+  fontWeight: 400,
+  fontSize: '16px',
+  lineHeight: '18px',
+  minHeight: '18px',
+  width: 'fit-content',
+  whiteSpace: 'pre'
 };

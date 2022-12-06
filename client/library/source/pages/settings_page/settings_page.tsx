@@ -72,6 +72,8 @@ interface Properties {
 
   paymentMethodsTabPage: PaymentMethodsTab.Page;
 
+  paymentReceiptModalPage: PaymentReceiptModal.Page;
+
   onChangePaymentMethodsTabPage: (page: PaymentMethodsTab.Page) => void;
 
   /** Indicates the Add card button is clicked. */
@@ -131,13 +133,24 @@ interface Properties {
 
   /** Indicates the view receipt button is clicked. */
   onViewReceiptClick: (record: PaymentRecord) => void;
+
+  onPrintClick: () => void;
+
+  onDownloadPdfClick: () => void;
+
+  onBackClick: () => void;
+
+  onHelpButtonClick: () => void;
+
+  onSubmitHelpEmail: (receiptId: number, message: string) => void;
+
+  onSendEmailClick: () => void;
 }
 
 interface State {
   activeTab: SettingsPage.Tab
   isReceiptDisplayed: boolean;
   paymentRecord: PaymentRecord;
-  paymentReceiptModalPage: PaymentReceiptModal.Page;
 }
 
 /** Displays the Settings Page. */
@@ -147,8 +160,7 @@ export class SettingsPage extends React.Component<Properties, State> {
     this.state = {
       activeTab: SettingsPage.Tab.ACCOUNT_INFORMATION,
       isReceiptDisplayed: false,
-      paymentRecord: PaymentRecord.noRecord(),
-      paymentReceiptModalPage: PaymentReceiptModal.Page.INITIAL
+      paymentRecord: PaymentRecord.noRecord()
     };
   }
 
@@ -203,13 +215,14 @@ export class SettingsPage extends React.Component<Properties, State> {
         <PaymentReceiptModal
           displayMode={this.props.displayMode}
           paymentRecord={this.state.paymentRecord}
-          page={this.state.paymentReceiptModalPage}
+          page={this.props.paymentReceiptModalPage}
           onClose={this.handlePaymentReceiptClose}
-          onPrintClick={() => {}}
-          onDownloadPdfClick={() => {}}
-          onSendEmailClick={() => {}}
-          onHelpClick={this.handleHelpClick}
-          submitHelpEmail={() => {}}
+          onPrintClick={this.props.onPrintClick}
+          onDownloadPdfClick={this.props.onDownloadPdfClick}
+          onSendEmailClick={this.props.onSendEmailClick}
+          onHelpClick={this.props.onHelpButtonClick}
+          submitHelpEmail={this.props.onSubmitHelpEmail}
+          onBack={this.props.onBackClick}
         />
       </Modal>);
     return (
@@ -280,10 +293,6 @@ export class SettingsPage extends React.Component<Properties, State> {
       isReceiptDisplayed: true,
       paymentRecord: paymentRecord
     });
-  }
-
-  private handleHelpClick = () => {
-    this.setState({ paymentReceiptModalPage: PaymentReceiptModal.Page.HELP });
   }
 }
 
@@ -367,14 +376,18 @@ const TABS_ROW_STYLE: React.CSSProperties = {
   flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  height: '45px'
+  height: '45px',
+  flexWrap: 'nowrap',
+  width: '100%',
+  overflowX: 'auto'
 };
 
 const DESKTOP_LAST_TAB_STYLE: React.CSSProperties = {
   height: '1px',
   width: '315px',
   backgroundColor: '#EFEFEF',
-  marginTop: '44px'
+  marginTop: '44px',
+  flex: '0 0 auto'
 };
 
 const TABLET_LAST_TAB_STYLE: React.CSSProperties = {
@@ -390,7 +403,8 @@ const ACCOUNT_TAB_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   borderRadius: '4px 0px 0px 4px',
   width: '164px',
-  minWidth: '164px'
+  minWidth: '164px',
+  flex: '0 0 auto'
 };
 
 const GREY_BORDER_STYLE: React.CSSProperties = {
@@ -401,20 +415,23 @@ const GREY_BORDER_STYLE: React.CSSProperties = {
 const NOTIFICATIONS_TAB_STYLE: React.CSSProperties = {
   ...GREY_BORDER_STYLE,
   width: '125px',
-  minWidth: '125px'
+  minWidth: '125px',
+  flex: '0 0 auto'
 };
 
 const PAYMENT_METHODS_TAB_STYLE: React.CSSProperties = {
   ...GREY_BORDER_STYLE,
   width: '151px',
-  minWidth: '151px'
+  minWidth: '151px',
+  flex: '0 0 auto'
 };
 
 const PAYMENY_HISTORY_TAB_STYLE: React.CSSProperties = {
   ...GREY_BORDER_STYLE,
   width: '145px',
   minWidth: '145px',
-  borderRadius: '0px 4px 4px 0px'
+  borderRadius: '0px 4px 4px 0px',
+  flex: '0 0 auto'
 };
 
 const PAGE_CONTAINER_STYLE: React.CSSProperties = {
@@ -432,17 +449,4 @@ const MOBILE_PAGE_CONTAINER_STYLE: React.CSSProperties = {
   ...PAGE_CONTAINER_STYLE,
   paddingLeft: '20px',
   paddingRight: '20px'
-};
-
-const PAGE_HEADING_STYLE: React.CSSProperties = {
-  fontFamily: 'Oswald',
-  fontStyle: 'normal',
-  fontWeight: 400,
-  fontSize: '23px',
-  lineHeight: '34px',
-  height: '34px',
-  textTransform: 'capitalize',
-  color: '#000000',
-  margin: '0px 0px 30px 0px',
-  padding: '0px'
 };

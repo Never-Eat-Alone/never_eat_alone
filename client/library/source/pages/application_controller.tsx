@@ -4,7 +4,7 @@ import { Modal } from '../components';
 import { DisplayMode, getDisplayMode, User, UserProfileImage,
   UserStatus } from '../definitions';
 import { InviteAFoodieModalController, JoinController, LogInModalController,
-  PartnerWithUsModalController } from '../modals';
+  PartnerWithUsModalController, PaymentReceiptModal } from '../modals';
 import { ApplicationModel } from './application_model';
 import { CookiesPolicyPage } from './cookie_policy_page';
 import { DiningEventPageController } from './dining_event_page';
@@ -37,6 +37,7 @@ interface State {
   isInviteAFoodieButtonClicked: boolean;
   isPartnerWithUsButtonClicked: boolean;
   accountProfileImage: UserProfileImage;
+  paymentReceiptModalPage: PaymentReceiptModal.Page;
 }
 
 export class ApplicationController extends React.Component<Properties, State> {
@@ -53,7 +54,8 @@ export class ApplicationController extends React.Component<Properties, State> {
       isLogInButtonClicked: false,
       isInviteAFoodieButtonClicked: false,
       isPartnerWithUsButtonClicked: false,
-      accountProfileImage: UserProfileImage.NoImage()
+      accountProfileImage: UserProfileImage.NoImage(),
+      paymentReceiptModalPage: PaymentReceiptModal.Page.INITIAL
     };
   }
 
@@ -415,6 +417,20 @@ export class ApplicationController extends React.Component<Properties, State> {
         position: 'relative',
         zIndex: 'auto'
       } as React.CSSProperties
+    });
+  }
+
+  private handleHelpClick = () => {
+    this.setState({ paymentReceiptModalPage: PaymentReceiptModal.Page.HELP });
+  }
+
+  private handleBackButton = () => {
+    if (this.state.paymentReceiptModalPage ===
+        PaymentReceiptModal.Page.REQUEST_SENT) {
+      this.setState({ paymentReceiptModalPage: PaymentReceiptModal.Page.HELP });
+    }
+    this.setState({
+      paymentReceiptModalPage: PaymentReceiptModal.Page.INITIAL
     });
   }
 }
