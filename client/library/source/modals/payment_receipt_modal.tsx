@@ -123,9 +123,9 @@ export class PaymentReceiptModal extends React.Component<Properties, State> {
               <BackButton onClick={this.props.onBack} />
               <h1 style={HELP_H1_STYLE} >Request sent!</h1>
             </div>
-            <p style={HELP_FORM_P_STYLE} >
+            <div style={HELP_FORM_P_STYLE} >
               Someone from our team will get back to you as soon as we can.
-            </p>
+            </div>
             <div style={HELP_FORM_P_STYLE} >
               Need a quick answer now? <RedNavLink to='/help'
               label='See our Help Page' style={RED_LINK_STYLE} />.
@@ -139,10 +139,10 @@ export class PaymentReceiptModal extends React.Component<Properties, State> {
               <BackButton onClick={this.props.onBack} />
               <h1 style={HELP_H1_STYLE} >Get help with this receipt</h1>
             </div>
-            <p style={HELP_FORM_P_STYLE} >
+            <div style={HELP_FORM_P_STYLE} >
               Fill in the form below or email <b>
               support@nevereatalone.net</b> with your Receipt Number.
-            </p>
+            </div>
             <InputField
               style={HELP_INPUT_STYLE}
               value={`Help with Receipt #${this.props.paymentRecord.id}`}
@@ -807,7 +807,7 @@ const HELP_FORM_P_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
   flexWrap: 'wrap',
-  whiteSpace: 'pre',
+  whiteSpace: 'pre-line',
   width: '100%',
   padding: '0px',
   margin: '0px',
@@ -843,5 +843,5 @@ const RED_LINK_STYLE: React.CSSProperties = {
   lineHeight: '18px',
   minHeight: '18px',
   width: 'fit-content',
-  whiteSpace: 'pre'
+  whiteSpace: 'pre-line'
 };
