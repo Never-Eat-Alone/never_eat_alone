@@ -142,7 +142,9 @@ interface Properties {
 
   onDownloadPdfClick: (paymentRecord: PaymentRecord) => void;
 
-  onBackClick: () => void;
+  onPaymentReceiptBackClick: () => void;
+
+  onAccountInformationBackClick: () => void;
 
   onHelpButtonClick: () => void;
 
@@ -156,6 +158,7 @@ interface Properties {
 interface State {
   activeTab: SettingsPage.Tab
   isReceiptDisplayed: boolean;
+  isDeactivateDisplayed: boolean;
   paymentRecord: PaymentRecord;
 }
 
@@ -166,7 +169,8 @@ export class SettingsPage extends React.Component<Properties, State> {
     this.state = {
       activeTab: SettingsPage.Tab.ACCOUNT_INFORMATION,
       isReceiptDisplayed: false,
-      paymentRecord: PaymentRecord.noRecord()
+      paymentRecord: PaymentRecord.noRecord(),
+      isDeactivateDisplayed: false
     };
   }
 
@@ -202,7 +206,8 @@ export class SettingsPage extends React.Component<Properties, State> {
       switch (this.state.activeTab) {
         case SettingsPage.Tab.ACCOUNT_INFORMATION:
           return <AccountInformationTab {...this.props}
-            page={this.props.accountInformationTabPage} />;
+            page={this.props.accountInformationTabPage}
+            onBackClick={this.props.onAccountInformationBackClick} />;
         case SettingsPage.Tab.NOTIFICATIONS:
           return <NotificationsTab {...this.props} />;
         case SettingsPage.Tab.PAYMENT_METHODS:
@@ -230,14 +235,19 @@ export class SettingsPage extends React.Component<Properties, State> {
           onSendEmailClick={this.props.onEmailReceiptClick}
           onHelpClick={this.props.onHelpButtonClick}
           submitHelpEmail={this.props.onSubmitHelpEmail}
-          onBack={this.props.onBackClick}
+          onBack={this.props.onPaymentReceiptBackClick}
           activateEmailButton={this.props.activateEmailButton}
         />
-      </Modal>);
+      </Modal> || null);
+    const deactivateModal = (this.state.isDeactivateDisplayed &&
+      <Modal>
+        deactivate
+      </Modal> || null);
     return (
       <div style={containerStyle} >
         <div style={contentStyle} >
           {receiptModal}
+          {deactivateModal}
           <h1 style={headingStyle} >Settings</h1>
           <div style={TABS_ROW_STYLE} >
             <Tab

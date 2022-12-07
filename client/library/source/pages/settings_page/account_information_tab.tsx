@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { InputField, SecondaryTextButton, SecondaryTextLinkButton, BackButton
+import { BackButton, InputField, SecondaryTextButton, SecondaryTextLinkButton,
 } from '../../components';
 import { DisplayMode, SocialAccount, SocialAccountType
 } from '../../definitions';
@@ -49,7 +49,13 @@ interface Properties {
   /** Indicates the delete account button is clicked. */
   onDeleteAccount: () => void;
 
+  /** Indicates the deactivate/delete account button on initial page is
+   * clicked.
+   */
   onDeactivateAccountPageClick: () => void;
+
+  /** Indicates the back button is clicked. */
+  onBackClick: () => void;
 }
 
 interface State {
@@ -101,11 +107,11 @@ export class AccountInformationTab extends React.Component<Properties, State> {
         inputEditRowStyle: INPUT_EDIT_ROW_STYLE
       };
     })();
-    if (this.props.page === AccountInformationTab.Page.DEACTIVATE) {
+    if (this.props.page === AccountInformationTab.Page.DEACTIVATE_DELETE) {
       return (
         <>
           <div style={DEACTIVE_ROW_CONTAINER_STYLE} >
-            <BackButton />
+            <BackButton onClick={this.props.onBackClick} />
             <div style={DEACTIVE_COLUMN_CONTAINER_STYLE} >
               <h1 style={DEACTIVATE_H1_STYLE} >
                 Deactivate or Delete Your Account
@@ -113,6 +119,110 @@ export class AccountInformationTab extends React.Component<Properties, State> {
               <p style={DEACTIVATE_GREY_TEXT_STYLE} >Settings</p>
             </div>
           </div>
+          <h2 style={DEACTIVE_H2_STYLE} >Deactivate Account</h2>
+          <p style={DEACTIVE_P_STYLE} >
+            If you want to take a break from NeverEatAlone, you can 
+            deactivate your account. If you deactivate your account:{'\n\n'}
+          </p>
+          <ul style={UL_STYLE} >
+            <li style={LI_STYLE} >
+              Your profile will be hidden from public access.
+            </li>
+            <li style={LI_STYLE} >
+              Your seat(s) will be removed from the attendee lists of 
+              any upcoming events.
+            </li>
+            <li style={LI_STYLE} >
+              Past events will no longer link to your profile.
+            </li>
+          </ul>
+          <p style={DEACTIVE_P_STYLE} >
+            {'\n'}
+            Your account will reactivate when you log in again. All links 
+            will be restored when you reactivate your account.
+          </p>
+          <SecondaryTextButton
+            style={DEACTIVATE_BUTTON_STYLE}
+            label='Deactivate Account'
+            onClick={this.props.onDeactivateAccount}
+          />
+          <h2 style={DELETE_H2_STYLE} >Delete Account</h2>
+          <p style={DEACTIVE_P_STYLE} >
+            Deleting your account is a permanent action and cannot be undone. 
+            Your information and account will be completely removed from 
+            NeverEatAlone.{'\n\n'}
+            If you delete your account:{'\n\n'}
+          </p>
+          <ul style={UL_STYLE}>
+            <li style={LI_STYLE} >
+              Your email and handle will be available for new accounts to use.
+            </li>
+            <li style={LI_STYLE} >
+              All socials will be unlinked.
+            </li>
+            <li style={LI_STYLE} >
+              Your seat(s) will be removed from the attendee lists of any 
+              upcoming events.
+            </li>
+            <li style={LI_STYLE} >
+              Any mentions of you on your past events will be replaced with 
+              “Deleted User.”
+            </li>
+            <li style={LI_STYLE} >
+              Your profile will be removed.
+            </li>
+          </ul>
+          <p style={DEACTIVE_P_STYLE} >
+            {'\n'}
+            <b>NeverEatAlone will remove your account within 15 days and your 
+              account will not be recoverable. </b>If you wish to return to 
+              NeverEatAlone, you’ll need to create a new account.
+          </p>
+          <SecondaryTextLinkButton
+            style={DELETE_LINK_STYLE}
+            label='Delete Account'
+            onClick={this.props.onDeleteAccount}
+          />
+        </>);
+    }
+    if (this.props.page === AccountInformationTab.Page.DELETE) {
+      return (
+        <>
+          <div style={DELETE_ROW_CONTAINER_STYLE} >
+            <BackButton onClick={this.props.onBackClick} />
+            <h1 style={DELETE_H1_STYLE} >DELETE ACCOUNT</h1>
+          </div>
+          <div style={DELETE_ROW_CONTAINER_STYLE} >
+            <img
+              style={WARNING_ICON_STYLE}
+              src='resources/icons/warning.svg'
+              alt='Warning Icon'
+            />
+            <p style={PINK_TEXT_STYLE} >
+              Are you sure you want to delete your account? This is a permanent 
+              action and cannot be undone.
+            </p>
+          </div>
+        </>);
+    }
+    if (this.props.page === AccountInformationTab.Page.DELETE_CONFIRMED) {
+      return (
+        <>
+        </>);
+    }
+    if (this.props.page === AccountInformationTab.Page.DELETE_REASON_SENT) {
+      return (
+        <>
+        </>);
+    }
+    if (this.props.page === AccountInformationTab.Page.DEACTIVATE_CONFIRMED) {
+      return (
+        <>
+        </>);
+    }
+    if (this.props.page === AccountInformationTab.Page.DEACTIVATE_REASON_SENT) {
+      return (
+        <>
         </>);
     }
     const socialAccountButtons = [];
@@ -283,7 +393,12 @@ export class AccountInformationTab extends React.Component<Properties, State> {
 export namespace AccountInformationTab {
   export enum Page {
     INITIAL,
-    DEACTIVATE
+    DEACTIVATE_DELETE,
+    DELETE,
+    DELETE_CONFIRMED,
+    DELETE_REASON_SENT,
+    DEACTIVATE_CONFIRMED,
+    DEACTIVATE_REASON_SENT
   }
 }
 
@@ -475,7 +590,8 @@ const DEACTIVE_ROW_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'center',
   gap: '10px',
-  width: '100%'
+  width: '100%',
+  marginBottom: '30px'
 };
 
 const DEACTIVE_COLUMN_CONTAINER_STYLE: React.CSSProperties = {
@@ -484,4 +600,123 @@ const DEACTIVE_COLUMN_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
   gap: '4px'
+};
+
+const DEACTIVATE_H1_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  whiteSpace: 'pre-line',
+  fontFamily: 'Oswald',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '26px',
+  lineHeight: '39px',
+  textTransform: 'capitalize',
+  color: '#000000',
+  padding: '0px',
+  margin: '0px',
+  width: '100%'
+};
+
+const DEACTIVATE_GREY_TEXT_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#969696',
+  margin: '0px',
+  padding: '0px'
+};
+
+const DEACTIVE_H2_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '18px',
+  lineHeight: '23px',
+  color: '#000000',
+  padding: '0px',
+  margin: '0px 0px 10px 0px'
+};
+
+const DEACTIVE_P_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 300,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#000000',
+  whiteSpace: 'pre-line',
+  padding: '0px',
+  margin: '0px'
+};
+
+const UL_STYLE: React.CSSProperties = {
+  margin: '0px',
+  paddingLeft: '25px',
+  listStyleType: 'disc',
+  listStylePosition: 'outside'
+};
+
+const LI_STYLE: React.CSSProperties = {
+  ...DEACTIVE_P_STYLE
+};
+
+const DEACTIVATE_BUTTON_STYLE: React.CSSProperties = {
+  marginTop: '30px',
+  minWidth: '187px',
+  width: '187px',
+  height: '35px',
+  minHeight: '35px'
+};
+
+const DELETE_H2_STYLE: React.CSSProperties = {
+  ...DEACTIVE_H2_STYLE,
+  margin: '50px 0px 10px 0px'
+};
+
+const DELETE_LINK_STYLE: React.CSSProperties = {
+  fontWeight: 600,
+  fontSize: '12px',
+  lineHeight: '15px',
+  color: '#F24D3D',
+  height: '15px',
+  minHeight: '15px',
+  minWidth: '92px',
+  marginTop: '30px',
+  textTransform: 'uppercase'
+};
+
+const DELETE_ROW_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  gap: '10px',
+  width: '100%',
+  marginBottom: '20px'
+};
+
+const DELETE_H1_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  whiteSpace: 'pre-line',
+  fontFamily: 'Oswald',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '23px',
+  lineHeight: '34px',
+  textTransform: 'uppercase',
+  color: '#000000',
+  padding: '0px',
+  margin: '0px'
+};
+
+const WARNING_ICON_STYLE: React.CSSProperties = {
+  
 };

@@ -111,7 +111,8 @@ export class SettingsPageController extends React.Component<Properties, State> {
       onChangePaymentMethodsTabPage={this.handleChangePaymentMethodsTabPage}
       onPrintClick={this.handlePrint}
       onDownloadPdfClick={this.handleDownloadPdf}
-      onBackClick={this.handleBackButton}
+      onPaymentReceiptBackClick={this.handlePaymentReceiptBackButton}
+      onAccountInformationBackClick={this.handleAccountInformationBackClick}
       onHelpButtonClick={this.handleHelpClick}
       onSubmitHelpEmail={this.handleSubmitHelpEmail}
       onEmailReceiptClick={this.handleEmailReceipt}
@@ -315,7 +316,9 @@ export class SettingsPageController extends React.Component<Properties, State> {
   }
 
   private handleDeleteAccount = () => {
-
+    this.setState({
+      accountInformationTabPage: AccountInformationTab.Page.DELETE
+    });
   }
 
   private handleViewReceiptClick = () => {
@@ -332,13 +335,26 @@ export class SettingsPageController extends React.Component<Properties, State> {
     this.setState({ paymentReceiptModalPage: PaymentReceiptModal.Page.HELP });
   }
 
-  private handleBackButton = () => {
+  private handlePaymentReceiptBackButton = () => {
     if (this.state.paymentReceiptModalPage ===
         PaymentReceiptModal.Page.REQUEST_SENT) {
       this.setState({ paymentReceiptModalPage: PaymentReceiptModal.Page.HELP });
     } else {
       this.setState({
         paymentReceiptModalPage: PaymentReceiptModal.Page.INITIAL
+      });
+    }
+  }
+
+  private handleAccountInformationBackClick = () => {
+    if (this.state.accountInformationTabPage ===
+        AccountInformationTab.Page.DELETE) {
+      this.setState({
+        accountInformationTabPage: AccountInformationTab.Page.DEACTIVATE
+      });
+    } else {
+      this.setState({
+        accountInformationTabPage: AccountInformationTab.Page.INITIAL
       });
     }
   }
