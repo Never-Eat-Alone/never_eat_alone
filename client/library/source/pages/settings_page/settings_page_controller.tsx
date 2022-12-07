@@ -327,7 +327,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleDeactivateAccountPageClick = () => {
     this.setState({
-      accountInformationTabPage: AccountInformationTab.Page.DEACTIVATE
+      accountInformationTabPage: AccountInformationTab.Page.DEACTIVATE_DELETE
     });
   }
 
@@ -350,7 +350,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
     if (this.state.accountInformationTabPage ===
         AccountInformationTab.Page.DELETE) {
       this.setState({
-        accountInformationTabPage: AccountInformationTab.Page.DEACTIVATE
+        accountInformationTabPage: AccountInformationTab.Page.DEACTIVATE_DELETE
       });
     } else {
       this.setState({

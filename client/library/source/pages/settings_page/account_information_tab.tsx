@@ -193,11 +193,13 @@ export class AccountInformationTab extends React.Component<Properties, State> {
             <h1 style={DELETE_H1_STYLE} >DELETE ACCOUNT</h1>
           </div>
           <div style={DELETE_ROW_CONTAINER_STYLE} >
-            <img
-              style={WARNING_ICON_STYLE}
-              src='resources/icons/warning.svg'
-              alt='Warning Icon'
-            />
+            <div style={WARNING_ICON_CONTAINER_STYLE} >
+              <img
+                style={WARNING_ICON_STYLE}
+                src='resources/icons/warning.svg'
+                alt='Warning Icon'
+              />
+            </div>
             <p style={PINK_TEXT_STYLE} >
               Are you sure you want to delete your account? This is a permanent 
               action and cannot be undone.
@@ -717,6 +719,25 @@ const DELETE_H1_STYLE: React.CSSProperties = {
   margin: '0px'
 };
 
+const WARNING_ICON_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '20px',
+  height: '20px',
+  backgroundColor: 'transparent'
+};
+
 const WARNING_ICON_STYLE: React.CSSProperties = {
-  
+  width: '18px',
+  minWidth: '18px',
+  height: '16px',
+  minHeight: '16px'
+};
+
+const PINK_TEXT_STYLE: React.CSSProperties = {
+  ...DEACTIVE_P_STYLE,
+  fontWeight: 600,
+  color: '#FF2C79'
 };
