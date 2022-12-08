@@ -166,6 +166,14 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
     return;
   }
 
+  public async deleteAccount(account: NeverEatAlone.User, password: string
+      ): Promise<NeverEatAlone.User> {
+    if (account && account.id !== -1 && password) {
+      return account;
+    }
+    return NeverEatAlone.User.makeGuest();
+  }
+
   private _displayName: string;
   private _linkedSocialAccounts: NeverEatAlone.SocialAccount[];
   private _profileId: number;

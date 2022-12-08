@@ -70,11 +70,19 @@ interface Properties {
   /** Error code regarding updating an existing credit card. */
   updateCardErrorCode: CardDetailsForm.ErrorCode;
 
+  accountInformationTabPage: AccountInformationTab.Page;
+
   paymentMethodsTabPage: PaymentMethodsTab.Page;
 
   paymentReceiptModalPage: PaymentReceiptModal.Page;
 
   isReceiptEmailed: boolean;
+
+  isDeleteChecked: boolean;
+
+  deleteAccountPassword: string;
+
+  deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode;
 
   onChangePaymentMethodsTabPage: (page: PaymentMethodsTab.Page) => void;
 
@@ -131,7 +139,9 @@ interface Properties {
   onDeactivateAccount: () => void;
 
   /** Indicates the delete account button is clicked. */
-  onDeleteAccount: () => void;
+  onDeleteAccountPage: () => void;
+
+  onSubmitDeleteAccount: () => void;
 
   /** Indicates the view receipt button is clicked. */
   onViewReceiptClick: (record: PaymentRecord) => void;
@@ -140,7 +150,9 @@ interface Properties {
 
   onDownloadPdfClick: (paymentRecord: PaymentRecord) => void;
 
-  onBackClick: () => void;
+  onPaymentReceiptBackClick: () => void;
+
+  onAccountInformationBackClick: () => void;
 
   onHelpButtonClick: () => void;
 
@@ -148,11 +160,15 @@ interface Properties {
 
   onEmailReceiptClick: (paymentRecord: PaymentRecord) => void;
   activateEmailButton: () => void;
+  onDeactivateAccountPageClick: () => void;
+  onDeleteCheckboxClick: () => void;
+  onDeletePasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 interface State {
   activeTab: SettingsPage.Tab
   isReceiptDisplayed: boolean;
+  isDeactivateDisplayed: boolean;
   paymentRecord: PaymentRecord;
 }
 
@@ -163,7 +179,8 @@ export class SettingsPage extends React.Component<Properties, State> {
     this.state = {
       activeTab: SettingsPage.Tab.ACCOUNT_INFORMATION,
       isReceiptDisplayed: false,
-      paymentRecord: PaymentRecord.noRecord()
+      paymentRecord: PaymentRecord.noRecord(),
+      isDeactivateDisplayed: false
     };
   }
 
@@ -198,7 +215,10 @@ export class SettingsPage extends React.Component<Properties, State> {
     const tabContent = (() => {
       switch (this.state.activeTab) {
         case SettingsPage.Tab.ACCOUNT_INFORMATION:
-          return <AccountInformationTab {...this.props} />;
+          return <AccountInformationTab {...this.props}
+            page={this.props.accountInformationTabPage}
+            onBackClick={this.props.onAccountInformationBackClick}
+          />;
         case SettingsPage.Tab.NOTIFICATIONS:
           return <NotificationsTab {...this.props} />;
         case SettingsPage.Tab.PAYMENT_METHODS:
@@ -226,14 +246,19 @@ export class SettingsPage extends React.Component<Properties, State> {
           onSendEmailClick={this.props.onEmailReceiptClick}
           onHelpClick={this.props.onHelpButtonClick}
           submitHelpEmail={this.props.onSubmitHelpEmail}
-          onBack={this.props.onBackClick}
+          onBack={this.props.onPaymentReceiptBackClick}
           activateEmailButton={this.props.activateEmailButton}
         />
-      </Modal>);
+      </Modal> || null);
+    const deactivateModal = (this.state.isDeactivateDisplayed &&
+      <Modal>
+        deactivate
+      </Modal> || null);
     return (
       <div style={containerStyle} >
         <div style={contentStyle} >
           {receiptModal}
+          {deactivateModal}
           <h1 style={headingStyle} >Settings</h1>
           <div style={TABS_ROW_STYLE} >
             <Tab

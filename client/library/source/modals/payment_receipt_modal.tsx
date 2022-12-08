@@ -127,8 +127,12 @@ export class PaymentReceiptModal extends React.Component<Properties, State> {
               Someone from our team will get back to you as soon as we can.
             </div>
             <div style={HELP_FORM_P_STYLE} >
-              Need a quick answer now? <RedNavLink to='/help'
-              label='See our Help Page' style={RED_LINK_STYLE} />.
+              Need a quick answer now?&nbsp;
+              <RedNavLink
+                to='/help'
+                label='See our Help Page'
+                style={RED_LINK_STYLE}
+              />.
             </div>
           </div>);
       }

@@ -1,4 +1,5 @@
-import { PaymentCard, PaymentRecord, SocialAccount } from '../../definitions';
+import { PaymentCard, PaymentRecord, SocialAccount, User
+} from '../../definitions';
 
 export abstract class SettingsPageModel {
   public abstract load(): Promise<void>;
@@ -34,4 +35,5 @@ export abstract class SettingsPageModel {
   public abstract emailReceipt(paymentRecord: PaymentRecord): Promise<void>;
   public abstract SubmitHelpEmail(receiptId: number, message: string): Promise<
     void>;
+  public abstract deleteAccount(account: User, password: string): Promise<User>;
 }
