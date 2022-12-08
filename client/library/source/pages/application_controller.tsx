@@ -264,6 +264,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       displayMode={this.state.displayMode}
       model={this.props.model.getSettingsPageModel(id)}
       account={this.state.account}
+      onLogOut={this.handleLogOut}
     />;
   }
 

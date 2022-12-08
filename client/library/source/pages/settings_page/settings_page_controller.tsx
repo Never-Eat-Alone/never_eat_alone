@@ -13,6 +13,7 @@ interface Properties {
   displayMode: DisplayMode;
   account: User;
   model: SettingsPageModel;
+  onLogOut: () => void;
 }
 
 interface State {
@@ -33,6 +34,9 @@ interface State {
   paymentMethodsTabPage: PaymentMethodsTab.Page;
   paymentReceiptModalPage: PaymentReceiptModal.Page;
   isReceiptEmailed: boolean;
+  isDeleteChecked: boolean;
+  deleteAccountPassword: string;
+  deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode;
 }
 
 export class SettingsPageController extends React.Component<Properties, State> {
@@ -55,7 +59,10 @@ export class SettingsPageController extends React.Component<Properties, State> {
       accountInformationTabPage: AccountInformationTab.Page.INITIAL,
       paymentMethodsTabPage: PaymentMethodsTab.Page.INITIAL,
       paymentReceiptModalPage: PaymentReceiptModal.Page.INITIAL,
-      isReceiptEmailed: false
+      isReceiptEmailed: false,
+      isDeleteChecked: false,
+      deleteAccountPassword: '',
+      deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode.NONE
     };
   }
 
@@ -89,6 +96,10 @@ export class SettingsPageController extends React.Component<Properties, State> {
       paymentMethodsTabPage={this.state.paymentMethodsTabPage}
       paymentReceiptModalPage={this.state.paymentReceiptModalPage}
       isReceiptEmailed={this.state.isReceiptEmailed}
+      isDeleteChecked={this.state.isDeleteChecked}
+      deleteAccountPassword={this.state.deleteAccountPassword}
+      deleteAccountErrorCode={this.state.deleteAccountErrorCode}
+      onSubmitDeleteAccount={this.handleSubmitDeleteAccount}
       onAddCard={this.handleAddCard}
       onUpdateCard={this.handleUpdateCard}
       onDeleteCard={this.handleDeleteCard}
@@ -106,7 +117,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
       onEditEmailClick={this.handleEditEmailClick}
       onEditPasswordClick={this.handleEditPasswordClick}
       onDeactivateAccount={this.handleDeactivateAccount}
-      onDeleteAccount={this.handleDeleteAccount}
+      onDeleteAccountPage={this.handleDeleteAccount}
       onViewReceiptClick={this.handleViewReceiptClick}
       onChangePaymentMethodsTabPage={this.handleChangePaymentMethodsTabPage}
       onPrintClick={this.handlePrint}
@@ -118,6 +129,8 @@ export class SettingsPageController extends React.Component<Properties, State> {
       onEmailReceiptClick={this.handleEmailReceipt}
       activateEmailButton={this.handleActivateEmailButton}
       onDeactivateAccountPageClick={this.handleDeactivateAccountPageClick}
+      onDeleteCheckboxClick={this.handleDeleteCheckboxClick}
+      onDeletePasswordChange={this.handleDeletePasswordChange}
     />;
   }
 
@@ -211,6 +224,17 @@ export class SettingsPageController extends React.Component<Properties, State> {
     } catch {
       // pass
     }
+  }
+
+  private handleDeleteCheckboxClick = () => {
+    this.setState((prevState) => ({
+      isDeleteChecked: !prevState.isDeleteChecked
+    }));
+  }
+
+  private handleDeletePasswordChange = (event: React.ChangeEvent<
+      HTMLInputElement>) => {
+    this.setState({ deleteAccountPassword: event.target.value });
   }
 
   private handleAnnouncementToggle = async () => {
@@ -319,6 +343,29 @@ export class SettingsPageController extends React.Component<Properties, State> {
     this.setState({
       accountInformationTabPage: AccountInformationTab.Page.DELETE
     });
+  }
+
+  private handleSubmitDeleteAccount = async () => {
+    try {
+      const response = await this.props.model.deleteAccount(this.props.account,
+        this.state.deleteAccountPassword);
+      if (response.id === -1) {
+        this.setState({
+          deleteAccountErrorCode:
+            AccountInformationTab.DeleteAccountErrorCode.WRONG_PASSWORD
+        });
+      } else {
+        this.setState({
+          accountInformationTabPage: AccountInformationTab.Page.DELETE_CONFIRMED
+        });
+        this.props.onLogOut();
+      }
+    } catch {
+      this.setState({
+        deleteAccountErrorCode:
+          AccountInformationTab.DeleteAccountErrorCode.NO_CONNECTION
+      });
+    }
   }
 
   private handleViewReceiptClick = () => {

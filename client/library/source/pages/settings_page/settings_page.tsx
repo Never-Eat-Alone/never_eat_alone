@@ -78,6 +78,12 @@ interface Properties {
 
   isReceiptEmailed: boolean;
 
+  isDeleteChecked: boolean;
+
+  deleteAccountPassword: string;
+
+  deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode;
+
   onChangePaymentMethodsTabPage: (page: PaymentMethodsTab.Page) => void;
 
   /** Indicates the Add card button is clicked. */
@@ -133,7 +139,9 @@ interface Properties {
   onDeactivateAccount: () => void;
 
   /** Indicates the delete account button is clicked. */
-  onDeleteAccount: () => void;
+  onDeleteAccountPage: () => void;
+
+  onSubmitDeleteAccount: () => void;
 
   /** Indicates the view receipt button is clicked. */
   onViewReceiptClick: (record: PaymentRecord) => void;
@@ -153,6 +161,8 @@ interface Properties {
   onEmailReceiptClick: (paymentRecord: PaymentRecord) => void;
   activateEmailButton: () => void;
   onDeactivateAccountPageClick: () => void;
+  onDeleteCheckboxClick: () => void;
+  onDeletePasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 interface State {
@@ -207,7 +217,8 @@ export class SettingsPage extends React.Component<Properties, State> {
         case SettingsPage.Tab.ACCOUNT_INFORMATION:
           return <AccountInformationTab {...this.props}
             page={this.props.accountInformationTabPage}
-            onBackClick={this.props.onAccountInformationBackClick} />;
+            onBackClick={this.props.onAccountInformationBackClick}
+          />;
         case SettingsPage.Tab.NOTIFICATIONS:
           return <NotificationsTab {...this.props} />;
         case SettingsPage.Tab.PAYMENT_METHODS:

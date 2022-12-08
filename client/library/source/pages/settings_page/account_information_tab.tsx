@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { BackButton, InputField, SecondaryTextButton, SecondaryTextLinkButton,
-} from '../../components';
+import { BackButton, CheckBox, InputField, SecondaryTextButton,
+  SecondaryTextLinkButton, 
+  PrimaryTextButton} from '../../components';
 import { DisplayMode, SocialAccount, SocialAccountType
 } from '../../definitions';
 import { LinkSocialAccountButton } from './link_social_account_button';
@@ -25,6 +26,12 @@ interface Properties {
 
   page: AccountInformationTab.Page;
 
+  isDeleteChecked: boolean;
+
+  deleteAccountPassword: string;
+
+  deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode;
+
   /** Indicates link Google account button is clicked. */
   onGoogleClick: () => void;
 
@@ -47,7 +54,11 @@ interface Properties {
   onDeactivateAccount: () => void;
 
   /** Indicates the delete account button is clicked. */
-  onDeleteAccount: () => void;
+  onDeleteAccountPage: () => void;
+
+  /** Indicates the delete account button is clicked that submits the delete
+   * request. */
+  onSubmitDeleteAccount: () => void;
 
   /** Indicates the deactivate/delete account button on initial page is
    * clicked.
@@ -56,6 +67,12 @@ interface Properties {
 
   /** Indicates the back button is clicked. */
   onBackClick: () => void;
+
+  /** Indicates the checkbox is clicked on the delete account page. */
+  onDeleteCheckboxClick: () => void;
+
+  /** Indicates the password value changed in the inputfield. */
+  onDeletePasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 interface State {
@@ -181,11 +198,18 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           <SecondaryTextLinkButton
             style={DELETE_LINK_STYLE}
             label='Delete Account'
-            onClick={this.props.onDeleteAccount}
+            onClick={this.props.onDeleteAccountPage}
           />
         </>);
     }
     if (this.props.page === AccountInformationTab.Page.DELETE) {
+      const errorMessage = (() => {
+        if (this.props.deleteAccountErrorCode !==
+            AccountInformationTab.DeleteAccountErrorCode.NONE) {
+          return 'Something went wrong. Please try again later.';
+        }
+        return '';
+      })();
       return (
         <>
           <div style={DELETE_ROW_CONTAINER_STYLE} >
@@ -205,6 +229,40 @@ export class AccountInformationTab extends React.Component<Properties, State> {
               action and cannot be undone.
             </p>
           </div>
+          <div style={DELETE_P_STYLE} >
+            If you delete your account, all information associated with your 
+            profile will be removed from NeverEatAlone.{'\n\n'}
+            Your email and handle will be available for new accounts to use.
+          </div>
+          <div style={CHECKBOX_ROW_CONTAINER_STYLE} >
+            <CheckBox
+              label='Yes, I want to permanently remove my account from NeverEatAlone.'
+              checked={this.props.isDeleteChecked}
+              onBoxClick={this.props.onDeleteCheckboxClick}
+            />
+          </div>
+          <p style={DEACTIVATE_GREY_TEXT_STYLE} >Enter Password</p>
+          <InputField
+            style={DELETE_INPUT_STYLE}
+            type='password'
+            value={this.props.deleteAccountPassword}
+            onChange={this.props.onDeletePasswordChange}
+          />
+          <div style={DELETE_BUTTONS_CONTAINER_STYLE} >
+            <PrimaryTextButton
+              style={SUBMIT_DELETE_BUTTON_STYLE}
+              label='Delete Account'
+              onClick={this.props.onSubmitDeleteAccount}
+              disabled={!this.props.isDeleteChecked ||
+                this.props.deleteAccountPassword === ''}
+            />
+            <SecondaryTextButton
+              style={DELETE_CANCEL_BUTTON_STYLE}
+              label='Cancel'
+              onClick={this.props.onBackClick}
+            />
+          </div>
+          <div style={ERROR_STYLE} >{errorMessage}</div>
         </>);
     }
     if (this.props.page === AccountInformationTab.Page.DELETE_CONFIRMED) {
@@ -372,10 +430,10 @@ export class AccountInformationTab extends React.Component<Properties, State> {
             disabled
           />
           <SecondaryTextButton
-          style={EDIT_BUTTON_STYLE}
-          label='Edit'
-          onClick={this.props.onEditPasswordClick}
-        />
+            style={EDIT_BUTTON_STYLE}
+            label='Edit'
+            onClick={this.props.onEditPasswordClick}
+          />
         </div>
         <h2 style={DEACTIVATE_HEADING_STYLE} >
           Looking To Deactivate or Delete your account?
@@ -401,6 +459,12 @@ export namespace AccountInformationTab {
     DELETE_REASON_SENT,
     DEACTIVATE_CONFIRMED,
     DEACTIVATE_REASON_SENT
+  }
+
+  export enum DeleteAccountErrorCode {
+    NONE,
+    NO_CONNECTION,
+    WRONG_PASSWORD
   }
 }
 
@@ -740,4 +804,74 @@ const PINK_TEXT_STYLE: React.CSSProperties = {
   ...DEACTIVE_P_STYLE,
   fontWeight: 600,
   color: '#FF2C79'
+};
+
+const DELETE_P_STYLE: React.CSSProperties = {
+  ...DEACTIVE_P_STYLE,
+  margin: '20px 0px 30px 0px',
+  fontWeight: 400
+};
+
+const CHECKBOX_ROW_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  height: '18px',
+  minHeight: '18px',
+  marginBottom: '30px'
+};
+
+const DELETE_INPUT_STYLE: React.CSSProperties = {
+  marginTop: '5px',
+  width: '297px',
+  minWidth: '297px',
+  height: '38px',
+  minHeight: '38px',
+  fontSize: '14px',
+  lineHeight: '18px',
+  marginBottom: '30px'
+}
+
+const DELETE_BUTTONS_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  gap: '20px'
+};
+
+const SUBMIT_DELETE_BUTTON_STYLE: React.CSSProperties = {
+  width: '164px',
+  minWidth: '164px',
+  height: '35px',
+  minHeight: '35px',
+  fontWeight: 600,
+  fontSize: '12px',
+  lineHeight: '15px'
+};
+
+const DELETE_CANCEL_BUTTON_STYLE: React.CSSProperties = {
+  width: '113px',
+  minWidth: '113px',
+  height: '35px',
+  minHeight: '35px',
+  fontWeight: 600,
+  fontSize: '12px',
+  lineHeight: '15px'
+};
+
+const ERROR_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  whiteSpace: 'pre-line',
+  color: '#FF2C79',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  marginTop: '5px'
 };
