@@ -253,5 +253,7 @@ const TEXT_STYLE: React.CSSProperties = {
 const LINK_STYLE: React.CSSProperties = {
   fontWeight: 400,
   fontSize: '18px',
-  lineHeight: '23px'
+  lineHeight: '23px',
+  minHeight: '18px',
+  width: 'fit-content'
 };
