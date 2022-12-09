@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as Router from 'react-router-dom';
 import { AddCreditCardForm } from '../../components';
 import { DisplayMode, PaymentCard, PaymentRecord, User
 } from '../../definitions';
@@ -37,6 +38,7 @@ interface State {
   isDeleteChecked: boolean;
   deleteAccountPassword: string;
   deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode;
+  redirect: string;
 }
 
 export class SettingsPageController extends React.Component<Properties, State> {
@@ -62,13 +64,17 @@ export class SettingsPageController extends React.Component<Properties, State> {
       isReceiptEmailed: false,
       isDeleteChecked: false,
       deleteAccountPassword: '',
-      deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode.NONE
+      deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode.NONE,
+      redirect: null
     };
   }
 
   public render(): JSX.Element {
     if (!this.state.isLoaded || this.state.hasError) {
       return <div />;
+    }
+    if (this.state.redirect) {
+      return <Router.Redirect to={this.state.redirect} />;
     }
     return <SettingsPage
       displayMode={this.props.displayMode}
@@ -355,9 +361,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
             AccountInformationTab.DeleteAccountErrorCode.WRONG_PASSWORD
         });
       } else {
-        this.setState({
-          accountInformationTabPage: AccountInformationTab.Page.DELETE_CONFIRMED
-        });
+        this.setState({ redirect: '/deleted_account_survey' });
         this.props.onLogOut();
       }
     } catch {

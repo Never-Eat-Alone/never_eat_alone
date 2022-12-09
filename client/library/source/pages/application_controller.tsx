@@ -123,6 +123,10 @@ export class ApplicationController extends React.Component<Properties, State> {
               render={this.renderCookiesPolicy}
             />
             <Router.Route
+              path='/deleted_account_survey'
+              render={this.renderDeletedAccountSurvey}
+            />
+            <Router.Route
               path='/dining_events/:id'
               render={this.renderDiningEvents}
             />
@@ -287,6 +291,12 @@ export class ApplicationController extends React.Component<Properties, State> {
         displayMode={this.state.displayMode}
         account={this.state.account}
         model={this.props.model.getEditProfilePageModel(id)}
+    />;
+  }
+
+  private renderDeletedAccountSurvey = () => {
+    return <DeletedAccountSurveyController
+      displayMode={this.state.displayMode}  
     />;
   }
 
