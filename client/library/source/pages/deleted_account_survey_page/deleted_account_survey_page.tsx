@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CheckBox, PrimaryTextButton, Textarea } from '../../components';
+import { CheckBox, PrimaryTextButton, Textarea, RedNavLink } from '../../components';
 import { DisplayMode } from '../../definitions';
 
 const SurveyOptions = {
@@ -131,7 +131,8 @@ export class DeletedAccountSurveyPage extends React.Component<Properties, State
           </div>
           <div style={TEXT_STYLE} >
             We’re sad to see you go, but you can still browse NeverEatAlone as 
-            a guest. Go to Homepage.
+            a guest.&nbsp;
+            <RedNavLink style={LINK_STYLE} to='/' label='Go to Homepage' />.
           </div>
           {surveyContentSection}
         </div>
@@ -216,19 +217,21 @@ const DESKTOP_IMAGE_STYLE: React.CSSProperties = {
 };
 
 const TABLET_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
-
+  ...DESKTOP_IMAGE_CONTAINER_STYLE
 };
 
 const TABLET_IMAGE_STYLE: React.CSSProperties = {
-  
+  ...DESKTOP_IMAGE_STYLE
 };
 
 const MOBILE_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
-
+  ...DESKTOP_IMAGE_CONTAINER_STYLE
 };
 
 const MOBILE_IMAGE_STYLE: React.CSSProperties = {
-  
+  ...DESKTOP_IMAGE_STYLE,
+  width: '300px',
+  minWidth: '300px'
 };
 
 const TEXT_STYLE: React.CSSProperties = {
@@ -245,4 +248,10 @@ const TEXT_STYLE: React.CSSProperties = {
   fontSize: '18px',
   lineHeight: '23px',
   color: '#000000'
+};
+
+const LINK_STYLE: React.CSSProperties = {
+  fontWeight: 400,
+  fontSize: '18px',
+  lineHeight: '23px'
 };
