@@ -1,3 +1,4 @@
+export * from './account_deleted_survey';
 export * from './array_json';
 export * from './attendee';
 export * from './attendee_status';

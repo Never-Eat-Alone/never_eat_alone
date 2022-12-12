@@ -1,68 +1,12 @@
 import * as React from 'react';
-import { CheckBox, PrimaryTextButton, Textarea, RedNavLink
+import { CheckBox, PrimaryTextButton, RedNavLink, Textarea
 } from '../../components';
-import { DisplayMode } from '../../definitions';
-
-const SurveyOptions = ["I don’t find it useful.",
-  "I don’t understand how it works.", 'There are no events that interest me.',
-  'There are no events in my area.',
-  'This is a temporary break / I want to make a new account.',
-  'I have a privacy or safety concern.'
-];
-
-export class SurveyAnswers {
-  constructor(a1: boolean, a2: boolean, a3: boolean, a4: boolean, a5: boolean,
-      a6: boolean, message: string) {
-    this._a1 = a1;
-    this._a2 = a2;
-    this._a3 = a3;
-    this._a4 = a4;
-    this._a5 = a5;
-    this._a6 = a6;
-    this._message = message;
-  }
-
-  public get a1(): boolean {
-    return this._a1;
-  }
-
-  public get a2(): boolean {
-    return this._a2;
-  }
-
-  public get a3(): boolean {
-    return this._a3;
-  }
-
-  public get a4(): boolean {
-    return this._a4;
-  }
-
-  public get a5(): boolean {
-    return this._a5;
-  }
-
-  public get a6(): boolean {
-    return this._a6;
-  }
-
-  public get message(): string {
-    return this._message;
-  }
-
-  private _a1: boolean;
-  private _a2: boolean;
-  private _a3: boolean;
-  private _a4: boolean;
-  private _a5: boolean;
-  private _a6: boolean;
-  private _message: string;
-}
+import { AccountDeletedSurvey, DisplayMode } from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
   isSubmitted: boolean;
-  onSubmit: (surveyAnswers: SurveyAnswers) => void;
+  onSubmit: (survey: AccountDeletedSurvey) => void;
 }
 
 interface State {
@@ -79,15 +23,18 @@ export class DeletedAccountSurveyPage extends React.Component<Properties, State
     > {
   constructor(props: Properties) {
     super(props);
+    const survey = new AccountDeletedSurvey(false, false, false, false,
+      false, false, '');
     this.state = {
-      message: '',
-      a1: false,
-      a2: false,
-      a3: false,
-      a4: false,
-      a5: false,
-      a6: false
+      a1: survey.a1,
+      a2: survey.a2,
+      a3: survey.a3,
+      a4: survey.a4,
+      a5: survey.a5,
+      a6: survey.a6,
+      message: ''
     };
+    this._surveyQuestions = survey.questions;
   }
 
   public render(): JSX.Element {
@@ -135,7 +82,7 @@ export class DeletedAccountSurveyPage extends React.Component<Properties, State
       surveyRows.push(
         <div key='option-1' style={SURVEY_ROW_STYLE} >
           <CheckBox
-            label={SurveyOptions[0]}
+            label={this._surveyQuestions[0]}
             checked={this.state.a1}
             onBoxClick={this.handleCheckBoxA1Click}
           />
@@ -143,7 +90,7 @@ export class DeletedAccountSurveyPage extends React.Component<Properties, State
       surveyRows.push(
         <div key='option-2' style={SURVEY_ROW_STYLE} >
           <CheckBox
-            label={SurveyOptions[1]}
+            label={this._surveyQuestions[1]}
             checked={this.state.a2}
             onBoxClick={this.handleCheckBoxA2Click}
           />
@@ -151,7 +98,7 @@ export class DeletedAccountSurveyPage extends React.Component<Properties, State
       surveyRows.push(
         <div key='option-3' style={SURVEY_ROW_STYLE} >
           <CheckBox
-            label={SurveyOptions[2]}
+            label={this._surveyQuestions[2]}
             checked={this.state.a3}
             onBoxClick={this.handleCheckBoxA3Click}
           />
@@ -159,7 +106,7 @@ export class DeletedAccountSurveyPage extends React.Component<Properties, State
       surveyRows.push(
         <div key='option-4' style={SURVEY_ROW_STYLE} >
           <CheckBox
-            label={SurveyOptions[3]}
+            label={this._surveyQuestions[3]}
             checked={this.state.a4}
             onBoxClick={this.handleCheckBoxA4Click}
           />
@@ -167,7 +114,7 @@ export class DeletedAccountSurveyPage extends React.Component<Properties, State
       surveyRows.push(
         <div key='option-5' style={SURVEY_ROW_STYLE} >
           <CheckBox
-            label={SurveyOptions[4]}
+            label={this._surveyQuestions[4]}
             checked={this.state.a5}
             onBoxClick={this.handleCheckBoxA5Click}
           />
@@ -175,7 +122,7 @@ export class DeletedAccountSurveyPage extends React.Component<Properties, State
       surveyRows.push(
         <div key='option-6' style={SURVEY_ROW_STYLE} >
           <CheckBox
-            label={SurveyOptions[5]}
+            label={this._surveyQuestions[5]}
             checked={this.state.a6}
             onBoxClick={this.handleCheckBoxA6Click}
           />
@@ -250,11 +197,13 @@ export class DeletedAccountSurveyPage extends React.Component<Properties, State
   }
 
   private handleSubmit = () => {
-    const surveyAnswers = new SurveyAnswers(this.state.a1, this.state.a2,
+    const survey = new AccountDeletedSurvey(this.state.a1, this.state.a2,
       this.state.a3, this.state.a4, this.state.a5, this.state.a6,
       this.state.message);
-    this.props.onSubmit(surveyAnswers);
+    this.props.onSubmit(survey);
   }
+
+  private _surveyQuestions: string[];
 }
 
 const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {

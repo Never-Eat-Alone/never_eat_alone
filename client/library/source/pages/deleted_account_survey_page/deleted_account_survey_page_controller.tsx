@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { DisplayMode } from '../../definitions';
+import { AccountDeletedSurvey, DisplayMode } from '../../definitions';
 import { DeletedAccountSurveyPageModel
 } from './deleted_account_survey_page_model';
-import { DeletedAccountSurveyPage, SurveyAnswers
-} from './deleted_account_survey_page';
+import { DeletedAccountSurveyPage } from './deleted_account_survey_page';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -31,9 +30,9 @@ export class DeletedAccountSurveyPageController extends React.Component<
     />;
   }
 
-  private handleSubmit = async (surveyAnswers: SurveyAnswers) => {
+  private handleSubmit = async (survey: AccountDeletedSurvey) => {
     try {
-      await this.props.model.submit(surveyAnswers);
+      await this.props.model.submit(survey);
       this.setState({ isSubmitted: true });
     } catch {
       //pass
