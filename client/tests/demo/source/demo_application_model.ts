@@ -1,6 +1,8 @@
 import * as NeverEatAlone from 'never_eat_alone';
-import { DemoDeletedAccountSurveyPageModel } from
-'./demo_deleted_account_survey_page_model';
+import { DemoDeactivateAccountSurveyModel } from
+'./demo_deactivate_account_survey_model';
+import { DemoDeletedAccountSurveyModel } from
+'./demo_deleted_account_survey_model';
 import { DemoDiningEventPageModel } from './demo_dining_event_page_model';
 import { DemoLogInModel } from './demo_login_model';
 import { DemoEditProfilePageModel } from './demo_edit_profile_page_model';
@@ -410,8 +412,8 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       false, false, false, false, true, arthurVisa1234, arthurPaymentCards,
       arthurPaymentRecords);
     this._settingsPageModel.set(2, demoSettingsPageModel2);
-    this._deletedAccountSurveyPageModel =
-      new DemoDeletedAccountSurveyPageModel();
+    this._deletedAccountSurveyModel = new DemoDeletedAccountSurveyModel();
+    this._deactivateAccountSurveyModel = new DemoDeactivateAccountSurveyModel();
     // Loading all models with load method.
     await Promise.all([this._headerModel.load(), this._homePageModel.load(),
       this._inviteAFoodieModel.load()]);
@@ -447,11 +449,6 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return this._logInModel;
   }
 
-  public get deletedAccountSurveyPageModel():
-      NeverEatAlone.DeletedAccountSurveyPageModel {
-    return this._deletedAccountSurveyPageModel;
-  }
-
   public getProfilePageModel(id: number): NeverEatAlone.ProfilePageModel {
     return this._profilePageModelMap.get(id);
   }
@@ -465,6 +462,16 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return this._settingsPageModel.get(id);
   }
 
+  public get deletedAccountSurveyModel():
+      NeverEatAlone.DeletedAccountSurveyModel {
+    return this._deletedAccountSurveyModel;
+  }
+
+  public get deactivateAccountSurveyModel():
+      NeverEatAlone.DeactivateAccountSurveyModel {
+    return this._deactivateAccountSurveyModel;
+  }
+
   private _headerModel: NeverEatAlone.HeaderModel;
   private _homePageModel: NeverEatAlone.HomePageModel;
   private _diningEventModelMap: Map<number, NeverEatAlone.DiningEventPageModel>;
@@ -476,6 +483,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
   private _editProfilePageModel: Map<number,
     NeverEatAlone.EditProfilePageModel>;
   private _settingsPageModel: Map<number, NeverEatAlone.SettingsPageModel>;
-  private _deletedAccountSurveyPageModel:
-    NeverEatAlone.DeletedAccountSurveyPageModel;
+  private _deletedAccountSurveyModel: NeverEatAlone.DeletedAccountSurveyModel;
+  private _deactivateAccountSurveyModel:
+    NeverEatAlone.DeactivateAccountSurveyModel;
 }

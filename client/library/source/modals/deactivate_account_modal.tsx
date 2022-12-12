@@ -23,7 +23,7 @@ export class DeactivateAccountModal extends React.Component<Properties> {
         <div ref={this._containerRef} style={containerStyle} >
           <CloseButton
             style={CLOSE_BUTTON_STYLE}
-            displayMode={DisplayMode.MOBILE}
+            displayMode={this.props.displayMode}
             onClick={this.props.onClose}
           />
           <h1 style={H1_TEXT_STYLE} >DEACTIVATE ACCOUNT</h1>
