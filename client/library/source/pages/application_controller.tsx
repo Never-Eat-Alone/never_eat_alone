@@ -7,6 +7,8 @@ import { InviteAFoodieModalController, JoinController, LogInModalController,
   PartnerWithUsModalController } from '../modals';
 import { ApplicationModel } from './application_model';
 import { CookiesPolicyPage } from './cookie_policy_page';
+import { DeletedAccountSurveyPageController
+} from './deleted_account_survey_page';
 import { DiningEventPageController } from './dining_event_page';
 import { EditProfilePageController } from './edit_profile_page';
 import { HelpPage } from './help_page';
@@ -121,6 +123,10 @@ export class ApplicationController extends React.Component<Properties, State> {
             <Router.Route
               path='/cookies_policy'
               render={this.renderCookiesPolicy}
+            />
+            <Router.Route
+              path='/deleted_account_survey'
+              render={this.renderDeletedAccountSurvey}
             />
             <Router.Route
               path='/dining_events/:id'
@@ -287,6 +293,13 @@ export class ApplicationController extends React.Component<Properties, State> {
         displayMode={this.state.displayMode}
         account={this.state.account}
         model={this.props.model.getEditProfilePageModel(id)}
+    />;
+  }
+
+  private renderDeletedAccountSurvey = () => {
+    return <DeletedAccountSurveyPageController
+      displayMode={this.state.displayMode}
+      model={this.props.model.deletedAccountSurveyPageModel}
     />;
   }
 

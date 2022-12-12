@@ -265,16 +265,6 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           <div style={ERROR_STYLE} >{errorMessage}</div>
         </>);
     }
-    if (this.props.page === AccountInformationTab.Page.DELETE_CONFIRMED) {
-      return (
-        <>
-        </>);
-    }
-    if (this.props.page === AccountInformationTab.Page.DELETE_REASON_SENT) {
-      return (
-        <>
-        </>);
-    }
     if (this.props.page === AccountInformationTab.Page.DEACTIVATE_CONFIRMED) {
       return (
         <>
@@ -455,8 +445,6 @@ export namespace AccountInformationTab {
     INITIAL,
     DEACTIVATE_DELETE,
     DELETE,
-    DELETE_CONFIRMED,
-    DELETE_REASON_SENT,
     DEACTIVATE_CONFIRMED,
     DEACTIVATE_REASON_SENT
   }

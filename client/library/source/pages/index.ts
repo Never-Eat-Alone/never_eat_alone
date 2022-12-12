@@ -1,6 +1,7 @@
 export * from './application_controller';
 export * from './application_model';
 export * from './cookie_policy_page';
+export * from './deleted_account_survey_page';
 export * from './dining_event_page';
 export * from './edit_profile_page';
 export * from './forgot_password_link_sent_page';
