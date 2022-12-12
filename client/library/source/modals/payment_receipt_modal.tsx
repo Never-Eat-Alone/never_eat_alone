@@ -425,8 +425,9 @@ const CONTAINER_STYLE: React.CSSProperties = {
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
   ...CONTAINER_STYLE,
-  width: '375px',
-  minWidth: '375px'
+  width: '100%',
+  minWidth: 'auto',
+  maxWidth: '375px'
 };
 
 const BACKGROUND_IMAGE_CONTAINER_STYLE: React.CSSProperties = {

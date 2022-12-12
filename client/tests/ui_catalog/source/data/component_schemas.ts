@@ -1624,9 +1624,20 @@ export function loadComponentSchemas(): ComponentSchema[] {
       new SignalSchema('onEditDisplayNameClick', '', []),
       new SignalSchema('onEditEmailClick', '', []),
       new SignalSchema('onEditPasswordClick', '', []),
-      new SignalSchema('onDeactivateAccount', '', []),
-      new SignalSchema('onDeleteAccount', '', []),
-      new SignalSchema('onViewReceiptClick', '', [])
+      new SignalSchema('onDeactivateAccountSubmit', '', []),
+      new SignalSchema('onDeleteAccountPage', '', []),
+      new SignalSchema('onSubmitDeleteAccount', '', []),
+      new SignalSchema('onPrintClick', '', []),
+      new SignalSchema('onDownloadPdfClick', '', []),
+      new SignalSchema('onPaymentReceiptBackClick', '', []),
+      new SignalSchema('onAccountInformationBackClick', '', []),
+      new SignalSchema('onHelpButtonClick', '', []),
+      new SignalSchema('onSubmitHelpEmail', '', []),
+      new SignalSchema('onEmailReceiptClick', '', []),
+      new SignalSchema('activateEmailButton', '', []),
+      new SignalSchema('onDeactivateAccountPageClick', '', []),
+      new SignalSchema('onDeleteCheckboxClick', '', []),
+      new SignalSchema('onDeletePasswordChange', '', [])
       ], NeverEatAlone.SettingsPage);
   const linkSocialMediaButtonSchema = new ComponentSchema(
     'LinkSocialMediaButton',

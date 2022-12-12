@@ -284,7 +284,9 @@ const CONTAINER_STYLE: React.CSSProperties = {
   alignItems: 'flex-start',
   position: 'relative',
   height: '486px',
+  minHeight: '486px',
   width: '687px',
+  minWidth: '687px',
   boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
   borderRadius: '4px',
   overflow: 'hidden'
@@ -298,6 +300,7 @@ const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
   alignItems: 'flex-start',
   position: 'relative',
   width: '100%',
+  maxWidth: '375px',
   minHeight: '482px',
   boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
   borderRadius: '4px',

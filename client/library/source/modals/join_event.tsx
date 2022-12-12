@@ -483,15 +483,12 @@ const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  width: '675px'
+  width: '675px',
+  minWidth: '675px'
 };
 
 const TABLET_CONTAINER_STYLE: React.CSSProperties = {
-  ...CONTAINER_STYLE,
-  flexDirection: 'row',
-  justifyContent: 'flex-start',
-  alignItems: 'flex-start',
-  width: '675px'
+  ...DESKTOP_CONTAINER_STYLE
 };
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
@@ -499,7 +496,9 @@ const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  width: '100%'
+  width: '100%',
+  minWidth: 'auto',
+  maxWidth: '375px'
 };
 
 const CLOSE_BUTTON_STYLE: React.CSSProperties = {

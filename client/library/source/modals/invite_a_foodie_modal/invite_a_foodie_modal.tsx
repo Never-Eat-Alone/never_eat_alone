@@ -292,6 +292,8 @@ const CONTAINER_STYLE: React.CSSProperties = {
   backgroundColor: '#FFFFFF',
   width: '702px',
   height: '534px',
+  minWidth: '702px',
+  minHeight: '534px',
   padding: '30px',
   borderRadius: '4px',
   overflow: 'hidden',
@@ -301,7 +303,10 @@ const CONTAINER_STYLE: React.CSSProperties = {
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
   ...CONTAINER_STYLE,
   width: '100%',
+  minWidth: 'auto',
+  maxWidth: '375px',
   height: 'auto',
+  minHeight: 'auto',
   padding: '30px 20px'
 };
 

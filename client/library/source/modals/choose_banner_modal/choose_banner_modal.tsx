@@ -155,7 +155,8 @@ const CONTAINER_STYLE: React.CSSProperties = {
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
   ...CONTAINER_STYLE,
-  width: '100%'
+  width: '100%',
+  maxWidth: '375px'
 };
 
 const CLOSE_BUTTON_STYLE: React.CSSProperties = {

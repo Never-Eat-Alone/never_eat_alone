@@ -348,7 +348,8 @@ const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
   ...DESKTOP_CONTAINER_STYLE,
   paddingTop: '20px',
   paddingBottom: '20px',
-  width: '100%'
+  width: '100%',
+  maxWidth: '375px'
 };
 
 const DESKTOP_FORM_STYLE: React.CSSProperties = {

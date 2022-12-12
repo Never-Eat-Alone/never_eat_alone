@@ -122,7 +122,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
       onEditDisplayNameClick={this.handleEditDisplayNameClick}
       onEditEmailClick={this.handleEditEmailClick}
       onEditPasswordClick={this.handleEditPasswordClick}
-      onDeactivateAccount={this.handleDeactivateAccount}
+      onDeactivateAccountSubmit={this.handleSubmitDeactivateAccount}
       onDeleteAccountPage={this.handleDeleteAccount}
       onChangePaymentMethodsTabPage={this.handleChangePaymentMethodsTabPage}
       onPrintClick={this.handlePrint}
@@ -337,10 +337,6 @@ export class SettingsPageController extends React.Component<Properties, State> {
   }
 
   private handleEditPasswordClick = () => {
-
-  }
-
-  private handleDeactivateAccount = () => {
 
   }
 
