@@ -143,9 +143,6 @@ interface Properties {
 
   onSubmitDeleteAccount: () => void;
 
-  /** Indicates the view receipt button is clicked. */
-  onViewReceiptClick: (record: PaymentRecord) => void;
-
   onPrintClick: (paymentRecord: PaymentRecord) => void;
 
   onDownloadPdfClick: (paymentRecord: PaymentRecord) => void;

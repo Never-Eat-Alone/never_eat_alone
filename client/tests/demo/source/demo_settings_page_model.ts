@@ -174,6 +174,10 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
     return NeverEatAlone.User.makeGuest();
   }
 
+  public async deactivateAccount(accountId: number): Promise<void> {
+    return;
+  }
+
   private _displayName: string;
   private _linkedSocialAccounts: NeverEatAlone.SocialAccount[];
   private _profileId: number;
