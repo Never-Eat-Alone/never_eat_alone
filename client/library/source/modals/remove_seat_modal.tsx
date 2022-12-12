@@ -78,7 +78,8 @@ const CONTAINER_STYLE: React.CSSProperties = {
   boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
   backgroundColor: '#FFFFFF',
   overflowY: 'initial',
-  width: '375px'
+  maxWidth: '375px',
+  width: '100%'
 };
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {

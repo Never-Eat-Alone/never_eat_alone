@@ -1,18 +1,19 @@
 import * as React from 'react';
 import { AccountDeletedSurvey, DisplayMode } from '../../definitions';
-import { DeletedAccountSurveyModel } from './deleted_account_survey_model';
-import { DeletedAccountSurveyPage } from './deleted_account_survey_page';
+import { DeactivateAccountSurveyModel
+} from './deactivate_account_survey_model';
+import { DeactivateAccountSurveyPage } from './deactivate_account_survey_page';
 
 interface Properties {
   displayMode: DisplayMode;
-  model: DeletedAccountSurveyModel;
+  model: DeactivateAccountSurveyModel;
 }
 
 interface State {
   isSubmitted: boolean;
 }
 
-export class DeletedAccountSurveyPageController extends React.Component<
+export class DeactivateAccountSurveyPageController extends React.Component<
     Properties, State> {
   constructor(props: Properties) {
     super(props);
@@ -22,7 +23,7 @@ export class DeletedAccountSurveyPageController extends React.Component<
   }
 
   public render(): JSX.Element {
-    return <DeletedAccountSurveyPage
+    return <DeactivateAccountSurveyPage
       displayMode={this.props.displayMode}
       isSubmitted={this.state.isSubmitted}
       onSubmit={this.handleSubmit}

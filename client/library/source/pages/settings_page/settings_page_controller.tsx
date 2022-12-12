@@ -122,9 +122,8 @@ export class SettingsPageController extends React.Component<Properties, State> {
       onEditDisplayNameClick={this.handleEditDisplayNameClick}
       onEditEmailClick={this.handleEditEmailClick}
       onEditPasswordClick={this.handleEditPasswordClick}
-      onDeactivateAccount={this.handleDeactivateAccount}
+      onDeactivateAccountSubmit={this.handleSubmitDeactivateAccount}
       onDeleteAccountPage={this.handleDeleteAccount}
-      onViewReceiptClick={this.handleViewReceiptClick}
       onChangePaymentMethodsTabPage={this.handleChangePaymentMethodsTabPage}
       onPrintClick={this.handlePrint}
       onDownloadPdfClick={this.handleDownloadPdf}
@@ -341,10 +340,6 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   }
 
-  private handleDeactivateAccount = () => {
-
-  }
-
   private handleDeleteAccount = () => {
     this.setState({
       accountInformationTabPage: AccountInformationTab.Page.DELETE
@@ -372,8 +367,14 @@ export class SettingsPageController extends React.Component<Properties, State> {
     }
   }
 
-  private handleViewReceiptClick = () => {
-
+  private handleSubmitDeactivateAccount = async () => {
+    try {
+      await this.props.model.deactivateAccount(this.props.account.id);
+      this.setState({ redirect: '/deactivate_account_survey' });
+      this.props.onLogOut();
+    } catch {
+      //pass
+    }
   }
 
   private handleDeactivateAccountPageClick = () => {

@@ -320,6 +320,7 @@ const CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'center',
   width: '490px',
+  minWidth: '490px',
   padding: '60px 90px 70px 90px',
   borderRadius: '4px',
   backgroundColor: '#FFFFFF',
@@ -329,7 +330,9 @@ const CONTAINER_STYLE: React.CSSProperties = {
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
   ...CONTAINER_STYLE,
-  width: '375px',
+  maxWidth: '375px',
+  minWidth: 'auto',
+  width: '100%',
   padding: '50px 33px 60px 32px'
 };
 

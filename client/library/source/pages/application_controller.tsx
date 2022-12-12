@@ -6,6 +6,8 @@ import { DisplayMode, getDisplayMode, User, UserProfileImage,
 import { InviteAFoodieModalController, JoinController, LogInModalController,
   PartnerWithUsModalController } from '../modals';
 import { ApplicationModel } from './application_model';
+import { DeactivateAccountSurveyPageController }
+from './deactivate_account_survey_page';
 import { CookiesPolicyPage } from './cookie_policy_page';
 import { DeletedAccountSurveyPageController
 } from './deleted_account_survey_page';
@@ -123,6 +125,10 @@ export class ApplicationController extends React.Component<Properties, State> {
             <Router.Route
               path='/cookies_policy'
               render={this.renderCookiesPolicy}
+            />
+            <Router.Route
+              path='/deactivate_account_survey'
+              render={this.renderDeactivateAccountSurvey}
             />
             <Router.Route
               path='/deleted_account_survey'
@@ -274,6 +280,13 @@ export class ApplicationController extends React.Component<Properties, State> {
     />;
   }
 
+  private renderDeactivateAccountSurvey = () => {
+    return <DeactivateAccountSurveyPageController
+      displayMode={this.state.displayMode}
+      model={this.props.model.deactivateAccountSurveyModel}
+    />;
+  }
+
   private renderDiningEvents = ({match}: Router.RouteComponentProps<TParams>
       ) => {
     const id = Number(match.params.id);
@@ -299,7 +312,7 @@ export class ApplicationController extends React.Component<Properties, State> {
   private renderDeletedAccountSurvey = () => {
     return <DeletedAccountSurveyPageController
       displayMode={this.state.displayMode}
-      model={this.props.model.deletedAccountSurveyPageModel}
+      model={this.props.model.deletedAccountSurveyModel}
     />;
   }
 

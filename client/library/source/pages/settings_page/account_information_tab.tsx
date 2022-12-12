@@ -51,7 +51,7 @@ interface Properties {
   onEditPasswordClick: () => void;
 
   /** Indicates the deactivate account button is clicked. */
-  onDeactivateAccount: () => void;
+  onDeactivateAccountButton: () => void;
 
   /** Indicates the delete account button is clicked. */
   onDeleteAccountPage: () => void;
@@ -161,7 +161,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           <SecondaryTextButton
             style={DEACTIVATE_BUTTON_STYLE}
             label='Deactivate Account'
-            onClick={this.props.onDeactivateAccount}
+            onClick={this.props.onDeactivateAccountButton}
           />
           <h2 style={DELETE_H2_STYLE} >Delete Account</h2>
           <p style={DEACTIVE_P_STYLE} >

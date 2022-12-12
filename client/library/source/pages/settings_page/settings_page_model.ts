@@ -36,4 +36,5 @@ export abstract class SettingsPageModel {
   public abstract SubmitHelpEmail(receiptId: number, message: string): Promise<
     void>;
   public abstract deleteAccount(account: User, password: string): Promise<User>;
+  public abstract deactivateAccount(accountId: number): Promise<void>;
 }

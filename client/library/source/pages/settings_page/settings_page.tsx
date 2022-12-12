@@ -2,7 +2,7 @@ import * as React from 'react';
 import { AddCreditCardForm, Modal } from '../../components';
 import { DisplayMode, PaymentCard, PaymentRecord, SocialAccount
 } from '../../definitions';
-import { PaymentReceiptModal } from '../../modals';
+import { DeactivateAccountModal, PaymentReceiptModal } from '../../modals';
 import { AccountInformationTab } from './account_information_tab';
 import { CardDetailsForm } from './card_details_form'; 
 import { NotificationsTab } from './notifications_tab';
@@ -135,29 +135,18 @@ interface Properties {
   /** Indicates the edit button regarding the password is clicked. */
   onEditPasswordClick: () => void;
 
-  /** Indicates the deactivate account button is clicked. */
-  onDeactivateAccount: () => void;
+  /** Indicates the deactivate account submit button is clicked. */
+  onDeactivateAccountSubmit: () => void;
 
   /** Indicates the delete account button is clicked. */
   onDeleteAccountPage: () => void;
-
   onSubmitDeleteAccount: () => void;
-
-  /** Indicates the view receipt button is clicked. */
-  onViewReceiptClick: (record: PaymentRecord) => void;
-
   onPrintClick: (paymentRecord: PaymentRecord) => void;
-
   onDownloadPdfClick: (paymentRecord: PaymentRecord) => void;
-
   onPaymentReceiptBackClick: () => void;
-
   onAccountInformationBackClick: () => void;
-
   onHelpButtonClick: () => void;
-
   onSubmitHelpEmail: (receiptId: number, message: string) => void;
-
   onEmailReceiptClick: (paymentRecord: PaymentRecord) => void;
   activateEmailButton: () => void;
   onDeactivateAccountPageClick: () => void;
@@ -217,6 +206,7 @@ export class SettingsPage extends React.Component<Properties, State> {
         case SettingsPage.Tab.ACCOUNT_INFORMATION:
           return <AccountInformationTab {...this.props}
             page={this.props.accountInformationTabPage}
+            onDeactivateAccountButton={this.handleDeactivateAccountButton}
             onBackClick={this.props.onAccountInformationBackClick}
           />;
         case SettingsPage.Tab.NOTIFICATIONS:
@@ -252,7 +242,11 @@ export class SettingsPage extends React.Component<Properties, State> {
       </Modal> || null);
     const deactivateModal = (this.state.isDeactivateDisplayed &&
       <Modal>
-        deactivate
+        <DeactivateAccountModal
+          displayMode={this.props.displayMode}
+          onSubmit={this.props.onDeactivateAccountSubmit}
+          onClose={this.handleDeactivateAccountClose}
+        />
       </Modal> || null);
     return (
       <div style={containerStyle} >
@@ -323,6 +317,14 @@ export class SettingsPage extends React.Component<Properties, State> {
       isReceiptDisplayed: true,
       paymentRecord: paymentRecord
     });
+  }
+
+  private handleDeactivateAccountButton = () => {
+    this.setState({ isDeactivateDisplayed: true });
+  }
+
+  private handleDeactivateAccountClose = () => {
+    this.setState({ isDeactivateDisplayed: false });
   }
 }
 
