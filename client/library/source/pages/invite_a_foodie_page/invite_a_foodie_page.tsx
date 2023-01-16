@@ -1,9 +1,9 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
-import { CircularCounterWithCounterOutside, CloseButton, EmailInputField,
-  FacebookButton, InstagramButton, RedditLinkButton, TwitterButton
-} from '../../components';
+import { CircularCounterWithCounterOutside, EmailInputField, FacebookButton,
+  InstagramButton, RedditLinkButton, TwitterButton } from '../../components';
 import { DisplayMode, UserInvitationCode } from '../../definitions';
+import { InviteAFoodieSuccessContent } from './invite_a_foodie_success_content';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -11,11 +11,11 @@ interface Properties {
   emailList: string;
   content: string;
   maxContentLength: number;
-  errorCode: InviteAFoodieModal.ErrorCode;
+  errorCode: InviteAFoodiePage.ErrorCode;
   emailInputFieldErrorCode: EmailInputField.ErrorCode;
-  textAreaErrorCode: InviteAFoodieModal.TextErrorCode;
+  textAreaErrorCode: InviteAFoodiePage.TextErrorCode;
   wrongEmails: string[];
-  onClose: () => void;
+  isSuccess: boolean;
   onEmailListChange: (newValue: string) => void;
   onEmailListFocus: () => void;
   onEmailListBlur: () => void;
@@ -28,27 +28,25 @@ interface State {
   borderStyle: string;
 }
 
-export class InviteAFoodieModal extends React.Component<Properties, State> {
+export class InviteAFoodiePage extends React.Component<Properties, State> {
   public static readonly INVITATION_URL = 
     'www.nevereatalone.net/invitation_code/';
   constructor(props: Properties) {
     super(props);
     this._inviteCodeTextArea = React.createRef();
     this.state = {
-      invitationLink: `${InviteAFoodieModal.INVITATION_URL +
+      invitationLink: `${InviteAFoodiePage.INVITATION_URL +
         this.props.userInvitationCode.invitationCode}`,
       borderStyle: '1px solid #CCCCCC'
     };
-    this._containerRef = React.createRef();
   }
 
   public render(): JSX.Element {
-    const { containerStyle, closeButtonStyle, shareContainerStyle,
-        linksContainerStyle, socialMediaButtonStyle } = (() => {
+    const { containerStyle, shareContainerStyle, linksContainerStyle,
+        socialMediaButtonStyle } = (() => {
       if (this.props.displayMode === DisplayMode.MOBILE) {
         return {
           containerStyle: MOBILE_CONTAINER_STYLE,
-          closeButtonStyle:  MOBILE_CLOSE_BUTTON_STYLE,
           shareContainerStyle: MOBILE_SHARE_CONTAINER_STYLE,
           linksContainerStyle: MOBILE_LINKS_CONTAINER_STYLE,
           socialMediaButtonStyle:  MOBILE_SOCIAL_MEDIA_BUTTON_STYLE
@@ -56,7 +54,6 @@ export class InviteAFoodieModal extends React.Component<Properties, State> {
       }
       return {
         containerStyle: CONTAINER_STYLE,
-        closeButtonStyle: CLOSE_BUTTON_STYLE,
         shareContainerStyle: SHARE_CONTAINER_STYLE,
         linksContainerStyle: LINKS_CONTAINER_STYLE,
         socialMediaButtonStyle: SOCIAL_MEDIA_BUTTON_STYLE
@@ -81,13 +78,13 @@ export class InviteAFoodieModal extends React.Component<Properties, State> {
       }
     })();
     const pageError = (() => {
-      if (this.props.errorCode === InviteAFoodieModal.ErrorCode.NO_CONNECTION) {
+      if (this.props.errorCode === InviteAFoodiePage.ErrorCode.NO_CONNECTION) {
         return (
           <div style={PAGE_ERROR_STYLE} >
             Check your internet connection and try again later.
           </div>);
       }
-      if (this.props.errorCode === InviteAFoodieModal.ErrorCode.EMAIL_FAILED) {
+      if (this.props.errorCode === InviteAFoodiePage.ErrorCode.EMAIL_FAILED) {
         return (
           <div style={PAGE_ERROR_STYLE} >
             The email couldn't be sent. Please try again later.
@@ -95,120 +92,114 @@ export class InviteAFoodieModal extends React.Component<Properties, State> {
       }
       return null;
     })();
-    return (
-      <div style={FORM_STYLE} >
-        <div ref={this._containerRef} style={containerStyle} >
-          <CloseButton
-            displayMode={this.props.displayMode}
-            onClick={this.props.onClose}
-            style={closeButtonStyle}
+    const content = (this.props.isSuccess && <InviteAFoodieSuccessContent
+      displayMode={this.props.displayMode} /> ||
+      <div style={containerStyle} >
+        <h1 style={HEADER_STYLE} >Invite a Foodie</h1>
+        <p style={INVITE_LINE_STYLE} >
+          Invite a friend to join NeverEatAlone! They’ll be able to see the 
+          events you’re attending and message you.
+        </p>
+        <EmailInputField
+          style={EMAIL_INPUT_STYLE}
+          placeholder='Seperate Emails Using a comma (,)'
+          value={this.props.emailList}
+          hasError={this.props.emailInputFieldErrorCode !==
+            EmailInputField.ErrorCode.NONE}
+          onChange={this.handleEmailListChange}
+          onFocus={this.props.onEmailListFocus}
+          onBlur={this.props.onEmailListBlur}
+        />
+        <div style={EMAIL_ERROR_MESSAGE_STYLE} >
+          {emailErrorMessage}
+        </div>
+        <h3 style={CONTENT_TITLE_STYLE} >
+          Personalize your message
+        </h3>
+        <p style={CONTENT_DESCRIPTION_STYLE} >
+          Make it yours, or not. Totally your call.
+        </p>
+        <div
+            style={TEXT_AREA_CONTAINER_STYLE}
+            className={css(styles.textAreaContainer)}
+        >
+          <textarea
+            style={TEXT_AREA_STYLE}
+            className={css(styles.textarea)}
+            value={this.props.content}
+            onChange={this.handleContentChange}
           />
-          <h1 style={HEADER_STYLE} >Invite a Foodie</h1>
-          <p style={INVITE_LINE_STYLE} >
-            Invite a friend to join NeverEatAlone! They’ll be able to see the 
-            events you’re attending and message you.
-          </p>
-          <EmailInputField
-            style={EMAIL_INPUT_STYLE}
-            placeholder='Seperate Emails Using a comma (,)'
-            value={this.props.emailList}
-            hasError={this.props.emailInputFieldErrorCode !==
-              EmailInputField.ErrorCode.NONE}
-            onChange={this.handleEmailListChange}
-            onFocus={this.props.onEmailListFocus}
-            onBlur={this.props.onEmailListBlur}
+          <CircularCounterWithCounterOutside
+            style={COUNTER_STYLE}
+            value={this.props.content.length}
+            maxValue={this.props.maxContentLength}
           />
-          <div style={EMAIL_ERROR_MESSAGE_STYLE} >
-            {emailErrorMessage}
-          </div>
-          <h3 style={CONTENT_TITLE_STYLE} >
-            Personalize your message
-          </h3>
-          <p style={CONTENT_DESCRIPTION_STYLE} >
-            Make it yours, or not. Totally your call.
-          </p>
-          <div
-              style={TEXT_AREA_CONTAINER_STYLE}
-              className={css(styles.textAreaContainer)}
+        </div>
+        <div style={SEND_BUTTON_ROW_STYLE} >
+          <button
+              style={SEND_BUTTON_STYLE}
+              className={css(styles.sendButton)}
+              disabled={this.props.emailInputFieldErrorCode !==
+                EmailInputField.ErrorCode.NONE ||
+                this.props.textAreaErrorCode ===
+                InviteAFoodiePage.TextErrorCode.TEXT_OVERFLOW}
+              onClick={this.props.onSendInviteEmail}
           >
-            <textarea
-              style={TEXT_AREA_STYLE}
-              className={css(styles.textarea)}
-              value={this.props.content}
-              onChange={this.handleContentChange}
-            />
-            <CircularCounterWithCounterOutside
-              style={COUNTER_STYLE}
-              value={this.props.content.length}
-              maxValue={this.props.maxContentLength}
-            />
-          </div>
-          <div style={SEND_BUTTON_ROW_STYLE} >
-            <button
-                style={SEND_BUTTON_STYLE}
-                className={css(styles.sendButton)}
-                disabled={this.props.emailInputFieldErrorCode !==
-                  EmailInputField.ErrorCode.NONE ||
-                  this.props.textAreaErrorCode ===
-                  InviteAFoodieModal.TextErrorCode.TEXT_OVERFLOW}
-                onClick={this.props.onSendInviteEmail}
+            <div style={EMAIL_ICON_CONTAINER_STYLE} >
+              <img
+                style={EMAIL_ICON_STYLE}
+                src='resources/icons/email_white.svg'
+                alt='Email icon'
+                draggable={false}
+              />
+            </div>
+            <p style={BUTTON_TEXT_STYLE} >Send Email</p>
+          </button>
+          {pageError}
+        </div>
+        <div style={shareContainerStyle} >
+          <h2 style={SHARE_TEXT_STYLE} >Or Share Via:</h2>
+          <div style={linksContainerStyle} >
+            <TwitterButton style={socialMediaButtonStyle} />
+            <InstagramButton style={socialMediaButtonStyle} />
+            <FacebookButton style={socialMediaButtonStyle} />
+            <RedditLinkButton style={socialMediaButtonStyle} />
+            <div
+                style={{...COPY_CONTAINER_STYLE,
+                  border: this.state.borderStyle}}
+                className={css(styles.copyContainer)}
             >
-              <div style={EMAIL_ICON_CONTAINER_STYLE} >
+              <button
+                  style={COPY_ICON_CONTAINER_STYLE}
+                  onClick={this.handleCopy}
+              >
                 <img
-                  style={EMAIL_ICON_STYLE}
-                  src='resources/icons/email_white.svg'
-                  alt='Email icon'
+                  style={COPY_ICON_STYLE}
+                  src='resources/icons/copy.svg'
+                  alt='Copy Icon'
                   draggable={false}
                 />
-              </div>
-              <p style={BUTTON_TEXT_STYLE} >Send Email</p>
-            </button>
-            {pageError}
-          </div>
-          <div style={shareContainerStyle} >
-            <h2 style={SHARE_TEXT_STYLE} >Or Share Via:</h2>
-            <div style={linksContainerStyle} >
-              <TwitterButton style={socialMediaButtonStyle} />
-              <InstagramButton style={socialMediaButtonStyle} />
-              <FacebookButton style={socialMediaButtonStyle} />
-              <RedditLinkButton style={socialMediaButtonStyle} />
-              <div
-                  style={{...COPY_CONTAINER_STYLE,
-                    border: this.state.borderStyle}}
-                  className={css(styles.copyContainer)}
-              >
-                <button
-                    style={COPY_ICON_CONTAINER_STYLE}
-                    onClick={this.handleCopy}
-                >
-                  <img
-                    style={COPY_ICON_STYLE}
-                    src='resources/icons/copy.svg'
-                    alt='Copy Icon'
-                    draggable={false}
-                  />
-                </button>
-                <input
-                  ref={this._inviteCodeTextArea}
-                  style={INVITE_LINK_TEXT_STYLE}
-                  value={this.state.invitationLink}
-                  readOnly
-                />
-              </div>
+              </button>
+              <input
+                ref={this._inviteCodeTextArea}
+                style={INVITE_LINK_TEXT_STYLE}
+                value={this.state.invitationLink}
+                readOnly
+              />
             </div>
           </div>
         </div>
       </div>);
-  }
-
-  public componentDidMount(): void {
-    document.addEventListener('mousedown', this.handleClickOutside);
+    return (
+      <div style={PAGE_STYLE} >
+        {content}
+      </div>);
   }
 
   public componentDidUpdate(): void {
     if (this.state.invitationLink === 'Link copied!') {
       this._timeOutId = setTimeout(() => {
-        this.setState({ invitationLink: `${InviteAFoodieModal.INVITATION_URL +
+        this.setState({ invitationLink: `${InviteAFoodiePage.INVITATION_URL +
         this.props.userInvitationCode.invitationCode}`,
         borderStyle: '1px solid #CCCCCC'
       })}, 1500);
@@ -217,16 +208,6 @@ export class InviteAFoodieModal extends React.Component<Properties, State> {
 
   public componentWillUnmount(): void {
     clearTimeout(this._timeOutId);
-    document.removeEventListener('mousedown', this.handleClickOutside);
-  }
-
-  private handleClickOutside: { (event: any): void } = (
-      event: React.MouseEvent) => {
-    if (!this._containerRef.current.contains(event.target as Node)) {
-      event.preventDefault();
-      event.stopPropagation();
-      this.props.onClose();
-    }
   }
 
   private handleEmailListChange = (event: React.ChangeEvent<HTMLInputElement>
@@ -240,7 +221,7 @@ export class InviteAFoodieModal extends React.Component<Properties, State> {
   }
 
   private handleCopy = (event: React.MouseEvent<HTMLElement>) => {
-    const invitationLink = `${InviteAFoodieModal.INVITATION_URL +
+    const invitationLink = `${InviteAFoodiePage.INVITATION_URL +
       this.props.userInvitationCode.invitationCode}`;
     // @ts-ignore
     navigator.clipboard.writeText(invitationLink);
@@ -252,11 +233,10 @@ export class InviteAFoodieModal extends React.Component<Properties, State> {
 
   private _inviteCodeTextArea: React.RefObject<HTMLInputElement>;
   private _timeOutId: NodeJS.Timeout;
-  private _containerRef: React.RefObject<HTMLDivElement>;
 }
 
 /** InviteAFoodieModal Error Codes. */
-export namespace InviteAFoodieModal {
+export namespace InviteAFoodiePage {
   export enum ErrorCode {
     NONE,
     NO_CONNECTION,
@@ -269,18 +249,18 @@ export namespace InviteAFoodieModal {
   }
 }
 
-const FORM_STYLE: React.CSSProperties = {
-  position: 'fixed',
-  top: '0px',
-  left: '0px',
+const PAGE_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
   height: '100%',
-  backgroundColor: 'rgb(150, 150, 150, 0.5)',
-  zIndex: 1000
+  backgroundColor: '#F6F6F6',
+  backgroundImage: 'url(resources/illustrations/synesthesia_2x.png)',
+  backgroundSize: 'cover',
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'left center'
 };
 
 const CONTAINER_STYLE: React.CSSProperties = {
@@ -298,7 +278,8 @@ const CONTAINER_STYLE: React.CSSProperties = {
   padding: '30px',
   borderRadius: '4px',
   overflow: 'hidden',
-  boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)'
+  boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
+  margin: '50px 0px 150px 0px'
 };
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
@@ -308,18 +289,8 @@ const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
   maxWidth: '375px',
   height: 'auto',
   minHeight: 'auto',
-  padding: '30px 20px'
-};
-
-const CLOSE_BUTTON_STYLE: React.CSSProperties = {
-  position: 'absolute',
-  top: '20px',
-  right: '20px'
-};
-
-const MOBILE_CLOSE_BUTTON_STYLE: React.CSSProperties = {
-  ...CLOSE_BUTTON_STYLE,
-  right: '8px'
+  padding: '30px 20px',
+  margin: '50px 0px 142px 0px'
 };
 
 const HEADER_STYLE: React.CSSProperties = {

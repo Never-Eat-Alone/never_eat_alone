@@ -7,7 +7,7 @@ interface Properties {
   onClose: () => void;
 }
 
-export class SuccessPage extends React.Component<Properties> {
+export class InviteAFoodieSuccessModal extends React.Component<Properties> {
   constructor(props: Properties) {
     super(props);
     this._containerRef = React.createRef();

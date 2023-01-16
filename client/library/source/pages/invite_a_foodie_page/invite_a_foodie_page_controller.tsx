@@ -2,29 +2,27 @@ import * as EmailValidator from 'email-validator';
 import * as React from 'react';
 import { EmailInputField } from '../../components';
 import { DisplayMode, InviteEmail } from '../../definitions';
-import { InviteAFoodieModal } from './invite_a_foodie_modal';
-import { InviteAFoodieModel } from './invite_a_foodie_model';
-import { InviteAFoodieSuccessModal } from './invite_a_foodie_success_modal';
+import { InviteAFoodieModel } from '../../modals/invite_a_foodie_modal';
+import { InviteAFoodiePage } from './invite_a_foodie_page';
 
 interface Properties {
   displayMode: DisplayMode;
   model: InviteAFoodieModel;
   maxContentLength: number;
-  onClose: () => void;
 }
 
 interface State {
   content: string;
   emailListText: string;
-  errorCode: InviteAFoodieModal.ErrorCode;
+  errorCode: InviteAFoodiePage.ErrorCode;
   emailInputFieldErrorCode: EmailInputField.ErrorCode;
-  textAreaErrorCode: InviteAFoodieModal.TextErrorCode;
+  textAreaErrorCode: InviteAFoodiePage.TextErrorCode;
   wrongEmails: string[];
   isLoaded: boolean;
   isSuccess: boolean;
 }
 
-export class InviteAFoodieModalController extends React.Component<Properties,
+export class InviteAFoodiePageController extends React.Component<Properties,
     State> {
   constructor(props: Properties) {
     super(props);
@@ -34,9 +32,9 @@ export class InviteAFoodieModalController extends React.Component<Properties,
       'You can follow the events I’m attending and message me too. I hope ' +
       'you can join!',
       emailListText: '',
-      errorCode: InviteAFoodieModal.ErrorCode.NONE,
+      errorCode: InviteAFoodiePage.ErrorCode.NONE,
       emailInputFieldErrorCode: EmailInputField.ErrorCode.NONE,
-      textAreaErrorCode: InviteAFoodieModal.TextErrorCode.NONE,
+      textAreaErrorCode: InviteAFoodiePage.TextErrorCode.NONE,
       wrongEmails: [],
       isLoaded: false,
       isSuccess: false
@@ -44,16 +42,9 @@ export class InviteAFoodieModalController extends React.Component<Properties,
   }
 
   public render(): JSX.Element {
-    if (this.state.isSuccess) {
-      return (
-        <InviteAFoodieSuccessModal
-          displayMode={this.props.displayMode}
-          onClose={this.props.onClose}
-        />);
-    }
     if (this.state.isLoaded) {
       return (
-        <InviteAFoodieModal
+        <InviteAFoodiePage
           displayMode={this.props.displayMode}
           emailList={this.state.emailListText}
           content={this.state.content}
@@ -62,13 +53,13 @@ export class InviteAFoodieModalController extends React.Component<Properties,
           emailInputFieldErrorCode={this.state.emailInputFieldErrorCode}
           textAreaErrorCode={this.state.textAreaErrorCode}
           wrongEmails={this.state.wrongEmails}
-          onClose={this.props.onClose}
           onContentChange={this.handleContentChange}
           onEmailListChange={this.handleEmailListChange}
           onEmailListFocus={this.handleEmailListOnFocus}
           onEmailListBlur={this.handleEmailListOnBlur}
           userInvitationCode={this.props.model.getUserInvitationCode()}
           onSendInviteEmail={this.handleSendInviteEmailClick}
+          isSuccess={this.state.isSuccess}
         />);
     }
     return <div />;
@@ -79,12 +70,12 @@ export class InviteAFoodieModalController extends React.Component<Properties,
       await this.props.model.load();
       this.setState({
         isLoaded: true,
-        errorCode: InviteAFoodieModal.ErrorCode.NONE
+        errorCode: InviteAFoodiePage.ErrorCode.NONE
       });
     } catch {
       this.setState({
         isLoaded: true,
-        errorCode: InviteAFoodieModal.ErrorCode.NO_CONNECTION
+        errorCode: InviteAFoodiePage.ErrorCode.NO_CONNECTION
       });
     }
     return;
@@ -93,12 +84,12 @@ export class InviteAFoodieModalController extends React.Component<Properties,
   private handleContentChange = (value: string) => {
     if (value.length > this.props.maxContentLength) {
       this.setState({
-        textAreaErrorCode: InviteAFoodieModal.TextErrorCode.TEXT_OVERFLOW,
+        textAreaErrorCode: InviteAFoodiePage.TextErrorCode.TEXT_OVERFLOW,
         content: value
       });
     } else {
       this.setState({
-        textAreaErrorCode: InviteAFoodieModal.TextErrorCode.NONE,
+        textAreaErrorCode: InviteAFoodiePage.TextErrorCode.NONE,
         content: value
       });
     }
@@ -154,10 +145,10 @@ export class InviteAFoodieModalController extends React.Component<Properties,
         this.setState({ isSuccess: true });
         return;
       }
-      this.setState({ errorCode: InviteAFoodieModal.ErrorCode.EMAIL_FAILED });
+      this.setState({ errorCode: InviteAFoodiePage.ErrorCode.EMAIL_FAILED });
       return;
     } catch {
-      this.setState({ errorCode: InviteAFoodieModal.ErrorCode.NO_CONNECTION });
+      this.setState({ errorCode: InviteAFoodiePage.ErrorCode.NO_CONNECTION });
     }
   }
 }
