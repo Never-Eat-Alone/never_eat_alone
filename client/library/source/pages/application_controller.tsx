@@ -13,6 +13,7 @@ import { DeletedAccountSurveyPageController
 } from './deleted_account_survey_page';
 import { DiningEventPageController } from './dining_event_page';
 import { EditProfilePageController } from './edit_profile_page';
+import { ForgotPasswordPage } from './forgot_password_page';
 import { HelpPage } from './help_page';
 import { HomePageController } from './home_page';
 import { InviteAFoodiePageController } from './invite_a_foodie_page';
@@ -378,7 +379,11 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private renderForgotPassword = () => {
-    return <div>Forgot Password Page</div>;
+    return <ForgotPasswordPage
+      displayMode={this.state.displayMode}
+      errorCode={ForgotPasswordPage.ErrorCode.NONE}
+      onSendLinkClick={() => {}}
+    />;
   }
 
   private renderInviteAFoodie = () => {
