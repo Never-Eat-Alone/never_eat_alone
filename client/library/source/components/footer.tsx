@@ -277,6 +277,8 @@ const DOT_STYLE: React.CSSProperties = {
 };
 
 const CONTAINER_STYLE: React.CSSProperties = {
+  position: 'absolute',
+  bottom: '0px',
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'center',

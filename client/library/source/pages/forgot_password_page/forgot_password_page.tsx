@@ -88,7 +88,7 @@ const CONTAINER_STYLE: React.CSSProperties = {
   alignItems: 'center',
   width: '100%',
   backgroundColor: '#FFFFFF',
-  padding: '60px 10px'
+  padding: '60px 10px 60px 10px'
 };
 
 const CONTENT_CONTAINER_STYLE: React.CSSProperties = {

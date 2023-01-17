@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { DisplayMode, User, UserProfileImage,
-  UserStatus } from '../../definitions';
+import { DisplayMode, User, UserProfileImage, UserStatus
+} from '../../definitions';
 import { LogInModal } from './log_in_modal';
 import { LogInModel } from './log_in_model';
 
