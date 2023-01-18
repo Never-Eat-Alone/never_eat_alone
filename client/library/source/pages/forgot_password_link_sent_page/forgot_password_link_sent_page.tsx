@@ -8,10 +8,35 @@ interface Properties {
   onResendLinkClick: () => void;
 }
 
-export class ForgotPasswordLinkSentPage extends React.Component<Properties> {
+interface State {
+  counter: number;
+}
+
+export class ForgotPasswordLinkSentPage extends React.Component<Properties,
+    State> {
+  constructor(props: Properties) {
+    super(props);
+    this.state = {
+      counter: 30
+    };
+  }
+
   public render(): JSX.Element {
     const contentStyle = ((this.props.displayMode === DisplayMode.MOBILE &&
       MOBILE_CONTENT_STYLE) || CONTENT_STYLE);
+    const resendLinkSection = (() => {
+      if () {
+        return (
+          <div style={COUNT_DOWN_STYLE} >
+            {`New link sent (${this.state.counter}s)`}
+          </div>);
+      }
+      return <SecondaryTextLinkButton
+        label='resend link'
+        style={RESEND_LINK_STYLE}
+        onClick={this.props.onResendLinkClick}
+      />;
+    })();
     return (
       <div style={CONTAINER_STYLE} >
         <div style={{...CONTENT_CONTAINER_STYLE, ...contentStyle}} >
@@ -26,11 +51,7 @@ export class ForgotPasswordLinkSentPage extends React.Component<Properties> {
           <p style={P_STYLE} >
             Follow the link we sent to your email to reset your password.
           </p>
-          <SecondaryTextLinkButton
-            label='resend link'
-            style={RESEND_LINK_STYLE}
-            onClick={this.props.onResendLinkClick}
-          />
+          {resendLinkSection}
           <SecondaryButtonNavLink
             style={BACK_TO_HOMEPAGE_BUTTON_STYLE}
             to='/'
@@ -39,6 +60,8 @@ export class ForgotPasswordLinkSentPage extends React.Component<Properties> {
         </div>
       </div>);
   }
+
+  private _emailTimerId: NodeJS.Timeout;
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {
@@ -125,4 +148,13 @@ const RESEND_LINK_STYLE: React.CSSProperties = {
 
 const BACK_TO_HOMEPAGE_BUTTON_STYLE: React.CSSProperties = {
   width: '100%'
+};
+
+const COUNT_DOWN_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#000000'
 };
