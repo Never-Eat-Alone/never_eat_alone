@@ -105,6 +105,15 @@ export class LogInPage extends React.Component<Properties, State> {
     })();
     const containerStyle = (this.props.displayMode === DisplayMode.MOBILE &&
       MOBILE_CONTAINER_STYLE || CONTAINER_STYLE);
+    const imageSize = (() => {
+      if (this.props.displayMode === DisplayMode.DESKTOP) {
+        return DESKTOP_FIXED_IMAGE_STYLE;
+      }
+      if (this.props.displayMode === DisplayMode.TABLET) {
+        return TABLET_IMAGE_STYLE;
+      }
+      return MOBILE_IMAGE_STYLE;
+    })();
     return (
       <div style={FORM_STYLE} >
         <div style={containerStyle} >
@@ -173,7 +182,7 @@ export class LogInPage extends React.Component<Properties, State> {
             />
           </div>
         </div>
-        <div style={IMAGE_STYLE} />
+        <div style={{...IMAGE_STYLE, ...imageSize}} />
       </div>);
   }
 
@@ -263,16 +272,40 @@ export namespace LogInPage {
 
 const FORM_STYLE: React.CSSProperties = {
   display: 'flex',
-  flexDirection: 'column',
+  flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
   height: '100%',
-  backgroundColor: '#FFFFFF',
+  backgroundColor: '#FFFFFF'
 };
 
 const IMAGE_STYLE: React.CSSProperties = {
+  backgroundImage: 'url(resources/log_in_page/images/background.jpeg)',
+  backgroundSize: 'cover',
+  clipPath: 'polygon(0 0, 100% 0, 100% 100%, 128px 100%)',
+  height: '100%',
+  width: '100%'
+};
 
+const MOBILE_IMAGE_STYLE: React.CSSProperties = {
+  minWidth: '450px',
+  maxWidth: '845px'
+};
+
+const TABLET_IMAGE_STYLE: React.CSSProperties = {
+  minWidth: '450px',
+  maxWidth: '845px'
+};
+
+const DESKTOP_RESPONSIVE_STYLE: React.CSSProperties = {
+  minWidth: '845px',
+  maxWidth: 'calc(100% - 521px - calc(100% - 1366px) / 2)'
+};
+
+const DESKTOP_FIXED_IMAGE_STYLE: React.CSSProperties = {
+  minWidth: '915px',
+  maxWidth: 'calc(100% - 539px - calc(100% - 1366px) / 2)'
 };
 
 const CONTAINER_STYLE: React.CSSProperties = {
