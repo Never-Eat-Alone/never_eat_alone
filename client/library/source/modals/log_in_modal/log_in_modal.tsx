@@ -219,7 +219,6 @@ export class LogInModal extends React.Component<Properties, State> {
 
   private handleRedirect = (path: string) => {
     this.setState({ redirect: path });
-    //this.props.onClose();
   }
 
   private handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
