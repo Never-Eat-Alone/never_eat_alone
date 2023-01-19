@@ -4,8 +4,10 @@ import { DemoDeactivateAccountSurveyModel } from
 import { DemoDeletedAccountSurveyModel } from
 './demo_deleted_account_survey_model';
 import { DemoDiningEventPageModel } from './demo_dining_event_page_model';
-import { DemoLogInModel } from './demo_login_model';
 import { DemoEditProfilePageModel } from './demo_edit_profile_page_model';
+import { DemoForgotPasswordPageModel
+} from './demo_forogot_password_page_model';
+import { DemoLogInModel } from './demo_login_model';
 import { DemoSettingsPageModel } from './demo_settings_page_model';
 
 /** Implements the ApplicationModel for demo purposes. */
@@ -273,6 +275,8 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     this._partnerWithUsModel.load();
     this._logInModel = new DemoLogInModel([userEmma, userArthur], [
       emmaProfileImage, arthurProfileImage]);
+    this._forgotPasswordPageModel = new DemoForgotPasswordPageModel([userEmma,
+      userArthur]);
     const toronto = new NeverEatAlone.CityProvince(1, 'Toronto', 'ON',
       'Canada');
     const vancouver = new NeverEatAlone.CityProvince(2, 'Vancouver', 'BC',
@@ -449,6 +453,10 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return this._logInModel;
   }
 
+  public get forgotPasswordPageModel(): NeverEatAlone.ForgotPasswordPageModel {
+    return this._forgotPasswordPageModel;
+  }
+
   public getProfilePageModel(id: number): NeverEatAlone.ProfilePageModel {
     return this._profilePageModelMap.get(id);
   }
@@ -486,4 +494,5 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
   private _deletedAccountSurveyModel: NeverEatAlone.DeletedAccountSurveyModel;
   private _deactivateAccountSurveyModel:
     NeverEatAlone.DeactivateAccountSurveyModel;
+  private _forgotPasswordPageModel: NeverEatAlone.ForgotPasswordPageModel;
 }

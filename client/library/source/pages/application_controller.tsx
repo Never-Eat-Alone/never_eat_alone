@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { Modal } from '../components';
-import { DisplayMode, getDisplayMode, User, UserProfileImage,
-  UserStatus } from '../definitions';
+import { DisplayMode, getDisplayMode, User, UserProfileImage, UserStatus
+} from '../definitions';
 import { InviteAFoodieModalController, JoinController, LogInModalController,
   PartnerWithUsModalController } from '../modals';
 import { ApplicationModel } from './application_model';
@@ -13,7 +13,7 @@ import { DeletedAccountSurveyPageController
 } from './deleted_account_survey_page';
 import { DiningEventPageController } from './dining_event_page';
 import { EditProfilePageController } from './edit_profile_page';
-import { ForgotPasswordPage } from './forgot_password_page';
+import { ForgotPasswordPageController } from './forgot_password_page';
 import { HelpPage } from './help_page';
 import { HomePageController } from './home_page';
 import { InviteAFoodiePageController } from './invite_a_foodie_page';
@@ -379,10 +379,9 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private renderForgotPassword = () => {
-    return <ForgotPasswordPage
+    return <ForgotPasswordPageController
       displayMode={this.state.displayMode}
-      errorCode={ForgotPasswordPage.ErrorCode.NONE}
-      onSendLinkClick={() => {}}
+      model={this.props.model.forgotPasswordPageModel}
     />;
   }
 

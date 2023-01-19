@@ -54,7 +54,6 @@ export class LogInModal extends React.Component<Properties, State> {
 
   public render(): JSX.Element {
     if (this.state.redirect) {
-      this.props.onClose();
       return <Router.Redirect to={this.state.redirect} />;
     }
     const formErrorMessage = (() => {
@@ -188,7 +187,7 @@ export class LogInModal extends React.Component<Properties, State> {
             <SecondaryTextLinkButton
               label='Request Your Account'
               labelStyle={JOIN_LINK_STYLE}
-              onClick={() => this.handleRedirect('/join')}
+              onClick={() => this.handleRedirect('/sign_up')}
             />
           </div>
         </div>
@@ -197,6 +196,12 @@ export class LogInModal extends React.Component<Properties, State> {
 
   public componentDidMount(): void {
     document.addEventListener('mousedown', this.handleClickOutside);
+  }
+
+  public componentDidUpdate(): void {
+    if (this.state.redirect) {
+      this.props.onClose();
+    }
   }
 
   public componentWillUnmount(): void {
@@ -214,6 +219,7 @@ export class LogInModal extends React.Component<Properties, State> {
 
   private handleRedirect = (path: string) => {
     this.setState({ redirect: path });
+    //this.props.onClose();
   }
 
   private handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {

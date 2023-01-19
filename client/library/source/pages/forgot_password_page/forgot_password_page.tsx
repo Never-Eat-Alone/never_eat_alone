@@ -5,6 +5,7 @@ import { DisplayMode } from '../../definitions';
 interface Properties {
   displayMode: DisplayMode;
   errorCode: ForgotPasswordPage.ErrorCode;
+  email: string;
   onSendLinkClick: (email: string) => void;
 }
 
@@ -16,7 +17,7 @@ export class ForgotPasswordPage extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props);
     this.state = {
-      email: ''
+      email: this.props.email
     };
   }
 
@@ -87,6 +88,7 @@ const CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
+  height: '100%',
   backgroundColor: '#FFFFFF',
   padding: '60px 10px 60px 10px'
 };

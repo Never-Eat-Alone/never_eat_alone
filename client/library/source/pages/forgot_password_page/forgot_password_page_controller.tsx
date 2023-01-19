@@ -10,10 +10,10 @@ interface Properties {
 }
 
 interface State {
-  isLoaded: boolean;
-  hasError: boolean;
   errorCode: ForgotPasswordPage.ErrorCode;
   hasSentEmail: boolean;
+  email: string;
+  user: User;
 }
 
 export class ForgotPasswordPageController extends React.Component<Properties,
@@ -21,17 +21,14 @@ export class ForgotPasswordPageController extends React.Component<Properties,
   constructor(props: Properties) {
     super(props);
     this.state = {
-      isLoaded: false,
-      hasError: false,
       errorCode: ForgotPasswordPage.ErrorCode.NONE,
-      hasSentEmail: false
+      hasSentEmail: false,
+      email: '',
+      user: User.makeGuest()
     };
   }
 
   public render(): JSX.Element {
-    if (!this.state.isLoaded || this.state.hasError) {
-      return <div />;
-    }
     if (this.state.hasSentEmail) {
       return <ForgotPasswordLinkSentPage
         displayMode={this.props.displayMode}
@@ -40,27 +37,32 @@ export class ForgotPasswordPageController extends React.Component<Properties,
     }
     return <ForgotPasswordPage
       displayMode={this.props.displayMode}
+      email={this.state.email}
       errorCode={this.state.errorCode}
       onSendLinkClick={this.handleSendLinkClick}
     />;
   }
 
   private handleResendLinkClick = async () => {
-    
+    try {
+      await this.props.model.resendRecoveryEmail(this.state.email,
+        this.state.user);
+      this.setState({ errorCode: ForgotPasswordPage.ErrorCode.NONE });
+    } catch {
+      this.setState({ errorCode: ForgotPasswordPage.ErrorCode.NO_CONNECTION });
+    }
   }
 
   private handleSendLinkClick = async (email: string) => {
+    this.setState({ email });
     try {
       const response = await this.props.model.sendRecoveryEmail(email);
       const user = User.fromJson(response);
-      if (user && user.id !== -1) {
-        this.setState({
-          hasSentEmail: true,
-          errorCode: ForgotPasswordPage.ErrorCode.NONE
-        });
-      } else {
-        this.setState({ hasSentEmail: false });
-      }
+      this.setState({
+        hasSentEmail: true,
+        user: user,
+        errorCode: ForgotPasswordPage.ErrorCode.NONE
+      });
     } catch {
       this.setState({ errorCode: ForgotPasswordPage.ErrorCode.NO_CONNECTION });
     }
