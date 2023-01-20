@@ -8,10 +8,35 @@ interface Properties {
   onResendLinkClick: () => void;
 }
 
-export class ForgotPasswordLinkSentPage extends React.Component<Properties> {
+interface State {
+  counter: number;
+}
+
+export class ForgotPasswordLinkSentPage extends React.Component<Properties,
+    State> {
+  constructor(props: Properties) {
+    super(props);
+    this.state = {
+      counter: 0
+    };
+  }
+
   public render(): JSX.Element {
     const contentStyle = ((this.props.displayMode === DisplayMode.MOBILE &&
       MOBILE_CONTENT_STYLE) || CONTENT_STYLE);
+    const resendLinkSection = (() => {
+      if (this.state.counter) {
+        return (
+          <div style={COUNT_DOWN_STYLE} >
+            {`New link sent (${this.state.counter}s)`}
+          </div>);
+      }
+      return <SecondaryTextLinkButton
+        label='resend link'
+        style={RESEND_LINK_STYLE}
+        onClick={this.handleResendEmailClick}
+      />;
+    })();
     return (
       <div style={CONTAINER_STYLE} >
         <div style={{...CONTENT_CONTAINER_STYLE, ...contentStyle}} >
@@ -24,13 +49,10 @@ export class ForgotPasswordLinkSentPage extends React.Component<Properties> {
             <h1 style={TITLE_STYLE} >Link sent!</h1>
           </div>
           <p style={P_STYLE} >
-            Follow the link we sent to your email to reset your password.
+            If you have an account with us, you will receive an email. Follow 
+            the link we sent you to reset your password.
           </p>
-          <SecondaryTextLinkButton
-            label='resend link'
-            style={RESEND_LINK_STYLE}
-            onClick={this.props.onResendLinkClick}
-          />
+          {resendLinkSection}
           <SecondaryButtonNavLink
             style={BACK_TO_HOMEPAGE_BUTTON_STYLE}
             to='/'
@@ -39,6 +61,26 @@ export class ForgotPasswordLinkSentPage extends React.Component<Properties> {
         </div>
       </div>);
   }
+
+  public componentDidUpdate(): void {
+    if (this.state.counter === 0) {
+      clearInterval(this._emailTimerId);
+    }
+  }
+
+  public componentWillUnmount(): void {
+    clearInterval(this._emailTimerId);
+  }
+
+  private handleResendEmailClick = () => {
+    this.props.onResendLinkClick();
+    this.setState({ counter: 30 });
+    this._emailTimerId = setInterval(() => {
+      this.setState((prevState) => ({ counter: prevState.counter - 1 }));
+    }, 1000);
+  }
+
+  private _emailTimerId: NodeJS.Timeout;
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {
@@ -48,8 +90,9 @@ const CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
+  height: '100%',
   backgroundColor: '#FFFFFF',
-  padding: '60px 10px'
+  padding: '60px 10px 60px 10px'
 };
 
 const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
@@ -116,7 +159,8 @@ const P_STYLE: React.CSSProperties = {
   lineHeight: '18px',
   color: '#000000',
   padding: '0px',
-  margin: '30px 0px 0px 0px'
+  margin: '30px 0px 0px 0px',
+  whiteSpace: 'pre-line'
 };
 
 const RESEND_LINK_STYLE: React.CSSProperties = {
@@ -125,4 +169,14 @@ const RESEND_LINK_STYLE: React.CSSProperties = {
 
 const BACK_TO_HOMEPAGE_BUTTON_STYLE: React.CSSProperties = {
   width: '100%'
+};
+
+const COUNT_DOWN_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#000000',
+  margin: '30px 0px'
 };

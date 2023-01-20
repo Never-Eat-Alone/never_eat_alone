@@ -6,6 +6,7 @@ import { DeactivateAccountSurveyModel } from './deactivate_account_survey_page';
 import { DeletedAccountSurveyModel } from './deleted_account_survey_page';
 import { DiningEventPageModel } from './dining_event_page';
 import { EditProfilePageModel } from './edit_profile_page';
+import { ForgotPasswordPageModel } from './forgot_password_page';
 import { HomePageModel } from './home_page';
 import { PartnerWithUsModel } from './partner_with_us_page';
 import { ProfilePageModel } from './profile_page';
@@ -26,4 +27,5 @@ export abstract class ApplicationModel {
   public abstract get deletedAccountSurveyModel(): DeletedAccountSurveyModel;
   public abstract get deactivateAccountSurveyModel():
     DeactivateAccountSurveyModel;
+  public abstract get forgotPasswordPageModel(): ForgotPasswordPageModel;
 }
