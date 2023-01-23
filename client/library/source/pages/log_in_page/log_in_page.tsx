@@ -1,9 +1,9 @@
 import * as EmailValidator from 'email-validator';
 import * as React from 'react';
 import * as Router from 'react-router-dom';
-import { CheckBox, EmailInputField, FacebookLogInButton,
-  GoogleLogInButton, PasswordInputField, PrimaryTextButton,
-  SecondaryTextLinkButton } from '../../components';
+import { CheckBox, EmailInputField, FacebookLogInButton, GoogleLogInButton,
+  PasswordInputField, PrimaryTextButton, SecondaryTextLinkButton
+} from '../../components';
 import { DisplayMode } from '../../definitions';
 
 interface Properties {
@@ -162,11 +162,13 @@ export class LogInPage extends React.Component<Properties, State> {
             </div>
           </div>
           <GoogleLogInButton
+            style={SOCIAL_BUTTON_STYLE}
             label='Log in with Google'
             onClick={this.props.onGoogleLogIn}
           />
           <div style={ERROR_CONTAINER_STYLE} >{googleErrorMessage}</div>
           <FacebookLogInButton
+            style={SOCIAL_BUTTON_STYLE}
             label='Log in with Facebook'
             onClick={this.props.onFacebookLogIn}
           />
@@ -375,9 +377,9 @@ const FORGOT_LINK_STYLE: React.CSSProperties = {
 const REQUEST_ACCOUNT_ROW_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
-  justifyContent: 'center',
+  justifyContent: 'flex-start',
   alignItems: 'center',
-  height: '15px',
+  flexWrap: 'wrap',
   width: '100%',
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
@@ -450,4 +452,11 @@ const DESKTOP_IMAGE_STYLE: React.CSSProperties = {
 const TABLET_IMAGE_STYLE: React.CSSProperties = {
   minWidth: '348px',
   maxWidth: '730px'
+};
+
+const SOCIAL_BUTTON_STYLE: React.CSSProperties = {
+  width: '100%',
+  minWidth: '100%',
+  height: '28px',
+  minHeight: '28px'
 };
