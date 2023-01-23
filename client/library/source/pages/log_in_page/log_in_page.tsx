@@ -105,14 +105,14 @@ export class LogInPage extends React.Component<Properties, State> {
     })();
     const containerStyle = (this.props.displayMode === DisplayMode.MOBILE &&
       MOBILE_CONTAINER_STYLE || CONTAINER_STYLE);
-    const imageSize = (() => {
+    const imageSection = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
-        return DESKTOP_FIXED_IMAGE_STYLE;
+        return <div style={{...IMAGE_STYLE, ...DESKTOP_IMAGE_STYLE}} />;
       }
       if (this.props.displayMode === DisplayMode.TABLET) {
-        return TABLET_IMAGE_STYLE;
+        return <div style={{...IMAGE_STYLE, ...TABLET_IMAGE_STYLE}} />;
       }
-      return MOBILE_IMAGE_STYLE;
+      return null;
     })();
     return (
       <div style={FORM_STYLE} >
@@ -182,7 +182,7 @@ export class LogInPage extends React.Component<Properties, State> {
             />
           </div>
         </div>
-        <div style={{...IMAGE_STYLE, ...imageSize}} />
+        {imageSection}
       </div>);
   }
 
@@ -280,57 +280,27 @@ const FORM_STYLE: React.CSSProperties = {
   backgroundColor: '#FFFFFF'
 };
 
-const IMAGE_STYLE: React.CSSProperties = {
-  backgroundImage: 'url(resources/log_in_page/images/background.jpeg)',
-  backgroundSize: 'cover',
-  clipPath: 'polygon(0 0, 100% 0, 100% 100%, 128px 100%)',
-  height: '100%',
-  width: '100%'
-};
-
-const MOBILE_IMAGE_STYLE: React.CSSProperties = {
-  minWidth: '450px',
-  maxWidth: '845px'
-};
-
-const TABLET_IMAGE_STYLE: React.CSSProperties = {
-  minWidth: '450px',
-  maxWidth: '845px'
-};
-
-const DESKTOP_RESPONSIVE_STYLE: React.CSSProperties = {
-  minWidth: '845px',
-  maxWidth: 'calc(100% - 521px - calc(100% - 1366px) / 2)'
-};
-
-const DESKTOP_FIXED_IMAGE_STYLE: React.CSSProperties = {
-  minWidth: '915px',
-  maxWidth: 'calc(100% - 539px - calc(100% - 1366px) / 2)'
-};
-
 const CONTAINER_STYLE: React.CSSProperties = {
   position: 'relative',
-  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
-  alignItems: 'center',
-  width: '490px',
-  minWidth: '490px',
+  alignItems: 'flex-start',
+  width: '310px',
+  minWidth: '310px',
   padding: '50px 80px 60px 30px',
   overflow: 'hidden'
 };
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
   ...CONTAINER_STYLE,
-  maxWidth: '375px',
+  maxWidth: '310px',
   minWidth: 'auto',
   width: '100%',
   padding: '50px 30px 60px 30px'
 };
 
 const TITLE_STYLE: React.CSSProperties = {
-  marginTop: '15px',
   fontFamily: 'Oswald',
   fontStyle: 'normal',
   fontWeight: 400,
@@ -374,7 +344,11 @@ const ERROR_CONTAINER_STYLE: React.CSSProperties = {
 };
 
 const INPUT_FIELD_STYLE: React.CSSProperties = {
-  marginTop: '20px'
+  marginTop: '20px',
+  width: '100%',
+  minWidth: '100%',
+  minHeight: '38px',
+  height: '38px'
 };
 
 const ROW_CONTAINER_STYLE: React.CSSProperties = {
@@ -398,7 +372,7 @@ const FORGOT_LINK_STYLE: React.CSSProperties = {
   minWidth: '104px'
 };
 
-const TEXT_STYLE: React.CSSProperties = {
+const REQUEST_ACCOUNT_ROW_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'center',
@@ -412,11 +386,6 @@ const TEXT_STYLE: React.CSSProperties = {
   lineHeight: '15px',
   textAlign: 'center',
   color: '#000000',
-  marginTop: '20px'
-};
-
-const REQUEST_ACCOUNT_ROW_STYLE: React.CSSProperties = {
-  ...TEXT_STYLE,
   margin: '0px'
 };
 
@@ -463,4 +432,22 @@ const OR_SPAN_STYLE: React.CSSProperties = {
   top: '0px',
   backgroundColor: '#FFFFFF',
   cursor: 'default'
+};
+
+const IMAGE_STYLE: React.CSSProperties = {
+  backgroundImage: 'url(resources/log_in_page/images/background.jpeg)',
+  backgroundSize: 'cover',
+  clipPath: 'polygon(0 0, 100% 0, 100% 100%, 128px 100%)',
+  height: '100%',
+  width: '100%'
+};
+
+const DESKTOP_IMAGE_STYLE: React.CSSProperties = {
+  minWidth: '750px',
+  maxWidth: 'calc(100% - 521px - calc(100% - 1366px) / 2)'
+};
+
+const TABLET_IMAGE_STYLE: React.CSSProperties = {
+  minWidth: '348px',
+  maxWidth: '730px'
 };
