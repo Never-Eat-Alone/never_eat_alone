@@ -361,10 +361,11 @@ export class ApplicationController extends React.Component<Properties, State> {
     />;
   }
 
-  private renderSignUp = () => {
+  private renderSignUp = ({match}: Router.RouteComponentProps<TParams>) => {
+    const id = Number(match.params.id);
     return <SignUpPageController
       displayMode={this.state.displayMode}
-      model={this.props.model.signUpPageModel}
+      model={this.props.model.getSignUpPageModel(id)}
     />;
   }
 

@@ -29,5 +29,5 @@ export abstract class ApplicationModel {
   public abstract get deactivateAccountSurveyModel():
     DeactivateAccountSurveyModel;
   public abstract get forgotPasswordPageModel(): ForgotPasswordPageModel;
-  public abstract get signUpPageModel(): SignUpPageModel;
+  public abstract getSignUpPageModel(id: number): SignUpPageModel;
 }
