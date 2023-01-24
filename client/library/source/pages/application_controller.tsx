@@ -23,6 +23,7 @@ import { PrivacyPolicyPage } from './privacy_policy_page';
 import { ProfilePageController } from './profile_page';
 import { SettingsPageController } from './settings_page';
 import { Shell } from './shell';
+import { SignUpPageController } from './sign_up_page';
 import { TermsOfUsePage } from './terms_of_use_page';
 import { WhatIsNeaPage } from './what_is_nea_page';
 
@@ -361,7 +362,10 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private renderSignUp = () => {
-    return <div>Sign Up Page</div>;
+    return <SignUpPageController
+      displayMode={this.state.displayMode}
+      model={this.props.model.signUpPageModel}
+    />;
   }
 
   private renderWhatIsNea = () => {

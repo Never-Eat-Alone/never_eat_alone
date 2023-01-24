@@ -210,10 +210,10 @@ export class LogInPage extends React.Component<Properties, State> {
       this.setState({ emailErrorCode: LogInPage.EmailErrorCode.EMPTY });
       return false;
     } else if (!EmailValidator.validate(this.state.email)) {
-      this.setState({ emailErrorCode: LogInPage.EmailErrorCode.NOT_AN_EMAIL});
+      this.setState({ emailErrorCode: LogInPage.EmailErrorCode.NOT_AN_EMAIL });
       return false;
     } else {
-      this.setState({ emailErrorCode: LogInPage.EmailErrorCode.NONE});
+      this.setState({ emailErrorCode: LogInPage.EmailErrorCode.NONE });
       return true;
     }
   }
@@ -238,16 +238,8 @@ export class LogInPage extends React.Component<Properties, State> {
   }
 
   private isDisabled = () => {
-    if (this.state.password.length === 0) {
-      return true;
-    }
-    if (this.state.email.trim().length === 0) {
-      return true;
-    }
-    if (!EmailValidator.validate(this.state.email)) {
-      return true;
-    }
-    return false;
+    return (this.state.password.length === 0 || this.state.email.trim().length
+      === 0 || !EmailValidator.validate(this.state.email));
   }
 }
 

@@ -2,7 +2,7 @@ import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 import { AvatarWithCheckMark, NameInputFieldWithCounterInside, PrimaryTextButton
 } from '../../components';
-import { DisplayMode } from '../../definitions';
+import { DisplayMode, UserProfileImage } from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -10,26 +10,28 @@ interface Properties {
   /** The user display name entered when they requested an account. */
   displayName: string;
 
+  selectedImage: UserProfileImage;
+
+  avatars: UserProfileImage[];
+
   /** Indicates the upload image button is clicked. */
   onUploadImageClick: () => void;
 
   /** Indicates the let's go button is clicked. */
-  onLetsGoClick: () => void;
+  onLetsGoClick: (displayName: string, image: UserProfileImage) => void;
 }
 
 interface State {
-  imageSrc: string;
+  selectedImage: UserProfileImage;
   displayName: string;
-  markIndex: number;
 }
 
 export class ProfileSetUpPage extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props);
     this.state = {
-      imageSrc: 'resources/profile_set_up_page/icons/profile-image-0.svg',
-      displayName: this.props.displayName || '',
-      markIndex: -1
+      selectedImage: this.props.selectedImage,
+      displayName: this.props.displayName
     };
   }
 
@@ -39,11 +41,10 @@ export class ProfileSetUpPage extends React.Component<Properties, State> {
     const contentStyle = (this.props.displayMode === DisplayMode.MOBILE &&
       MOBILE_CONTENT_STYLE || CONTENT_STYLE);
     const avatars = [];
-    for (let i = 0; i < 20; ++i) {
-      const src = `resources/profile_set_up_page/icons/profile-image-${i}.svg`;
-      avatars.push(<AvatarWithCheckMark key={`avatar-${i}`} imageSrc={src}
-        isMarked={i === this.state.markIndex}
-        onClick={() => this.handleAvatarImageClick(src, i)} />);
+    for (const avatar of this.props.avatars) {
+      avatars.push(<AvatarWithCheckMark key={avatar.id} imageSrc={avatar.src}
+        isMarked={avatar.id === this.state.selectedImage.id}
+        onClick={() => this.handleAvatarImageClick(avatar)} />);
     }
     const isDisplayName = this.state.displayName.length !== 0;
     const nameErrorMessage = (!isDisplayName && 'Please enter a display name.'
@@ -58,7 +59,7 @@ export class ProfileSetUpPage extends React.Component<Properties, State> {
               <div style={ICON_CONTAINER_STYLE} >
                 <img
                   style={ICON_STYLE}
-                  src={this.state.imageSrc}
+                  src={this.state.selectedImage.src}
                   alt='Profile Picture'
                 />
               </div>
@@ -92,7 +93,8 @@ export class ProfileSetUpPage extends React.Component<Properties, State> {
               <PrimaryTextButton
                 label="Let’s go!"
                 style={LETS_GO_BUTTON_STYLE}
-                onClick={this.props.onLetsGoClick}
+                onClick={() => this.props.onLetsGoClick(this.state.displayName,
+                  this.state.selectedImage)}
                 disabled={!isDisplayName}
               />
             </div>
@@ -109,13 +111,21 @@ export class ProfileSetUpPage extends React.Component<Properties, State> {
   }
 
   /** Handles the click on the avatar images. */
-  private handleAvatarImageClick = (src: string, i: number) => {
-    this.setState({ imageSrc: src, markIndex: i });
+  private handleAvatarImageClick = (avatar: UserProfileImage) => {
+    this.setState({ selectedImage: avatar });
   }
 
   /** Handles the change in display name inputfield. */
   private handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ displayName: event.target.value });
+  }
+}
+
+export namespace ProfileSetUpPage {
+  export enum ErrorCode {
+    NONE,
+    UPLOAD_IMAGE_FAILED,
+    NO_CONNECTION
   }
 }
 

@@ -1,11 +1,10 @@
 import * as React from 'react';
-import * as Router from 'react-router-dom';
 import { PasswordAnalyzer, PasswordInputField, PrimaryTextButton, RedNavLink
 } from '../../components';
 import { DisplayMode } from '../../definitions';
 import { getPasswordChecks, getPasswordChecksScore } from '../../utilities';
 
-interface Properties extends Router.LinkProps {
+interface Properties {
   displayMode: DisplayMode;
 
   /** The email user requested an account for. */
