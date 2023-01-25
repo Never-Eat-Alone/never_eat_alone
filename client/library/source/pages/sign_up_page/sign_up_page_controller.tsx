@@ -67,7 +67,7 @@ export class SignUpPageController extends React.Component<Properties, State> {
   public async componentDidMount(): Promise<void> {
     try {
       await this.props.model.load();
-      this.setState({ isLoaded: true });
+      this.setState({ isLoaded: true, image: this.props.model.defaultImage });
     } catch {
       this.setState({
         isLoaded: true,
