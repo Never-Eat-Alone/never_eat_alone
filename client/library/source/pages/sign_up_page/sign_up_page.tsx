@@ -117,8 +117,8 @@ export class SignUpPage extends React.Component<Properties, State> {
               <RedNavLink
                 {...this.props}
                 style={LINK_STYLE}
-                to='/terms_of_service'
-                label='Terms of Service'
+                to='/terms_of_use'
+                label='Terms of Use'
               />
               &nbsp;and&nbsp;
               <RedNavLink

@@ -19,22 +19,13 @@ interface Properties {
 
   /** Indicates the let's go button is clicked. */
   onLetsGoClick: (displayName: string, image: UserProfileImage) => void;
+
+  onAvatarClick: (avatar: UserProfileImage) => void;
+
+  onDisplayNameChange: (newName: string) => void;
 }
 
-interface State {
-  selectedImage: UserProfileImage;
-  displayName: string;
-}
-
-export class ProfileSetUpPage extends React.Component<Properties, State> {
-  constructor(props: Properties) {
-    super(props);
-    this.state = {
-      selectedImage: this.props.selectedImage,
-      displayName: this.props.displayName
-    };
-  }
-
+export class ProfileSetUpPage extends React.Component<Properties> {
   public render(): JSX.Element {
     const contentContainerStyle = (this.props.displayMode ===
       DisplayMode.MOBILE && MOBILE_CONTAINER_STYLE || CONTENT_CONTAINER_STYLE);
@@ -43,10 +34,10 @@ export class ProfileSetUpPage extends React.Component<Properties, State> {
     const avatars = [];
     for (const avatar of this.props.avatars) {
       avatars.push(<AvatarWithCheckMark key={avatar.id} imageSrc={avatar.src}
-        isMarked={avatar.id === this.state.selectedImage.id}
-        onClick={() => this.handleAvatarImageClick(avatar)} />);
+        isMarked={avatar.id === this.props.selectedImage.id}
+        onClick={() => this.props.onAvatarClick(avatar)} />);
     }
-    const isDisplayName = this.state.displayName.length !== 0;
+    const isDisplayName = this.props.displayName.length !== 0;
     const nameErrorMessage = (!isDisplayName && 'Please enter a display name.'
       || '');
     const content = ((contentContainerStyle: React.CSSProperties,
@@ -59,21 +50,21 @@ export class ProfileSetUpPage extends React.Component<Properties, State> {
               <div style={ICON_CONTAINER_STYLE} >
                 <img
                   style={ICON_STYLE}
-                  src={this.state.selectedImage.src}
+                  src={this.props.selectedImage.src}
                   alt='Profile Picture'
                 />
               </div>
             </div>
             <div style={ROW_CONTAINER_STYLE} >
-              <div style={DISPLAY_NAME_STYLE} >{this.state.displayName}</div>
+              <div style={DISPLAY_NAME_STYLE} >{this.props.displayName}</div>
             </div>
             <div style={YOUR_NAME_TITLE_STYLE} >Your Display Name:</div>
             <NameInputFieldWithCounterInside
               style={NAME_FIELD_STYLE}
-              counterValue={this.state.displayName.length}
+              counterValue={this.props.displayName.length}
               maxValue={20}
               placeholder='Display Name (20 characters max.)'
-              value={this.state.displayName}
+              value={this.props.displayName}
               onChange={this.handleNameChange}
               hasError={!isDisplayName}
             />
@@ -93,8 +84,8 @@ export class ProfileSetUpPage extends React.Component<Properties, State> {
               <PrimaryTextButton
                 label="Let’s go!"
                 style={LETS_GO_BUTTON_STYLE}
-                onClick={() => this.props.onLetsGoClick(this.state.displayName,
-                  this.state.selectedImage)}
+                onClick={() => this.props.onLetsGoClick(this.props.displayName,
+                  this.props.selectedImage)}
                 disabled={!isDisplayName}
               />
             </div>
@@ -110,14 +101,9 @@ export class ProfileSetUpPage extends React.Component<Properties, State> {
       </div>);
   }
 
-  /** Handles the click on the avatar images. */
-  private handleAvatarImageClick = (avatar: UserProfileImage) => {
-    this.setState({ selectedImage: avatar });
-  }
-
   /** Handles the change in display name inputfield. */
   private handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ displayName: event.target.value });
+    this.props.onDisplayNameChange(event.target.value);
   }
 }
 

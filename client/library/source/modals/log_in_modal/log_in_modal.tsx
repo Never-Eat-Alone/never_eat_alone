@@ -187,7 +187,7 @@ export class LogInModal extends React.Component<Properties, State> {
             <SecondaryTextLinkButton
               label='Request Your Account'
               labelStyle={JOIN_LINK_STYLE}
-              onClick={() => this.handleRedirect('/sign_up')}
+              onClick={() => this.handleRedirect('/request_to_join')}
             />
           </div>
         </div>
@@ -219,7 +219,6 @@ export class LogInModal extends React.Component<Properties, State> {
 
   private handleRedirect = (path: string) => {
     this.setState({ redirect: path });
-    //this.props.onClose();
   }
 
   private handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {

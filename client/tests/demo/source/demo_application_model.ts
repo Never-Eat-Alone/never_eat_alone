@@ -421,7 +421,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     this._deactivateAccountSurveyModel = new DemoDeactivateAccountSurveyModel();
     // Loading all models with load method.
     this._signUpPageModel = new Map();
-    const avatars = [];
+    const avatars: NeverEatAlone.UserProfileImage[] = [];
     for (let i = 0; i < 20; ++i) {
       const src = `resources/profile_set_up_page/icons/profile-image-${i}.svg`;
       avatars.push(new NeverEatAlone.UserProfileImage(1, Date.now() + i, src));
@@ -429,7 +429,10 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const defaultImage = avatars[0];
     const demoSignUpPageModel1 = new DemoSignUpPageModel('arthur@gmail.com',
       avatars, defaultImage);
+    const demoSignUpPageModel2 = new DemoSignUpPageModel('jessica@gmail.com',
+      avatars, defaultImage);
     this._signUpPageModel.set(1, demoSignUpPageModel1);
+    this._signUpPageModel.set(2, demoSignUpPageModel2);
     await Promise.all([this._headerModel.load(), this._homePageModel.load(),
       this._inviteAFoodieModel.load()]);
     return;

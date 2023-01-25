@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as Router from 'react-router-dom';
 import { DisplayMode, UserProfileImage } from '../../definitions';
 import { ProfileSetUpPage } from './profile_set_up_page';
 import { SignUpPage } from './sign_up_page';
@@ -17,6 +18,7 @@ interface State {
   displayName: string;
   image: UserProfileImage;
   isSetUpPage: boolean;
+  redirect: string;
 }
 
 export class SignUpPageController extends React.Component<Properties, State> {
@@ -29,11 +31,15 @@ export class SignUpPageController extends React.Component<Properties, State> {
       isSetUpPage: false,
       displayName: '',
       image: UserProfileImage.NoImage(),
-      password: ''
+      password: '',
+      redirect: null
     };
   }
 
   public render(): JSX.Element {
+    if (this.state.redirect) {
+      return <Router.Redirect to={this.state.redirect} />;
+    }
     if (!this.state.isLoaded || this.state.signUpPageErrorCode ===
         SignUpPage.ErrorCode.NO_CONNECTION) {
       return <div />;
@@ -46,6 +52,8 @@ export class SignUpPageController extends React.Component<Properties, State> {
         avatars={this.props.model.avatars}
         onUploadImageClick={this.handleUploadImageClick}
         onLetsGoClick={this.handleLetsGoClick}
+        onAvatarClick={this.handleAvatarClick}
+        onDisplayNameChange={this.handleDisplayNameChange}
       />;
     }
     return <SignUpPage
@@ -97,6 +105,14 @@ export class SignUpPageController extends React.Component<Properties, State> {
     }
   }
 
+  private handleAvatarClick = (avatar: UserProfileImage) => {
+    this.setState({ image: avatar });
+  }
+
+  private handleDisplayNameChange = (newName: string) => {
+    this.setState({ displayName: newName });
+  }
+
   private handleLetsGoClick = async (displayName: string,
       image: UserProfileImage) => {
     try {
@@ -104,7 +120,8 @@ export class SignUpPageController extends React.Component<Properties, State> {
       this.setState({
         profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NONE,
         displayName: displayName,
-        image: image
+        image: image,
+        redirect: '/'
       });
     } catch {
       this.setState({

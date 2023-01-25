@@ -175,7 +175,7 @@ export class ApplicationController extends React.Component<Properties, State> {
               render={this.renderSettings}
             />
             <Router.Route
-              path='/sign_up'
+              path='/sign_up/:id'
               render={this.renderSignUp}
             />
             <Router.Route
