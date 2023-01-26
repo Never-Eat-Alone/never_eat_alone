@@ -187,7 +187,7 @@ export class LogInModal extends React.Component<Properties, State> {
             <SecondaryTextLinkButton
               label='Request Your Account'
               labelStyle={JOIN_LINK_STYLE}
-              onClick={() => this.handleRedirect('/sign_up')}
+              onClick={() => this.handleRedirect('/request_to_join')}
             />
           </div>
         </div>

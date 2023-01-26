@@ -1,13 +1,10 @@
 import * as React from 'react';
-import * as Router from 'react-router-dom';
-import { PrimaryTextButton } from '../components';
-import { DisplayMode } from '../definitions';
-import { getPasswordChecks, getPasswordChecksScore } from '../utilities';
-import { PasswordInputField } from './input_field';
-import { RedNavLink } from './nav_link';
-import { PasswordAnalyzer } from './password_analyzer';
+import { PasswordAnalyzer, PasswordInputField, PrimaryTextButton, RedNavLink
+} from '../../components';
+import { DisplayMode } from '../../definitions';
+import { getPasswordChecks, getPasswordChecksScore } from '../../utilities';
 
-interface Properties extends Router.LinkProps {
+interface Properties {
   displayMode: DisplayMode;
 
   /** The email user requested an account for. */
@@ -17,7 +14,7 @@ interface Properties extends Router.LinkProps {
   errorCode: SignUpPage.ErrorCode;
 
   /** Indicates the sign up button is clicked. */
-  onSignUp: () => void;
+  onSignUp: (password: string) => void;
 }
 
 interface State {
@@ -108,7 +105,7 @@ export class SignUpPage extends React.Component<Properties, State> {
             <PrimaryTextButton
               style={SIGN_UP_BUTTON_STYLE}
               label='Sign Up'
-              onClick={this.props.onSignUp}
+              onClick={() => this.props.onSignUp(this.state.password)}
               disabled={this.props.errorCode ===
                 SignUpPage.ErrorCode.NO_CONNECTION ||
                 this.state.password.length < 9 ||
@@ -120,8 +117,8 @@ export class SignUpPage extends React.Component<Properties, State> {
               <RedNavLink
                 {...this.props}
                 style={LINK_STYLE}
-                to='/terms_of_service'
-                label='Terms of Service'
+                to='/terms_of_use'
+                label='Terms of Use'
               />
               &nbsp;and&nbsp;
               <RedNavLink

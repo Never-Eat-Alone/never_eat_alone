@@ -1,9 +1,8 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
-import { DisplayMode } from '../definitions';
-import { AvatarWithCheckMark } from './avatar_with_check_mark';
-import { NameInputFieldWithCounterInside } from './input_field';
-import { PrimaryTextButton } from './text_button';
+import { AvatarWithCheckMark, NameInputFieldWithCounterInside, PrimaryTextButton
+} from '../../components';
+import { DisplayMode, UserProfileImage } from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -11,42 +10,34 @@ interface Properties {
   /** The user display name entered when they requested an account. */
   displayName: string;
 
+  selectedImage: UserProfileImage;
+
+  avatars: UserProfileImage[];
+
   /** Indicates the upload image button is clicked. */
   onUploadImageClick: () => void;
 
   /** Indicates the let's go button is clicked. */
-  onLetsGoClick: () => void;
+  onLetsGoClick: (displayName: string, image: UserProfileImage) => void;
+
+  onAvatarClick: (avatar: UserProfileImage) => void;
+
+  onDisplayNameChange: (newName: string) => void;
 }
 
-interface State {
-  imageSrc: string;
-  displayName: string;
-  markIndex: number;
-}
-
-export class ProfileSetUpPage extends React.Component<Properties, State> {
-  constructor(props: Properties) {
-    super(props);
-    this.state = {
-      imageSrc: 'resources/profile_set_up_page/icons/profile-image-0.svg',
-      displayName: this.props.displayName || '',
-      markIndex: -1
-    };
-  }
-
+export class ProfileSetUpPage extends React.Component<Properties> {
   public render(): JSX.Element {
     const contentContainerStyle = (this.props.displayMode ===
       DisplayMode.MOBILE && MOBILE_CONTAINER_STYLE || CONTENT_CONTAINER_STYLE);
     const contentStyle = (this.props.displayMode === DisplayMode.MOBILE &&
       MOBILE_CONTENT_STYLE || CONTENT_STYLE);
     const avatars = [];
-    for (let i = 0; i < 20; ++i) {
-      const src = `resources/profile_set_up_page/icons/profile-image-${i}.svg`;
-      avatars.push(<AvatarWithCheckMark key={`avatar-${i}`} imageSrc={src}
-        isMarked={i === this.state.markIndex}
-        onClick={() => this.handleAvatarImageClick(src, i)} />);
+    for (const avatar of this.props.avatars) {
+      avatars.push(<AvatarWithCheckMark key={avatar.id} imageSrc={avatar.src}
+        isMarked={avatar.id === this.props.selectedImage.id}
+        onClick={() => this.props.onAvatarClick(avatar)} />);
     }
-    const isDisplayName = this.state.displayName.length !== 0;
+    const isDisplayName = this.props.displayName.length !== 0;
     const nameErrorMessage = (!isDisplayName && 'Please enter a display name.'
       || '');
     const content = ((contentContainerStyle: React.CSSProperties,
@@ -59,21 +50,20 @@ export class ProfileSetUpPage extends React.Component<Properties, State> {
               <div style={ICON_CONTAINER_STYLE} >
                 <img
                   style={ICON_STYLE}
-                  src={this.state.imageSrc}
+                  src={this.props.selectedImage.src}
                   alt='Profile Picture'
                 />
               </div>
             </div>
-            <div style={ROW_CONTAINER_STYLE} >
-              <div style={DISPLAY_NAME_STYLE} >{this.state.displayName}</div>
+            <div style={DISPLAY_NAME_ROW_STYLE} >
+              <div style={DISPLAY_NAME_STYLE} >{this.props.displayName}</div>
             </div>
-            <div style={YOUR_NAME_TITLE_STYLE} >Your Display Name:</div>
             <NameInputFieldWithCounterInside
               style={NAME_FIELD_STYLE}
-              counterValue={this.state.displayName.length}
+              counterValue={this.props.displayName.length}
               maxValue={20}
               placeholder='Display Name (20 characters max.)'
-              value={this.state.displayName}
+              value={this.props.displayName}
               onChange={this.handleNameChange}
               hasError={!isDisplayName}
             />
@@ -93,7 +83,8 @@ export class ProfileSetUpPage extends React.Component<Properties, State> {
               <PrimaryTextButton
                 label="Let’s go!"
                 style={LETS_GO_BUTTON_STYLE}
-                onClick={this.props.onLetsGoClick}
+                onClick={() => this.props.onLetsGoClick(this.props.displayName,
+                  this.props.selectedImage)}
                 disabled={!isDisplayName}
               />
             </div>
@@ -109,14 +100,17 @@ export class ProfileSetUpPage extends React.Component<Properties, State> {
       </div>);
   }
 
-  /** Handles the click on the avatar images. */
-  private handleAvatarImageClick = (src: string, i: number) => {
-    this.setState({ imageSrc: src, markIndex: i });
-  }
-
   /** Handles the change in display name inputfield. */
   private handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ displayName: event.target.value });
+    this.props.onDisplayNameChange(event.target.value);
+  }
+}
+
+export namespace ProfileSetUpPage {
+  export enum ErrorCode {
+    NONE,
+    UPLOAD_IMAGE_FAILED,
+    NO_CONNECTION
   }
 }
 
@@ -132,19 +126,8 @@ const CONTAINER_STYLE: React.CSSProperties = {
   backgroundColor: '#F6F6F6',
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'left center',
-  padding: '50px 100px'
-};
-
-const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
-  boxSizing: 'border-box',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: '#FFFFFF',
-  boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
-  borderRadius: '4px',
-  padding: '50px 100px'
+  padding: '50px 100px',
+  overflow: 'initial'
 };
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
@@ -157,30 +140,49 @@ const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
   boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
   borderRadius: '4px',
   width: '100%',
-  padding: '50px 30px'
+  padding: '50px 30px',
+  overflow: 'initial'
+};
+
+const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: '#FFFFFF',
+  boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
+  borderRadius: '4px',
+  padding: '50px 100px',
+  overflow: 'initial'
 };
 
 const CONTENT_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
-  alignItems: 'flex-start',
-  width: '460px'
+  alignItems: 'center',
+  width: '460px',
+  height: '100%',
+  overflow: 'initial'
 };
 
 const MOBILE_CONTENT_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
-  alignItems: 'flex-start',
-  width: '100%'
+  alignItems: 'center',
+  width: '100%',
+  height: '100%',
+  overflow: 'initial'
 };
 
 const TITLE_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
+  justifyContent: 'center',
   flexWrap: 'wrap',
   width: '100%',
   fontFamily: 'Oswald',
@@ -225,22 +227,6 @@ const DISPLAY_NAME_STYLE: React.CSSProperties = {
   color: '#000000'
 };
 
-const YOUR_NAME_TITLE_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
-  height: '18px',
-  width: '100%',
-  fontFamily: 'Source Sans Pro',
-  fontStyle: 'normal',
-  fontWeight: 600,
-  fontSize: '14px',
-  lineHeight: '18px',
-  color: '#000000',
-  marginBottom: '5px'
-};
-
 const ERROR_MESSAGE_STYLE: React.CSSProperties = {
   marginTop: '2px',
   width: '264px',
@@ -267,7 +253,7 @@ const YOUR_PICTURE_TITLE_STYLE: React.CSSProperties = {
   fontSize: '14px',
   lineHeight: '18px',
   color: '#000000',
-  marginTop: '10px',
+  marginTop: '30px',
   marginBottom: '15px'
 };
 
@@ -277,6 +263,11 @@ const ROW_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'center',
   alignItems: 'flex-start',
   width: '100%'
+};
+
+const DISPLAY_NAME_ROW_STYLE: React.CSSProperties = {
+  ...ROW_CONTAINER_STYLE,
+  marginBottom: '30px'
 };
 
 const AVATARS_CONTAINER_STYLE: React.CSSProperties = {
@@ -312,7 +303,7 @@ const UPLOAD_IMAGE_BUTTON_STYLE: React.CSSProperties = {
 
 const LETS_GO_BUTTON_STYLE: React.CSSProperties = {
   marginTop: '30px',
-  width: '123px',
+  width: '100%',
   height: '35px'
 };
 

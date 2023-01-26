@@ -23,6 +23,7 @@ import { PrivacyPolicyPage } from './privacy_policy_page';
 import { ProfilePageController } from './profile_page';
 import { SettingsPageController } from './settings_page';
 import { Shell } from './shell';
+import { SignUpPageController } from './sign_up_page';
 import { TermsOfUsePage } from './terms_of_use_page';
 import { WhatIsNeaPage } from './what_is_nea_page';
 
@@ -174,7 +175,7 @@ export class ApplicationController extends React.Component<Properties, State> {
               render={this.renderSettings}
             />
             <Router.Route
-              path='/sign_up'
+              path='/sign_up/:id'
               render={this.renderSignUp}
             />
             <Router.Route
@@ -360,8 +361,12 @@ export class ApplicationController extends React.Component<Properties, State> {
     />;
   }
 
-  private renderSignUp = () => {
-    return <div>Sign Up Page</div>;
+  private renderSignUp = ({match}: Router.RouteComponentProps<TParams>) => {
+    const id = Number(match.params.id);
+    return <SignUpPageController
+      displayMode={this.state.displayMode}
+      model={this.props.model.getSignUpPageModel(id)}
+    />;
   }
 
   private renderWhatIsNea = () => {

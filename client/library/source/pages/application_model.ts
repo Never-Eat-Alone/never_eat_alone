@@ -11,6 +11,7 @@ import { HomePageModel } from './home_page';
 import { PartnerWithUsModel } from './partner_with_us_page';
 import { ProfilePageModel } from './profile_page';
 import { SettingsPageModel } from './settings_page';
+import { SignUpPageModel } from './sign_up_page';
 
 export abstract class ApplicationModel {
   public abstract load(): Promise<void>;
@@ -28,4 +29,5 @@ export abstract class ApplicationModel {
   public abstract get deactivateAccountSurveyModel():
     DeactivateAccountSurveyModel;
   public abstract get forgotPasswordPageModel(): ForgotPasswordPageModel;
+  public abstract getSignUpPageModel(id: number): SignUpPageModel;
 }

@@ -213,8 +213,7 @@ const TEXT_CONTAINER_STYLE: React.CSSProperties = {
 };
 
 const BAR_STYLE: React.CSSProperties = {
-  minWidth: '58px',
-  width: '58px',
+  width: 'calc(100% / 5)',
   height: '100%',
   borderRadius: '3px'
 };

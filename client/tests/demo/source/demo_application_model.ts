@@ -9,6 +9,7 @@ import { DemoForgotPasswordPageModel
 } from './demo_forogot_password_page_model';
 import { DemoLogInModel } from './demo_login_model';
 import { DemoSettingsPageModel } from './demo_settings_page_model';
+import { DemoSignUpPageModel } from './demo_sign_up_page_model';
 
 /** Implements the ApplicationModel for demo purposes. */
 export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
@@ -419,6 +420,19 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     this._deletedAccountSurveyModel = new DemoDeletedAccountSurveyModel();
     this._deactivateAccountSurveyModel = new DemoDeactivateAccountSurveyModel();
     // Loading all models with load method.
+    this._signUpPageModel = new Map();
+    const avatars: NeverEatAlone.UserProfileImage[] = [];
+    for (let i = 0; i < 20; ++i) {
+      const src = `resources/profile_set_up_page/icons/profile-image-${i}.svg`;
+      avatars.push(new NeverEatAlone.UserProfileImage(1, Date.now() + i, src));
+    }
+    const defaultImage = avatars[0];
+    const demoSignUpPageModel1 = new DemoSignUpPageModel('arthur@gmail.com',
+      avatars, defaultImage);
+    const demoSignUpPageModel2 = new DemoSignUpPageModel('jessica@gmail.com',
+      avatars, defaultImage);
+    this._signUpPageModel.set(1, demoSignUpPageModel1);
+    this._signUpPageModel.set(2, demoSignUpPageModel2);
     await Promise.all([this._headerModel.load(), this._homePageModel.load(),
       this._inviteAFoodieModel.load()]);
     return;
@@ -480,6 +494,10 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return this._deactivateAccountSurveyModel;
   }
 
+  public getSignUpPageModel(id: number): NeverEatAlone.SignUpPageModel {
+    return this._signUpPageModel.get(id);
+  }
+
   private _headerModel: NeverEatAlone.HeaderModel;
   private _homePageModel: NeverEatAlone.HomePageModel;
   private _diningEventModelMap: Map<number, NeverEatAlone.DiningEventPageModel>;
@@ -495,4 +513,5 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
   private _deactivateAccountSurveyModel:
     NeverEatAlone.DeactivateAccountSurveyModel;
   private _forgotPasswordPageModel: NeverEatAlone.ForgotPasswordPageModel;
+  private _signUpPageModel: Map<number, NeverEatAlone.SignUpPageModel>;
 }
