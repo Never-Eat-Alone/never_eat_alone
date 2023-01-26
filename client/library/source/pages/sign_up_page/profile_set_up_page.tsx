@@ -55,10 +55,9 @@ export class ProfileSetUpPage extends React.Component<Properties> {
                 />
               </div>
             </div>
-            <div style={ROW_CONTAINER_STYLE} >
+            <div style={DISPLAY_NAME_ROW_STYLE} >
               <div style={DISPLAY_NAME_STYLE} >{this.props.displayName}</div>
             </div>
-            <div style={YOUR_NAME_TITLE_STYLE} >Your Display Name:</div>
             <NameInputFieldWithCounterInside
               style={NAME_FIELD_STYLE}
               counterValue={this.props.displayName.length}
@@ -127,19 +126,8 @@ const CONTAINER_STYLE: React.CSSProperties = {
   backgroundColor: '#F6F6F6',
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'left center',
-  padding: '50px 100px'
-};
-
-const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
-  boxSizing: 'border-box',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: '#FFFFFF',
-  boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
-  borderRadius: '4px',
-  padding: '50px 100px'
+  padding: '50px 100px',
+  overflow: 'initial'
 };
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
@@ -152,30 +140,49 @@ const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
   boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
   borderRadius: '4px',
   width: '100%',
-  padding: '50px 30px'
+  padding: '50px 30px',
+  overflow: 'initial'
+};
+
+const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: '#FFFFFF',
+  boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
+  borderRadius: '4px',
+  padding: '50px 100px',
+  overflow: 'initial'
 };
 
 const CONTENT_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
-  alignItems: 'flex-start',
-  width: '460px'
+  alignItems: 'center',
+  width: '460px',
+  height: '100%',
+  overflow: 'initial'
 };
 
 const MOBILE_CONTENT_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
-  alignItems: 'flex-start',
-  width: '100%'
+  alignItems: 'center',
+  width: '100%',
+  height: '100%',
+  overflow: 'initial'
 };
 
 const TITLE_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
+  justifyContent: 'center',
   flexWrap: 'wrap',
   width: '100%',
   fontFamily: 'Oswald',
@@ -220,22 +227,6 @@ const DISPLAY_NAME_STYLE: React.CSSProperties = {
   color: '#000000'
 };
 
-const YOUR_NAME_TITLE_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
-  height: '18px',
-  width: '100%',
-  fontFamily: 'Source Sans Pro',
-  fontStyle: 'normal',
-  fontWeight: 600,
-  fontSize: '14px',
-  lineHeight: '18px',
-  color: '#000000',
-  marginBottom: '5px'
-};
-
 const ERROR_MESSAGE_STYLE: React.CSSProperties = {
   marginTop: '2px',
   width: '264px',
@@ -262,7 +253,7 @@ const YOUR_PICTURE_TITLE_STYLE: React.CSSProperties = {
   fontSize: '14px',
   lineHeight: '18px',
   color: '#000000',
-  marginTop: '10px',
+  marginTop: '30px',
   marginBottom: '15px'
 };
 
@@ -272,6 +263,11 @@ const ROW_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'center',
   alignItems: 'flex-start',
   width: '100%'
+};
+
+const DISPLAY_NAME_ROW_STYLE: React.CSSProperties = {
+  ...ROW_CONTAINER_STYLE,
+  marginBottom: '30px'
 };
 
 const AVATARS_CONTAINER_STYLE: React.CSSProperties = {
@@ -307,7 +303,7 @@ const UPLOAD_IMAGE_BUTTON_STYLE: React.CSSProperties = {
 
 const LETS_GO_BUTTON_STYLE: React.CSSProperties = {
   marginTop: '30px',
-  width: '123px',
+  width: '100%',
   height: '35px'
 };
 
