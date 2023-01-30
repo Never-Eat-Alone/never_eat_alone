@@ -17,6 +17,7 @@ import { ForgotPasswordPageController } from './forgot_password_page';
 import { HelpPage } from './help_page';
 import { HomePageController } from './home_page';
 import { InviteAFoodiePageController } from './invite_a_foodie_page';
+import { JoinPageController } from './join_page';
 import { LogInPageController } from './log_in_page';
 import { PartnerWithUsController } from './partner_with_us_page';
 import { PrivacyPolicyPage } from './privacy_policy_page';

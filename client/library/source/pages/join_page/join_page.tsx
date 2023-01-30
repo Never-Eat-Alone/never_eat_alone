@@ -47,16 +47,17 @@ export class JoinPage extends React.Component<Properties, State> {
   }
 
   public render(): JSX.Element {
-    const containerStyle = (this.props.displayMode === DisplayMode.MOBILE &&
-      MOBILE_CONTAINER_STYLE || CONTAINER_STYLE);
-    const imageSection = (() => {
-      if (this.props.displayMode === DisplayMode.DESKTOP) {
-        return <div style={{...IMAGE_STYLE, ...DESKTOP_IMAGE_STYLE}} />;
+    const { containerStyle, imageSection } = (() => {
+      if (this.props.displayMode === DisplayMode.MOBILE) {
+        return {
+          containerStyle: MOBILE_CONTAINER_STYLE,
+          imageSection: null
+        };
       }
-      if (this.props.displayMode === DisplayMode.TABLET) {
-        return <div style={{...IMAGE_STYLE, ...TABLET_IMAGE_STYLE}} />;
-      }
-      return null;
+      return {
+        containerStyle: CONTAINER_STYLE,
+        imageSection: <div style={{...IMAGE_STYLE, ...DESKTOP_IMAGE_STYLE}} />,
+      };
     })();
     const nameErrorMessage = (() => {
       if (this.props.nameErrorCode === JoinPage.NameErrorCode.EMPTY) {
@@ -125,11 +126,40 @@ export class JoinPage extends React.Component<Properties, State> {
           <PrimaryTextButton
             style={requestButtonStyle}
             label='Request to join!'
-            onClick={this.handleRequestClick}
+            onClick={this.handleJoin}
           />
         </div>
         {imageSection}
       </div>);
+  }
+
+  private checkEmail = () => {
+    if (this.state.email.length === 0) {
+      this.setState({ emailErrorCode: JoinPage.EmailErrorCode.EMPTY });
+      return false;
+    } else if (!EmailValidator.validate(this.state.email)) {
+      this.setState({ emailErrorCode: JoinPage.EmailErrorCode.NOT_AN_EMAIL });
+      return false;
+    } else {
+      this.setState({ emailErrorCode: JoinPage.EmailErrorCode.NONE });
+      return true;
+    }
+  }
+
+  private checkName = () => {
+    if (this.state.name.trim().length === 0) {
+      this.setState({
+        nameErrorCode: JoinPage.NameErrorCode.EMPTY,
+        name: this.state.name.trim()
+      });
+      return false;
+    } else {
+      this.setState({
+        nameErrorCode: JoinPage.NameErrorCode.NONE,
+        name: this.state.name.trim()
+      });
+      return true;
+    }
   }
 
   private handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -137,11 +167,11 @@ export class JoinPage extends React.Component<Properties, State> {
   }
 
   private handleJoin = () => {
-    const isPass = this.checkPasswordField();
+    const isName = this.checkName();
     const isEmail = this.checkEmail();
-    if (isEmail && isPass) {
-      this.props.onLogIn(this.state.email, this.state.password,
-        this.state.isRememberMe);
+    if (isEmail && isName) {
+      this.props.onJoin(this.state.email, this.state.name,
+        this.state.referralCode);
     }
   }
 
@@ -250,7 +280,9 @@ const TEXT_STYLE: React.CSSProperties = {
   fontWeight: 400,
   fontSize: '14px',
   lineHeight: '18px',
-  color: '#000000'
+  color: '#000000',
+  maxWidth: '100%',
+  padding: '0px'
 };
 
 const ERROR_MESSAGE_STYLE: React.CSSProperties = {
