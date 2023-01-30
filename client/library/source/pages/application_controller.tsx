@@ -160,6 +160,10 @@ export class ApplicationController extends React.Component<Properties, State> {
               render={this.renderInviteAFoodie}
             />
             <Router.Route
+              path='/join'
+              render={this.renderJoin}
+            />
+            <Router.Route
               path='/log_in'
               render={this.renderLogIn}
             />
@@ -311,6 +315,13 @@ export class ApplicationController extends React.Component<Properties, State> {
         displayMode={this.state.displayMode}
         account={this.state.account}
         model={this.props.model.getEditProfilePageModel(id)}
+    />;
+  }
+
+  private renderJoin = () => {
+    return <JoinPageController
+      displayMode={this.state.displayMode}
+      model={this.props.model.joinModel}
     />;
   }
 

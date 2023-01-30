@@ -1,28 +1,17 @@
 import * as EmailValidator from 'email-validator';
 import * as React from 'react';
-import { EmailInputField, PrimaryTextButton } from '../../components';
+import { EmailInputField, InputField, NameInputField, PrimaryTextButton
+} from '../../components';
 import { DisplayMode } from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
-  email: string;
-  name: string;
-  referralCode: string;
 
   /** The page error code. */
   errorCode: JoinPage.ErrorCode;
 
-  emailErrorCode: JoinPage.EmailErrorCode;
-  nameErrorCode: JoinPage.NameErrorCode;
-
-  onNameChange: (newName: string) => void;
-
-  onEmailChange: (newEmail: string) => void;
-
-  onReferralChange: (newValue: string) => void;
-
   /** Indicates the Join button is clicked. */
-  onJoin: () => void;
+  onJoin: (name: string, email: string, referralCode: string) => void;
 }
 
 interface State {
@@ -38,9 +27,9 @@ export class JoinPage extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props);
     this.state = {
-      name: this.props.name,
-      email: this.props.email,
-      referralCode: this.props.referralCode,
+      name: '',
+      email: '',
+      referralCode: '',
       nameErrorCode: JoinPage.NameErrorCode.NONE,
       emailErrorCode: JoinPage.EmailErrorCode.NONE
     };
@@ -60,7 +49,7 @@ export class JoinPage extends React.Component<Properties, State> {
       };
     })();
     const nameErrorMessage = (() => {
-      if (this.props.nameErrorCode === JoinPage.NameErrorCode.EMPTY) {
+      if (this.state.nameErrorCode === JoinPage.NameErrorCode.EMPTY) {
         return (
           <div style={ERROR_MESSAGE_STYLE} >
             * This field is required.
@@ -69,13 +58,13 @@ export class JoinPage extends React.Component<Properties, State> {
       return null;
     })();
     const emailErrorMessage = (() => {
-      if (this.props.emailErrorCode === JoinPage.EmailErrorCode.EMPTY) {
+      if (this.state.emailErrorCode === JoinPage.EmailErrorCode.EMPTY) {
         return (
           <div style={ERROR_MESSAGE_STYLE} >
             * This field is required.
           </div>);
       }
-      if (this.props.emailErrorCode === JoinPage.EmailErrorCode.NOT_AN_EMAIL) {
+      if (this.state.emailErrorCode === JoinPage.EmailErrorCode.NOT_AN_EMAIL) {
         return (
           <div style={ERROR_MESSAGE_STYLE} >
             Please enter a valid email address.
@@ -98,7 +87,7 @@ export class JoinPage extends React.Component<Properties, State> {
             Fill in the form below to request your account.
           </p>
           <NameInputField
-            style={nameFieldStyle}
+            style={NAME_INPUT_FIELD_STYLE}
             placeholder='Your Name'
             hasError={this.state.nameErrorCode !==
               JoinPage.NameErrorCode.NONE}
@@ -108,7 +97,7 @@ export class JoinPage extends React.Component<Properties, State> {
           />
           <div style={ERROR_CONTAINER_STYLE} >{nameErrorMessage}</div>
           <EmailInputField
-            style={INPUT_STYLE}
+            style={EMAIL_INPUT_FIELD_STYLE}
             placeholder='Your Email'
             value={this.state.email}
             hasError={this.state.emailErrorCode !==
@@ -118,15 +107,16 @@ export class JoinPage extends React.Component<Properties, State> {
           />
           <div style={ERROR_CONTAINER_STYLE} >{emailErrorMessage}</div>
           <InputField
-            style={INPUT_STYLE}
+            style={REFERRAL_INPUT_FIELD_STYLE}
             value={this.state.referralCode}
             placeholder='Name/Username of person who invited you? (optional)'
             onChange={this.handleReferralCodeChange}
           />
           <PrimaryTextButton
-            style={requestButtonStyle}
+            style={REQUEST_BUTTON_STYLE}
             label='Request to join!'
             onClick={this.handleJoin}
+            disabled={this.isDisabled()}
           />
         </div>
         {imageSection}
@@ -163,21 +153,30 @@ export class JoinPage extends React.Component<Properties, State> {
   }
 
   private handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.props.onEmailChange(event.target.value.trim());
+    this.setState({ email: event.target.value.trim() });
+  }
+
+  private handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ name: event.target.value });
+  }
+
+  private handleReferralCodeChange = (event: React.ChangeEvent<HTMLInputElement>
+      ) => {
+    this.setState({ referralCode: event.target.value });
   }
 
   private handleJoin = () => {
     const isName = this.checkName();
     const isEmail = this.checkEmail();
     if (isEmail && isName) {
-      this.props.onJoin(this.state.email, this.state.name,
+      this.props.onJoin(this.state.name, this.state.email,
         this.state.referralCode);
     }
   }
 
   private isDisabled = () => {
-    return (this.props.name.length === 0 || this.props.email.trim().length
-      === 0 || !EmailValidator.validate(this.props.email));
+    return (this.state.name.length === 0 || this.state.email.trim().length
+      === 0 || !EmailValidator.validate(this.state.email));
   }
 }
 
@@ -289,10 +288,10 @@ const ERROR_MESSAGE_STYLE: React.CSSProperties = {
   fontFamily: 'Source Sans Pro',
   fontStyle: 'normal',
   fontWeight: 400,
-  fontSize: '14px',
+  fontSize: '12px',
   lineHeight: '18px',
   color: '#FF2C79',
-  textAlign: 'center',
+  textAlign: 'right',
   padding: '0px',
   margin: '0px'
 };
@@ -303,16 +302,16 @@ const ERROR_CONTAINER_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'center',
-  alignItems: 'flex-start',
+  alignItems: 'flex-end',
   flexWrap: 'wrap',
-  width: '100%',
-  minHeight: '40px',
-  paddingTop: '17px',
-  paddingBottom: '5px',
+  maxWidth: '100%',
+  minHeight: '30px',
+  paddingTop: '2px',
+  paddingBottom: '10px',
   whiteSpace: 'pre-line'
 };
 
-const INPUT_FIELD_STYLE: React.CSSProperties = {
+const NAME_INPUT_FIELD_STYLE: React.CSSProperties = {
   marginTop: '20px',
   width: '100%',
   minWidth: '100%',
@@ -320,87 +319,23 @@ const INPUT_FIELD_STYLE: React.CSSProperties = {
   height: '38px'
 };
 
-const ROW_CONTAINER_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
+const EMAIL_INPUT_FIELD_STYLE: React.CSSProperties = {
   width: '100%',
-  height: '20px',
-  minHeight: '20px',
+  minWidth: '100%',
+  minHeight: '38px',
+  height: '38px'
+};
+
+const REFERRAL_INPUT_FIELD_STYLE: React.CSSProperties = {
+  ...EMAIL_INPUT_FIELD_STYLE
+};
+
+const REQUEST_BUTTON_STYLE: React.CSSProperties = {
+  minWidth: '100%',
+  width: '100%',
+  height: '35px',
+  minHeight: '35px',
   marginTop: '20px'
-};
-
-const FORGOT_LINK_STYLE: React.CSSProperties = {
-  fontWeight: 400,
-  fontSize: '14px',
-  lineHeight: '18px',
-  minHeight: '18px',
-  height: '100%',
-  width: 'fit-content',
-  minWidth: '104px'
-};
-
-const REQUEST_ACCOUNT_ROW_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
-  flexWrap: 'wrap',
-  width: '100%',
-  fontFamily: 'Source Sans Pro',
-  fontStyle: 'normal',
-  fontWeight: 400,
-  fontSize: '12px',
-  lineHeight: '15px',
-  textAlign: 'center',
-  color: '#000000',
-  margin: '0px'
-};
-
-const JOIN_LINK_STYLE: React.CSSProperties = {
-  fontSize: '12px',
-  lineHeight: '15px',
-  fontWeight: 400,
-  minHeight: '15px',
-  width: 'fit-content',
-  minWidth: 'fit-content'
-};
-
-const OR_LINE_CONTAINER_STYLE: React.CSSProperties = {
-  width: '100%',
-  height: '6px',
-  minHeight: '6px',
-  margin: '0px 0px 27px 0px'
-};
-
-const OR_LINE_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'center',
-  position: 'relative',
-  width: '100%',
-  height: '100%',
-  borderBottom: '1px solid #CCCCCC',
-  textAlign: 'center',
-  fontFamily: 'Roboto',
-  fontSize: '11px',
-  lineHeight: '13px',
-  fontStyle: 'normal',
-  fontWeight: 400,
-  color: '#000000',
-  marginLeft: '0px',
-  marginRight: '0px'
-};
-
-const OR_SPAN_STYLE: React.CSSProperties = {
-  position: 'absolute',
-  color: '#000000',
-  padding: '0px 4px',
-  top: '0px',
-  backgroundColor: '#FFFFFF',
-  cursor: 'default'
 };
 
 const IMAGE_STYLE: React.CSSProperties = {

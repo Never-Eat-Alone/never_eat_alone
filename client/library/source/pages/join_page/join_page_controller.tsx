@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { DisplayMode, User, UserProfileImage, UserStatus
-} from '../../definitions';
+import { DisplayMode } from '../../definitions';
 import { JoinModel } from '../../modals/join_modal';
 import { JoinPage } from './join_page';
 
@@ -15,7 +14,7 @@ interface Properties {
 interface State {
   email: string;
   name: string;
-  referral: string;
+  referralCode: string;
   errorCode: JoinPage.ErrorCode;
 }
 
@@ -25,7 +24,7 @@ export class JoinPageController extends React.Component<Properties, State> {
     this.state = {
       email: '',
       name: '',
-      referral: '',
+      referralCode: '',
       errorCode: JoinPage.ErrorCode.NONE
     };
   }
@@ -33,39 +32,20 @@ export class JoinPageController extends React.Component<Properties, State> {
   public render(): JSX.Element {
     return <JoinPage
       displayMode={this.props.displayMode}
-      email={this.state.email}
-      name={this.state.name}
-      referral={this.state.referral}
       errorCode={this.state.errorCode}
-      onNameChange={this.handleNameChange}
-      onEmailChange={this.handleEmailChange}
-      onReferralChange={this.handleReferralChange}
       onJoin={this.handleJoin}
     />;
   }
 
-  private handleLogIn = async (email: string, password: string,
-      rememberMe: boolean) => {
+  private handleJoin = async (name: string, email: string,
+      referralCode: string) => {
     try {
-      const userResponse = await this.props.model.join(email, password,
-        rememberMe);
-      const user = User.fromJson(userResponse.user);
-      const profileImage = UserProfileImage.fromJson(userResponse.profileImage);
-      if (user.userStatus === UserStatus.ACTIVE) {
-        this.props.onLogInSuccess(user, profileImage);
-      } else {
-        this.setState({ errorCode: LogInPage.ErrorCode.LOGIN_FAILED });
-      }
+      await this.props.model.join(name, email, referralCode);
     } catch {
-      this.setState({
-        email: email,
-        password: password,
-        rememberMe: rememberMe,
-        errorCode: LogInPage.ErrorCode.NO_CONNECTION
-      });
+      this.setState({ errorCode: JoinPage.ErrorCode.NO_CONNECTION });
     }
   }
-
+/** 
   private checkEmail = () => {
     if (this.state.email.length === 0) {
       this.setState({ emailErrorCode: JoinPage.EmailErrorCode.EMPTY });
@@ -78,4 +58,5 @@ export class JoinPageController extends React.Component<Properties, State> {
       return true;
     }
   }
+  */
 }
