@@ -3,8 +3,8 @@ import * as Router from 'react-router-dom';
 import { Modal } from '../components';
 import { DisplayMode, getDisplayMode, User, UserProfileImage, UserStatus
 } from '../definitions';
-import { InviteAFoodieModalController, JoinController, LogInModalController,
-  PartnerWithUsModalController } from '../modals';
+import { InviteAFoodieModalController, JoinModalController,
+  LogInModalController, PartnerWithUsModalController } from '../modals';
 import { ApplicationModel } from './application_model';
 import { DeactivateAccountSurveyPageController }
 from './deactivate_account_survey_page';
@@ -76,7 +76,7 @@ export class ApplicationController extends React.Component<Properties, State> {
     const pathname = this.props.location.pathname;
     const JoinModal = (this.state.isJoinButtonClicked &&
       <Modal>
-        <JoinController
+        <JoinModalController
           displayMode={this.state.displayMode}
           model={this.props.model.joinModel}
           onClose={this.handleJoinModalClose}
