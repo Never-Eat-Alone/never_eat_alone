@@ -76,7 +76,7 @@ export class JoinController extends React.Component<Properties, State> {
   private handleRequestJoin = async (name: string, email: string,
       referralCode: string) => {
     try {
-      await this.props.model.requestSignUp(name, email, referralCode);
+      await this.props.model.join(name, email, referralCode);
       this.setState({
         name: name,
         email: email,

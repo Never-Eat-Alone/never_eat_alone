@@ -43,9 +43,15 @@ export class JoinPage extends React.Component<Properties, State> {
           imageSection: null
         };
       }
+      if (this.props.displayMode === DisplayMode.TABLET) {
+        return {
+          containerStyle: CONTAINER_STYLE,
+          imageSection: <div style={{...IMAGE_STYLE, ...TABLET_IMAGE_STYLE}} />
+        };
+      }
       return {
         containerStyle: CONTAINER_STYLE,
-        imageSection: <div style={{...IMAGE_STYLE, ...DESKTOP_IMAGE_STYLE}} />,
+        imageSection: <div style={{...IMAGE_STYLE, ...DESKTOP_IMAGE_STYLE}} />
       };
     })();
     const nameErrorMessage = (() => {
@@ -210,7 +216,8 @@ const FORM_STYLE: React.CSSProperties = {
   alignItems: 'center',
   width: '100%',
   height: '100%',
-  backgroundColor: '#FFFFFF'
+  backgroundColor: '#FFFFFF',
+  overflow: 'initial'
 };
 
 const CONTAINER_STYLE: React.CSSProperties = {
@@ -221,8 +228,7 @@ const CONTAINER_STYLE: React.CSSProperties = {
   alignItems: 'center',
   width: '310px',
   minWidth: '310px',
-  padding: '50px 80px 60px 30px',
-  overflow: 'hidden'
+  padding: '50px 80px 60px 30px'
 };
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
@@ -262,7 +268,7 @@ const HEADING_TEXT_STYLE: React.CSSProperties = {
   fontWeight: 400,
   fontSize: '26px',
   lineHeight: '39px',
-  color: '#FFFFFF',
+  color: '#000000',
   maxWidth: '100%',
   margin: '0px 0px 15px 0px',
   padding: '0px'
@@ -291,7 +297,6 @@ const ERROR_MESSAGE_STYLE: React.CSSProperties = {
   fontSize: '12px',
   lineHeight: '18px',
   color: '#FF2C79',
-  textAlign: 'right',
   padding: '0px',
   margin: '0px'
 };
@@ -301,10 +306,10 @@ const ERROR_CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'flex-end',
+  justifyContent: 'flex-end',
+  alignItems: 'flex-start',
   flexWrap: 'wrap',
-  maxWidth: '100%',
+  width: '100%',
   minHeight: '30px',
   paddingTop: '2px',
   paddingBottom: '10px',
@@ -339,7 +344,7 @@ const REQUEST_BUTTON_STYLE: React.CSSProperties = {
 };
 
 const IMAGE_STYLE: React.CSSProperties = {
-  backgroundImage: 'url(resources/log_in_page/images/background.jpeg)',
+  backgroundImage: 'url(resources/join_page/images/background.jpeg)',
   backgroundSize: 'cover',
   clipPath: 'polygon(0 0, 100% 0, 100% 100%, 128px 100%)',
   height: '100%',
@@ -348,17 +353,12 @@ const IMAGE_STYLE: React.CSSProperties = {
 
 const DESKTOP_IMAGE_STYLE: React.CSSProperties = {
   minWidth: '750px',
-  maxWidth: 'calc(100% - 521px - calc(100% - 1366px) / 2)'
+  maxWidth: 'calc(100% - 521px - calc(100% - 1366px) / 2)',
+  minHeight: '708px'
 };
 
 const TABLET_IMAGE_STYLE: React.CSSProperties = {
-  minWidth: '348px',
-  maxWidth: '730px'
-};
-
-const SOCIAL_BUTTON_STYLE: React.CSSProperties = {
-  width: '100%',
-  minWidth: '100%',
-  height: '28px',
-  minHeight: '28px'
+  minWidth: '392px',
+  maxWidth: '734px',
+  minHeight: '708px'
 };
