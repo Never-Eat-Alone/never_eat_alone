@@ -12,20 +12,22 @@ interface Properties {
 }
 
 interface State {
-  email: string;
   name: string;
+  email: string;
   referralCode: string;
   errorCode: JoinPage.ErrorCode;
+  page: JoinPage.Page
 }
 
 export class JoinPageController extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props);
     this.state = {
-      email: '',
+      errorCode: JoinPage.ErrorCode.NONE,
       name: '',
+      email: '',
       referralCode: '',
-      errorCode: JoinPage.ErrorCode.NONE
+      page: JoinPage.Page.INITIAL
     };
   }
 
@@ -33,6 +35,7 @@ export class JoinPageController extends React.Component<Properties, State> {
     return <JoinPage
       displayMode={this.props.displayMode}
       errorCode={this.state.errorCode}
+      page={this.state.page}
       onJoin={this.handleJoin}
     />;
   }
@@ -41,22 +44,15 @@ export class JoinPageController extends React.Component<Properties, State> {
       referralCode: string) => {
     try {
       await this.props.model.join(name, email, referralCode);
+      this.setState({
+        page: JoinPage.Page.REQUEST_SENT,
+        errorCode: JoinPage.ErrorCode.NONE
+      });
     } catch {
-      this.setState({ errorCode: JoinPage.ErrorCode.NO_CONNECTION });
+      this.setState({
+        errorCode: JoinPage.ErrorCode.NO_CONNECTION,
+        page: JoinPage.Page.INITIAL
+      });
     }
   }
-/** 
-  private checkEmail = () => {
-    if (this.state.email.length === 0) {
-      this.setState({ emailErrorCode: JoinPage.EmailErrorCode.EMPTY });
-      return false;
-    } else if (!EmailValidator.validate(this.state.email)) {
-      this.setState({ emailErrorCode: JoinPage.EmailErrorCode.NOT_AN_EMAIL });
-      return false;
-    } else {
-      this.setState({ emailErrorCode: JoinPage.EmailErrorCode.NONE });
-      return true;
-    }
-  }
-  */
 }

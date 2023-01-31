@@ -10,6 +10,10 @@ interface Properties {
   /** The page error code. */
   errorCode: JoinPage.ErrorCode;
 
+  page: JoinPage.Page;
+
+  email: string;
+
   /** Indicates the Join button is clicked. */
   onJoin: (name: string, email: string, referralCode: string) => void;
 }
@@ -28,7 +32,7 @@ export class JoinPage extends React.Component<Properties, State> {
     super(props);
     this.state = {
       name: '',
-      email: '',
+      email: this.props.email,
       referralCode: '',
       nameErrorCode: JoinPage.NameErrorCode.NONE,
       emailErrorCode: JoinPage.EmailErrorCode.NONE
@@ -78,8 +82,14 @@ export class JoinPage extends React.Component<Properties, State> {
       }
       return null;
     })();
-    return (
-      <div style={FORM_STYLE} >
+    const pageContent = (() => {
+      if (this.props.page === JoinPage.Page.REQUEST_SENT) {
+        return (
+          <div style={containerStyle} >
+          
+          </div>);
+      }
+      return (
         <div style={containerStyle} >
           <div style={LOGO_CONTAINER_STYLE} >
             <img
@@ -124,7 +134,11 @@ export class JoinPage extends React.Component<Properties, State> {
             onClick={this.handleJoin}
             disabled={this.isDisabled()}
           />
-        </div>
+        </div>);
+    })();
+    return (
+      <div style={FORM_STYLE} >
+        {pageContent}
         {imageSection}
       </div>);
   }
