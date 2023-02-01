@@ -6,7 +6,7 @@ interface Properties {
   displayMode: DisplayMode;
 }
 
-export class ErrorPage403 extends React.Component<Properties> {
+export class ErrorPage404 extends React.Component<Properties> {
   public render(): JSX.Element {
     const { containerStyle, imageStyle, buttonStyle, buttonLabel } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
@@ -35,11 +35,12 @@ export class ErrorPage403 extends React.Component<Properties> {
     return (
       <div style={PAGE_CONTAINER_STYLE} >
         <div style={containerStyle} >
-          <h1 style={H1_STYLE} >403 Error</h1>
-          <h2 style={H2_STYLE} >
-            Sorry! You do not have permission to access this page
-          </h2>
-          <p style={P_STYLE} >Let’s head back to the home.</p>
+          <h1 style={H1_STYLE} >404 Error</h1>
+          <h2 style={H2_STYLE} >Seems like there’s nothing here</h2>
+          <p style={P_STYLE} >
+            We cannot find the page you were looking for. Let’s head back to 
+            the home.
+          </p>
           <PrimaryButtonNavLink
             to='/'
             label={buttonLabel}
@@ -47,7 +48,7 @@ export class ErrorPage403 extends React.Component<Properties> {
           />
           <img
             style={imageStyle}
-            src='resources/error_page/images/403.jpg'
+            src='resources/error_page/images/404.jpg'
             alt='Image'
           />
         </div>
@@ -163,11 +164,11 @@ const DESKTOP_BUTTON_STYLE: React.CSSProperties = {
 const MOBILE_IMAGE_STYLE: React.CSSProperties = {
   width: '100%',
   objectFit: 'contain',
-  height: '394px'
+  height: '403px'
 };
 
 const IMAGE_STYLE: React.CSSProperties = {
   width: '600px',
-  height: '491px',
+  height: '403px',
   objectFit: 'contain'
 };

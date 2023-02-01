@@ -13,7 +13,7 @@ import { DeletedAccountSurveyPageController
 } from './deleted_account_survey_page';
 import { DiningEventPageController } from './dining_event_page';
 import { EditProfilePageController } from './edit_profile_page';
-import { ErrorPage403 } from './error_page';
+import { ErrorPage403, ErrorPage404 } from './error_page';
 import { ForgotPasswordPageController } from './forgot_password_page';
 import { HelpPage } from './help_page';
 import { HomePageController } from './home_page';
@@ -149,6 +149,10 @@ export class ApplicationController extends React.Component<Properties, State> {
               render={this.renderErrorPage403}
             />
             <Router.Route
+              path='/error_page_404'
+              render={this.renderErrorPage404}
+            />
+            <Router.Route
               path='/users/edit_profile/:id'
               render={this.renderEditProfilePage}
             />
@@ -208,7 +212,7 @@ export class ApplicationController extends React.Component<Properties, State> {
               path='/'
               render={this.renderHomePage}
             />
-            <Router.Route render={this.renderPageNotFound} />
+            <Router.Route render={this.renderErrorPage404} />
           </Router.Switch>
         </Shell>
       </div>);
@@ -447,12 +451,12 @@ export class ApplicationController extends React.Component<Properties, State> {
     />;
   }
 
-  private renderPageNotFound = () => {
-    return <div>Page Not Found</div>;
-  }
-
   private renderErrorPage403 = () => {
     return <ErrorPage403 displayMode={this.state.displayMode} />;
+  }
+
+  private renderErrorPage404 = () => {
+    return <ErrorPage404 displayMode={this.state.displayMode} />;
   }
 
   private handleHeaderAndFooter = (pathname: string) => {
