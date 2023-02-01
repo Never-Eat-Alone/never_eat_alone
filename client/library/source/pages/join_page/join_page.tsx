@@ -378,8 +378,8 @@ const IMAGE_STYLE: React.CSSProperties = {
 };
 
 const DESKTOP_IMAGE_STYLE: React.CSSProperties = {
-  minWidth: '750px',
-  maxWidth: 'calc(100% - 521px - calc(100% - 1366px) / 2)',
+  minWidth: '744px',
+  maxWidth: 'calc(100% / 2 - 164px)',
   minHeight: '708px'
 };
 
