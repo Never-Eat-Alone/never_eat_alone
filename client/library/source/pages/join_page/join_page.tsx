@@ -12,8 +12,6 @@ interface Properties {
 
   page: JoinPage.Page;
 
-  email: string;
-
   /** Indicates the Join button is clicked. */
   onJoin: (name: string, email: string, referralCode: string) => void;
 }
@@ -32,7 +30,7 @@ export class JoinPage extends React.Component<Properties, State> {
     super(props);
     this.state = {
       name: '',
-      email: this.props.email,
+      email: '',
       referralCode: '',
       nameErrorCode: JoinPage.NameErrorCode.NONE,
       emailErrorCode: JoinPage.EmailErrorCode.NONE
@@ -86,7 +84,21 @@ export class JoinPage extends React.Component<Properties, State> {
       if (this.props.page === JoinPage.Page.REQUEST_SENT) {
         return (
           <div style={containerStyle} >
-          
+            <div style={EMAIL_SENT_ICON_CONTAINER_STYLE} >
+              <img
+                style={EMAIL_SENT_ICON_STYLE}
+                src='resources/join_page/icons/email_sent.svg'
+                alt='Email Sent Icon'
+              />
+            </div>
+            <div style={HEADING_TEXT_STYLE} >Request sent!</div>
+            <div style={TEXT_STYLE} >
+              You should receive an email confirmation to
+            </div>
+            <div style={EMAIL_TEXT_STYLE} >{this.state.email}</div>
+            <div style={LAST_LINE_TEXT_STYLE} >
+              We can’t wait to have you in the NEA community!
+            </div>
           </div>);
       }
       return (
@@ -366,8 +378,8 @@ const IMAGE_STYLE: React.CSSProperties = {
 };
 
 const DESKTOP_IMAGE_STYLE: React.CSSProperties = {
-  minWidth: '750px',
-  maxWidth: 'calc(100% - 521px - calc(100% - 1366px) / 2)',
+  minWidth: '744px',
+  maxWidth: 'calc(100% / 2 - 164px)',
   minHeight: '708px'
 };
 
@@ -375,4 +387,39 @@ const TABLET_IMAGE_STYLE: React.CSSProperties = {
   minWidth: '392px',
   maxWidth: '734px',
   minHeight: '708px'
+};
+
+const EMAIL_SENT_ICON_CONTAINER_STYLE: React.CSSProperties = {
+  width: '80px',
+  height: '40px'
+};
+
+const EMAIL_SENT_ICON_STYLE: React.CSSProperties = {
+  backgroundColor: 'transparent',
+  minWidth: '80px',
+  width: '100%',
+  objectFit: 'cover'
+};
+
+const EMAIL_TEXT_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  fontSize: '14px',
+  lineHeight: '24px',
+  height: '24px',
+  textAlign: 'center',
+  color: '#000000'
+};
+
+const LAST_LINE_TEXT_STYLE: React.CSSProperties = {
+  marginTop: '24px',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '24px',
+  height: '24px',
+  textAlign: 'center',
+  color: '#000000'
 };

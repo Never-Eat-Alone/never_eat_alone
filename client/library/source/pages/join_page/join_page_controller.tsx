@@ -12,9 +12,6 @@ interface Properties {
 }
 
 interface State {
-  name: string;
-  email: string;
-  referralCode: string;
   errorCode: JoinPage.ErrorCode;
   page: JoinPage.Page
 }
@@ -24,9 +21,6 @@ export class JoinPageController extends React.Component<Properties, State> {
     super(props);
     this.state = {
       errorCode: JoinPage.ErrorCode.NONE,
-      name: '',
-      email: '',
-      referralCode: '',
       page: JoinPage.Page.INITIAL
     };
   }
