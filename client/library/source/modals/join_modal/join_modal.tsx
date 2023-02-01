@@ -203,10 +203,10 @@ export class JoinModal extends React.Component<Properties , State> {
       this.setState({ emailErrorCode: JoinModal.EmailErrorCode.EMPTY });
       return false;
     } else if (!EmailValidator.validate(this.state.email)) {
-      this.setState({ emailErrorCode: JoinModal.EmailErrorCode.NOT_AN_EMAIL});
+      this.setState({ emailErrorCode: JoinModal.EmailErrorCode.NOT_AN_EMAIL });
       return false;
     } else {
-      this.setState({ emailErrorCode: JoinModal.EmailErrorCode.NONE});
+      this.setState({ emailErrorCode: JoinModal.EmailErrorCode.NONE });
       return true;
     }
   }

@@ -3,8 +3,8 @@ import * as Router from 'react-router-dom';
 import { Modal } from '../components';
 import { DisplayMode, getDisplayMode, User, UserProfileImage, UserStatus
 } from '../definitions';
-import { InviteAFoodieModalController, JoinController, LogInModalController,
-  PartnerWithUsModalController } from '../modals';
+import { InviteAFoodieModalController, JoinModalController,
+  LogInModalController, PartnerWithUsModalController } from '../modals';
 import { ApplicationModel } from './application_model';
 import { DeactivateAccountSurveyPageController }
 from './deactivate_account_survey_page';
@@ -17,6 +17,7 @@ import { ForgotPasswordPageController } from './forgot_password_page';
 import { HelpPage } from './help_page';
 import { HomePageController } from './home_page';
 import { InviteAFoodiePageController } from './invite_a_foodie_page';
+import { JoinPageController } from './join_page';
 import { LogInPageController } from './log_in_page';
 import { PartnerWithUsController } from './partner_with_us_page';
 import { PrivacyPolicyPage } from './privacy_policy_page';
@@ -75,7 +76,7 @@ export class ApplicationController extends React.Component<Properties, State> {
     const pathname = this.props.location.pathname;
     const JoinModal = (this.state.isJoinButtonClicked &&
       <Modal>
-        <JoinController
+        <JoinModalController
           displayMode={this.state.displayMode}
           model={this.props.model.joinModel}
           onClose={this.handleJoinModalClose}
@@ -157,6 +158,10 @@ export class ApplicationController extends React.Component<Properties, State> {
             <Router.Route
               path='/invite_a_foodie'
               render={this.renderInviteAFoodie}
+            />
+            <Router.Route
+              path='/join'
+              render={this.renderJoin}
             />
             <Router.Route
               path='/log_in'
@@ -310,6 +315,13 @@ export class ApplicationController extends React.Component<Properties, State> {
         displayMode={this.state.displayMode}
         account={this.state.account}
         model={this.props.model.getEditProfilePageModel(id)}
+    />;
+  }
+
+  private renderJoin = () => {
+    return <JoinPageController
+      displayMode={this.state.displayMode}
+      model={this.props.model.joinModel}
     />;
   }
 
