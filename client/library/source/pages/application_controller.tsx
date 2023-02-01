@@ -13,7 +13,7 @@ import { DeletedAccountSurveyPageController
 } from './deleted_account_survey_page';
 import { DiningEventPageController } from './dining_event_page';
 import { EditProfilePageController } from './edit_profile_page';
-import { ErrorPage403, ErrorPage404 } from './error_page';
+import { ErrorPage403, ErrorPage404, ErrorPage500 } from './error_page';
 import { ForgotPasswordPageController } from './forgot_password_page';
 import { HelpPage } from './help_page';
 import { HomePageController } from './home_page';
@@ -69,7 +69,7 @@ export class ApplicationController extends React.Component<Properties, State> {
 
   public render(): JSX.Element {
     if (this.state.hasError) {
-      return <div>Error Page</div>;
+      return <ErrorPage500 displayMode={this.state.displayMode} />;
     }
     if (!this.state.isLoaded) {
       return <div />;
@@ -151,6 +151,10 @@ export class ApplicationController extends React.Component<Properties, State> {
             <Router.Route
               path='/error_page_404'
               render={this.renderErrorPage404}
+            />
+            <Router.Route
+              path='/error_page_500'
+              render={this.renderErrorPage500}
             />
             <Router.Route
               path='/users/edit_profile/:id'
@@ -458,6 +462,10 @@ export class ApplicationController extends React.Component<Properties, State> {
 
   private renderErrorPage404 = () => {
     return <ErrorPage404 displayMode={this.state.displayMode} />;
+  }
+
+  private renderErrorPage500 = () => {
+    return <ErrorPage500 displayMode={this.state.displayMode} />;
   }
 
   private handleHeaderAndFooter = (pathname: string) => {
