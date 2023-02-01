@@ -209,6 +209,7 @@ export class ApplicationController extends React.Component<Properties, State> {
               render={this.renderWhatIsNea}
             />
             <Router.Route
+              exact
               path='/'
               render={this.renderHomePage}
             />
