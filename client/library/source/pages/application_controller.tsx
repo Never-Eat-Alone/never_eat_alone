@@ -26,6 +26,7 @@ import { ProfilePageController } from './profile_page';
 import { SettingsPageController } from './settings_page';
 import { Shell } from './shell';
 import { SignUpPageController } from './sign_up_page';
+import { SitemapPage } from './sitemap_page';
 import { TermsOfUsePage } from './terms_of_use_page';
 import { WhatIsNeaPage } from './what_is_nea_page';
 
@@ -445,7 +446,7 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private renderSiteMap = () => {
-    return <div>Site Map</div>;
+    return <SitemapPage />;
   }
 
   private renderLogIn = () => {
