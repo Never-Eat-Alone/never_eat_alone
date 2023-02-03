@@ -20,8 +20,7 @@ const CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'center',
   backgroundColor: '#FFFFFF',
-  overflow: 'initial',
-  minHeight: '650px'
+  overflow: 'initial'
 };
 
 const IMAGE_STYLE: React.CSSProperties = {
