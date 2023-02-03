@@ -96,18 +96,6 @@ export class PartnerWithUsMessageSentPage extends React.Component<Properties,
         </div>
       </div>);
   }
-
-  public componentDidMount(): void {
-    this._timeOutId = setTimeout(() => {
-      this.setState({ isRedirect: true });
-    }, 1500);
-  }
-
-  public componentWillUnmount(): void {
-    clearTimeout(this._timeOutId);
-  }
-
-  private _timeOutId: NodeJS.Timeout;
 }
 
 const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
@@ -174,7 +162,7 @@ const DESKTOP_HEADER_FORM_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
-  alignItems: 'space-between',
+  alignItems: 'flex-start',
   width: '740px',
   marginTop: '0px'
 };

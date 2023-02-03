@@ -101,12 +101,10 @@ export class PartnerWithUsMessageSentModal extends React.Component<Properties> {
   }
 
   public componentDidMount(): void {
-    this._timeOutId = setTimeout(() => { this.props.onClose() }, 1500);
     document.addEventListener('mousedown', this.handleClickOutside);
   }
 
   public componentWillUnmount(): void {
-    clearTimeout(this._timeOutId);
     document.removeEventListener('mousedown', this.handleClickOutside);
   }
 
@@ -119,7 +117,6 @@ export class PartnerWithUsMessageSentModal extends React.Component<Properties> {
     }
   }
 
-  private _timeOutId: NodeJS.Timeout;
   private _containerRef: React.RefObject<HTMLDivElement>;
 }
 
@@ -145,7 +142,7 @@ const CLOSE_BUTTON_STYLE: React.CSSProperties = {
 
 const MOBILE_CLOSE_BUTTON_STYLE: React.CSSProperties = {
   ...CLOSE_BUTTON_STYLE,
-  right: '8px'
+  right: '10px'
 };
 
 const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
@@ -222,15 +219,19 @@ const DESKTOP_HEADER_FORM_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
-  alignItems: 'space-between',
+  alignItems: 'flex-start',
   width: '100%',
-  marginTop: '0px'
+  marginTop: '0px',
+  paddingLeft: '50px',
+  paddingRight: '50px'
 };
 
 const TABLET_HEADER_FORM_STYLE: React.CSSProperties = {
   ...DESKTOP_HEADER_FORM_STYLE,
   width: '100%',
-  marginTop: '0px'
+  marginTop: '0px',
+  paddingLeft: '20px',
+  paddingRight: '20px'
 };
 
 const MOBILE_HEADER_FORM_STYLE: React.CSSProperties = {
