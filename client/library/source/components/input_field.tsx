@@ -52,7 +52,7 @@ export function EmailInputField(props: InputFieldWithIconProperties) {
       {...props}
       type='email'
       name='email'
-      iconSrc='resources/input_field/icons/email.svg'
+      iconSrc='resources/icons/email.svg'
       iconAlt='Email Icon'
     />);
 }
@@ -100,7 +100,7 @@ export function NameInputField(props: InputFieldWithIconProperties) {
       {...props}
       type='text'
       name='name'
-      iconSrc='resources/input_field/icons/name.svg'
+      iconSrc='resources/icons/name.svg'
       iconAlt='Name Icon'
     />);
 }

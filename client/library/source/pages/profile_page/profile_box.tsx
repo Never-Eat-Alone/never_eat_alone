@@ -233,8 +233,21 @@ const PROFILE_IMAGE_STYLE: React.CSSProperties = {
 };
 
 const DISPLAY_NAME_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'flex-start',
+  flexWrap: 'wrap',
   margin: '10px 0px 0px 0px',
-  padding: '0px'
+  padding: '0px',
+  fontFamily: 'Oswald',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '26px',
+  lineHeight: '39px',
+  textAlign: 'center',
+  textTransform: 'capitalize',
+  color: '#000000'
 };
 
 const USER_NAME_STYLE: React.CSSProperties = {
