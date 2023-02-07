@@ -12,3 +12,15 @@ client/tests/**/application/
 client/application/application/
 client/library/library/
 client/tests/ui_catalog/library
+
+# Ignore all text files
+*.txt
+
+# Ignore files related to API keys
+.env
+*.lock
+
+**/server/application/
+**/.swp
+
+server/config.default.json

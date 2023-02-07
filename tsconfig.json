@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "build",
+    "types": [
+      "node"
+    ],
+  },
+  "include": [
+    "/**/*.ts",
+    "/**/*.ts"
+  ]
+}
