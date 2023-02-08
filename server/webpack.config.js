@@ -1,5 +1,6 @@
 const path = require('path');
 module.paths.push(path.resolve(process.cwd(), 'node_modules'));
+const nodeExternals = require('webpack-node-externals');
 const PROD = JSON.parse(process.env.PROD_ENV || '0');
 module.exports = {
   devtool: PROD ? false : 'source-map',
@@ -27,23 +28,8 @@ module.exports = {
   },
   resolve: {
     symlinks: false,
-    extensions: ['.ts', '.js', '.json'],
-    fallback: {
-      'fs': false,
-      'path': false,
-      'zlib': false,
-      'querystring': false,
-      'util': false,
-      'url': false,
-      'net': false,
-      'tls': false,
-      'dns': false,
-      'pg-native': false,
-      'crypto': false,
-      'assert': false,
-      'stream': false,
-      'http': false,
-      'buffer': false
-    }
-  }
+    extensions: ['.ts', '.js', '.json']
+  },
+  target: 'node',
+  externals: [nodeExternals]
 };
