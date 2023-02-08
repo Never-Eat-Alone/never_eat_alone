@@ -24,7 +24,7 @@ const initializePostgres = async (pool, dir, label) => {
         return [null, null];
       }
     })();
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
       pool.query(isValue, (error, results) => {
         if (error) {
           reject(error);
