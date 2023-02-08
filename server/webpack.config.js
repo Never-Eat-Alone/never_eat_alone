@@ -27,6 +27,23 @@ module.exports = {
   },
   resolve: {
     symlinks: false,
-    extensions: ['.ts', '.js', '.json']
+    extensions: ['.ts', '.js', '.json'],
+    fallback: {
+      'fs': false,
+      'path': false,
+      'zlib': false,
+      'querystring': false,
+      'util': false,
+      'url': false,
+      'net': false,
+      'tls': false,
+      'dns': false,
+      'pg-native': false,
+      'crypto': false,
+      'assert': false,
+      'stream': false,
+      'http': false,
+      'buffer': false
+    }
   }
 };
