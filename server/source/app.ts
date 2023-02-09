@@ -3,7 +3,7 @@ import * as Cors from 'cors';
 import * as Express from 'express';
 import * as Session from 'express-session';
 import * as fs from 'fs';
-import * as Helmet from 'helmet';
+import Helmet from 'helmet';
 import * as Path from 'path';
 import { Pool } from 'pg';
 import * as SGMail from '@sendgrid/mail';
@@ -52,7 +52,7 @@ const initializePostgres = async (pool, dir, label) => {
 function runExpress(pool: Pool, config: any) {
   const app = Express();
   app.use(Helmet({
-    contentSecurityPolicy: false,
+      contentSecurityPolicy: false,
   }));
   app.use(Bodyparser.json());
   app.use(Cors(
@@ -90,6 +90,7 @@ function runExpress(pool: Pool, config: any) {
     session.cookie.secure = true // serve secure cookies
   }
   app.use(Session(session));
+  
   app.get('*', (request, response, next) => {
     response.sendFile(Path.join(process.cwd(), 'public', 'index.html'));
   });
