@@ -1,13 +1,13 @@
 import * as NeverEatAlone from 'never_eat_alone';
 import { AddCreditCardFormErrorCodeInput, ArrayInput, AttendeeInput,
   BooleanInput, CardDetailsFormErrorCodeInput, CityProvinceInput, CSSInput,
-  CuisineInput, DateInput, DateTimeInput, DisplayModeInput, DressCodeInput,
-  EventCardSummaryInput, EventTagInput, ForgotPasswordPageErrorCodeInput,
-  HomePageErrorCodeInput, JoinEventModalErrorCodeInput, LanguageInput,
-  LocationInput, NumberInput, PaymentCardInput, PaymentRecordInput,
-  RestaurantInput, SeatingInput, SignUpPageErrorCodeInput, SocialAccountInput,
-  SocialAccountTypeInput, SocialMediaImageInput, TextInput, UserInput
-} from '../viewer/propertyInput';
+  CuisineInput, CoverImageInput, DateInput, DateTimeInput, DisplayModeInput,
+  DressCodeInput, EventCardSummaryInput, EventTagInput,
+  ForgotPasswordPageErrorCodeInput, HomePageErrorCodeInput,
+  JoinEventModalErrorCodeInput, LanguageInput, LocationInput, NumberInput,
+  PaymentCardInput, PaymentRecordInput, RestaurantInput, SeatingInput,
+  SignUpPageErrorCodeInput, SocialAccountInput, SocialAccountTypeInput,
+  SocialMediaImageInput, TextInput, UserInput } from '../viewer/propertyInput';
 import { ComponentSchema, PropertySchema, SignalSchema } from './schemas';
 
 /** Loads the complete list of schemas available to test. */
@@ -1199,19 +1199,31 @@ export function loadComponentSchemas(): ComponentSchema[] {
   const editProfilePageSchema = new ComponentSchema('EditProfilePage', [
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
       DisplayModeInput),
-    new PropertySchema('coverImageSrc',
-      'resources/profile_page/images/default_banner_2.jpg', TextInput),
-    new PropertySchema('profileImageSrc', 'resources/images/profileguy5.jpeg',
-      TextInput),
     new PropertySchema('displayName', 'Casper Host', TextInput),
     new PropertySchema('userName', '@120498509', TextInput),
+    new PropertySchema('profileUserId', 1, NumberInput),
+    new PropertySchema('coverImage', new NeverEatAlone.CoverImage(2,
+      'resources/profile_page/images/default_banner_2.jpg', 'Image'),
+      CoverImageInput),
+    new PropertySchema('coverImageList', [
+        new NeverEatAlone.CoverImage(2,
+          'resources/profile_page/images/default_banner_2.jpg', 'Cover'),
+        new NeverEatAlone.CoverImage(1,
+          'resources/profile_page/images/default_banner_1.jpg', 'Cover'),
+        new NeverEatAlone.CoverImage(3,
+          'resources/profile_page/images/default_banner_3.jpg', 'Cover'),
+        new NeverEatAlone.CoverImage(4,
+          'resources/profile_page/images/default_banner_4.jpg', 'Cover')
+      ],
+      ArrayInput(new PropertySchema('coverImage', new NeverEatAlone.CoverImage(
+        2, 'resources/profile_page/images/default_banner_2.jpg', 'Cover'),
+        CoverImageInput))),
+    new PropertySchema('profileImageSrc', 'resources/images/profileguy5.jpeg',
+      TextInput),
     new PropertySchema('isUpcomingEventsPrivate', false, BooleanInput),
     new PropertySchema('isPastEventsPrivate', true, BooleanInput),
     new PropertySchema('isLocationPrivate', false, BooleanInput),
     new PropertySchema('locationValue', 'Toronto, ON, CA', TextInput),
-    new PropertySchema('facebookInputIsValid', true, BooleanInput),
-    new PropertySchema('twitterInputIsValid', true, BooleanInput),
-    new PropertySchema('instagramInputIsValid', true, BooleanInput),
     new PropertySchema('suggestedLocationList', [
       NeverEatAlone.CityProvince.defaultLocation(),
       new NeverEatAlone.CityProvince(2, 'Ottawa', 'ON', 'CA')], ArrayInput(
@@ -1251,27 +1263,34 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('isInstagramPrivate', false, BooleanInput),
     new PropertySchema('facebookLink', '', TextInput),
     new PropertySchema('twitterLink', '', TextInput),
-    new PropertySchema('instagramLink', '', TextInput)
+    new PropertySchema('instagramLink', '', TextInput),
+    new PropertySchema('facebookInputIsValid', true, BooleanInput),
+    new PropertySchema('twitterInputIsValid', true, BooleanInput),
+    new PropertySchema('instagramInputIsValid', true, BooleanInput),
     ], [
     new SignalSchema('onLocationInputChange', '', []),
     new SignalSchema('onLocationPrivacyClick', '', []),
+    new SignalSchema('onLocationDropdownClick', '', []),
     new SignalSchema('onChangeProfileImageClick', '', []),
     new SignalSchema('onChangeBanner', '', []),
     new SignalSchema('onUpcomingEventPrivacyClick', '', []),
     new SignalSchema('onPastEventPrivacyClick', '', []),
     new SignalSchema('onLanguagePrivacyClick', '', []),
     new SignalSchema('onLanguageInputChange', '', []),
+    new SignalSchema('onLanguageDropdownClick', '', []),
+    new SignalSchema('onRemoveLanguageClick', '', []),
     new SignalSchema('onBiographyPrivacyClick', '', []),
     new SignalSchema('onBiographyInputChange', '', []),
     new SignalSchema('onCuisinePrivacyClick', '', []),
     new SignalSchema('onCuisineInputChange', '', []),
+    new SignalSchema('onCuisineDropdownClick', '', []),
+    new SignalSchema('onRemoveCuisineClick', '', []),
     new SignalSchema('onFacebookPrivacyClick', '', []),
     new SignalSchema('onFacebookInputChange', '', []),
     new SignalSchema('onTwitterPrivacyClick', '', []),
     new SignalSchema('onTwitterInputChange', '', []),
     new SignalSchema('onInstagramPrivacyClick', '', []),
     new SignalSchema('onInstagramInputChange', '', []),
-    new SignalSchema('onLocationDropdownClick', '', []),
     new SignalSchema('onSaveClick', '', []),
     new SignalSchema('onCancelClick', '', [])
   ], NeverEatAlone.EditProfilePage);
