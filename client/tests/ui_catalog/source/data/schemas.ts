@@ -105,7 +105,7 @@ export class SignalSchema {
     if(parameters === undefined) {
       this._parameters = [];
     } else {
-      this._parameters = parameters?.slice();
+      this._parameters = parameters.slice();
     }
   }
 
