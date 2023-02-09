@@ -54,7 +54,7 @@ export class UICatalog extends React.Component<Properties, State> {
           localProperties.push(signal.parameters[i].propertyName);
           localParameters.push(signal.parameters[i].parameterName);
         }
-        newValues[signal.name] = (...localParameters: any) =>
+        newValues[signal.name] = (...localParameters: any[]) =>
           this.onMixedSignal(signal.name, localProperties, ...localParameters);
       } else if(signal.propertyName === '') {
         newValues[signal.name] = () =>
