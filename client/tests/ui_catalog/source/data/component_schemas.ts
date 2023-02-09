@@ -4,10 +4,11 @@ import { AddCreditCardFormErrorCodeInput, ArrayInput, AttendeeInput,
   CuisineInput, CoverImageInput, DateInput, DateTimeInput, DisplayModeInput,
   DressCodeInput, EventCardSummaryInput, EventTagInput,
   ForgotPasswordPageErrorCodeInput, HomePageErrorCodeInput,
-  JoinEventModalErrorCodeInput, LanguageInput, LocationInput, NumberInput,
-  PaymentCardInput, PaymentRecordInput, RestaurantInput, SeatingInput,
-  SignUpPageErrorCodeInput, SocialAccountInput, SocialAccountTypeInput,
-  SocialMediaImageInput, TextInput, UserInput } from '../viewer/propertyInput';
+  JoinEventModalErrorCodeInput, LanguageInput, LocationInput,
+  LogInModalErrorCodeInput, NumberInput, PaymentCardInput, PaymentRecordInput,
+  RestaurantInput, SeatingInput, SignUpPageErrorCodeInput, SocialAccountInput,
+  SocialAccountTypeInput, SocialMediaImageInput, TextInput, UserInput,
+  UserProfileImageInput } from '../viewer/propertyInput';
 import { ComponentSchema, PropertySchema, SignalSchema } from './schemas';
 
 /** Loads the complete list of schemas available to test. */
@@ -698,21 +699,30 @@ export function loadComponentSchemas(): ComponentSchema[] {
     [new SignalSchema('onClose', '', [])], NeverEatAlone.JoinRequestSentModal);
   const signUpPageSchema = new ComponentSchema('SignUpPage', [
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
-    DisplayModeInput),
+      DisplayModeInput),
     new PropertySchema('email', 'sh@gmail.com', TextInput),
     new PropertySchema('errorCode', NeverEatAlone.SignUpPage.ErrorCode.NONE,
-    SignUpPageErrorCodeInput),
-    new PropertySchema('style', {}, CSSInput)], [
-    new SignalSchema('onSignUp', '', [])],
+      SignUpPageErrorCodeInput)], [new SignalSchema('onSignUp', '', [])],
     NeverEatAlone.SignUpPage);
   const profileSetUpPageSchema = new ComponentSchema('ProfileSetUpPage', [
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.DESKTOP,
-    DisplayModeInput),
-    new PropertySchema('imageSrc',
-      'resources/profile_set_up_page/icons/profile-image-0.svg', TextInput),
-    new PropertySchema('displayName', 'Riley Spire', TextInput)
-    ], [new SignalSchema('onLetsGoClick', '', []),
-    new SignalSchema('onUploadImageClick', '', [])],
+      DisplayModeInput),
+    new PropertySchema('displayName', 'Riley Spire', TextInput),
+    new PropertySchema('selectedImage', new NeverEatAlone.UserProfileImage(
+      1, 1, 'resources/profile_set_up_page/icons/profile-image-0.svg'),
+      UserProfileImageInput),
+    new PropertySchema('avatars', [new NeverEatAlone.UserProfileImage(1, 1,
+      'resources/profile_set_up_page/icons/profile-image-0.svg'),
+      new NeverEatAlone.UserProfileImage(1, 2,
+        'resources/profile_set_up_page/icons/profile-image-1.svg')],
+      ArrayInput(new PropertySchema('selectedImage',
+        new NeverEatAlone.UserProfileImage(1, 1,
+        'resources/profile_set_up_page/icons/profile-image-0.svg'),
+        UserProfileImageInput)))], [
+    new SignalSchema('onLetsGoClick', '', []),
+    new SignalSchema('onUploadImageClick', '', []),
+    new SignalSchema('onAvatarClick', '', []),
+    new SignalSchema('onDisplayNameChange', '', [])],
     NeverEatAlone.ProfileSetUpPage);
   const avatarWithCheckMarkSchema = new ComponentSchema('AvatarWithCheckMark',
     [new PropertySchema('imageSrc',
@@ -737,17 +747,16 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new SignalSchema('onClick', '' , [])], NeverEatAlone.FacebookLogInButton);
   const logInModalSchema = new ComponentSchema('LogInModal', [
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
-    DisplayModeInput),
-    new PropertySchema('formErrorMessage', '', TextInput),
-    new PropertySchema('modalErrorMessage', '', TextInput),
-    new PropertySchema('googleErrorMessage', '', TextInput),
-    new PropertySchema('facebookErrorMessage', '', TextInput),
-    ], [new SignalSchema('onLogIn', '', []),
+      DisplayModeInput),
+    new PropertySchema('email', 'emma@gmail.com', TextInput),
+    new PropertySchema('password', '', TextInput),
+    new PropertySchema('rememberMe', false, BooleanInput),
+    new PropertySchema('errorCode', NeverEatAlone.LogInModal.ErrorCode.NONE,
+      LogInModalErrorCodeInput)],
+    [new SignalSchema('onLogIn', '', []),
     new SignalSchema('onClose', '', []),
-    new SignalSchema('onForgotPassword', '', []),
-    new SignalSchema('onGoogleLogInClick', '', []),
-    new SignalSchema('onFacebookLogInClick', '', [])],
-    NeverEatAlone.LogInModal);
+    new SignalSchema('onGoogleLogIn', '', []),
+    new SignalSchema('onFacebookLogIn', '', [])], NeverEatAlone.LogInModal);
   const forgotPasswordPageSchema = new ComponentSchema('ForgotPasswordPage',
     [new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
       DisplayModeInput),
