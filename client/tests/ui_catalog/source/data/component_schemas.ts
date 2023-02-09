@@ -750,10 +750,11 @@ export function loadComponentSchemas(): ComponentSchema[] {
     NeverEatAlone.LogInModal);
   const forgotPasswordPageSchema = new ComponentSchema('ForgotPasswordPage',
     [new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
-    DisplayModeInput),
+      DisplayModeInput),
     new PropertySchema('errorCode',
-    NeverEatAlone.ForgotPasswordPage.ErrorCode.NONE,
-    ForgotPasswordPageErrorCodeInput)],
+      NeverEatAlone.ForgotPasswordPage.ErrorCode.NONE,
+      ForgotPasswordPageErrorCodeInput),
+    new PropertySchema('email', 'arthur@gmail.com', TextInput)],
     [new SignalSchema('onSendLinkClick', '', [])],
     NeverEatAlone.ForgotPasswordPage);
   const forgotPasswordLinkSentPageSchema = new ComponentSchema(
