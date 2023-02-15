@@ -9,7 +9,7 @@ export class HttpHeaderModel extends HeaderModel {
   }
 
   public async load(): Promise<void> {
-    const response = await fetch(`/profile_image/${this._account.id}`);
+    const response = await fetch(`/api/profile_image/${this._account.id}`);
     const profileImageSrc = await response.json();
     this._model = new LocalHeaderModel(profileImageSrc);
     this._model.load();

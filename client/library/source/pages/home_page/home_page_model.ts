@@ -7,9 +7,9 @@ export abstract class HomePageModel {
    * any other method of this class.
    */
   public abstract load(): Promise<void>;
-  public abstract getImageList(): SocialMediaImage[];
-  public abstract getEventList(): EventCardSummary[];
-  public abstract getEventTagList(): EventTag[];
-  public abstract getUserFutureEventList(): EventCardSummary[];
-  public abstract getTotalEventsThisMonth(): number;
+  public abstract get imageList(): SocialMediaImage[];
+  public abstract get eventList(): EventCardSummary[];
+  public abstract get eventTagList(): EventTag[];
+  public abstract get userFutureEventList(): EventCardSummary[];
+  public abstract get totalEventsThisMonth(): number;
 }

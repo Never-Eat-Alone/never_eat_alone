@@ -9,7 +9,7 @@ import { DeletedAccountSurveyModel } from './deleted_account_survey_page';
 import { DiningEventPageModel } from './dining_event_page';
 import { EditProfilePageModel } from './edit_profile_page';
 import { ForgotPasswordPageModel } from './forgot_password_page';
-import { HomePageModel } from './home_page';
+import { HomePageModel, HttpHomePageModel } from './home_page';
 import { LocalApplicationModel } from './local_application_model';
 import { PartnerWithUsModel } from './partner_with_us_page';
 import { ProfilePageModel } from './profile_page';
@@ -18,14 +18,14 @@ import { SignUpPageModel } from './sign_up_page';
 
 export class HttpApplicationModel extends ApplicationModel {
   public async load(): Promise<void> {
-    const accountResponse = await fetch('/current_user');
+    const accountResponse = await fetch('/api/current_user');
     let account = User.makeGuest();
     if (accountResponse.status === 200) {
       const accountJson = await accountResponse.json();
       account = User.fromJson(accountJson);
     }
     const headerModel = new HttpHeaderModel(account);
-    const homePageModel:HomePageModel;
+    const homePageModel = new HttpHomePageModel(account);
     const inviteAFoodieModel: InviteAFoodieModel;
     const joinModel: JoinModel;
     const partnerWithUsModel: PartnerWithUsModel;

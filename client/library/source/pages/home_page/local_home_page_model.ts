@@ -18,23 +18,23 @@ export class LocalHomePageModel extends HomePageModel {
     return;
   }
 
-  public getImageList(): SocialMediaImage[] {
+  public get imageList(): SocialMediaImage[] {
     return this._imageList;
   }
 
-  public getEventList(): EventCardSummary[] {
+  public get eventList(): EventCardSummary[] {
     return this._eventList;
   }
 
-  public getEventTagList(): EventTag[] {
+  public get eventTagList(): EventTag[] {
     return this._eventTagList;
   }
 
-  public getUserFutureEventList(): EventCardSummary[] {
+  public get userFutureEventList(): EventCardSummary[] {
     return this._userFutureEventList;
   }
 
-  public getTotalEventsThisMonth(): number {
+  public get totalEventsThisMonth(): number {
     return this._totalEventsThisMonth;
   }
 
