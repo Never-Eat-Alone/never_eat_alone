@@ -51,7 +51,6 @@ export class Shell extends React.Component<Properties> {
       <div style={CONTAINER_STYLE} >
         <HeaderController
           account={this.props.account}
-          profileImageSrc={this.props.profileImageSrc}
           displayMode={this.props.displayMode}
           model={this.props.headerModel}
           onLogOut={this.props.onLogOut}

@@ -1,4 +1,5 @@
-import { HeaderModel } from '../components';
+import { HeaderModel, HttpHeaderModel } from '../components';
+import { User } from '../definitions';
 import { InviteAFoodieModel } from '../modals';
 import { JoinModel } from '../modals/join_modal';
 import { LogInModel } from '../modals/log_in_modal';
@@ -17,7 +18,13 @@ import { SignUpPageModel } from './sign_up_page';
 
 export class HttpApplicationModel extends ApplicationModel {
   public async load(): Promise<void> {
-    const headerModel: HeaderModel;
+    const accountResponse = await fetch('/current_user');
+    let account = User.makeGuest();
+    if (accountResponse.status === 200) {
+      const accountJson = await accountResponse.json();
+      account = User.fromJson(accountJson);
+    }
+    const headerModel = new HttpHeaderModel(account);
     const homePageModel:HomePageModel;
     const inviteAFoodieModel: InviteAFoodieModel;
     const joinModel: JoinModel;

@@ -28,6 +28,7 @@ export * from './header_controller';
 export * from './header_logo';
 export * from './header_model';
 export * from './hero';
+export * from './http_header_model';
 export * from './input_field';
 export * from './instagram_button';
 export * from './invite_a_foodie_button';
