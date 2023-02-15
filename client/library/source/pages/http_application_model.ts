@@ -9,6 +9,7 @@ import { DiningEventPageModel } from './dining_event_page';
 import { EditProfilePageModel } from './edit_profile_page';
 import { ForgotPasswordPageModel } from './forgot_password_page';
 import { HomePageModel } from './home_page';
+import { LocalApplicationModel } from './local_application_model';
 import { PartnerWithUsModel } from './partner_with_us_page';
 import { ProfilePageModel } from './profile_page';
 import { SettingsPageModel } from './settings_page';
@@ -16,62 +17,77 @@ import { SignUpPageModel } from './sign_up_page';
 
 export class HttpApplicationModel extends ApplicationModel {
   public async load(): Promise<void> {
-
+    const headerModel: HeaderModel;
+    const homePageModel:HomePageModel;
+    const inviteAFoodieModel: InviteAFoodieModel;
+    const joinModel: JoinModel;
+    const partnerWithUsModel: PartnerWithUsModel;
+    const logInModel: LogInModel;
+    const deletedAccountSurveyModel: DeletedAccountSurveyModel;
+    const deactivateAccountSurveyModel: DeactivateAccountSurveyModel;
+    const forgotPasswordPageModel: ForgotPasswordPageModel;
+    this._model = new LocalApplicationModel(headerModel, homePageModel,
+      inviteAFoodieModel, joinModel, partnerWithUsModel, logInModel,
+      deletedAccountSurveyModel, deactivateAccountSurveyModel,
+      forgotPasswordPageModel);
+    await this._model.load();
   }
 
   public get headerModel(): HeaderModel {
-    return;
+    return this._model.headerModel;
   }
 
   public get homePageModel(): HomePageModel {
-    return;
+    return this._model.homePageModel;
   }
 
   public getDiningEventPageModel(id: number): DiningEventPageModel {
-    return;
+    return this._model.getDiningEventPageModel(id);
   }
 
   public get inviteAFoodieModel(): InviteAFoodieModel {
-    return;
+    return this._model.inviteAFoodieModel;
   }
 
   public get joinModel(): JoinModel {
-    return;
+    return this._model.joinModel;
   }
 
   public get partnerWithUsModel(): PartnerWithUsModel {
-    return;
+    return this._model.partnerWithUsModel;
   }
 
   public get logInModel(): LogInModel {
-    return;
+    return this._model.logInModel;
   }
 
   public getProfilePageModel(id: number): ProfilePageModel {
-    return;
+    return this._model.getProfilePageModel(id);
   }
 
   public getEditProfilePageModel(id: number): EditProfilePageModel {
-    return;
+    return this._model.getEditProfilePageModel(id);
   }
 
   public getSettingsPageModel(id: number): SettingsPageModel {
-    return;
+    return this._model.getSettingsPageModel(id);
   }
 
   public get deletedAccountSurveyModel(): DeletedAccountSurveyModel {
-    return;
+    return this._model.deletedAccountSurveyModel;
   }
 
   public get deactivateAccountSurveyModel(): DeactivateAccountSurveyModel {
-    return;
+    return this._model.deactivateAccountSurveyModel;
   }
 
   public get forgotPasswordPageModel(): ForgotPasswordPageModel {
-    return;
+    return this._model.forgotPasswordPageModel;
   }
 
   public getSignUpPageModel(id: number): SignUpPageModel {
-    return;
+    return this._model.getSignUpPageModel(id);
   }
+
+  private _model: ApplicationModel;
 }

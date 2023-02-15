@@ -128,7 +128,6 @@ export class LocalApplicationModel extends ApplicationModel {
   private _deletedAccountSurveyModel: DeletedAccountSurveyModel;
   private _deactivateAccountSurveyModel: DeactivateAccountSurveyModel;
   private _forgotPasswordPageModel: ForgotPasswordPageModel;
-  private _signUpPageModel: SignUpPageModel;
   private _diningEventPageModelMap: Map<number, DiningEventPageModel>;
   private _profilePageModelMap: Map<number, ProfilePageModel>;
   private _editProfilePageModelMap: Map<number, EditProfilePageModel>;
