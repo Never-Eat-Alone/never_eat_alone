@@ -67,7 +67,7 @@ export class InviteAFoodieModalController extends React.Component<Properties,
           onEmailListChange={this.handleEmailListChange}
           onEmailListFocus={this.handleEmailListOnFocus}
           onEmailListBlur={this.handleEmailListOnBlur}
-          userInvitationCode={this.props.model.getUserInvitationCode()}
+          userInvitationCode={this.props.model.userInvitationCode}
           onSendInviteEmail={this.handleSendInviteEmailClick}
         />);
     }
