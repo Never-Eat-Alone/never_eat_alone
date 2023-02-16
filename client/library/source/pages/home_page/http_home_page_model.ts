@@ -49,6 +49,7 @@ export class HttpHomePageModel extends HomePageModel {
     const userTotalEventsThisMonth = await totalEventsResponse.json();
     this._model = new LocalHomePageModel(imageList, eventList, userEventTagList,
       userFutureEventList, userTotalEventsThisMonth);
+    this._model.load();
   }
 
   public get imageList(): SocialMediaImage[] {
