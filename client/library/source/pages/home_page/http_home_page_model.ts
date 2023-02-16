@@ -26,13 +26,13 @@ export class HttpHomePageModel extends HomePageModel {
         eventList.push(EventCardSummary.fromJson(event));
       }
     }
-    const eventTagList: EventTag[] = [];
+    const userEventTagList: EventTag[] = [];
     const eventTagListResponse = await fetch(
       `/api/home_page/event_tag_list/${this._account.id}`);
     if (eventTagListResponse.status === 200) {
       const eventTagListObject = await eventTagListResponse.json();
       for (const tag of eventTagListObject.eventTagList) {
-        eventTagList.push(EventTag.fromJson(tag));
+        userEventTagList.push(EventTag.fromJson(tag));
       }
     }
     const userFutureEventList: EventCardSummary[] = [];
@@ -45,11 +45,10 @@ export class HttpHomePageModel extends HomePageModel {
       }
     }
     const totalEventsResponse = await fetch(
-      '/api/home_page/total_events_this_month');
-    const totalEventsThisMonth = await totalEventsResponse.json();
-    this._model = new LocalHomePageModel(imageList, eventList, eventTagList,
-      userFutureEventList, totalEventsThisMonth);
-    return;
+      `/api/home_page/total_events_this_month/${this._account.id}`);
+    const userTotalEventsThisMonth = await totalEventsResponse.json();
+    this._model = new LocalHomePageModel(imageList, eventList, userEventTagList,
+      userFutureEventList, userTotalEventsThisMonth);
   }
 
   public get imageList(): SocialMediaImage[] {
@@ -60,16 +59,16 @@ export class HttpHomePageModel extends HomePageModel {
     return this._model.eventList;
   }
 
-  public get eventTagList(): EventTag[] {
-    return this._model.eventTagList;
+  public get userEventTagList(): EventTag[] {
+    return this._model.userEventTagList;
   }
 
   public get userFutureEventList(): EventCardSummary[] {
     return this._model.userFutureEventList;
   }
 
-  public get totalEventsThisMonth(): number {
-    return this._model.totalEventsThisMonth;
+  public get userTotalEventsThisMonth(): number {
+    return this._model.userTotalEventsThisMonth;
   }
 
   private _account: User;
