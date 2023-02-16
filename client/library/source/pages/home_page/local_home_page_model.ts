@@ -4,43 +4,41 @@ import { HomePageModel } from './home_page_model';
 
 export class LocalHomePageModel extends HomePageModel {
   constructor(imageList: SocialMediaImage[], eventList: EventCardSummary[],
-      eventTagList: EventTag[], userFutureEventList: EventCardSummary[],
-      totalEventsThisMonth: number) {
+      userEventTagList: EventTag[], userFutureEventList: EventCardSummary[],
+      userTotalEventsThisMonth: number) {
     super();
     this._imageList = imageList;
     this._eventList = eventList;
-    this._eventTagList = eventTagList;
+    this._userEventTagList = userEventTagList;
     this._userFutureEventList = userFutureEventList;
-    this._totalEventsThisMonth = totalEventsThisMonth;
+    this._userTotalEventsThisMonth = userTotalEventsThisMonth;
   }
 
-  public async load(): Promise<void> {
-    return;
-  }
+  public async load(): Promise<void> {}
 
-  public getImageList(): SocialMediaImage[] {
+  public get imageList(): SocialMediaImage[] {
     return this._imageList;
   }
 
-  public getEventList(): EventCardSummary[] {
+  public get eventList(): EventCardSummary[] {
     return this._eventList;
   }
 
-  public getEventTagList(): EventTag[] {
-    return this._eventTagList;
+  public get userEventTagList(): EventTag[] {
+    return this._userEventTagList;
   }
 
-  public getUserFutureEventList(): EventCardSummary[] {
+  public get userFutureEventList(): EventCardSummary[] {
     return this._userFutureEventList;
   }
 
-  public getTotalEventsThisMonth(): number {
-    return this._totalEventsThisMonth;
+  public get userTotalEventsThisMonth(): number {
+    return this._userTotalEventsThisMonth;
   }
 
   private _imageList: SocialMediaImage[];
   private _eventList: EventCardSummary[];
-  private _eventTagList: EventTag[];
+  private _userEventTagList: EventTag[];
   private _userFutureEventList: EventCardSummary[];
-  private _totalEventsThisMonth: number;
+  private _userTotalEventsThisMonth: number;
 }

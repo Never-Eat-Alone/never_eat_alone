@@ -6,9 +6,7 @@ export class LocalHeaderModel extends HeaderModel {
     this._profileImageSrc = profileImageSrc;
   }
 
-  public async load(): Promise<void> {
-    return;
-  }
+  public async load(): Promise<void> {}
 
   public get profileImageSrc(): string {
     return this._profileImageSrc;

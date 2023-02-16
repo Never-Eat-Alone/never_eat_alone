@@ -42,11 +42,11 @@ export class HomePageController extends React.Component<Properties, State> {
         <HomePage
           displayMode={this.props.displayMode}
           account={this.props.account}
-          imageList={this.props.model.getImageList()}
-          eventList={this.props.model.getEventList()}
-          eventTagList={this.props.model.getEventTagList()}
-          userFutureEventList={this.props.model.getUserFutureEventList()}
-          totalEventsThisMonth={this.props.model.getTotalEventsThisMonth()}
+          imageList={this.props.model.imageList}
+          eventList={this.props.model.eventList}
+          userEventTagList={this.props.model.userEventTagList}
+          userFutureEventList={this.props.model.userFutureEventList}
+          userTotalEventsThisMonth={this.props.model.userTotalEventsThisMonth}
           errorCode={this.state.errorCode}
           onJoinButton={this.props.onJoinButton}
           onPartnerWithUsButton={this.props.onPartnerWithUsButton}
