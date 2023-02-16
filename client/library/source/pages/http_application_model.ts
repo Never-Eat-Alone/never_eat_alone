@@ -1,6 +1,7 @@
 import { HeaderModel, HttpHeaderModel } from '../components';
 import { User } from '../definitions';
-import { InviteAFoodieModel } from '../modals';
+import { HttpInviteAFoodieModel, InviteAFoodieModel
+} from '../modals/invite_a_foodie_modal';
 import { JoinModel } from '../modals/join_modal';
 import { LogInModel } from '../modals/log_in_modal';
 import { ApplicationModel } from './application_model';
@@ -26,7 +27,7 @@ export class HttpApplicationModel extends ApplicationModel {
     }
     const headerModel = new HttpHeaderModel(account);
     const homePageModel = new HttpHomePageModel(account);
-    const inviteAFoodieModel: InviteAFoodieModel;
+    const inviteAFoodieModel = new HttpInviteAFoodieModel(account);
     const joinModel: JoinModel;
     const partnerWithUsModel: PartnerWithUsModel;
     const logInModel: LogInModel;
