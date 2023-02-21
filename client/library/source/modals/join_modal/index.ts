@@ -1,3 +1,4 @@
+export * from './http_join_model';
 export * from './join_modal';
 export * from './join_modal_controller';
 export * from './join_model';

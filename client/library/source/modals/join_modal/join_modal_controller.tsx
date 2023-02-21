@@ -57,7 +57,16 @@ export class JoinModalController extends React.Component<Properties, State> {
   private handleRequestJoin = async (name: string, email: string,
       referralCode: string) => {
     try {
-      await this.props.model.join(name, email, referralCode);
+      const isSent = await this.props.model.join(name, email, referralCode);
+      if (!isSent) {
+        this.setState({
+          name: name,
+          email: email,
+          referralCode: referralCode,
+          errorCode: JoinModal.ErrorCode.NO_CONNECTION,
+          page: JoinModal.Page.INITIAL
+        });
+      }
       this.setState({
         name: name,
         email: email,

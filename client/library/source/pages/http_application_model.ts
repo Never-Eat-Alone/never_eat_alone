@@ -2,7 +2,7 @@ import { HeaderModel, HttpHeaderModel } from '../components';
 import { User } from '../definitions';
 import { HttpInviteAFoodieModel, InviteAFoodieModel
 } from '../modals/invite_a_foodie_modal';
-import { JoinModel } from '../modals/join_modal';
+import { HttpJoinModel, JoinModel } from '../modals/join_modal';
 import { LogInModel } from '../modals/log_in_modal';
 import { ApplicationModel } from './application_model';
 import { DeactivateAccountSurveyModel } from './deactivate_account_survey_page';
@@ -28,7 +28,7 @@ export class HttpApplicationModel extends ApplicationModel {
     const headerModel = new HttpHeaderModel(account);
     const homePageModel = new HttpHomePageModel(account);
     const inviteAFoodieModel = new HttpInviteAFoodieModel(account);
-    const joinModel: JoinModel;
+    const joinModel = new HttpJoinModel();
     const partnerWithUsModel: PartnerWithUsModel;
     const logInModel: LogInModel;
     const deletedAccountSurveyModel: DeletedAccountSurveyModel;
