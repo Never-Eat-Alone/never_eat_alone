@@ -12,7 +12,8 @@ import { EditProfilePageModel } from './edit_profile_page';
 import { ForgotPasswordPageModel } from './forgot_password_page';
 import { HomePageModel, HttpHomePageModel } from './home_page';
 import { LocalApplicationModel } from './local_application_model';
-import { PartnerWithUsModel } from './partner_with_us_page';
+import { HttpPartnerWithUsModel, PartnerWithUsModel
+} from './partner_with_us_page';
 import { ProfilePageModel } from './profile_page';
 import { SettingsPageModel } from './settings_page';
 import { SignUpPageModel } from './sign_up_page';
@@ -29,7 +30,7 @@ export class HttpApplicationModel extends ApplicationModel {
     const homePageModel = new HttpHomePageModel(account);
     const inviteAFoodieModel = new HttpInviteAFoodieModel(account);
     const joinModel = new HttpJoinModel();
-    const partnerWithUsModel: PartnerWithUsModel;
+    const partnerWithUsModel = new HttpPartnerWithUsModel();
     const logInModel: LogInModel;
     const deletedAccountSurveyModel: DeletedAccountSurveyModel;
     const deactivateAccountSurveyModel: DeactivateAccountSurveyModel;
