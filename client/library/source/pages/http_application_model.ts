@@ -3,7 +3,7 @@ import { User } from '../definitions';
 import { HttpInviteAFoodieModel, InviteAFoodieModel
 } from '../modals/invite_a_foodie_modal';
 import { HttpJoinModel, JoinModel } from '../modals/join_modal';
-import { LogInModel } from '../modals/log_in_modal';
+import { HttpLogInModel, LogInModel } from '../modals/log_in_modal';
 import { ApplicationModel } from './application_model';
 import { DeactivateAccountSurveyModel } from './deactivate_account_survey_page';
 import { DeletedAccountSurveyModel } from './deleted_account_survey_page';
@@ -31,7 +31,7 @@ export class HttpApplicationModel extends ApplicationModel {
     const inviteAFoodieModel = new HttpInviteAFoodieModel(account);
     const joinModel = new HttpJoinModel();
     const partnerWithUsModel = new HttpPartnerWithUsModel();
-    const logInModel: LogInModel;
+    const logInModel = new HttpLogInModel();
     const deletedAccountSurveyModel: DeletedAccountSurveyModel;
     const deactivateAccountSurveyModel: DeactivateAccountSurveyModel;
     const forgotPasswordPageModel: ForgotPasswordPageModel;
