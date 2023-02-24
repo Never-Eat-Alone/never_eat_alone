@@ -35,7 +35,7 @@ export class LocalApplicationModel extends ApplicationModel {
 
   public async load(): Promise<void> {
     await Promise.all([this._headerModel.load(), this._homepageModel.load(),
-      this._inviteAFoodieModel.load(), this._partnerWithUsModel.load()]);
+      this._inviteAFoodieModel.load()]);
   }
 
   public get headerModel(): HeaderModel {

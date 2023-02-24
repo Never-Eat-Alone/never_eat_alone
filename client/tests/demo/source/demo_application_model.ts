@@ -273,7 +273,6 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       new NeverEatAlone.UserInvitationCode(1, 1, 'AcFTHD$5Dg'));
     this._joinModel = new DemoJoinModel();
     this._partnerWithUsModel = new NeverEatAlone.LocalPartnerWithUsModel();
-    this._partnerWithUsModel.load();
     this._logInModel = new DemoLogInModel([userEmma, userArthur], [
       emmaProfileImage, arthurProfileImage]);
     this._forgotPasswordPageModel = new DemoForgotPasswordPageModel([userEmma,
