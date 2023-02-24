@@ -55,15 +55,27 @@ export class PartnerWithUsController extends React.Component<Properties,
   private handleEmailSendClick = async (name: string, email: string,
       profileLink: string, message: string) => {
     try {
-      await this.props.model.sendEmail(name, email, profileLink, message);
-      this.setState({
-        name: name,
-        email: email,
-        profileLink: profileLink,
-        message: message,
-        page: PartnerWithUsPage.Page.MESSAGE_SENT,
-        errorCode: PartnerWithUsPage.PageErrorCode.NONE
-      });
+      const isEmailSent = await this.props.model.sendEmail(name, email,
+        profileLink, message);
+      if (isEmailSent) {
+        this.setState({
+          name: name,
+          email: email,
+          profileLink: profileLink,
+          message: message,
+          page: PartnerWithUsPage.Page.MESSAGE_SENT,
+          errorCode: PartnerWithUsPage.PageErrorCode.NONE
+        });
+      } else {
+        this.setState({
+          name: name,
+          email: email,
+          profileLink: profileLink,
+          message: message,
+          page: PartnerWithUsPage.Page.INITIAL,
+          errorCode: PartnerWithUsPage.PageErrorCode.SEND_FAILED
+        });
+      }
     } catch {
       this.setState({
         name: name,
