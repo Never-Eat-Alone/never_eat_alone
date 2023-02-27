@@ -32,7 +32,7 @@ export class HttpApplicationModel extends ApplicationModel {
     const joinModel = new HttpJoinModel();
     const partnerWithUsModel = new HttpPartnerWithUsModel();
     const logInModel = new HttpLogInModel();
-    const deletedAccountSurveyModel: DeletedAccountSurveyModel;
+    const deletedAccountSurveyModel = new HttpDeletedAccountSurveyModel();
     const deactivateAccountSurveyModel: DeactivateAccountSurveyModel;
     const forgotPasswordPageModel: ForgotPasswordPageModel;
     this._model = new LocalApplicationModel(headerModel, homePageModel,
