@@ -5,8 +5,10 @@ import { HttpInviteAFoodieModel, InviteAFoodieModel
 import { HttpJoinModel, JoinModel } from '../modals/join_modal';
 import { HttpLogInModel, LogInModel } from '../modals/log_in_modal';
 import { ApplicationModel } from './application_model';
-import { DeactivateAccountSurveyModel } from './deactivate_account_survey_page';
-import { DeletedAccountSurveyModel } from './deleted_account_survey_page';
+import { DeactivateAccountSurveyModel, HttpDeactivateAccountSurveyModel
+} from './deactivate_account_survey_page';
+import { DeletedAccountSurveyModel, HttpDeletedAccountSurveyModel
+} from './deleted_account_survey_page';
 import { DiningEventPageModel } from './dining_event_page';
 import { EditProfilePageModel } from './edit_profile_page';
 import { ForgotPasswordPageModel } from './forgot_password_page';
@@ -32,8 +34,8 @@ export class HttpApplicationModel extends ApplicationModel {
     const joinModel = new HttpJoinModel();
     const partnerWithUsModel = new HttpPartnerWithUsModel();
     const logInModel = new HttpLogInModel();
-    const deletedAccountSurveyModel: DeletedAccountSurveyModel;
-    const deactivateAccountSurveyModel: DeactivateAccountSurveyModel;
+    const deletedAccountSurveyModel = new HttpDeletedAccountSurveyModel();
+    const deactivateAccountSurveyModel = new HttpDeactivateAccountSurveyModel();
     const forgotPasswordPageModel: ForgotPasswordPageModel;
     this._model = new LocalApplicationModel(headerModel, homePageModel,
       inviteAFoodieModel, joinModel, partnerWithUsModel, logInModel,
