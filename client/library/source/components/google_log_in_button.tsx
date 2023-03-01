@@ -3,26 +3,79 @@ import * as React from 'react';
 
 interface Properties extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
+  clientId: string;
+  onSuccess: (email: string, token: any) => void;
 }
 
-export function GoogleLogInButton(props: Properties) {
-  return (
-    <button
-        {...props}
-        style={{...BUTTON_STYLE, ...props.style}}
-        className={css(styles.button)}
-    >
-      <div className='customGPlusSignIn' style={CUSTOM_DIV_STYLE} >
-        <div style={SOCIAL_MEDIA_BUTTON_STYLE} >
-          <img
-            style={SOCIAL_MEDIA_ICON_STYLE}
-            alt='Google'
-            src='resources/google_log_in_button/icons/google.svg'
-          />
-          <span>{props.label}</span>
+export class GoogleLogInButton extends React.Component<Properties> {
+  constructor(props: Properties) {
+    super(props);
+    const scripts = document.getElementsByTagName(
+      'head')[0].getElementsByTagName('script');
+    let isPlatform = false;
+    for (let i =0; i< scripts.length; i++) {
+      const script = scripts[i];
+      if (script.src === 'https://apis.google.com/js/platform.js' ||
+          script.src === 'http://apis.google.com/js/platform.js') {
+        isPlatform = true;
+        break;
+      }
+    }
+    if (!isPlatform) {
+      const googlePlatformScript = document.createElement('script');
+      googlePlatformScript.type = 'text/javascript';
+      googlePlatformScript.src = 'https://apis.google.com/js/platform.js';
+      googlePlatformScript.defer = true;
+      googlePlatformScript.onload = this.onPlatformLoaded;
+      document.getElementsByTagName('head')[0].appendChild(
+        googlePlatformScript
+      );
+    }
+  }
+
+  public render(): JSX.Element {
+    return (
+      <button
+          {...this.props}
+          style={{...BUTTON_STYLE, ...this.props.style}}
+          className={css(styles.button)}
+          onClick={this.onGoogleSignIn}
+      >
+        <div className='customGPlusSignIn' style={CUSTOM_DIV_STYLE} >
+          <div style={SOCIAL_MEDIA_BUTTON_STYLE} >
+            <img
+              style={SOCIAL_MEDIA_ICON_STYLE}
+              alt='Google'
+              src='resources/google_log_in_button/icons/google.svg'
+            />
+            <span>{this.props.label}</span>
+          </div>
         </div>
-      </div>
-    </button>);
+      </button>);
+  }
+
+  private onGoogleSignIn = () => {
+    this._gapiAuth.signIn().then((googleUser: any) => {
+      const includeAuthorizationData = true;
+      this.props.onSuccess(googleUser.getBasicProfile().getEmail(),
+        googleUser.getAuthResponse(includeAuthorizationData));
+    }, (error: any) => {
+      console.log(error);
+    });
+  }
+
+  private onPlatformLoaded = () => {
+    const gapi = (window as any).gapi;
+    gapi.load('auth2', () => {
+      gapi.auth2.init({
+        client_id: this.props.clientId
+      }).then(() => {
+        this._gapiAuth = gapi.auth2.getAuthInstance();
+      });
+    });
+  }
+
+  private _gapiAuth: any;
 }
 
 const BUTTON_STYLE: React.CSSProperties = {
