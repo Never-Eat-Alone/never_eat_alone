@@ -14,7 +14,7 @@ export class HttpForgotPasswordPageModel extends ForgotPasswordPageModel {
     });
     if (response.status === 200) {
       const responseObject = await response.json();
-      return User.fromJson(responseObject);
+      return User.fromJson(responseObject.user);
     }
     return User.makeGuest();
   }
