@@ -30,4 +30,6 @@ export abstract class ApplicationModel {
     DeactivateAccountSurveyModel;
   public abstract get forgotPasswordPageModel(): ForgotPasswordPageModel;
   public abstract getSignUpPageModel(id: number): SignUpPageModel;
+  public abstract get googleClientId(): string;
+  public abstract get facebookClientId(): string;
 }

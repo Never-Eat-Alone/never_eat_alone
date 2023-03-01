@@ -12,6 +12,9 @@ interface Properties {
   password: string;
   rememberMe: boolean;
 
+  googleClientId: string;
+  facebookClientId: string;
+
   /** The modal error code. */
   errorCode: LogInPage.ErrorCode;
 
@@ -19,10 +22,10 @@ interface Properties {
   onLogIn: (email: string, password: string, rememberMe: boolean) => void;
 
   /** Indicates the google login button is clicked. */
-  onGoogleLogIn: () => void;
+  onGoogleLogIn: (email: string, token: any) => void;
 
   /** Indicates the facebook login button is clicked. */
-  onFacebookLogIn: () => void;
+  onFacebookLogIn: (email: string, token: any) => void;
 }
 
 interface State {
@@ -163,14 +166,16 @@ export class LogInPage extends React.Component<Properties, State> {
           </div>
           <GoogleLogInButton
             style={SOCIAL_BUTTON_STYLE}
+            clientId={this.props.googleClientId}
             label='Log in with Google'
-            onClick={this.props.onGoogleLogIn}
+            onSuccess={this.props.onGoogleLogIn}
           />
           <div style={ERROR_CONTAINER_STYLE} >{googleErrorMessage}</div>
           <FacebookLogInButton
             style={SOCIAL_BUTTON_STYLE}
+            clientId={this.props.facebookClientId}
             label='Log in with Facebook'
-            onClick={this.props.onFacebookLogIn}
+            onSuccess={this.props.onFacebookLogIn}
           />
           <div style={ERROR_CONTAINER_STYLE} >
             {facebookErrorMessage}

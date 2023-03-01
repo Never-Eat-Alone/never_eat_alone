@@ -3,22 +3,39 @@ import * as React from 'react';
 
 interface Properties extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
+  clientId: string;
+  onSuccess: (email: string, token: any) => void;
 }
 
-export function FacebookLogInButton(props: Properties) {
-  return (
-    <button
-        {...props}
-        style={{...BUTTON_STYLE, ...props.style}}
-        className={css(styles.button)}
-    >
-      <img
-        style={FACEBOOK_ICON_STYLE}
-        src='resources/facebook_log_in_button/icons/facebook.svg'
-        alt='Facebook Icon'
-      />
-      <span>{props.label}</span>
-    </button>);
+export class FacebookLogInButton extends React.Component<Properties> {
+  public render(): JSX.Element {
+    return (
+      <button
+          {...this.props}
+          style={{...BUTTON_STYLE, ...this.props.style}}
+          className={css(styles.button)}
+          onClick={this.onFacebookSignIn}
+      >
+        <img
+          style={FACEBOOK_ICON_STYLE}
+          src='resources/facebook_log_in_button/icons/facebook.svg'
+          alt='Facebook Icon'
+        />
+        <span>{this.props.label}</span>
+      </button>);
+  }
+
+  private onFacebookSignIn = () => {
+    this._fapiAuth.signIn().then((facebookUser: any) => {
+      const includeAuthorizationData = true;
+      this.props.onSuccess(facebookUser.getBasicProfile().getEmail(),
+        facebookUser.getAuthResponse(includeAuthorizationData));
+    }, (error: any) => {
+      console.log(error);
+    });
+  }
+
+  private _fapiAuth: any;
 }
 
 const BUTTON_STYLE: React.CSSProperties = {
