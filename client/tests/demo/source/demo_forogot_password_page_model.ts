@@ -17,8 +17,8 @@ export class DemoForgotPasswordPageModel extends
   }
 
   public async resendRecoveryEmail(email: string, user: NeverEatAlone.User
-      ): Promise<void> {
-    return;
+      ): Promise<boolean> {
+    return Boolean(email && user);
   }
 
   private _userList: NeverEatAlone.User[];
