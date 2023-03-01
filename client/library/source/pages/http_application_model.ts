@@ -11,7 +11,8 @@ import { DeletedAccountSurveyModel, HttpDeletedAccountSurveyModel
 } from './deleted_account_survey_page';
 import { DiningEventPageModel } from './dining_event_page';
 import { EditProfilePageModel } from './edit_profile_page';
-import { ForgotPasswordPageModel } from './forgot_password_page';
+import { ForgotPasswordPageModel, HttpForgotPasswordPageModel
+} from './forgot_password_page';
 import { HomePageModel, HttpHomePageModel } from './home_page';
 import { LocalApplicationModel } from './local_application_model';
 import { HttpPartnerWithUsModel, PartnerWithUsModel
@@ -36,7 +37,7 @@ export class HttpApplicationModel extends ApplicationModel {
     const logInModel = new HttpLogInModel();
     const deletedAccountSurveyModel = new HttpDeletedAccountSurveyModel();
     const deactivateAccountSurveyModel = new HttpDeactivateAccountSurveyModel();
-    const forgotPasswordPageModel: ForgotPasswordPageModel;
+    const forgotPasswordPageModel = new HttpForgotPasswordPageModel();
     this._model = new LocalApplicationModel(headerModel, homePageModel,
       inviteAFoodieModel, joinModel, partnerWithUsModel, logInModel,
       deletedAccountSurveyModel, deactivateAccountSurveyModel,
