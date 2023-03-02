@@ -15,7 +15,7 @@ interface Properties {
   avatars: UserProfileImage[];
 
   /** Indicates the upload image button is clicked. */
-  onUploadImageClick: () => void;
+  onUploadImageClick: (image: UserProfileImage) => void;
 
   /** Indicates the let's go button is clicked. */
   onLetsGoClick: (displayName: string, image: UserProfileImage) => void;
@@ -74,7 +74,7 @@ export class ProfileSetUpPage extends React.Component<Properties> {
               <button
                 style={UPLOAD_IMAGE_BUTTON_STYLE}
                 className={css(styles.uploadImageButton)}
-                onClick={this.props.onUploadImageClick}
+                onClick={this.handleUploadImageClick}
               >
                 Upload an Image
               </button>
@@ -103,6 +103,12 @@ export class ProfileSetUpPage extends React.Component<Properties> {
   /** Handles the change in display name inputfield. */
   private handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.props.onDisplayNameChange(event.target.value);
+  }
+
+  private handleUploadImageClick = () => {
+    //method to create an image object from the user input
+    const image = UserProfileImage.NoImage();
+    this.props.onUploadImageClick(image);
   }
 }
 

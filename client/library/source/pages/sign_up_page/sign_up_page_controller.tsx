@@ -78,8 +78,8 @@ export class SignUpPageController extends React.Component<Properties, State> {
 
   private handleSignUp = async (password: string) => {
     try {
-      await this.props.model.signUp(password);
-      this.setState({ isSetUpPage: true, password: password });
+      const isSignedUp = await this.props.model.signUp(password);
+      this.setState({ isSetUpPage: isSignedUp, password: password });
     } catch {
       this.setState({
         signUpPageErrorCode: SignUpPage.ErrorCode.NO_CONNECTION,
@@ -89,9 +89,9 @@ export class SignUpPageController extends React.Component<Properties, State> {
     }
   }
 
-  private handleUploadImageClick = async () => {
+  private handleUploadImageClick = async (uploadedImage: UserProfileImage) => {
     try {
-      const image = await this.props.model.uploadImage();
+      const image = await this.props.model.uploadImage(uploadedImage);
       this.setState({
         image: image,
         profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NONE
@@ -116,13 +116,21 @@ export class SignUpPageController extends React.Component<Properties, State> {
   private handleLetsGoClick = async (displayName: string,
       image: UserProfileImage) => {
     try {
-      await this.props.model.setUpProfile(displayName, image);
-      this.setState({
-        profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NONE,
-        displayName: displayName,
-        image: image,
-        redirect: '/'
-      });
+      const isSetUp = await this.props.model.setUpProfile(displayName, image);
+      if (isSetUp) {
+        this.setState({
+          profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NONE,
+          displayName: displayName,
+          image: image,
+          redirect: '/'
+        });
+      } else {
+        this.setState({
+          profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NO_CONNECTION,
+          displayName: displayName,
+          image: image
+        });
+      }
     } catch {
       this.setState({
         profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NO_CONNECTION,

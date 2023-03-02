@@ -25,18 +25,21 @@ export class DemoSignUpPageModel extends NeverEatAlone.SignUpPageModel {
     return this._defaultImage;
   }
 
-  public async uploadImage(): Promise<NeverEatAlone.UserProfileImage> {
-    return new NeverEatAlone.UserProfileImage(1, Date.now(),
-      'resources/images/profileguy2.jpeg');
+  public async uploadImage(image: NeverEatAlone.UserProfileImage): Promise<
+      NeverEatAlone.UserProfileImage> {
+    if (!image) {
+      return NeverEatAlone.UserProfileImage.NoImage();
+    }
+    return image;
   }
 
-  public async signUp(password: string): Promise<void> {
-    return;
+  public async signUp(password: string): Promise<boolean> {
+    return Boolean(password);
   }
 
   public async setUpProfile(displayName: string,
-      image: NeverEatAlone.UserProfileImage): Promise<void> {
-    return;
+      image: NeverEatAlone.UserProfileImage): Promise<boolean> {
+    return Boolean(displayName && image);
   }
 
   private _email: string;
