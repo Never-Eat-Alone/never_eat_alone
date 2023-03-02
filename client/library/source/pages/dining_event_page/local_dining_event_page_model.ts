@@ -1,13 +1,14 @@
-import * as NeverEatAlone from 'never_eat_alone';
+import { Attendee, DressCode, Location, Restaurant, Seating, User
+} from '../../definitions';
+import { DiningEventPageModel } from './dining_event_page_model';
 
-export class DemoDiningEventPageModel extends
-    NeverEatAlone.DiningEventPageModel {
+/** local model used by the DiningEventPage. */
+export class LocalDiningEventPageModel extends DiningEventPageModel {
   constructor(eventId: number, eventColor: string, eventFee: number,
-      coverImageSrc: string, title: string, restaurant:
-      NeverEatAlone.Restaurant, dressCode: NeverEatAlone.DressCode,
-      seating: NeverEatAlone.Seating, location: NeverEatAlone.Location,
-      reservationName: string, startTime: Date, endTime: Date, attendeeList:
-      NeverEatAlone.Attendee[], totalCapacity: number, description: string,
+      coverImageSrc: string, title: string, restaurant: Restaurant,
+      dressCode: DressCode, seating: Seating, location: Location,
+      reservationName: string, startTime: Date, endTime: Date,
+      attendeeList: Attendee[], totalCapacity: number, description: string,
       isGoing: boolean, isRSVPOpen: boolean) {
     super();
     this._eventId = eventId;
@@ -29,9 +30,10 @@ export class DemoDiningEventPageModel extends
     this._isRSVPOpen = isRSVPOpen;
   }
 
-  public async load(): Promise<void> {
-    return;
-  }
+  /** Loads the data to display on the DiningEventPage
+   * must be called before calling any other method of this class.
+   */
+  public async load(): Promise<void> {}
 
   public get eventId(): number {
     return this._eventId;
@@ -53,19 +55,19 @@ export class DemoDiningEventPageModel extends
     return this._title;
   }
 
-  public get restaurant(): NeverEatAlone.Restaurant {
+  public get restaurant(): Restaurant {
     return this._restaurant;
   }
 
-  public get dressCode(): NeverEatAlone.DressCode {
+  public get dressCode(): DressCode {
     return this._dressCode;
   }
 
-  public get seating(): NeverEatAlone.Seating {
+  public get seating(): Seating {
     return this._seating;
   }
 
-  public get location(): NeverEatAlone.Location {
+  public get location(): Location {
     return this._location;
   }
 
@@ -81,7 +83,7 @@ export class DemoDiningEventPageModel extends
     return this._endTime;
   }
 
-  public get attendeeList(): NeverEatAlone.Attendee[] {
+  public get attendeeList(): Attendee[] {
     return this._attendeeList;
   }
 
@@ -101,44 +103,29 @@ export class DemoDiningEventPageModel extends
     return this._isRSVPOpen;
   }
 
-  public async joinEvent(account: NeverEatAlone.User, profileImageSrc: string
-      ): Promise<boolean> {
-    const index = this._attendeeList.findIndex((a) => a.userId === account.id);
-    if (index !== -1) {
-      if (this._attendeeList[index].status ===
-          NeverEatAlone.AttendeeStatus.GOING) {
-        return false;
-      }
-      this._attendeeList.splice(index, 1);
-    }
-    this._attendeeList.push(new NeverEatAlone.Attendee(account.id,
-      this._eventId, account.name, 0, NeverEatAlone.AttendeeStatus.GOING,
-      profileImageSrc, new Date()));
-    return true;
+  public async joinEvent(account: User, profileImageSrc: string): Promise<
+      boolean> {
+    return Boolean(account && profileImageSrc);
   }
 
-  public async removeSeat(account: NeverEatAlone.User): Promise<boolean> {
-    const index = this._attendeeList.findIndex((a) => a.userId === account.id);
-    if (index !== -1) {
-      this._attendeeList.splice(index, 1);
-      return true;
-    }
-    return false;
+  public async removeSeat(account: User): Promise<boolean> {
+    return Boolean(account);
   }
 
+  
   private _eventId: number;
   private _eventColor: string;
   private _eventFee: number;
   private _coverImageSrc: string;
   private _title: string;
-  private _restaurant: NeverEatAlone.Restaurant;
-  private _dressCode: NeverEatAlone.DressCode;
-  private _seating: NeverEatAlone.Seating;
-  private _location: NeverEatAlone.Location;
+  private _restaurant: Restaurant;
+  private _dressCode: DressCode;
+  private _seating: Seating;
+  private _location: Location;
   private _reservationName: string;
   private _startTime: Date;
   private _endTime: Date;
-  private _attendeeList: NeverEatAlone.Attendee[];
+  private _attendeeList: Attendee[];
   private _totalCapacity: number;
   private _description: string;
   private _isGoing: boolean;
