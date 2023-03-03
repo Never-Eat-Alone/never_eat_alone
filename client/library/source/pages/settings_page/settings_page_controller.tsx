@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { AddCreditCardForm } from '../../components';
-import { DisplayMode, PaymentCard, PaymentRecord, User
+import { DisplayMode, PaymentCard, PaymentRecord, User, CreditCardType
 } from '../../definitions';
 import { PaymentReceiptModal } from '../../modals';
 import { AccountInformationTab } from './account_information_tab';
@@ -79,9 +79,9 @@ export class SettingsPageController extends React.Component<Properties, State> {
     return <SettingsPage
       displayMode={this.props.displayMode}
       linkedSocialAccounts={this.props.model.linkedSocialAccounts}
-      displayName={this.props.model.displayName}
-      profileId={this.props.model.profileId}
-      email={this.props.model.email}
+      displayName={this.props.account.name}
+      profileId={this.props.account.id}
+      email={this.props.account.email}
       password={this.props.model.password}
       isNewEventsNotificationOn={this.state.isNewEventsNotificationOn}
       isEventJoinedNotificationOn={this.state.isEventJoinedNotificationOn}
@@ -193,7 +193,8 @@ export class SettingsPageController extends React.Component<Properties, State> {
     try {
       await this.props.model.toggleEventRemindersNotification();
       this.setState((prevState) => ({
-        isEventRemindersNotificationOn: !prevState.isEventRemindersNotificationOn
+        isEventRemindersNotificationOn:
+          !prevState.isEventRemindersNotificationOn
       }));
     } catch {
       // pass
@@ -253,10 +254,11 @@ export class SettingsPageController extends React.Component<Properties, State> {
   }
 
   private handleAddCard = async (cardNumber: number, nameOnCard: string,
-      month: number, year: number, securityCode: number, zipcode: string) => {
+      month: number, year: number, securityCode: number, zipcode: string,
+      creditCardType: CreditCardType) => {
     try {
       const response = await this.props.model.addCard(cardNumber, nameOnCard,
-        month, year, securityCode, zipcode);
+        month, year, securityCode, zipcode, creditCardType);
       if (response.id !== -1) {
         this.setState({
           addCardErrorCode: AddCreditCardForm.ErrorCode.NONE,
@@ -348,7 +350,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleSubmitDeleteAccount = async () => {
     try {
-      const response = await this.props.model.deleteAccount(this.props.account,
+      const response = await this.props.model.deleteAccount(
         this.state.deleteAccountPassword);
       if (response.id === -1) {
         this.setState({
@@ -369,7 +371,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleSubmitDeactivateAccount = async () => {
     try {
-      await this.props.model.deactivateAccount(this.props.account.id);
+      await this.props.model.deactivateAccount();
       this.setState({ redirect: '/deactivate_account_survey' });
       this.props.onLogOut();
     } catch {
