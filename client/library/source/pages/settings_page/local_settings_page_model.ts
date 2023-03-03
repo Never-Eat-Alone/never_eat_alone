@@ -1,10 +1,9 @@
-import { PaymentCard, PaymentRecord, SocialAccount, User, CreditCardType
+import { CreditCardType, PaymentCard, PaymentRecord, SocialAccount, User
 } from '../../definitions';
 import { SettingsPageModel } from './settings_page_model';
 
 export class LocalSettingsPageModel extends SettingsPageModel {
-  constructor(displayName: string, linkedSocialAccounts: SocialAccount[],
-      profileId: number, email: string, password: string,
+  constructor(linkedSocialAccounts: SocialAccount[], password: string,
       isNewEventsNotificationOn: boolean, isEventJoinedNotificationOn: boolean,
       isEventRemindersNotificationOn: boolean, isChangesNotificationOn: boolean,
       isSomeoneJoinedNotificationOn: boolean,
@@ -12,10 +11,7 @@ export class LocalSettingsPageModel extends SettingsPageModel {
       isAnnouncementNotificationOn: boolean, defaultCard: PaymentCard,
       paymentCards: PaymentCard[], paymentRecords: PaymentRecord[]) {
     super();
-    this._displayName = displayName;
     this._linkedSocialAccounts = linkedSocialAccounts;
-    this._profileId = profileId;
-    this._email = email;
     this._password = password;
     this._isNewEventsNotificationOn = isNewEventsNotificationOn;
     this._isEventJoinedNotificationOn = isEventJoinedNotificationOn;
@@ -32,20 +28,8 @@ export class LocalSettingsPageModel extends SettingsPageModel {
 
   public async load(): Promise<void> {}
 
-  public get displayName(): string {
-    return this._displayName;
-  }
-
   public get linkedSocialAccounts(): SocialAccount[] {
     return this._linkedSocialAccounts;
-  }
-
-  public get profileId(): number {
-    return this._profileId;
-  }
-
-  public get email(): string {
-    return this._email;
   }
 
   public get password(): string {
@@ -148,20 +132,14 @@ export class LocalSettingsPageModel extends SettingsPageModel {
   }
 
   public async deleteAccount(password: string): Promise<User> {
-    if (password) {
-      return account;
-    }
     return User.makeGuest();
   }
 
-  public async deactivateAccount(accountId: number): Promise<boolean> {
-    return Boolean(accountId);
+  public async deactivateAccount(): Promise<boolean> {
+    return true;
   }
 
-  private _displayName: string;
   private _linkedSocialAccounts: SocialAccount[];
-  private _profileId: number;
-  private _email: string;
   private _password: string;
   private _isNewEventsNotificationOn: boolean;
   private _isEventJoinedNotificationOn: boolean;

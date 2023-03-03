@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { AddCreditCardForm } from '../../components';
-import { DisplayMode, PaymentCard, PaymentRecord, User, CreditCardType
+import { CreditCardType, DisplayMode, PaymentCard, PaymentRecord, User
 } from '../../definitions';
 import { PaymentReceiptModal } from '../../modals';
 import { AccountInformationTab } from './account_information_tab';

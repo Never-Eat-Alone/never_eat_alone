@@ -12,13 +12,10 @@ export class HttpSettingsPageModel extends SettingsPageModel {
   public async load(): Promise<void> {
     const response = await fetch(`/api/settings/${this._account.id}`);
     const responseObject = await response.json();
-    const displayName = responseObject.displayName;
     const linkedSocialAccounts: SocialAccount[] = [];
     for (const socialAccount of responseObject.linkedSocialAccounts) {
       linkedSocialAccounts.push(SocialAccount.fromJson(socialAccount));
     }
-    const profileId = responseObject.profileId;
-    const email = responseObject.email;
     const password = responseObject.password;
     const isNewEventsNotificationOn = responseObject.isNewEventsNotificationOn;
     const isEventJoinedNotificationOn = 
@@ -41,29 +38,16 @@ export class HttpSettingsPageModel extends SettingsPageModel {
     for (const record of responseObject.paymentRecords) {
       paymentRecords.push(PaymentRecord.fromJson(record));
     }
-    this._model = new LocalSettingsPageModel(displayName, linkedSocialAccounts,
-      profileId, email, password, isNewEventsNotificationOn,
-      isEventJoinedNotificationOn, isEventRemindersNotificationOn,
-      isChangesNotificationOn, isSomeoneJoinedNotificationOn,
-      isFoodieAcceptedInviteNotificationOn, isAnnouncementNotificationOn,
-      defaultCard, paymentCards, paymentRecords);
+    this._model = new LocalSettingsPageModel(linkedSocialAccounts, password,
+      isNewEventsNotificationOn, isEventJoinedNotificationOn,
+      isEventRemindersNotificationOn, isChangesNotificationOn,
+      isSomeoneJoinedNotificationOn, isFoodieAcceptedInviteNotificationOn,
+      isAnnouncementNotificationOn, defaultCard, paymentCards, paymentRecords);
     this._model.load();
-  }
-
-  public get displayName(): string {
-    return this._model.displayName;
   }
 
   public get linkedSocialAccounts(): SocialAccount[] {
     return this._model.linkedSocialAccounts;
-  }
-
-  public get profileId(): number {
-    return this._model.profileId;
-  }
-
-  public get email(): string {
-    return this._model.email;
   }
 
   public get password(): string {

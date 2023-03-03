@@ -3,10 +3,7 @@ import { CreditCardType, PaymentCard, PaymentRecord, SocialAccount, User
 
 export abstract class SettingsPageModel {
   public abstract load(): Promise<void>;
-  public abstract get displayName(): string;
   public abstract get linkedSocialAccounts(): SocialAccount[];
-  public abstract get profileId(): number;
-  public abstract get email(): string;
   public abstract get password(): string;
   public abstract get isNewEventsNotificationOn(): boolean;
   public abstract get isEventJoinedNotificationOn(): boolean;
