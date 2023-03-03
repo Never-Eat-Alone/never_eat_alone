@@ -171,9 +171,12 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleNewEventsToggle = async () => {
     try {
-      await this.props.model.toggleNewEventsNotification();
-      this.setState((prevState) => ({
-        isNewEventsNotificationOn: !prevState.isNewEventsNotificationOn }));
+      const isToggled = await this.props.model.toggleNewEventsNotification();
+      if (isToggled) {
+        this.setState((prevState) => ({
+          isNewEventsNotificationOn: !prevState.isNewEventsNotificationOn
+        }));
+      }
     } catch {
       // pass
     }
@@ -181,9 +184,12 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleEventJoinedToggle = async () => {
     try {
-      await this.props.model.toggleEventJoinedNotification();
-      this.setState((prevState) => ({
-        isEventJoinedNotificationOn: !prevState.isEventJoinedNotificationOn }));
+      const isToggled = await this.props.model.toggleEventJoinedNotification();
+      if (isToggled) {
+        this.setState((prevState) => ({
+          isEventJoinedNotificationOn: !prevState.isEventJoinedNotificationOn
+        }));
+      }
     } catch {
       // pass
     }
@@ -191,11 +197,14 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleEventRemindersToggle = async () => {
     try {
-      await this.props.model.toggleEventRemindersNotification();
-      this.setState((prevState) => ({
-        isEventRemindersNotificationOn:
-          !prevState.isEventRemindersNotificationOn
-      }));
+      const isToggled = 
+        await this.props.model.toggleEventRemindersNotification();
+      if (isToggled) {
+        this.setState((prevState) => ({
+          isEventRemindersNotificationOn:
+            !prevState.isEventRemindersNotificationOn
+        }));
+      }
     } catch {
       // pass
     }
@@ -203,9 +212,12 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleChangesToggle = async () => {
     try {
-      await this.props.model.toggleChangesNotification();
-      this.setState((prevState) => ({
-        isChangesNotificationOn: !prevState.isChangesNotificationOn }));
+      const isToggled = await this.props.model.toggleChangesNotification();
+      if (isToggled) {
+        this.setState((prevState) => ({
+          isChangesNotificationOn: !prevState.isChangesNotificationOn
+        }));
+      }
     } catch {
       // pass
     }
