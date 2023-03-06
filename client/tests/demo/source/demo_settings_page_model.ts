@@ -28,9 +28,7 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
     this._paymentRecords = paymentRecords;
   }
 
-  public async load(): Promise<void> {
-    return;
-  }
+  public async load(): Promise<void> {}
 
   public get displayName(): string {
     return this._displayName;
@@ -113,9 +111,9 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
     return newCard;
   }
 
-  public async deleteCard(cardId: number): Promise<void> {
+  public async deleteCard(cardId: number): Promise<boolean> {
     if (cardId === -1) {
-      return;
+      return false;
     }
     const temp = [...this._paymentCards];
     this._paymentCards = temp.filter((paymentCard) => paymentCard.id !==
@@ -123,47 +121,54 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
     if (this._defaultCard.id === cardId) {
       this._defaultCard = NeverEatAlone.PaymentCard.noCard();
     }
-    return;
+    return true;
   }
 
-  public async toggleNewEventsNotification(): Promise<void> {
+  public async toggleNewEventsNotification(): Promise<boolean> {
     this._isNewEventsNotificationOn = !this._isNewEventsNotificationOn;
+    return true;
   }
 
-  public async toggleEventJoinedNotification(): Promise<void> {
+  public async toggleEventJoinedNotification(): Promise<boolean> {
     this._isEventJoinedNotificationOn = !this._isEventJoinedNotificationOn;
+    return true;
   }
 
-  public async toggleEventRemindersNotification(): Promise<void> {
+  public async toggleEventRemindersNotification(): Promise<boolean> {
     this._isEventRemindersNotificationOn =
       !this._isEventRemindersNotificationOn;
+    return true;
   }
 
-  public async toggleChangesNotification(): Promise<void> {
+  public async toggleChangesNotification(): Promise<boolean> {
     this._isChangesNotificationOn = !this._isChangesNotificationOn;
+    return true;
   }
 
-  public async toggleSomeoneJoinedNotification(): Promise<void> {
+  public async toggleSomeoneJoinedNotification(): Promise<boolean> {
     this._isSomeoneJoinedNotificationOn = !this._isSomeoneJoinedNotificationOn;
+    return true;
   }
 
-  public async toggleFoodieAcceptedInviteNotification(): Promise<void> {
+  public async toggleFoodieAcceptedInviteNotification(): Promise<boolean> {
     this._isFoodieAcceptedInviteNotificationOn =
       !this._isFoodieAcceptedInviteNotificationOn;
+    return true;
   }
 
-  public async toggleAnnouncementNotification(): Promise<void> {
+  public async toggleAnnouncementNotification(): Promise<boolean> {
     this._isAnnouncementNotificationOn = !this._isAnnouncementNotificationOn;
+    return true;
   }
 
   public async emailReceipt(paymentRecord: NeverEatAlone.PaymentRecord):
-      Promise<void> {
-    return;
+      Promise<boolean> {
+    return Boolean(paymentRecord);
   }
 
   public async SubmitHelpEmail(receiptId: number, message: string): Promise<
-      void> {
-    return;
+      boolean> {
+    return Boolean(receiptId && message);
   }
 
   public async deleteAccount(account: NeverEatAlone.User, password: string
@@ -174,8 +179,8 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
     return NeverEatAlone.User.makeGuest();
   }
 
-  public async deactivateAccount(accountId: number): Promise<void> {
-    return;
+  public async deactivateAccount(accountId: number): Promise<boolean> {
+    return Boolean(accountId);
   }
 
   private _displayName: string;
