@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { CreditCardType } from '../definitions';
 import { InputField, PaymentCardInputField, SecurityCodeInputField
 } from './input_field';
 import { NumberedDropdownMenu } from './numbered_dropdown_menu';
@@ -28,7 +29,8 @@ interface Properties {
 
   /** Indicates the add button is clicked. */
   onAddCard: (cardNumber: number, cardName: string, month: number, year: number,
-    securityCode: number, zipcode: string) => void;
+    securityCode: number, zipcode: string, creditCardType: CreditCardType
+    ) => void;
 }
 
 interface State {
@@ -44,6 +46,7 @@ interface State {
   isZipcodeInvalid: boolean;
   addCardInputHasChanged: boolean;
   errorCode: AddCreditCardForm.ErrorCode;
+  creditCardType: CreditCardType;
 }
 
 /** Displays the Add Creditcard Form. */
@@ -62,7 +65,8 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
       isSecurityCodeInvalid: false,
       isZipcodeInvalid: false,
       addCardInputHasChanged: false,
-      errorCode: this.props.errorCode
+      errorCode: this.props.errorCode,
+      creditCardType: CreditCardType.VISA
     };
   }
 
@@ -265,7 +269,7 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
     });
     this.props.onAddCard(this.state.cardNumber, this.state.nameOnCard,
       this.state.selectedMonth, this.state.selectedYear,
-      this.state.securityCode, this.state.zipcode);
+      this.state.securityCode, this.state.zipcode, this.state.creditCardType);
   }
 
   private handleInvalidInput = (fieldName: string) => {

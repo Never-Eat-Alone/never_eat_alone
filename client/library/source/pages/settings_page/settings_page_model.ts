@@ -1,12 +1,9 @@
-import { PaymentCard, PaymentRecord, SocialAccount, User
+import { CreditCardType, PaymentCard, PaymentRecord, SocialAccount, User
 } from '../../definitions';
 
 export abstract class SettingsPageModel {
   public abstract load(): Promise<void>;
-  public abstract get displayName(): string;
   public abstract get linkedSocialAccounts(): SocialAccount[];
-  public abstract get profileId(): number;
-  public abstract get email(): string;
   public abstract get password(): string;
   public abstract get isNewEventsNotificationOn(): boolean;
   public abstract get isEventJoinedNotificationOn(): boolean;
@@ -20,21 +17,22 @@ export abstract class SettingsPageModel {
   public abstract get paymentRecords(): PaymentRecord[];
   // Payment methods tab related methods
   public abstract addCard(cardNumber: number, nameOnCard: string, month: number,
-    year: number, securityCode: number, zipcode: string): Promise<PaymentCard>;
+    year: number, securityCode: number, zipcode: string, creditCardType:
+    CreditCardType): Promise<PaymentCard>;
   public abstract updateCard(newCard: PaymentCard, isMarkedAsDefault: boolean
     ): Promise<PaymentCard>;
-  public abstract deleteCard(cardId: number): Promise<void>;
+  public abstract deleteCard(cardId: number): Promise<boolean>;
   // Notification tab related methods
-  public abstract toggleNewEventsNotification(): Promise<void>;
-  public abstract toggleEventJoinedNotification(): Promise<void>;
-  public abstract toggleEventRemindersNotification(): Promise<void>;
-  public abstract toggleChangesNotification(): Promise<void>;
-  public abstract toggleSomeoneJoinedNotification(): Promise<void>;
-  public abstract toggleFoodieAcceptedInviteNotification(): Promise<void>;
-  public abstract toggleAnnouncementNotification(): Promise<void>;
-  public abstract emailReceipt(paymentRecord: PaymentRecord): Promise<void>;
+  public abstract toggleNewEventsNotification(): Promise<boolean>;
+  public abstract toggleEventJoinedNotification(): Promise<boolean>;
+  public abstract toggleEventRemindersNotification(): Promise<boolean>;
+  public abstract toggleChangesNotification(): Promise<boolean>;
+  public abstract toggleSomeoneJoinedNotification(): Promise<boolean>;
+  public abstract toggleFoodieAcceptedInviteNotification(): Promise<boolean>;
+  public abstract toggleAnnouncementNotification(): Promise<boolean>;
+  public abstract emailReceipt(paymentRecord: PaymentRecord): Promise<boolean>;
   public abstract SubmitHelpEmail(receiptId: number, message: string): Promise<
-    void>;
-  public abstract deleteAccount(account: User, password: string): Promise<User>;
-  public abstract deactivateAccount(accountId: number): Promise<void>;
+    boolean>;
+  public abstract deleteAccount(password: string): Promise<User>;
+  public abstract deactivateAccount(): Promise<boolean>;
 }
