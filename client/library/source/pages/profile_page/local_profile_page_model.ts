@@ -1,11 +1,11 @@
-import { ProfilePageModel } from './profile_page_model';
-import { EventCardSummary, CoverImage, Cuisine, CityProvince
+import { CityProvince, CoverImage, Cuisine, EventCardSummary, Language
 } from '../../definitions';
+import { ProfilePageModel } from './profile_page_model';
 
 export class LocalProfilePageModel extends ProfilePageModel {
   constructor(profileId: number, coverImage: CoverImage, profileImageSrc:
       string, name: string, userName: string, createdAt: Date, biography:
-      string, location: CityProvince, languageList: string[], facebookLink:
+      string, location: CityProvince, languageList: Language[], facebookLink:
       string, twitterLink: string, instagramLink: string, favoriteCuisineList:
       Cuisine[], upcomingEventList: EventCardSummary[], pastEventList:
       EventCardSummary[]) {
@@ -27,9 +27,7 @@ export class LocalProfilePageModel extends ProfilePageModel {
     this._pastEventList = pastEventList;
   }
 
-  public async load(): Promise<void> {
-    return;
-  }
+  public async load(): Promise<void> {}
 
   public get profileId(): number {
     return this._profileId;
@@ -63,7 +61,7 @@ export class LocalProfilePageModel extends ProfilePageModel {
     return this._location;
   }
 
-  public get languageList(): string[] {
+  public get languageList(): Language[] {
     return this._languageList;
   }
 
@@ -99,7 +97,7 @@ export class LocalProfilePageModel extends ProfilePageModel {
   private _createdAt: Date;
   private _biography: string;
   private _location: CityProvince;
-  private _languageList: string[];
+  private _languageList: Language[];
   private _facebookLink: string;
   private _twitterLink: string;
   private _instagramLink: string;
