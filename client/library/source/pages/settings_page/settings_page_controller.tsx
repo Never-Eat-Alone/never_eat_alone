@@ -225,10 +225,13 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleSomeoneJoinedToggle = async () => {
     try {
-      await this.props.model.toggleSomeoneJoinedNotification();
-      this.setState((prevState) => ({
-        isSomeoneJoinedNotificationOn: !prevState.isSomeoneJoinedNotificationOn
-      }));
+      const isToggled =
+        await this.props.model.toggleSomeoneJoinedNotification();
+      if (isToggled) {
+        this.setState((prevState) => ({ isSomeoneJoinedNotificationOn:
+          !prevState.isSomeoneJoinedNotificationOn
+        }));
+      }
     } catch {
       // pass
     }
@@ -236,9 +239,12 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleFoodieAcceptedInviteToggle = async () => {
     try {
-      await this.props.model.toggleFoodieAcceptedInviteNotification();
-      this.setState((prevState) => ({ isFoodieAcceptedInviteNotificationOn:
-        !prevState.isFoodieAcceptedInviteNotificationOn }));
+      const isToggled =
+        await this.props.model.toggleFoodieAcceptedInviteNotification();
+      if (isToggled) {
+        this.setState((prevState) => ({ isFoodieAcceptedInviteNotificationOn:
+          !prevState.isFoodieAcceptedInviteNotificationOn }));
+      }
     } catch {
       // pass
     }
@@ -257,9 +263,11 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleAnnouncementToggle = async () => {
     try {
-      await this.props.model.toggleAnnouncementNotification();
-      this.setState((prevState) => ({ isAnnouncementNotificationOn:
-        !prevState.isAnnouncementNotificationOn }));
+      const isToggled = await this.props.model.toggleAnnouncementNotification();
+      if (isToggled) {
+        this.setState((prevState) => ({ isAnnouncementNotificationOn:
+          !prevState.isAnnouncementNotificationOn }));
+      }
     } catch {
       // pass
     }
@@ -315,13 +323,15 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleDeleteCard = async (cardId: number) => {
     try {
-      await this.props.model.deleteCard(cardId);
-      this.setState({
-        defaultCard: this.props.model.defaultCard,
-        paymentCards: this.props.model.paymentCards,
-        updateCardErrorCode: CardDetailsForm.ErrorCode.NONE,
-        paymentMethodsTabPage: PaymentMethodsTab.Page.INITIAL
-      });
+      const isDeleted = await this.props.model.deleteCard(cardId);
+      if (isDeleted) {
+        this.setState({
+          defaultCard: this.props.model.defaultCard,
+          paymentCards: this.props.model.paymentCards,
+          updateCardErrorCode: CardDetailsForm.ErrorCode.NONE,
+          paymentMethodsTabPage: PaymentMethodsTab.Page.INITIAL
+        });
+      }
     } catch {
       this.setState({
         updateCardErrorCode: CardDetailsForm.ErrorCode.NO_CONNECTION,
@@ -330,29 +340,17 @@ export class SettingsPageController extends React.Component<Properties, State> {
     }
   }
 
-  private handleGoogleClick = () => {
+  private handleGoogleClick = () => {}
 
-  }
+  private handleFacebookClick = () => {}
 
-  private handleFacebookClick = () => {
+  private handleRemoveLinkedAccount = () => {}
 
-  }
+  private handleEditDisplayNameClick = () => {}
 
-  private handleRemoveLinkedAccount = () => {
+  private handleEditEmailClick = () => {}
 
-  }
-
-  private handleEditDisplayNameClick = () => {
-
-  }
-
-  private handleEditEmailClick = () => {
-
-  }
-
-  private handleEditPasswordClick = () => {
-
-  }
+  private handleEditPasswordClick = () => {}
 
   private handleDeleteAccount = () => {
     this.setState({
@@ -383,9 +381,11 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleSubmitDeactivateAccount = async () => {
     try {
-      await this.props.model.deactivateAccount();
-      this.setState({ redirect: '/deactivate_account_survey' });
-      this.props.onLogOut();
+      const isDeactivated = await this.props.model.deactivateAccount();
+      if (isDeactivated) {
+        this.setState({ redirect: '/deactivate_account_survey' });
+        this.props.onLogOut();
+      }
     } catch {
       //pass
     }
@@ -425,19 +425,19 @@ export class SettingsPageController extends React.Component<Properties, State> {
     }
   }
 
-  private handlePrint = (paymentRecord: PaymentRecord) => {
-  }
+  private handlePrint = (paymentRecord: PaymentRecord) => {}
 
-  private handleDownloadPdf = (paymentRecord: PaymentRecord) => {
-  }
+  private handleDownloadPdf = (paymentRecord: PaymentRecord) => {}
 
   private handleSubmitHelpEmail = async (receiptId: number,
       message: string) => {
     try {
-      await this.props.model.SubmitHelpEmail(receiptId, message);
-      this.setState({
-        paymentReceiptModalPage: PaymentReceiptModal.Page.REQUEST_SENT
-      });
+      const isSent = await this.props.model.SubmitHelpEmail(receiptId, message);
+      if (isSent) {
+        this.setState({
+          paymentReceiptModalPage: PaymentReceiptModal.Page.REQUEST_SENT
+        });
+      }
     } catch {
       //pass
     }
@@ -445,8 +445,10 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleEmailReceipt = async (paymentRecord: PaymentRecord) => {
     try {
-      await this.props.model.emailReceipt(paymentRecord);
-      this.setState({ isReceiptEmailed: true });
+      const isSent = await this.props.model.emailReceipt(paymentRecord);
+      if (isSent) {
+        this.setState({ isReceiptEmailed: true });
+      }
     } catch {
       this.setState({ isReceiptEmailed: false });
     }
