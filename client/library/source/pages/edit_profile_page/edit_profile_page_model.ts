@@ -12,7 +12,7 @@ export abstract class EditProfilePageModel {
   public abstract get displayName(): string;
   public abstract get userName(): string;
   public abstract get selectedLocation(): CityProvince;
-  public abstract get profileUserId(): number;
+  public abstract get profileId(): number;
   public abstract get isUpcomingEventsPrivate(): boolean;
   public abstract get isPastEventsPrivate(): boolean;
   public abstract get isLocationPrivate(): boolean;
@@ -43,5 +43,5 @@ export abstract class EditProfilePageModel {
     isCuisinePrivate: boolean, isFacebookPrivate: boolean,
     isTwitterPrivate: boolean, isInstagramPrivate: boolean,
     facebookLink: string, twitterLink: string, instagramLink: string): Promise<
-    void>;
+    boolean>;
 }

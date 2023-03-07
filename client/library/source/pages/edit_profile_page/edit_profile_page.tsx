@@ -11,7 +11,7 @@ interface Properties {
   displayMode: DisplayMode;
   displayName: string;
   userName: string;
-  profileUserId: number;
+  profileId: number;
 
   /** The source address of the user's cover image. */
   coverImage: CoverImage;
@@ -444,7 +444,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
                 To change your display name or handle, go to&nbsp;
                 <RedNavLink
                   label='Account Information'
-                  to={`/users/settings/${this.props.profileUserId}`}
+                  to={`/users/settings/${this.props.profileId}`}
                   style={LINK_STYLE}
                 />
                 &nbsp;in your settings.

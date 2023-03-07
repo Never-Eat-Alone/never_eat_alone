@@ -5,9 +5,9 @@ import { EditProfilePageModel } from './edit_profile_page_model';
 export class LocalEditProfilePageModel extends EditProfilePageModel {
   constructor(locationList: CityProvince[], languageList: Language[],
       cuisineList: Cuisine[], coverImage: CoverImage,
-      coverImageList: CoverImage[], profileImageSrc: UserProfileImage,
+      coverImageList: CoverImage[], profileImage: UserProfileImage,
       displayName: string, userName: string, selectedLocation: CityProvince,
-      profileUserId: number, isUpcomingEventsPrivate: boolean,
+      profileId: number, isUpcomingEventsPrivate: boolean,
       isPastEventsPrivate: boolean, isLocationPrivate: boolean,
       isLanguagePrivate: boolean, biographyValue: string,
       isBiographyPrivate: boolean, selectedLanguageList: Language[],
@@ -21,11 +21,11 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
     this._cuisineList= cuisineList;
     this._coverImage = coverImage;
     this._coverImageList = coverImageList;
-    this._profileImage = profileImageSrc;
+    this._profileImage = profileImage;
     this._displayName = displayName;
     this._userName = userName;
     this._selectedLocation = selectedLocation;
-    this._profileUserId = profileUserId;
+    this._profileId = profileId;
     this._isUpcomingEventsPrivate = isUpcomingEventsPrivate;
     this._isPastEventsPrivate = isPastEventsPrivate;
     this._isLocationPrivate = isLocationPrivate;
@@ -84,8 +84,8 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
     return this._selectedLocation;
   }
 
-  public get profileUserId(): number {
-    return this._profileUserId;
+  public get profileId(): number {
+    return this._profileId;
   }
 
   public get isUpcomingEventsPrivate(): boolean {
@@ -194,7 +194,7 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
       isCuisinePrivate: boolean, isFacebookPrivate: boolean,
       isTwitterPrivate: boolean, isInstagramPrivate: boolean,
       facebookLink: string, twitterLink: string, instagramLink: string
-      ): Promise<void> {
+      ): Promise<boolean> {
     this._coverImage = coverImage;
     this._profileImage = profileImage;
     this._isUpcomingEventsPrivate = isUpcomingEventsPrivate;
@@ -212,6 +212,7 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
     this._facebookLink = facebookLink;
     this._twitterLink = twitterLink;
     this._instagramLink = instagramLink;
+    return true;
   }
 
   private _locationList: CityProvince[];
@@ -223,7 +224,7 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
   private _displayName: string;
   private _userName: string;
   private _selectedLocation: CityProvince;
-  private _profileUserId: number;
+  private _profileId: number;
   private _isUpcomingEventsPrivate: boolean;
   private _isPastEventsPrivate: boolean;
   private _isLocationPrivate: boolean;

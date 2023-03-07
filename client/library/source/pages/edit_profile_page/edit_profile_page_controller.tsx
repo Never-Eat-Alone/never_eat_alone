@@ -81,6 +81,7 @@ export class EditProfilePageController extends React.Component<Properties,
       instagramInputIsValid: true
     };
   }
+
   public render(): JSX.Element {
     if (this.state.redirect) {
       return <Router.Redirect to={this.state.redirect} />;
@@ -92,7 +93,7 @@ export class EditProfilePageController extends React.Component<Properties,
       displayMode={this.props.displayMode}
       displayName={this.props.model.displayName}
       userName={this.props.model.userName}
-      profileUserId={this.props.model.profileUserId}
+      profileId={this.props.model.profileId}
       coverImage={this.state.coverImage}
       coverImageList={this.props.model.coverImageList}
       profileImage={this.state.profileImage}
@@ -388,13 +389,13 @@ export class EditProfilePageController extends React.Component<Properties,
 
   private handleCancel = () => {
     this.setState({
-      redirect: `/users/profile/${this.props.model.profileUserId}`
+      redirect: `/users/profile/${this.props.model.profileId}`
     });
   }
 
   private handleSave = async () => {
     try {
-      await this.props.model.save(this.state.coverImage,
+      const isSaved = await this.props.model.save(this.state.coverImage,
         this.state.profileImage, this.state.isUpcomingEventsPrivate,
         this.state.isPastEventsPrivate, this.state.isLocationPrivate,
         this.state.isLanguagePrivate, this.state.biographyValue,
@@ -403,9 +404,13 @@ export class EditProfilePageController extends React.Component<Properties,
         this.state.isFacebookPrivate, this.state.isTwitterPrivate,
         this.state.isInstagramPrivate, this.state.facebookLink,
         this.state.twitterLink, this.state.instagramLink);
-      this.setState({
-        redirect: `/users/profile/${this.props.model.profileUserId}`
-      });
+      if (isSaved) {
+        this.setState({
+          redirect: `/users/profile/${this.props.model.profileId}`
+        });
+      } else {
+        this.setState({ hasError: true });
+      }
     } catch {
       this.setState({ hasError: true });
     }
