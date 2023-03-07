@@ -1,9 +1,10 @@
-import { CityProvince, CoverImage, Cuisine, Language } from '../../definitions';
+import { CityProvince, CoverImage, Cuisine, Language, UserProfileImage
+} from '../../definitions';
 import { EditProfilePageModel } from './edit_profile_page_model';
 
 export class HttpEditProfilePageModel extends EditProfilePageModel {
   public async load(): Promise<void> {
-    
+
   }
 
   public get locationList(): CityProvince[] {
@@ -26,8 +27,8 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
     return this._model.coverImageList;
   }
 
-  public get profileImageSrc(): string {
-    return this._model.profileImageSrc;
+  public get profileImage(): UserProfileImage {
+    return this._model.profileImage;
   }
 
   public get displayName(): string {
@@ -119,15 +120,16 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
     return this._model.instagramLink;
   }
 
-  public async uploadProfileImage(): Promise<void> {
+  public async uploadProfileImage(newImage: UserProfileImage): Promise<
+      UserProfileImage> {
     return;
   }
 
-  public async saveCoverImage(newImage: CoverImage): Promise<void> {
+  public async saveCoverImage(newImage: CoverImage): Promise<CoverImage> {
     return;
   }
 
-  public async save(coverImage: CoverImage, profileImageSrc: string,
+  public async save(coverImage: CoverImage, profileImage: UserProfileImage,
       isUpcomingEventsPrivate: boolean, isPastEventsPrivate: boolean,
       isLocationPrivate: boolean, isLanguagePrivate: boolean,
       biographyValue: string, isBiographyPrivate: boolean,

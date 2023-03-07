@@ -1,4 +1,5 @@
-import { CityProvince, CoverImage, Cuisine, Language } from '../../definitions';
+import { CityProvince, CoverImage, Cuisine, Language, UserProfileImage
+} from '../../definitions';
 
 export abstract class EditProfilePageModel {
   public abstract load(): Promise<void>;
@@ -7,7 +8,7 @@ export abstract class EditProfilePageModel {
   public abstract get cuisineList(): Cuisine[];
   public abstract get coverImage(): CoverImage;
   public abstract get coverImageList(): CoverImage[];
-  public abstract get profileImageSrc(): string;
+  public abstract get profileImage(): UserProfileImage;
   public abstract get displayName(): string;
   public abstract get userName(): string;
   public abstract get selectedLocation(): CityProvince;
@@ -31,9 +32,10 @@ export abstract class EditProfilePageModel {
   public abstract get facebookLink(): string;
   public abstract get twitterLink(): string;
   public abstract get instagramLink(): string;
-  public abstract uploadProfileImage(): Promise<void>;
-  public abstract saveCoverImage(newImage: CoverImage): Promise<void>;
-  public abstract save(coverImage: CoverImage, profileImageSrc: string,
+  public abstract uploadProfileImage(newImage: UserProfileImage): Promise<
+    UserProfileImage>;
+  public abstract saveCoverImage(newImage: CoverImage): Promise<CoverImage>;
+  public abstract save(coverImage: CoverImage, profileImage: UserProfileImage,
     isUpcomingEventsPrivate: boolean, isPastEventsPrivate: boolean,
     isLocationPrivate: boolean, isLanguagePrivate: boolean,
     biographyValue: string, isBiographyPrivate: boolean,

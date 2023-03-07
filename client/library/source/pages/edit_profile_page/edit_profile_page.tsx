@@ -3,8 +3,8 @@ import * as React from 'react';
 import { CloseButton, InputField, InputFieldWithIcon,
   InvertedSecondaryTextButton, Modal, PublicButton, PrivateButton, RedNavLink,
   SaveCancelStickyMenu, TextareaWithCounter } from '../../components';
-import { CityProvince, CoverImage, Cuisine, DisplayMode, Language
-} from '../../definitions';
+import { CityProvince, CoverImage, Cuisine, DisplayMode, Language,
+  UserProfileImage } from '../../definitions';
 import { ChooseBannerModal } from '../../modals';
 
 interface Properties {
@@ -19,7 +19,7 @@ interface Properties {
   coverImageList: CoverImage[];
 
   /** The source address of the user's profile image. */
-  profileImageSrc: string;
+  profileImage: UserProfileImage;
 
   /** Whether user's upcoming events section is private or public. */
   isUpcomingEventsPrivate: boolean;
@@ -103,7 +103,7 @@ interface Properties {
   onLocationDropdownClick: (selectedLocation: CityProvince) => void;
 
   /** Indicates the change profile image button is clicked. */
-  onChangeProfileImageClick: () => void;
+  onChangeProfileImageClick: (newImage: UserProfileImage) => void;
 
   /** Indicates the change banner modal's Done button is clicked. */
   onChangeBannerDone: (newImage: CoverImage) => void;
@@ -177,6 +177,7 @@ interface State {
   isCuisineInputFocued: boolean;
   isCuisineDropdownDisplayed: boolean;
   isChangeBanner: boolean;
+  newProfileImage: UserProfileImage;
 }
 
 /** Displays the edit profile page. */
@@ -190,7 +191,8 @@ export class EditProfilePage extends React.Component<Properties, State> {
       isLanguageInputFocued: false,
       isCuisineInputFocued: false,
       isLocationInputFocused: false,
-      isChangeBanner: false
+      isChangeBanner: false,
+      newProfileImage: UserProfileImage.NoImage()
     };
     this._languageDropdownRef = React.createRef<HTMLDivElement>();
     this._cuisineDropdownRef = React.createRef<HTMLDivElement>();
@@ -216,7 +218,8 @@ export class EditProfilePage extends React.Component<Properties, State> {
           coverImageStyle: DESKTOP_COVER_IMAGE_STYLE,
           changeBannerButtonStyle: DESKTOP_CHANGE_BANNER_BUTTON_STYLE,
           contentContainerStyle: DESKTOP_TABLET_CONTENT_CONTAINER_STYLE,
-          imagePrivacyContainerStyle: DESKTOP_TABLET_IMAGE_PRIVACY_CONTAINER_STYLE
+          imagePrivacyContainerStyle:
+            DESKTOP_TABLET_IMAGE_PRIVACY_CONTAINER_STYLE
         };
       } else if (this.props.displayMode === DisplayMode.TABLET) {
         return {
@@ -224,7 +227,8 @@ export class EditProfilePage extends React.Component<Properties, State> {
           coverImageStyle: TABLET_COVER_IMAGE_STYLE,
           changeBannerButtonStyle: MOBILE_TABLET_CHANGE_BANNER_BUTTON_STYLE,
           contentContainerStyle: DESKTOP_TABLET_CONTENT_CONTAINER_STYLE,
-          imagePrivacyContainerStyle: DESKTOP_TABLET_IMAGE_PRIVACY_CONTAINER_STYLE
+          imagePrivacyContainerStyle:
+            DESKTOP_TABLET_IMAGE_PRIVACY_CONTAINER_STYLE
         };
       } else {
         return {
@@ -412,12 +416,17 @@ export class EditProfilePage extends React.Component<Properties, State> {
             <div style={IMAGE_CONTAINER_STYLE} >
               <img
                 style={PROFILE_IMAGE_STYLE}
-                src={this.props.profileImageSrc}
+                src={this.props.profileImage.src}
                 alt='Profile Image'
+              />
+              <input
+                type='file'
+                accept='image/*'
+                onChange={this.handleChangeProfileImageClick}
               />
               <button
                   style={CHANGE_IMAGE_BUTTON_STYLE}
-                  onClick={this.props.onChangeProfileImageClick}
+                  onClick={this.handleChangeProfileButton}
               >
                 <img
                   style={CHANGE_IMAGE_ICON_STYLE}
@@ -751,6 +760,16 @@ export class EditProfilePage extends React.Component<Properties, State> {
 
   private handleModalClose = () => {
     this.setState({ isChangeBanner: false });
+  }
+
+  private handleChangeProfileImageClick = (event: React.ChangeEvent<
+      HTMLInputElement>) => {
+    const newImage = new UserProfileImage(-1, -1, event.currentTarget.src);
+    this.setState({ newProfileImage: newImage });
+  }
+
+  private handleChangeProfileButton = () => {
+    this.props.onChangeProfileImageClick(this.state.newProfileImage);
   }
 
   private _languageDropdownRef: React.RefObject<HTMLDivElement>;
