@@ -1,5 +1,5 @@
-import { CreditCardType, PaymentCard, PaymentRecord, SocialAccount, User
-} from '../../definitions';
+import { arrayFromJson, CreditCardType, PaymentCard, PaymentRecord,
+  SocialAccount, User } from '../../definitions';
 import { SettingsPageModel } from './settings_page_model';
 import { LocalSettingsPageModel } from './local_settings_page_model';
 
@@ -12,10 +12,8 @@ export class HttpSettingsPageModel extends SettingsPageModel {
   public async load(): Promise<void> {
     const response = await fetch(`/api/settings/${this._account.id}`);
     const responseObject = await response.json();
-    const linkedSocialAccounts: SocialAccount[] = [];
-    for (const socialAccount of responseObject.linkedSocialAccounts) {
-      linkedSocialAccounts.push(SocialAccount.fromJson(socialAccount));
-    }
+    const linkedSocialAccounts: SocialAccount[] = arrayFromJson(SocialAccount,
+      responseObject.linkedSocialAccounts);
     const password = responseObject.password;
     const isNewEventsNotificationOn = responseObject.isNewEventsNotificationOn;
     const isEventJoinedNotificationOn = 
@@ -30,14 +28,10 @@ export class HttpSettingsPageModel extends SettingsPageModel {
     const isAnnouncementNotificationOn =
       responseObject.isAnnouncementNotificationOn;
     const defaultCard = PaymentCard.fromJson(responseObject.defaultCard);
-    const paymentCards: PaymentCard[] = [];
-    for (const card of responseObject.paymentCards) {
-      paymentCards.push(PaymentCard.fromJson(card));
-    }
-    const paymentRecords: PaymentRecord[] = [];
-    for (const record of responseObject.paymentRecords) {
-      paymentRecords.push(PaymentRecord.fromJson(record));
-    }
+    const paymentCards: PaymentCard[] = arrayFromJson(PaymentCard,
+      responseObject.paymentCards);
+    const paymentRecords: PaymentRecord[] = arrayFromJson(PaymentRecord,
+      responseObject.paymentRecords);
     this._model = new LocalSettingsPageModel(linkedSocialAccounts, password,
       isNewEventsNotificationOn, isEventJoinedNotificationOn,
       isEventRemindersNotificationOn, isChangesNotificationOn,
