@@ -1,4 +1,4 @@
-import { Attendee, DressCode, Location, Restaurant, Seating, User
+import { arrayFromJson, Attendee, DressCode, Location, Restaurant, Seating, User
 } from '../../definitions';
 import { DiningEventPageModel } from './dining_event_page_model';
 import { LocalDiningEventPageModel } from './local_dining_event_page_model';
@@ -31,10 +31,8 @@ export class HttpDiningEventPageModel extends DiningEventPageModel {
     const reservationName = responseObject.reservationName;
     const startTime = new Date(Date.parse(responseObject.startTime));
     const endTime = new Date(Date.parse(responseObject.endTime));
-    const attendeeList: Attendee[] = [];
-    for (const attendee of responseObject.attendeeList) {
-      attendeeList.push(Attendee.fromJson(attendee));
-    }
+    const attendeeList: Attendee[] = arrayFromJson(Attendee,
+      responseObject.attendeeList);
     const totalCapacity = responseObject.totalCapacity;
     const description = responseObject.description;
     const isGoing = responseObject.isGoing;

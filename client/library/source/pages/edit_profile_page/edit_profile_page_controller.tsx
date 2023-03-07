@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
-import { CityProvince, CoverImage, Cuisine, DisplayMode, Language, User
-} from '../../definitions';
+import { CityProvince, CoverImage, Cuisine, DisplayMode, Language, User,
+  UserProfileImage } from '../../definitions';
 import { EditProfilePage } from './edit_profile_page';
 import { EditProfilePageModel } from './edit_profile_page_model';
 
@@ -16,7 +16,7 @@ interface State {
   hasError: boolean;
   redirect: string;
   coverImage: CoverImage;
-  profileImageSrc: string;
+  profileImage: UserProfileImage;
   locationValue: string;
   selectedLocation: CityProvince;
   suggestedLocationList: CityProvince[];
@@ -53,7 +53,7 @@ export class EditProfilePageController extends React.Component<Properties,
       hasError: false,
       redirect: null,
       coverImage: CoverImage.default(),
-      profileImageSrc: '',
+      profileImage: UserProfileImage.NoImage(),
       locationValue: '',
       suggestedLocationList: [],
       selectedLocation: CityProvince.empty(),
@@ -81,6 +81,7 @@ export class EditProfilePageController extends React.Component<Properties,
       instagramInputIsValid: true
     };
   }
+
   public render(): JSX.Element {
     if (this.state.redirect) {
       return <Router.Redirect to={this.state.redirect} />;
@@ -92,10 +93,10 @@ export class EditProfilePageController extends React.Component<Properties,
       displayMode={this.props.displayMode}
       displayName={this.props.model.displayName}
       userName={this.props.model.userName}
-      profileUserId={this.props.model.profileUserId}
+      profileId={this.props.model.profileId}
       coverImage={this.state.coverImage}
       coverImageList={this.props.model.coverImageList}
-      profileImageSrc={this.state.profileImageSrc}
+      profileImage={this.state.profileImage}
       isUpcomingEventsPrivate={this.state.isUpcomingEventsPrivate}
       isPastEventsPrivate={this.state.isPastEventsPrivate}
       isLocationPrivate={this.state.isLocationPrivate}
@@ -154,7 +155,7 @@ export class EditProfilePageController extends React.Component<Properties,
       this.setState({
         isLoaded: true,
         coverImage: this.props.model.coverImage,
-        profileImageSrc: this.props.model.profileImageSrc,
+        profileImage: this.props.model.profileImage,
         locationValue: `${this.props.model.selectedLocation.city}, ${
           this.props.model.selectedLocation.province}`,
         biographyValue: this.props.model.biographyValue,
@@ -338,9 +339,10 @@ export class EditProfilePageController extends React.Component<Properties,
     this.setState({ selectedCuisineList: temp });
   }
 
-  private handleChangeProfileImageClick = async () => {
+  private handleChangeProfileImageClick = async (newImage: UserProfileImage
+      ) => {
     try {
-      await this.props.model.uploadProfileImage();
+      await this.props.model.uploadProfileImage(newImage);
     } catch {
       //pass
     }
@@ -387,14 +389,14 @@ export class EditProfilePageController extends React.Component<Properties,
 
   private handleCancel = () => {
     this.setState({
-      redirect: `/users/profile/${this.props.model.profileUserId}`
+      redirect: `/users/profile/${this.props.model.profileId}`
     });
   }
 
   private handleSave = async () => {
     try {
-      await this.props.model.save(this.state.coverImage,
-        this.state.profileImageSrc, this.state.isUpcomingEventsPrivate,
+      const isSaved = await this.props.model.save(this.state.coverImage,
+        this.state.profileImage, this.state.isUpcomingEventsPrivate,
         this.state.isPastEventsPrivate, this.state.isLocationPrivate,
         this.state.isLanguagePrivate, this.state.biographyValue,
         this.state.isBiographyPrivate, this.state.selectedLanguageList,
@@ -402,9 +404,13 @@ export class EditProfilePageController extends React.Component<Properties,
         this.state.isFacebookPrivate, this.state.isTwitterPrivate,
         this.state.isInstagramPrivate, this.state.facebookLink,
         this.state.twitterLink, this.state.instagramLink);
-      this.setState({
-        redirect: `/users/profile/${this.props.model.profileUserId}`
-      });
+      if (isSaved) {
+        this.setState({
+          redirect: `/users/profile/${this.props.model.profileId}`
+        });
+      } else {
+        this.setState({ hasError: true });
+      }
     } catch {
       this.setState({ hasError: true });
     }

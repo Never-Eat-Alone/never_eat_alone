@@ -1,21 +1,18 @@
-import { UserProfileImage } from '../../definitions';
+import { arrayFromJson, UserProfileImage } from '../../definitions';
 import { LocalSignUpPageModel } from './local_sign_up_page_model';
 import { SignUpPageModel } from './sign_up_page_model';
 
 export class HttpSignUpPageModel extends SignUpPageModel {
   public async load(): Promise<void> {
     const response = await fetch('/api/sign_up');
-    const responseObject = await response.json();
-    let email = '';
-    let defaultImage = UserProfileImage.NoImage();
-    let avatars: UserProfileImage[] = [];
-    if (response.status === 200) {
-      email = responseObject.email;
-      defaultImage = UserProfileImage.fromJson(responseObject.defaultImage);
-      for (const avatar of responseObject.avatars) {
-        avatars.push(UserProfileImage.fromJson(avatar));
-      }
+    if (response.status !== 200) {
+      return;
     }
+    const responseObject = await response.json();
+    const email = responseObject.email;
+    const defaultImage = UserProfileImage.fromJson(responseObject.defaultImage);
+    const avatars: UserProfileImage[] = arrayFromJson('UserProfileImage',
+      responseObject.avatars);
     this._model = new LocalSignUpPageModel(email, defaultImage, avatars);
     this._model.load();
   }

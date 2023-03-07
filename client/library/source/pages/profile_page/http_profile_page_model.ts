@@ -1,5 +1,5 @@
-import { CityProvince, CoverImage, Cuisine, EventCardSummary, Language
-} from '../../definitions';
+import { arrayFromJson, CityProvince, CoverImage, Cuisine, EventCardSummary,
+  Language } from '../../definitions';
 import { LocalProfilePageModel } from './local_profile_page_model';
 import { ProfilePageModel } from './profile_page_model';
 
@@ -25,25 +25,17 @@ export class HttpProfilePageModel extends ProfilePageModel {
     const createdAt = responseObject.createdAt;
     const biography = responseObject.biography;
     const location = responseObject.location;
-    const languageList: Language[] = [];
-    for (const language of responseObject.languageList) {
-      languageList.push(Language.fromJson(language));
-    }
+    const languageList: Language[] = arrayFromJson(Language,
+      responseObject.languageList);
     const facebookLink = responseObject.facebookLink;
     const twitterLink = responseObject.twitterLink;
     const instagramLink = responseObject.instagramLink;
-    const favoriteCuisineList: Cuisine[] = [];
-    for (const cuisine of responseObject.favoriteCuisineList) {
-      favoriteCuisineList.push(Cuisine.fromJson(cuisine));
-    }
-    const upcomingEventList: EventCardSummary[] = [];
-    for (const event of responseObject.upcomingEventList) {
-      upcomingEventList.push(EventCardSummary.fromJson(event));
-    }
-    const pastEventList: EventCardSummary[] = [];
-    for (const event of responseObject.pastEventList) {
-      pastEventList.push(EventCardSummary.fromJson(event));
-    }
+    const favoriteCuisineList: Cuisine[] = arrayFromJson(Cuisine,
+      responseObject.favoriteCuisineList);
+    const upcomingEventList: EventCardSummary[] = arrayFromJson(
+      EventCardSummary, responseObject.upcomingEventList);
+    const pastEventList: EventCardSummary[] = arrayFromJson(EventCardSummary,
+      responseObject.pastEventList);
     this._model = new LocalProfilePageModel(this._profileId, coverImage,
       profileImageSrc, name, userName, createdAt, biography, location,
       languageList, facebookLink, twitterLink, instagramLink,
