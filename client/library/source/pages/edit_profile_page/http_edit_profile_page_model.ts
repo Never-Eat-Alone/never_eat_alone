@@ -1,5 +1,5 @@
-import { CityProvince, CoverImage, Cuisine, Language, UserProfileImage
-} from '../../definitions';
+import { arrayFromJson, arrayToJson, CityProvince, CoverImage, Cuisine,
+  Language, UserProfileImage } from '../../definitions';
 import { EditProfilePageModel } from './edit_profile_page_model';
 import { LocalEditProfilePageModel } from './local_edit_profile_page_model';
 
@@ -15,23 +15,15 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
       return;
     }
     const responseObject = await response.json();
-    const locationList: CityProvince[] = [];
-    for (const location of responseObject.locationList) {
-      locationList.push(CityProvince.fromJson(location));
-    }
-    const languageList: Language[] = [];
-    for (const language of responseObject.languageList) {
-      languageList.push(Language.fromJson(language));
-    }
-    const cuisineList: Cuisine[] = [];
-    for (const cuisine of responseObject.cuisineList) {
-      cuisineList.push(Cuisine.fromJson(cuisine));
-    }
+    const locationList: CityProvince[] = arrayFromJson(CityProvince,
+      responseObject.locationList);
+    const languageList: Language[] = arrayFromJson(Language,
+      responseObject.languageList);
+    const cuisineList: Cuisine[] = arrayFromJson(Cuisine,
+      responseObject.cuisineList);
     const coverImage = CoverImage.fromJson(responseObject.coverImage);
-    const coverImageList: CoverImage[] = [];
-    for (const cover of responseObject.coverImageList) {
-      coverImageList.push(CoverImage.fromJson(cover));
-    }
+    const coverImageList: CoverImage[] = arrayFromJson(CoverImage,
+      responseObject.coverImageList);
     const profileImage = UserProfileImage.fromJson(responseObject.profileImage);
     const displayName = responseObject.displayName;
     const userName = responseObject.userName;
@@ -43,14 +35,10 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
     const isLanguagePrivate = responseObject.isLanguagePrivate;
     const biographyValue = responseObject.biographyValue;
     const isBiographyPrivate = responseObject.isBiographyPrivate;
-    const selectedLanguageList: Language[] = [];
-    for (const language of responseObject.selectedLanguageList) {
-      selectedLanguageList.push(Language.fromJson(language));
-    }
-    const selectedCuisineList: Cuisine[] = [];
-    for (const cuisine of responseObject.selectedCuisineList) {
-      selectedCuisineList.push(Cuisine.fromJson(cuisine));
-    }
+    const selectedLanguageList: Language[] = arrayFromJson(Language,
+      responseObject.selectedLanguageList);
+    const selectedCuisineList: Cuisine[] = arrayFromJson(Cuisine,
+      responseObject.selectedCuisineList);
     const isCuisinePrivate = responseObject.isCuisinePrivate;
     const isFacebookPrivate = responseObject.isFacebookPrivate;
     const isTwitterPrivate = responseObject.isTwitterPrivate;
@@ -144,10 +132,8 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
       return [];
     }
     const responseObject = await response.json();
-    const suggestedLanguageList: Language[] = [];
-    for (const language of responseObject.languageList) {
-      suggestedLanguageList.push(Language.fromJson(language));
-    }
+    const suggestedLanguageList: Language[] = arrayFromJson(Language,
+      responseObject.languageList);
     return suggestedLanguageList;
   }
 
@@ -157,10 +143,8 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
       return [];
     }
     const responseObject = await response.json();
-    const suggestedCuisineList: Cuisine[] = [];
-    for (const cuisine of responseObject.cuisineList) {
-      suggestedCuisineList.push(Cuisine.fromJson(cuisine));
-    }
+    const suggestedCuisineList: Cuisine[] = arrayFromJson(Cuisine,
+      responseObject.cuisineList);
     return suggestedCuisineList;
   }
 
@@ -258,16 +242,16 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        'coverImage': coverImage,
-        'profileImage': profileImage,
+        'coverImage': coverImage.toJson(),
+        'profileImage': profileImage.toJson(),
         'isUpcomingEventsPrivate': isUpcomingEventsPrivate,
         'isPastEventsPrivate': isPastEventsPrivate,
         'isLocationPrivate': isLocationPrivate,
         'isLanguagePrivate': isLanguagePrivate,
         'biographyValue': biographyValue,
         'isBiographyPrivate': isBiographyPrivate,
-        'selectedLanguageList': selectedLanguageList,
-        'selectedCuisineList': selectedCuisineList,
+        'selectedLanguageList': arrayToJson(selectedLanguageList),
+        'selectedCuisineList': arrayToJson(selectedCuisineList),
         'isCuisinePrivate': isCuisinePrivate,
         'isFacebookPrivate': isFacebookPrivate,
         'isTwitterPrivate': isTwitterPrivate,
