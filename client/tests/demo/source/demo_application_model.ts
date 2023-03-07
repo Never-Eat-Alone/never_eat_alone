@@ -361,7 +361,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       omakaseCuisine, persianCuisine, seafoodCuisine, steakhouseCuisine,
       traditionalCuisine];
     const demoEditProfilePageModel1 = new DemoEditProfilePageModel(
-      emmaCoverImage, coverImageList, emmaProfileImage.src, 'Emma', 'emma',
+      emmaCoverImage, coverImageList, emmaProfileImage, 'Emma', 'emma',
       1, false, false, false, false, emmaBio, false, emmaLanguageList,
       emmaFavoriteCuisines, false, false, false, false, '', '',
       emmaInstagramLink, emmaLocation, locationList, languageList, cuisineList);
