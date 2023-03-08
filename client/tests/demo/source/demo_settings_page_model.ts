@@ -171,16 +171,12 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
     return Boolean(receiptId && message);
   }
 
-  public async deleteAccount(account: NeverEatAlone.User, password: string
-      ): Promise<NeverEatAlone.User> {
-    if (account && account.id !== -1 && password) {
-      return account;
-    }
+  public async deleteAccount(password: string): Promise<NeverEatAlone.User> {
     return NeverEatAlone.User.makeGuest();
   }
 
-  public async deactivateAccount(accountId: number): Promise<boolean> {
-    return Boolean(accountId);
+  public async deactivateAccount(): Promise<boolean> {
+    return true;
   }
 
   private _displayName: string;

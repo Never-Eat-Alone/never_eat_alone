@@ -15,7 +15,7 @@ import { DemoSignUpPageModel } from './demo_sign_up_page_model';
 /** Implements the ApplicationModel for demo purposes. */
 export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
   public async load(): Promise<void> {
-    this._headerModel = new NeverEatAlone.LocalHeaderModel();
+    this._headerModel = new NeverEatAlone.LocalHeaderModel('');
     const imageListEmpty: NeverEatAlone.SocialMediaImage[] = [];
     const imageListSample: NeverEatAlone.SocialMediaImage[] = [
       new NeverEatAlone.SocialMediaImage(1, 'resources/images/2.jpg'),
@@ -298,10 +298,9 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const frenchLanguage = new NeverEatAlone.Language(5, 'French');
     const farsiLanguage = new NeverEatAlone.Language(6, 'Farsi');
     const emmaLanguageList = [englishLanguage];
-    const emmaLanguageNameList = [englishLanguage.name];
-    const arthurLanguageList = [englishLanguage.name, frenchLanguage.name];
-    const lucyLanguageList = [mandarinLanguage.name, englishLanguage.name,
-      spanishLanguage.name, germanLanguage.name];
+    const arthurLanguageList = [englishLanguage, frenchLanguage];
+    const lucyLanguageList = [mandarinLanguage, englishLanguage,
+      spanishLanguage, germanLanguage];
     const emmaFavoriteCuisines = [frenchCuisine, canadianCuisine, modernCuisine
     ];
     const arthurFavoriteCuisines = [traditionalCuisine, steakhouseCuisine];
@@ -328,7 +327,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const demoProfilePageModel1 = new NeverEatAlone.LocalProfilePageModel(1,
       emmaCoverImage, emmaProfileImage.src, userEmma.name,
       userEmma.userName, userEmma.createdAt, emmaBio, emmaLocation,
-      emmaLanguageNameList, '', '', emmaInstagramLink, emmaFavoriteCuisines, [],
+      emmaLanguageList, '', '', emmaInstagramLink, emmaFavoriteCuisines, [],
       [eventCardSummary1]);
     this._profilePageModelMap.set(1, demoProfilePageModel1);
     // User Profile Page Model for userArthur

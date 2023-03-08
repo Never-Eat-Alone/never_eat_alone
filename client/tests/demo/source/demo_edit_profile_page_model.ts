@@ -4,7 +4,7 @@ export class DemoEditProfilePageModel extends
     NeverEatAlone.EditProfilePageModel {
   constructor(coverImage: NeverEatAlone.CoverImage, coverImageList:
       NeverEatAlone.CoverImage[], profileImage: NeverEatAlone.UserProfileImage,
-      displayName: string, userName: string, profileUserId: number,
+      displayName: string, userName: string, profileId: number,
       isUpcomingEventsPrivate: boolean, isPastEventsPrivate: boolean,
       isLocationPrivate: boolean, isLanguagePrivate: boolean,
       biographyValue: string, isBiographyPrivate: boolean,
@@ -21,7 +21,7 @@ export class DemoEditProfilePageModel extends
     this._profileImage = profileImage;
     this._displayName = displayName;
     this._userName = userName;
-    this._profileUserId = profileUserId;
+    this._profileId = profileId;
     this._isUpcomingEventsPrivate = isUpcomingEventsPrivate;
     this._isPastEventsPrivate = isPastEventsPrivate;
     this._isLocationPrivate = isLocationPrivate;
@@ -83,8 +83,8 @@ export class DemoEditProfilePageModel extends
     return this._selectedLocation;
   }
 
-  public get profileUserId(): number {
-    return this._profileUserId;
+  public get profileId(): number {
+    return this._profileId;
   }
 
   public get isUpcomingEventsPrivate(): boolean {
@@ -219,7 +219,7 @@ export class DemoEditProfilePageModel extends
   private _profileImage: NeverEatAlone.UserProfileImage;
   private _displayName: string;
   private _userName: string;
-  private _profileUserId: number;
+  private _profileId: number;
   private _isUpcomingEventsPrivate: boolean;
   private _isPastEventsPrivate: boolean;
   private _isLocationPrivate: boolean;
