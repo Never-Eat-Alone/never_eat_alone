@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { AddCreditCardForm } from '../../components';
-import { DisplayMode, PaymentCard, PaymentRecord, User
+import { CreditCardType, DisplayMode, PaymentCard, PaymentRecord, User
 } from '../../definitions';
 import { PaymentReceiptModal } from '../../modals';
 import { AccountInformationTab } from './account_information_tab';
@@ -79,9 +79,9 @@ export class SettingsPageController extends React.Component<Properties, State> {
     return <SettingsPage
       displayMode={this.props.displayMode}
       linkedSocialAccounts={this.props.model.linkedSocialAccounts}
-      displayName={this.props.model.displayName}
-      profileId={this.props.model.profileId}
-      email={this.props.model.email}
+      displayName={this.props.account.name}
+      profileId={this.props.account.id}
+      email={this.props.account.email}
       password={this.props.model.password}
       isNewEventsNotificationOn={this.state.isNewEventsNotificationOn}
       isEventJoinedNotificationOn={this.state.isEventJoinedNotificationOn}
@@ -171,9 +171,12 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleNewEventsToggle = async () => {
     try {
-      await this.props.model.toggleNewEventsNotification();
-      this.setState((prevState) => ({
-        isNewEventsNotificationOn: !prevState.isNewEventsNotificationOn }));
+      const isToggled = await this.props.model.toggleNewEventsNotification();
+      if (isToggled) {
+        this.setState((prevState) => ({
+          isNewEventsNotificationOn: !prevState.isNewEventsNotificationOn
+        }));
+      }
     } catch {
       // pass
     }
@@ -181,9 +184,12 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleEventJoinedToggle = async () => {
     try {
-      await this.props.model.toggleEventJoinedNotification();
-      this.setState((prevState) => ({
-        isEventJoinedNotificationOn: !prevState.isEventJoinedNotificationOn }));
+      const isToggled = await this.props.model.toggleEventJoinedNotification();
+      if (isToggled) {
+        this.setState((prevState) => ({
+          isEventJoinedNotificationOn: !prevState.isEventJoinedNotificationOn
+        }));
+      }
     } catch {
       // pass
     }
@@ -191,10 +197,14 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleEventRemindersToggle = async () => {
     try {
-      await this.props.model.toggleEventRemindersNotification();
-      this.setState((prevState) => ({
-        isEventRemindersNotificationOn: !prevState.isEventRemindersNotificationOn
-      }));
+      const isToggled = 
+        await this.props.model.toggleEventRemindersNotification();
+      if (isToggled) {
+        this.setState((prevState) => ({
+          isEventRemindersNotificationOn:
+            !prevState.isEventRemindersNotificationOn
+        }));
+      }
     } catch {
       // pass
     }
@@ -202,9 +212,12 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleChangesToggle = async () => {
     try {
-      await this.props.model.toggleChangesNotification();
-      this.setState((prevState) => ({
-        isChangesNotificationOn: !prevState.isChangesNotificationOn }));
+      const isToggled = await this.props.model.toggleChangesNotification();
+      if (isToggled) {
+        this.setState((prevState) => ({
+          isChangesNotificationOn: !prevState.isChangesNotificationOn
+        }));
+      }
     } catch {
       // pass
     }
@@ -212,10 +225,13 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleSomeoneJoinedToggle = async () => {
     try {
-      await this.props.model.toggleSomeoneJoinedNotification();
-      this.setState((prevState) => ({
-        isSomeoneJoinedNotificationOn: !prevState.isSomeoneJoinedNotificationOn
-      }));
+      const isToggled =
+        await this.props.model.toggleSomeoneJoinedNotification();
+      if (isToggled) {
+        this.setState((prevState) => ({ isSomeoneJoinedNotificationOn:
+          !prevState.isSomeoneJoinedNotificationOn
+        }));
+      }
     } catch {
       // pass
     }
@@ -223,9 +239,12 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleFoodieAcceptedInviteToggle = async () => {
     try {
-      await this.props.model.toggleFoodieAcceptedInviteNotification();
-      this.setState((prevState) => ({ isFoodieAcceptedInviteNotificationOn:
-        !prevState.isFoodieAcceptedInviteNotificationOn }));
+      const isToggled =
+        await this.props.model.toggleFoodieAcceptedInviteNotification();
+      if (isToggled) {
+        this.setState((prevState) => ({ isFoodieAcceptedInviteNotificationOn:
+          !prevState.isFoodieAcceptedInviteNotificationOn }));
+      }
     } catch {
       // pass
     }
@@ -244,19 +263,22 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleAnnouncementToggle = async () => {
     try {
-      await this.props.model.toggleAnnouncementNotification();
-      this.setState((prevState) => ({ isAnnouncementNotificationOn:
-        !prevState.isAnnouncementNotificationOn }));
+      const isToggled = await this.props.model.toggleAnnouncementNotification();
+      if (isToggled) {
+        this.setState((prevState) => ({ isAnnouncementNotificationOn:
+          !prevState.isAnnouncementNotificationOn }));
+      }
     } catch {
       // pass
     }
   }
 
   private handleAddCard = async (cardNumber: number, nameOnCard: string,
-      month: number, year: number, securityCode: number, zipcode: string) => {
+      month: number, year: number, securityCode: number, zipcode: string,
+      creditCardType: CreditCardType) => {
     try {
       const response = await this.props.model.addCard(cardNumber, nameOnCard,
-        month, year, securityCode, zipcode);
+        month, year, securityCode, zipcode, creditCardType);
       if (response.id !== -1) {
         this.setState({
           addCardErrorCode: AddCreditCardForm.ErrorCode.NONE,
@@ -301,13 +323,15 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleDeleteCard = async (cardId: number) => {
     try {
-      await this.props.model.deleteCard(cardId);
-      this.setState({
-        defaultCard: this.props.model.defaultCard,
-        paymentCards: this.props.model.paymentCards,
-        updateCardErrorCode: CardDetailsForm.ErrorCode.NONE,
-        paymentMethodsTabPage: PaymentMethodsTab.Page.INITIAL
-      });
+      const isDeleted = await this.props.model.deleteCard(cardId);
+      if (isDeleted) {
+        this.setState({
+          defaultCard: this.props.model.defaultCard,
+          paymentCards: this.props.model.paymentCards,
+          updateCardErrorCode: CardDetailsForm.ErrorCode.NONE,
+          paymentMethodsTabPage: PaymentMethodsTab.Page.INITIAL
+        });
+      }
     } catch {
       this.setState({
         updateCardErrorCode: CardDetailsForm.ErrorCode.NO_CONNECTION,
@@ -316,29 +340,17 @@ export class SettingsPageController extends React.Component<Properties, State> {
     }
   }
 
-  private handleGoogleClick = () => {
+  private handleGoogleClick = () => {}
 
-  }
+  private handleFacebookClick = () => {}
 
-  private handleFacebookClick = () => {
+  private handleRemoveLinkedAccount = () => {}
 
-  }
+  private handleEditDisplayNameClick = () => {}
 
-  private handleRemoveLinkedAccount = () => {
+  private handleEditEmailClick = () => {}
 
-  }
-
-  private handleEditDisplayNameClick = () => {
-
-  }
-
-  private handleEditEmailClick = () => {
-
-  }
-
-  private handleEditPasswordClick = () => {
-
-  }
+  private handleEditPasswordClick = () => {}
 
   private handleDeleteAccount = () => {
     this.setState({
@@ -348,7 +360,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleSubmitDeleteAccount = async () => {
     try {
-      const response = await this.props.model.deleteAccount(this.props.account,
+      const response = await this.props.model.deleteAccount(
         this.state.deleteAccountPassword);
       if (response.id === -1) {
         this.setState({
@@ -369,9 +381,11 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleSubmitDeactivateAccount = async () => {
     try {
-      await this.props.model.deactivateAccount(this.props.account.id);
-      this.setState({ redirect: '/deactivate_account_survey' });
-      this.props.onLogOut();
+      const isDeactivated = await this.props.model.deactivateAccount();
+      if (isDeactivated) {
+        this.setState({ redirect: '/deactivate_account_survey' });
+        this.props.onLogOut();
+      }
     } catch {
       //pass
     }
@@ -411,19 +425,19 @@ export class SettingsPageController extends React.Component<Properties, State> {
     }
   }
 
-  private handlePrint = (paymentRecord: PaymentRecord) => {
-  }
+  private handlePrint = (paymentRecord: PaymentRecord) => {}
 
-  private handleDownloadPdf = (paymentRecord: PaymentRecord) => {
-  }
+  private handleDownloadPdf = (paymentRecord: PaymentRecord) => {}
 
   private handleSubmitHelpEmail = async (receiptId: number,
       message: string) => {
     try {
-      await this.props.model.SubmitHelpEmail(receiptId, message);
-      this.setState({
-        paymentReceiptModalPage: PaymentReceiptModal.Page.REQUEST_SENT
-      });
+      const isSent = await this.props.model.SubmitHelpEmail(receiptId, message);
+      if (isSent) {
+        this.setState({
+          paymentReceiptModalPage: PaymentReceiptModal.Page.REQUEST_SENT
+        });
+      }
     } catch {
       //pass
     }
@@ -431,8 +445,10 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleEmailReceipt = async (paymentRecord: PaymentRecord) => {
     try {
-      await this.props.model.emailReceipt(paymentRecord);
-      this.setState({ isReceiptEmailed: true });
+      const isSent = await this.props.model.emailReceipt(paymentRecord);
+      if (isSent) {
+        this.setState({ isReceiptEmailed: true });
+      }
     } catch {
       this.setState({ isReceiptEmailed: false });
     }

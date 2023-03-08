@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { AddCreditCardForm, Modal } from '../../components';
-import { DisplayMode, PaymentCard, PaymentRecord, SocialAccount
+import { CreditCardType, DisplayMode, PaymentCard, PaymentRecord, SocialAccount
 } from '../../definitions';
 import { DeactivateAccountModal, PaymentReceiptModal } from '../../modals';
 import { AccountInformationTab } from './account_information_tab';
@@ -88,7 +88,8 @@ interface Properties {
 
   /** Indicates the Add card button is clicked. */
   onAddCard: (cardNumber: number, nameOnCard: string, month: number,
-    year: number, securityCode: number, zipcode: string) => void;
+    year: number, securityCode: number, zipcode: string, creditCardType:
+    CreditCardType) => void;
 
   /** Indicates the update card details button is clicked. */
   onUpdateCard: (newCard: PaymentCard, isMarkedDefault: boolean) => void;

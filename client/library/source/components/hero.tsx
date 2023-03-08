@@ -6,8 +6,8 @@ import { AccentTextButton } from './text_button';
 interface Properties {
   account: User;
   displayMode: DisplayMode;
-  eventTagList: EventTag[];
-  totalEventsThisMonth: number;
+  userEventTagList: EventTag[];
+  userTotalEventsThisMonth: number;
   onJoinButton: () => void;
 }
 
@@ -55,21 +55,25 @@ export class Hero extends React.Component<Properties> {
         if (this.props.displayMode === DisplayMode.DESKTOP) {
           return {
             loggedContainerStyle: DESKTOP_LOGGED_CONTAINER_STYLE,
-            detailsNoEventsContainerStyle: DESKTOP_DETAILS_NO_EVENTS_CONTAINER_STYLE
+            detailsNoEventsContainerStyle:
+              DESKTOP_DETAILS_NO_EVENTS_CONTAINER_STYLE
           };
         }
         if (this.props.displayMode === DisplayMode.TABLET) {
           return {
             loggedContainerStyle: TABLET_LOGGED_CONTAINER_STYLE,
-            detailsNoEventsContainerStyle: TABLET_DETAILS_NO_EVENTS_CONTAINER_STYLE
+            detailsNoEventsContainerStyle:
+              TABLET_DETAILS_NO_EVENTS_CONTAINER_STYLE
           };
         }
         return {
           loggedContainerStyle: MOBILE_LOGGED_CONTAINER_STYLE,
-          detailsNoEventsContainerStyle: MOBILE_DETAILS_NO_EVENTS_CONTAINER_STYLE
+          detailsNoEventsContainerStyle:
+            MOBILE_DETAILS_NO_EVENTS_CONTAINER_STYLE
         };
       })();
-      if (!this.props.eventTagList || this.props.eventTagList.length === 0) {
+      if (!this.props.userEventTagList || this.props.userEventTagList.length ===
+          0) {
         return (
           <div style={{...LOGGED_CONTAINER_STYLE, ...CONTAINER_NO_EVENTS}} >
             <div
@@ -85,8 +89,8 @@ export class Hero extends React.Component<Properties> {
           <AttendanceRecord
             account={this.props.account}
             displayMode={this.props.displayMode}
-            pastEventList={this.props.eventTagList}
-            totalNumberOfEvents={this.props.totalEventsThisMonth}
+            pastEventList={this.props.userEventTagList}
+            totalNumberOfEvents={this.props.userTotalEventsThisMonth}
           />
         </div>);
     }

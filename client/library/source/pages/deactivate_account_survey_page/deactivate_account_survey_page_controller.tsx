@@ -32,10 +32,10 @@ export class DeactivateAccountSurveyPageController extends React.Component<
 
   private handleSubmit = async (survey: AccountDeletedSurvey) => {
     try {
-      await this.props.model.submit(survey);
-      this.setState({ isSubmitted: true });
+      const isSubmitted = await this.props.model.submit(survey);
+      this.setState({ isSubmitted });
     } catch {
-      //pass
+      this.setState({ isSubmitted: false });
     }
   }
 }

@@ -1,6 +1,5 @@
 import { AccountDeletedSurvey } from '../../definitions';
 
 export abstract class DeletedAccountSurveyModel {
-  public abstract submit(survey: AccountDeletedSurvey): Promise<
-    void>; 
+  public abstract submit(survey: AccountDeletedSurvey): Promise<boolean>;
 }

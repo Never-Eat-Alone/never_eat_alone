@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CityProvince, Cuisine, DisplayMode, EventCardSummary, User
+import { CityProvince, Cuisine, DisplayMode, EventCardSummary, Language, User
 } from '../../definitions';
 import { ProfileBox } from './profile_box';
 import { ProfilePastEvents } from './profile_past_events';
@@ -36,7 +36,7 @@ interface Properties {
   location: CityProvince;
 
   /** List of the languages the user can speak. */
-  languageList: string[];
+  languageList: Language[];
 
   /** The url to user's profile on Facebook social platform. */
   facebookLink: string;

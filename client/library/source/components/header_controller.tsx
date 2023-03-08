@@ -7,8 +7,6 @@ interface Properties {
   /** Current session user. */
   account: User;
 
-  profileImageSrc: string;
-
   /** The display mode based on the user's display dimensions. */
   displayMode: DisplayMode;
 
@@ -56,7 +54,9 @@ export class HeaderController extends React.Component<Properties, State> {
     if (this.state.isLoaded && !this.state.hasError) {
       return (
         <div id='shell-header' style={CONTAINER_STYLE} >
-          <Header {...this.props} />
+          <Header {...this.props}
+            profileImageSrc={this.props.model.profileImageSrc}
+          />
         </div>);
     }
     return <div />;

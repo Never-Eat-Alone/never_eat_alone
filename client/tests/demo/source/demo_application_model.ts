@@ -15,7 +15,7 @@ import { DemoSignUpPageModel } from './demo_sign_up_page_model';
 /** Implements the ApplicationModel for demo purposes. */
 export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
   public async load(): Promise<void> {
-    this._headerModel = new NeverEatAlone.LocalHeaderModel();
+    this._headerModel = new NeverEatAlone.LocalHeaderModel('');
     const imageListEmpty: NeverEatAlone.SocialMediaImage[] = [];
     const imageListSample: NeverEatAlone.SocialMediaImage[] = [
       new NeverEatAlone.SocialMediaImage(1, 'resources/images/2.jpg'),
@@ -273,7 +273,6 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       new NeverEatAlone.UserInvitationCode(1, 1, 'AcFTHD$5Dg'));
     this._joinModel = new DemoJoinModel();
     this._partnerWithUsModel = new NeverEatAlone.LocalPartnerWithUsModel();
-    this._partnerWithUsModel.load();
     this._logInModel = new DemoLogInModel([userEmma, userArthur], [
       emmaProfileImage, arthurProfileImage]);
     this._forgotPasswordPageModel = new DemoForgotPasswordPageModel([userEmma,
@@ -299,10 +298,9 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const frenchLanguage = new NeverEatAlone.Language(5, 'French');
     const farsiLanguage = new NeverEatAlone.Language(6, 'Farsi');
     const emmaLanguageList = [englishLanguage];
-    const emmaLanguageNameList = [englishLanguage.name];
-    const arthurLanguageList = [englishLanguage.name, frenchLanguage.name];
-    const lucyLanguageList = [mandarinLanguage.name, englishLanguage.name,
-      spanishLanguage.name, germanLanguage.name];
+    const arthurLanguageList = [englishLanguage, frenchLanguage];
+    const lucyLanguageList = [mandarinLanguage, englishLanguage,
+      spanishLanguage, germanLanguage];
     const emmaFavoriteCuisines = [frenchCuisine, canadianCuisine, modernCuisine
     ];
     const arthurFavoriteCuisines = [traditionalCuisine, steakhouseCuisine];
@@ -329,7 +327,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const demoProfilePageModel1 = new NeverEatAlone.LocalProfilePageModel(1,
       emmaCoverImage, emmaProfileImage.src, userEmma.name,
       userEmma.userName, userEmma.createdAt, emmaBio, emmaLocation,
-      emmaLanguageNameList, '', '', emmaInstagramLink, emmaFavoriteCuisines, [],
+      emmaLanguageList, '', '', emmaInstagramLink, emmaFavoriteCuisines, [],
       [eventCardSummary1]);
     this._profilePageModelMap.set(1, demoProfilePageModel1);
     // User Profile Page Model for userArthur
@@ -362,7 +360,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       omakaseCuisine, persianCuisine, seafoodCuisine, steakhouseCuisine,
       traditionalCuisine];
     const demoEditProfilePageModel1 = new DemoEditProfilePageModel(
-      emmaCoverImage, coverImageList, emmaProfileImage.src, 'Emma', 'emma',
+      emmaCoverImage, coverImageList, emmaProfileImage, 'Emma', 'emma',
       1, false, false, false, false, emmaBio, false, emmaLanguageList,
       emmaFavoriteCuisines, false, false, false, false, '', '',
       emmaInstagramLink, emmaLocation, locationList, languageList, cuisineList);
@@ -433,6 +431,8 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       avatars, defaultImage);
     this._signUpPageModel.set(1, demoSignUpPageModel1);
     this._signUpPageModel.set(2, demoSignUpPageModel2);
+    this._googleClientId = '';
+    this._facebookClientId = '';
     await Promise.all([this._headerModel.load(), this._homePageModel.load(),
       this._inviteAFoodieModel.load()]);
     return;
@@ -498,6 +498,14 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return this._signUpPageModel.get(id);
   }
 
+  public get googleClientId(): string {
+    return this._googleClientId;
+  }
+
+  public get facebookClientId(): string {
+    return this._facebookClientId;
+  }
+
   private _headerModel: NeverEatAlone.HeaderModel;
   private _homePageModel: NeverEatAlone.HomePageModel;
   private _diningEventModelMap: Map<number, NeverEatAlone.DiningEventPageModel>;
@@ -514,4 +522,6 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     NeverEatAlone.DeactivateAccountSurveyModel;
   private _forgotPasswordPageModel: NeverEatAlone.ForgotPasswordPageModel;
   private _signUpPageModel: Map<number, NeverEatAlone.SignUpPageModel>;
+  private _googleClientId: string;
+  private _facebookClientId: string;
 }

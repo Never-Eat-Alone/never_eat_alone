@@ -102,27 +102,28 @@ export class DemoDiningEventPageModel extends
   }
 
   public async joinEvent(account: NeverEatAlone.User, profileImageSrc: string
-      ): Promise<void> {
+      ): Promise<boolean> {
     const index = this._attendeeList.findIndex((a) => a.userId === account.id);
     if (index !== -1) {
       if (this._attendeeList[index].status ===
           NeverEatAlone.AttendeeStatus.GOING) {
-        return;
+        return false;
       }
       this._attendeeList.splice(index, 1);
     }
     this._attendeeList.push(new NeverEatAlone.Attendee(account.id,
       this._eventId, account.name, 0, NeverEatAlone.AttendeeStatus.GOING,
       profileImageSrc, new Date()));
-    return;
+    return true;
   }
 
-  public async removeSeat(account: NeverEatAlone.User): Promise<void> {
+  public async removeSeat(account: NeverEatAlone.User): Promise<boolean> {
     const index = this._attendeeList.findIndex((a) => a.userId === account.id);
     if (index !== -1) {
       this._attendeeList.splice(index, 1);
+      return true;
     }
-    return;
+    return false;
   }
 
   private _eventId: number;

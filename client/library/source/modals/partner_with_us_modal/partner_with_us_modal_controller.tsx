@@ -17,8 +17,6 @@ interface Properties {
 }
 
 interface State {
-  isLoaded: boolean;
-  hasError: boolean;
   name: string;
   email: string;
   profileLink: string;
@@ -32,11 +30,9 @@ export class PartnerWithUsModalController extends React.Component<Properties,
   constructor(props: Properties) {
     super(props);
     this.state = {
-      isLoaded: false,
       name: '',
       email: '',
       profileLink: '',
-      hasError: false,
       message: '',
       page: PartnerWithUsPage.Page.INITIAL,
       errorCode: PartnerWithUsPage.PageErrorCode.NONE
@@ -44,9 +40,6 @@ export class PartnerWithUsModalController extends React.Component<Properties,
   }
 
   public render(): JSX.Element {
-    if (!this.state.isLoaded || this.state.hasError) {
-      return <div />;
-    }
     if (this.state.page === PartnerWithUsPage.Page.INITIAL) {
       return <PartnerWithUsModal
         displayMode={this.props.displayMode}
@@ -65,33 +58,30 @@ export class PartnerWithUsModalController extends React.Component<Properties,
     />;
   }
 
-  public async componentDidMount(): Promise<void> {
-    try {
-      await this.props.model.load();
-      this.setState({
-        isLoaded: true
-      });
-    } catch {
-      this.setState({
-        isLoaded: true,
-        hasError: true
-      });
-    }
-    return;
-  }
-
   private handleEmailSendClick = async (name: string, email: string,
       profileLink: string, message: string) => {
     try {
-      await this.props.model.sendEmail(name, email, profileLink, message);
-      this.setState({
-        name: name,
-        email: email,
-        profileLink: profileLink,
-        message: message,
-        page: PartnerWithUsPage.Page.MESSAGE_SENT,
-        errorCode: PartnerWithUsPage.PageErrorCode.NONE
-      });
+      const isEmailSent = await this.props.model.sendEmail(name, email,
+        profileLink, message);
+      if (isEmailSent) {
+        this.setState({
+          name: name,
+          email: email,
+          profileLink: profileLink,
+          message: message,
+          page: PartnerWithUsPage.Page.MESSAGE_SENT,
+          errorCode: PartnerWithUsPage.PageErrorCode.NONE
+        });
+      } else {
+        this.setState({
+          name: name,
+          email: email,
+          profileLink: profileLink,
+          message: message,
+          page: PartnerWithUsPage.Page.INITIAL,
+          errorCode: PartnerWithUsPage.PageErrorCode.SEND_FAILED
+        });
+      }
     } catch {
       this.setState({
         name: name,

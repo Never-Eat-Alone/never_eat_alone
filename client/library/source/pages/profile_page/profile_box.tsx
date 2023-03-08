@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { EllipsisDropdownMenu, FacebookButton, InstagramButton,
   SecondaryButtonNavLink, TwitterButton } from '../../components';
-import { CityProvince, Cuisine, User } from '../../definitions';
+import { CityProvince, Cuisine, Language, User } from '../../definitions';
 
 interface Properties {
 
@@ -30,7 +30,7 @@ interface Properties {
   location: CityProvince;
 
   /** List of the languages the user can speak. */
-  languageList: string[];
+  languageList: Language[];
 
   /** The url to user's profile on Facebook social platform. */
   facebookLink: string;
@@ -92,7 +92,8 @@ export class ProfileBox extends React.Component<Properties> {
               alt='Language Icon'
             />
             <p style={TEXT_STYLE} >
-              {this.props.languageList.join(', ')}
+              {this.props.languageList.map(language => language.name).join(','
+              )}
             </p>
           </div>);
       }

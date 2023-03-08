@@ -45,9 +45,10 @@ export class ForgotPasswordPageController extends React.Component<Properties,
 
   private handleResendLinkClick = async () => {
     try {
-      await this.props.model.resendRecoveryEmail(this.state.email,
-        this.state.user);
-      this.setState({ errorCode: ForgotPasswordPage.ErrorCode.NONE });
+      const isResend = await this.props.model.resendRecoveryEmail(
+        this.state.email, this.state.user);
+      this.setState({ errorCode: isResend && ForgotPasswordPage.ErrorCode.NONE
+        || ForgotPasswordPage.ErrorCode.NO_CONNECTION });
     } catch {
       this.setState({ errorCode: ForgotPasswordPage.ErrorCode.NO_CONNECTION });
     }

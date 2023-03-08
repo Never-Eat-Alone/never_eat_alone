@@ -25,6 +25,6 @@ export abstract class DiningEventPageModel {
   public abstract get isGoing(): boolean;
   public abstract get isRSVPOpen(): boolean;
   public abstract joinEvent(account: User, profileImageSrc: string): Promise<
-    void>;
-  public abstract removeSeat(account: User): Promise<void>;
+    boolean>;
+  public abstract removeSeat(account: User): Promise<boolean>;
 }

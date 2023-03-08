@@ -30,7 +30,8 @@ interface Properties {
 
   /** Indicates the Add card button is clicked. */
   onAddCard: (cardNumber: number, cardName: string, month: number, year: number,
-    securityCode: number, zipcode: string) => void;
+    securityCode: number, zipcode: string, creditCardType: CreditCardType
+    ) => void;
 
   /** Indicates the delete card button is clicked. */
   onDeleteCard: (cardId: number) => void;

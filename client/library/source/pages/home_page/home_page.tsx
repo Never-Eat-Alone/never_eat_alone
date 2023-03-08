@@ -21,13 +21,13 @@ interface Properties {
   eventList: EventCardSummary[];
 
   /** The list of Event Tags that user has attended in the current month. */
-  eventTagList: EventTag[];
+  userEventTagList: EventTag[];
 
   /** List of user's upcoming events. */
   userFutureEventList: EventCardSummary[];
 
   /** Total number of events happening this month. */
-  totalEventsThisMonth: number;
+  userTotalEventsThisMonth: number;
 
   /** Indicates the join button is clicked. */
   onJoinButton: () => void;
@@ -67,8 +67,8 @@ export class HomePage extends React.Component<Properties> {
           account={this.props.account}
           displayMode={this.props.displayMode}
           onJoinButton={this.props.onJoinButton}
-          eventTagList={this.props.eventTagList}
-          totalEventsThisMonth={this.props.totalEventsThisMonth}
+          userEventTagList={this.props.userEventTagList}
+          userTotalEventsThisMonth={this.props.userTotalEventsThisMonth}
         />
         {userUpcomingEventsSection}
         <ExploreEventsSummary

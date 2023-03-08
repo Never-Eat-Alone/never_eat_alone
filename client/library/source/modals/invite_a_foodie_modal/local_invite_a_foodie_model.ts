@@ -7,11 +7,9 @@ export class LocalInviteAFoodieModel extends InviteAFoodieModel {
     this._userInvitationCode = userInvitationCode;
   }
 
-  public async load(): Promise<void> {
-    return;
-  }
+  public async load(): Promise<void> {}
 
-  public getUserInvitationCode(): UserInvitationCode {
+  public get userInvitationCode(): UserInvitationCode {
     return this._userInvitationCode;
   }
 
