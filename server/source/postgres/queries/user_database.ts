@@ -26,7 +26,7 @@ export class UserDatabase {
 
   /** Returns a user based on the given email address.
    * @param email - User email.
-  */
+   */
   public loadUserByEmail = async (email: string): Promise<User> => {
     const result =
       await this.pool.query('SELECT * FROM users WHERE email = $1', [email]);
@@ -41,7 +41,7 @@ export class UserDatabase {
 
   /** Returns a user with the given user id.
    * @param id - User id.
-  */
+   */
   public loadUserById = async (id: number): Promise<User> => {
     const result = await this.pool.query('SELECT * from users WHERE id = $1',
       [id]);
@@ -56,7 +56,7 @@ export class UserDatabase {
 
   /** Returns the user associated with the given session id.
    * @param id - Session id.
-  */
+   */
   public loadUserBySessionId = async (id: string): Promise<User> => {
     const userIdResult = await this.pool.query(
       'SELECT (user_id) from sessions WHERE sid = $1', [id]);
@@ -82,7 +82,7 @@ export class UserDatabase {
 
   /** Returns the user google credentials based on the given user id.
    * @param userId - User id.
-  */
+   */
   public loadGoogleCredentials = async (userId: number): Promise<string> => {
     const result = await this.pool.query(
       'SELECT * FROM google_user_credentials WHERE user_id = $1', [userId]);
@@ -114,7 +114,7 @@ export class UserDatabase {
    * @param name - User name.
    * @param email - User email.
    * @param ticket - Google login ticket.
-  */
+   */
   public addGoogleUser = async (name: string, email: string,
       ticket: LoginTicket): Promise<User> => {
     const result = await this.pool.query(
@@ -136,7 +136,7 @@ export class UserDatabase {
    * @param name - User name.
    * @param email - User email.
    * @param password - User password.
-  */
+   */
   public addGuestUser = async (name: string, email: string, userName: string,
       password: string): Promise<User> => {
     const result = await this.pool.query(
@@ -161,7 +161,7 @@ export class UserDatabase {
    * @param tokenId - Confirmation token id.
    * @param expiresAt - Token expiration date.
    * @param userId - User id.
-  */
+   */
   public addConfirmationToken = async (tokenId: string, expiresAt: Date,
       userId: number): Promise<void> => {
     await this.pool.query(

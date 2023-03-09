@@ -14,29 +14,30 @@ export class UserRoutes {
    */
   constructor(app: any, userDatabase: UserDatabase, sgmail: any,
       googleClientId: string) {
-    /** Route for the guest user log in. */
-    app.post('/log_in', this.logIn);
-
-    /** Route for the guest user login with a Google account. */
-    app.post('/google_log_in', this.googleLogIn);
-
-    /** Route for the guest user sign up. */
-    app.post('/guest_sign_up', this.guestSignUp);
-
-    /** Route for the guest user sign up with a Google account. */
-    app.post('/guest_google_sign_up', this.guestGoogleSignUp);
 
     /** Route to get the current logged in user. */
-    app.get('/current_user', this.getCurrentUser);
+    app.get('/api/current_user', this.getCurrentUser);
+
+    /** Route for the guest user sign up. */
+    app.post('/api/sign_up', this.guestSignUp);
+
+    /** Route for the user log in. */
+    app.post('/api/log_in', this.logIn);
+
+    /** Route for the guest user login with a Google account. */
+    app.post('/api/google_log_in', this.googleLogIn);
+
+    /** Route for the guest user sign up with a Google account. */
+    app.post('/api/guest_google_sign_up', this.guestGoogleSignUp);
 
     /** Route to log out the user. */
-    app.get('/log_out', this.logOut);
+    app.get('/api/log_out', this.logOut);
 
     /** Route to send a confirm email to the user. */
-    app.post('/send_confirmation_email', this.sendConfirmationEmail);
+    app.post('/api/send_confirmation_email', this.sendConfirmationEmail);
 
     /** Route to the confirmation token page. */
-    app.get('/confirmation_tokens/:id', this.verifyConfirmationToken);
+    app.get('/api/confirmation_tokens/:id', this.verifyConfirmationToken);
 
     this.userDatabase = userDatabase;
     this.sgmail = sgmail;
@@ -251,7 +252,7 @@ export class UserRoutes {
    * @param subject - Subject of the email.
    * @param text - Context of the email.
    * @param html - The html representation of the email.
-  */
+   */
   private sendEmail = async (to: string, from: string, subject: string,
       text: string, html: string) => {
     const message = {
