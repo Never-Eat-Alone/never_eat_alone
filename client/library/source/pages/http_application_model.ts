@@ -23,11 +23,11 @@ import { SignUpPageModel } from './sign_up_page';
 
 export class HttpApplicationModel extends ApplicationModel {
   public async load(): Promise<void> {
-    const accountResponse = await fetch('/api/current_user');
+    const response = await fetch('/api/current_user');
     let account = User.makeGuest();
-    if (accountResponse.status === 200) {
-      const accountJson = await accountResponse.json();
-      account = User.fromJson(accountJson);
+    if (response.status === 200) {
+      const responseObject = await response.json();
+      account = User.fromJson(responseObject.user);
     }
     const googleClientIdResponse = await fetch('/api/google_client_id');
     const googleClientId = await googleClientIdResponse.json();

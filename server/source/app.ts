@@ -8,6 +8,9 @@ import * as Path from 'path';
 import { Pool } from 'pg';
 import * as SGMail from '@sendgrid/mail';
 import { v4 as uuidv4 } from 'uuid';
+import { UserDatabase } from './postgres/queries/user_database';
+import { UserRoutes } from './routes/user';
+
 const pgSession = require('connect-pg-simple')(Session);
 
 const initializePostgres = async (pool, dir, label) => {
@@ -90,7 +93,9 @@ function runExpress(pool: Pool, config: any) {
     session.cookie.secure = true // serve secure cookies
   }
   app.use(Session(session));
-  
+  const userDatabase = new UserDatabase(pool);
+  const userRoutes = new UserRoutes(app, userDatabase, SGMail,
+    config.google_client_id);
   app.get('*', (request, response, next) => {
     response.sendFile(Path.join(process.cwd(), 'public', 'index.html'));
   });
