@@ -135,6 +135,26 @@ export class UserDatabase {
   /** Add the new user.
    * @param name - User name.
    * @param email - User email.
+   * @param referralCode - User referral code.
+   */
+  public addGuestUserRequest = async (name, email, referralCode
+      ): Promise<User> => {
+    const result = await this.pool.query(
+      'INSERT INTO users (name, email, user_status, created_at, referral_code) \
+      VALUES ($1, $2, DEFAULT, DEFAULT, $3) RETURNING *', [name, email,
+        referralCode]);
+    if (result.rows.length === 0) {
+      return User.makeGuest();
+    }
+    return new User(parseInt(result.rows[0].id), result.rows[0].name,
+      result.rows[0].email, result.rows[0].user_name,
+      UserStatus[result.rows[0].user_status as keyof typeof UserStatus],
+      new Date(Date.parse(result.rows[0].created_at)));
+  }
+
+  /** Add the new user.
+   * @param name - User name.
+   * @param email - User email.
    * @param password - User password.
    */
   public addGuestUser = async (name: string, email: string, userName: string,

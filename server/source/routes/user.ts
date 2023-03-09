@@ -18,17 +18,14 @@ export class UserRoutes {
     /** Route to get the current logged in user. */
     app.get('/api/current_user', this.getCurrentUser);
 
-    /** Route for the guest user sign up. */
-    app.post('/api/sign_up', this.guestSignUp);
+    /** Route for guest user requesting to join the app. */
+    app.post('/api/join', this.join);
 
     /** Route for the user log in. */
     app.post('/api/log_in', this.logIn);
 
     /** Route for the guest user login with a Google account. */
     app.post('/api/google_log_in', this.googleLogIn);
-
-    /** Route for the guest user sign up with a Google account. */
-    app.post('/api/guest_google_sign_up', this.guestGoogleSignUp);
 
     /** Route to log out the user. */
     app.get('/api/log_out', this.logOut);
@@ -106,9 +103,9 @@ export class UserRoutes {
     response.status(200).json({ user: user.toJson() });
   }
 
-  /** Registers guest user. */
-  private guestSignUp = async (request, response) => {
-    const { name, email, userName, password } = request.body;
+  /** Registers the user request to join the app. */
+  private join = async (request, response) => {
+    const { name, email, referralCode } = request.body;
     let isEmail: boolean;
     try {
       isEmail = await this.userDatabase.isDuplicateEmail(email);
@@ -120,21 +117,10 @@ export class UserRoutes {
       response.status(400).json({ message: 'DUPLICATE_EMAIL' });
       return;
     }
-    let isUserName: boolean;
-    try {
-      isUserName = await this.userDatabase.isDuplicateUserName(userName);
-    } catch (error) {
-      response.status(400).json({ message: 'DATABASE_ERROR' });
-      return;
-    }
-    if (isUserName) {
-      response.status(400).json({ message: 'DUPLICATE_USERNAME' });
-      return;
-    }
     let user: User;
     try {
-      user = await this.userDatabase.addGuestUser(name, email, userName,
-        password);
+      user = await this.userDatabase.addGuestUserRequest(name, email,
+        referralCode);
     } catch (error) {
       response.status(400).json({ message: 'DATABASE_ERROR' });
       return;
@@ -163,7 +149,7 @@ export class UserRoutes {
       token);
     try {
       await this.sendEmail(email, 'info@nevereatalone.net',
-        'Welcome to Never Eat Alone', 'Welcome to NEA', newHtml);
+        'NEA Account: Registration Request', '', newHtml);
     } catch (error) {
       response.status(201).json({
         user: user.toJson(),
@@ -172,41 +158,6 @@ export class UserRoutes {
       return;
     }
     response.status(201).json({ user: user.toJson(), message: '' });
-  }
-
-  /** Registers guest user using her gmail account. */
-  private guestGoogleSignUp = async (request, response) => {
-    const { authToken, email, name } = request.body;
-    let ticket: LoginTicket;
-    try {
-      const googleClient = new OAuth2Client(this.googleClientId);
-      ticket = await googleClient.verifyIdToken({
-        idToken: authToken,
-        audience: this.googleClientId
-      });
-    } catch (error) {
-      response.status(400).json({ message: 'DATABASE_ERROR' });
-      return;
-    }
-    let isEmail: boolean;
-    try {
-      isEmail = await this.userDatabase.isDuplicateEmail(email);
-    } catch (error) {
-      response.status(400).json({ message: 'DATABASE_ERROR' });
-      return;
-    }
-    if (isEmail) {
-      response.status(400).json({ message: 'DUPLICATE_EMAIL' });
-      return;
-    }
-    let user: User;
-    try {
-      user = await this.userDatabase.addGoogleUser(name, email, ticket);
-    } catch (error) {
-      response.status(400).json({ message: 'DATABASE_ERROR' });
-      return;
-    }
-    response.status(201).json({ user: user.toJson() });
   }
 
   /** Returns the current logged in user. */
