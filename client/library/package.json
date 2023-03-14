@@ -1,5 +1,5 @@
 {
-  "name": "never_eat_alone_library",
+  "name": "never_eat_alone",
   "version": "0.1.0",
   "description": "Never eat alone client library.",
   "license": "LicenseRef-LICENSE",
@@ -17,7 +17,7 @@
     "@types/react-router-hash-link": "2.4.5",
     "@types/react-transition-group": "4.4.5",
     "@types/tinycolor2": "1.4.3",
-    "source-map-loader": "4.0.1",
+    "source-map-loader": "3.0.0",
     "style-loader": "3.3.1",
     "ts-loader": "9.4.2",
     "typescript": "4.9.5",
