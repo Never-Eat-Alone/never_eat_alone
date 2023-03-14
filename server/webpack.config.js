@@ -1,6 +1,6 @@
 const path = require('path');
+const webpack = require('webpack');
 module.paths.push(path.resolve(process.cwd(), 'node_modules'));
-const nodeExternals = require('webpack-node-externals');
 const PROD = JSON.parse(process.env.PROD_ENV || '0');
 module.exports = {
   devtool: PROD ? false : 'source-map',
@@ -30,6 +30,9 @@ module.exports = {
     symlinks: false,
     extensions: ['.ts', '.js', '.json']
   },
+  plugins: [
+    new webpack.IgnorePlugin({ resourceRegExp: /^pg-native$/ })
+  ],
   target: 'node',
-  externals: [nodeExternals]
+  ignoreWarnings: [/Failed to parse source map/]
 };
