@@ -124,7 +124,7 @@ export class UserDatabase {
       return User.makeGuest();
     }
     await this.pool.query(
-      'INSERT INTO google_credentials (user_id, id_token) VALUES ($1, $2)',
+      'INSERT INTO google_user_credentials (user_id, id_token) VALUES ($1, $2)',
       [result.rows[0].id, ticket.getPayload()['sub']]);
     return new User(parseInt(result.rows[0].id), result.rows[0].name,
       result.rows[0].email, '',
@@ -200,8 +200,8 @@ export class UserDatabase {
   }
 
   public isDuplicateUserName = async (userName: string): Promise<boolean> => {
-    const result = await this.pool.query('SELECT * FROM users WHERE email = $1',
-      [userName]);
+    const result = await this.pool.query('SELECT * FROM users WHERE \
+      user_name = $1', [userName]);
     return result.rows.length !== 0;
   }
 
@@ -218,7 +218,7 @@ export class UserDatabase {
       return -1;
     }
     await this.pool.query(
-      "UPDATE users SET user_status = 'active' WHERE id = $1",
+      "UPDATE users SET user_status = 'ACTIVE' WHERE id = $1",
       [result.rows[0].user_id]);
     await this.pool.query(
       'DELETE from user_confirmation_tokens WHERE token_id = $1', [token]);
