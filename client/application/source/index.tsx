@@ -1,9 +1,16 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import * as Router from 'react-router-dom';
+import { withRouter, BrowserRouter } from 'react-router-dom';
 import * as NeverEatAlone from 'never_eat_alone';
 
+const model = new NeverEatAlone.HttpApplicationModel();
+const ApplicationControllerWithRouting = withRouter(
+  NeverEatAlone.ApplicationController);
+const ScrollToTopWithRouter = withRouter(NeverEatAlone.ScrollToTop);
 ReactDOM.render(
-  <Router.BrowserRouter>
-    <div></div>
-  </Router.BrowserRouter>, document.getElementById('main'));
+  <BrowserRouter>
+    <ScrollToTopWithRouter>
+      <ApplicationControllerWithRouting model={model} />
+    </ScrollToTopWithRouter>
+  </BrowserRouter>,
+  document.getElementById('main'));
