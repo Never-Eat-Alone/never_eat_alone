@@ -4,12 +4,12 @@ import * as Router from 'react-router-dom';
 export class ScrollToTop extends React.Component<
     Router.RouteComponentProps> {
   public render(): JSX.Element {
-    return null;
+    return <>{this.props.children}</>;
   }
 
   public componentDidUpdate(prevProps: Router.RouteComponentProps): void {
     if (this.props.location.pathname !== prevProps.location.pathname) {
-      document.getElementById('app_top').scroll(0, 0);
+      window.scrollTo(0, 0);
     }
   }
 }
