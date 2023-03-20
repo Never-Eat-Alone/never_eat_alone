@@ -96,6 +96,7 @@ function runExpress(pool: Pool, config: any) {
   const userDatabase = new UserDatabase(pool);
   const userRoutes = new UserRoutes(app, userDatabase, SGMail,
     config.google_client_id);
+  
   app.get('*', (request, response, next) => {
     response.sendFile(Path.join(process.cwd(), 'public', 'index.html'));
   });

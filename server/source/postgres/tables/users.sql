@@ -1,11 +1,12 @@
 CREATE TABLE IF NOT EXISTS users (
   id            SERIAL             PRIMARY KEY                  ,
-  name          VARCHAR(200)       NOT NULL                     ,
-  email         TEXT               NOT NULL                     ,
-  user_name     VARCHAR(200)                                    ,
+  name          VARCHAR(255)                                    ,
+  email         VARCHAR(255)       UNIQUE                       ,
+  user_name     VARCHAR(255)                                    ,
   user_status   user_status_enum               DEFAULT 'PENDING',
   created_at    TIMESTAMP                      DEFAULT NOW(),
-  referral_code VARCHAR(200)
+  updated_at    TIMESTAMP                      DEFAULT NOW(),
+  referral_code VARCHAR(255)
 );
 
 INSERT INTO users (
