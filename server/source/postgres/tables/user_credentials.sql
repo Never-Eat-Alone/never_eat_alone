@@ -3,6 +3,13 @@ CREATE TABLE IF NOT EXISTS user_credentials (
   hashed_pass TEXT    NOT NULL
 );
 
+ALTER TABLE user_credentials
+  ADD CONSTRAINT fk_user_credentials_users
+  FOREIGN KEY (user_id)
+  REFERENCES users (id)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE;
+
 INSERT INTO user_credentials (
   user_id,
   hashed_pass

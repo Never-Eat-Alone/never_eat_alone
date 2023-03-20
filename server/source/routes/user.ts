@@ -24,8 +24,17 @@ export class UserRoutes {
     /** Route for the user log in. */
     app.post('/api/log_in', this.logIn);
 
+    /** Route for the guest user signup with a Google account. */
+    app.post('/api/google_sign_up', this.googleSignUp);
+
+    /** Route for the guest user signup with a Facebook account. */
+    app.post('/api/facebook_sign_up', this.facebookSignUp);
+
     /** Route for the guest user login with a Google account. */
     app.post('/api/google_log_in', this.googleLogIn);
+
+    /** Route for the guest user login with a Facebook account. */
+    app.post('/api/facebook_log_in', this.facebookLogIn);
 
     /** Route to log out the user. */
     app.get('/api/log_out', this.logOut);
@@ -59,40 +68,6 @@ export class UserRoutes {
       request.session.cookie.maxAge = 30 * 365 * 24 * 60 * 60 * 1000;
     } else {
       request.session.cookie.maxAge = 24 * 60 * 60 * 1000;
-    }
-    try {
-      await this.userDatabase.assignUserIdToSid(request.session.id, user.id);
-    } catch (error) {
-      response.status(400).json({ message: 'DATABASE_ERROR' });
-      return;
-    }
-    response.status(200).json({ user: user.toJson() });
-  }
-
-  /** Checks user credentials for login using Google account. */
-  private googleLogIn = async (request, response) => {
-    const { email, token } = request.body;
-    const user = await this.userDatabase.loadUserByEmail(email);
-    if (user === null) {
-      response.status(400).json({ message: 'EMAIL_NOT_FOUND' });
-      return;
-    }
-    let ticket: LoginTicket;
-    try {
-      const googleClient = new OAuth2Client(this.googleClientId);
-      ticket = await googleClient.verifyIdToken({
-        idToken: token.id_token,
-        audience: this.googleClientId
-      });
-    } catch (error) {
-      response.status(400).json({ message: 'GOOGLE_SERVICE_ERROR' });
-      return;
-    }
-    const googleCredentials =
-      await this.userDatabase.loadGoogleCredentials(user.id);
-    if (googleCredentials !== ticket.getPayload()['sub']) {
-      response.status(400).json({ message: 'SOCIAL_LOGIN_FAILED' });
-      return;
     }
     try {
       await this.userDatabase.assignUserIdToSid(request.session.id, user.id);
@@ -158,6 +133,52 @@ export class UserRoutes {
       return;
     }
     response.status(201).json({ user: user.toJson(), message: '' });
+  }
+
+  /** Register the users request to join the app using their Google account. */
+  private googleSignUp = async () => {
+
+  }
+
+  /** Register the users request to join the app using their
+   * Facebook account.
+   */
+  private facebookSignUp = async () => {
+
+  }
+
+  /** Checks user credentials for login using Google account. */
+  private googleLogIn = async (request, response) => {
+    const { email, token } = request.body;
+    const user = await this.userDatabase.loadUserByEmail(email);
+    if (user === null) {
+      response.status(400).json({ message: 'EMAIL_NOT_FOUND' });
+      return;
+    }
+    let ticket: LoginTicket;
+    try {
+      const googleClient = new OAuth2Client(this.googleClientId);
+      ticket = await googleClient.verifyIdToken({
+        idToken: token.id_token,
+        audience: this.googleClientId
+      });
+    } catch (error) {
+      response.status(400).json({ message: 'GOOGLE_SERVICE_ERROR' });
+      return;
+    }
+    const googleCredentials =
+      await this.userDatabase.loadGoogleCredentials(user.id);
+    if (googleCredentials !== ticket.getPayload()['sub']) {
+      response.status(400).json({ message: 'SOCIAL_LOGIN_FAILED' });
+      return;
+    }
+    try {
+      await this.userDatabase.assignUserIdToSid(request.session.id, user.id);
+    } catch (error) {
+      response.status(400).json({ message: 'DATABASE_ERROR' });
+      return;
+    }
+    response.status(200).json({ user: user.toJson() });
   }
 
   /** Returns the current logged in user. */
