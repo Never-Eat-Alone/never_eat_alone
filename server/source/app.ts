@@ -92,6 +92,16 @@ function runExpress(pool: Pool, config: any) {
     session.cookie.secure = true // serve secure cookies
   }
   app.use(Session(session));
+  app.get('/api/google_client_id', (request, response) => {
+    let id = '';
+    try {
+      id = config.google_client_id;
+    } catch (error) {
+      response.status(400).json({ google_client_id: id, message: 'ERROR' });
+      return;
+    }
+    response.status(200).json({ google_client_id: id });
+  });
   const userDatabase = new UserDatabase(pool);
   const userRoutes = new UserRoutes(app, userDatabase, SGMail);
   app.get('*', (request, response, next) => {
