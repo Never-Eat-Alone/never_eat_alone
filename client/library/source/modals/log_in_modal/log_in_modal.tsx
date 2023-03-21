@@ -1,9 +1,8 @@
 import * as EmailValidator from 'email-validator';
 import * as React from 'react';
 import * as Router from 'react-router-dom';
-import { CheckBox, CloseButton, EmailInputField, FacebookLogInButton,
-  GoogleLogInButton, PasswordInputField, PrimaryTextButton,
-  SecondaryTextLinkButton } from '../../components';
+import { CheckBox, CloseButton, EmailInputField, PasswordInputField,
+  PrimaryTextButton, SecondaryTextLinkButton } from '../../components';
 import { DisplayMode } from '../../definitions';
 
 interface Properties {
@@ -15,21 +14,11 @@ interface Properties {
   /** The modal error code. */
   errorCode: LogInModal.ErrorCode;
 
-  googleClientId: string;
-
-  facebookClientId: string;
-
   /** Indicates the close button is clicked. */
   onClose: () => void;
 
   /** Indicates the Log In button is clicked. */
   onLogIn: (email: string, password: string, rememberMe: boolean) => void;
-
-  /** Indicates the google login button is clicked. */
-  onGoogleLogIn: (email: string, token: any) => void;
-
-  /** Indicates the facebook login button is clicked. */
-  onFacebookLogIn: (email: string, token: any) => void;
 }
 
 interface State {
@@ -80,34 +69,6 @@ export class LogInModal extends React.Component<Properties, State> {
     const modalErrorMessage = (() => {
       if (this.props.errorCode === LogInModal.ErrorCode.NO_CONNECTION) {
         return 'Somethign went wrong. Please try again later.';
-      }
-      return '';
-    })();
-    const googleErrorMessage = (() => {
-      if (this.props.errorCode === LogInModal.ErrorCode.GOOGLE_LOGIN_FAILED) {
-        return (
-          <>
-            Google login failed. Please log in using your email.&nbsp;
-            <SecondaryTextLinkButton
-              labelStyle={FORGOT_LINK_STYLE}
-              label='Learn more...'
-              onClick={() => this.handleRedirect('/help')}
-            />
-          </>);
-      }
-      return null;
-    })();
-    const facebookErrorMessage = (() => {
-      if (this.props.errorCode === LogInModal.ErrorCode.FACEBOOK_LOGIN_FAILED) {
-        return (
-          <>
-            Facebook login failed. Please log in using your email.&nbsp;
-            <SecondaryTextLinkButton
-              labelStyle={FORGOT_LINK_STYLE}
-              label='Learn more...'
-              onClick={() => this.handleRedirect('/help')}
-            />
-          </>);
       }
       return '';
     })();
@@ -173,20 +134,6 @@ export class LogInModal extends React.Component<Properties, State> {
             <div style={OR_LINE_STYLE} >
               <span style={OR_SPAN_STYLE} >or</span>
             </div>
-          </div>
-          <GoogleLogInButton
-            clientId={this.props.googleClientId}
-            label='Log in with Google'
-            onSuccess={this.props.onGoogleLogIn}
-          />
-          <div style={ERROR_CONTAINER_STYLE} >{googleErrorMessage}</div>
-          <FacebookLogInButton
-            clientId={this.props.facebookClientId}
-            label='Log in with Facebook'
-            onSuccess={this.props.onFacebookLogIn}
-          />
-          <div style={ERROR_CONTAINER_STYLE} >
-            {facebookErrorMessage}
           </div>
           <div style={REQUEST_ACCOUNT_ROW_STYLE} >
             Haven’t joined yet? Let’s fix this and&nbsp;
@@ -292,9 +239,7 @@ export namespace LogInModal {
   export enum ErrorCode {
     NONE,
     NO_CONNECTION,
-    LOGIN_FAILED,
-    GOOGLE_LOGIN_FAILED,
-    FACEBOOK_LOGIN_FAILED
+    LOGIN_FAILED
   }
 
   export enum PasswordErrorCode {

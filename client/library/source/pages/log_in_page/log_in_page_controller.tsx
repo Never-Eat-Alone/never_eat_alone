@@ -11,9 +11,6 @@ interface Properties {
   /** Log in model. */
   model: LogInModel;
 
-  googleClientId: string;
-  facebookClientId: string;
-
   /** Indicates the log in was successful. */
   onLogInSuccess: (user: User, profileImage: UserProfileImage) => void;
 }
@@ -42,12 +39,8 @@ export class LogInPageController extends React.Component<Properties, State> {
       email={this.state.email}
       password={this.state.password}
       rememberMe={this.state.rememberMe}
-      googleClientId={this.props.googleClientId}
-      facebookClientId={this.props.facebookClientId}
       errorCode={this.state.errorCode}
       onLogIn={this.handleLogIn}
-      onGoogleLogIn={this.handleGoogleLogIn}
-      onFacebookLogIn={this.handleFacebookLogIn}
     />;
   }
 
@@ -70,38 +63,6 @@ export class LogInPageController extends React.Component<Properties, State> {
         rememberMe: rememberMe,
         errorCode: LogInPage.ErrorCode.NO_CONNECTION
       });
-    }
-  }
-
-  private handleGoogleLogIn = async (email: string, token: any) => {
-    try {
-      const userResponse = await this.props.model.googleLogIn(email, token);
-      const user = User.fromJson(userResponse.user);
-      const profileImage = UserProfileImage.fromJson(userResponse.profileImage);
-      if (user.userStatus === UserStatus.ACTIVE) {
-        this.props.onLogInSuccess(user, profileImage);
-      } else {
-        this.setState({ errorCode: LogInPage.ErrorCode.GOOGLE_LOGIN_FAILED });
-      }
-    } catch {
-      this.setState({ errorCode: LogInPage.ErrorCode.NO_CONNECTION });
-    }
-  }
-
-  private handleFacebookLogIn = async (email: string, token: any) => {
-    try {
-      const userResponse = await this.props.model.facebookLogIn(email, token);
-      const user = User.fromJson(userResponse.user);
-      const profileImage = UserProfileImage.fromJson(userResponse.profileImage);
-      if (user.userStatus === UserStatus.ACTIVE) {
-        this.props.onLogInSuccess(user, profileImage);
-      } else {
-        this.setState({
-          errorCode: LogInPage.ErrorCode.FACEBOOK_LOGIN_FAILED
-        });
-      }
-    } catch {
-      this.setState({ errorCode: LogInPage.ErrorCode.NO_CONNECTION });
     }
   }
 }

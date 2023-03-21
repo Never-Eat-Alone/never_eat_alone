@@ -89,8 +89,6 @@ export class ApplicationController extends React.Component<Properties, State> {
         <LogInModalController
           displayMode={this.state.displayMode}
           model={this.props.model.logInModel}
-          googleClientId={this.props.model.googleClientId}
-          facebookClientId={this.props.model.facebookClientId}
           onClose={this.handleLogInModalClose}
           onLogInSuccess={this.handleLogInSuccess}
         />
@@ -455,8 +453,6 @@ export class ApplicationController extends React.Component<Properties, State> {
     return <LogInPageController
       displayMode={this.state.displayMode}
       model={this.props.model.logInModel}
-      googleClientId={this.props.model.googleClientId}
-      facebookClientId={this.props.model.facebookClientId}
       onLogInSuccess={this.handleLogInSuccess}
     />;
   }

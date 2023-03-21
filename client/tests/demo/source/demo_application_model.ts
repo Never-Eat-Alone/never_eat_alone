@@ -432,7 +432,6 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     this._signUpPageModel.set(1, demoSignUpPageModel1);
     this._signUpPageModel.set(2, demoSignUpPageModel2);
     this._googleClientId = '';
-    this._facebookClientId = '';
     await Promise.all([this._headerModel.load(), this._homePageModel.load(),
       this._inviteAFoodieModel.load()]);
     return;
@@ -502,10 +501,6 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return this._googleClientId;
   }
 
-  public get facebookClientId(): string {
-    return this._facebookClientId;
-  }
-
   private _headerModel: NeverEatAlone.HeaderModel;
   private _homePageModel: NeverEatAlone.HomePageModel;
   private _diningEventModelMap: Map<number, NeverEatAlone.DiningEventPageModel>;
@@ -523,5 +518,4 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
   private _forgotPasswordPageModel: NeverEatAlone.ForgotPasswordPageModel;
   private _signUpPageModel: Map<number, NeverEatAlone.SignUpPageModel>;
   private _googleClientId: string;
-  private _facebookClientId: string;
 }

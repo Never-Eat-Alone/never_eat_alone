@@ -20,8 +20,8 @@ export class LocalApplicationModel extends ApplicationModel {
       partnerWithUsModel: PartnerWithUsModel, logInModel: LogInModel,
       deletedAccountSurveyModel: DeletedAccountSurveyModel,
       deactivateAccountSurveyModel: DeactivateAccountSurveyModel,
-      forgotPasswordPageModel: ForgotPasswordPageModel, googleClientId: string,
-      facebookClientId: string) {
+      forgotPasswordPageModel: ForgotPasswordPageModel,
+      googleClientId: string) {
     super();
     this._headerModel = headerModel;
     this._homepageModel = homePageModel;
@@ -33,7 +33,6 @@ export class LocalApplicationModel extends ApplicationModel {
     this._deactivateAccountSurveyModel = deactivateAccountSurveyModel;
     this._forgotPasswordPageModel = forgotPasswordPageModel;
     this._googleClientId = googleClientId;
-    this._facebookClientId = facebookClientId;
   }
 
   public async load(): Promise<void> {
@@ -126,10 +125,6 @@ export class LocalApplicationModel extends ApplicationModel {
     return this._googleClientId;
   }
 
-  public get facebookClientId(): string {
-    return this._facebookClientId;
-  }
-
   private _headerModel: HeaderModel;
   private _homepageModel: HomePageModel;
   private _inviteAFoodieModel: InviteAFoodieModel;
@@ -145,5 +140,4 @@ export class LocalApplicationModel extends ApplicationModel {
   private _settingsPageModelMap: Map<number, SettingsPageModel>;
   private _signUpPageModelMap: Map<number, SignUpPageModel>;
   private _googleClientId: string;
-  private _facebookClientId: string;
 }
