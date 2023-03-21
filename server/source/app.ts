@@ -12,7 +12,6 @@ import { UserDatabase } from './postgres/queries/user_database';
 import { UserRoutes } from './routes/user';
 
 const pgSession = require('connect-pg-simple')(Session);
-
 const initializePostgres = async (pool, dir, label) => {
   const fileNames = fs.readdirSync(dir).filter(
     f => Path.extname(f).toLowerCase() === '.sql');

@@ -1,5 +1,4 @@
 import * as Hash from 'hash.js';
-import { LoginTicket } from 'google-auth-library';
 import { Pool } from 'pg';
 import { User, UserStatus
 } from '../../../../client/library/source/definitions';
@@ -80,30 +79,6 @@ export class UserDatabase {
     return user;
   }
 
-  /** Returns the user google credentials based on the given user id.
-   * @param userId - User id.
-   */
-  public loadGoogleCredentials = async (userId: number): Promise<string> => {
-    const result = await this.pool.query(
-      'SELECT * FROM google_user_credentials WHERE user_id = $1', [userId]);
-    if (result.rows.length === 0) {
-      return '';
-    }
-    return result.rows[0].google_id;
-  }
-
-  /** Returns the user facebook credentials based on the given user id.
-   * @param userId - User id.
-   */
-  public loadFacebookCredentials = async (userId: number): Promise<string> => {
-    const result = await this.pool.query(
-      'SELECT * FROM social_accounts WHERE user_id = $1', [userId]);
-    if (result.rows.length === 0) {
-      return '';
-    }
-    return result.rows[0].provider_id;
-  }
-
   /**
    * Determines if a password is valid or not for a user login.
    * @param userId - User id.
@@ -120,28 +95,6 @@ export class UserDatabase {
       return false;
     }
     return true;
-  }
-
-  /** Add a new user signed up with google account.
-   * @param name - User name.
-   * @param email - User email.
-   * @param ticket - Google login ticket.
-   */
-  public addGoogleUser = async (name: string, email: string,
-      ticket: LoginTicket): Promise<User> => {
-    const result = await this.pool.query(
-      'INSERT INTO users (name, email, user_status, created_at) VALUES \
-      ($1, $2, DEFAULT, DEFAULT) RETURNING *', [name, email]);
-    if (result.rows.length === 0) {
-      return User.makeGuest();
-    }
-    await this.pool.query(
-      'INSERT INTO google_user_credentials (user_id, id_token) VALUES ($1, $2)',
-      [result.rows[0].id, ticket.getPayload()['sub']]);
-    return new User(parseInt(result.rows[0].id), result.rows[0].name,
-      result.rows[0].email, '',
-      UserStatus[result.rows[0].user_status as keyof typeof UserStatus],
-      new Date(Date.parse(result.rows[0].created_at)));
   }
 
   /** Add the new user.
