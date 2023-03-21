@@ -13,7 +13,7 @@ export class UserRoutes {
    * @param googleClientId - Google client id number.
    */
   constructor(app: any, userDatabase: UserDatabase, sgmail: any,
-      googleClientId: string) {
+      googleClientId: string, facebookDevelopers: object) {
 
     /** Route to get the current logged in user. */
     app.get('/api/current_user', this.getCurrentUser);
@@ -48,6 +48,7 @@ export class UserRoutes {
     this.userDatabase = userDatabase;
     this.sgmail = sgmail;
     this.googleClientId = googleClientId;
+    this.facebookDevelopers = facebookDevelopers;
   }
 
   /** Checks user credentials for login. */
@@ -169,6 +170,36 @@ export class UserRoutes {
     const googleCredentials =
       await this.userDatabase.loadGoogleCredentials(user.id);
     if (googleCredentials !== ticket.getPayload()['sub']) {
+      response.status(400).json({ message: 'SOCIAL_LOGIN_FAILED' });
+      return;
+    }
+    try {
+      await this.userDatabase.assignUserIdToSid(request.session.id, user.id);
+    } catch (error) {
+      response.status(400).json({ message: 'DATABASE_ERROR' });
+      return;
+    }
+    response.status(200).json({ user: user.toJson() });
+  }
+
+  /** Checks user credentials for login using Facebook account. */
+  private facebookLogIn = async (request, response) => {
+    const { email, token } = request.body;
+    const user = await this.userDatabase.loadUserByEmail(email);
+    if (user === null) {
+      response.status(400).json({ message: 'EMAIL_NOT_FOUND' });
+      return;
+    }
+    let ticket: LoginTicket;
+    try {
+      const facebookClient = new OAuth2Client(this.facebookDevelopers);
+    } catch (error) {
+      response.status(400).json({ message: 'FACEBOOK_SERVICE_ERROR' });
+      return;
+    }
+    const facebookCredentials =
+      await this.userDatabase.loadFacebookCredentials(user.id);
+    if (facebookCredentials !== ticket.getPayload()['sub']) {
       response.status(400).json({ message: 'SOCIAL_LOGIN_FAILED' });
       return;
     }
@@ -330,4 +361,7 @@ export class UserRoutes {
 
   /** The Google CliendId. */
   private googleClientId: string;
+
+  /** The Facebook developers jason object. */
+  private facebookDevelopers: object;
 }

@@ -92,6 +92,18 @@ export class UserDatabase {
     return result.rows[0].google_id;
   }
 
+  /** Returns the user facebook credentials based on the given user id.
+   * @param userId - User id.
+   */
+  public loadFacebookCredentials = async (userId: number): Promise<string> => {
+    const result = await this.pool.query(
+      'SELECT * FROM social_accounts WHERE user_id = $1', [userId]);
+    if (result.rows.length === 0) {
+      return '';
+    }
+    return result.rows[0].provider_id;
+  }
+
   /**
    * Determines if a password is valid or not for a user login.
    * @param userId - User id.

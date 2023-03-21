@@ -94,9 +94,17 @@ function runExpress(pool: Pool, config: any) {
   }
   app.use(Session(session));
   const userDatabase = new UserDatabase(pool);
+  const facebookDevelopers = {
+    'app_id': config.facebook_developers['app_id'],
+    'app_secret': config.facebook_developers['app_secret'],
+    'instagram_app_id': config.facebook_developers['instagram_app_id'],
+    'instagram_app_secret': config.facebook_developers['instagram_app_secret'],
+    'app_access_token': config.facebook_developers['app_access_token'],
+    'user_access_token_long': config.facebook_developers[
+      'user_access_token_long']
+  };
   const userRoutes = new UserRoutes(app, userDatabase, SGMail,
-    config.google_client_id);
-  
+    config.google_client_id, facebookDevelopers);
   app.get('*', (request, response, next) => {
     response.sendFile(Path.join(process.cwd(), 'public', 'index.html'));
   });
