@@ -30,7 +30,8 @@ export class HttpApplicationModel extends ApplicationModel {
       account = User.fromJson(responseObject.user);
     }
     const googleClientIdResponse = await fetch('/api/google_client_id');
-    const googleClientId = await googleClientIdResponse.json();
+    const googleClientIdObject = await googleClientIdResponse.json();
+    const googleClientId = googleClientIdObject.google_client_id;
     const headerModel = new HttpHeaderModel(account);
     const homePageModel = new HttpHomePageModel(account);
     const inviteAFoodieModel = new HttpInviteAFoodieModel(account);
