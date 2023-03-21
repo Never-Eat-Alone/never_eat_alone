@@ -29,19 +29,6 @@ export class DemoLogInModel extends NeverEatAlone.LogInModel {
     };
   }
 
-  public async googleLogIn(email: string, token: string): Promise<{
-      user: NeverEatAlone.User, profileImage: NeverEatAlone.UserProfileImage}> {
-    return { user: this._userList[0], profileImage: this._profileImageList[0] };
-  }
-
-  public async facebookLogIn(email: string, token: string): Promise<{
-      user: NeverEatAlone.User, profileImage: NeverEatAlone.UserProfileImage}> {
-    return {
-      user: NeverEatAlone.User.makeGuest(),
-      profileImage: NeverEatAlone.UserProfileImage.NoImage()
-    };
-  }
-
   public async logOut(): Promise<boolean> {
     return true;
   }

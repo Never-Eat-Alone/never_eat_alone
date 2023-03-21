@@ -31,8 +31,6 @@ export class HttpApplicationModel extends ApplicationModel {
     }
     const googleClientIdResponse = await fetch('/api/google_client_id');
     const googleClientId = await googleClientIdResponse.json();
-    const facebookClientIdResponse = await fetch('/api/facebook_client_id');
-    const facebookClientId = await facebookClientIdResponse.json();
     const headerModel = new HttpHeaderModel(account);
     const homePageModel = new HttpHomePageModel(account);
     const inviteAFoodieModel = new HttpInviteAFoodieModel(account);
@@ -45,7 +43,7 @@ export class HttpApplicationModel extends ApplicationModel {
     this._model = new LocalApplicationModel(headerModel, homePageModel,
       inviteAFoodieModel, joinModel, partnerWithUsModel, logInModel,
       deletedAccountSurveyModel, deactivateAccountSurveyModel,
-      forgotPasswordPageModel, googleClientId, facebookClientId);
+      forgotPasswordPageModel, googleClientId);
     await this._model.load();
   }
 
@@ -107,10 +105,6 @@ export class HttpApplicationModel extends ApplicationModel {
 
   public get googleClientId(): string {
     return this._model.googleClientId;
-  }
-
-  public get facebookClientId(): string {
-    return this._model.facebookClientId;
   }
 
   private _model: ApplicationModel;
