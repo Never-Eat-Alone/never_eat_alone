@@ -1,4 +1,8 @@
 export class SocialMediaImage {
+  public static NoImage(): SocialMediaImage {
+    return new SocialMediaImage(-1, '');
+  }
+
   public static fromJson(value: any): SocialMediaImage {
     return new SocialMediaImage(value.id, value.src);
   }
