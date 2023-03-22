@@ -6,8 +6,8 @@ import { SocialMediaImageDatabase } from '../postgres/queries';
 export class SocialMediaImageRoutes {
   /**
    * @param app - Express app.
-   * @param socialMediaImageDatabase - The user related table manipulation
-   * class instance.
+   * @param socialMediaImageDatabase - The social media images related table
+   * manipulation class instance.
    */
   constructor(app: any, socialMediaImageDatabase: SocialMediaImageDatabase) {
     /** Route to get the social media images displayed on homepage. */
