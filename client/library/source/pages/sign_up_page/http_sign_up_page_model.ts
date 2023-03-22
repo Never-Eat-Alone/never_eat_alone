@@ -17,13 +17,14 @@ export class HttpSignUpPageModel extends SignUpPageModel {
     this._model.load();
   }
 
-  public async uploadImage(image: UserProfileImage): Promise<UserProfileImage> {
+  public async uploadImage(userProfileImage: UserProfileImage): Promise<
+      UserProfileImage> {
     const response = await fetch('/api/upload_profile_image', {
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        'image': image.toJson()
+        'userProfileImage': userProfileImage.toJson()
       })
     });
     if (response.status === 201) {

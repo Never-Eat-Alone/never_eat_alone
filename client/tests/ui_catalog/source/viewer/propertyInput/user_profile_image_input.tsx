@@ -21,8 +21,8 @@ export class UserProfileImageInput extends React.Component<Properties> {
       if (!event.target.value.trim()) {
         return NeverEatAlone.UserProfileImage.NoImage();
       }
-      return new NeverEatAlone.UserProfileImage(this.props.value.userId,
-        this.props.value.id, event.target.value);
+      return new NeverEatAlone.UserProfileImage(this.props.value.id,
+        this.props.value.userId, event.target.value);
     })();
     this.props.update(newValue);
   }
