@@ -422,7 +422,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const avatars: NeverEatAlone.UserProfileImage[] = [];
     for (let i = 0; i < 20; ++i) {
       const src = `resources/profile_set_up_page/icons/profile-image-${i}.svg`;
-      avatars.push(new NeverEatAlone.UserProfileImage(1, Date.now() + i, src));
+      avatars.push(new NeverEatAlone.UserProfileImage(Date.now() + i, 1, src));
     }
     const defaultImage = avatars[0];
     const demoSignUpPageModel1 = new DemoSignUpPageModel('arthur@gmail.com',

@@ -23,5 +23,8 @@ INSERT INTO user_profile_images (
 (4, '/resources/images/profile4.jpeg'),
 (5, '/resources/images/profileguy5.jpeg'),
 (6, '/resources/images/profile6.jpeg'),
+(7, '/resources/images/profile7.jpeg'),
+(8, '/resources/images/profile8.jpeg'),
+(9, '/resources/images/profile9.jpeg'),
 (10, '/resources/images/profileguy10.jpeg'),
 (11, '/resources/images/profileguy1.jpeg');

@@ -200,14 +200,14 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        'image': newImage.toJson(),
+        'userProfileImage': newImage.toJson(),
       })
     });
     if (response.status !== 201) {
       return UserProfileImage.NoImage();
     }
     const responseObject = await response.json();
-    return UserProfileImage.fromJson(responseObject.profileImage);
+    return UserProfileImage.fromJson(responseObject.userProfileImage);
   }
 
   public async saveCoverImage(newImage: CoverImage): Promise<CoverImage> {

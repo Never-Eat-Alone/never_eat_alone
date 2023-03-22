@@ -9,7 +9,10 @@ import { Pool } from 'pg';
 import * as SGMail from '@sendgrid/mail';
 import { v4 as uuidv4 } from 'uuid';
 import { UserDatabase } from './postgres/queries/user_database';
+import { UserProfileImageDatabase
+} from './postgres/queries/user_profile_image_database';
 import { UserRoutes } from './routes/user';
+import { UserProfileImageRoutes } from './routes/user_profile_image';
 
 const pgSession = require('connect-pg-simple')(Session);
 const initializePostgres = async (pool, dir, label) => {
@@ -104,6 +107,9 @@ function runExpress(pool: Pool, config: any) {
   });
   const userDatabase = new UserDatabase(pool);
   const userRoutes = new UserRoutes(app, userDatabase, SGMail);
+  const userProfileImageDatabase = new UserProfileImageDatabase(pool);
+  const userProfileImageRoutes = new UserProfileImageRoutes(app,
+    userProfileImageDatabase);
   app.get('*', (request, response, next) => {
     response.sendFile(Path.join(process.cwd(), 'public', 'index.html'));
   });

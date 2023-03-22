@@ -713,7 +713,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
       UserProfileImageInput),
     new PropertySchema('avatars', [new NeverEatAlone.UserProfileImage(1, 1,
       'resources/profile_set_up_page/icons/profile-image-0.svg'),
-      new NeverEatAlone.UserProfileImage(1, 2,
+      new NeverEatAlone.UserProfileImage(2, 1,
         'resources/profile_set_up_page/icons/profile-image-1.svg')],
       ArrayInput(new PropertySchema('selectedImage',
         new NeverEatAlone.UserProfileImage(1, 1,

@@ -1,24 +1,24 @@
 export class UserProfileImage {
   public static fromJson(value: any): UserProfileImage {
-    return new UserProfileImage(value.userId, value.id, value.src);
+    return new UserProfileImage(value.id, value.userId, value.src);
   }
 
   public static NoImage(): UserProfileImage {
     return new UserProfileImage(-1, -1, '');
   }
 
-  constructor(userId: number, id: number, src: string) {
-    this._userId = userId;
+  constructor(id: number, userId: number, src: string) {
     this._id = id;
+    this._userId = userId;
     this._src = src;
-  }
-
-  public get userId(): number {
-    return this._userId;
   }
 
   public get id(): number {
     return this._id;
+  }
+
+  public get userId(): number {
+    return this._userId;
   }
 
   public get src(): string {
@@ -28,13 +28,13 @@ export class UserProfileImage {
   /** Converts UserProfileImage to json. */
   public toJson(): any {
     return {
-      userId: this._userId,
       id: this._id,
+      userId: this._userId,
       src: this._src
     };
   }
 
-  private _userId: number;
   private _id: number;
+  private _userId: number;
   private _src: string;
 }
