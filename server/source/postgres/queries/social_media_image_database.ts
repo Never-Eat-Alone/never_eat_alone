@@ -23,18 +23,6 @@ export class SocialMediaImageDatabase {
     return images;
   }
 
-  public uploadSocialMediaImage = async (image: SocialMediaImage): Promise<
-      SocialMediaImage> => {
-    const result = await this.pool.query('INSERT INTO social_media_images \
-      (src, created_at, updated_at) VALUES ($1, DEFAULT, DEFAULT) \
-      RETURNING *', [image]);
-    if (!result || result.rows.length === 0) {
-      return SocialMediaImage.NoImage();
-    }
-    return new SocialMediaImage(parseInt(result.rows[0].id),
-      result.rows[0].src);
-  }
-
   /** The postgress pool connection. */
   private pool: Pool;
 }

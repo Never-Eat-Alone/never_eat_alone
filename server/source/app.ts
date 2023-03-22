@@ -8,9 +8,12 @@ import * as Path from 'path';
 import { Pool } from 'pg';
 import * as SGMail from '@sendgrid/mail';
 import { v4 as uuidv4 } from 'uuid';
+import { SocialMediaImageDatabase
+} from './postgres/queries/social_media_image_database';
 import { UserDatabase } from './postgres/queries/user_database';
 import { UserProfileImageDatabase
 } from './postgres/queries/user_profile_image_database';
+import { SocialMediaImageRoutes } from './routes/social_media_image';
 import { UserRoutes } from './routes/user';
 import { UserProfileImageRoutes } from './routes/user_profile_image';
 
@@ -110,6 +113,9 @@ function runExpress(pool: Pool, config: any) {
   const userProfileImageDatabase = new UserProfileImageDatabase(pool);
   const userProfileImageRoutes = new UserProfileImageRoutes(app,
     userProfileImageDatabase);
+  const socialMediaImageDatabase = new SocialMediaImageDatabase(pool);
+  const socialMediaImageRoutes = new SocialMediaImageRoutes(app,
+    socialMediaImageDatabase);
   app.get('*', (request, response, next) => {
     response.sendFile(Path.join(process.cwd(), 'public', 'index.html'));
   });
