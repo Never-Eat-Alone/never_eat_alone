@@ -11,10 +11,10 @@ export class HttpHomePageModel extends HomePageModel {
 
   public async load(): Promise<void> {
     const imageList: SocialMediaImage[] = [];
-    const imageListResponse = await fetch('/api/home_page/image_list');
+    const imageListResponse = await fetch('/api/home_page/social_media_images');
     if (imageListResponse.status === 200) {
       const imageListObject = await imageListResponse.json();
-      for (const image of imageListObject.imageList) {
+      for (const image of imageListObject.socialMediaImages) {
         imageList.push(SocialMediaImage.fromJson(image));
       }
     }

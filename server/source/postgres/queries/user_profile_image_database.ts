@@ -2,14 +2,14 @@ import { Pool } from 'pg';
 import { UserProfileImage
 } from '../../../../client/library/source/definitions';
 
-/** USerProfileImage related database manipulations class. */
+/** UserProfileImage related database manipulations class. */
 export class UserProfileImageDatabase {
   /** @param pool - The pool connection to the postgres database. */
   constructor(pool: Pool) {
     this.pool = pool;
   }
 
-  /** Returns a user profile image based on the user id.
+  /** Returns the user profile image based on the user id.
    * @param userId - User id.
    */
   public loadProfileImageByUserId = async (userId: number): Promise<
