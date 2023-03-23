@@ -13,7 +13,7 @@ export class DiningEventRoutes {
     /** Route to get the dining event card summaries on homepage. */
     app.get('/api/home_page/dining_event_card_summaries',
       this.getHomePageDiningEventCardSummaries);
-
+    app.get('/api/dining_events/:eventId', this.getDiningEventById);
     this.diningEventDatabase = diningEventDatabase;
   }
 
@@ -32,6 +32,10 @@ export class DiningEventRoutes {
     response.status(200).json({
       diningEventCardSummaryList: arrayToJson(diningEventCardSummaryList)
     });
+  }
+
+  private getDiningEventById = async (request, response) => {
+
   }
 
   private diningEventDatabase: DiningEventDatabase;
