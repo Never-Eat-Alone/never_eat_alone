@@ -1,0 +1,8 @@
+CREATE TYPE price_range_enum AS ENUM
+(
+  'INEXPENSIVE',
+  'MODERATELY_PRICED',
+  'EXPENSIVE',
+  'VERY_EXPENSIVE',
+  'UNKNOWN'
+);

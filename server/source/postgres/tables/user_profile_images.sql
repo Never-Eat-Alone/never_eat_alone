@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS user_profile_images (
   id            SERIAL       PRIMARY KEY,
-  user_id       INTEGER      NOT NULL,
-  src           TEXT         NOT NULL,
+  user_id       INTEGER                        NOT NULL,
+  src           TEXT                           NOT NULL,
   created_at    TIMESTAMP                      DEFAULT NOW(),
   updated_at    TIMESTAMP                      DEFAULT NOW()
 );
@@ -27,4 +27,14 @@ INSERT INTO user_profile_images (
 (8, '/resources/images/profile8.jpeg'),
 (9, '/resources/images/profile9.jpeg'),
 (10, '/resources/images/profileguy10.jpeg'),
-(11, '/resources/images/profileguy1.jpeg');
+(11, '/resources/images/profileguy1.jpeg'),
+(12, '/resources/profile_set_up_page/icons/profile-image-0.svg'),
+(13, '/resources/profile_set_up_page/icons/profile-image-1.svg'),
+(14, '/resources/profile_set_up_page/icons/profile-image-2.svg'),
+(15, '/resources/profile_set_up_page/icons/profile-image-3.svg'),
+(16, '/resources/profile_set_up_page/icons/profile-image-4.svg'),
+(17, '/resources/profile_set_up_page/icons/profile-image-5.svg'),
+(18, '/resources/profile_set_up_page/icons/profile-image-6.svg'),
+(19, '/resources/profile_set_up_page/icons/profile-image-7.svg'),
+(20, '/resources/profile_set_up_page/icons/profile-image-8.svg'
+);
