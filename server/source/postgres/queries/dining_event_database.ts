@@ -1,5 +1,5 @@
 import { Pool } from 'pg';
-import { Cuisine, EventCardSummary, PriceRange
+import { Cuisine, DiningEvent, EventCardSummary, PriceRange
 } from '../../../../client/library/source/definitions';
 
 /** SocialMediaImage related database manipulations class. */
@@ -64,6 +64,11 @@ export class DiningEventDatabase {
       numberOfSeatsAvailable -= parseInt(queryResult.rows[0].total);
     }
     return numberOfSeatsAvailable;
+  }
+
+  public loadDiningEventById = async (eventId: number): Promise<
+      DiningEvent> => {
+    return;
   }
 
   /** The postgress pool connection. */

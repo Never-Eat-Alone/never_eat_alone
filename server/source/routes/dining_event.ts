@@ -1,4 +1,4 @@
-import { arrayToJson, EventCardSummary
+import { arrayToJson, DiningEvent, EventCardSummary
 } from '../../../client/library/source/definitions';
 import { DiningEventDatabase } from '../postgres/queries';
 
@@ -35,7 +35,17 @@ export class DiningEventRoutes {
   }
 
   private getDiningEventById = async (request, response) => {
-
+    const eventId = parseInt(request.params.eventId);
+    let diningEvent: DiningEvent;
+    try {
+      diningEvent = await this.diningEventDatabase.loadDiningEventById(eventId);
+    } catch (error) {
+      response.status(400).json({
+        error: 'Bad Request: Please provide valid data.'
+      });
+      return;
+    }
+    response.status(200).json({ diningEvent: diningEvent.toJson() });
   }
 
   private diningEventDatabase: DiningEventDatabase;

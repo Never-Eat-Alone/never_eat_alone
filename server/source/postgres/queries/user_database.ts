@@ -29,7 +29,7 @@ export class UserDatabase {
   public loadUserByEmail = async (email: string): Promise<User> => {
     const result =
       await this.pool.query('SELECT * FROM users WHERE email = $1', [email]);
-    if (result.rows.length === 0) {
+    if (!result || result.rows.length === 0) {
       return User.makeGuest();
     }
     return new User(parseInt(result.rows[0].id), result.rows[0].name,
