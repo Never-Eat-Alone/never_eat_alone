@@ -54,6 +54,18 @@ export class DiningEventDatabase {
     return events;
   }
 
+  public getNumberOfSeatsAvailableAtEvent = async (eventId: number,
+      eventMaxAttendeeLimit: number) => {
+    const queryResult = await this.pool.query('SELECT \
+      COUNT(event_id) + SUM(guest_count) AS total FROM attendees WHERE \
+      event_id = $1 GROUP BY event_id', [eventId]);
+    let numberOfSeatsAvailable = eventMaxAttendeeLimit;
+    if (queryResult.rows.length != 0) {
+      numberOfSeatsAvailable -= parseInt(queryResult.rows[0].total);
+    }
+    return numberOfSeatsAvailable;
+  }
+
   /** The postgress pool connection. */
   private pool: Pool;
 }
