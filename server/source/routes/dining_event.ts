@@ -38,14 +38,14 @@ export class DiningEventRoutes {
     const eventId = parseInt(request.params.eventId);
     let diningEvent: DiningEvent;
     try {
-      diningEvent = await this.diningEventDatabase.loadDiningEventById(eventId);
+      diningEvent = null;
     } catch (error) {
       response.status(400).json({
         error: 'Bad Request: Please provide valid data.'
       });
       return;
     }
-    response.status(200).json({ diningEvent: diningEvent.toJson() });
+    response.status(200);
   }
 
   private diningEventDatabase: DiningEventDatabase;

@@ -66,11 +66,6 @@ export class DiningEventDatabase {
     return numberOfSeatsAvailable;
   }
 
-  public loadDiningEventById = async (eventId: number): Promise<
-      DiningEvent> => {
-    return;
-  }
-
   /** The postgress pool connection. */
   private pool: Pool;
 }
