@@ -38,14 +38,19 @@ export class DiningEventRoutes {
     const eventId = parseInt(request.params.eventId);
     let diningEvent: DiningEvent;
     try {
-      diningEvent = null;
+      // Add the code to fetch the dining event by its ID
+      // e.g., diningEvent = await this.diningEventService.getDiningEventById(
+      // eventId);
+      // Replace the above comment with your actual implementation
     } catch (error) {
       response.status(400).json({
         error: 'Bad Request: Please provide valid data.'
       });
       return;
     }
-    response.status(200);
+
+    // Send the response with the retrieved dining event, if any
+    response.status(200).json({ diningEvent: diningEvent.toJson() });
   }
 
   private diningEventDatabase: DiningEventDatabase;
