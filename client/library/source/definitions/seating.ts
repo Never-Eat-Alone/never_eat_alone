@@ -3,33 +3,40 @@ export enum Seating {
   PATIO,
   STANDARD,
   PRIVATE_ROOM,
-  HIGH_TABLE
+  HIGH_TABLE,
+  LOUNGE
 }
 
 export function getSeatingIconSrc(seating: Seating) {
-  if (seating === Seating.BAR) {
-    return 'resources/icons/bar.svg';
-  } else if (seating === Seating.PATIO) {
-    return 'resources/icons/patio.svg';
-  } else if (seating === Seating.PRIVATE_ROOM) {
-    return 'resources/icons/private_room.svg';
-  } else if (seating === Seating.HIGH_TABLE) {
-    return 'resources/icons/high_table.svg';
-  } else {
-    return 'resources/icons/standard.svg';
+  switch (seating) {
+    case Seating.BAR:
+      return 'resources/icons/bar.svg';
+    case Seating.PATIO:
+      return 'resources/icons/patio.svg';
+    case Seating.PRIVATE_ROOM:
+      return 'resources/icons/private_room.svg';
+    case Seating.HIGH_TABLE:
+      return 'resources/icons/high_table.svg';
+    case Seating.LOUNGE:
+      return 'resources/icons/lounge.svg';
+    default:
+      return 'resources/icons/standard.svg';
   }
 }
 
 export function getSeatingName(seating: Seating) {
-  if (seating === Seating.BAR) {
-    return 'Bar';
-  } else if (seating === Seating.PATIO) {
-    return 'Patio';
-  } else if (seating === Seating.PRIVATE_ROOM) {
-    return 'Private Room';
-  } else if (seating === Seating.HIGH_TABLE) {
-    return 'High Table';
-  } else {
-    return 'Standard';
+  switch (seating) {
+    case Seating.BAR:
+      return 'Bar';
+    case Seating.PATIO:
+      return 'Patio';
+    case Seating.PRIVATE_ROOM:
+      return 'Private Room';
+    case Seating.HIGH_TABLE:
+      return 'High Table';
+    case Seating.LOUNGE:
+      return 'Lounge';
+    default:
+      return 'Standard';
   }
 }
