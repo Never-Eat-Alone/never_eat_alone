@@ -11,7 +11,7 @@ export class DiningEventRoutes {
    */
   constructor(app: any, diningEventDatabase: DiningEventDatabase) {
     /** Route to get the dining event card summaries on homepage. */
-    app.get('/api/home_page/dining_event_card_summaries/:userId',
+    app.get('/api/home_page/event_list/:userId',
       this.getHomePageDiningEventCardSummaries);
     this.diningEventDatabase = diningEventDatabase;
   }
