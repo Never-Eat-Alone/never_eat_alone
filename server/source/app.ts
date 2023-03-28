@@ -8,12 +8,14 @@ import * as Path from 'path';
 import { Pool } from 'pg';
 import * as SGMail from '@sendgrid/mail';
 import { v4 as uuidv4 } from 'uuid';
+import { AttendeeDatabase } from './postgres/queries/attendee_database';
 import { DiningEventDatabase } from './postgres/queries/dining_event_database';
 import { SocialMediaImageDatabase
 } from './postgres/queries/social_media_image_database';
 import { UserDatabase } from './postgres/queries/user_database';
 import { UserProfileImageDatabase
 } from './postgres/queries/user_profile_image_database';
+import { AttendeeRoutes } from './routes/attendee';
 import { DiningEventRoutes } from './routes/dining_event';
 import { SocialMediaImageRoutes } from './routes/social_media_image';
 import { UserRoutes } from './routes/user';
@@ -120,6 +122,8 @@ function runExpress(pool: Pool, config: any) {
     socialMediaImageDatabase);
   const diningEventDatabase = new DiningEventDatabase(pool);
   const diningEventRoutes = new DiningEventRoutes(app, diningEventDatabase);
+  const attendeeDatabase = new AttendeeDatabase(pool);
+  const attendeeRoutes = new AttendeeRoutes(app, attendeeDatabase);
   app.get('*', (request, response, next) => {
     response.sendFile(Path.join(process.cwd(), 'public', 'index.html'));
   });
