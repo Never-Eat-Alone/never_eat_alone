@@ -141,4 +141,9 @@ VALUES
   'Steak and oyster night', 19, 'BUSINESS_CASUAL', 'STANDARD', 19,
   'Alexa Perry', '2022-08-01 18:45', '2022-09-01 20:45', 4, 'Great food',
   '2022-04-20 18:45', '2022-09-01 18:45', 'ACTIVE', 'PUBLIC',
-  '2022-03-01 10:45', '2022-04-01 10:45');
+  '2022-03-01 10:45', '2022-04-01 10:45'),
+  ('hsva(75, 67%, 92%, 1)', 10.00, 'resources/images/cover_20.jpg',
+  'Champagne Night', 20, 'BUSINESS_CASUAL', 'STANDARD', 20,
+  'Alexa', '2023-03-11 18:45', '2023-03-11 20:45', 4, 'Great food',
+  '2023-03-11 18:45', '2022-03-01 18:45', 'ACTIVE', 'PUBLIC',
+  '2022-03-01 10:45', '2023-03-01 10:45');

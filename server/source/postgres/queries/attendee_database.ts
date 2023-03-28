@@ -8,12 +8,14 @@ export class AttendeeDatabase {
     this.pool = pool;
   }
 
+  /** Returns all the user's attended event tags in the current month. */
   public loadHomePageEventTagList = async (userId: number): Promise<
       EventTag[]> => {
     const result = await this.pool.query(
       "SELECT att.event_id, de.color_code, de.title FROM attendees AS att \
       JOIN dining_events AS de ON att.event_id = de.id WHERE att.user_id = $1 \
-      AND att.status = 'GOING' AND de.start_at >= NOW() - INTERVAL '1 month' \
+      AND att.status = 'GOING' AND de.start_at < NOW() AND \
+      date_trunc('month', de.start_at) = date_trunc('month', CURRENT_DATE) \
       ORDER BY de.start_at ASC", [userId]);
     if (!result || result.rows.length === 0) {
       return [];
