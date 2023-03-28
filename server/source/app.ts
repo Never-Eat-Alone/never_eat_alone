@@ -122,7 +122,7 @@ function runExpress(pool: Pool, config: any) {
     socialMediaImageDatabase);
   const diningEventDatabase = new DiningEventDatabase(pool);
   const diningEventRoutes = new DiningEventRoutes(app, diningEventDatabase);
-  const attendeeDatabase = new AttendeeDatabase(app);
+  const attendeeDatabase = new AttendeeDatabase(pool);
   const attendeeRoutes = new AttendeeRoutes(app, attendeeDatabase);
   app.get('*', (request, response, next) => {
     response.sendFile(Path.join(process.cwd(), 'public', 'index.html'));
