@@ -11,16 +11,18 @@ export class DiningEventRoutes {
    */
   constructor(app: any, diningEventDatabase: DiningEventDatabase) {
     /** Route to get the dining event card summaries on homepage. */
-    app.get('/api/home_page/dining_event_card_summaries',
+    app.get('/api/home_page/dining_event_card_summaries/:userId',
       this.getHomePageDiningEventCardSummaries);
     this.diningEventDatabase = diningEventDatabase;
   }
 
   private getHomePageDiningEventCardSummaries = async (request, response) => {
+    const userId = parseInt(request.params.userId);
     let diningEventCardSummaryList: EventCardSummary[];
     try {
       diningEventCardSummaryList =
-        await this.diningEventDatabase.loadHomePageDiningEventCardSummaries();
+        await this.diningEventDatabase.loadHomePageDiningEventCardSummaries(
+          userId);
     } catch (error) {
       response.status(400).json({
         diningEventCardSummaryList: [],
