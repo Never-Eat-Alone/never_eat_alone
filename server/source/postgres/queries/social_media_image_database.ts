@@ -12,7 +12,7 @@ export class SocialMediaImageDatabase {
   public loadHomePageSocialMediaImages = async (): Promise<
       SocialMediaImage[]> => {
     const result = await this.pool.query('SELECT * FROM social_media_images \
-      order by created_at DESC');
+      ORDER BY created_at DESC');
     if (!result || result.rows.length === 0) {
       return [];
     }

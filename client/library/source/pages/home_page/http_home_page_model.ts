@@ -36,20 +36,22 @@ export class HttpHomePageModel extends HomePageModel {
         userEventTagList.push(EventTag.fromJson(tag));
       }
     }
-    const userFutureEventList: EventCardSummary[] = [];
+    const userFutureEventCardSummaryList: EventCardSummary[] = [];
     const userFutureEventsResponse = await fetch(
       `/api/home_page/user_future_events/${this._account.id}`);
     if (userFutureEventsResponse.status === 200) {
       const userFutureEventsObject = await userFutureEventsResponse.json();
-      for (const futureEvent of userFutureEventsObject.userFutureEventList) {
-        userFutureEventList.push(EventCardSummary.fromJson(futureEvent));
+      for (const futureEvent of
+          userFutureEventsObject.userFutureEventCardSummaryList) {
+        userFutureEventCardSummaryList.push(EventCardSummary.fromJson(
+          futureEvent));
       }
     }
     const totalEventsResponse = await fetch(
       `/api/home_page/total_events_this_month/${this._account.id}`);
     const userTotalEventsThisMonth = await totalEventsResponse.json();
     this._model = new LocalHomePageModel(imageList, eventList, userEventTagList,
-      userFutureEventList, userTotalEventsThisMonth);
+      userFutureEventCardSummaryList, userTotalEventsThisMonth);
     this._model.load();
   }
 

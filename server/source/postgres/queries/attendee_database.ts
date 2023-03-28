@@ -12,9 +12,9 @@ export class AttendeeDatabase {
       EventTag[]> => {
     const result = await this.pool.query(
       "SELECT att.event_id, de.color_code, de.title FROM attendees AS att \
-      JOIN dining_events AS de on att.event_id = de.id WHERE att.user_id = $1 \
+      JOIN dining_events AS de ON att.event_id = de.id WHERE att.user_id = $1 \
       AND att.status = 'GOING' AND de.start_at >= NOW() - INTERVAL '1 month' \
-      order by de.start_at ASC", [userId]);
+      ORDER BY de.start_at ASC", [userId]);
     if (!result || result.rows.length === 0) {
       return [];
     }
