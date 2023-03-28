@@ -19,7 +19,8 @@ export class HttpHomePageModel extends HomePageModel {
       }
     }
     const eventList: EventCardSummary[] = [];
-    const eventListResponse = await fetch('/api/home_page/event_list');
+    const eventListResponse = await fetch(
+      `/api/home_page/event_list/${this._account.id}`);
     if (eventListResponse.status === 200) {
       const eventListObject = await eventListResponse.json();
       for (const event of eventListObject.eventList) {
