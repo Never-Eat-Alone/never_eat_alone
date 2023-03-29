@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS user_confirmation_tokens (
-  token_id   VARCHAR   PRIMARY KEY,
-  expires_at TIMESTAMP NOT NULL,
-  user_id    INTEGER   NOT NULL
+  token_id   VARCHAR(255)   PRIMARY KEY,
+  expires_at TIMESTAMP      NOT NULL,
+  user_id    INTEGER        NOT NULL
 );
 
 ALTER TABLE user_confirmation_tokens
