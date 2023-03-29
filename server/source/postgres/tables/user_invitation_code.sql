@@ -6,12 +6,18 @@ CREATE TABLE IF NOT EXISTS user_invitation_codes (
   PRIMARY KEY (user_id)
 );
 
-ALTER TABLE user_invitation_codes
-  ADD CONSTRAINT fk_user_invitation_codes_users
-  FOREIGN KEY (user_id)
-  REFERENCES users (id)
-  ON DELETE CASCADE
-  ON UPDATE CASCADE;
+DO $$ 
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE
+      conname = 'fk_user_invitation_codes_users') THEN
+        ALTER TABLE user_invitation_codes
+          ADD CONSTRAINT fk_user_invitation_codes_users
+          FOREIGN KEY (user_id)
+          REFERENCES users (id)
+          ON DELETE CASCADE
+          ON UPDATE CASCADE;
+    END IF;
+END $$;
 
 INSERT INTO user_invitation_codes (
   invite_code,
@@ -36,5 +42,6 @@ INSERT INTO user_invitation_codes (
 ('N09LTX7W', 17),
 ('J57PYQ3H', 18),
 ('K31SBE4R', 19),
-('X16GUF8D', 20
-);
+('X16GUF8D', 20)
+ON CONFLICT (user_id)
+DO UPDATE SET invite_code = excluded.invite_code, updated_at = NOW();
