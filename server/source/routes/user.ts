@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as Hash from 'hash.js';
-import { User } from '../../../client/library/source/definitions';
+import { User, UserInvitationCode, InviteEmail } from '../../../client/library/source/definitions';
 import { UserDatabase } from '../postgres/queries/user_database';
 
 /** User Routes class. */
@@ -29,6 +29,8 @@ export class UserRoutes {
     /** Route to the confirmation token page. */
     app.get('/api/confirmation_tokens/:id', this.verifyConfirmationToken);
     app.get('/api/user_invitation_code/:userId', this.getUserInvitationCode);
+    app.post('/api/send_invite_email', this.sendInviteEmail);
+
     this.userDatabase = userDatabase;
     this.sgmail = sgmail;
   }
@@ -271,6 +273,12 @@ export class UserRoutes {
       return;
     }
     response.status(200).json({ userInvitationCode: userInvitationCode });
+  }
+
+  private sendInviteEmail = async (request, response) => {
+    const userInvitationCode = UserInvitationCode.fromJson(
+      request.body.userInvitationCode);
+    const inviteEmail = InviteEmail.fromJson(request.body.inviteEmail);
   }
 
   private userDatabase: UserDatabase;
