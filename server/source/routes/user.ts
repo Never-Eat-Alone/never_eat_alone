@@ -28,7 +28,7 @@ export class UserRoutes {
 
     /** Route to the confirmation token page. */
     app.get('/api/confirmation_tokens/:id', this.verifyConfirmationToken);
-
+    app.get('/api/user_invitation_code/:userId', this.getUserInvitationCode);
     this.userDatabase = userDatabase;
     this.sgmail = sgmail;
   }
@@ -258,6 +258,19 @@ export class UserRoutes {
       return;
     }
     response.redirect(303, 'https://www.nevereatalone.net');
+  }
+
+  private getUserInvitationCode = async (request, response) => {
+    const userId = request.params.userId;
+    let userInvitationCode: string = '';
+    try {
+      userInvitationCode = await this.userDatabase.loadUserInvitationCode(
+        userId);
+    } catch {
+      response.status(500).send();
+      return;
+    }
+    response.status(200).json({ userInvitationCode: userInvitationCode });
   }
 
   private userDatabase: UserDatabase;

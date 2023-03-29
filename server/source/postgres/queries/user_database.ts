@@ -2,12 +2,43 @@ import * as Hash from 'hash.js';
 import { Pool } from 'pg';
 import { User, UserStatus
 } from '../../../../client/library/source/definitions';
+import * as Crypto from 'crypto';
+
+/** Generates a unique invitation code. */
+function generateInvitationCode() {
+  const length = 8;
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let code = '';
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Crypto.randomInt(chars.length);
+    code += chars[randomIndex];
+  }
+  return code;
+}
 
 /** User related database manipulations class. */
 export class UserDatabase {
   /** @param pool - The pool connection to the postgres database. */
   constructor(pool: Pool) {
     this.pool = pool;
+  }
+
+  public assingInvitationCodeToUserId = async (userId: number): Promise<
+      void> => {
+    const inviteCode = generateInvitationCode();
+    await this.pool.query('INSERT INTO user_invitation_codes \
+      (invite_code, user_id, created_at, updated_at) VALUES \
+      ($1, $2, NOW(), NOW()) ON CONFLICT (user_id) DO UPDATE \
+      SET invite_code = $1, updated_at = NOW()', [inviteCode, userId]);
+  }
+
+  public loadUserInvitationCode = async (userId: number): Promise<string> => {
+    const result = await this.pool.query('SELECT invite_code FROM \
+      user_invitation_codes WHERE user_id = $1', [userId]);
+    if (!result || result.rows.length === 0) {
+      return '';
+    }
+    return result.rows[0].invite_code;
   }
 
   /**
@@ -111,31 +142,7 @@ export class UserDatabase {
     if (result.rows.length === 0) {
       return User.makeGuest();
     }
-    return new User(parseInt(result.rows[0].id), result.rows[0].name,
-      result.rows[0].email, result.rows[0].user_name,
-      UserStatus[result.rows[0].user_status as keyof typeof UserStatus],
-      new Date(Date.parse(result.rows[0].created_at)));
-  }
-
-  /** Add the new user.
-   * @param name - User name.
-   * @param email - User email.
-   * @param password - User password.
-   */
-  public addGuestUser = async (name: string, email: string, userName: string,
-      password: string): Promise<User> => {
-    const result = await this.pool.query(
-      'INSERT INTO users (name, email, user_name, user_status, created_at) \
-      VALUES ($1, $2, $3, DEFAULT, DEFAULT) RETURNING *', [name, email,
-      userName]);
-    if (result.rows.length === 0) {
-      return User.makeGuest();
-    }
-    const hashedPass = 
-      Hash.sha256().update(password + result.rows[0].id).digest('hex');
-    await this.pool.query(
-      'INSERT INTO user_credentials (user_id, hashed_pass) VALUES ($1, $2)',
-      [result.rows[0].id, hashedPass]);
+    await this.assingInvitationCodeToUserId(parseInt(result.rows[0].id));
     return new User(parseInt(result.rows[0].id), result.rows[0].name,
       result.rows[0].email, result.rows[0].user_name,
       UserStatus[result.rows[0].user_status as keyof typeof UserStatus],
