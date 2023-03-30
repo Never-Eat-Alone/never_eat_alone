@@ -279,6 +279,30 @@ export class UserRoutes {
     const userInvitationCode = UserInvitationCode.fromJson(
       request.body.userInvitationCode);
     const inviteEmail = InviteEmail.fromJson(request.body.inviteEmail);
+    const account = User.fromJson(request.body.account);
+    const invitationHtml = await new Promise<string>((resolve, reject) => {
+      fs.readFile('public/resources/invitation_email/email.html', 'utf8',
+        (error, html) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(html);
+          }
+        });
+    });
+    const newHtml = invitationHtml.replace('$name', account.name).replace(
+      '$content', inviteEmail.contest);
+    for (const email of inviteEmail.emailList) {
+      try {
+        await this.sendEmail(email, account.email,
+          `Your friend, ${account.name}, invited you to check out NEA`,
+          inviteEmail.contest, newHtml);
+      } catch (error) {
+        response.status(400).send();
+        return;
+      }
+    }
+    response.status(200).send();
   }
 
   private userDatabase: UserDatabase;
