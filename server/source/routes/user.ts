@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as Hash from 'hash.js';
-import { User } from '../../../client/library/source/definitions';
+import { User, UserInvitationCode, InviteEmail } from '../../../client/library/source/definitions';
 import { UserDatabase } from '../postgres/queries/user_database';
 
 /** User Routes class. */
@@ -29,6 +29,8 @@ export class UserRoutes {
     /** Route to the confirmation token page. */
     app.get('/api/confirmation_tokens/:id', this.verifyConfirmationToken);
     app.get('/api/user_invitation_code/:userId', this.getUserInvitationCode);
+    app.post('/api/send_invite_email', this.sendInviteEmail);
+
     this.userDatabase = userDatabase;
     this.sgmail = sgmail;
   }
@@ -271,6 +273,36 @@ export class UserRoutes {
       return;
     }
     response.status(200).json({ userInvitationCode: userInvitationCode });
+  }
+
+  private sendInviteEmail = async (request, response) => {
+    const userInvitationCode = UserInvitationCode.fromJson(
+      request.body.userInvitationCode);
+    const inviteEmail = InviteEmail.fromJson(request.body.inviteEmail);
+    const account = User.fromJson(request.body.account);
+    const invitationHtml = await new Promise<string>((resolve, reject) => {
+      fs.readFile('public/resources/invitation_email/email.html', 'utf8',
+        (error, html) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(html);
+          }
+        });
+    });
+    const newHtml = invitationHtml.replace('$user_name',
+      account.userName).replace('$contest', inviteEmail.contest);
+    for (const email of inviteEmail.emailList) {
+      try {
+        await this.sendEmail(email, account.email,
+          `Your friend, ${account.name}, invited you to check out NEA`,
+          inviteEmail.contest, newHtml);
+      } catch (error) {
+        response.status(400).send();
+        return;
+      }
+    }
+    response.status(200).send();
   }
 
   private userDatabase: UserDatabase;

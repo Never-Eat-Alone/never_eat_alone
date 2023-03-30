@@ -30,7 +30,8 @@ export class HttpInviteAFoodieModel extends InviteAFoodieModel {
       },
       body: JSON.stringify({
         'userInvitationCode': this._model.userInvitationCode.toJson(),
-        'inviteEmail': inviteEmail.toJson()
+        'inviteEmail': inviteEmail.toJson(),
+        'account': this._account.toJson()
       })
     });
     if (response.status === 200) {
