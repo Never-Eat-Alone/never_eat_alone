@@ -290,8 +290,8 @@ export class UserRoutes {
           }
         });
     });
-    const newHtml = invitationHtml.replace('$name', account.name).replace(
-      '$content', inviteEmail.contest);
+    const newHtml = invitationHtml.replace('$user_name',
+      account.userName).replace('$contest', inviteEmail.contest);
     for (const email of inviteEmail.emailList) {
       try {
         await this.sendEmail(email, account.email,
