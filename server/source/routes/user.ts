@@ -319,16 +319,45 @@ export class UserRoutes {
           }
         });
     });
-    const newHtml = partnerWithUsHtml.replace('$name', name).replace('$contest',
-      message);
+    const newHtml = partnerWithUsHtml.replace('$name', name).replace('$link',
+      profileLink).replace('$contest', message);
     try {
-      await this.sendEmail(email, 'info@nevereatalone.net',
+      await this.sendEmail('info@nevereatalone.net', email,
         `${name}, want to partner with NEA`, message, newHtml);
+      await this.sendPartnerWithUsRecievedConfirmationEmail(email, name);
     } catch (error) {
       response.status(400).send();
       return;
     }
     response.status(200).send();
+  }
+
+  private sendPartnerWithUsRecievedConfirmationEmail = async (email: string,
+      name: string) => {
+    const partnerWithUsRecievedConfirmationHtml = await new Promise<string>((
+        resolve, reject) => {
+      fs.readFile(
+        'public/resources/partner_with_us_email/confirmation_email.html',
+        'utf8', (error, html) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(html);
+          }
+        });
+    });
+    const newHtml = partnerWithUsRecievedConfirmationHtml.replace('$name',
+      name);
+    try {
+      await this.sendEmail(email, 'info@nevereatalone.net',
+        'We Appreciate Your Business!', "This is a confirmation that we got \
+        your message! We’re excited you registered to be a partner of \
+        NeverEatAlone! Currently we are developing the backend for our \
+        partners so hang tight and we will notify you to share any news or \
+        updates.", newHtml);
+    } catch (error) {
+      return error;
+    }
   }
 
   private userDatabase: UserDatabase;
