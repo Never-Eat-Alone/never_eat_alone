@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as Hash from 'hash.js';
-import { User, UserInvitationCode, InviteEmail } from '../../../client/library/source/definitions';
+import { InviteEmail, User, UserInvitationCode
+} from '../../../client/library/source/definitions';
 import { UserDatabase } from '../postgres/queries/user_database';
 
 /** User Routes class. */
@@ -30,6 +31,7 @@ export class UserRoutes {
     app.get('/api/confirmation_tokens/:id', this.verifyConfirmationToken);
     app.get('/api/user_invitation_code/:userId', this.getUserInvitationCode);
     app.post('/api/send_invite_email', this.sendInviteEmail);
+    app.post('/api/send_partner_with_us_email', this.sendPartnerWithUsEmail);
 
     this.userDatabase = userDatabase;
     this.sgmail = sgmail;
@@ -301,6 +303,30 @@ export class UserRoutes {
         response.status(400).send();
         return;
       }
+    }
+    response.status(200).send();
+  }
+
+  private sendPartnerWithUsEmail = async (request, response) => {
+    const { name, email, profileLink, message } = request.body;
+    const partnerWithUsHtml = await new Promise<string>((resolve, reject) => {
+      fs.readFile('public/resources/partner_with_us_email/email.html', 'utf8',
+        (error, html) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(html);
+          }
+        });
+    });
+    const newHtml = partnerWithUsHtml.replace('$name', name).replace('$contest',
+      message);
+    try {
+      await this.sendEmail(email, 'info@nevereatalone.net',
+        `${name}, want to partner with NEA`, message, newHtml);
+    } catch (error) {
+      response.status(400).send();
+      return;
     }
     response.status(200).send();
   }
