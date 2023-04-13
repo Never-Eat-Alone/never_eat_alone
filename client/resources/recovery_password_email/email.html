@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Recovery Email</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f6f6f6;
+            padding: 20px;
+        }
+
+        .email-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .greeting {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .message {
+            margin-top: 30px;
+            margin-bottom: 0px;
+        }
+
+        .button {
+            background-color: #F26B55;
+            border: none;
+            color: white;
+            padding: 10px 36px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 12px;
+            line-height: 15px;
+            margin: 30px 0;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="email-container">
+      <p class="greeting">Hello {{name}}&nbsp;👋</p>
+      <p class="message">
+          You are receiving this email because you requested a password recovery from NEA. Click on the button below to proceed to reset your password.
+      </p>
+      <a href="https://nevereatalone.net/reset_password" class="button">
+        Reset My Password
+      </a>
+    </div>
+  </body>
+</html>

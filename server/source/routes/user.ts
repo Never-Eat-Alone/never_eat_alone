@@ -32,7 +32,8 @@ export class UserRoutes {
     app.get('/api/user_invitation_code/:userId', this.getUserInvitationCode);
     app.post('/api/send_invite_email', this.sendInviteEmail);
     app.post('/api/send_partner_with_us_email', this.sendPartnerWithUsEmail);
-
+    app.post('/api/send_recovery_email', this.sendRecoveryEmail);
+    app.post('/api/resend_recovery_email', this.resendRecoveryEmail);
     this.userDatabase = userDatabase;
     this.sgmail = sgmail;
   }
@@ -358,6 +359,66 @@ export class UserRoutes {
     } catch (error) {
       return error;
     }
+  }
+
+  private sendRecoveryEmail = async (request, response) => {
+    const email = request.body.email;
+    const user = await this.userDatabase.loadUserByEmail(email);
+    if (user === null) {
+      response.status(400).json({ message: 'EMAIL_NOT_FOUND' });
+      return;
+    }
+    const recoveryHtml = await new Promise<string>((resolve, reject) => {
+      fs.readFile('public/resources/recovery_password_email/email.html', 'utf8',
+        (error, html) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(html);
+          }
+        });
+    });
+    const newHtml = recoveryHtml.replace('$name', user.name);
+    try {
+      await this.sendEmail(user.email, 'info@nevereatalone.net',
+        'Recovery Password Link', 'You are receiving this email because \
+        requested a password recovery from NEA. Click on the button below to \
+        proceed to reset your password. ', newHtml);
+    } catch (error) {
+      response.status(400).send();
+      return;
+    }
+    response.status(200).json({ user: user.toJson() });
+  }
+
+  private resendRecoveryEmail = async (request, response) => {
+    const email = request.body.email;
+    const user = User.fromJson(request.body.user);
+    if (user === null) {
+      response.status(400).json({ message: 'USER_NOT_FOUND' });
+      return;
+    }
+    const recoveryHtml = await new Promise<string>((resolve, reject) => {
+      fs.readFile('public/resources/recovery_password_email/email.html', 'utf8',
+        (error, html) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(html);
+          }
+        });
+    });
+    const newHtml = recoveryHtml.replace('$name', user.name);
+    try {
+      await this.sendEmail(user.email, 'info@nevereatalone.net',
+        'Recovery Password Link', 'You are receiving this email because \
+        requested a password recovery from NEA. Click on the button below to \
+        proceed to reset your password. ', newHtml);
+    } catch (error) {
+      response.status(400).send();
+      return;
+    }
+    response.status(200).send();
   }
 
   private userDatabase: UserDatabase;
