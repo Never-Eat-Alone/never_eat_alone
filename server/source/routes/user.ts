@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as Hash from 'hash.js';
-import { User, UserInvitationCode, InviteEmail } from '../../../client/library/source/definitions';
+import { InviteEmail, User, UserInvitationCode
+} from '../../../client/library/source/definitions';
 import { UserDatabase } from '../postgres/queries/user_database';
 
 /** User Routes class. */
@@ -30,7 +31,9 @@ export class UserRoutes {
     app.get('/api/confirmation_tokens/:id', this.verifyConfirmationToken);
     app.get('/api/user_invitation_code/:userId', this.getUserInvitationCode);
     app.post('/api/send_invite_email', this.sendInviteEmail);
-
+    app.post('/api/send_partner_with_us_email', this.sendPartnerWithUsEmail);
+    app.post('/api/send_recovery_email', this.sendRecoveryEmail);
+    app.post('/api/resend_recovery_email', this.resendRecoveryEmail);
     this.userDatabase = userDatabase;
     this.sgmail = sgmail;
   }
@@ -301,6 +304,119 @@ export class UserRoutes {
         response.status(400).send();
         return;
       }
+    }
+    response.status(200).send();
+  }
+
+  private sendPartnerWithUsEmail = async (request, response) => {
+    const { name, email, profileLink, message } = request.body;
+    const partnerWithUsHtml = await new Promise<string>((resolve, reject) => {
+      fs.readFile('public/resources/partner_with_us_email/email.html', 'utf8',
+        (error, html) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(html);
+          }
+        });
+    });
+    const newHtml = partnerWithUsHtml.replace('$name', name).replace('$link',
+      profileLink).replace('$contest', message);
+    try {
+      await this.sendEmail('info@nevereatalone.net', email,
+        `${name}, want to partner with NEA`, message, newHtml);
+      await this.sendPartnerWithUsRecievedConfirmationEmail(email, name);
+    } catch (error) {
+      response.status(400).send();
+      return;
+    }
+    response.status(200).send();
+  }
+
+  private sendPartnerWithUsRecievedConfirmationEmail = async (email: string,
+      name: string) => {
+    const partnerWithUsRecievedConfirmationHtml = await new Promise<string>((
+        resolve, reject) => {
+      fs.readFile(
+        'public/resources/partner_with_us_email/confirmation_email.html',
+        'utf8', (error, html) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(html);
+          }
+        });
+    });
+    const newHtml = partnerWithUsRecievedConfirmationHtml.replace('$name',
+      name);
+    try {
+      await this.sendEmail(email, 'info@nevereatalone.net',
+        'We Appreciate Your Business!', "This is a confirmation that we got \
+        your message! We’re excited you registered to be a partner of \
+        NeverEatAlone! Currently we are developing the backend for our \
+        partners so hang tight and we will notify you to share any news or \
+        updates.", newHtml);
+    } catch (error) {
+      return error;
+    }
+  }
+
+  private sendRecoveryEmail = async (request, response) => {
+    const email = request.body.email;
+    const user = await this.userDatabase.loadUserByEmail(email);
+    if (user === null) {
+      response.status(400).json({ message: 'EMAIL_NOT_FOUND' });
+      return;
+    }
+    const recoveryHtml = await new Promise<string>((resolve, reject) => {
+      fs.readFile('public/resources/recovery_password_email/email.html', 'utf8',
+        (error, html) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(html);
+          }
+        });
+    });
+    const newHtml = recoveryHtml.replace('$name', user.name);
+    try {
+      await this.sendEmail(user.email, 'info@nevereatalone.net',
+        'Recovery Password Link', 'You are receiving this email because \
+        requested a password recovery from NEA. Click on the button below to \
+        proceed to reset your password. ', newHtml);
+    } catch (error) {
+      response.status(400).send();
+      return;
+    }
+    response.status(200).json({ user: user.toJson() });
+  }
+
+  private resendRecoveryEmail = async (request, response) => {
+    const email = request.body.email;
+    const user = User.fromJson(request.body.user);
+    if (user === null) {
+      response.status(400).json({ message: 'USER_NOT_FOUND' });
+      return;
+    }
+    const recoveryHtml = await new Promise<string>((resolve, reject) => {
+      fs.readFile('public/resources/recovery_password_email/email.html', 'utf8',
+        (error, html) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(html);
+          }
+        });
+    });
+    const newHtml = recoveryHtml.replace('$name', user.name);
+    try {
+      await this.sendEmail(user.email, 'info@nevereatalone.net',
+        'Recovery Password Link', 'You are receiving this email because \
+        requested a password recovery from NEA. Click on the button below to \
+        proceed to reset your password. ', newHtml);
+    } catch (error) {
+      response.status(400).send();
+      return;
     }
     response.status(200).send();
   }
