@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as Hash from 'hash.js';
-import { InviteEmail, User, UserInvitationCode
+import { AccountDeletedSurvey, InviteEmail, User, UserInvitationCode
 } from '../../../client/library/source/definitions';
 import { UserDatabase } from '../postgres/queries/user_database';
 
@@ -34,6 +34,7 @@ export class UserRoutes {
     app.post('/api/send_partner_with_us_email', this.sendPartnerWithUsEmail);
     app.post('/api/send_recovery_email', this.sendRecoveryEmail);
     app.post('/api/resend_recovery_email', this.resendRecoveryEmail);
+    app.post('/api/submit_deleted_account_survey', this.submitDeleteAccount);
     this.userDatabase = userDatabase;
     this.sgmail = sgmail;
   }
@@ -419,6 +420,11 @@ export class UserRoutes {
       return;
     }
     response.status(200).send();
+  }
+
+  private submitDeleteAccount = async (request, response) => {
+    const survey = AccountDeletedSurvey.fromJson(request.body);
+    
   }
 
   private userDatabase: UserDatabase;
