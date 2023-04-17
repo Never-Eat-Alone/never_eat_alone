@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as Hash from 'hash.js';
-import { AccountDeletedSurvey, InviteEmail, User, UserInvitationCode
+import { InviteEmail, User, UserInvitationCode
 } from '../../../client/library/source/definitions';
 import { UserDatabase } from '../postgres/queries/user_database';
 
@@ -420,11 +420,6 @@ export class UserRoutes {
       return;
     }
     response.status(200).send();
-  }
-
-  private submitDeleteAccount = async (request, response) => {
-    const survey = AccountDeletedSurvey.fromJson(request.body);
-    
   }
 
   private userDatabase: UserDatabase;

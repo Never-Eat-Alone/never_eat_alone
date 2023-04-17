@@ -1,11 +1,12 @@
 export class AccountDeletedSurvey {
   public static fromJson(value: any): AccountDeletedSurvey {
-    return new AccountDeletedSurvey(value.a1, value.a2, value.a3,
+    return new AccountDeletedSurvey(value.userId, value.a1, value.a2, value.a3,
       value.a4, value.a5, value.a6, value.message);
   }
 
-  constructor(a1: boolean, a2: boolean, a3: boolean, a4: boolean, a5: boolean,
-      a6: boolean, message: string) {
+  constructor(userId: number, a1: boolean, a2: boolean, a3: boolean,
+      a4: boolean, a5: boolean, a6: boolean, message: string) {
+    this._userId = userId;
     this._a1 = a1;
     this._a2 = a2;
     this._a3 = a3;
@@ -20,6 +21,10 @@ export class AccountDeletedSurvey {
       'This is a temporary break / I want to make a new account.',
       'I have a privacy or safety concern.'
     ];
+  }
+
+  public get userId(): number {
+    return this._userId;
   }
 
   public get a1(): boolean {
@@ -56,6 +61,7 @@ export class AccountDeletedSurvey {
 
   public toJson(): any {
     return {
+      userId: this._userId,
       a1: this._a1,
       a2: this._a2,
       a3: this._a3,
@@ -67,6 +73,7 @@ export class AccountDeletedSurvey {
     };
   }
 
+  private _userId: number;
   private _a1: boolean;
   private _a2: boolean;
   private _a3: boolean;

@@ -5,6 +5,7 @@ import { AccountDeletedSurvey, DisplayMode } from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
+  userId: number;
   isSubmitted: boolean;
   onSubmit: (survey: AccountDeletedSurvey) => void;
 }
@@ -23,8 +24,8 @@ export class DeactivateAccountSurveyPage extends React.Component<Properties,
     State> {
   constructor(props: Properties) {
     super(props);
-    const survey = new AccountDeletedSurvey(false, false, false, false,
-      false, false, '');
+    const survey = new AccountDeletedSurvey(this.props.userId, false, false,
+      false, false, false, false, '');
     this.state = {
       a1: survey.a1,
       a2: survey.a2,
