@@ -200,9 +200,9 @@ export class DeactivateAccountSurveyPage extends React.Component<Properties,
   }
 
   private handleSubmit = () => {
-    const survey = new AccountDeletedSurvey(this.state.a1, this.state.a2,
-      this.state.a3, this.state.a4, this.state.a5, this.state.a6,
-      this.state.message);
+    const survey = new AccountDeletedSurvey(-1, this.props.userId,
+      this.state.a1, this.state.a2, this.state.a3, this.state.a4, this.state.a5,
+      this.state.a6, this.state.message, new Date());
     this.props.onSubmit(survey);
   }
 
