@@ -34,7 +34,7 @@ export class UserRoutes {
     app.post('/api/send_partner_with_us_email', this.sendPartnerWithUsEmail);
     app.post('/api/send_recovery_email', this.sendRecoveryEmail);
     app.post('/api/resend_recovery_email', this.resendRecoveryEmail);
-    app.post('/api/submit_deleted_account_survey', this.submitDeleteAccount);
+
     this.userDatabase = userDatabase;
     this.sgmail = sgmail;
   }

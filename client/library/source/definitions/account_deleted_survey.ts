@@ -1,11 +1,12 @@
 export class AccountDeletedSurvey {
   public static fromJson(value: any): AccountDeletedSurvey {
-    return new AccountDeletedSurvey(value.userId, value.a1, value.a2, value.a3,
-      value.a4, value.a5, value.a6, value.message);
+    return new AccountDeletedSurvey(value.id, value.userId, value.a1, value.a2,
+      value.a3, value.a4, value.a5, value.a6, value.message, value.createdAt);
   }
 
-  constructor(userId: number, a1: boolean, a2: boolean, a3: boolean,
-      a4: boolean, a5: boolean, a6: boolean, message: string) {
+  constructor(id: number, userId: number, a1: boolean, a2: boolean, a3: boolean,
+      a4: boolean, a5: boolean, a6: boolean, message: string, createdAt: Date) {
+    this._id = id;
     this._userId = userId;
     this._a1 = a1;
     this._a2 = a2;
@@ -21,6 +22,11 @@ export class AccountDeletedSurvey {
       'This is a temporary break / I want to make a new account.',
       'I have a privacy or safety concern.'
     ];
+    this._createdAt = createdAt;
+  }
+
+  public get id(): number {
+    return this._id;
   }
 
   public get userId(): number {
@@ -59,8 +65,13 @@ export class AccountDeletedSurvey {
     return this._questions;
   }
 
+  public get createdAt(): Date {
+    return this._createdAt;
+  }
+
   public toJson(): any {
     return {
+      id: this._id,
       userId: this._userId,
       a1: this._a1,
       a2: this._a2,
@@ -69,10 +80,12 @@ export class AccountDeletedSurvey {
       a5: this._a5,
       a6: this._a6,
       message: this._message,
-      questions: this._questions
+      questions: this._questions,
+      createdAt: this._createdAt
     };
   }
 
+  private _id: number;
   private _userId: number;
   private _a1: boolean;
   private _a2: boolean;
@@ -82,4 +95,5 @@ export class AccountDeletedSurvey {
   private _a6: boolean;
   private _message: string;
   private _questions: string[];
+  private _createdAt: Date;
 }
