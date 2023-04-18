@@ -306,6 +306,7 @@ export class ApplicationController extends React.Component<Properties, State> {
 
   private renderDeactivateAccountSurvey = () => {
     return <DeactivateAccountSurveyPageController
+      account={this.state.account}
       displayMode={this.state.displayMode}
       model={this.props.model.deactivateAccountSurveyModel}
     />;
@@ -342,6 +343,7 @@ export class ApplicationController extends React.Component<Properties, State> {
 
   private renderDeletedAccountSurvey = () => {
     return <DeletedAccountSurveyPageController
+      account={this.state.account}
       displayMode={this.state.displayMode}
       model={this.props.model.deletedAccountSurveyModel}
     />;

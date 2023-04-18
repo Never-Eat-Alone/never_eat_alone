@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { CheckBox, PrimaryTextButton, RedNavLink, Textarea
 } from '../../components';
-import { AccountDeletedSurvey, DisplayMode } from '../../definitions';
+import { AccountDeletedSurvey, DisplayMode, User } from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
+  account: User;
   isSubmitted: boolean;
   onSubmit: (survey: AccountDeletedSurvey) => void;
 }
@@ -23,8 +24,8 @@ export class DeletedAccountSurveyPage extends React.Component<Properties, State
     > {
   constructor(props: Properties) {
     super(props);
-    const survey = new AccountDeletedSurvey(false, false, false, false,
-      false, false, '');
+    const survey = new AccountDeletedSurvey(-1, this.props.account.id, false,
+      false, false, false, false, false, '', new Date());
     this.state = {
       a1: survey.a1,
       a2: survey.a2,
@@ -197,9 +198,9 @@ export class DeletedAccountSurveyPage extends React.Component<Properties, State
   }
 
   private handleSubmit = () => {
-    const survey = new AccountDeletedSurvey(this.state.a1, this.state.a2,
-      this.state.a3, this.state.a4, this.state.a5, this.state.a6,
-      this.state.message);
+    const survey = new AccountDeletedSurvey(-1, this.props.account.id,
+      this.state.a1, this.state.a2, this.state.a3, this.state.a4, this.state.a5,
+      this.state.a6, this.state.message, new Date());
     this.props.onSubmit(survey);
   }
 
