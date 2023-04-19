@@ -14,17 +14,17 @@ export class DeactivateAccountSurveyRoutes {
    * @param userDatabase - The user related table manipulation class instance.
    * @param sgmail - SendGrid api.
    */
-  constructor(app: any, deleteAccountSurveyDatabase:
+  constructor(app: any, deactivateAccountSurveyDatabase:
       DeactivateAccountSurveyDatabase, userDatabase: UserDatabase, sgmail: any
       ) {
     app.post('/api/submit_deactivate_account_survey',
-      this.submitDeleteAccountSurvey);
-    this.deactivateAccountSurveyDatabase = deleteAccountSurveyDatabase;
+      this.submitDeactivateAccountSurvey);
+    this.deactivateAccountSurveyDatabase = deactivateAccountSurveyDatabase;
     this.userDatabase = userDatabase;
     this.sgmail = sgmail;
   }
 
-  private submitDeleteAccountSurvey = async (request, response) => {
+  private submitDeactivateAccountSurvey = async (request, response) => {
     const survey = AccountDeletedSurvey.fromJson(request.body);
     try {
       await this.deactivateAccountSurveyDatabase.saveSurvey(survey);
@@ -37,7 +37,7 @@ export class DeactivateAccountSurveyRoutes {
       return;
     }
     const confirmationHtml = await new Promise<string>((resolve, reject) => {
-      fs.readFile('public/resources/delete_account_survey_email/email.html',
+      fs.readFile('public/resources/deactivate_account_survey_email/email.html',
         'utf8', (error, html) => {
           if (error) {
             reject(error);
@@ -49,7 +49,7 @@ export class DeactivateAccountSurveyRoutes {
     const newHtml = confirmationHtml.replace('$name', user.name);
     try {
       await this.sendEmail(user.email, 'info@nevereatalone.net',
-        'NEA Account Deleted', '', newHtml);
+        'NEA Account Deactivated', '', newHtml);
     } catch (error) {
       response.status(201).json({
         message: 'EMAIL_NOT_SENT'
