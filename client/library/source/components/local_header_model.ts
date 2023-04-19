@@ -1,16 +1,17 @@
+import { UserProfileImage } from '../definitions';
 import { HeaderModel } from './header_model';
 
 export class LocalHeaderModel extends HeaderModel {
-  constructor(profileImageSrc: string) {
+  constructor(profileImage: UserProfileImage) {
     super();
-    this._profileImageSrc = profileImageSrc;
+    this._profileImage = profileImage;
   }
 
   public async load(): Promise<void> {}
 
-  public get profileImageSrc(): string {
-    return this._profileImageSrc;
+  public get profileImage(): UserProfileImage {
+    return this._profileImage;
   }
 
-  private _profileImageSrc: string;
+  private _profileImage: UserProfileImage;
 }

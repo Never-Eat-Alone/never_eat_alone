@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DisplayMode, User } from '../definitions';
+import { DisplayMode, User, UserProfileImage } from '../definitions';
 import { HeaderLogo } from './header_logo';
 import { WhiteNavLink } from './nav_link';
 import { ProfileMenu } from './profile_menu';
@@ -12,8 +12,8 @@ interface Properties {
   /** Indicates the current user account. */
   account: User;
 
-  /** Represents the user profile image source. */
-  profileImageSrc: string;
+  /** Represents the user profile image. */
+  profileImage: UserProfileImage;
 
   headerStyle?: React.CSSProperties;
 
@@ -45,7 +45,7 @@ export class Header extends React.Component<Properties> {
           key='ProfileMenu'
           displayMode={this.props.displayMode}
           userId={this.props.account.id}
-          imageSrc={this.props.profileImageSrc ||
+          imageSrc={this.props.profileImage.src ||
             'resources/header/icons/avatar_default.svg'}
           onLogOut={this.props.onLogOut}
           style={PROFILE_MENU_STYLE}
