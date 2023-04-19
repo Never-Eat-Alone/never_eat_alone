@@ -14,7 +14,7 @@ export class HttpDeactivateAccountSurveyModel extends
         'survey': survey.toJson()
       })
     });
-    if (response.status === 200) {
+    if (response.status === 200 || response.status === 201) {
       return true;
     }
     return false;
