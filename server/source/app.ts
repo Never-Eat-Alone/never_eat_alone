@@ -9,6 +9,10 @@ import { Pool } from 'pg';
 import * as SGMail from '@sendgrid/mail';
 import { v4 as uuidv4 } from 'uuid';
 import { AttendeeDatabase } from './postgres/queries/attendee_database';
+import { DeactivateAccountSurveyDatabase
+} from './postgres/queries/deactivate_account_survey_database';
+import { DeleteAccountSurveyDatabase
+} from './postgres/queries/delete_account_survey_database';
 import { DiningEventDatabase } from './postgres/queries/dining_event_database';
 import { SocialMediaImageDatabase
 } from './postgres/queries/social_media_image_database';
@@ -16,6 +20,9 @@ import { UserDatabase } from './postgres/queries/user_database';
 import { UserProfileImageDatabase
 } from './postgres/queries/user_profile_image_database';
 import { AttendeeRoutes } from './routes/attendee';
+import { DeactivateAccountSurveyRoutes
+} from './routes/deactivate_account_survey';
+import { DeleteAccountSurveyRoutes } from './routes/delete_account_survey';
 import { DiningEventRoutes } from './routes/dining_event';
 import { SocialMediaImageRoutes } from './routes/social_media_image';
 import { UserRoutes } from './routes/user';
@@ -120,6 +127,13 @@ function runExpress(pool: Pool, config: any) {
   const socialMediaImageDatabase = new SocialMediaImageDatabase(pool);
   const socialMediaImageRoutes = new SocialMediaImageRoutes(app,
     socialMediaImageDatabase);
+  const deactivateAccountSurveyDatabase = new DeactivateAccountSurveyDatabase(
+    pool);
+  const deactivateAccountSurveyRoute = new DeactivateAccountSurveyRoutes(app,
+    deactivateAccountSurveyDatabase, userDatabase, SGMail);
+  const deleteAccountSurveyDatabase = new DeleteAccountSurveyDatabase(pool);
+  const deleteAccountSurveyRoute = new DeleteAccountSurveyRoutes(app,
+    deleteAccountSurveyDatabase, userDatabase, SGMail);
   const diningEventDatabase = new DiningEventDatabase(pool);
   const diningEventRoutes = new DiningEventRoutes(app, diningEventDatabase);
   const attendeeDatabase = new AttendeeDatabase(pool);

@@ -1,4 +1,5 @@
 export * from './attendee_database';
+export * from './deactivate_account_survey_database';
 export * from './delete_account_survey_database';
 export * from './dining_event_database';
 export * from './social_media_image_database';
