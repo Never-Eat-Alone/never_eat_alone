@@ -55,7 +55,7 @@ export class HeaderController extends React.Component<Properties, State> {
       return (
         <div id='shell-header' style={CONTAINER_STYLE} >
           <Header {...this.props}
-            profileImageSrc={this.props.model.profileImageSrc}
+            profileImage={this.props.model.profileImage}
           />
         </div>);
     }

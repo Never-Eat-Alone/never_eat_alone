@@ -23,7 +23,7 @@ export class HttpHomePageModel extends HomePageModel {
       `/api/home_page/event_list/${this._account.id}`);
     if (eventListResponse.status === 200) {
       const eventListObject = await eventListResponse.json();
-      for (const event of eventListObject.eventList) {
+      for (const event of eventListObject.diningEventCardSummaryList) {
         eventList.push(EventCardSummary.fromJson(event));
       }
     }
