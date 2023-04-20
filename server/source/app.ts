@@ -29,11 +29,14 @@ import { UserRoutes } from './routes/user';
 import { UserProfileImageRoutes } from './routes/user_profile_image';
 
 const pgSession = require('connect-pg-simple')(Session);
-const initializePostgres = async (pool, dir, label) => {
-  const fileNames = fs.readdirSync(dir).filter(
-    f => Path.extname(f).toLowerCase() === '.sql');
-  for (const fileName of fileNames) {
-    const value = fileName.replace('.sql', '');
+const initializePostgres = async (pool, dir, label, tableNames = []) => {
+  if (tableNames.length === 0) {
+    tableNames = fs.readdirSync(dir).filter(
+      f => Path.extname(f).toLowerCase() === '.sql').map(f => f.replace('.sql',
+      ''));
+  }
+
+  for (const value of tableNames) {
     const [isValue, column] = (() => {
       if (label === 'table') {
         return [`SELECT to_regclass('${value}')`, 'to_regclass'];
@@ -43,6 +46,7 @@ const initializePostgres = async (pool, dir, label) => {
         return [null, null];
       }
     })();
+
     await new Promise<void>((resolve, reject) => {
       pool.query(isValue, (error, results) => {
         if (error) {
@@ -50,7 +54,7 @@ const initializePostgres = async (pool, dir, label) => {
           return;
         }
         if (results.rows.length == 0 || results.rows[0][column] == null) {
-          const query = fs.readFileSync(dir + `${fileName}`).toString();
+          const query = fs.readFileSync(dir + `${value}.sql`).toString();
           pool.query(query, (error, results) => {
             if (error) {
               reject(error);
@@ -66,7 +70,7 @@ const initializePostgres = async (pool, dir, label) => {
       });
     });
   }
-}
+};
 
 function runExpress(pool: Pool, config: any) {
   const app = Express();
@@ -143,7 +147,24 @@ function runExpress(pool: Pool, config: any) {
   });
   app.listen(config.port, async () => {
     await initializePostgres(pool, '../source/postgres/types/', 'type');
-    await initializePostgres(pool, '../source/postgres/tables/', 'table');  
+    await initializePostgres(pool, '../source/postgres/tables/', 'table', [
+      'users',
+      'user_sessions',
+      'sessions',
+      'user_confirmation_tokens',
+      'user_invitation_codes',
+      'user_credentials',
+      'user_profile_images',
+      'social_media_images',
+      'cuisines',
+      'locations',
+      'restaurants',
+      'restaurant_cuisines',
+      'dining_events',
+      'delete_account_survey',
+      'deactivate_account_survey',
+      'attendees'
+    ]);
   });
 }
 
