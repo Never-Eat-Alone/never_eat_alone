@@ -197,6 +197,7 @@ export class UserRoutes {
     } catch (error) {
       response.status(400).json({ message: 'SESSIONS_DATABASE_ERROR' });
     }
+    response.status(200).send();
   }
 
   /** Sends a confirmstion email to the user via Sendgrid api. */
