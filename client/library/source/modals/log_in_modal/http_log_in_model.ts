@@ -1,8 +1,8 @@
-import { User, UserProfileImage } from '../../definitions';
+import { User } from '../../definitions';
 
 export class HttpLogInModel {
   public async logIn(email: string, password: string, rememberMe: boolean
-      ): Promise<{user: User, profileImage: UserProfileImage}> {
+      ): Promise<User> {
     const response = await fetch('/api/log_in', {
       method: 'POST',
       headers: {
@@ -16,12 +16,9 @@ export class HttpLogInModel {
     });
     if (response.status === 200) {
       const responseObject = await response.json();
-      const user = User.fromJson(responseObject.user);
-      const profileImage = UserProfileImage.fromJson(
-        responseObject.profileImage);
-      return { user: user, profileImage: profileImage };
+      return User.fromJson(responseObject.user);
     }
-    return { user: User.makeGuest(), profileImage: UserProfileImage.NoImage() };
+    return User.makeGuest();
   }
 
   public async logOut(): Promise<boolean> {

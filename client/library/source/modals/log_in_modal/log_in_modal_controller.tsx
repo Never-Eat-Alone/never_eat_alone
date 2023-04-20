@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { DisplayMode, User, UserProfileImage, UserStatus
-} from '../../definitions';
+import { DisplayMode, User, UserStatus } from '../../definitions';
 import { LogInModal } from './log_in_modal';
 import { LogInModel } from './log_in_model';
 
@@ -15,7 +14,7 @@ interface Properties {
   onClose: () => void;
 
   /** Indicates the log in was successful. */
-  onLogInSuccess: (user: User, profileImage: UserProfileImage) => void;
+  onLogInSuccess: (user: User) => void;
 }
 
 interface State {
@@ -51,12 +50,10 @@ export class LogInModalController extends React.Component<Properties, State> {
   private handleLogIn = async (email: string, password: string,
       rememberMe: boolean) => {
     try {
-      const userResponse = await this.props.model.logIn(email, password,
+      const user = await this.props.model.logIn(email, password,
         rememberMe);
-      const user = User.fromJson(userResponse.user);
-      const profileImage = UserProfileImage.fromJson(userResponse.profileImage);
       if (user.userStatus === UserStatus.ACTIVE) {
-        this.props.onLogInSuccess(user, profileImage);
+        this.props.onLogInSuccess(user);
       } else {
         this.setState({ errorCode: LogInModal.ErrorCode.LOGIN_FAILED });
       }

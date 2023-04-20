@@ -48,6 +48,7 @@ interface State {
   isInviteAFoodieButtonClicked: boolean;
   isPartnerWithUsButtonClicked: boolean;
   accountProfileImage: UserProfileImage;
+  loggedIn: boolean;
 }
 
 export class ApplicationController extends React.Component<Properties, State> {
@@ -64,7 +65,8 @@ export class ApplicationController extends React.Component<Properties, State> {
       isLogInButtonClicked: false,
       isInviteAFoodieButtonClicked: false,
       isPartnerWithUsButtonClicked: false,
-      accountProfileImage: UserProfileImage.NoImage()
+      accountProfileImage: UserProfileImage.NoImage(),
+      loggedIn: false
     };
   }
 
@@ -231,7 +233,20 @@ export class ApplicationController extends React.Component<Properties, State> {
       await this.props.model.load();
       this.setState({ isLoaded: true, hasError: false });
     } catch (error) {
-      this.setState({ hasError: true, isLoaded: true });
+      this.setState({ isLoaded: true, hasError: true });
+    }
+    return;
+  }
+
+  public async componentDidUpdate(prevProps: Properties,
+      prevState: State): Promise<void> {
+    if (prevState.loggedIn !== this.state.loggedIn) {
+      try {
+        await this.props.model.load();
+        this.setState({ isLoaded: true, hasError: false });
+      } catch (error) {
+        this.setState({ isLoaded: true, hasError: true });
+      }
     }
     return;
   }
@@ -278,17 +293,20 @@ export class ApplicationController extends React.Component<Properties, State> {
     this.setState({ isPartnerWithUsButtonClicked: false });
   }
 
-  private handleLogInSuccess = (user: User, profileImage: UserProfileImage) => {
+  private handleLogInSuccess = async (user: User) => {
     if (this.state.isLogInButtonClicked) {
       this.handleLogInModalClose();
     }
-    this.setState({ account: user, accountProfileImage: profileImage });
+    this.setState({
+      account: user,
+      loggedIn: true
+    });
   }
 
   private handleLogOut = async () => {
     const isLoggedOut = await this.props.model.logInModel.logOut();
     if (isLoggedOut) {
-      this.setState({ account: User.makeGuest() });
+      this.setState({ account: User.makeGuest(), loggedIn: false });
     }
   }
 
