@@ -46,10 +46,10 @@ VALUES
   '2020-03-01 09:30',
   '@shahrzad'
   ),
-  ('Mike',
+  ('Sheryl',
   'shahrzad@nevereatalone.net',
   'mk3622',
-  'DEACTIVE',
+  'ACTIVE',
   '2020-03-01 23:14',
   'meetup'
   ),
@@ -157,4 +157,11 @@ VALUES
   'PENDING',
   '2020-03-09 04:02:23',
   ''
+  ),
+  ('Kranar',
+  'kamal@spiretrading.com',
+  'Kranar',
+  'ACTIVE',
+  '2021-03-09 04:02:23',
+  'Sheryl'
   );

@@ -21,7 +21,7 @@ INSERT INTO user_profile_images (
 (2, '/resources/images/profile2.jpeg'),
 (3, '/resources/images/profile3.jpeg'),
 (4, '/resources/images/profile4.jpeg'),
-(5, '/resources/images/profileguy5.jpeg'),
+(5, '/resources/images/profile5.jpeg'),
 (6, '/resources/images/profile6.jpeg'),
 (7, '/resources/images/profile7.jpeg'),
 (8, '/resources/images/profile8.jpeg'),
@@ -36,5 +36,5 @@ INSERT INTO user_profile_images (
 (17, '/resources/profile_set_up_page/icons/profile-image-5.svg'),
 (18, '/resources/profile_set_up_page/icons/profile-image-6.svg'),
 (19, '/resources/profile_set_up_page/icons/profile-image-7.svg'),
-(20, '/resources/profile_set_up_page/icons/profile-image-8.svg'
-);
+(20, '/resources/profile_set_up_page/icons/profile-image-8.svg'),
+(21, '/resources/images/profileguy8.jpeg');
