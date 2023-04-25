@@ -101,7 +101,7 @@ export class UserRoutes {
       token);
     try {
       await this.sendEmail(email, 'info@nevereatalone.net',
-        'NEA Account: Registration Request', '', newHtml);
+        'NEA Account: Registration Request', newHtml);
     } catch (error) {
       response.status(201).json({
         user: user.toJson(),
@@ -168,16 +168,22 @@ export class UserRoutes {
    * @param text - Context of the email.
    * @param html - The html representation of the email.
    */
-  private sendEmail = async (to: string, from: string, subject: string,
-      text: string, html: string) => {
+  private sendEmail = async (toEmail: string, fromEmail: string,
+      subject: string, content: string) => {
     const message = {
-      to: to,
-      from: from,
+      to: toEmail,
+      from: fromEmail,
       subject: subject,
-      text: text,
-      html: html,
+      html: content
     };
-    await this.sgmail.send(message);
+    try {
+      await this.sgmail.send(message);
+    } catch (error) {
+      console.error(`Error sending email: ${error}`);
+      if (error.response && error.response.body && error.response.body.errors) {
+        console.error('Error details:', error.response.body.errors);
+      }
+    }
   }
 
   /** Logs out the user. */
@@ -231,7 +237,7 @@ export class UserRoutes {
       '$token', token);
     try {
       await this.sendEmail(user.email, 'info@nevereatalone.net',
-        'Welcome to Never Eat Alone', 'Welcome to NEA', newHtml);
+        'Welcome to Never Eat Alone', newHtml);
     } catch (error) {
       response.status(400).send();
       return;
@@ -301,7 +307,7 @@ export class UserRoutes {
       try {
         await this.sendEmail(email, account.email,
           `Your friend, ${account.name}, invited you to check out NEA`,
-          inviteEmail.contest, newHtml);
+          newHtml);
       } catch (error) {
         response.status(400).send();
         return;
@@ -326,7 +332,7 @@ export class UserRoutes {
       profileLink).replace('$contest', message);
     try {
       await this.sendEmail('info@nevereatalone.net', email,
-        `${name}, want to partner with NEA`, message, newHtml);
+        `${name}, want to partner with NEA`, newHtml);
       await this.sendPartnerWithUsRecievedConfirmationEmail(email, name);
     } catch (error) {
       response.status(400).send();
@@ -353,11 +359,7 @@ export class UserRoutes {
       name);
     try {
       await this.sendEmail(email, 'info@nevereatalone.net',
-        'We Appreciate Your Business!', "This is a confirmation that we got \
-        your message! We’re excited you registered to be a partner of \
-        NeverEatAlone! Currently we are developing the backend for our \
-        partners so hang tight and we will notify you to share any news or \
-        updates.", newHtml);
+        'We Appreciate Your Business!', newHtml);
     } catch (error) {
       return error;
     }
@@ -383,9 +385,7 @@ export class UserRoutes {
     const newHtml = recoveryHtml.replace('$name', user.name);
     try {
       await this.sendEmail(user.email, 'info@nevereatalone.net',
-        'Recovery Password Link', 'You are receiving this email because \
-        requested a password recovery from NEA. Click on the button below to \
-        proceed to reset your password. ', newHtml);
+        'Recovery Password Link', newHtml);
     } catch (error) {
       response.status(400).send();
       return;
@@ -413,9 +413,7 @@ export class UserRoutes {
     const newHtml = recoveryHtml.replace('$name', user.name);
     try {
       await this.sendEmail(user.email, 'info@nevereatalone.net',
-        'Recovery Password Link', 'You are receiving this email because \
-        requested a password recovery from NEA. Click on the button below to \
-        proceed to reset your password. ', newHtml);
+        'Recovery Password Link', newHtml);
     } catch (error) {
       response.status(400).send();
       return;
