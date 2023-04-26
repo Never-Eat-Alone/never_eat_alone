@@ -46,7 +46,7 @@ export class DeactivateAccountSurveyRoutes {
           }
         });
     });
-    const newHtml = confirmationHtml.replace('$name', user.name);
+    const newHtml = confirmationHtml.replace('{{name}}', user.name);
     try {
       await this.sendEmail(user.email, 'info@nevereatalone.net',
         'NEA Account Deactivated', '', newHtml);
