@@ -64,7 +64,7 @@ export class PrivacyPolicyPage extends React.Component<Properties> {
                   className={css(styles.link)}
                   to='/'
               >
-                https://www.nevereatalone.net
+                http://nevereatalone.net
               </Router.Link>
             </span>
             &nbsp;(the "Website"), and more generally, use any of our 

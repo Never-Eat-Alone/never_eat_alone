@@ -229,7 +229,7 @@ export class UserRoutes {
       response.status(400).json({ message: 'DATABASE_ERROR' });
       return;
     }
-    response.redirect(303, 'https://www.nevereatalone.net');
+    response.redirect(303, 'http://nevereatalone.net');
   }
 
   private getUserInvitationCode = async (request, response) => {

@@ -30,7 +30,7 @@ interface State {
 
 export class InviteAFoodieModal extends React.Component<Properties, State> {
   public static readonly INVITATION_URL = 
-    'www.nevereatalone.net/invitation_code/';
+    'http://nevereatalone.net/invitation_code/';
   constructor(props: Properties) {
     super(props);
     this._inviteCodeTextArea = React.createRef();

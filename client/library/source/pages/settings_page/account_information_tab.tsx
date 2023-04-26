@@ -383,7 +383,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           disabled
         />
         <div style={idRowStyle} >
-          www.nevereatalone.net/users/profile/
+          http://nevereatalone.net/users/profile/
           <InputField
             style={ID_INPUT_STYLE}
             value={this.props.profileId}
