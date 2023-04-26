@@ -45,7 +45,7 @@ export class DeleteAccountSurveyRoutes {
           }
         });
     });
-    const newHtml = confirmationHtml.replace('$name', user.name);
+    const newHtml = confirmationHtml.replace('{{name}}', user.name);
     try {
       await this.sendEmail(user.email, 'info@nevereatalone.net',
         'NEA Account Deleted', '', newHtml);

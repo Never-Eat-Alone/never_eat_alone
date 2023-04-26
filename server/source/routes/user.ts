@@ -24,12 +24,10 @@ export class UserRoutes {
     /** Route to log out the user. */
     app.get('/api/log_out', this.logOut);
 
-    /** Route to send a confirm email to the user. */
-    app.post('/api/send_confirmation_email', this.sendConfirmationEmail);
-
     /** Route to the confirmation token page. */
     app.get('/api/confirmation_tokens/:id', this.verifyConfirmationToken);
     app.get('/api/user_invitation_code/:userId', this.getUserInvitationCode);
+
     app.post('/api/send_invite_email', this.sendInviteEmail);
     app.post('/api/send_partner_with_us_email', this.sendPartnerWithUsEmail);
     app.post('/api/send_recovery_email', this.sendRecoveryEmail);
@@ -97,8 +95,8 @@ export class UserRoutes {
       });
       return;
     }
-    const newHtml = confirmationHtml.replace('$name', name).replace('$token',
-      token);
+    const newHtml = confirmationHtml.replace('{{name}}', name).replace(
+      '{{token}}', token);
     try {
       await this.sendEmail(email, 'info@nevereatalone.net',
         'NEA Account: Registration Request', newHtml);
@@ -206,45 +204,6 @@ export class UserRoutes {
     response.status(200).send();
   }
 
-  /** Sends a confirmstion email to the user via Sendgrid api. */
-  private sendConfirmationEmail = async (request, response) => {
-    const { userId } = request.body;
-    let user: User;
-    try {
-      user = await this.userDatabase.loadUserById(parseInt(userId));
-    } catch (error) {
-      response.status(400).send();
-      return;
-    }
-    const confirmationHtml = await new Promise<string>((resolve, reject) => {
-      fs.readFile('public/resources/confirmation_email/email.html', 'utf8',
-        (error, html) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(html);
-          }
-        });
-    });
-    let token: string;
-    try {
-      token = await this.getConfirmationToken(user.email, user.id);
-    } catch (error) {
-      response.status(400).json({ message: 'CONFIRMATION_TOKEN_ERROR' });
-      return;
-    }
-    const newHtml = confirmationHtml.replace('$name', user.name).replace(
-      '$token', token);
-    try {
-      await this.sendEmail(user.email, 'info@nevereatalone.net',
-        'Welcome to Never Eat Alone', newHtml);
-    } catch (error) {
-      response.status(400).send();
-      return;
-    }
-    response.status(200).send();
-  }
-
   /**
    * Identifies if the token is valid or not and displays the confirmation
    * page accordingly.
@@ -301,8 +260,8 @@ export class UserRoutes {
           }
         });
     });
-    const newHtml = invitationHtml.replace('$user_name',
-      account.userName).replace('$contest', inviteEmail.contest);
+    const newHtml = invitationHtml.replace('{{user_name}}',
+      account.userName).replace('{{contest}}', inviteEmail.contest);
     for (const email of inviteEmail.emailList) {
       try {
         await this.sendEmail(email, account.email,
@@ -328,8 +287,8 @@ export class UserRoutes {
           }
         });
     });
-    const newHtml = partnerWithUsHtml.replace('$name', name).replace('$link',
-      profileLink).replace('$contest', message);
+    const newHtml = partnerWithUsHtml.replace('{{name}}', name).replace(
+      '{{link}}', profileLink).replace('{{contest}}', message);
     try {
       await this.sendEmail('info@nevereatalone.net', email,
         `${name}, want to partner with NEA`, newHtml);
@@ -355,7 +314,7 @@ export class UserRoutes {
           }
         });
     });
-    const newHtml = partnerWithUsRecievedConfirmationHtml.replace('$name',
+    const newHtml = partnerWithUsRecievedConfirmationHtml.replace('{{name}}',
       name);
     try {
       await this.sendEmail(email, 'info@nevereatalone.net',
@@ -382,7 +341,7 @@ export class UserRoutes {
           }
         });
     });
-    const newHtml = recoveryHtml.replace('$name', user.name);
+    const newHtml = recoveryHtml.replace('{{name}}', user.name);
     try {
       await this.sendEmail(user.email, 'info@nevereatalone.net',
         'Recovery Password Link', newHtml);
@@ -410,7 +369,7 @@ export class UserRoutes {
           }
         });
     });
-    const newHtml = recoveryHtml.replace('$name', user.name);
+    const newHtml = recoveryHtml.replace('{{name}}', user.name);
     try {
       await this.sendEmail(user.email, 'info@nevereatalone.net',
         'Recovery Password Link', newHtml);
