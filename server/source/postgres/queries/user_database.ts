@@ -178,6 +178,29 @@ export class UserDatabase {
   }
 
   /**
+   * Indicates whether the give confirmation token is valid or not.
+   * @param token - Confirmation token.
+   */
+  public isTokenValid = async (token: string): Promise<boolean> => {
+    const result = await this.pool.query('SELECT * from \
+      user_confirmation_tokens WHERE token_id = $1 AND expires_at > NOW()',
+      [token]);
+    if (!result.rows || result.rows.length === 0) {
+      return false;
+    }
+    return true;
+  }
+
+  public getUserIdByToken = async (token: string): Promise<number> => {
+    const result = await this.pool.query('SELECT user_id from \
+      user_confirmation_tokens WHERE token_id = $1', [token]);
+    if (!result.rows || result.rows.length === 0) {
+      return -1;
+    }
+    return parseInt(result.rows[0].user_id);
+  }
+
+  /**
    * Update the user status based on the validity of the give confirmation
    * token.
    * @param token - Confirmation token.
@@ -195,6 +218,15 @@ export class UserDatabase {
     await this.pool.query(
       'DELETE from user_confirmation_tokens WHERE token_id = $1', [token]);
     return parseInt(result.rows[0].user_id);
+  }
+
+  public hasCredentials = async (userId: number): Promise<boolean> => {
+    const result = await this.pool.query('SELECT * from user_credentials WHERE \
+      user_id = $1', [userId]);
+    if (!result.rows || result.rows.length === 0) {
+      return false;
+    }
+    return true;
   }
 
   /** The postgress pool connection. */
