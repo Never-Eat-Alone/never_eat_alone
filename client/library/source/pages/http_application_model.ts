@@ -11,6 +11,7 @@ import { DeletedAccountSurveyModel, HttpDeletedAccountSurveyModel
 } from './deleted_account_survey_page';
 import { DiningEventPageModel } from './dining_event_page';
 import { EditProfilePageModel } from './edit_profile_page';
+import { EmailConfirmationPageModel } from './email_confirmation_page';
 import { ForgotPasswordPageModel, HttpForgotPasswordPageModel
 } from './forgot_password_page';
 import { HomePageModel, HttpHomePageModel } from './home_page';
@@ -102,6 +103,10 @@ export class HttpApplicationModel extends ApplicationModel {
 
   public getSignUpPageModel(id: number): SignUpPageModel {
     return this._model.getSignUpPageModel(id);
+  }
+
+  public getEmailConfirmationPageModel(id: string): EmailConfirmationPageModel {
+    return this._model.getEmailConfirmationPageModel(id);
   }
 
   public get googleClientId(): string {

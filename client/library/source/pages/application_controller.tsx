@@ -13,6 +13,7 @@ import { DeletedAccountSurveyPageController
 } from './deleted_account_survey_page';
 import { DiningEventPageController } from './dining_event_page';
 import { EditProfilePageController } from './edit_profile_page';
+import { EmailConfirmationPageController } from './email_confirmation_page';
 import { ErrorPage403, ErrorPage404, ErrorPage500 } from './error_page';
 import { ForgotPasswordPageController } from './forgot_password_page';
 import { HelpPage } from './help_page';
@@ -131,6 +132,10 @@ export class ApplicationController extends React.Component<Properties, State> {
           {inviteAFoodieModal}
           {partnerWithUsModal}
           <Router.Switch>
+            <Router.Route
+              path='/confirmation_tokens/:id'
+              render={this.renderEmailConfirmationPage}
+            />
             <Router.Route
               path='/cookies_policy'
               render={this.renderCookiesPolicy}
@@ -311,6 +316,14 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private handleButtonWithDropDownClick = (label: string) => {}
+
+  private renderEmailConfirmationPage = ({match}: Router.RouteComponentProps<
+      TParams>) => {
+    return <EmailConfirmationPageController
+      displayMode={this.state.displayMode}
+      model={this.props.model.getEmailConfirmationPageModel(match.params.id)}
+    />;
+  }
 
   private renderSettings = ({match}: Router.RouteComponentProps<TParams>) => {
     const id = Number(match.params.id);
