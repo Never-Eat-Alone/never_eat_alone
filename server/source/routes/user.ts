@@ -318,7 +318,7 @@ export class UserRoutes {
           }
         });
     });
-    const newHtml = signUpHtml.replace('{{name}}', name);
+    const newHtml = signUpHtml.replace('{{name}}', user.name);
     try {
       await this.sendEmail(user.email, 'info@nevereatalone.net',
         'NEA Account: Sign Up', newHtml);
