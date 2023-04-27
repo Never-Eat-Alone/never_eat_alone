@@ -105,12 +105,12 @@ export class HttpApplicationModel extends ApplicationModel {
     return this._model.getSignUpPageModel(id);
   }
 
-  public getEmailConfirmationPageModel(id: string): EmailConfirmationPageModel {
-    return this._model.getEmailConfirmationPageModel(id);
-  }
-
   public get googleClientId(): string {
     return this._model.googleClientId;
+  }
+
+  public getEmailConfirmationPageModel(id: string): EmailConfirmationPageModel {
+    return this._model.getEmailConfirmationPageModel(id);
   }
 
   private _model: ApplicationModel;

@@ -10,7 +10,7 @@ export class HttpEmailConfirmationPageModel extends EmailConfirmationPageModel {
 
   /** Loads the Email confirmation page for a specific token id. */
   public async load(): Promise<void> {
-    const response = await fetch(`/api/email_confirmation_page/${this._tokenId}`
+    const response = await fetch(`/api/confirmation_tokens/${this._tokenId}`
       );
     let error, message = '';
     let isValid = false;

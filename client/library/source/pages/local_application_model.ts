@@ -7,6 +7,7 @@ import { DeactivateAccountSurveyModel } from './deactivate_account_survey_page';
 import { DeletedAccountSurveyModel } from './deleted_account_survey_page';
 import { DiningEventPageModel } from './dining_event_page';
 import { EditProfilePageModel } from './edit_profile_page';
+import { EmailConfirmationPageModel } from './email_confirmation_page';
 import { ForgotPasswordPageModel } from './forgot_password_page';
 import { HomePageModel } from './home_page';
 import { PartnerWithUsModel } from './partner_with_us_page';
@@ -125,6 +126,10 @@ export class LocalApplicationModel extends ApplicationModel {
     return this._googleClientId;
   }
 
+  public getEmailConfirmationPageModel(id: string): EmailConfirmationPageModel {
+    return this._emailConfirmationPageModelMap.get(id);
+  }
+
   private _headerModel: HeaderModel;
   private _homepageModel: HomePageModel;
   private _inviteAFoodieModel: InviteAFoodieModel;
@@ -140,4 +145,6 @@ export class LocalApplicationModel extends ApplicationModel {
   private _settingsPageModelMap: Map<number, SettingsPageModel>;
   private _signUpPageModelMap: Map<number, SignUpPageModel>;
   private _googleClientId: string;
+  private _emailConfirmationPageModelMap: Map<string, EmailConfirmationPageModel
+    >;
 }
