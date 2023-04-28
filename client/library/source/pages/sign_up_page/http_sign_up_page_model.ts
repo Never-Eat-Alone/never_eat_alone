@@ -86,7 +86,7 @@ export class HttpSignUpPageModel extends SignUpPageModel {
     return this._model.defaultImage;
   }
 
-  public get avatars(): UserProfileImage[] {
+  public get avatars(): Avatar[] {
     return this._model.avatars;
   }
 
