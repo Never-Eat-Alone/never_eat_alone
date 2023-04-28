@@ -317,8 +317,8 @@ export class ApplicationController extends React.Component<Properties, State> {
 
   private handleButtonWithDropDownClick = (label: string) => {}
 
-  private renderEmailConfirmationPage = ({match}: Router.RouteComponentProps<
-      TParams>) => {
+  private renderEmailConfirmationPage = (
+      {match}: Router.RouteComponentProps<TParams>) => {
     return <EmailConfirmationPageController
       displayMode={this.state.displayMode}
       model={this.props.model.getEmailConfirmationPageModel(match.params.id)}
@@ -343,8 +343,8 @@ export class ApplicationController extends React.Component<Properties, State> {
     />;
   }
 
-  private renderDiningEvents = ({match}: Router.RouteComponentProps<TParams>
-      ) => {
+  private renderDiningEvents = (
+      {match}: Router.RouteComponentProps<TParams>) => {
     const id = Number(match.params.id);
     return <DiningEventPageController
       displayMode={this.state.displayMode}
@@ -355,8 +355,8 @@ export class ApplicationController extends React.Component<Properties, State> {
     />;
   }
 
-  private renderEditProfilePage = ({match}: Router.RouteComponentProps<TParams>
-      ) => {
+  private renderEditProfilePage = (
+      {match}: Router.RouteComponentProps<TParams>) => {
     const id = Number(match.params.id);
     return <EditProfilePageController
         displayMode={this.state.displayMode}
@@ -399,8 +399,8 @@ export class ApplicationController extends React.Component<Properties, State> {
       });
   }
 
-  private renderProfilePage = ({match}: Router.RouteComponentProps<TParams>
-      ) => {
+  private renderProfilePage = (
+      {match}: Router.RouteComponentProps<TParams>) => {
     const id = Number(match.params.id);
     return <ProfilePageController
       account={this.state.account}

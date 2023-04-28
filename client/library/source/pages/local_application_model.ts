@@ -133,6 +133,11 @@ export class LocalApplicationModel extends ApplicationModel {
     return this._googleClientId;
   }
 
+  public addEmailConfirmationPageModel(id: string,
+      emailConfirmationPageModel: EmailConfirmationPageModel): void {
+    this._emailConfirmationPageModelMap.set(id, emailConfirmationPageModel);
+  }
+
   public getEmailConfirmationPageModel(id: string): EmailConfirmationPageModel {
     return this._emailConfirmationPageModelMap.get(id);
   }
