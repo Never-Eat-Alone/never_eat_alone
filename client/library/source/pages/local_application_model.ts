@@ -34,6 +34,13 @@ export class LocalApplicationModel extends ApplicationModel {
     this._deactivateAccountSurveyModel = deactivateAccountSurveyModel;
     this._forgotPasswordPageModel = forgotPasswordPageModel;
     this._googleClientId = googleClientId;
+    this._diningEventPageModelMap = new Map<number, DiningEventPageModel>();
+    this._profilePageModelMap = new Map<number, ProfilePageModel>();
+    this._editProfilePageModelMap = new Map<number, EditProfilePageModel>();
+    this._settingsPageModelMap = new Map<number, SettingsPageModel>();
+    this._signUpPageModelMap = new Map<number, SignUpPageModel>();
+    this._emailConfirmationPageModelMap = new Map<string,
+      EmailConfirmationPageModel>();
   }
 
   public async load(): Promise<void> {
@@ -145,6 +152,6 @@ export class LocalApplicationModel extends ApplicationModel {
   private _settingsPageModelMap: Map<number, SettingsPageModel>;
   private _signUpPageModelMap: Map<number, SignUpPageModel>;
   private _googleClientId: string;
-  private _emailConfirmationPageModelMap: Map<string, EmailConfirmationPageModel
-    >;
+  private _emailConfirmationPageModelMap: Map<string,
+    EmailConfirmationPageModel>;
 }
