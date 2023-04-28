@@ -10,7 +10,6 @@ export class HttpSignUpPageModel extends SignUpPageModel {
 
   public async load(): Promise<void> {
     const response = await fetch(`/api/sign_up/${this._profileId}`);
-    console.log('sign up model response status', response.status);
     if (response.status !== 200) {
       return;
     }

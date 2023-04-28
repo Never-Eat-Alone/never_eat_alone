@@ -137,7 +137,6 @@ export class UserRoutes {
     if (hasCredentials) {
       response.redirect(303, 'http://nevereatalone.net/log_in');
     }
-    console.log('email sent in sign up response 200');
     response.status(200).json({ email: user.email });
   }
 
@@ -253,7 +252,6 @@ export class UserRoutes {
    */
   private verifyConfirmationToken = async (request, response) => {
     const token = request.params.id;
-    console.log('token', token);
     let isTokenValid = false;
     try {
       isTokenValid = await this.userDatabase.isTokenValid(token);
@@ -266,7 +264,6 @@ export class UserRoutes {
         'http://nevereatalone.net/confirmation_token_invalid');
       return;
     }
-    console.log('token is valid');
     let userIdByToken: number;
     try {
       userIdByToken = await this.userDatabase.getUserIdByToken(token);
@@ -274,7 +271,6 @@ export class UserRoutes {
       response.status(500).send({ error: error });
       return;
     }
-    console.log('useIDByToken', userIdByToken);
     let user = User.makeGuest();
     try {
       user = await this.userDatabase.loadUserById(userIdByToken);
@@ -283,7 +279,6 @@ export class UserRoutes {
       return;
     }
     if (user.userStatus === UserStatus.ACTIVE) {
-      console.log('user is already verified');
       let hasCredentials = false;
       try {
         hasCredentials = await this.userDatabase.hasCredentials(user.id);
@@ -291,7 +286,6 @@ export class UserRoutes {
         response.status(500).send({ error: error });
         return;
       }
-      console.log('hasCredentials', hasCredentials);
       if (hasCredentials) {
         response.redirect(303, 'http://nevereatalone.net');
       } else {
@@ -307,7 +301,6 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
-    console.log('useId after status update to ACTIVE', id);
     request.session.cookie.maxAge = 24 * 60 * 60 * 1000;
     try {
       await this.userDatabase.assignUserIdToSid(request.session.id, user.id);
@@ -315,7 +308,6 @@ export class UserRoutes {
       response.status(500).json({ message: 'DATABASE_ERROR' });
       return;
     }
-    console.log('sign up email loading');
     const signUpHtml = await new Promise<string>((resolve, reject) => {
       fs.readFile('public/resources/sign_up_email/email.html', 'utf8',
         (error, html) => {
@@ -338,7 +330,6 @@ export class UserRoutes {
       });
       return;
     }
-    console.log('sign up email sent');
     response.status(200).send({ message: 'Email sent.' });
   }
 
