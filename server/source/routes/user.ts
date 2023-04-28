@@ -19,7 +19,8 @@ export class UserRoutes {
     app.post('/api/join', this.join);
 
     /** Route for the guest user to set up an account. */
-    app.get('/api/sign_up', this.signUp);
+    app.get('/api/sign_up/:id', this.signUp);
+    app.post('/api/sign_up/:id', this.setUpPassword);
 
     /** Route for the user log in. */
     app.post('/api/log_in', this.logIn);
@@ -114,28 +115,42 @@ export class UserRoutes {
   }
 
   private signUp = async (request, response) => {
-    let user: User;
+    const userId = parseInt(request.params.id);
+    let user = User.makeGuest();
     try {
-      user = await this.userDatabase.loadUserBySessionId(request.session.id);
+      user = await this.userDatabase.loadUserById(userId);
     } catch (error) {
-      response.status(400).json({ message: 'DATABASE_ERROR' });
+      response.status(500).send();
       return;
     }
     if (!user || user.id === -1 || user.userStatus !== UserStatus.ACTIVE) {
-      response.status(400).json({ user: User.makeGuest().toJson() });
+      response.redirect(303, 'http://nevereatalone.net/join');
       return;
     }
     let hasCredentials = false;
     try {
       hasCredentials = await this.userDatabase.hasCredentials(user.id);
     } catch {
-      response.status(400).json({ message: 'DATABASE_ERROR' });
+      response.status(500).send();
       return;
     }
     if (hasCredentials) {
-      response.redirect(303, 'http://nevereatalone.net');
+      response.redirect(303, 'http://nevereatalone.net/log_in');
     }
-    response.status(200).json({ user: user.toJson() });
+    console.log('email sent in sign up response 200');
+    response.status(200).json({ email: user.email });
+  }
+
+  private setUpPassword = async (request, response) => {
+    const userId = parseInt(request.params.id);
+    const { password } = request.body;
+    let user = User.makeGuest();
+    try {
+      user = await this.userDatabase.loadUserById(userId);
+    } catch {
+      response.status(500).send();
+    }
+    
   }
 
   /** Checks user credentials for login. */

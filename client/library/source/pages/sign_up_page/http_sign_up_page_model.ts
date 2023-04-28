@@ -10,14 +10,20 @@ export class HttpSignUpPageModel extends SignUpPageModel {
 
   public async load(): Promise<void> {
     const response = await fetch(`/api/sign_up/${this._profileId}`);
+    console.log('sign up model response status', response.status);
     if (response.status !== 200) {
       return;
     }
     const responseObject = await response.json();
     const email = responseObject.email;
-    const defaultImage = UserProfileImage.fromJson(responseObject.defaultImage);
-    const avatars: UserProfileImage[] = arrayFromJson('UserProfileImage',
-      responseObject.avatars);
+    let defaultImage = UserProfileImage.NoImage();
+    if (responseObject.defaultImage) {
+      defaultImage = UserProfileImage.fromJson(responseObject.defaultImage);
+    }
+    let avatars: UserProfileImage[] = [UserProfileImage.NoImage()];
+    if (responseObject.avatars && responseObject.avatars.length !== 0) {
+      avatars = arrayFromJson('UserProfileImage', responseObject.avatars);
+    }
     this._model = new LocalSignUpPageModel(email, defaultImage, avatars);
     this._model.load();
   }
@@ -40,7 +46,7 @@ export class HttpSignUpPageModel extends SignUpPageModel {
   }
 
   public async signUp(password: string): Promise<boolean> {
-    const response = await fetch('/api/sign_up', {
+    const response = await fetch(`/api/sign_up/${this._profileId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
