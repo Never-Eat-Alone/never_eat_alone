@@ -22,6 +22,7 @@ export class HttpEmailConfirmationPageModel extends EmailConfirmationPageModel {
       message = responseObject.message;
     }
     this._model = new LocalEmailConfirmationPageModel(isValid, error, message);
+    this._model.load();
   }
 
   public get isValid(): boolean {
