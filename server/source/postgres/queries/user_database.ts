@@ -1,6 +1,6 @@
 import * as Hash from 'hash.js';
 import { Pool } from 'pg';
-import { User, UserStatus
+import { Avatar, User, UserStatus
 } from '../../../../client/library/source/definitions';
 import * as Crypto from 'crypto';
 
@@ -39,6 +39,17 @@ export class UserDatabase {
       return '';
     }
     return result.rows[0].invite_code;
+  }
+
+  public loadAvatars = async (): Promise<Avatar[]> => {
+    const result = await this.pool.query('SELECT * FROM avatars');
+    const avatars: Avatar[] = [];
+    if (result && result.rows && result.rows.length > 0) {
+      for (const row of result.rows) {
+        avatars.push(new Avatar(parseInt(row.id), row.src));
+      }
+    }
+    return avatars;
   }
 
   /**
@@ -181,6 +192,13 @@ export class UserDatabase {
       // If the user ID doesn't exist, insert the new credentials
       await this.pool.query('INSERT INTO user_credentials \
         (user_id, hashed_pass) VALUES ($1, $2)', [userId, hashedEnteredPass]);
+    }
+    const tempResult = await this.pool.query('SELECT * from \
+      user_profile_images WHERE user_id = $1', [userId]);
+    if (!tempResult || !tempResult.rows || tempResult.rows.length === 0) {
+      const defaultImageSrc = '/resources/avatars/profile-image-0.svg';
+      await this.pool.query('INSERT INTO user_profile_images (user_id, src) \
+        VALUES ($1, $2)', [userId, defaultImageSrc]);
     }
   }
 

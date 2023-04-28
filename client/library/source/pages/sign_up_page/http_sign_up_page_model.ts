@@ -1,4 +1,4 @@
-import { arrayFromJson, UserProfileImage } from '../../definitions';
+import { arrayFromJson, Avatar, UserProfileImage } from '../../definitions';
 import { LocalSignUpPageModel } from './local_sign_up_page_model';
 import { SignUpPageModel } from './sign_up_page_model';
 
@@ -19,9 +19,9 @@ export class HttpSignUpPageModel extends SignUpPageModel {
     if (responseObject.defaultImage) {
       defaultImage = UserProfileImage.fromJson(responseObject.defaultImage);
     }
-    let avatars: UserProfileImage[] = [UserProfileImage.NoImage()];
+    let avatars: Avatar[] = [];
     if (responseObject.avatars && responseObject.avatars.length !== 0) {
-      avatars = arrayFromJson('UserProfileImage', responseObject.avatars);
+      avatars = arrayFromJson('Avatar', responseObject.avatars);
     }
     this._model = new LocalSignUpPageModel(email, defaultImage, avatars);
     this._model.load();
@@ -62,7 +62,7 @@ export class HttpSignUpPageModel extends SignUpPageModel {
 
   public async setUpProfile(displayName: string, image: UserProfileImage
       ): Promise<boolean> {
-    const response = await fetch('/api/set_up_profile', {
+    const response = await fetch(`/api/set_up_profile/${this._profileId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

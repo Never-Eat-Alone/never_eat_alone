@@ -2,7 +2,7 @@ import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 import { AvatarWithCheckMark, NameInputFieldWithCounterInside, PrimaryTextButton
 } from '../../components';
-import { DisplayMode, UserProfileImage } from '../../definitions';
+import { Avatar, DisplayMode, UserProfileImage } from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -12,7 +12,7 @@ interface Properties {
 
   selectedImage: UserProfileImage;
 
-  avatars: UserProfileImage[];
+  avatars: Avatar[];
 
   /** Indicates the upload image button is clicked. */
   onUploadImageClick: (image: UserProfileImage) => void;
@@ -20,7 +20,7 @@ interface Properties {
   /** Indicates the let's go button is clicked. */
   onLetsGoClick: (displayName: string, image: UserProfileImage) => void;
 
-  onAvatarClick: (avatar: UserProfileImage) => void;
+  onAvatarClick: (avatar: Avatar) => void;
 
   onDisplayNameChange: (newName: string) => void;
 }

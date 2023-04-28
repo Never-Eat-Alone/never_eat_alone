@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
-import { DisplayMode, UserProfileImage } from '../../definitions';
+import { Avatar, DisplayMode, UserProfileImage } from '../../definitions';
 import { ProfileSetUpPage } from './profile_set_up_page';
 import { SignUpPage } from './sign_up_page';
 import { SignUpPageModel } from './sign_up_page_model';
@@ -105,8 +105,11 @@ export class SignUpPageController extends React.Component<Properties, State> {
     }
   }
 
-  private handleAvatarClick = (avatar: UserProfileImage) => {
-    this.setState({ image: avatar });
+  private handleAvatarClick = (avatar: Avatar) => {
+    this.setState({
+      image: new UserProfileImage(avatar.id, this.state.image.userId,
+        avatar.src)
+    });
   }
 
   private handleDisplayNameChange = (newName: string) => {

@@ -1,9 +1,9 @@
-import { UserProfileImage } from '../../definitions';
+import { Avatar, UserProfileImage } from '../../definitions';
 import { SignUpPageModel } from './sign_up_page_model';
 
 export class LocalSignUpPageModel extends SignUpPageModel {
   constructor(email: string, defaultImage: UserProfileImage,
-      avatars: UserProfileImage[]) {
+      avatars: Avatar[]) {
     super();
     this._email = email;
     this._defaultImage = defaultImage;
@@ -36,11 +36,11 @@ export class LocalSignUpPageModel extends SignUpPageModel {
     return this._defaultImage;
   }
 
-  public get avatars(): UserProfileImage[] {
+  public get avatars(): Avatar[] {
     return this._avatars;
   }
 
   private _email: string;
   private _defaultImage: UserProfileImage;
-  private _avatars: UserProfileImage[];
+  private _avatars: Avatar[];
 }

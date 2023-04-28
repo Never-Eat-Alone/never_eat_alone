@@ -124,10 +124,11 @@ function runExpress(pool: Pool, config: any) {
     response.status(200).json({ google_client_id: id });
   });
   const userDatabase = new UserDatabase(pool);
-  const userRoutes = new UserRoutes(app, userDatabase, SGMail);
   const userProfileImageDatabase = new UserProfileImageDatabase(pool);
   const userProfileImageRoutes = new UserProfileImageRoutes(app,
     userProfileImageDatabase);
+  const userRoutes = new UserRoutes(app, userDatabase, userProfileImageDatabase,
+    SGMail);
   const socialMediaImageDatabase = new SocialMediaImageDatabase(pool);
   const socialMediaImageRoutes = new SocialMediaImageRoutes(app,
     socialMediaImageDatabase);
@@ -151,6 +152,7 @@ function runExpress(pool: Pool, config: any) {
       'users',
       'user_sessions',
       'sessions',
+      'avatars',
       'user_confirmation_tokens',
       'user_invitation_codes',
       'user_credentials',

@@ -1,17 +1,20 @@
 import * as fs from 'fs';
 import * as Hash from 'hash.js';
-import { InviteEmail, User, UserInvitationCode, UserStatus
-} from '../../../client/library/source/definitions';
+import { arrayToJson, Avatar, InviteEmail, User, UserInvitationCode, UserStatus,
+  UserProfileImage } from '../../../client/library/source/definitions';
 import { UserDatabase } from '../postgres/queries/user_database';
+import { UserProfileImageDatabase } from '../postgres/queries';
 
 /** User Routes class. */
 export class UserRoutes {
   /**
    * @param app - Express app.
    * @param userDatabase - The user related table manipulation class instance.
+   * @param userProfileImageDatabase
    * @param sgmail - SendGrid api.
    */
-  constructor(app: any, userDatabase: UserDatabase, sgmail: any) {
+  constructor(app: any, userDatabase: UserDatabase,
+      userProfileImageDatabase: UserProfileImageDatabase, sgmail: any) {
     /** Route to get the current logged in user. */
     app.get('/api/current_user', this.getCurrentUser);
 
@@ -38,6 +41,7 @@ export class UserRoutes {
     app.post('/api/resend_recovery_email', this.resendRecoveryEmail);
 
     this.userDatabase = userDatabase;
+    this.userProfileImageDatabase = userProfileImageDatabase;
     this.sgmail = sgmail;
   }
 
@@ -137,7 +141,25 @@ export class UserRoutes {
     if (hasCredentials) {
       response.redirect(303, 'http://nevereatalone.net/log_in');
     }
-    response.status(200).json({ email: user.email });
+    let userProfileImage = UserProfileImage.NoImage();
+    try {
+      userProfileImage = 
+        await this.userProfileImageDatabase.loadProfileImageByUserId(userId);
+    } catch {
+      response.status(500).send();
+    }
+    let avatars: Avatar[] = [];
+    try {
+      const tempAvatars = await this.userDatabase.loadAvatars();
+      avatars = [...tempAvatars];
+    } catch {
+      response.status(500).send();
+    }
+    response.status(200).json({
+      email: user.email,
+      userProfileImage: userProfileImage.toJson(),
+      avatars: arrayToJson(avatars)
+    });
   }
 
   private setUpPassword = async (request, response) => {
@@ -481,6 +503,8 @@ export class UserRoutes {
   }
 
   private userDatabase: UserDatabase;
+
+  private userProfileImageDatabase: UserProfileImageDatabase;
 
   /** The Sendgrid mailing api. */
   private sgmail: any;
