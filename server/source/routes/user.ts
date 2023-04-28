@@ -143,13 +143,12 @@ export class UserRoutes {
   private setUpPassword = async (request, response) => {
     const userId = parseInt(request.params.id);
     const { password } = request.body;
-    let user = User.makeGuest();
     try {
-      user = await this.userDatabase.loadUserById(userId);
+      await this.userDatabase.addUserCredentials(userId, password);
     } catch {
       response.status(500).send();
     }
-    
+    response.status(200).send();
   }
 
   /** Checks user credentials for login. */

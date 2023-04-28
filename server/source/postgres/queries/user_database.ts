@@ -115,8 +115,8 @@ export class UserDatabase {
    * @param userId - User id.
    * @param password - User password.
    */
-  public validatePassword =
-      async (userId: number, password: string): Promise<boolean> => {
+  public validatePassword = async (userId: number, password: string): Promise<
+      boolean> => {
     const hashedEnteredPass =
       Hash.sha256().update(password + userId).digest('hex');
     const result = await this.pool.query(
@@ -159,6 +159,29 @@ export class UserDatabase {
     await this.pool.query(
       'INSERT INTO user_confirmation_tokens (token_id, expires_at, user_id) \
       VALUES ($1, $2, $3)', [tokenId, expiresAt, userId]);
+  }
+
+  /**
+   * Add the user credentials.
+   * @param userId - User id.
+   * @param password - User password.
+   */
+  public addUserCredentials = async (userId: number, password: string): Promise<
+      void> => {
+    const hashedEnteredPass =
+      Hash.sha256().update(password + userId).digest('hex');
+    // Check if the user ID already exists in the table
+    const result = await this.pool.query('SELECT user_id FROM user_credentials \
+      WHERE user_id = $1', [userId]);
+    if (result.rows.length > 0) {
+      // If the user ID already exists, update the password
+      await this.pool.query('UPDATE user_credentials SET hashed_pass = $1 \
+        WHERE user_id = $2', [hashedEnteredPass, userId]);
+    } else {
+      // If the user ID doesn't exist, insert the new credentials
+      await this.pool.query('INSERT INTO user_credentials \
+        (user_id, hashed_pass) VALUES ($1, $2)', [userId, hashedEnteredPass]);
+    }
   }
 
   /**
