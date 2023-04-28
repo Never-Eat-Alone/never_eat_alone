@@ -15,7 +15,8 @@ import { DemoSignUpPageModel } from './demo_sign_up_page_model';
 /** Implements the ApplicationModel for demo purposes. */
 export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
   public async load(): Promise<void> {
-    this._headerModel = new NeverEatAlone.LocalHeaderModel('');
+    this._headerModel = new NeverEatAlone.LocalHeaderModel(
+      NeverEatAlone.UserProfileImage.NoImage());
     const imageListEmpty: NeverEatAlone.SocialMediaImage[] = [];
     const imageListSample: NeverEatAlone.SocialMediaImage[] = [
       new NeverEatAlone.SocialMediaImage(1, 'resources/images/2.jpg'),
@@ -432,6 +433,12 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     this._signUpPageModel.set(1, demoSignUpPageModel1);
     this._signUpPageModel.set(2, demoSignUpPageModel2);
     this._googleClientId = '';
+    this._emailConfirmationPageModel = new Map();
+    const demoEmailConfirmationPageModel1 = 
+      new NeverEatAlone.LocalEmailConfirmationPageModel(true, '', '');
+    this._emailConfirmationPageModel.set(
+      'e2a25428e17ec7b6e61e6ab514f64776b84e224bcde140f88718cc2d814089d9',
+      demoEmailConfirmationPageModel1);
     await Promise.all([this._headerModel.load(), this._homePageModel.load(),
       this._inviteAFoodieModel.load()]);
     return;
@@ -497,6 +504,11 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return this._signUpPageModel.get(id);
   }
 
+  public getEmailConfirmationPageModel(id: string
+      ): NeverEatAlone.EmailConfirmationPageModel {
+    return this._emailConfirmationPageModel.get(id);
+  }
+
   public get googleClientId(): string {
     return this._googleClientId;
   }
@@ -518,4 +530,6 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
   private _forgotPasswordPageModel: NeverEatAlone.ForgotPasswordPageModel;
   private _signUpPageModel: Map<number, NeverEatAlone.SignUpPageModel>;
   private _googleClientId: string;
+  private _emailConfirmationPageModel: Map<string,
+    NeverEatAlone.EmailConfirmationPageModel>;
 }

@@ -4,13 +4,13 @@ import { SettingsPageModel } from './settings_page_model';
 import { LocalSettingsPageModel } from './local_settings_page_model';
 
 export class HttpSettingsPageModel extends SettingsPageModel {
-  constructor(account: User) {
+  constructor(userId: number) {
     super();
-    this._account = account;
+    this._userId = userId;
   }
 
   public async load(): Promise<void> {
-    const response = await fetch(`/api/settings/${this._account.id}`);
+    const response = await fetch(`/api/settings/${this._userId}`);
     const responseObject = await response.json();
     const linkedSocialAccounts: SocialAccount[] = arrayFromJson(SocialAccount,
       responseObject.linkedSocialAccounts);
@@ -304,5 +304,5 @@ export class HttpSettingsPageModel extends SettingsPageModel {
   }
 
   private _model: SettingsPageModel;
-  private _account: User;
+  private _userId: number;
 }

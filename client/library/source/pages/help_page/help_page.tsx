@@ -202,7 +202,7 @@ export class HelpPage extends React.Component<Properties> {
             <div style={P_STYLE} >. You can also check your&nbsp;</div>
             <span style={LINK_SPAN_STYLE} >
               <Router.Link
-                  to='/users/settings/:id'
+                  to='/settings/:id'
                   style={LINK_STYLE}
                   className={css(styles.link)}
               >
@@ -674,7 +674,7 @@ export class HelpPage extends React.Component<Properties> {
             </div>
             <span style={LINK_SPAN_STYLE} >
               <Router.Link
-                  to='/users/settings/:id'
+                  to='/settings/:id'
                   style={LINK_STYLE}
                   className={css(styles.link)}
               >

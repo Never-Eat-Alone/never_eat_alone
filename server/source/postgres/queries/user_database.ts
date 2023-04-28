@@ -115,8 +115,8 @@ export class UserDatabase {
    * @param userId - User id.
    * @param password - User password.
    */
-  public validatePassword =
-      async (userId: number, password: string): Promise<boolean> => {
+  public validatePassword = async (userId: number, password: string): Promise<
+      boolean> => {
     const hashedEnteredPass =
       Hash.sha256().update(password + userId).digest('hex');
     const result = await this.pool.query(
@@ -162,6 +162,29 @@ export class UserDatabase {
   }
 
   /**
+   * Add the user credentials.
+   * @param userId - User id.
+   * @param password - User password.
+   */
+  public addUserCredentials = async (userId: number, password: string): Promise<
+      void> => {
+    const hashedEnteredPass =
+      Hash.sha256().update(password + userId).digest('hex');
+    // Check if the user ID already exists in the table
+    const result = await this.pool.query('SELECT user_id FROM user_credentials \
+      WHERE user_id = $1', [userId]);
+    if (result.rows.length > 0) {
+      // If the user ID already exists, update the password
+      await this.pool.query('UPDATE user_credentials SET hashed_pass = $1 \
+        WHERE user_id = $2', [hashedEnteredPass, userId]);
+    } else {
+      // If the user ID doesn't exist, insert the new credentials
+      await this.pool.query('INSERT INTO user_credentials \
+        (user_id, hashed_pass) VALUES ($1, $2)', [userId, hashedEnteredPass]);
+    }
+  }
+
+  /**
    * Indicates whether the email alreay exist in the users database or not.
    * @param email - User email.
    */
@@ -175,6 +198,29 @@ export class UserDatabase {
     const result = await this.pool.query('SELECT * FROM users WHERE \
       user_name = $1', [userName]);
     return result.rows.length !== 0;
+  }
+
+  /**
+   * Indicates whether the give confirmation token is valid or not.
+   * @param token - Confirmation token.
+   */
+  public isTokenValid = async (token: string): Promise<boolean> => {
+    const result = await this.pool.query('SELECT * from \
+      user_confirmation_tokens WHERE token_id = $1 AND expires_at > NOW()',
+      [token]);
+    if (!result.rows || result.rows.length === 0) {
+      return false;
+    }
+    return true;
+  }
+
+  public getUserIdByToken = async (token: string): Promise<number> => {
+    const result = await this.pool.query('SELECT user_id from \
+      user_confirmation_tokens WHERE token_id = $1', [token]);
+    if (!result.rows || result.rows.length === 0) {
+      return -1;
+    }
+    return parseInt(result.rows[0].user_id);
   }
 
   /**
@@ -195,6 +241,15 @@ export class UserDatabase {
     await this.pool.query(
       'DELETE from user_confirmation_tokens WHERE token_id = $1', [token]);
     return parseInt(result.rows[0].user_id);
+  }
+
+  public hasCredentials = async (userId: number): Promise<boolean> => {
+    const result = await this.pool.query('SELECT * from user_credentials WHERE \
+      user_id = $1', [userId]);
+    if (!result.rows || result.rows.length === 0) {
+      return false;
+    }
+    return true;
   }
 
   /** The postgress pool connection. */

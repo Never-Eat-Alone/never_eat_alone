@@ -5,6 +5,7 @@ export * from './deactivate_account_survey_page';
 export * from './deleted_account_survey_page';
 export * from './dining_event_page';
 export * from './edit_profile_page';
+export * from './email_confirmation_page';
 export * from './error_page';
 export * from './forgot_password_link_sent_page';
 export * from './forgot_password_page';

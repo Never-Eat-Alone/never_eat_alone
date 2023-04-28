@@ -9,8 +9,7 @@ export class DemoLogInModel extends NeverEatAlone.LogInModel {
   }
 
   public async logIn(email: string, password: string, rememberMe: boolean):
-      Promise<{user: NeverEatAlone.User, profileImage:
-      NeverEatAlone.UserProfileImage}> {
+      Promise<NeverEatAlone.User> {
     let tempUser = NeverEatAlone.User.makeGuest();
     let tempProfileImage = NeverEatAlone.UserProfileImage.NoImage();
     for (const user of this._userList) {
@@ -23,10 +22,7 @@ export class DemoLogInModel extends NeverEatAlone.LogInModel {
         } 
       }
     }
-    return {
-      user: tempUser,
-      profileImage: tempProfileImage
-    };
+    return tempUser;
   }
 
   public async logOut(): Promise<boolean> {

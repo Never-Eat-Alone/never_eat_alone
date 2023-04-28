@@ -47,7 +47,7 @@ export class TermsOfUsePage extends React.Component<Properties> {
             between you, whether personally or on behalf of an entity (“you”) 
             and Never Eat Alone Inc. ("<b>Company</b>", “<b>we</b>”, 
             “<b>us</b>”, or “<b>our</b>”), concerning your access to and use of 
-            the https://www.nevereatalone.net/ website as well as any other 
+            the http://nevereatalone.net/ website as well as any other 
             media form, media channel, mobile website or mobile application 
             related, linked, or otherwise connected thereto (collectively, the 
             “<b>Site</b>”). We are registered in Canada and have our 
@@ -461,7 +461,7 @@ export class TermsOfUsePage extends React.Component<Properties> {
                   style={LINK_STYLE}
                   className={css(styles.link)}
               >
-                https://www.nevereatalone.net/privacy-policy
+                http://nevereatalone.net/privacy-policy
               </Router.Link>
             </span>. By using the 
             Site, you agree to be bound by our Privacy Policy, which is 
