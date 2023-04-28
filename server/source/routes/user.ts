@@ -146,6 +146,7 @@ export class UserRoutes {
       userProfileImage = 
         await this.userProfileImageDatabase.loadProfileImageByUserId(userId);
     } catch {
+      console.log('failed profile image');
       response.status(500).send();
     }
     let avatars: Avatar[] = [];
@@ -153,11 +154,12 @@ export class UserRoutes {
       const tempAvatars = await this.userDatabase.loadAvatars();
       avatars = [...tempAvatars];
     } catch {
+      console.log('failed avatars');
       response.status(500).send();
     }
     response.status(200).json({
       email: user.email,
-      userProfileImage: userProfileImage.toJson(),
+      defaultImage: userProfileImage.toJson(),
       avatars: arrayToJson(avatars)
     });
   }
