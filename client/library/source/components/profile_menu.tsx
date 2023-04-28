@@ -69,7 +69,7 @@ export class ProfileMenu extends React.Component<Properties,
             <Router.Link
                 style={MENU_ITEM_STYLE}
                 className={css(styles.menuItem)}
-                to={`/users/settings/${this.props.userId}`}
+                to={`/settings/${this.props.userId}`}
             >
               Settings
             </Router.Link>

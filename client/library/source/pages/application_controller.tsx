@@ -197,7 +197,7 @@ export class ApplicationController extends React.Component<Properties, State> {
               render={this.renderPrivacyPolicy}
             />
             <Router.Route
-              path='/users/settings/:id'
+              path='/settings/:id'
               render={this.renderSettings}
             />
             <Router.Route

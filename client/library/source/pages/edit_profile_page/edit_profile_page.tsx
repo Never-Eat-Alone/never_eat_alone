@@ -444,7 +444,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
                 To change your display name or handle, go to&nbsp;
                 <RedNavLink
                   label='Account Information'
-                  to={`/users/settings/${this.props.profileId}`}
+                  to={`/settings/${this.props.profileId}`}
                   style={LINK_STYLE}
                 />
                 &nbsp;in your settings.

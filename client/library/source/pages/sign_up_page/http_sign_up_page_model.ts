@@ -3,8 +3,13 @@ import { LocalSignUpPageModel } from './local_sign_up_page_model';
 import { SignUpPageModel } from './sign_up_page_model';
 
 export class HttpSignUpPageModel extends SignUpPageModel {
+  constructor(profileId: number) {
+    super();
+    this._profileId = profileId;
+  }
+
   public async load(): Promise<void> {
-    const response = await fetch('/api/sign_up');
+    const response = await fetch(`/api/sign_up/${this._profileId}`);
     if (response.status !== 200) {
       return;
     }
@@ -81,4 +86,5 @@ export class HttpSignUpPageModel extends SignUpPageModel {
   }
 
   private _model: SignUpPageModel;
+  private _profileId: number;
 }

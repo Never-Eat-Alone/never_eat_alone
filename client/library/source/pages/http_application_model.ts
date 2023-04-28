@@ -127,7 +127,7 @@ export class HttpApplicationModel extends ApplicationModel {
   public getSettingsPageModel(id: number): SettingsPageModel {
     let settingsPageModel = this._model.getSettingsPageModel(id);
     if (!settingsPageModel) {
-      settingsPageModel = new HttpSettingsPageModel(this._account); // account needs to be changed to userId
+      settingsPageModel = new HttpSettingsPageModel(id);
       this._model.addSettingsPageModel(id, settingsPageModel);
     }
     return settingsPageModel;
@@ -153,7 +153,7 @@ export class HttpApplicationModel extends ApplicationModel {
   public getSignUpPageModel(id: number): SignUpPageModel {
     let signUpPageModel = this._model.getSignUpPageModel(id);
     if (!signUpPageModel) {
-      signUpPageModel = new HttpSignUpPageModel(); // needs to get the id as an input
+      signUpPageModel = new HttpSignUpPageModel(id);
       this.addSignUpPageModel(id, signUpPageModel);
     }
     return signUpPageModel;
