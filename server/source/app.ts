@@ -172,7 +172,9 @@ function runExpress(pool: Pool, config: any) {
 
 async function main() {
   const configPath = path.join(__dirname, 'config.json');
+  console.log('configpath', configPath);
   const config = JSON.parse(fs.readFileSync(configPath).toString());
+  console.log('config', config);
   SGMail.setApiKey(config.send_grid_api_key);
   const pool = new Pool(config.database);
   runExpress(pool, config);
