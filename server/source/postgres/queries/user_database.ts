@@ -109,14 +109,14 @@ export class UserDatabase {
     const userIdResult = await this.pool.query(
       'SELECT (user_id) from user_sessions WHERE sid = $1', [id]);
     const guest = User.makeGuest();
-    if (!!userIdResult.rows || userIdResult.rows.length === 0 ||
+    if (!userIdResult.rows || userIdResult.rows.length === 0 ||
         !userIdResult.rows[0].user_id) {
       await this.assignUserIdToSid(id, guest.id, {}, new Date(Date.now() +
         24 * 60 * 60 * 1000));
       return guest;
     }
     const userResult = await this.pool.query(
-      'SELECT * from users WHERE id = $1', [userIdResult.rows[0].user_id]);
+      'SELECT * FROM users WHERE id = $1', [userIdResult.rows[0].user_id]);
     if (!userResult.rows || userResult.rows.length === 0) {
       await this.assignUserIdToSid(id, guest.id, {}, new Date(Date.now() +
         24 * 60 * 60 * 1000));
