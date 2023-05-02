@@ -197,7 +197,10 @@ export class UserRoutes {
       request.session.cookie.maxAge = 24 * 60 * 60 * 1000;
     }
     try {
-      await this.userDatabase.assignUserIdToSid(request.session.id, user.id);
+      const sessionExpiration = new Date(
+        Date.now() + request.session.cookie.maxAge);
+      await this.userDatabase.assignUserIdToSid(request.session.id, user.id,
+        request.session, sessionExpiration);
     } catch (error) {
       response.status(400).json({ message: 'DATABASE_ERROR' });
       return;
@@ -264,7 +267,10 @@ export class UserRoutes {
       return;
     }
     try {
-      await this.userDatabase.assignUserIdToSid(sid, User.makeGuest().id);
+      const sessionExpiration = new Date(
+        Date.now() + request.session.cookie.maxAge);
+      await this.userDatabase.assignUserIdToSid(sid, User.makeGuest().id,
+        request.session, sessionExpiration);
     } catch (error) {
       response.status(400).json({ message: 'SESSIONS_DATABASE_ERROR' });
     }
@@ -328,7 +334,10 @@ export class UserRoutes {
     }
     request.session.cookie.maxAge = 24 * 60 * 60 * 1000;
     try {
-      await this.userDatabase.assignUserIdToSid(request.session.id, user.id);
+      const sessionExpiration = new Date(
+        Date.now() + request.session.cookie.maxAge);
+      await this.userDatabase.assignUserIdToSid(request.session.id, user.id,
+        request.session, sessionExpiration);
     } catch (error) {
       response.status(500).json({ message: 'DATABASE_ERROR' });
       return;

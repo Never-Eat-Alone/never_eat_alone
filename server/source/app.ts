@@ -151,7 +151,6 @@ function runExpress(pool: Pool, config: any) {
     await initializePostgres(pool, '../source/postgres/tables/', 'table', [
       'users',
       'user_sessions',
-      'sessions',
       'avatars',
       'user_confirmation_tokens',
       'user_invitation_codes',
