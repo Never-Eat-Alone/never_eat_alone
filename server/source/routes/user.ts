@@ -157,6 +157,8 @@ export class UserRoutes {
       console.log('failed avatars');
       response.status(500).send();
     }
+    console.log('email', user.email, 'defaultImage', userProfileImage.toJson());
+    console.log('avatars', avatars.length, avatars[0].src);
     response.status(200).json({
       email: user.email,
       defaultImage: userProfileImage.toJson(),
