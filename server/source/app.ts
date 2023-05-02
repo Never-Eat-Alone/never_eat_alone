@@ -171,6 +171,7 @@ function runExpress(pool: Pool, config: any) {
 }
 
 async function main() {
+  console.log('Current working directory:', process.cwd());
   const configPath = path.join(__dirname, 'config.json');
   console.log('configpath', configPath);
   const config = JSON.parse(fs.readFileSync(configPath).toString());
