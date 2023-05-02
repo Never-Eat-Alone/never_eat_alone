@@ -26,15 +26,18 @@ export class UserDatabase {
   public assingInvitationCodeToUserId = async (userId: number): Promise<
       void> => {
     const inviteCode = generateInvitationCode();
-    await this.pool.query('INSERT INTO user_invitation_codes \
-      (invite_code, user_id, created_at, updated_at) VALUES \
-      ($1, $2, NOW(), NOW()) ON CONFLICT (user_id) DO UPDATE \
-      SET invite_code = $1, updated_at = NOW()', [inviteCode, userId]);
+    await this.pool.query(`
+      INSERT INTO user_invitation_codes (invite_code, user_id, created_at,
+      updated_at)
+      VALUES ($1, $2, NOW(), NOW())
+      ON CONFLICT (user_id) DO UPDATE SET invite_code = $1, updated_at = NOW()
+    `, [inviteCode, userId]);
   }
 
   public loadUserInvitationCode = async (userId: number): Promise<string> => {
-    const result = await this.pool.query('SELECT invite_code FROM \
-      user_invitation_codes WHERE user_id = $1', [userId]);
+    const result = await this.pool.query(`
+      SELECT invite_code FROM user_invitation_codes WHERE user_id = $1`,
+      [userId]);
     if (!result || result.rows.length === 0) {
       return '';
     }
@@ -60,9 +63,11 @@ export class UserDatabase {
    */
   public assignUserIdToSid = async (sid: string, userId: number):
       Promise<void> => {
-    await this.pool.query(
-      'INSERT INTO sessions (sid, user_id) VALUES ($1, $2) ON CONFLICT (sid) \
-      DO UPDATE SET user_id = $2', [sid, userId]);
+    await this.pool.query(`
+      INSERT INTO sessions (sid, user_id)
+      VALUES ($1, $2)
+      ON CONFLICT (sid) DO UPDATE SET user_id = $2
+    `, [sid, userId]);
   }
 
   /** Returns a user based on the given email address.
@@ -146,14 +151,14 @@ export class UserDatabase {
    */
   public addGuestUserRequest = async (name, email, referralCode
       ): Promise<User> => {
-    const result = await this.pool.query(
-      'INSERT INTO users (name, email, user_status, created_at, referral_code) \
-      VALUES ($1, $2, DEFAULT, DEFAULT, $3) RETURNING *', [name, email,
-        referralCode]);
+    const result = await this.pool.query(`
+      INSERT INTO users (name, email, user_status, created_at, referral_code)
+      VALUES ($1, $2, DEFAULT, DEFAULT, $3)
+      RETURNING *
+    `, [name, email, referralCode]);
     if (result.rows.length === 0) {
       return User.makeGuest();
     }
-    await this.assingInvitationCodeToUserId(parseInt(result.rows[0].id));
     return new User(parseInt(result.rows[0].id), result.rows[0].name,
       result.rows[0].email, result.rows[0].user_name,
       UserStatus[result.rows[0].user_status as keyof typeof UserStatus],
@@ -167,9 +172,9 @@ export class UserDatabase {
    */
   public addConfirmationToken = async (tokenId: string, expiresAt: Date,
       userId: number): Promise<void> => {
-    await this.pool.query(
-      'INSERT INTO user_confirmation_tokens (token_id, expires_at, user_id) \
-      VALUES ($1, $2, $3)', [tokenId, expiresAt, userId]);
+    await this.pool.query(`
+      INSERT INTO user_confirmation_tokens (token_id, expires_at, user_id)
+      VALUES ($1, $2, $3)`, [tokenId, expiresAt, userId]);
   }
 
   /**
@@ -182,24 +187,21 @@ export class UserDatabase {
     const hashedEnteredPass =
       Hash.sha256().update(password + userId).digest('hex');
     // Check if the user ID already exists in the table
-    const result = await this.pool.query('SELECT user_id FROM user_credentials \
-      WHERE user_id = $1', [userId]);
+    const result = await this.pool.query(`
+      SELECT user_id FROM user_credentials WHERE user_id = $1`, [userId]);
     if (result.rows.length > 0) {
       // If the user ID already exists, update the password
-      await this.pool.query('UPDATE user_credentials SET hashed_pass = $1 \
-        WHERE user_id = $2', [hashedEnteredPass, userId]);
+      await this.pool.query(`
+        UPDATE user_credentials SET hashed_pass = $1 WHERE user_id = $2`,
+        [hashedEnteredPass, userId]);
     } else {
       // If the user ID doesn't exist, insert the new credentials
-      await this.pool.query('INSERT INTO user_credentials \
-        (user_id, hashed_pass) VALUES ($1, $2)', [userId, hashedEnteredPass]);
+      await this.pool.query(`
+        INSERT INTO user_credentials (user_id, hashed_pass) VALUES ($1, $2)`,
+        [userId, hashedEnteredPass]);
     }
-    const tempResult = await this.pool.query('SELECT * from \
-      user_profile_images WHERE user_id = $1', [userId]);
-    if (!tempResult || !tempResult.rows || tempResult.rows.length === 0) {
-      const defaultImageSrc = '/resources/avatars/profile-image-0.svg';
-      await this.pool.query('INSERT INTO user_profile_images (user_id, src) \
-        VALUES ($1, $2)', [userId, defaultImageSrc]);
-    }
+    const tempResult = await this.pool.query(`
+      SELECT * from user_profile_images WHERE user_id = $1`, [userId]);
   }
 
   /**
@@ -213,8 +215,8 @@ export class UserDatabase {
   }
 
   public isDuplicateUserName = async (userName: string): Promise<boolean> => {
-    const result = await this.pool.query('SELECT * FROM users WHERE \
-      user_name = $1', [userName]);
+    const result = await this.pool.query(`
+      SELECT * FROM users WHERE user_name = $1`, [userName]);
     return result.rows.length !== 0;
   }
 
@@ -223,9 +225,10 @@ export class UserDatabase {
    * @param token - Confirmation token.
    */
   public isTokenValid = async (token: string): Promise<boolean> => {
-    const result = await this.pool.query('SELECT * from \
-      user_confirmation_tokens WHERE token_id = $1 AND expires_at > NOW()',
-      [token]);
+    const result = await this.pool.query(`
+      SELECT * from user_confirmation_tokens
+      WHERE token_id = $1 AND expires_at > NOW()
+    `, [token]);
     if (!result.rows || result.rows.length === 0) {
       return false;
     }
@@ -233,8 +236,9 @@ export class UserDatabase {
   }
 
   public getUserIdByToken = async (token: string): Promise<number> => {
-    const result = await this.pool.query('SELECT user_id from \
-      user_confirmation_tokens WHERE token_id = $1', [token]);
+    const result = await this.pool.query(`
+      SELECT user_id from user_confirmation_tokens WHERE token_id = $1`,
+      [token]);
     if (!result.rows || result.rows.length === 0) {
       return -1;
     }
@@ -258,12 +262,23 @@ export class UserDatabase {
       [result.rows[0].user_id]);
     await this.pool.query(
       'DELETE from user_confirmation_tokens WHERE token_id = $1', [token]);
+    // Creates the default profile image for the new confirmed user.
+    const defaultImageSrc = '/resources/avatars/profile-image-0.svg';
+    await this.pool.query(`
+      INSERT INTO user_profile_images (user_id, src)
+      VALUES ($1, $2)
+      ON CONFLICT (user_id)
+      DO UPDATE SET src = EXCLUDED.src, updated_at = NOW()
+    `, [parseInt(result.rows[0].id), defaultImageSrc]);
+    // Assigns the user invitation code to the database.
+    await this.assingInvitationCodeToUserId(parseInt(result.rows[0].id));
+
     return parseInt(result.rows[0].user_id);
   }
 
   public hasCredentials = async (userId: number): Promise<boolean> => {
-    const result = await this.pool.query('SELECT * from user_credentials WHERE \
-      user_id = $1', [userId]);
+    const result = await this.pool.query(`
+      SELECT * from user_credentials WHERE user_id = $1`, [userId]);
     if (!result.rows || result.rows.length === 0) {
       return false;
     }
