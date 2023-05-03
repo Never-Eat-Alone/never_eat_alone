@@ -48,9 +48,11 @@ export class UserRoutes {
   /** Returns the current logged in user. */
   private getCurrentUser = async (request, response) => {
     let user: User = User.makeGuest();
+    console.log('get current user');
     try {
       user = await this.userDatabase.loadUserBySessionId(request.session.id);
     } catch (error) {
+      console.log('error', error);
       response.status(500).json({ user: user.toJson() });
       return;
     }
