@@ -102,14 +102,12 @@ function runExpress(pool: Pool, config: any) {
     resave: false,
     saveUninitialized: true,
     cookie: {
-      //secure: false,
       maxAge: 10 * 365 * 24 * 60 * 60 * 1000,
       secure: false,
     }
   };
   app.set('trust proxy', 1);
   if (app.get('env') === 'production') {
-    app.set('trust proxy', 1) // trust first proxy
     session.cookie.secure = true // serve secure cookies
   }
   app.use(Session(session));
