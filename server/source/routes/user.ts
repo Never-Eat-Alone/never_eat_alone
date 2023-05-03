@@ -48,11 +48,9 @@ export class UserRoutes {
   /** Returns the current logged in user. */
   private getCurrentUser = async (request, response) => {
     let user: User = User.makeGuest();
-    console.log('get current user');
     try {
       user = await this.userDatabase.loadUserBySessionId(request.session.id);
     } catch (error) {
-      console.log('error', error);
       response.status(500).json({ user: user.toJson() });
       return;
     }
@@ -66,20 +64,35 @@ export class UserRoutes {
     try {
       isEmail = await this.userDatabase.isDuplicateEmail(email);
     } catch (error) {
-      response.status(400).json({ message: 'DATABASE_ERROR' });
-      return;
-    }
-    if (isEmail) {
-      response.status(400).json({ message: 'DUPLICATE_EMAIL' });
+      response.status(500).json({ message: 'DATABASE_ERROR' });
       return;
     }
     let user: User;
-    try {
-      user = await this.userDatabase.addGuestUserRequest(name, email,
-        referralCode);
-    } catch (error) {
-      response.status(400).json({ message: 'DATABASE_ERROR' });
-      return;
+    if (isEmail) {
+      try {
+        const userByEmail = await this.userDatabase.loadUserByEmail(email);
+        if (userByEmail.userStatus === UserStatus.ACTIVE ||
+            userByEmail.userStatus === UserStatus.BANNED ||
+            userByEmail.userStatus === UserStatus.DEACTIVE) {
+          response.status(400).json({ message: 'DUPLICATE_EMAIL' });
+          return;
+        }
+        if (userByEmail.userStatus === UserStatus.PENDING) {
+          user = userByEmail;
+        }
+      } catch {
+        response.status(500).send();
+        return;
+      }
+    }
+    if (user.id === -1) {
+      try {
+        user = await this.userDatabase.addGuestUserRequest(name, email,
+          referralCode);
+      } catch (error) {
+        response.status(500).json({ message: 'DATABASE_ERROR' });
+        return;
+      }
     }
     const confirmationHtml = await new Promise<string>((resolve, reject) => {
       fs.readFile('public/resources/confirmation_email/email.html', 'utf8',
@@ -144,7 +157,6 @@ export class UserRoutes {
       userProfileImage = 
         await this.userProfileImageDatabase.loadProfileImageByUserId(userId);
     } catch {
-      console.log('failed profile image');
       response.status(500).send();
     }
     let avatars: Avatar[] = [];
@@ -152,11 +164,8 @@ export class UserRoutes {
       const tempAvatars = await this.userDatabase.loadAvatars();
       avatars = [...tempAvatars];
     } catch {
-      console.log('failed avatars');
       response.status(500).send();
     }
-    console.log('email', user.email, 'defaultImage', userProfileImage.toJson());
-    console.log('avatars', avatars.length, avatars[0].src);
     response.status(200).json({
       email: user.email,
       defaultImage: userProfileImage.toJson(),
@@ -179,6 +188,10 @@ export class UserRoutes {
   private logIn = async (request, response) => {
     const { email, password, rememberMe } = request.body;
     const user = await this.userDatabase.loadUserByEmail(email);
+    if (!email || user.id === -1) {
+      response.status(400).json({ message: 'INVALID_CREDENTIALS' });
+      return;
+    }
     const isValidPassword =
       await this.userDatabase.validatePassword(user.id, password);
     if (!isValidPassword) {
@@ -193,10 +206,8 @@ export class UserRoutes {
     try {
       const sessionExpiration = new Date(
         Date.now() + request.session.cookie.maxAge);
-      if (user.id !== -1) {
-        await this.userDatabase.assignUserIdToSid(request.session.id, user.id,
-          request.session, sessionExpiration);
-      }
+      await this.userDatabase.assignUserIdToSid(request.session.id, user.id,
+        request.session, sessionExpiration);
     } catch (error) {
       response.status(500).json({ message: 'DATABASE_ERROR' });
       return;
@@ -211,6 +222,15 @@ export class UserRoutes {
    * @param userId - The user id based on the users table.
    */
   private getConfirmationToken = async (email: string, userId: number) => {
+    let token = '';
+    try {
+      token = await this.userDatabase.getTokenByUserId(userId);
+    } catch (error) {
+      throw error;
+    }
+    if (token) {
+      return token;
+    }
     const confirmationTokenId = Hash.sha256().update(
       email + Date.now() + userId).digest('hex');
     try {
@@ -279,11 +299,13 @@ export class UserRoutes {
    */
   private verifyConfirmationToken = async (request, response) => {
     const token = request.params.id;
+    console.log('token', token);
     let isTokenValid = false;
     try {
       isTokenValid = await this.userDatabase.isTokenValid(token);
     } catch (error) {
-      response.status(500).send({ error: error });
+      response.status(500).send();
+      console.log(error);
       return;
     }
     if (!isTokenValid) {
@@ -295,13 +317,19 @@ export class UserRoutes {
     try {
       userIdByToken = await this.userDatabase.getUserIdByToken(token);
     } catch (error) {
-      response.status(500).send({ error: error });
+      response.status(500).send();
+      console.log(error);
       return;
     }
     let user = User.makeGuest();
     try {
       user = await this.userDatabase.loadUserById(userIdByToken);
-    } catch {
+    } catch (error) {
+      response.status(500).send();
+      console.log(error);
+      return;
+    }
+    if (user.id === -1) {
       response.redirect(303, 'http://nevereatalone.net/join');
       return;
     }
@@ -310,11 +338,12 @@ export class UserRoutes {
       try {
         hasCredentials = await this.userDatabase.hasCredentials(user.id);
       } catch (error) {
-        response.status(500).send({ error: error });
+        response.status(500).send();
+        console.log(error);
         return;
       }
       if (hasCredentials) {
-        response.redirect(303, 'http://nevereatalone.net');
+        response.redirect(303, 'http://nevereatalone.net/log_in');
       } else {
         response.redirect(303, `http://nevereatalone.net/sign_up/${user.id}`);
       }
@@ -326,6 +355,7 @@ export class UserRoutes {
         token);
     } catch (error) {
       response.status(500).send();
+      console.log(error);
       return;
     }
     request.session.cookie.maxAge = 24 * 60 * 60 * 1000;
@@ -364,7 +394,7 @@ export class UserRoutes {
   }
 
   private getUserInvitationCode = async (request, response) => {
-    const userId = request.params.userId;
+    const userId = parseInt(request.params.userId);
     let userInvitationCode: string = '';
     try {
       userInvitationCode = await this.userDatabase.loadUserInvitationCode(
@@ -399,7 +429,7 @@ export class UserRoutes {
           `Your friend, ${account.name}, invited you to check out NEA`,
           newHtml);
       } catch (error) {
-        response.status(400).send();
+        response.status(500).send();
         return;
       }
     }
@@ -425,7 +455,7 @@ export class UserRoutes {
         `${name}, want to partner with NEA`, newHtml);
       await this.sendPartnerWithUsRecievedConfirmationEmail(email, name);
     } catch (error) {
-      response.status(400).send();
+      response.status(500).send();
       return;
     }
     response.status(200).send();
@@ -458,7 +488,7 @@ export class UserRoutes {
   private sendRecoveryEmail = async (request, response) => {
     const email = request.body.email;
     const user = await this.userDatabase.loadUserByEmail(email);
-    if (user === null) {
+    if (user.id === -1 || user.email == '') {
       response.status(400).json({ message: 'EMAIL_NOT_FOUND' });
       return;
     }
@@ -472,12 +502,13 @@ export class UserRoutes {
           }
         });
     });
-    const newHtml = recoveryHtml.replace('{{name}}', user.name);
+    const name = user.name || 'NeverEatAlone Member';
+    const newHtml = recoveryHtml.replace('{{name}}', name);
     try {
       await this.sendEmail(user.email, 'info@nevereatalone.net',
         'Recovery Password Link', newHtml);
     } catch (error) {
-      response.status(400).send();
+      response.status(500).send();
       return;
     }
     response.status(200).json({ user: user.toJson() });
@@ -486,7 +517,7 @@ export class UserRoutes {
   private resendRecoveryEmail = async (request, response) => {
     const email = request.body.email;
     const user = User.fromJson(request.body.user);
-    if (user === null) {
+    if (user === null || user.id === -1) {
       response.status(400).json({ message: 'USER_NOT_FOUND' });
       return;
     }
@@ -505,7 +536,7 @@ export class UserRoutes {
       await this.sendEmail(user.email, 'info@nevereatalone.net',
         'Recovery Password Link', newHtml);
     } catch (error) {
-      response.status(400).send();
+      response.status(500).send();
       return;
     }
     response.status(200).send();

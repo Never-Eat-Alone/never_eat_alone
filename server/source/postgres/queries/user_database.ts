@@ -35,10 +35,13 @@ export class UserDatabase {
   }
 
   public loadUserInvitationCode = async (userId: number): Promise<string> => {
+    if (userId === -1) {
+      return '';
+    }
     const result = await this.pool.query(`
       SELECT invite_code FROM user_invitation_codes WHERE user_id = $1`,
       [userId]);
-    if (!result || result.rows.length === 0) {
+    if (!result || !result.rows || result.rows.length === 0) {
       return '';
     }
     return result.rows[0].invite_code;
@@ -64,7 +67,7 @@ export class UserDatabase {
    * @param expire - Expiration date.
    */
   public assignUserIdToSid = async (sid: string, userId: number, sess: object,
-        expire: Date): Promise<void> => {
+      expire: Date): Promise<void> => {
     await this.pool.query(`
       INSERT INTO user_sessions (sid, user_id, sess, expire)
       VALUES ($1, $2, $3, $4)
@@ -91,9 +94,9 @@ export class UserDatabase {
    * @param id - User id.
    */
   public loadUserById = async (id: number): Promise<User> => {
-    const result = await this.pool.query('SELECT * from users WHERE id = $1',
+    const result = await this.pool.query('SELECT * FROM users WHERE id = $1',
       [id]);
-    if (result.rows.length === 0) {
+    if (!result || !result.rows || result.rows.length === 0) {
       return User.makeGuest();
     }
     return new User(parseInt(result.rows[0].id), result.rows[0].name,
@@ -106,21 +109,19 @@ export class UserDatabase {
    * @param id - Session id.
    */
   public loadUserBySessionId = async (id: string): Promise<User> => {
-    const userIdResult = await this.pool.query(
-      'SELECT (user_id) from user_sessions WHERE sid = $1', [id]);
     const guest = User.makeGuest();
+    const userIdResult = await this.pool.query(
+      'SELECT (user_id) FROM user_sessions WHERE sid = $1', [id]);
     if (!userIdResult.rows || userIdResult.rows.length === 0 ||
         !userIdResult.rows[0].user_id) {
       return guest;
     }
-    console.log('load user by id from db');
     const userResult = await this.pool.query(
       'SELECT * FROM users WHERE id = $1', [parseInt(
         userIdResult.rows[0].user_id)]);
     if (!userResult.rows || userResult.rows.length === 0) {
       return guest;
     }
-    console.log('userResult.rows[0]', userResult.rows[0]);
     const user = new User(parseInt(userResult.rows[0].id),
       userResult.rows[0].name, userResult.rows[0].email,
       userResult.rows[0].user_name,
@@ -138,9 +139,6 @@ export class UserDatabase {
    */
   public validatePassword = async (userId: number, password: string): Promise<
       boolean> => {
-    if (userId === -1) {
-      return false;
-    }
     const hashedEnteredPass =
       Hash.sha256().update(password + userId).digest('hex');
     const result = await this.pool.query(
@@ -228,24 +226,48 @@ export class UserDatabase {
     return result.rows.length !== 0;
   }
 
+  public deleteExpiredTokens = async (): Promise<void> => {
+    const query = `
+      DELETE FROM user_confirmation_tokens
+      WHERE expires_at < NOW();
+    `;
+    try {
+      await this.pool.query(query);
+      console.log('Expired tokens have been deleted.');
+    } catch (error) {
+      console.error('Error deleting expired tokens:', error);
+    }
+  }
+
   /**
    * Indicates whether the give confirmation token is valid or not.
    * @param token - Confirmation token.
    */
   public isTokenValid = async (token: string): Promise<boolean> => {
+    await this.deleteExpiredTokens();
     const result = await this.pool.query(`
-      SELECT * from user_confirmation_tokens
+      SELECT * FROM user_confirmation_tokens
       WHERE token_id = $1 AND expires_at > NOW()
     `, [token]);
-    if (!result.rows || result.rows.length === 0) {
+    if (!result || !result.rows || result.rows.length === 0) {
       return false;
     }
     return true;
   }
 
+  public getTokenByUserId = async (userId: number): Promise<string> => {
+    const result = await this.pool.query(`
+      SELECT token_id FROM user_confirmation_tokens WHERE user_id = $1`,
+      [userId]);
+    if (!result || !result.rows || result.rows.length === 0) {
+      return '';
+    }
+    return result.rows[0].token_id;
+  }
+
   public getUserIdByToken = async (token: string): Promise<number> => {
     const result = await this.pool.query(`
-      SELECT user_id from user_confirmation_tokens WHERE token_id = $1`,
+      SELECT user_id FROM user_confirmation_tokens WHERE token_id = $1`,
       [token]);
     if (!result.rows || result.rows.length === 0) {
       return -1;
