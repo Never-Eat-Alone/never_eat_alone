@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS user_sessions (
     sid         VARCHAR       NOT NULL COLLATE "default",
-    user_id     INTEGER       DEFAULT -1,
+    user_id     INTEGER       NOT NULL,
     sess        JSON          NOT NULL,
     expire      TIMESTAMP(6)  NOT NULL
 )

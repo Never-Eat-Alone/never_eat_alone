@@ -179,10 +179,6 @@ export class UserRoutes {
   private logIn = async (request, response) => {
     const { email, password, rememberMe } = request.body;
     const user = await this.userDatabase.loadUserByEmail(email);
-    if (user === null) {
-      response.status(400).json({ message: 'EMAIL_NOT_FOUND' });
-      return;
-    }
     const isValidPassword =
       await this.userDatabase.validatePassword(user.id, password);
     if (!isValidPassword) {
@@ -197,10 +193,12 @@ export class UserRoutes {
     try {
       const sessionExpiration = new Date(
         Date.now() + request.session.cookie.maxAge);
-      await this.userDatabase.assignUserIdToSid(request.session.id, user.id,
-        request.session, sessionExpiration);
+      if (user.id !== -1) {
+        await this.userDatabase.assignUserIdToSid(request.session.id, user.id,
+          request.session, sessionExpiration);
+      }
     } catch (error) {
-      response.status(400).json({ message: 'DATABASE_ERROR' });
+      response.status(500).json({ message: 'DATABASE_ERROR' });
       return;
     }
     response.status(200).json({ user: user.toJson() });

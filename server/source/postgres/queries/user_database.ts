@@ -78,7 +78,7 @@ export class UserDatabase {
   public loadUserByEmail = async (email: string): Promise<User> => {
     const result =
       await this.pool.query('SELECT * FROM users WHERE email = $1', [email]);
-    if (!result || result.rows.length === 0) {
+    if (!result || !result.rows || result.rows.length === 0) {
       return User.makeGuest();
     }
     return new User(parseInt(result.rows[0].id), result.rows[0].name,
@@ -111,9 +111,6 @@ export class UserDatabase {
     const guest = User.makeGuest();
     if (!userIdResult.rows || userIdResult.rows.length === 0 ||
         !userIdResult.rows[0].user_id) {
-      console.log('assignUserIdToSid');
-      await this.assignUserIdToSid(id, guest.id, {}, new Date(Date.now() +
-        24 * 60 * 60 * 1000));
       return guest;
     }
     console.log('load user by id from db');
@@ -121,8 +118,6 @@ export class UserDatabase {
       'SELECT * FROM users WHERE id = $1', [parseInt(
         userIdResult.rows[0].user_id)]);
     if (!userResult.rows || userResult.rows.length === 0) {
-      await this.assignUserIdToSid(id, guest.id, {}, new Date(Date.now() +
-        24 * 60 * 60 * 1000));
       return guest;
     }
     console.log('userResult.rows[0]', userResult.rows[0]);
@@ -143,11 +138,14 @@ export class UserDatabase {
    */
   public validatePassword = async (userId: number, password: string): Promise<
       boolean> => {
+    if (userId === -1) {
+      return false;
+    }
     const hashedEnteredPass =
       Hash.sha256().update(password + userId).digest('hex');
     const result = await this.pool.query(
       'SELECT * from user_credentials WHERE user_id = $1', [userId]);
-    if (result.rows.length === 0 ||
+    if (!result.rows || result.rows.length === 0 ||
         hashedEnteredPass !== result.rows[0].hashed_pass) {
       return false;
     }
