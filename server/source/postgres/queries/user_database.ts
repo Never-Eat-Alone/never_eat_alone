@@ -111,17 +111,21 @@ export class UserDatabase {
     const guest = User.makeGuest();
     if (!userIdResult.rows || userIdResult.rows.length === 0 ||
         !userIdResult.rows[0].user_id) {
+      console.log('assignUserIdToSid');
       await this.assignUserIdToSid(id, guest.id, {}, new Date(Date.now() +
         24 * 60 * 60 * 1000));
       return guest;
     }
+    console.log('load user by id from db');
     const userResult = await this.pool.query(
-      'SELECT * FROM users WHERE id = $1', [userIdResult.rows[0].user_id]);
+      'SELECT * FROM users WHERE id = $1', [parseInt(
+        userIdResult.rows[0].user_id)]);
     if (!userResult.rows || userResult.rows.length === 0) {
       await this.assignUserIdToSid(id, guest.id, {}, new Date(Date.now() +
         24 * 60 * 60 * 1000));
       return guest;
     }
+    console.log('userResult.rows[0]', userResult.rows[0]);
     const user = new User(parseInt(userResult.rows[0].id),
       userResult.rows[0].name, userResult.rows[0].email,
       userResult.rows[0].user_name,
