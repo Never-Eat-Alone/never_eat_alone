@@ -16,15 +16,18 @@ export class HttpSignUpPageModel extends SignUpPageModel {
     }
     const responseObject = await response.json();
     const email = responseObject.email;
+    console.log('email', email);
     let userProfileImage = UserProfileImage.NoImage();
     if (responseObject.userProfileImage) {
       userProfileImage = UserProfileImage.fromJson(
         responseObject.userProfileImage);
     }
+    console.log('userProfileImage', userProfileImage.id, userProfileImage.src);
     let avatars: Avatar[] = [];
     if (responseObject.avatars && responseObject.avatars.length > 0) {
       avatars = arrayFromJson('Avatar', responseObject.avatars);
     }
+    console.log('avatars', avatars.length);
     this._model = new LocalSignUpPageModel(email, userProfileImage, avatars);
     this._model.load();
   }

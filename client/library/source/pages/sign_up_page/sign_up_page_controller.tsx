@@ -12,6 +12,7 @@ interface Properties {
 
 interface State {
   isLoaded: boolean;
+  email: string;
   signUpPageErrorCode: SignUpPage.ErrorCode;
   profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode;
   password: string;
@@ -28,6 +29,7 @@ export class SignUpPageController extends React.Component<Properties, State> {
       isLoaded: false,
       signUpPageErrorCode: SignUpPage.ErrorCode.NONE,
       profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NONE,
+      email: '',
       isSetUpPage: false,
       displayName: '',
       image: UserProfileImage.NoImage(),
@@ -58,21 +60,29 @@ export class SignUpPageController extends React.Component<Properties, State> {
     }
     return <SignUpPage
       displayMode={this.props.displayMode}
-      email={this.props.model.email}
+      email={this.state.email}
       errorCode={this.state.signUpPageErrorCode}
       onSignUp={this.handleSignUp}
     />;
   }
 
   public async componentDidMount(): Promise<void> {
+    console.log('componentDidMount');
     try {
       await this.props.model.load();
-      this.setState({ isLoaded: true, image: this.props.model.defaultImage });
-    } catch {
+      console.log('loaded');
+      this.setState({
+        isLoaded: true,
+        email: this.props.model.email,
+        image: this.props.model.defaultImage,
+        signUpPageErrorCode: SignUpPage.ErrorCode.NONE
+      });
+    } catch (error) {
       this.setState({
         isLoaded: true,
         signUpPageErrorCode: SignUpPage.ErrorCode.NO_CONNECTION
       });
+      console.log(error);
     }
   }
 
