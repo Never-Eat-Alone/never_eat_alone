@@ -233,7 +233,6 @@ export class UserDatabase {
     `;
     try {
       await this.pool.query(query);
-      console.log('Expired tokens have been deleted.');
     } catch (error) {
       console.error('Error deleting expired tokens:', error);
     }

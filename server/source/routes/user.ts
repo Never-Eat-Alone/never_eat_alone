@@ -141,39 +141,50 @@ export class UserRoutes {
       user = await this.userDatabase.loadUserById(userId);
     } catch (error) {
       response.status(500).send();
+      console.log(error);
       return;
     }
+    console.log('user', user.name, user.id, user.userStatus);
     if (!user || user.id === -1 || user.userStatus !== UserStatus.ACTIVE) {
       response.redirect(303, 'http://nevereatalone.net/join');
       return;
     }
     let hasCredentials = false;
     try {
-      hasCredentials = await this.userDatabase.hasCredentials(user.id);
-    } catch {
+      hasCredentials = await this.userDatabase.hasCredentials(userId);
+    } catch (error) {
       response.status(500).send();
+      console.log(error);
       return;
     }
+    console.log('hasCredentials', hasCredentials);
     if (hasCredentials) {
       response.redirect(303, 'http://nevereatalone.net/log_in');
+      return;
     }
     let userProfileImage = UserProfileImage.NoImage();
     try {
       userProfileImage = 
         await this.userProfileImageDatabase.loadProfileImageByUserId(userId);
-    } catch {
+    } catch (error) {
       response.status(500).send();
+      console.log(error);
+      return;
     }
+    console.log('userProfileImage', userProfileImage.src, userProfileImage.id);
     let avatars: Avatar[] = [];
     try {
       const tempAvatars = await this.userDatabase.loadAvatars();
       avatars = [...tempAvatars];
-    } catch {
+    } catch (error) {
       response.status(500).send();
+      console.log(error);
+      return;
     }
+    console.log('avatars', avatars.length, avatars[0]);
     response.status(200).json({
       email: user.email,
-      defaultImage: userProfileImage.toJson(),
+      userProfileImage: userProfileImage.toJson(),
       avatars: arrayToJson(avatars)
     });
   }
@@ -183,8 +194,10 @@ export class UserRoutes {
     const { password } = request.body;
     try {
       await this.userDatabase.addUserCredentials(userId, password);
-    } catch {
+    } catch (error) {
       response.status(500).send();
+      console.log(error);
+      return;
     }
     response.status(200).send();
   }
@@ -304,7 +317,6 @@ export class UserRoutes {
    */
   private verifyConfirmationToken = async (request, response) => {
     const token = request.params.id;
-    console.log('token', token);
     let isTokenValid = false;
     try {
       isTokenValid = await this.userDatabase.isTokenValid(token);
@@ -321,7 +333,6 @@ export class UserRoutes {
     let userIdByToken: number;
     try {
       userIdByToken = await this.userDatabase.getUserIdByToken(token);
-      console.log('userIdByToken', userIdByToken);
     } catch (error) {
       response.status(500).send();
       console.log(error);
