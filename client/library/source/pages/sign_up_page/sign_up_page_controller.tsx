@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
-import { DisplayMode, UserProfileImage } from '../../definitions';
+import { Avatar, DisplayMode, UserProfileImage } from '../../definitions';
 import { ProfileSetUpPage } from './profile_set_up_page';
 import { SignUpPage } from './sign_up_page';
 import { SignUpPageModel } from './sign_up_page_model';
@@ -12,6 +12,7 @@ interface Properties {
 
 interface State {
   isLoaded: boolean;
+  email: string;
   signUpPageErrorCode: SignUpPage.ErrorCode;
   profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode;
   password: string;
@@ -28,6 +29,7 @@ export class SignUpPageController extends React.Component<Properties, State> {
       isLoaded: false,
       signUpPageErrorCode: SignUpPage.ErrorCode.NONE,
       profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NONE,
+      email: '',
       isSetUpPage: false,
       displayName: '',
       image: UserProfileImage.NoImage(),
@@ -58,29 +60,40 @@ export class SignUpPageController extends React.Component<Properties, State> {
     }
     return <SignUpPage
       displayMode={this.props.displayMode}
-      email={this.props.model.email}
+      email={this.state.email}
       errorCode={this.state.signUpPageErrorCode}
       onSignUp={this.handleSignUp}
     />;
   }
 
   public async componentDidMount(): Promise<void> {
+    console.log('componentDidMount');
     try {
       await this.props.model.load();
-      this.setState({ isLoaded: true, image: this.props.model.defaultImage });
-    } catch {
+      console.log('loaded');
+      this.setState({
+        isLoaded: true,
+        email: this.props.model.email,
+        image: this.props.model.defaultImage,
+        signUpPageErrorCode: SignUpPage.ErrorCode.NONE
+      });
+    } catch (error) {
       this.setState({
         isLoaded: true,
         signUpPageErrorCode: SignUpPage.ErrorCode.NO_CONNECTION
       });
+      console.log(error);
     }
   }
 
   private handleSignUp = async (password: string) => {
+    console.log('handleSignUp', 'pass', password);
     try {
       const isSignedUp = await this.props.model.signUp(password);
+      console.log('isSignedup', isSignedUp);
       this.setState({ isSetUpPage: isSignedUp, password: password });
     } catch {
+      console.log('error in isSignedup response');
       this.setState({
         signUpPageErrorCode: SignUpPage.ErrorCode.NO_CONNECTION,
         password: password,
@@ -90,6 +103,7 @@ export class SignUpPageController extends React.Component<Properties, State> {
   }
 
   private handleUploadImageClick = async (uploadedImage: UserProfileImage) => {
+    console.log('handle upload image');
     try {
       const image = await this.props.model.uploadImage(uploadedImage);
       this.setState({
@@ -105,8 +119,12 @@ export class SignUpPageController extends React.Component<Properties, State> {
     }
   }
 
-  private handleAvatarClick = (avatar: UserProfileImage) => {
-    this.setState({ image: avatar });
+  private handleAvatarClick = (avatar: Avatar) => {
+    console.log('avatar click', avatar.src, 'userId', this.state.image.userId);
+    this.setState({
+      image: new UserProfileImage(avatar.id, this.state.image.userId,
+        avatar.src)
+    });
   }
 
   private handleDisplayNameChange = (newName: string) => {
@@ -115,9 +133,11 @@ export class SignUpPageController extends React.Component<Properties, State> {
 
   private handleLetsGoClick = async (displayName: string,
       image: UserProfileImage) => {
+    console.log('handleLetsGoClick', 'dislayname', displayName, 'image', image.src);
     try {
       const isSetUp = await this.props.model.setUpProfile(displayName, image);
       if (isSetUp) {
+        console.log('isSetUp', isSetUp);
         this.setState({
           profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NONE,
           displayName: displayName,
@@ -125,6 +145,7 @@ export class SignUpPageController extends React.Component<Properties, State> {
           redirect: '/'
         });
       } else {
+        console.log('error in isSetup');
         this.setState({
           profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NO_CONNECTION,
           displayName: displayName,
@@ -132,6 +153,7 @@ export class SignUpPageController extends React.Component<Properties, State> {
         });
       }
     } catch {
+      console.log('error in upload');
       this.setState({
         profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NO_CONNECTION,
         displayName: displayName,

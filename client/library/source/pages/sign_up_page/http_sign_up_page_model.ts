@@ -1,4 +1,4 @@
-import { arrayFromJson, UserProfileImage } from '../../definitions';
+import { arrayFromJson, Avatar, UserProfileImage } from '../../definitions';
 import { LocalSignUpPageModel } from './local_sign_up_page_model';
 import { SignUpPageModel } from './sign_up_page_model';
 
@@ -10,20 +10,25 @@ export class HttpSignUpPageModel extends SignUpPageModel {
 
   public async load(): Promise<void> {
     const response = await fetch(`/api/sign_up/${this._profileId}`);
+    console.log(response.status);
     if (response.status !== 200) {
       return;
     }
     const responseObject = await response.json();
     const email = responseObject.email;
-    let defaultImage = UserProfileImage.NoImage();
-    if (responseObject.defaultImage) {
-      defaultImage = UserProfileImage.fromJson(responseObject.defaultImage);
+    console.log('email', email);
+    let userProfileImage = UserProfileImage.NoImage();
+    if (responseObject.userProfileImage) {
+      userProfileImage = UserProfileImage.fromJson(
+        responseObject.userProfileImage);
     }
-    let avatars: UserProfileImage[] = [UserProfileImage.NoImage()];
-    if (responseObject.avatars && responseObject.avatars.length !== 0) {
-      avatars = arrayFromJson('UserProfileImage', responseObject.avatars);
+    console.log('userProfileImage', userProfileImage.id, userProfileImage.src);
+    let avatars: Avatar[] = [];
+    if (responseObject.avatars && responseObject.avatars.length > 0) {
+      avatars = arrayFromJson(Avatar, responseObject.avatars);
     }
-    this._model = new LocalSignUpPageModel(email, defaultImage, avatars);
+    console.log('avatars', avatars.length);
+    this._model = new LocalSignUpPageModel(email, userProfileImage, avatars);
     this._model.load();
   }
 
@@ -62,7 +67,7 @@ export class HttpSignUpPageModel extends SignUpPageModel {
 
   public async setUpProfile(displayName: string, image: UserProfileImage
       ): Promise<boolean> {
-    const response = await fetch('/api/set_up_profile', {
+    const response = await fetch(`/api/set_up_profile/${this._profileId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -86,7 +91,7 @@ export class HttpSignUpPageModel extends SignUpPageModel {
     return this._model.defaultImage;
   }
 
-  public get avatars(): UserProfileImage[] {
+  public get avatars(): Avatar[] {
     return this._model.avatars;
   }
 
