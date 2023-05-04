@@ -65,6 +65,7 @@ export class UserRoutes {
       isEmail = await this.userDatabase.isDuplicateEmail(email);
     } catch (error) {
       response.status(500).json({ message: 'DATABASE_ERROR' });
+      console.log(error);
       return;
     }
     let user: User;
@@ -80,17 +81,19 @@ export class UserRoutes {
         if (userByEmail.userStatus === UserStatus.PENDING) {
           user = userByEmail;
         }
-      } catch {
+      } catch (error) {
         response.status(500).send();
+        console.log(error);
         return;
       }
     }
-    if (user.id === -1) {
+    if (!user || user.id === -1) {
       try {
         user = await this.userDatabase.addGuestUserRequest(name, email,
           referralCode);
       } catch (error) {
         response.status(500).json({ message: 'DATABASE_ERROR' });
+        console.log(error);
         return;
       }
     }
@@ -112,6 +115,7 @@ export class UserRoutes {
         user: user.toJson(),
         message: 'CONFIRMATION_TOKEN_ERROR'
       });
+      console.log(error);
       return;
     }
     const newHtml = confirmationHtml.replace('{{name}}', name).replace(
@@ -124,6 +128,7 @@ export class UserRoutes {
         user: user.toJson(),
         message: 'EMAIL_NOT_SENT'
       });
+      console.log(error);
       return;
     }
     response.status(201).json({ user: user.toJson(), message: '' });
