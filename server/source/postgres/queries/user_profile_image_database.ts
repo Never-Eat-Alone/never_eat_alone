@@ -30,6 +30,7 @@ export class UserProfileImageDatabase {
     const fileName = `${userId}-${Date.now()}-${imageFile.originalname}`;
     const filePath = path.join('/resources/uploads', fileName);
     // Save the uploaded file to the local disk.
+    console.log('file path', filePath);
     fs.writeFileSync(filePath, imageFile.buffer);
     // Store the file path in the database.
     const result = await this.pool.query('INSERT INTO user_profile_images \
