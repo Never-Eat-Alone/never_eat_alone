@@ -1,3 +1,5 @@
+import * as fs from 'fs';
+import * as path from 'path';
 import { Pool } from 'pg';
 import { UserProfileImage
 } from '../../../../client/library/source/definitions';
@@ -23,12 +25,17 @@ export class UserProfileImageDatabase {
       result.rows[0].id), result.rows[0].src);
   }
 
-  public uploadProfileImage = async (image: UserProfileImage): Promise<
-      UserProfileImage> => {
+  public uploadProfileImage = async (userId: number,
+      imageFile: Express.Multer.File): Promise<UserProfileImage> => {
+    const fileName = `${userId}-${Date.now()}-${imageFile.originalname}`;
+    const filePath = path.join('/resources/uploads', fileName);
+    // Save the uploaded file to the local disk.
+    fs.writeFileSync(filePath, imageFile.buffer);
+    // Store the file path in the database.
     const result = await this.pool.query('INSERT INTO user_profile_images \
       (user_id, src, created_at, updated_at) VALUES ($1, $2, DEFAULT, DEFAULT) \
-      RETURNING *', [image]);
-    if (!result || result.rows.length === 0) {
+      RETURNING *', [userId, filePath]);
+    if (!result || !result.rows || result.rows.length === 0) {
       return UserProfileImage.NoImage();
     }
     return new UserProfileImage(parseInt(result.rows[0].id), parseInt(

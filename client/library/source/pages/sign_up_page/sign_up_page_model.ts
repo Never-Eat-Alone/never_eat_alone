@@ -2,8 +2,7 @@ import { Avatar, UserProfileImage } from '../../definitions';
 
 export abstract class SignUpPageModel {
   public abstract load(): Promise<void>;
-  public abstract uploadImage(image: UserProfileImage): Promise<
-    UserProfileImage>;
+  public abstract uploadImage(imageFile: File): Promise<UserProfileImage>;
   public abstract signUp(password: string): Promise<boolean>;
   public abstract setUpProfile(displayName: string, image: UserProfileImage
     ): Promise<boolean>;

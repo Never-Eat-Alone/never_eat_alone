@@ -1,3 +1,4 @@
+import multer from 'multer';
 import { UserProfileImage } from '../../../client/library/source/definitions';
 import { UserProfileImageDatabase } from '../postgres/queries';
 
@@ -9,10 +10,13 @@ export class UserProfileImageRoutes {
    * class instance.
    */
   constructor(app: any, userProfileImageDatabase: UserProfileImageDatabase) {
+    const upload = multer({ storage: multer.memoryStorage() });
+
     /** Route to get the current logged in user. */
     app.get('/api/user_profile_image/:userId',
       this.getUserProfileImageByUserId);
-    app.post('/api/upload_profile_image', this.uploadUserProfileImage);
+    app.post('/api/upload_profile_image/:userId', upload.single(
+      'userProfileImage'), this.uploadUserProfileImage);
 
     this.userProfileImageDatabase = userProfileImageDatabase;
   }
@@ -35,13 +39,15 @@ export class UserProfileImageRoutes {
   }
 
   private uploadUserProfileImage = async (request, response) => {
-    const image = UserProfileImage.fromJson(request.body.userProfileImage);
+    const userId = parseInt(request.params.userId);
+    const userProfileImageFile = request.file;
     let uploadedImage: UserProfileImage;
     try {
       uploadedImage = await this.userProfileImageDatabase.uploadProfileImage(
-        image);
-    } catch {
-      response.status(400).json({ message: 'DATABASE_ERROR' });
+        userId, userProfileImageFile);
+    } catch (error) {
+      response.status(500).json({ message: 'DATABASE_ERROR' });
+      console.log(error);
       return;
     }
     response.status(201).json({ userProfileImage: uploadedImage.toJson() });

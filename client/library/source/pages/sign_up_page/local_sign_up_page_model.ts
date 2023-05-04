@@ -12,11 +12,8 @@ export class LocalSignUpPageModel extends SignUpPageModel {
 
   public async load(): Promise<void> {}
 
-  public async uploadImage(image: UserProfileImage): Promise<UserProfileImage> {
-    if (!image) {
-      return UserProfileImage.NoImage();
-    }
-    return image;
+  public async uploadImage(imageFile: File): Promise<UserProfileImage> {
+    return UserProfileImage.NoImage();
   }
 
   public async signUp(password: string): Promise<boolean> {
