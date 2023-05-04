@@ -1,4 +1,4 @@
-import multer from 'multer';
+import * as multer from 'multer';
 import { UserProfileImage } from '../../../client/library/source/definitions';
 import { UserProfileImageDatabase } from '../postgres/queries';
 
@@ -29,10 +29,11 @@ export class UserProfileImageRoutes {
       image = await this.userProfileImageDatabase.loadProfileImageByUserId(
         userId);
     } catch (error) {
-      response.status(400).json({
+      response.status(500).json({
         userProfileImage: UserProfileImage.NoImage(),
         message: 'DATABASE_ERROR'
       });
+      console.log(error);
       return;
     }
     response.status(200).json({ userProfileImage: image.toJson() });

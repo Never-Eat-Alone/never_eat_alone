@@ -14,8 +14,8 @@ export class UserProfileImageDatabase {
   /** Returns the user profile image based on the user id.
    * @param userId - User id.
    */
-  public loadProfileImageByUserId = async (userId: number): Promise<
-      UserProfileImage> => {
+  public loadProfileImageByUserId = async (userId: number):
+      Promise<UserProfileImage> => {
     const result = await this.pool.query('SELECT * FROM user_profile_images \
       WHERE user_id = $1', [userId]);
     if (result.rows.length === 0) {
