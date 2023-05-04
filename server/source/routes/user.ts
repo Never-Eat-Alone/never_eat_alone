@@ -321,6 +321,7 @@ export class UserRoutes {
     let userIdByToken: number;
     try {
       userIdByToken = await this.userDatabase.getUserIdByToken(token);
+      console.log('userIdByToken', userIdByToken);
     } catch (error) {
       response.status(500).send();
       console.log(error);

@@ -269,7 +269,7 @@ export class UserDatabase {
     const result = await this.pool.query(`
       SELECT user_id FROM user_confirmation_tokens WHERE token_id = $1`,
       [token]);
-    if (!result.rows || result.rows.length === 0) {
+    if (!result || !result.rows || result.rows.length === 0) {
       return -1;
     }
     return parseInt(result.rows[0].user_id);
@@ -280,18 +280,19 @@ export class UserDatabase {
    * token.
    * @param token - Confirmation token.
    */
-  public updateUserStatusByConfirmationToken =
-      async (token: string): Promise<number> => {
+  public updateUserStatusByConfirmationToken = async (token: string):
+      Promise<number> => {
     const result = await this.pool.query(
-      'SELECT * from user_confirmation_tokens WHERE token_id = $1', [token]);
-    if (result.rows.length === 0) {
+      'SELECT * FROM user_confirmation_tokens WHERE token_id = $1', [token]);
+    if (!result || !result.rows || result.rows.length === 0 ||
+        !result.rows[0].user_id) {
       return -1;
     }
     await this.pool.query(
       "UPDATE users SET user_status = 'ACTIVE' WHERE id = $1",
-      [result.rows[0].user_id]);
+      [parseInt(result.rows[0].user_id)]);
     await this.pool.query(
-      'DELETE from user_confirmation_tokens WHERE token_id = $1', [token]);
+      'DELETE FROM user_confirmation_tokens WHERE token_id = $1', [token]);
     // Creates the default profile image for the new confirmed user.
     const defaultImageSrc = '/resources/avatars/profile-image-0.svg';
     await this.pool.query(`
@@ -299,17 +300,16 @@ export class UserDatabase {
       VALUES ($1, $2)
       ON CONFLICT (user_id)
       DO UPDATE SET src = EXCLUDED.src, updated_at = NOW()
-    `, [parseInt(result.rows[0].id), defaultImageSrc]);
+    `, [parseInt(result.rows[0].user_id), defaultImageSrc]);
     // Assigns the user invitation code to the database.
-    await this.assingInvitationCodeToUserId(parseInt(result.rows[0].id));
-
+    await this.assingInvitationCodeToUserId(parseInt(result.rows[0].user_id));
     return parseInt(result.rows[0].user_id);
   }
 
   public hasCredentials = async (userId: number): Promise<boolean> => {
     const result = await this.pool.query(`
-      SELECT * from user_credentials WHERE user_id = $1`, [userId]);
-    if (!result.rows || result.rows.length === 0) {
+      SELECT * FROM user_credentials WHERE user_id = $1`, [userId]);
+    if (!result || !result.rows || result.rows.length === 0) {
       return false;
     }
     return true;
