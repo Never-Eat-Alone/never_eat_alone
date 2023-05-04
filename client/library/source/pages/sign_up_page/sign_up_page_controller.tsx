@@ -17,7 +17,7 @@ interface State {
   profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode;
   password: string;
   displayName: string;
-  image: UserProfileImage;
+  userProfileImage: UserProfileImage;
   isSetUpPage: boolean;
   redirect: string;
 }
@@ -32,7 +32,7 @@ export class SignUpPageController extends React.Component<Properties, State> {
       email: '',
       isSetUpPage: false,
       displayName: '',
-      image: UserProfileImage.NoImage(),
+      userProfileImage: UserProfileImage.NoImage(),
       password: '',
       redirect: null
     };
@@ -50,7 +50,7 @@ export class SignUpPageController extends React.Component<Properties, State> {
       return <ProfileSetUpPage
         displayMode={this.props.displayMode}
         displayName={this.state.displayName}
-        selectedImage={this.state.image}
+        selectedImage={this.state.userProfileImage}
         avatars={this.props.model.avatars}
         onUploadImageClick={this.handleUploadImageClick}
         onLetsGoClick={this.handleLetsGoClick}
@@ -72,7 +72,7 @@ export class SignUpPageController extends React.Component<Properties, State> {
       this.setState({
         isLoaded: true,
         email: this.props.model.email,
-        image: this.props.model.defaultImage,
+        userProfileImage: this.props.model.defaultImage,
         signUpPageErrorCode: SignUpPage.ErrorCode.NONE
       });
     } catch {
@@ -96,26 +96,43 @@ export class SignUpPageController extends React.Component<Properties, State> {
     }
   }
 
-  private handleUploadImageClick = async (uploadedImage: UserProfileImage) => {
+  private handleUploadImageClick = async (uploadedImage: File) => {
     try {
-      const image = await this.props.model.uploadImage(uploadedImage);
-      this.setState({
-        image: image,
-        profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NONE
+      const formData = new FormData();
+      formData.append('userProfileImage', uploadedImage);
+      const response = await fetch(`/api/upload_profile_image/${
+          this.props.model.defaultImage.userId}`, {
+        method: 'POST',
+        body: formData,
       });
+      if (response.status === 201) {
+        const responseObject = await response.json();
+        const image = UserProfileImage.fromJson(
+          responseObject.userProfileImage);
+        this.setState({
+          userProfileImage: image,
+          profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NONE,
+        });
+      } else {
+        this.setState({
+          userProfileImage: this.props.model.defaultImage,
+          profileSetUpPageErrorCode:
+            ProfileSetUpPage.ErrorCode.UPLOAD_IMAGE_FAILED,
+        });
+      }
     } catch {
       this.setState({
-        image: this.props.model.defaultImage,
+        userProfileImage: this.props.model.defaultImage,
         profileSetUpPageErrorCode:
-          ProfileSetUpPage.ErrorCode.UPLOAD_IMAGE_FAILED
+          ProfileSetUpPage.ErrorCode.UPLOAD_IMAGE_FAILED,
       });
     }
   }
 
   private handleAvatarClick = (avatar: Avatar) => {
     this.setState({
-      image: new UserProfileImage(avatar.id, this.state.image.userId,
-        avatar.src)
+      userProfileImage: new UserProfileImage(avatar.id,
+        this.state.userProfileImage.userId, avatar.src)
     });
   }
 
@@ -131,21 +148,21 @@ export class SignUpPageController extends React.Component<Properties, State> {
         this.setState({
           profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NONE,
           displayName: displayName,
-          image: image,
+          userProfileImage: image,
           redirect: '/'
         });
       } else {
         this.setState({
           profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NO_CONNECTION,
           displayName: displayName,
-          image: image
+          userProfileImage: image
         });
       }
     } catch {
       this.setState({
         profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NO_CONNECTION,
         displayName: displayName,
-        image: image
+        userProfileImage: image
       });
     }
   }
