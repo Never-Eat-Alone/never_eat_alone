@@ -72,6 +72,7 @@ export class HttpSignUpPageModel extends SignUpPageModel {
         'image': image.toJson()
       })
     });
+    console.log('setUpProfile response', response.status);
     if (response.status === 200 || response.status === 201) {
       return true;
     }
