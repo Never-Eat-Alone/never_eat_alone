@@ -60,8 +60,8 @@ export class HttpSignUpPageModel extends SignUpPageModel {
     return false;
   }
 
-  public async setUpProfile(displayName: string, image: UserProfileImage
-      ): Promise<boolean> {
+  public async setUpProfile(displayName: string, image: UserProfileImage):
+      Promise<boolean> {
     const response = await fetch(`/api/set_up_profile/${this._profileId}`, {
       method: 'POST',
       headers: {

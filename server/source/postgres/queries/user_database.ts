@@ -1,6 +1,6 @@
 import * as Hash from 'hash.js';
 import { Pool } from 'pg';
-import { Avatar, User, UserStatus
+import { Avatar, User, UserStatus, UserProfileImage
 } from '../../../../client/library/source/definitions';
 import * as Crypto from 'crypto';
 
@@ -188,8 +188,8 @@ export class UserDatabase {
    * @param userId - User id.
    * @param password - User password.
    */
-  public addUserCredentials = async (userId: number, password: string): Promise<
-      void> => {
+  public addUserCredentials = async (userId: number, password: string):
+      Promise<void> => {
     const hashedEnteredPass =
       Hash.sha256().update(password + userId).digest('hex');
     // Check if the user ID already exists in the table
@@ -206,8 +206,6 @@ export class UserDatabase {
         INSERT INTO user_credentials (user_id, hashed_pass) VALUES ($1, $2)`,
         [userId, hashedEnteredPass]);
     }
-    const tempResult = await this.pool.query(`
-      SELECT * FROM user_profile_images WHERE user_id = $1`, [userId]);
   }
 
   /**
@@ -312,6 +310,18 @@ export class UserDatabase {
       return false;
     }
     return true;
+  }
+
+  public saveUserProfile = async (image: UserProfileImage, displayName: string):
+      Promise<void> => {
+    await this.pool.query(`UPDATE users SET name = $1 WHERE id = $2`,
+      [displayName, image.userId]);
+    await this.pool.query(`
+      INSERT INTO user_profile_images (user_id, src)
+      VALUES ($1, $2)
+      ON CONFLICT (user_id)
+      DO UPDATE SET src = EXCLUDED.src, updated_at = NOW()
+    `, [image.userId, image.src]);
   }
 
   /** The postgress pool connection. */
