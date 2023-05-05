@@ -28,8 +28,7 @@ export class UserProfileImageDatabase {
   public uploadProfileImage = async (userId: number,
       imageFile: Express.Multer.File): Promise<UserProfileImage> => {
     const fileName = `${userId}-${Date.now()}-${imageFile.originalname}`;
-    const filePath = path.join(__dirname, '..', '..', 'client', 'resources',
-      'uploads', fileName);
+    const filePath = path.join('/resources/uploads', fileName);
     // Save the uploaded file to the local disk.
     fs.writeFileSync(filePath, imageFile.buffer);
     // Store the file path in the database.
