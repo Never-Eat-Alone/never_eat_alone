@@ -10,37 +10,32 @@ export class HttpSignUpPageModel extends SignUpPageModel {
 
   public async load(): Promise<void> {
     const response = await fetch(`/api/sign_up/${this._profileId}`);
-    console.log(response.status);
     if (response.status !== 200) {
       return;
     }
     const responseObject = await response.json();
     const email = responseObject.email;
-    console.log('email', email);
     let userProfileImage = UserProfileImage.NoImage();
     if (responseObject.userProfileImage) {
       userProfileImage = UserProfileImage.fromJson(
         responseObject.userProfileImage);
     }
-    console.log('userProfileImage', userProfileImage.id, userProfileImage.src);
     let avatars: Avatar[] = [];
     if (responseObject.avatars && responseObject.avatars.length > 0) {
       avatars = arrayFromJson(Avatar, responseObject.avatars);
     }
-    console.log('avatars', avatars.length);
     this._model = new LocalSignUpPageModel(email, userProfileImage, avatars);
     this._model.load();
   }
 
-  public async uploadImage(userProfileImage: UserProfileImage): Promise<
-      UserProfileImage> {
-    const response = await fetch('/api/upload_profile_image', {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        'userProfileImage': userProfileImage.toJson()
-      })
+  public async uploadImage(userProfileImageFile: File):
+      Promise<UserProfileImage> {
+    const formData = new FormData();
+    formData.append('userProfileImage', userProfileImageFile);
+    const response = await fetch(
+      `/api/upload_profile_image/${this._profileId}`, {
+      method: 'POST',
+      body: formData
     });
     if (response.status === 201) {
       const responseObject = await response.json();

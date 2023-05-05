@@ -142,7 +142,7 @@ export class UserDatabase {
     const hashedEnteredPass =
       Hash.sha256().update(password + userId).digest('hex');
     const result = await this.pool.query(
-      'SELECT * from user_credentials WHERE user_id = $1', [userId]);
+      'SELECT * FROM user_credentials WHERE user_id = $1', [userId]);
     if (!result.rows || result.rows.length === 0 ||
         hashedEnteredPass !== result.rows[0].hashed_pass) {
       return false;
@@ -207,7 +207,7 @@ export class UserDatabase {
         [userId, hashedEnteredPass]);
     }
     const tempResult = await this.pool.query(`
-      SELECT * from user_profile_images WHERE user_id = $1`, [userId]);
+      SELECT * FROM user_profile_images WHERE user_id = $1`, [userId]);
   }
 
   /**

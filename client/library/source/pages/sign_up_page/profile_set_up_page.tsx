@@ -15,7 +15,7 @@ interface Properties {
   avatars: Avatar[];
 
   /** Indicates the upload image button is clicked. */
-  onUploadImageClick: (image: UserProfileImage) => void;
+  onUploadImageClick: (imageFile: File) => void;
 
   /** Indicates the let's go button is clicked. */
   onLetsGoClick: (displayName: string, image: UserProfileImage) => void;
@@ -106,9 +106,24 @@ export class ProfileSetUpPage extends React.Component<Properties> {
   }
 
   private handleUploadImageClick = () => {
-    //method to create an image object from the user input
-    const image = UserProfileImage.NoImage();
-    this.props.onUploadImageClick(image);
+    // Create a hidden input element with the type 'file'
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*'; // Accept only image files
+    input.style.display = 'none';
+
+  // Listen for the 'change' event to get the selected image file
+  input.addEventListener('change', (event) => {
+    const target = event.target as HTMLInputElement;
+    const file = target.files && target.files[0];
+    if (file) {
+      // Call the onUploadImageClick prop with the selected image file
+      this.props.onUploadImageClick(file);
+    }
+  });
+
+  // Trigger the click event to open the file picker dialog
+  input.click();
   }
 }
 

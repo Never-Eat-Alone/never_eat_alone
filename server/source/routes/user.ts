@@ -144,7 +144,6 @@ export class UserRoutes {
       console.log(error);
       return;
     }
-    console.log('user', user.name, user.id, user.userStatus);
     if (!user || user.id === -1 || user.userStatus !== UserStatus.ACTIVE) {
       response.redirect(303, 'http://nevereatalone.net/join');
       return;
@@ -157,7 +156,6 @@ export class UserRoutes {
       console.log(error);
       return;
     }
-    console.log('hasCredentials', hasCredentials);
     if (hasCredentials) {
       response.redirect(303, 'http://nevereatalone.net/log_in');
       return;
@@ -171,7 +169,6 @@ export class UserRoutes {
       console.log(error);
       return;
     }
-    console.log('userProfileImage', userProfileImage.src, userProfileImage.id);
     let avatars: Avatar[] = [];
     try {
       const tempAvatars = await this.userDatabase.loadAvatars();
@@ -181,7 +178,6 @@ export class UserRoutes {
       console.log(error);
       return;
     }
-    console.log('avatars', avatars.length, avatars[0]);
     response.status(200).json({
       email: user.email,
       userProfileImage: userProfileImage.toJson(),
@@ -298,6 +294,7 @@ export class UserRoutes {
       await request.session.destroy();
     } catch (error) {
       response.status(500).json({ message: 'SESSION_DESTROY_FAILED' });
+      console.log(error);
       return;
     }
     try {
@@ -306,7 +303,9 @@ export class UserRoutes {
       await this.userDatabase.assignUserIdToSid(sid, User.makeGuest().id,
         request.session, sessionExpiration);
     } catch (error) {
-      response.status(400).json({ message: 'SESSIONS_DATABASE_ERROR' });
+      response.status(500).json({ message: 'SESSIONS_DATABASE_ERROR' });
+      console.log(error);
+      return;
     }
     response.status(200).send();
   }
@@ -383,6 +382,7 @@ export class UserRoutes {
         request.session, sessionExpiration);
     } catch (error) {
       response.status(500).json({ message: 'DATABASE_ERROR' });
+      console.log(error);
       return;
     }
     const signUpHtml = await new Promise<string>((resolve, reject) => {
@@ -401,10 +401,12 @@ export class UserRoutes {
       await this.sendEmail(user.email, 'info@nevereatalone.net',
         'NEA Account: Sign Up', newHtml);
     } catch (error) {
+      const message = "Your account is verified but we weren't able to send \
+        you the sign up email. Contact info@nevereatalone.net to get help.";
       response.status(200).json({
-        message: "Your account is verified but we weren't able to send you the \
-        sign up email. Contact info@nevereatalone.net to get help."
+        message: message
       });
+      console.log(error, message);
       return;
     }
     response.status(200).send({ message: 'Email sent.' });
@@ -416,8 +418,9 @@ export class UserRoutes {
     try {
       userInvitationCode = await this.userDatabase.loadUserInvitationCode(
         userId);
-    } catch {
+    } catch (error) {
       response.status(500).send();
+      console.log(error);
       return;
     }
     response.status(200).json({ userInvitationCode: userInvitationCode });
@@ -447,6 +450,7 @@ export class UserRoutes {
           newHtml);
       } catch (error) {
         response.status(500).send();
+        console.log(error);
         return;
       }
     }
@@ -473,6 +477,7 @@ export class UserRoutes {
       await this.sendPartnerWithUsRecievedConfirmationEmail(email, name);
     } catch (error) {
       response.status(500).send();
+      console.log(error);
       return;
     }
     response.status(200).send();
@@ -526,6 +531,7 @@ export class UserRoutes {
         'Recovery Password Link', newHtml);
     } catch (error) {
       response.status(500).send();
+      console.log(error);
       return;
     }
     response.status(200).json({ user: user.toJson() });
@@ -554,13 +560,13 @@ export class UserRoutes {
         'Recovery Password Link', newHtml);
     } catch (error) {
       response.status(500).send();
+      console.log(error);
       return;
     }
     response.status(200).send();
   }
 
   private userDatabase: UserDatabase;
-
   private userProfileImageDatabase: UserProfileImageDatabase;
 
   /** The Sendgrid mailing api. */
