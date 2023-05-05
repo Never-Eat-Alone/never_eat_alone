@@ -31,12 +31,23 @@ export class UserProfileImageDatabase {
     const filePath = path.join(__dirname, '..', '..', 'client', 'resources',
       'uploads', fileName);
     // Save the uploaded file to the local disk.
-    console.log('file path', filePath);
     fs.writeFileSync(filePath, imageFile.buffer);
     // Store the file path in the database.
-    const result = await this.pool.query('INSERT INTO user_profile_images \
-      (user_id, src, created_at, updated_at) VALUES ($1, $2, DEFAULT, DEFAULT) \
-      RETURNING *', [userId, filePath]);
+    // Check if the user already has a profile image in the database.
+    const existingImageResult = await this.pool.query(
+      'SELECT * FROM user_profile_images WHERE user_id = $1', [userId]);
+    let result;
+    if (existingImageResult.rows.length > 0) {
+      // User already has a profile image, update the record.
+      result = await this.pool.query(`
+        UPDATE user_profile_images SET src = $1, updated_at = DEFAULT WHERE
+        user_id = $2 RETURNING *`, [filePath, userId]);
+    } else {
+      // User doesn't have a profile image, insert a new record.
+      result = await this.pool.query(`
+        INSERT INTO user_profile_images (user_id, src, created_at, updated_at)
+        VALUES ($1, $2, DEFAULT, DEFAULT) RETURNING *`, [userId, filePath]);
+    }
     if (!result || !result.rows || result.rows.length === 0) {
       return UserProfileImage.NoImage();
     }
