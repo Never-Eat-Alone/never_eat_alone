@@ -189,7 +189,6 @@ export class UserRoutes {
   private setUpProfile = async (request, response) => {
     const displayName = request.body.displayName;
     const image = UserProfileImage.fromJson(request.body.image);
-    console.log('setUpProfile');
     try {
       await this.userDatabase.saveUserProfile(image, displayName);
     } catch (error) {
@@ -197,7 +196,6 @@ export class UserRoutes {
       console.log(error);
       return;
     }
-    console.log('response 201');
     response.status(201).send();
   }
 

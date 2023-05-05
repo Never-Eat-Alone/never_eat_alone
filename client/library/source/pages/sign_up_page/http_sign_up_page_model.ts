@@ -1,4 +1,5 @@
-import { arrayFromJson, Avatar, UserProfileImage } from '../../definitions';
+import { arrayFromJson, Avatar, User, UserProfileImage
+} from '../../definitions';
 import { LocalSignUpPageModel } from './local_sign_up_page_model';
 import { SignUpPageModel } from './sign_up_page_model';
 
@@ -72,11 +73,20 @@ export class HttpSignUpPageModel extends SignUpPageModel {
         'image': image.toJson()
       })
     });
-    console.log('setUpProfile response', response.status);
+    let user: User;
+    let userProfileImage: UserProfileImage;
     if (response.status === 200 || response.status === 201) {
-      return true;
+      const responseObject = await response.json();
+      return {
+        user: User.fromJson(responseObject.user),
+        userProfileImage: UserProfileImage.fromJson(
+          responseObject.userProfileImage)
+      };
     }
-    return false;
+    return {
+      user: User.makeGuest,
+      userProfileImage: UserProfileImage.NoImage()
+    };
   }
 
   public get email(): string {

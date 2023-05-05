@@ -313,15 +313,29 @@ export class UserDatabase {
   }
 
   public saveUserProfile = async (image: UserProfileImage, displayName: string):
-      Promise<void> => {
-    await this.pool.query(`UPDATE users SET name = $1 WHERE id = $2`,
-      [displayName, image.userId]);
-    await this.pool.query(`
+      Promise<{ user: any, userProfileImage: UserProfileImage }> => {
+    const userResult = await this.pool.query(`
+      UPDATE users SET name = $1 WHERE id = $2
+      RETURNING *
+    `, [displayName, image.userId]);
+    const imageResult = await this.pool.query(`
       INSERT INTO user_profile_images (user_id, src)
       VALUES ($1, $2)
       ON CONFLICT (user_id)
       DO UPDATE SET src = EXCLUDED.src, updated_at = NOW()
+      RETURNING *
     `, [image.userId, image.src]);
+    return {
+      user: new User(parseInt(userResult.rows[0].id), userResult.rows[0].name,
+        userResult.rows[0].email, userResult.rows[0].user_name,
+        UserStatus[userResult.rows[0].user_status as keyof typeof UserStatus],
+        new Date(Date.parse(userResult.rows[0].created_at))),
+      userProfileImage: new UserProfileImage(
+        parseInt(imageResult.rows[0].id),
+        parseInt(imageResult.rows[0].user_id),
+        imageResult.rows[0].src
+      )
+    };
   }
 
   /** The postgress pool connection. */
