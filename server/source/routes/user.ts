@@ -50,7 +50,9 @@ export class UserRoutes {
   private getCurrentUser = async (request, response) => {
     if (request.session && request.session.user) {
       console.log(request.session.user);
-      response.status(200).json({ user: request.session.user.toJson() });
+      response.status(200).json({
+        user: User.fromJson(request.session.user).toJson()
+      });
     } else {
       const guestUser = User.makeGuest();
       response.status(200).json({ user: guestUser.toJson() });
