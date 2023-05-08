@@ -15,7 +15,6 @@ interface State {
   isLoaded: boolean;
   email: string;
   signUpPageErrorCode: SignUpPage.ErrorCode;
-  profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode;
   password: string;
   displayName: string;
   userProfileImage: UserProfileImage;
@@ -29,7 +28,6 @@ export class SignUpPageController extends React.Component<Properties, State> {
     this.state = {
       isLoaded: false,
       signUpPageErrorCode: SignUpPage.ErrorCode.NONE,
-      profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NONE,
       email: '',
       isSetUpPage: false,
       displayName: '',
@@ -110,21 +108,16 @@ export class SignUpPageController extends React.Component<Properties, State> {
         const image = UserProfileImage.fromJson(
           responseObject.userProfileImage);
         this.setState({
-          userProfileImage: image,
-          profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NONE,
+          userProfileImage: image
         });
       } else {
         this.setState({
-          userProfileImage: this.props.model.defaultImage,
-          profileSetUpPageErrorCode:
-            ProfileSetUpPage.ErrorCode.UPLOAD_IMAGE_FAILED,
+          userProfileImage: this.props.model.defaultImage
         });
       }
     } catch {
       this.setState({
-        userProfileImage: this.props.model.defaultImage,
-        profileSetUpPageErrorCode:
-          ProfileSetUpPage.ErrorCode.UPLOAD_IMAGE_FAILED,
+        userProfileImage: this.props.model.defaultImage
       });
     }
   }
@@ -143,24 +136,14 @@ export class SignUpPageController extends React.Component<Properties, State> {
   private handleLetsGoClick = async (displayName: string,
       image: UserProfileImage) => {
     try {
-      const isSetUp = await this.props.model.setUpProfile(displayName, image);
-      if (isSetUp) {
-        this.setState({
-          profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NONE,
-          displayName: displayName,
-          userProfileImage: image,
-          redirect: '/'
-        });
-      } else {
-        this.setState({
-          profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NO_CONNECTION,
-          displayName: displayName,
-          userProfileImage: image
-        });
-      }
+      await this.props.model.setUpProfile(displayName, image);
+      this.setState({
+        displayName: displayName,
+        userProfileImage: image,
+        redirect: '/'
+      });
     } catch {
       this.setState({
-        profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NO_CONNECTION,
         displayName: displayName,
         userProfileImage: image
       });

@@ -108,7 +108,7 @@ export class SignUpPage extends React.Component<Properties, State> {
               onClick={() => this.props.onSignUp(this.state.password)}
               disabled={this.props.errorCode ===
                 SignUpPage.ErrorCode.NO_CONNECTION ||
-                this.state.password.length < 9 ||
+                this.state.password.length < 8 ||
                 this.state.confirmPassword.length === 0 ||
                 !checks.doesConfirmationMatch}
             />
