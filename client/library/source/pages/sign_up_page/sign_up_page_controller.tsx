@@ -1,12 +1,13 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
-import { Avatar, DisplayMode, UserProfileImage } from '../../definitions';
+import { Avatar, DisplayMode, User, UserProfileImage } from '../../definitions';
 import { ProfileSetUpPage } from './profile_set_up_page';
 import { SignUpPage } from './sign_up_page';
 import { SignUpPageModel } from './sign_up_page_model';
 
 interface Properties {
   displayMode: DisplayMode;
+  account: User;
   model: SignUpPageModel;
 }
 
@@ -60,7 +61,7 @@ export class SignUpPageController extends React.Component<Properties, State> {
     }
     return <SignUpPage
       displayMode={this.props.displayMode}
-      email={this.state.email}
+      email={this.props.account.email}
       errorCode={this.state.signUpPageErrorCode}
       onSignUp={this.handleSignUp}
     />;
@@ -68,10 +69,9 @@ export class SignUpPageController extends React.Component<Properties, State> {
 
   public async componentDidMount(): Promise<void> {
     try {
-      await this.props.model.load();
+      await this.props.model.load(this.props.account);
       this.setState({
         isLoaded: true,
-        email: this.props.model.email,
         userProfileImage: this.props.model.defaultImage,
         signUpPageErrorCode: SignUpPage.ErrorCode.NONE
       });

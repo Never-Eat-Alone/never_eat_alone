@@ -1,11 +1,11 @@
-import { Avatar, UserProfileImage } from '../../definitions';
+import { Avatar, User, UserProfileImage } from '../../definitions';
 import { SignUpPageModel } from './sign_up_page_model';
 
 export class LocalSignUpPageModel extends SignUpPageModel {
-  constructor(email: string, defaultImage: UserProfileImage,
+  constructor(account: User, defaultImage: UserProfileImage,
       avatars: Avatar[]) {
     super();
-    this._email = email;
+    this._account = account;
     this._defaultImage = defaultImage;
     this._avatars = avatars;
   }
@@ -13,7 +13,7 @@ export class LocalSignUpPageModel extends SignUpPageModel {
   public async load(): Promise<void> {}
 
   public async uploadImage(imageFile: File): Promise<UserProfileImage> {
-    return UserProfileImage.NoImage();
+    return this._defaultImage;
   }
 
   public async signUp(password: string): Promise<boolean> {
@@ -21,12 +21,12 @@ export class LocalSignUpPageModel extends SignUpPageModel {
   }
 
   public async setUpProfile(displayName: string, image: UserProfileImage
-      ): Promise<boolean> {
-    return Boolean(displayName && image);
-  }
-
-  public get email(): string {
-    return this._email;
+      ): Promise<void> {
+    const tempAccount = new User(this._account.id, displayName,
+      this._account.email, this._account.userName, this._account.userStatus,
+      this._account.createdAt);
+    this._account = tempAccount;
+    this._defaultImage = image;
   }
 
   public get defaultImage(): UserProfileImage {
@@ -37,7 +37,7 @@ export class LocalSignUpPageModel extends SignUpPageModel {
     return this._avatars;
   }
 
-  private _email: string;
   private _defaultImage: UserProfileImage;
   private _avatars: Avatar[];
+  private _account: User;
 }
