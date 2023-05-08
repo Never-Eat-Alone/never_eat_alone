@@ -153,7 +153,7 @@ export class HttpApplicationModel extends ApplicationModel {
   public getSignUpPageModel(id: number): SignUpPageModel {
     let signUpPageModel = this._model.getSignUpPageModel(id);
     if (!signUpPageModel) {
-      signUpPageModel = new HttpSignUpPageModel(id);
+      signUpPageModel = new HttpSignUpPageModel(this._account);
       this.addSignUpPageModel(id, signUpPageModel);
     }
     return signUpPageModel;

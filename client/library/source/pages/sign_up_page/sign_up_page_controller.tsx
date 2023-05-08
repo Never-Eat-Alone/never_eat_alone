@@ -69,7 +69,7 @@ export class SignUpPageController extends React.Component<Properties, State> {
 
   public async componentDidMount(): Promise<void> {
     try {
-      await this.props.model.load(this.props.account);
+      await this.props.model.load();
       this.setState({
         isLoaded: true,
         userProfileImage: this.props.model.defaultImage,
