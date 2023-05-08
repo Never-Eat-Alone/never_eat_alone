@@ -48,14 +48,12 @@ export class UserRoutes {
 
   /** Returns the current logged in user. */
   private getCurrentUser = async (request, response) => {
-    let user: User = User.makeGuest();
-    try {
-      user = await this.userDatabase.loadUserBySessionId(request.session.id);
-    } catch (error) {
-      response.status(500).json({ user: user.toJson() });
-      return;
+    if (request.session && request.session.user) {
+      response.status(200).json({ user: request.session.user.toJson() });
+    } else {
+      const guestUser = User.makeGuest();
+      response.status(200).json({ user: guestUser.toJson() });
     }
-    response.status(200).json({ user: user.toJson() });
   }
 
   /** Registers the user request to join the app. */
@@ -132,6 +130,7 @@ export class UserRoutes {
       console.log(error);
       return;
     }
+    request.session.user = user;
     response.status(201).json({ user: user.toJson(), message: '' });
   }
 
@@ -240,6 +239,7 @@ export class UserRoutes {
       response.status(500).json({ message: 'DATABASE_ERROR' });
       return;
     }
+    request.session.user = user;
     response.status(200).json({ user: user.toJson() });
   }
 
