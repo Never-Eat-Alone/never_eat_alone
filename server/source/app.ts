@@ -1,5 +1,6 @@
 import * as Bodyparser from 'body-parser';
 import * as Cors from 'cors';
+import * as CookieParser from 'cookie-parser';
 import * as Express from 'express';
 import * as Session from 'express-session';
 import * as fs from 'fs';
@@ -103,13 +104,14 @@ function runExpress(pool: Pool, config: any) {
     saveUninitialized: true,
     cookie: {
       maxAge: 10 * 365 * 24 * 60 * 60 * 1000,
-      secure: false,
+      secure: false
     }
   };
   app.set('trust proxy', 1);
   if (app.get('env') === 'production') {
     session.cookie.secure = true // serve secure cookies
   }
+  app.use(CookieParser());
   app.use(Session(session));
   app.get('/api/google_client_id', (request, response) => {
     let id = '';
