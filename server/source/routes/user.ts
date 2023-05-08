@@ -50,12 +50,12 @@ export class UserRoutes {
   private getCurrentUser = async (request, response) => {
     if (request.session && request.session.user) {
       const user = new User(
-        parseInt(request.session.use.id),
-        request.session.use.name,
-        request.session.use.email,
-        request.session.use.userName,
-        UserStatus[request.session.use.userStatus as keyof typeof UserStatus],
-        new Date(Date.parse(request.session.use.createdAt)));
+        parseInt(request.session.user.id),
+        request.session.user.name,
+        request.session.user.email,
+        request.session.user.userName,
+        UserStatus[request.session.user.userStatus as keyof typeof UserStatus],
+        new Date(Date.parse(request.session.user.createdAt)));
       response.status(200).json({
         user: user.toJson()
       });
