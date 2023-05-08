@@ -425,6 +425,7 @@ export class ApplicationController extends React.Component<Properties, State> {
     const id = Number(match.params.id);
     return <SignUpPageController
       displayMode={this.state.displayMode}
+      account={this.state.account}
       model={this.props.model.getSignUpPageModel(id)}
     />;
   }

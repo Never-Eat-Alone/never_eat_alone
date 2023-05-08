@@ -24,6 +24,7 @@ export class UserRoutes {
     /** Route for the guest user to set up an account. */
     app.get('/api/sign_up/:id', this.signUp);
     app.post('/api/sign_up/:id', this.setUpPassword);
+    app.post('/api/set_up_profile/:id', this.setUpProfile);
 
     /** Route for the user log in. */
     app.post('/api/log_in', this.logIn);
@@ -183,6 +184,19 @@ export class UserRoutes {
       userProfileImage: userProfileImage.toJson(),
       avatars: arrayToJson(avatars)
     });
+  }
+
+  private setUpProfile = async (request, response) => {
+    const displayName = request.body.displayName;
+    const image = UserProfileImage.fromJson(request.body.image);
+    try {
+      await this.userDatabase.saveUserProfile(image, displayName);
+    } catch (error) {
+      response.status(500).send();
+      console.log(error);
+      return;
+    }
+    response.status(201).send();
   }
 
   private setUpPassword = async (request, response) => {
