@@ -48,6 +48,7 @@ export class UserRoutes {
 
   /** Returns the current logged in user. */
   private getCurrentUser = async (request, response) => {
+    console.log('getCurrentUser');
     if (request.session && request.session.user) {
       const sessionUser = request.session.user;
       const user = new User(
@@ -58,6 +59,7 @@ export class UserRoutes {
         UserStatus[sessionUser.userStatus as keyof typeof UserStatus],
         new Date(Date.parse(sessionUser.createdAt))
       );
+      console.log('current user', user.id, user.name);
       response.status(200).json({ user: user.toJson() });
     } else {
       const guestUser = User.makeGuest();
