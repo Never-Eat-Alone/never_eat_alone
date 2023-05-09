@@ -49,11 +49,16 @@ export class UserRoutes {
   /** Returns the current logged in user. */
   private getCurrentUser = async (request, response) => {
     if (request.session && request.session.user) {
-      const user = request.session.user;
-      console.log(user, typeof user, user.id, typeof user.id);
-      response.status(200).json({
-        user: request.session.user
-      });
+      const sessionUser = request.session.user;
+      const user = new User(
+        parseInt(sessionUser.id),
+        sessionUser.name,
+        sessionUser.email,
+        sessionUser.userName,
+        UserStatus[sessionUser.userStatus as keyof typeof UserStatus],
+        new Date(Date.parse(sessionUser.createdAt))
+      );
+      response.status(200).json({ user: user.toJson() });
     } else {
       const guestUser = User.makeGuest();
       response.status(200).json({ user: guestUser.toJson() });
@@ -250,8 +255,14 @@ export class UserRoutes {
       response.status(500).json({ message: 'DATABASE_ERROR' });
       return;
     }
-    request.session.user = user;
-    console.log('join session user', request.session.user, typeof request.session.user, request.session.user.id, typeof request.session.user);
+    request.session.user = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      userName: user.userName,
+      userStatus: UserStatus[user.userStatus],
+      createdAt: user.createdAt.toISOString()
+    };
     response.status(200).json({ user: user.toJson() });
   }
 
