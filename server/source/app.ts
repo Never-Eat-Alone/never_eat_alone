@@ -154,27 +154,37 @@ function runExpress(pool: Pool, config: any) {
   app.get('*', (request, response, next) => {
     response.sendFile(path.join(process.cwd(), 'public', 'index.html'));
   });
-  app.listen(config.port, async () => {
-    await initializePostgres(pool, '../source/postgres/types/', 'type');
-    await initializePostgres(pool, '../source/postgres/tables/', 'table', [
-      'users',
-      'user_sessions',
-      'avatars',
-      'user_confirmation_tokens',
-      'user_invitation_codes',
-      'user_credentials',
-      'user_profile_images',
-      'social_media_images',
-      'cuisines',
-      'locations',
-      'restaurants',
-      'restaurant_cuisines',
-      'dining_events',
-      'delete_account_survey',
-      'deactivate_account_survey',
-      'attendees'
-    ]);
-  });
+  // Start the server after initializing the tables
+  const startServer = async () => {
+    try {
+      await initializePostgres(pool, '../source/postgres/types/', 'type');
+      await initializePostgres(pool, '../source/postgres/tables/', 'table', [
+        'users',
+        'user_sessions',
+        'avatars',
+        'user_confirmation_tokens',
+        'user_invitation_codes',
+        'user_credentials',
+        'user_profile_images',
+        'social_media_images',
+        'cuisines',
+        'locations',
+        'restaurants',
+        'restaurant_cuisines',
+        'dining_events',
+        'delete_account_survey',
+        'deactivate_account_survey',
+        'attendees'
+      ]);
+      app.listen(config.port, async () => {
+        console.log('Server started successfully.');
+      });
+    } catch (error) {
+      console.error('Error initializing tables:', error);
+    }
+  }
+
+  startServer();
 }
 
 async function main() {
