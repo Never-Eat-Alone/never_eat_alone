@@ -49,7 +49,8 @@ export class UserRoutes {
   /** Returns the current logged in user. */
   private getCurrentUser = async (request, response) => {
     if (request.session && request.session.user) {
-      console.log(request.session.user);
+      const user = request.session.user;
+      console.log(user, typeof user, user.id, typeof user.id);
       response.status(200).json({
         user: request.session.user
       });
@@ -133,7 +134,8 @@ export class UserRoutes {
       console.log(error);
       return;
     }
-    request.session.user = user.toJson();
+    request.session.user = user;
+    console.log('join session user', request.session.user, typeof request.session.user, request.session.user.id, typeof request.session.user);
     response.status(201).json({ user: user.toJson(), message: '' });
   }
 
@@ -242,7 +244,8 @@ export class UserRoutes {
       response.status(500).json({ message: 'DATABASE_ERROR' });
       return;
     }
-    request.session.user = user.toJson();
+    request.session.user = user;
+    console.log('join session user', request.session.user, typeof request.session.user, request.session.user.id, typeof request.session.user);
     response.status(200).json({ user: user.toJson() });
   }
 
