@@ -134,8 +134,14 @@ export class UserRoutes {
       console.log(error);
       return;
     }
-    request.session.user = user;
-    console.log('join session user', request.session.user, typeof request.session.user, request.session.user.id, typeof request.session.user);
+    request.session.user = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      userName: user.userName,
+      userStatus: UserStatus[user.userStatus],
+      createdAt: user.createdAt.toISOString()
+    };
     response.status(201).json({ user: user.toJson(), message: '' });
   }
 
@@ -307,27 +313,18 @@ export class UserRoutes {
   /** Logs out the user. */
   private logOut = async (request, response) => {
     if (!request.session) {
+      response.status(400).json({ message: 'NO_SESSION_FOUND' });
       return;
     }
-    const sid = request.session.id;
-    try {
-      await request.session.destroy();
-    } catch (error) {
-      response.status(500).json({ message: 'SESSION_DESTROY_FAILED' });
-      console.log(error);
-      return;
-    }
-    try {
-      const sessionExpiration = new Date(
-        Date.now() + request.session.cookie.maxAge);
-      await this.userDatabase.assignUserIdToSid(sid, User.makeGuest().id,
-        request.session, sessionExpiration);
-    } catch (error) {
-      response.status(500).json({ message: 'SESSIONS_DATABASE_ERROR' });
-      console.log(error);
-      return;
-    }
-    response.status(200).send();
+    request.session.destroy((err) => {
+      if (err) {
+        response.status(500).json({ message: 'SESSION_DESTROY_FAILED' });
+        console.log(err);
+        return;
+      }
+      response.clearCookie('connect.sid'); // Clear the session cookie
+      response.status(200).send('Session data cleared');
+    });
   }
 
   /**
