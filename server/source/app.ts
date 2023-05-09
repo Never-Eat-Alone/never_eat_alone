@@ -108,13 +108,6 @@ function runExpress(pool: Pool, config: any) {
     }
   };
 
-  // Clear all sessions from the session store
-  session.store.clear((error) => {
-    if (error) {
-      console.log('Error clearing session store:', error);
-    }
-  });
-
   app.set('trust proxy', 1);
   if (app.get('env') === 'production') {
     session.cookie.secure = true // serve secure cookies
