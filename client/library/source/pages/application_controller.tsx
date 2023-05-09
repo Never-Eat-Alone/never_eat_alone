@@ -72,6 +72,7 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   public render(): JSX.Element {
+    console.log('account', this.state.account);
     if (this.state.hasError) {
       return <ErrorPage500 displayMode={this.state.displayMode} />;
     }

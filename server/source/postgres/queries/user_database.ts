@@ -66,8 +66,12 @@ export class UserDatabase {
    * @param sess - Session object.
    * @param expire - Expiration date.
    */
-  public assignUserIdToSid = async (sid: string, userId: number, sess: object,
-      expire: Date): Promise<void> => {
+  public assignUserIdToSid = async (sid: string,
+      userId: number | null | undefined, sess: object, expire: Date):
+      Promise<void> => {
+    if (userId === null || userId === undefined) {
+      return;
+    }
     await this.pool.query(`
       INSERT INTO user_sessions (sid, user_id, sess, expire)
       VALUES ($1, $2, $3, $4)

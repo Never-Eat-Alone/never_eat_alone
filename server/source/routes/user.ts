@@ -50,6 +50,7 @@ export class UserRoutes {
   private getCurrentUser = async (request, response) => {
     console.log('getCurrentUser');
     if (request.session && request.session.user) {
+      console.log('request.session.user', request.session.user);
       const sessionUser = request.session.user;
       const user = new User(
         parseInt(sessionUser.id),
@@ -63,6 +64,7 @@ export class UserRoutes {
       response.status(200).json({ user: user.toJson() });
     } else {
       const guestUser = User.makeGuest();
+      console.log('current user is guest', guestUser.id);
       response.status(200).json({ user: guestUser.toJson() });
     }
   }
@@ -71,6 +73,7 @@ export class UserRoutes {
   private join = async (request, response) => {
     const { name, email, referralCode } = request.body;
     let isEmail: boolean;
+    console.log('join', name, email, referralCode);
     try {
       isEmail = await this.userDatabase.isDuplicateEmail(email);
     } catch (error) {
@@ -98,9 +101,11 @@ export class UserRoutes {
       }
     }
     if (!user || user.id === -1) {
+      console.log('user is new');
       try {
         user = await this.userDatabase.addGuestUserRequest(name, email,
           referralCode);
+        console.log('addGuestUserRequest success', user.id, user.name);
       } catch (error) {
         response.status(500).json({ message: 'DATABASE_ERROR' });
         console.log(error);
@@ -120,6 +125,7 @@ export class UserRoutes {
     let token: string;
     try {
       token = await this.getConfirmationToken(email, user.id);
+      console.log('token created succesfuly', token);
     } catch (error) {
       response.status(201).json({
         user: user.toJson(),
@@ -141,13 +147,16 @@ export class UserRoutes {
       console.log(error);
       return;
     }
+    console.log('email sent successfully for confirmation');
     request.session.cookie.maxAge = 24 * 60 * 60 * 1000;
     try {
       const sessionExpiration = new Date(
         Date.now() + request.session.cookie.maxAge);
+      console.log('calling assignUserIdToSid', request.session.id, user.id);
       await this.userDatabase.assignUserIdToSid(request.session.id, user.id,
         request.session, sessionExpiration);
     } catch (error) {
+      console.log('falied to assing user to sessions table');
       response.status(500).json({ message: 'DATABASE_ERROR' });
       return;
     }
@@ -159,6 +168,7 @@ export class UserRoutes {
       userStatus: UserStatus[user.userStatus],
       createdAt: user.createdAt.toISOString()
     };
+    console.log('saving user to sessions');
     // Explicitly save the session after updating it
     request.session.save((err) => {
       if (err) {
