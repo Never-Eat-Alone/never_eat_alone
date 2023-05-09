@@ -165,6 +165,7 @@ export class UserRoutes {
         response.status(500).json({ message: 'SESSION_SAVE_ERROR' });
         return;
       }
+      console.log('sent the newly joined user', user.name, user.id);
       response.status(201).json({ user: user.toJson(), message: '' });
     });
   }
@@ -429,6 +430,15 @@ export class UserRoutes {
       console.log(error);
       return;
     }
+    // Update the session with the user information
+    request.session.user = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      userName: user.userName,
+      userStatus: UserStatus[user.userStatus],
+      createdAt: user.createdAt.toISOString()
+    };
     request.session.cookie.maxAge = 24 * 60 * 60 * 1000;
     try {
       const sessionExpiration = new Date(
@@ -464,6 +474,7 @@ export class UserRoutes {
       console.log(error, message);
       return;
     }
+    console.log('request.session.user', request.session.user.id, user.id);
     response.status(200).send({ message: 'Email sent.' });
   }
 
