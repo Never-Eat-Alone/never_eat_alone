@@ -139,6 +139,16 @@ export class UserRoutes {
       console.log(error);
       return;
     }
+    request.session.cookie.maxAge = 24 * 60 * 60 * 1000;
+    try {
+      const sessionExpiration = new Date(
+        Date.now() + request.session.cookie.maxAge);
+      await this.userDatabase.assignUserIdToSid(request.session.id, user.id,
+        request.session, sessionExpiration);
+    } catch (error) {
+      response.status(500).json({ message: 'DATABASE_ERROR' });
+      return;
+    }
     request.session.user = {
       id: user.id,
       name: user.name,
@@ -147,7 +157,14 @@ export class UserRoutes {
       userStatus: UserStatus[user.userStatus],
       createdAt: user.createdAt.toISOString()
     };
-    response.status(201).json({ user: user.toJson(), message: '' });
+    // Explicitly save the session after updating it
+    request.session.save((err) => {
+      if (err) {
+        response.status(500).json({ message: 'SESSION_SAVE_ERROR' });
+        return;
+      }
+      response.status(201).json({ user: user.toJson(), message: '' });
+    });
   }
 
   private signUp = async (request, response) => {
