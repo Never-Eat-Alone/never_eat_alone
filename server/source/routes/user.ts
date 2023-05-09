@@ -54,6 +54,14 @@ export class UserRoutes {
       const user = await this.userDatabase.loadUserBySessionIdUserId(
         request.session.id);
       console.log('current user', user.id, user.name);
+      request.session.user = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        userName: user.userName,
+        userStatus: UserStatus[user.userStatus],
+        createdAt: user.createdAt.toISOString()
+      };
       response.status(200).json({ user: user.toJson() });
     } else {
       const guestUser = User.makeGuest();
