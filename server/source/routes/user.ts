@@ -232,13 +232,13 @@ export class UserRoutes {
     const { email, password, rememberMe } = request.body;
     const user = await this.userDatabase.loadUserByEmail(email);
     if (!email || user.id === -1) {
-      response.status(400).json({ message: 'INVALID_CREDENTIALS' });
+      response.status(401).json({ message: 'INVALID_CREDENTIALS' });
       return;
     }
     const isValidPassword =
       await this.userDatabase.validatePassword(user.id, password);
     if (!isValidPassword) {
-      response.status(400).json({ message: 'INVALID_CREDENTIALS' });
+      response.status(401).json({ message: 'INVALID_CREDENTIALS' });
       return;
     }
     if (rememberMe) {
@@ -255,6 +255,7 @@ export class UserRoutes {
       response.status(500).json({ message: 'DATABASE_ERROR' });
       return;
     }
+    // Set the user object in the session
     request.session.user = {
       id: user.id,
       name: user.name,
@@ -263,7 +264,14 @@ export class UserRoutes {
       userStatus: UserStatus[user.userStatus],
       createdAt: user.createdAt.toISOString()
     };
-    response.status(200).json({ user: user.toJson() });
+    // Explicitly save the session after updating it
+    request.session.save((err) => {
+      if (err) {
+        response.status(500).json({ message: 'SESSION_SAVE_ERROR' });
+        return;
+      }
+      response.status(200).json({ user: user.toJson() });
+    });
   }
 
   /**
