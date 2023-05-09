@@ -70,14 +70,17 @@ export class UserDatabase {
       userId: number | null | undefined, sess: object, expire: Date):
       Promise<void> => {
     console.log('assignUserIdToSid user id', userId, typeof userId);
-    if (!userId || userId === null || userId === undefined || userId === NaN) {
+    if (!userId || userId === null || userId === undefined || Number.isNaN(
+        userId) || !sess || !sid || !expire) {
       return;
     }
     console.log('inserting in user_sessions', sid, userId, sess, expire);
     await this.pool.query(`
       INSERT INTO user_sessions (sid, user_id, sess, expire)
       VALUES ($1, $2, $3, $4)
-      ON CONFLICT (sid) DO UPDATE SET user_id = $2
+      ON CONFLICT (user_id, sid) DO UPDATE
+        SET sess = EXCLUDED.sess,
+            expire = EXCLUDED.expire
     `, [sid, userId, sess, expire]);
   }
 

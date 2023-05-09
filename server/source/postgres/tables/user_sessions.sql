@@ -18,4 +18,7 @@ ALTER TABLE user_sessions
         ON DELETE CASCADE
         ON UPDATE CASCADE;
 
+ALTER TABLE user_sessions
+  ADD CONSTRAINT uq_user_sessions_user_id_sid UNIQUE (user_id, sid);
+
 CREATE INDEX IDX_session_expire ON user_sessions ("expire");
