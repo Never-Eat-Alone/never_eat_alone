@@ -69,9 +69,11 @@ export class UserDatabase {
   public assignUserIdToSid = async (sid: string,
       userId: number | null | undefined, sess: object, expire: Date):
       Promise<void> => {
-    if (userId === null || userId === undefined) {
+    console.log('assignUserIdToSid user id', userId, typeof userId);
+    if (!userId || userId === null || userId === undefined || userId === NaN) {
       return;
     }
+    console.log('inserting in user_sessions', sid, userId, sess, expire);
     await this.pool.query(`
       INSERT INTO user_sessions (sid, user_id, sess, expire)
       VALUES ($1, $2, $3, $4)
