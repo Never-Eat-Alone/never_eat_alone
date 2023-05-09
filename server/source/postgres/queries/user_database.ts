@@ -78,8 +78,9 @@ export class UserDatabase {
     await this.pool.query(`
       INSERT INTO user_sessions (sid, user_id, sess, expire)
       VALUES ($1, $2, $3, $4)
-      ON CONFLICT (user_id, sid) DO UPDATE
-        SET sess = EXCLUDED.sess,
+      ON CONFLICT (sid) DO UPDATE
+        SET user_id = EXCLUDED.user_id,
+            sess = EXCLUDED.sess,
             expire = EXCLUDED.expire
     `, [sid, userId, sess, expire]);
   }
