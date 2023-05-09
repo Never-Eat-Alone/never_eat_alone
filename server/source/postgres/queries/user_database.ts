@@ -71,7 +71,7 @@ export class UserDatabase {
       Promise<void> => {
     console.log('assignUserIdToSid user id', userId, typeof userId);
     if (!userId || userId === null || userId === undefined || Number.isNaN(
-        userId) || !sess || !sid || !expire) {
+        userId) || userId === -1 || !sess || !sid || !expire) {
       return;
     }
     console.log('inserting in user_sessions', sid, userId, sess, expire);
