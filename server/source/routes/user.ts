@@ -52,14 +52,8 @@ export class UserRoutes {
     if (request.session && request.session.user) {
       console.log('request.session.user', request.session.user);
       const sessionUser = request.session.user;
-      const user = new User(
-        parseInt(sessionUser.id),
-        sessionUser.name,
-        sessionUser.email,
-        sessionUser.userName,
-        UserStatus[sessionUser.userStatus as keyof typeof UserStatus],
-        new Date(Date.parse(sessionUser.createdAt))
-      );
+      const user = await this.userDatabase.loadUserBySessionIdUserId(
+        request.session.id, parseInt(sessionUser.id));
       console.log('current user', user.id, user.name);
       response.status(200).json({ user: user.toJson() });
     } else {

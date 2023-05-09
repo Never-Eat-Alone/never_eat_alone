@@ -117,27 +117,27 @@ export class UserDatabase {
   /** Returns the user associated with the given session id.
    * @param id - Session id.
    */
-  public loadUserBySessionId = async (id: string): Promise<User> => {
+  public loadUserBySessionIdUserId = async (id: string, userId: number):
+      Promise<User> => {
     const guest = User.makeGuest();
-    const userIdResult = await this.pool.query(
-      'SELECT (user_id) FROM user_sessions WHERE sid = $1', [id]);
-    if (!userIdResult.rows || userIdResult.rows.length === 0 ||
-        !userIdResult.rows[0].user_id) {
+    const result = await this.pool.query(
+      'SELECT * FROM user_sessions WHERE sid = $1 AND user_id = $2', [id,
+        userId]);
+    if (!result.rows || result.rows.length === 0 || !result.rows[0].user_id) {
       return guest;
     }
     const userResult = await this.pool.query(
-      'SELECT * FROM users WHERE id = $1', [parseInt(
-        userIdResult.rows[0].user_id)]);
+      'SELECT * FROM users WHERE id = $1', [parseInt(result.rows[0].user_id)]);
     if (!userResult.rows || userResult.rows.length === 0) {
       return guest;
     }
-    const user = new User(parseInt(userResult.rows[0].id),
+    const user = new User(
+      parseInt(userResult.rows[0].id),
       userResult.rows[0].name, userResult.rows[0].email,
       userResult.rows[0].user_name,
       UserStatus[userResult.rows[0].user_status as keyof typeof UserStatus],
-      new Date(Date.parse(userResult.rows[0].created_at)));
-    await this.assignUserIdToSid(id, user.id, {}, new Date(Date.now() +
-      24 * 60 * 60 * 1000));
+      new Date(Date.parse(userResult.rows[0].created_at))
+    );
     return user;
   }
 
