@@ -118,15 +118,15 @@ export class UserDatabase {
   /** Returns the user associated with the given session id.
    * @param id - Session id.
    */
-  public loadUserBySessionIdUserId = async (id: string, userId: number):
-      Promise<User> => {
+  public loadUserBySessionIdUserId = async (id: string): Promise<User> => {
     const guest = User.makeGuest();
+    console.log('called loadUserBySessionIdUserId');
     const result = await this.pool.query(
-      'SELECT * FROM user_sessions WHERE sid = $1 AND user_id = $2', [id,
-        userId]);
+      'SELECT * FROM user_sessions WHERE sid = $1', [id]);
     if (!result.rows || result.rows.length === 0 || !result.rows[0].user_id) {
       return guest;
     }
+    console.log('load user with id', result.rows[0].user_id);
     const userResult = await this.pool.query(
       'SELECT * FROM users WHERE id = $1', [parseInt(result.rows[0].user_id)]);
     if (!userResult.rows || userResult.rows.length === 0) {
@@ -139,6 +139,7 @@ export class UserDatabase {
       UserStatus[userResult.rows[0].user_status as keyof typeof UserStatus],
       new Date(Date.parse(userResult.rows[0].created_at))
     );
+    console.log('loadUserBySessionIdUserId result', user);
     return user;
   }
 

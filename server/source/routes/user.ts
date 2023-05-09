@@ -50,10 +50,9 @@ export class UserRoutes {
   private getCurrentUser = async (request, response) => {
     console.log('getCurrentUser');
     if (request.session && request.session.user) {
-      console.log('request.session.user', request.session.user);
-      const sessionUser = request.session.user;
+      console.log('request.session.id', request.session.id);
       const user = await this.userDatabase.loadUserBySessionIdUserId(
-        request.session.id, parseInt(sessionUser.id));
+        request.session.id);
       console.log('current user', user.id, user.name);
       response.status(200).json({ user: user.toJson() });
     } else {
