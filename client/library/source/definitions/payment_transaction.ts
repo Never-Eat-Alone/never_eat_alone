@@ -91,8 +91,8 @@ export class PaymentTransaction {
       cardType: this._cardType,
       cardLast4digits: this._cardLast4digits,
       description: this._description,
-      scheduledAt: this._scheduledAt.toJSON(),
-      processedAt: this._processedAt.toJSON(),
+      scheduledAt: this._scheduledAt.toISOString(),
+      processedAt: this._processedAt.toISOString(),
       status: this._status,
       taxRate: this._taxRate
     };

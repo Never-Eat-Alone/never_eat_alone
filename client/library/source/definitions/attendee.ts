@@ -59,7 +59,7 @@ export class Attendee {
       guestCount: this._guestCount,
       status: this._status,
       profileImageSrc: this._profileImageSrc,
-      updatedAt: this._updatedAt.toJSON()
+      updatedAt: this._updatedAt.toISOString()
     };
   }
 

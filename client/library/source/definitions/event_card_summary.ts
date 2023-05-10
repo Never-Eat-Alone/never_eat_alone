@@ -111,8 +111,8 @@ export class EventCardSummary {
     return {
       eventId: this._eventId,
       eventTitle: this._eventTitle,
-      eventStartTime: this._eventStartTime.toJSON(),
-      eventEndTime: this._eventEndTime.toJSON(),
+      eventStartTime: this._eventStartTime.toISOString(),
+      eventEndTime: this._eventEndTime.toISOString(),
       restaurantName: this._restaurantName,
       restaurantPriceRange: this._restaurantPriceRange,
       cuisines: arrayToJson(this._cuisines),

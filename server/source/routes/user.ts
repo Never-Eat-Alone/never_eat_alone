@@ -51,7 +51,7 @@ export class UserRoutes {
     console.log('getCurrentUser');
     if (request.session && request.session.user) {
       console.log('request.session.id', request.session.id);
-      const user = await this.userDatabase.loadUserBySessionIdUserId(
+      const user = await this.userDatabase.loadUserBySessionId(
         request.session.id);
       console.log('current user', user.id, user.name);
       request.session.user = {
@@ -59,7 +59,7 @@ export class UserRoutes {
         name: user.name,
         email: user.email,
         userName: user.userName,
-        userStatus: UserStatus[user.userStatus],
+        userStatus: user.userStatus as UserStatus,
         createdAt: user.createdAt.toISOString()
       };
       response.status(200).json({ user: user.toJson() });

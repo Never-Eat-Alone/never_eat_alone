@@ -118,15 +118,16 @@ export class UserDatabase {
   /** Returns the user associated with the given session id.
    * @param id - Session id.
    */
-  public loadUserBySessionIdUserId = async (id: string): Promise<User> => {
+  public loadUserBySessionId = async (id: string): Promise<User> => {
     const guest = User.makeGuest();
     console.log('called loadUserBySessionIdUserId');
+    console.log('guest user status', guest.userStatus);
     const result = await this.pool.query(
       'SELECT * FROM user_sessions WHERE sid = $1', [id]);
     if (!result.rows || result.rows.length === 0 || !result.rows[0].user_id) {
       return guest;
     }
-    console.log('load user with id', result.rows[0].user_id);
+    console.log('load user with id', parseInt(result.rows[0].user_id));
     const userResult = await this.pool.query(
       'SELECT * FROM users WHERE id = $1', [parseInt(result.rows[0].user_id)]);
     if (!userResult.rows || userResult.rows.length === 0) {
@@ -136,10 +137,13 @@ export class UserDatabase {
       parseInt(userResult.rows[0].id),
       userResult.rows[0].name, userResult.rows[0].email,
       userResult.rows[0].user_name,
-      UserStatus[userResult.rows[0].user_status as keyof typeof UserStatus],
-      new Date(Date.parse(userResult.rows[0].created_at))
-    );
-    console.log('loadUserBySessionIdUserId result', user);
+      userResult.rows[0].user_status as UserStatus,
+      new Date(Date.parse(userResult.rows[0].created_at)));
+    console.log('loadUserBySessionIdUserId result', parseInt(userResult.rows[0].id),
+    userResult.rows[0].name, userResult.rows[0].email,
+    userResult.rows[0].user_name,
+    userResult.rows[0].user_status as UserStatus,
+    new Date(Date.parse(userResult.rows[0].created_at)));
     return user;
   }
 
@@ -176,9 +180,13 @@ export class UserDatabase {
     if (result.rows.length === 0) {
       return User.makeGuest();
     }
+    console.log('addGuestUserRequest', parseInt(result.rows[0].id), result.rows[0].name,
+    result.rows[0].email, result.rows[0].user_name,
+    result.rows[0].user_status as UserStatus,
+    new Date(Date.parse(result.rows[0].created_at)));
     return new User(parseInt(result.rows[0].id), result.rows[0].name,
       result.rows[0].email, result.rows[0].user_name,
-      UserStatus[result.rows[0].user_status as keyof typeof UserStatus],
+      result.rows[0].user_status as UserStatus,
       new Date(Date.parse(result.rows[0].created_at)));
   }
 

@@ -4,6 +4,7 @@ import { UserStatus } from './user_status';
 export class User {
   /** Creates a user from a json object. */
   public static fromJson(value: any): User {
+    console.log('User fromJson value.userStatus as UserStatus', value.userStatus as UserStatus);
     return new User(
       value.id,
       value.name,
@@ -55,13 +56,14 @@ export class User {
 
   /** Converts the user object to json. */
   public toJson(): any {
+    console.log('user toJson this._userStatus.toString()', this._userStatus.toString());
     return {
       id: this._id,
       name: this._name,
       email: this._email,
       userName: this._userName,
-      userStatus: this._userStatus,
-      createdAt: this._createdAt.toJSON()
+      userStatus: this._userStatus.toString(),
+      createdAt: this._createdAt.toISOString()
     };
   }
 
