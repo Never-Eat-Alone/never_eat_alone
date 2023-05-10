@@ -48,12 +48,18 @@ export class UserRoutes {
 
   /** Returns the current logged in user. */
   private getCurrentUser = async (request, response) => {
-    console.log('getCurrentUser');
+    console.log('Running getCurrentUser');
     if (request.session && request.session.user) {
-      console.log('request.session.id', request.session.id);
-      const user = await this.userDatabase.loadUserBySessionId(
-        request.session.id);
-      console.log('current user', user.id, user.name, user.userStatus as UserStatus);
+      let user: User;
+      console.log('Calling loadUserBySessionId for sid', request.session.id);
+      try {
+        user = await this.userDatabase.loadUserBySessionId(
+          request.session.id);
+        console.log('user', user.id, user.name, user.userStatus as UserStatus);
+      } catch (error) {
+        console.log('Failed at loadUserBySessionId', error);
+        response.status(500).send();
+      }
       request.session.user = {
         id: user.id,
         name: user.name,
@@ -62,6 +68,7 @@ export class UserRoutes {
         userStatus: user.userStatus,
         createdAt: user.createdAt.toISOString()
       };
+      console.log('user session updated based on loadedUser user: user.toJson()', user.toJson());
       response.status(200).json({ user: user.toJson() });
     } else {
       const guestUser = User.makeGuest();

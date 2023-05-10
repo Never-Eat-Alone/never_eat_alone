@@ -119,7 +119,8 @@ function runExpress(pool: Pool, config: any) {
     try {
       id = config.google_client_id;
     } catch (error) {
-      response.status(400).json({ google_client_id: id, message: 'ERROR' });
+      console.log('Failed at reading config.google_client_id', error);
+      response.status(500).json({ google_client_id: id, message: 'ERROR' });
       return;
     }
     response.status(200).json({ google_client_id: id });

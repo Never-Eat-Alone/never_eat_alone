@@ -1,4 +1,5 @@
 import { HeaderModel } from '../components';
+import { User, UserStatus } from '../definitions';
 import { InviteAFoodieModel } from '../modals';
 import { JoinModel } from '../modals/join_modal';
 import { LogInModel } from '../modals/log_in_modal';
@@ -16,14 +17,16 @@ import { SettingsPageModel } from './settings_page';
 import { SignUpPageModel } from './sign_up_page';
 
 export class LocalApplicationModel extends ApplicationModel {
-  constructor(headerModel: HeaderModel, homePageModel: HomePageModel,
-      inviteAFoodieModel: InviteAFoodieModel, joinModel: JoinModel,
-      partnerWithUsModel: PartnerWithUsModel, logInModel: LogInModel,
+  constructor(account: User, headerModel: HeaderModel,
+      homePageModel: HomePageModel, inviteAFoodieModel: InviteAFoodieModel,
+      joinModel: JoinModel, partnerWithUsModel: PartnerWithUsModel,
+      logInModel: LogInModel,
       deletedAccountSurveyModel: DeletedAccountSurveyModel,
       deactivateAccountSurveyModel: DeactivateAccountSurveyModel,
       forgotPasswordPageModel: ForgotPasswordPageModel,
       googleClientId: string) {
     super();
+    this._account = account;
     this._headerModel = headerModel;
     this._homepageModel = homePageModel;
     this._inviteAFoodieModel = inviteAFoodieModel;
@@ -46,6 +49,10 @@ export class LocalApplicationModel extends ApplicationModel {
   public async load(): Promise<void> {
     await Promise.all([this._headerModel.load(), this._homepageModel.load(),
       this._inviteAFoodieModel.load()]);
+  }
+
+  public get account(): User {
+    return this._account;;
   }
 
   public get headerModel(): HeaderModel {
@@ -142,6 +149,7 @@ export class LocalApplicationModel extends ApplicationModel {
     return this._emailConfirmationPageModelMap.get(id);
   }
 
+  private _account: User;
   private _headerModel: HeaderModel;
   private _homepageModel: HomePageModel;
   private _inviteAFoodieModel: InviteAFoodieModel;
