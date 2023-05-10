@@ -74,7 +74,7 @@ export class UserDatabase {
         userId) || userId === -1 || !sess || !sid || !expire) {
       return;
     }
-    console.log('inserting in user_sessions', sid, userId, sess, expire);
+    console.log('inserting in user_sessions', sid, userId, sess, expire.toISOString());
     await this.pool.query(`
       INSERT INTO user_sessions (sid, user_id, sess, expire)
       VALUES ($1, $2, $3, $4)
@@ -82,7 +82,7 @@ export class UserDatabase {
         SET user_id = EXCLUDED.user_id,
             sess = EXCLUDED.sess,
             expire = EXCLUDED.expire
-    `, [sid, userId, sess, expire]);
+    `, [sid, userId, sess, expire.toISOString()]);
   }
 
   /** Returns a user based on the given email address.
@@ -139,11 +139,6 @@ export class UserDatabase {
       userResult.rows[0].user_name,
       userResult.rows[0].user_status as UserStatus,
       new Date(Date.parse(userResult.rows[0].created_at)));
-    console.log('loadUserBySessionIdUserId result', parseInt(userResult.rows[0].id),
-    userResult.rows[0].name, userResult.rows[0].email,
-    userResult.rows[0].user_name,
-    userResult.rows[0].user_status as UserStatus,
-    new Date(Date.parse(userResult.rows[0].created_at)));
     return user;
   }
 

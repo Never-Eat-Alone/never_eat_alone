@@ -4,7 +4,6 @@ import { UserStatus } from './user_status';
 export class User {
   /** Creates a user from a json object. */
   public static fromJson(value: any): User {
-    console.log('User fromJson value.userStatus as UserStatus', value.userStatus as UserStatus);
     return new User(
       value.id,
       value.name,
