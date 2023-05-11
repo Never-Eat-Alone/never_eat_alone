@@ -36,17 +36,19 @@ export class AlbumSummary extends React.Component<Properties> {
         };
       }
     })();
-    const cardList = [];
-    for (let i = 0; i < Math.min(this.props.imageList.length,
-        numberOfDisplayedCards); ++i) {
-      const image = this.props.imageList[i];
-      cardList.push(
-        <AlbumCard
-          key={i}
-          id={image.id}
-          src={image.src}
-          displayMode={this.props.displayMode}
-        />);
+    const cardList: JSX.Element[] = [];
+    if (this.props.imageList && this.props.imageList.length !== 0) {
+      for (let i = 0; i < Math.min(this.props.imageList.length,
+          numberOfDisplayedCards); ++i) {
+        const image = this.props.imageList[i];
+        cardList.push(
+          <AlbumCard
+            key={i}
+            id={image.id}
+            src={image.src}
+            displayMode={this.props.displayMode}
+          />);
+      }
     }
     return (
       <div style={{...CONTAINER_STYLE, ...containerStyle}} >
