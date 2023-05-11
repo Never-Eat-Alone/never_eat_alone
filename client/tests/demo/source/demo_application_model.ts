@@ -152,6 +152,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const userArthur = new NeverEatAlone.User(2, 'Arthur', 'arthur@gmail.com',
       'arthur123', NeverEatAlone.UserStatus.ACTIVE, new Date(2022, 10, 11, 1, 5,
       35));
+    this._account = userArthur;
     const arthurProfileImage = new NeverEatAlone.UserProfileImage(2, 2,
       'resources/images/profileguy3.jpeg');
     const attendeeList1: NeverEatAlone.Attendee[] = [
@@ -447,6 +448,10 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return;
   }
 
+  public get account(): NeverEatAlone.User {
+    return this._account;
+  }
+
   public get headerModel(): NeverEatAlone.HeaderModel {
     return this._headerModel;
   }
@@ -547,6 +552,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return this._googleClientId;
   }
 
+  private _account: NeverEatAlone.User;
   private _headerModel: NeverEatAlone.HeaderModel;
   private _homePageModel: NeverEatAlone.HomePageModel;
   private _diningEventModelMap: Map<number, NeverEatAlone.DiningEventPageModel>;
