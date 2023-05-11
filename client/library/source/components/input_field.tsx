@@ -28,16 +28,17 @@ interface InputFieldWithIconProperties extends InputFieldProperties {
 }
 
 export function InputFieldWithIcon(props: InputFieldWithIconProperties) {
-  const { hasError, iconSrc, iconAlt, style, ...inputProps } = props;
+  const { hasError, iconSrc, iconAlt, iconContainerStyle, iconStyle, style,
+    ...inputProps } = props;
   return (
     <div
         style={{...CONTAINER_STYLE, ...CONTAINER_WITH_ICON_STYLE, ...style}}
         className={inputProps.disabled && css(styles.disabled) ||
           hasError && css(styles.hasError) || css(styles.container)}
     >
-      <div style={{...ICON_CONTAINER_STYLE, ...props.iconContainerStyle}} >
+      <div style={{...ICON_CONTAINER_STYLE, ...iconContainerStyle}} >
         <img
-          style={{...ICON_STYLE, ...props.iconStyle}}
+          style={{...ICON_STYLE, ...iconStyle}}
           src={iconSrc}
           alt={iconAlt}
         />

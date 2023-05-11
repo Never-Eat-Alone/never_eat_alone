@@ -466,6 +466,7 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private renderWhatIsNea = () => {
+    console.log('renderWhatIsNea');
     return <WhatIsNeaPage
       displayMode={this.state.displayMode}
       onCreateAccountClick={this.handleJoinButton}
