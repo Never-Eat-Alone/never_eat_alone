@@ -220,12 +220,12 @@ export class ApplicationController extends React.Component<Properties, State> {
               path='/what_is_nea'
               render={this.renderWhatIsNea}
             />
-            <Router.Route render={this.renderErrorPage404} />
             <Router.Route
               exact
               path='/'
               render={this.renderHomePage}
             />
+            <Router.Route render={this.renderErrorPage404} />
           </Router.Switch>
         </Shell>
       </div>);
