@@ -236,11 +236,18 @@ export class ApplicationController extends React.Component<Properties, State> {
     window.addEventListener('resize', this.handleSize);
     try {
       await this.props.model.load();
-      this.setState({ isLoaded: true, hasError: false });
+      this.setState(
+        {
+          isLoaded: true,
+          hasError: false,
+          account: this.props.model.account
+        },
+        () => {
+          this.setState({ loggedIn: this.isLoggedIn() });
+        });
     } catch (error) {
       this.setState({ isLoaded: true, hasError: true });
     }
-    return;
   }
 
   public async componentDidUpdate(prevProps: Properties,
@@ -248,7 +255,16 @@ export class ApplicationController extends React.Component<Properties, State> {
     if (prevState.loggedIn !== this.state.loggedIn) {
       try {
         await this.props.model.load();
-        this.setState({ isLoaded: true, hasError: false });
+        this.setState(
+          {
+            isLoaded: true,
+            hasError: false,
+            account: this.props.model.account
+          },
+          () => {
+            this.setState({ loggedIn: this.isLoggedIn() });
+          }
+        );
       } catch (error) {
         this.setState({ isLoaded: true, hasError: true });
       }
@@ -258,6 +274,23 @@ export class ApplicationController extends React.Component<Properties, State> {
 
   public componentWillUnmount(): void {
     window.removeEventListener('resize', this.handleSize);
+  }
+
+  public updateAccount(user: User): void {
+    this.setState({
+      account: user,
+      loggedIn: true
+    }, () => {
+      this.props.model.load().catch((error) => {
+        this.setState({ hasError: true });
+      });
+    });
+  }
+
+  private isLoggedIn(): boolean {
+    return this.state.account.id !== -1 &&
+      (this.state.account.userStatus === UserStatus.ACTIVE ||
+      this.state.account.userStatus === UserStatus.DEACTIVE);
   }
 
   private handleSize = () => {
@@ -302,16 +335,13 @@ export class ApplicationController extends React.Component<Properties, State> {
     if (this.state.isLogInButtonClicked) {
       this.handleLogInModalClose();
     }
-    this.setState({
-      account: user,
-      loggedIn: true
-    });
+    this.updateAccount(user);
   }
 
   private handleLogOut = async () => {
     const isLoggedOut = await this.props.model.logInModel.logOut();
     if (isLoggedOut) {
-      this.setState({ account: User.makeGuest(), loggedIn: false });
+      this.updateAccount(User.makeGuest());
     }
   }
 

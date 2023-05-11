@@ -1,5 +1,6 @@
 import * as Bodyparser from 'body-parser';
 import * as Cors from 'cors';
+import * as CookieParser from 'cookie-parser';
 import * as Express from 'express';
 import * as Session from 'express-session';
 import * as fs from 'fs';
@@ -103,20 +104,22 @@ function runExpress(pool: Pool, config: any) {
     saveUninitialized: true,
     cookie: {
       maxAge: 10 * 365 * 24 * 60 * 60 * 1000,
-      secure: false,
+      secure: false
     }
   };
+
   app.set('trust proxy', 1);
   if (app.get('env') === 'production') {
     session.cookie.secure = true // serve secure cookies
   }
+  app.use(CookieParser());
   app.use(Session(session));
   app.get('/api/google_client_id', (request, response) => {
     let id = '';
     try {
       id = config.google_client_id;
     } catch (error) {
-      response.status(400).json({ google_client_id: id, message: 'ERROR' });
+      response.status(500).json({ google_client_id: id, message: 'ERROR' });
       return;
     }
     response.status(200).json({ google_client_id: id });
@@ -144,27 +147,37 @@ function runExpress(pool: Pool, config: any) {
   app.get('*', (request, response, next) => {
     response.sendFile(path.join(process.cwd(), 'public', 'index.html'));
   });
-  app.listen(config.port, async () => {
-    await initializePostgres(pool, '../source/postgres/types/', 'type');
-    await initializePostgres(pool, '../source/postgres/tables/', 'table', [
-      'users',
-      'user_sessions',
-      'avatars',
-      'user_confirmation_tokens',
-      'user_invitation_codes',
-      'user_credentials',
-      'user_profile_images',
-      'social_media_images',
-      'cuisines',
-      'locations',
-      'restaurants',
-      'restaurant_cuisines',
-      'dining_events',
-      'delete_account_survey',
-      'deactivate_account_survey',
-      'attendees'
-    ]);
-  });
+  // Start the server after initializing the tables
+  const startServer = async () => {
+    try {
+      await initializePostgres(pool, '../source/postgres/types/', 'type');
+      await initializePostgres(pool, '../source/postgres/tables/', 'table', [
+        'users',
+        'user_sessions',
+        'avatars',
+        'user_confirmation_tokens',
+        'user_invitation_codes',
+        'user_credentials',
+        'user_profile_images',
+        'social_media_images',
+        'cuisines',
+        'locations',
+        'restaurants',
+        'restaurant_cuisines',
+        'dining_events',
+        'delete_account_survey',
+        'deactivate_account_survey',
+        'attendees'
+      ]);
+      app.listen(config.port, async () => {
+        console.log('Server started successfully.');
+      });
+    } catch (error) {
+      console.error('Error initializing tables:', error);
+    }
+  }
+
+  startServer();
 }
 
 async function main() {

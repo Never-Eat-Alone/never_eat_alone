@@ -34,10 +34,11 @@ export class GoogleLogInButton extends React.Component<Properties> {
   }
 
   public render(): JSX.Element {
+    const { label, clientId, onSuccess, ...buttonProps } = this.props;
     return (
       <button
-          {...this.props}
-          style={{...BUTTON_STYLE, ...this.props.style}}
+          {...buttonProps}
+          style={{...BUTTON_STYLE, ...buttonProps.style}}
           className={css(styles.button)}
           onClick={this.onGoogleSignIn}
       >
@@ -48,7 +49,7 @@ export class GoogleLogInButton extends React.Component<Properties> {
               alt='Google'
               src='resources/google_log_in_button/icons/google.svg'
             />
-            <span>{this.props.label}</span>
+            <span>{label}</span>
           </div>
         </div>
       </button>);

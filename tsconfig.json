@@ -2,12 +2,12 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "build",
+    "lib": ["dom", "es2015", "es2017"],
     "types": [
       "node"
     ],
   },
   "include": [
-    "/**/*.ts",
     "/**/*.ts"
   ]
 }

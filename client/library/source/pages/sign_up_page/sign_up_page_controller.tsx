@@ -20,6 +20,7 @@ interface State {
   userProfileImage: UserProfileImage;
   isSetUpPage: boolean;
   redirect: string;
+  avatars: Avatar[];
 }
 
 export class SignUpPageController extends React.Component<Properties, State> {
@@ -33,7 +34,8 @@ export class SignUpPageController extends React.Component<Properties, State> {
       displayName: '',
       userProfileImage: UserProfileImage.NoImage(),
       password: '',
-      redirect: null
+      redirect: null,
+      avatars: []
     };
   }
 
@@ -50,7 +52,7 @@ export class SignUpPageController extends React.Component<Properties, State> {
         displayMode={this.props.displayMode}
         displayName={this.state.displayName}
         selectedImage={this.state.userProfileImage}
-        avatars={this.props.model.avatars}
+        avatars={this.state.avatars}
         onUploadImageClick={this.handleUploadImageClick}
         onLetsGoClick={this.handleLetsGoClick}
         onAvatarClick={this.handleAvatarClick}
@@ -71,7 +73,8 @@ export class SignUpPageController extends React.Component<Properties, State> {
       this.setState({
         isLoaded: true,
         userProfileImage: this.props.model.defaultImage,
-        signUpPageErrorCode: SignUpPage.ErrorCode.NONE
+        signUpPageErrorCode: SignUpPage.ErrorCode.NONE,
+        avatars: this.props.model.avatars
       });
     } catch {
       this.setState({

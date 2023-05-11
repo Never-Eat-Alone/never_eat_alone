@@ -66,13 +66,21 @@ export class UserDatabase {
    * @param sess - Session object.
    * @param expire - Expiration date.
    */
-  public assignUserIdToSid = async (sid: string, userId: number, sess: object,
-      expire: Date): Promise<void> => {
+  public assignUserIdToSid = async (sid: string,
+      userId: number | null | undefined, sess: object, expire: Date):
+      Promise<void> => {
+    if (!userId || userId === null || userId === undefined || Number.isNaN(
+        userId) || userId === -1 || !sess || !sid || !expire) {
+      return;
+    }
     await this.pool.query(`
       INSERT INTO user_sessions (sid, user_id, sess, expire)
       VALUES ($1, $2, $3, $4)
-      ON CONFLICT (sid) DO UPDATE SET user_id = $2
-    `, [sid, userId, sess, expire]);
+      ON CONFLICT (sid) DO UPDATE
+        SET user_id = EXCLUDED.user_id,
+            sess = EXCLUDED.sess,
+            expire = EXCLUDED.expire
+    `, [sid, userId, sess, expire.toISOString()]);
   }
 
   /** Returns a user based on the given email address.
@@ -110,25 +118,22 @@ export class UserDatabase {
    */
   public loadUserBySessionId = async (id: string): Promise<User> => {
     const guest = User.makeGuest();
-    const userIdResult = await this.pool.query(
-      'SELECT (user_id) FROM user_sessions WHERE sid = $1', [id]);
-    if (!userIdResult.rows || userIdResult.rows.length === 0 ||
-        !userIdResult.rows[0].user_id) {
+    const result = await this.pool.query(
+      'SELECT * FROM user_sessions WHERE sid = $1', [id]);
+    if (!result.rows || result.rows.length === 0 || !result.rows[0].user_id) {
       return guest;
     }
     const userResult = await this.pool.query(
-      'SELECT * FROM users WHERE id = $1', [parseInt(
-        userIdResult.rows[0].user_id)]);
+      'SELECT * FROM users WHERE id = $1', [parseInt(result.rows[0].user_id)]);
     if (!userResult.rows || userResult.rows.length === 0) {
       return guest;
     }
-    const user = new User(parseInt(userResult.rows[0].id),
+    const user = new User(
+      parseInt(userResult.rows[0].id),
       userResult.rows[0].name, userResult.rows[0].email,
       userResult.rows[0].user_name,
-      UserStatus[userResult.rows[0].user_status as keyof typeof UserStatus],
+      userResult.rows[0].user_status as UserStatus,
       new Date(Date.parse(userResult.rows[0].created_at)));
-    await this.assignUserIdToSid(id, user.id, {}, new Date(Date.now() +
-      24 * 60 * 60 * 1000));
     return user;
   }
 
@@ -167,7 +172,7 @@ export class UserDatabase {
     }
     return new User(parseInt(result.rows[0].id), result.rows[0].name,
       result.rows[0].email, result.rows[0].user_name,
-      UserStatus[result.rows[0].user_status as keyof typeof UserStatus],
+      result.rows[0].user_status as UserStatus,
       new Date(Date.parse(result.rows[0].created_at)));
   }
 

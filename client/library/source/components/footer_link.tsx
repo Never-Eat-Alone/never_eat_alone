@@ -8,16 +8,15 @@ interface Properties extends Router.LinkProps {
   label: string;
 }
 
-export function FooterLink(props: Properties) {
-  const lineHeight = (props.displayMode === DisplayMode.MOBILE &&
-    '22px') || '15px';
+export function FooterLink({ displayMode, label, ...props}: Properties) {
+  const lineHeight = (displayMode === DisplayMode.MOBILE && '22px') || '15px';
   return (
     <Router.Link
         {...props}
         style={{...LINK_STYLE, ...props.style}}
         className={css(styles.link)}
     >
-      <p style={{...LABEL_STYLE, lineHeight: lineHeight}} >{props.label}</p>
+      <p style={{...LABEL_STYLE, lineHeight: lineHeight}} >{label}</p>
     </Router.Link>);
 }
 

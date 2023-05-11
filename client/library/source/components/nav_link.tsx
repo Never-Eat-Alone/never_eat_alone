@@ -8,14 +8,14 @@ interface Properties extends Router.LinkProps {
   className?: string;
 }
 
-export function NavLink(props: Properties) {
+export function NavLink({ label, style, className, ...props }: Properties) {
   return (
     <Router.Link
         {...props}
-        style={{...LINK_STYLE, ...props.style}}
-        className={props.className}
+        style={{...LINK_STYLE, ...style}}
+        className={className}
     >
-      <p style={LABEL_STYLE} >{props.label}</p>
+      <p style={LABEL_STYLE} >{label}</p>
     </Router.Link>);
 }
 
@@ -64,15 +64,16 @@ export function AccentButtonNavLink(props: Properties) {
     />);
 }
 
-export function RedNavLinkWithArrow(props: Properties) {
+export function RedNavLinkWithArrow({ label, style, className, ...props }:
+    Properties) {
   return (
     <Router.Link
         {...props}
         style={{...LINK_STYLE, ...NAVLINK_WITH_ARROW_CONTAINER_STYLE,
-          ...REDLINK_WITH_ARROW_STYLE, ...props.style}}
+          ...REDLINK_WITH_ARROW_STYLE, ...style}}
         className={css(styles.redNavLink)}
     >
-      <p style={LABEL_STYLE} >{props.label}</p>
+      <p style={LABEL_STYLE} >{label}</p>
       <svg
           style={ARROW_ICON_STYLE}
           width='8' height='8'

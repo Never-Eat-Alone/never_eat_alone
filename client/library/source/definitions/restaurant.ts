@@ -96,7 +96,7 @@ export class Restaurant {
     return {
       id: this._id,
       name: this._name,
-      createdAt: this._createdAt.toJSON(),
+      createdAt: this._createdAt.toISOString(),
       locationId: this._locationId,
       description: this._description,
       howToFind: this._howToFind,

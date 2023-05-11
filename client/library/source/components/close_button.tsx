@@ -6,8 +6,8 @@ interface Properties extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   displayMode: DisplayMode;
 }
 
-export function CloseButton(props: Properties) {
-  if (props.displayMode === DisplayMode.MOBILE) {
+export function CloseButton({ displayMode, ...props }: Properties) {
+  if (displayMode === DisplayMode.MOBILE) {
     return (
       <button {...props} style={{...MOBILE_BUTTON_STYLE, ...props.style}} >
         <svg style={MOBILE_ICON_STYLE} className={css(styles.mobileIcon)}

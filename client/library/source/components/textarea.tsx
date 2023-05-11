@@ -11,19 +11,20 @@ interface Properties extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
 
 export class Textarea extends React.Component<Properties> {
   public render(): JSX.Element {
+    const { hasError, value, ...textareaProps } = this.props;
     return (
       <div
           style={{...CONTAINER_STYLE, ...this.props.style}}
           className={this.props.disabled && css(styles.disabled) ||
-            this.props.hasError && css(styles.hasError) ||
+            hasError && css(styles.hasError) ||
             css(styles.container, styles.input)}
       >
         <textarea
-          {...this.props}
+          {...textareaProps}
           style={TEXTAREA_STYLE}
           onChange={this.handleOnChange}
         >
-          {this.props.value}
+          {value}
         </textarea>
       </div>);
   }
@@ -39,24 +40,25 @@ interface WithCounterProps extends Properties {
 
 export class TextareaWithCounter extends React.Component<WithCounterProps> {
   public render(): JSX.Element {
+    const { hasError, value, maxCount, ...textareaProps } = this.props;
     return (
       <div
           style={{...CONTAINER_STYLE, ...this.props.style}}
           className={this.props.disabled && css(styles.disabled) ||
-            this.props.hasError && css(styles.hasError) ||
+            hasError && css(styles.hasError) ||
             css(styles.container, styles.input)}
       >
         <textarea
-          {...this.props}
+          {...textareaProps}
           style={TEXTAREA_STYLE}
           onChange={this.handleOnChange}
         >
-          {this.props.value}
+          {value}
         </textarea>
         <div style={COUNTER_STYLE} >
           <CircularCounterWithCounterInside
-            value={this.props.value.length}
-            maxValue={this.props.maxCount}
+            value={value.length}
+            maxValue={maxCount}
           />
         </div>
       </div>);

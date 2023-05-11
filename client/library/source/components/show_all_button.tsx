@@ -7,14 +7,14 @@ interface Properties extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 /** Displays the ShowAll Button. */
-export function ShowAllButton(props: Properties) {
+export function ShowAllButton({ label, ...props }: Properties) {
   return (
     <button
         {...props}
         style={{...BUTTON_STYLE, ...props.style}}
         className={css(styles.button)}
     >
-      <div style={BUTTON_TEXT_STYLE} >{props.label}</div>
+      <div style={BUTTON_TEXT_STYLE} >{label}</div>
       <svg
         width='10' height='6' viewBox='0 0 10 6' fill='none'
         xmlns='http://www.w3.org/2000/svg'

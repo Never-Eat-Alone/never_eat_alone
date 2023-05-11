@@ -1,7 +1,16 @@
 export class AccountDeletedSurvey {
   public static fromJson(value: any): AccountDeletedSurvey {
-    return new AccountDeletedSurvey(value.id, value.userId, value.a1, value.a2,
-      value.a3, value.a4, value.a5, value.a6, value.message, value.createdAt);
+    return new AccountDeletedSurvey(
+      value.id,
+      value.userId,
+      value.a1,
+      value.a2,
+      value.a3,
+      value.a4,
+      value.a5,
+      value.a6,
+      value.message,
+      new Date(Date.parse(value.createdAt)));
   }
 
   constructor(id: number, userId: number, a1: boolean, a2: boolean, a3: boolean,
@@ -81,7 +90,7 @@ export class AccountDeletedSurvey {
       a6: this._a6,
       message: this._message,
       questions: this._questions,
-      createdAt: this._createdAt
+      createdAt: this._createdAt.toISOString()
     };
   }
 

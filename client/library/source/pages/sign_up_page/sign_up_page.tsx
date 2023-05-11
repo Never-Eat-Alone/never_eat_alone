@@ -115,14 +115,12 @@ export class SignUpPage extends React.Component<Properties, State> {
             <div style={TERMS_CONTAINER_STYLE} >
               By clicking “Sign Up,” you agree to NeverEatAlone’s&nbsp;
               <RedNavLink
-                {...this.props}
                 style={LINK_STYLE}
                 to='/terms_of_use'
                 label='Terms of Use'
               />
               &nbsp;and&nbsp;
               <RedNavLink
-                {...this.props}
                 style={LINK_STYLE}
                 to='/privacy_policy'
                 label='Privacy Policy'

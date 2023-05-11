@@ -9,10 +9,11 @@ interface Properties extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 export class FacebookLogInButton extends React.Component<Properties> {
   public render(): JSX.Element {
+    const { label, clientId, onSuccess, ...buttonProps } = this.props;
     return (
       <button
-          {...this.props}
-          style={{...BUTTON_STYLE, ...this.props.style}}
+          {...buttonProps}
+          style={{...BUTTON_STYLE, ...buttonProps.style}}
           className={css(styles.button)}
           onClick={this.onFacebookSignIn}
       >
@@ -21,7 +22,7 @@ export class FacebookLogInButton extends React.Component<Properties> {
           src='resources/facebook_log_in_button/icons/facebook.svg'
           alt='Facebook Icon'
         />
-        <span>{this.props.label}</span>
+        <span>{label}</span>
       </button>);
   }
 

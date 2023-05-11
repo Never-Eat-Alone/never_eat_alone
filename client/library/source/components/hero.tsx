@@ -80,7 +80,7 @@ export class Hero extends React.Component<Properties> {
                 style={{...DETAILS_NO_EVENTS_CONTAINER_STYLE,
                   ...detailsNoEventsContainerStyle}}
             >
-              Welcome Back, {this.props.account.userName}!
+              Welcome Back, {this.props.account.name}!
             </div>
           </div>);
       }

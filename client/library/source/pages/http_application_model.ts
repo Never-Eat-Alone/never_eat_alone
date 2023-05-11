@@ -28,12 +28,13 @@ import { HttpSignUpPageModel, SignUpPageModel } from './sign_up_page';
 export class HttpApplicationModel extends ApplicationModel {
   public async load(): Promise<void> {
     const response = await fetch('/api/current_user');
-    let account = User.makeGuest();
+    let account: User;
     if (response.status === 200) {
       const responseObject = await response.json();
       account = User.fromJson(responseObject.user);
+    } else {
+      account = User.makeGuest();
     }
-    this._account = account;
     const googleClientIdResponse = await fetch('/api/google_client_id');
     const googleClientIdObject = await googleClientIdResponse.json();
     const googleClientId = googleClientIdObject.google_client_id;
@@ -46,11 +47,16 @@ export class HttpApplicationModel extends ApplicationModel {
     const deletedAccountSurveyModel = new HttpDeletedAccountSurveyModel();
     const deactivateAccountSurveyModel = new HttpDeactivateAccountSurveyModel();
     const forgotPasswordPageModel = new HttpForgotPasswordPageModel();
-    this._model = new LocalApplicationModel(headerModel, homePageModel,
+    this._model = new LocalApplicationModel(account, headerModel,
+      homePageModel,
       inviteAFoodieModel, joinModel, partnerWithUsModel, logInModel,
       deletedAccountSurveyModel, deactivateAccountSurveyModel,
       forgotPasswordPageModel, googleClientId);
     await this._model.load();
+  }
+
+  public get account(): User {
+    return this._model.account;
   }
 
   public get headerModel(): HeaderModel {
@@ -153,7 +159,7 @@ export class HttpApplicationModel extends ApplicationModel {
   public getSignUpPageModel(id: number): SignUpPageModel {
     let signUpPageModel = this._model.getSignUpPageModel(id);
     if (!signUpPageModel) {
-      signUpPageModel = new HttpSignUpPageModel(this._account);
+      signUpPageModel = new HttpSignUpPageModel(this._model.account);
       this.addSignUpPageModel(id, signUpPageModel);
     }
     return signUpPageModel;
@@ -181,5 +187,4 @@ export class HttpApplicationModel extends ApplicationModel {
   }
 
   private _model: ApplicationModel;
-  private _account: User;
 }

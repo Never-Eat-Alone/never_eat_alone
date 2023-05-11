@@ -163,15 +163,15 @@ export class DiningEvent {
       seating: this._seating,
       location: this._location.toJson(),
       reservationName: this._reservationName,
-      startAt: this._startAt.toJSON(),
-      endAt: this._endAt.toJSON(),
+      startAt: this._startAt.toISOString(),
+      endAt: this._endAt.toISOString(),
       description: this._description,
-      rsvpOpenAt: this._rsvpOpenAt.toJSON(),
-      rsvpCloseAt: this._rsvpCloseAt.toJSON(),
+      rsvpOpenAt: this._rsvpOpenAt.toISOString(),
+      rsvpCloseAt: this._rsvpCloseAt.toISOString(),
       status: this._status,
       type: this._type,
-      createdAt: this._createdAt.toJSON(),
-      updatedAt: this._updatedAt.toJSON()
+      createdAt: this._createdAt.toISOString(),
+      updatedAt: this._updatedAt.toISOString()
     };
   }
 

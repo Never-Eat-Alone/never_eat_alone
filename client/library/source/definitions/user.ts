@@ -60,8 +60,8 @@ export class User {
       name: this._name,
       email: this._email,
       userName: this._userName,
-      userStatus: this._userStatus,
-      createdAt: this._createdAt.toJSON()
+      userStatus: this._userStatus.toString(),
+      createdAt: this._createdAt.toISOString()
     };
   }
 

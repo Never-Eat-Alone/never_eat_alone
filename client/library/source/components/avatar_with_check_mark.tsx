@@ -8,16 +8,17 @@ interface Properties extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   imageSrc: string;
 }
 
-export function AvatarWithCheckMark(props: Properties) {
+export function AvatarWithCheckMark({ isMarked, imageSrc, ...props }:
+    Properties) {
   return (
     <button {...props} style={CONTAINER_STYLE} >
       <img
         style={ICON_STYLE}
-        src={props.imageSrc}
+        src={imageSrc}
         alt='Avatar'
       />
       <div
-          style={{ display: props.isMarked && 'block' || 'none', ...RING_STYLE}}
+          style={{ display: isMarked && 'block' || 'none', ...RING_STYLE}}
       >
         <div style={CHECKMARK_CONTAINER_STYLE} >
           <img
