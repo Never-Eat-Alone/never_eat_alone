@@ -5,7 +5,7 @@ interface Properties extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   imageSrc: string;
 }
 
-export function ProfileRoundButton(props: Properties) {
+export function ProfileRoundButton({ imageSrc, ...props }: Properties) {
   return (
     <button
         {...props}
@@ -15,7 +15,7 @@ export function ProfileRoundButton(props: Properties) {
     >
       <img
         style={IMAGE_STYLE}
-        src={props.imageSrc}
+        src={imageSrc}
         alt='Profile Image'
       />
     </button>);
