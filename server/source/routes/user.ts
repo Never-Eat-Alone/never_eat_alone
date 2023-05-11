@@ -48,14 +48,11 @@ export class UserRoutes {
 
   /** Returns the current logged in user. */
   private getCurrentUser = async (request, response) => {
-    console.log('Running getCurrentUser');
     if (request.session && request.session.user) {
       let user: User;
-      console.log('Calling loadUserBySessionId for sid', request.session.id);
       try {
         user = await this.userDatabase.loadUserBySessionId(
           request.session.id);
-        console.log('user', user.id, user.name, user.userStatus as UserStatus);
       } catch (error) {
         console.log('Failed at loadUserBySessionId', error);
         response.status(500).send();
@@ -68,22 +65,17 @@ export class UserRoutes {
         userStatus: user.userStatus,
         createdAt: user.createdAt.toISOString()
       };
-      console.log('user session updated based on loadedUser user: user.toJson()', user.toJson());
       response.status(200).json({ user: user.toJson() });
     } else {
       const guestUser = User.makeGuest();
-      console.log('No session or session user found. current user is guest');
       response.status(200).json({ user: guestUser.toJson() });
     }
   }
 
   /** Registers the user request to join the app. */
   private join = async (request, response) => {
-    console.log('Running join');
     const { name, email, referralCode } = request.body;
     let isEmail: boolean;
-    console.log(name, email, referralCode);
-    console.log('Calling isDuplicateEmail');
     try {
       isEmail = await this.userDatabase.isDuplicateEmail(email);
     } catch (error) {
@@ -92,22 +84,17 @@ export class UserRoutes {
       return;
     }
     let user: User;
-    console.log('isEmail', isEmail);
     if (isEmail) {
-      console.log('Calling loadUserByEmail as found duplicated email');
       try {
         const userByEmail = await this.userDatabase.loadUserByEmail(email);
-        console.log('userByEmail status', userByEmail.userStatus);
         if (userByEmail.userStatus === UserStatus.ACTIVE ||
             userByEmail.userStatus === UserStatus.BANNED ||
             userByEmail.userStatus === UserStatus.DEACTIVE) {
-          console.log('response status 400 as user status was active, banned or deactive.');
           response.status(400).json({ message: 'DUPLICATE_EMAIL' });
           return;
         }
         if (userByEmail.userStatus === UserStatus.PENDING) {
           user = userByEmail;
-          console.log('user status was pending and user value is updated to', user);
         }
       } catch (error) {
         console.log('Failed at loadUserByEmail', error);
@@ -116,12 +103,9 @@ export class UserRoutes {
       }
     }
     if (!user || user.id === -1) {
-      console.log('user is guest (new)');
       try {
-        console.log('calling the addGuestUserRequest');
         user = await this.userDatabase.addGuestUserRequest(name, email,
           referralCode);
-        console.log('addGuestUserRequest success', user.id, user.name, user.userStatus);
       } catch (error) {
         response.status(500).json({ message: 'DATABASE_ERROR' });
         console.log('Failed to addGuestUserRequest:', error);
@@ -140,9 +124,7 @@ export class UserRoutes {
     });
     let token: string;
     try {
-      console.log('calling getConfirmationToken for user id', user.id);
       token = await this.getConfirmationToken(email, user.id);
-      console.log('token created succesfuly', token);
     } catch (error) {
       console.log('CONFIRMATION_TOKEN_ERROR in Database:', error);
       response.status(201).json({
@@ -154,7 +136,6 @@ export class UserRoutes {
     const newHtml = confirmationHtml.replace('{{name}}', name).replace(
       '{{token}}', token);
     try {
-      console.log('Calling sendEmail');
       await this.sendEmail(email, 'info@nevereatalone.net',
         'NEA Account: Registration Request', newHtml);
     } catch (error) {
@@ -165,15 +146,12 @@ export class UserRoutes {
       });
       return;
     }
-    console.log('email sent successfully for confirmation');
     request.session.cookie.maxAge = 24 * 60 * 60 * 1000;
-    console.log('calling assignUserIdToSid', request.session.id, user.id);
     try {
       const sessionExpiration = new Date(
         Date.now() + request.session.cookie.maxAge);
       await this.userDatabase.assignUserIdToSid(request.session.id, user.id,
         request.session, sessionExpiration);
-      console.log('assignUserIdToSid was successful!');
     } catch (error) {
       console.log('Failed at assignUserIdToSid:', error);
       response.status(500).json({ message: 'DATABASE_ERROR' });
@@ -187,16 +165,12 @@ export class UserRoutes {
       userStatus: user.userStatus,
       createdAt: user.createdAt.toISOString()
     };
-    console.log('Updated request.session.user object.', request.session.user);
-    console.log('201 response for user', user.toJson());
     response.status(201).json({ user: user.toJson(), message: '' });
   }
 
   private signUp = async (request, response) => {
-    console.log('Running signUp');
     const userId = parseInt(request.params.id);
     let user = User.makeGuest();
-    console.log('Calling loadUserById for id', userId);
     try {
       user = await this.userDatabase.loadUserById(userId);
     } catch (error) {
@@ -205,13 +179,11 @@ export class UserRoutes {
       return;
     }
     if (!user || user.id === -1 || user.userStatus !== UserStatus.ACTIVE) {
-      console.log('Redirect 303 to join page because !user || user.id === -1 || user.userStatus !== UserStatus.ACTIVE');
       response.redirect(303, 'http://nevereatalone.net/join');
       return;
     }
     let hasCredentials = false;
     try {
-      console.log('Calling hasCredentials for userId', userId);
       hasCredentials = await this.userDatabase.hasCredentials(userId);
     } catch (error) {
       console.log('Failed at hasCredentials', error);
@@ -219,32 +191,26 @@ export class UserRoutes {
       return;
     }
     if (hasCredentials) {
-      console.log('redirect 303 to login becasue hasCredentials is true.');
       response.redirect(303, 'http://nevereatalone.net/log_in');
       return;
     }
     let userProfileImage = UserProfileImage.NoImage();
-    console.log('Calling loadProfileImageByUserId for userId', userId);
     try {
       userProfileImage = 
         await this.userProfileImageDatabase.loadProfileImageByUserId(userId);
     } catch (error) {
-      console.log('Failed at loadProfileImageByUserId', error);
       response.status(500).send();
       return;
     }
     let avatars: Avatar[] = [];
     try {
-      console.log('Calling loadAvatars');
       const tempAvatars = await this.userDatabase.loadAvatars();
       avatars = [...tempAvatars];
-      console.log('Avatars loaded successfully', avatars.length);
     } catch (error) {
       console.log('Failed at loadAvatars', error);
       response.status(500).send();
       return;
     }
-    console.log('200 response signUp', user.email, userProfileImage.toJson(), arrayToJson(avatars));
     response.status(200).json({
       email: user.email,
       userProfileImage: userProfileImage.toJson(),
@@ -253,10 +219,8 @@ export class UserRoutes {
   }
 
   private setUpProfile = async (request, response) => {
-    console.log('Running setUpProfile');
     const displayName = request.body.displayName;
     const image = UserProfileImage.fromJson(request.body.image);
-    console.log('Calling saveUserProfile with image', image, 'displayName', displayName);
     try {
       await this.userDatabase.saveUserProfile(image, displayName);
     } catch (error) {
@@ -264,15 +228,12 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
-    console.log('Response 201 as saveUserProfile was successful.');
     response.status(201).send();
   }
 
   private setUpPassword = async (request, response) => {
-    console.log('Running setUpPassword');
     const userId = parseInt(request.params.id);
     const { password } = request.body;
-    console.log('Calling addUserCredentials for userId', userId, 'password', password);
     try {
       await this.userDatabase.addUserCredentials(userId, password);
     } catch (error) {
@@ -280,38 +241,28 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
-    console.log('response 200 as addUserCredentials was successful.');
     response.status(200).send();
   }
 
   /** Checks user credentials for login. */
   private logIn = async (request, response) => {
-    console.log('Running logIn');
     const { email, password, rememberMe } = request.body;
-    console.log('Calling loadUserByEmail for email', email);
     const user = await this.userDatabase.loadUserByEmail(email);
     if (!email || user.id === -1) {
-      console.log('response 401 as !email || user.id === -1');
       response.status(401).json({ message: 'INVALID_CREDENTIALS' });
       return;
     }
-    console.log('Calling validatePassword');
     const isValidPassword =
       await this.userDatabase.validatePassword(user.id, password);
-    console.log('isValidPassword', isValidPassword);
     if (!isValidPassword) {
-      console.log('response 401 as isValidPassword was false');
       response.status(401).json({ message: 'INVALID_CREDENTIALS' });
       return;
     }
-    console.log('rememberMe', rememberMe);
     if (rememberMe) {
       request.session.cookie.maxAge = 30 * 365 * 24 * 60 * 60 * 1000;
     } else {
       request.session.cookie.maxAge = 24 * 60 * 60 * 1000;
     }
-    console.log('request.session.cookie.maxAge', request.session.cookie.maxAge);
-    console.log('Calling assignUserIdToSid for sid', request.session.id, 'userId', user.id, 'session', request.session);
     try {
       const sessionExpiration = new Date(
         Date.now() + request.session.cookie.maxAge);
@@ -322,7 +273,6 @@ export class UserRoutes {
       response.status(500).json({ message: 'DATABASE_ERROR' });
       return;
     }
-    console.log('Successful assignUserIdToSid');
     // Set the user object in the session
     request.session.user = {
       id: user.id,
@@ -332,8 +282,6 @@ export class UserRoutes {
       userStatus: user.userStatus,
       createdAt: user.createdAt.toISOString()
     };
-    console.log('Update user session',user.id, user.name, user.email, user.userName, user.userStatus, user.createdAt.toISOString());
-    console.log('response 200 with user', user.toJson());
     response.status(200).json({ user: user.toJson() });
   }
 
@@ -344,10 +292,8 @@ export class UserRoutes {
    * @param userId - The user id based on the users table.
    */
   private getConfirmationToken = async (email: string, userId: number) => {
-    console.log('Running getConfirmationToken');
     let token = '';
     try {
-      console.log('Calling getTokenByUserId');
       token = await this.userDatabase.getTokenByUserId(userId);
     } catch (error) {
       console.log('Database failed at getTokenByUserId', error);
@@ -362,7 +308,6 @@ export class UserRoutes {
       const expiresAt = new Date();
       // The token expires in 24 hours.
       expiresAt.setDate(expiresAt.getDate() + 1);
-      console.log('Calling addConfirmationToken');
       await this.userDatabase.addConfirmationToken(confirmationTokenId,
         expiresAt, userId);
     } catch (error) {
@@ -399,9 +344,7 @@ export class UserRoutes {
 
   /** Logs out the user. */
   private logOut = async (request, response) => {
-    console.log('Running logOut');
     if (!request.session) {
-      console.log('response 400 as no session found');
       response.status(400).json({ message: 'NO_SESSION_FOUND' });
       return;
     }
@@ -412,7 +355,6 @@ export class UserRoutes {
         return;
       }
       response.clearCookie('connect.sid'); // Clear the session cookie
-      console.log('response 200 as user logged out successfully');
       response.status(200).send('Session data cleared');
     });
   }
@@ -422,11 +364,8 @@ export class UserRoutes {
    * page accordingly.
    */
   private verifyConfirmationToken = async (request, response) => {
-    console.log('Running verifyConfirmationToken');
     const token = request.params.id;
     let isTokenValid = false;
-    console.log('token', token);
-    console.log('Calling isTokenValid');
     try {
       isTokenValid = await this.userDatabase.isTokenValid(token);
     } catch (error) {
@@ -434,15 +373,12 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
-    console.log('isTokenValid', isTokenValid);
     if (!isTokenValid) {
-      console.log('redirect 303 to invalid token page');
       response.redirect(303,
         'http://nevereatalone.net/confirmation_token_invalid');
       return;
     }
     let userIdByToken: number;
-    console.log('Calling getUserIdByToken');
     try {
       userIdByToken = await this.userDatabase.getUserIdByToken(token);
     } catch (error) {
@@ -451,7 +387,6 @@ export class UserRoutes {
       return;
     }
     let user: User;
-    console.log('Calling loadUserById with is', userIdByToken);
     try {
       user = await this.userDatabase.loadUserById(userIdByToken);
     } catch (error) {
@@ -459,15 +394,12 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
-    console.log('userId', user.id, 'userStatus', user.userStatus);
     if (user.id === -1) {
-      console.log('redirect 303 to join page as user not regiestered');
       response.redirect(303, 'http://nevereatalone.net/join');
       return;
     }
     if (user.userStatus === UserStatus.ACTIVE) {
       let hasCredentials = false;
-      console.log('Calling hasCredentials for active user');
       try {
         hasCredentials = await this.userDatabase.hasCredentials(user.id);
       } catch (error) {
@@ -475,18 +407,14 @@ export class UserRoutes {
         response.status(500).send();
         return;
       }
-      console.log('hasCredentials', hasCredentials);
       if (hasCredentials) {
-        console.log('redirect 303 to log in');
         response.redirect(303, 'http://nevereatalone.net/log_in');
       } else {
-        console.log('redirect 303 to sign up page/', user.id);
         response.redirect(303, `http://nevereatalone.net/sign_up/${user.id}`);
       }
       return;
     }
     let id: number;
-    console.log('Calling updateUserStatusByConfirmationToken');
     try {
       id = await this.userDatabase.updateUserStatusByConfirmationToken(
         token);
@@ -496,7 +424,6 @@ export class UserRoutes {
       return;
     }
     request.session.cookie.maxAge = 24 * 60 * 60 * 1000;
-    console.log('Calling assignUserIdToSid');
     try {
       const sessionExpiration = new Date(
         Date.now() + request.session.cookie.maxAge);
@@ -507,7 +434,6 @@ export class UserRoutes {
       response.status(500).json({ message: 'DATABASE_ERROR' });
       return;
     }
-    console.log('Successful assignUserIdToSid');
     // Update the session with the user information
     request.session.user = {
       id: user.id,
@@ -517,7 +443,6 @@ export class UserRoutes {
       userStatus: user.userStatus,
       createdAt: user.createdAt.toISOString()
     };
-    console.log('session user is updated as userstatus is updated', user.id, user.userStatus);
     const signUpHtml = await new Promise<string>((resolve, reject) => {
       fs.readFile('public/resources/sign_up_email/email.html', 'utf8',
         (error, html) => {
@@ -530,7 +455,6 @@ export class UserRoutes {
     });
     const newHtml = signUpHtml.replace('{{name}}', user.name).replace('{{id}}',
       user.id.toString());
-    console.log('Calling sendEmail to send email to', user.email);
     try {
       await this.sendEmail(user.email, 'info@nevereatalone.net',
         'NEA Account: Sign Up', newHtml);
@@ -543,16 +467,12 @@ export class UserRoutes {
       });
       return;
     }
-    console.log('Successful sendEmail');
-    console.log('response 200 for request.session.user', request.session.user.id, 'user.id', user.id);
     response.status(200).send({ message: 'Email sent.' });
   }
 
   private getUserInvitationCode = async (request, response) => {
-    console.log('Running getUserInvitationCode');
     const userId = parseInt(request.params.userId);
     let userInvitationCode: string = '';
-    console.log('Calling loadUserInvitationCode for userId', userId);
     try {
       userInvitationCode = await this.userDatabase.loadUserInvitationCode(
         userId);
@@ -561,12 +481,10 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
-    console.log('response status 200 with userInvitationCode', userInvitationCode);
     response.status(200).json({ userInvitationCode: userInvitationCode });
   }
 
   private sendInviteEmail = async (request, response) => {
-    console.log('Running sendInviteEmail');
     const userInvitationCode = UserInvitationCode.fromJson(
       request.body.userInvitationCode);
     const inviteEmail = InviteEmail.fromJson(request.body.inviteEmail);
@@ -584,7 +502,6 @@ export class UserRoutes {
     const newHtml = invitationHtml.replace('{{user_name}}',
       account.userName).replace('{{contest}}', inviteEmail.contest);
     for (const email of inviteEmail.emailList) {
-      console.log('Calling sendEmail to', email, 'from', account.email);
       try {
         await this.sendEmail(email, account.email,
           `Your friend, ${account.name}, invited you to check out NEA`,
@@ -595,14 +512,11 @@ export class UserRoutes {
         return;
       }
     }
-    console.log('response 200 as emailes were sent successfully.');
     response.status(200).send();
   }
 
   private sendPartnerWithUsEmail = async (request, response) => {
-    console.log('Running sendPartnerWithUsEmail');
     const { name, email, profileLink, message } = request.body;
-    console.log('name', name, 'email', email, 'profileLink', profileLink, 'message', message);
     const partnerWithUsHtml = await new Promise<string>((resolve, reject) => {
       fs.readFile('public/resources/partner_with_us_email/email.html', 'utf8',
         (error, html) => {
@@ -615,7 +529,6 @@ export class UserRoutes {
     });
     const newHtml = partnerWithUsHtml.replace('{{name}}', name).replace(
       '{{link}}', profileLink).replace('{{contest}}', message);
-    console.log('Calling sendEmail');
     try {
       await this.sendEmail('info@nevereatalone.net', email,
         `${name}, want to partner with NEA`, newHtml);
@@ -624,7 +537,6 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
-    console.log('Calling sendPartnerWithUsRecievedConfirmationEmail to email', email, name);
     try {
       await this.sendPartnerWithUsRecievedConfirmationEmail(email, name);
     } catch (error) {
@@ -632,13 +544,11 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
-    console.log('response 200');
     response.status(200).send();
   }
 
   private sendPartnerWithUsRecievedConfirmationEmail = async (email: string,
       name: string) => {
-    console.log('Running sendPartnerWithUsRecievedConfirmationEmail');
     const partnerWithUsRecievedConfirmationHtml = await new Promise<string>((
         resolve, reject) => {
       fs.readFile(
@@ -653,7 +563,6 @@ export class UserRoutes {
     });
     const newHtml = partnerWithUsRecievedConfirmationHtml.replace('{{name}}',
       name);
-    console.log('Calling sendEmail');
     try {
       await this.sendEmail(email, 'info@nevereatalone.net',
         'We Appreciate Your Business!', newHtml);
@@ -664,9 +573,7 @@ export class UserRoutes {
   }
 
   private sendRecoveryEmail = async (request, response) => {
-    console.log('Running sendRecoveryEmail');
     const email = request.body.email;
-    console.log('Calling loadUserByEmail');
     let user: User;
     try {
       user = await this.userDatabase.loadUserByEmail(email);
@@ -676,7 +583,6 @@ export class UserRoutes {
       return;
     }
     if (!user || user.id === -1 || user.email == '') {
-      console.log('response 400 as no user found.');
       response.status(400).json({ message: 'EMAIL_NOT_FOUND' });
       return;
     }
@@ -692,7 +598,6 @@ export class UserRoutes {
     });
     const name = user.name || 'NeverEatAlone Member';
     const newHtml = recoveryHtml.replace('{{name}}', name);
-    console.log('Calling sendEmail');
     try {
       await this.sendEmail(user.email, 'info@nevereatalone.net',
         'Recovery Password Link', newHtml);
@@ -701,16 +606,13 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
-    console.log('response 200 for user', user.toJson());
     response.status(200).json({ user: user.toJson() });
   }
 
   private resendRecoveryEmail = async (request, response) => {
-    console.log('Running resendRecoveryEmail');
     const email = request.body.email;
     const user = User.fromJson(request.body.user);
     if (!user || user.id === -1) {
-      console.log('response 400 as no user found');
       response.status(400).json({ message: 'USER_NOT_FOUND' });
       return;
     }
@@ -733,7 +635,6 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
-    console.log('response 200');
     response.status(200).send();
   }
 

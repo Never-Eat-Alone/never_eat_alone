@@ -27,7 +27,6 @@ import { HttpSignUpPageModel, SignUpPageModel } from './sign_up_page';
 
 export class HttpApplicationModel extends ApplicationModel {
   public async load(): Promise<void> {
-    console.log('Running HttpApplicationModel load()');
     const response = await fetch('/api/current_user');
     let account: User;
     if (response.status === 200) {
@@ -36,11 +35,9 @@ export class HttpApplicationModel extends ApplicationModel {
     } else {
       account = User.makeGuest();
     }
-    console.log('current account', account);
     const googleClientIdResponse = await fetch('/api/google_client_id');
     const googleClientIdObject = await googleClientIdResponse.json();
     const googleClientId = googleClientIdObject.google_client_id;
-    console.log('googleClientId', googleClientId);
     const headerModel = new HttpHeaderModel(account);
     const homePageModel = new HttpHomePageModel(account);
     const inviteAFoodieModel = new HttpInviteAFoodieModel(account);

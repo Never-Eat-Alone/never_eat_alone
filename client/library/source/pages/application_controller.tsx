@@ -72,13 +72,10 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   public render(): JSX.Element {
-    console.log('application controller render');
-    console.log('account', this.state.account);
     if (this.state.hasError) {
       return <ErrorPage500 displayMode={this.state.displayMode} />;
     }
     if (!this.state.isLoaded) {
-      console.log('not loaded yet');
       return <div />;
     }
     const pathname = this.props.location.pathname;
@@ -280,7 +277,6 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   public updateAccount(user: User): void {
-    console.log('updateAccount for user', user);
     this.setState({
       account: user,
       loggedIn: true
@@ -343,9 +339,7 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private handleLogOut = async () => {
-    console.log('Running handleLogOut');
     const isLoggedOut = await this.props.model.logInModel.logOut();
-    console.log('isLoggedOut', isLoggedOut);
     if (isLoggedOut) {
       this.updateAccount(User.makeGuest());
     }
@@ -467,7 +461,6 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private renderWhatIsNea = () => {
-    console.log('renderWhatIsNea');
     return <WhatIsNeaPage
       displayMode={this.state.displayMode}
       onCreateAccountClick={this.handleJoinButton}

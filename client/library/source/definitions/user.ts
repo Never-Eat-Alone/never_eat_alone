@@ -55,7 +55,6 @@ export class User {
 
   /** Converts the user object to json. */
   public toJson(): any {
-    console.log('user toJson this._userStatus.toString()', this._userStatus.toString());
     return {
       id: this._id,
       name: this._name,

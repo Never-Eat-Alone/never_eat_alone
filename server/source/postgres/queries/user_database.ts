@@ -69,12 +69,10 @@ export class UserDatabase {
   public assignUserIdToSid = async (sid: string,
       userId: number | null | undefined, sess: object, expire: Date):
       Promise<void> => {
-    console.log('assignUserIdToSid user id', userId, typeof userId);
     if (!userId || userId === null || userId === undefined || Number.isNaN(
         userId) || userId === -1 || !sess || !sid || !expire) {
       return;
     }
-    console.log('inserting in user_sessions', sid, userId, sess, expire.toISOString());
     await this.pool.query(`
       INSERT INTO user_sessions (sid, user_id, sess, expire)
       VALUES ($1, $2, $3, $4)
@@ -120,14 +118,11 @@ export class UserDatabase {
    */
   public loadUserBySessionId = async (id: string): Promise<User> => {
     const guest = User.makeGuest();
-    console.log('called loadUserBySessionIdUserId');
-    console.log('guest user status', guest.userStatus);
     const result = await this.pool.query(
       'SELECT * FROM user_sessions WHERE sid = $1', [id]);
     if (!result.rows || result.rows.length === 0 || !result.rows[0].user_id) {
       return guest;
     }
-    console.log('load user with id', parseInt(result.rows[0].user_id));
     const userResult = await this.pool.query(
       'SELECT * FROM users WHERE id = $1', [parseInt(result.rows[0].user_id)]);
     if (!userResult.rows || userResult.rows.length === 0) {
@@ -175,10 +170,6 @@ export class UserDatabase {
     if (result.rows.length === 0) {
       return User.makeGuest();
     }
-    console.log('addGuestUserRequest', parseInt(result.rows[0].id), result.rows[0].name,
-    result.rows[0].email, result.rows[0].user_name,
-    result.rows[0].user_status as UserStatus,
-    new Date(Date.parse(result.rows[0].created_at)));
     return new User(parseInt(result.rows[0].id), result.rows[0].name,
       result.rows[0].email, result.rows[0].user_name,
       result.rows[0].user_status as UserStatus,
