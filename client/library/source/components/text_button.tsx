@@ -6,10 +6,10 @@ interface Properties extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   labelStyle?: React.CSSProperties;
 }
 
-export function TextButton(props: Properties) {
+export function TextButton({ label, labelStyle, ...props }: Properties) {
   return (
     <button {...props} style={{...BUTTON_STYLE, ...props.style}} >
-      <p style={{...LABEL_STYLE, ...props.labelStyle}} >{props.label}</p>
+      <p style={{...LABEL_STYLE, ...labelStyle}} >{label}</p>
     </button>);
 }
 

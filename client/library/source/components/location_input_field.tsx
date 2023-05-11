@@ -5,8 +5,8 @@ interface Properties extends React.InputHTMLAttributes<HTMLInputElement> {
   hasError: boolean;
 }
 
-export function LocationInputField(props: Properties) {
-  const containerClass = (props.disabled && styles.disabled || props.hasError
+export function LocationInputField({ hasError, ...props }: Properties) {
+  const containerClass = (props.disabled && styles.disabled || hasError
     && styles.error || styles.container);
   return (
     <div

@@ -13,9 +13,10 @@ interface Properties extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 /** Displays the sticky menu on pages with save and cancel buttons. */
-export function SaveCancelStickyMenu(props: Properties) {
+export function SaveCancelStickyMenu({ displayMode, onSaveClick, onCancelClick,
+    ...props }: Properties) {
   const contentStyle = (() => {
-    if (props.displayMode === DisplayMode.MOBILE) {
+    if (displayMode === DisplayMode.MOBILE) {
       return MOBILE_CONTENT_CONTAINER;
     }
     return CONTENT_STYLE;
@@ -26,13 +27,13 @@ export function SaveCancelStickyMenu(props: Properties) {
         <PrimaryTextButton
           label='Save'
           style={SAVE_BUTTON_STYLE}
-          onClick={props.onSaveClick}
+          onClick={onSaveClick}
         />
         <SecondaryTextButton
           label='Cancel'
           style={CANCEL_BUTTON_STYLE}
           labelStyle={CANCEL_TEXT_STYLE}
-          onClick={props.onCancelClick}
+          onClick={onCancelClick}
         />
       </div>
     </div>);

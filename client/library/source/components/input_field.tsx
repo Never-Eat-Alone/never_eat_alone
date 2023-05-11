@@ -8,14 +8,14 @@ interface InputFieldProperties extends React.InputHTMLAttributes<
   hasError?: boolean;
 }
 
-export function InputField(props: InputFieldProperties) {
+export function InputField({ hasError, ...props }: InputFieldProperties) {
   return (
     <input
       {...props}
       style={{...INPUT_STYLE, ...CONTAINER_STYLE, ...CONTAINER_NO_ICON_STYLE,
         ...props.style}}
       className={props.disabled && css(styles.disabled) ||
-        props.hasError && css(styles.hasError) ||
+        hasError && css(styles.hasError) ||
         css(styles.container, styles.input)}
     />);
 }
@@ -28,11 +28,11 @@ interface InputFieldWithIconProperties extends InputFieldProperties {
 }
 
 export function InputFieldWithIcon(props: InputFieldWithIconProperties) {
-  const { hasError, iconSrc, iconAlt, style, ...rest } = props;
+  const { hasError, iconSrc, iconAlt, style, ...inputProps } = props;
   return (
     <div
         style={{...CONTAINER_STYLE, ...CONTAINER_WITH_ICON_STYLE, ...style}}
-        className={rest.disabled && css(styles.disabled) ||
+        className={inputProps.disabled && css(styles.disabled) ||
           hasError && css(styles.hasError) || css(styles.container)}
     >
       <div style={{...ICON_CONTAINER_STYLE, ...props.iconContainerStyle}} >
@@ -42,7 +42,8 @@ export function InputFieldWithIcon(props: InputFieldWithIconProperties) {
           alt={iconAlt}
         />
       </div>
-      <input {...rest} style={INPUT_STYLE} className={css(styles.input)} />
+      <input {...inputProps} style={INPUT_STYLE} className={css(styles.input)}
+      />
     </div>);
 }
 
