@@ -225,6 +225,7 @@ export class ApplicationController extends React.Component<Properties, State> {
             />
             <Router.Route render={this.renderErrorPage404} />
             <Router.Route
+              exact
               path='/'
               render={this.renderHomePage}
             />
