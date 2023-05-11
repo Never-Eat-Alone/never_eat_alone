@@ -75,11 +75,11 @@ interface WithIconProperties extends Properties {
   iconStyle?: React.CSSProperties;
 }
 
-export function TextButtonWithArrow({ iconStyle, ...props }:
+export function TextButtonWithArrow({ iconStyle, labelStyle, label, ...props }:
     WithIconProperties) {
   return (
     <button {...props} style={{...BUTTON_STYLE, ...props.style}} >
-      <p style={{...LABEL_STYLE, ...props.labelStyle}} >{props.label}</p>
+      <p style={{...LABEL_STYLE, ...labelStyle}} >{label}</p>
       <svg
           style={{...ARROW_ICON_STYLE, ...iconStyle}}
           width='11px' height='10px' viewBox='0 0 11 10'
