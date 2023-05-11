@@ -75,12 +75,13 @@ interface WithIconProperties extends Properties {
   iconStyle?: React.CSSProperties;
 }
 
-export function TextButtonWithArrow(props: WithIconProperties) {
+export function TextButtonWithArrow({ iconStyle, ...props }:
+    WithIconProperties) {
   return (
     <button {...props} style={{...BUTTON_STYLE, ...props.style}} >
       <p style={{...LABEL_STYLE, ...props.labelStyle}} >{props.label}</p>
       <svg
-          style={{...ARROW_ICON_STYLE, ...props.iconStyle}}
+          style={{...ARROW_ICON_STYLE, ...iconStyle}}
           width='11px' height='10px' viewBox='0 0 11 10'
           fill='none'
           xmlns='http://www.w3.org/2000/svg'
@@ -131,7 +132,8 @@ export function SecondaryTextButtonWithArrow(props: WithIconProperties) {
     />);
 }
 
-export function PrimaryEmailButton(props: Properties) {
+export function PrimaryEmailButton({ label, labelStyle, ...props }:
+    Properties) {
   return (
     <button
         {...props}
@@ -151,8 +153,8 @@ export function PrimaryEmailButton(props: Properties) {
           fill='#FFFFFF'
         />
       </svg>
-      <p style={{...LABEL_STYLE, ...PRIMARY_LABEL_STYLE, ...props.labelStyle}} >
-        {props.label}
+      <p style={{...LABEL_STYLE, ...PRIMARY_LABEL_STYLE, ...labelStyle}} >
+        {label}
       </p>
     </button>);
 }
