@@ -136,10 +136,6 @@ export class ApplicationController extends React.Component<Properties, State> {
           {partnerWithUsModal}
           <Router.Switch>
             <Router.Route
-              path='/'
-              render={this.renderHomePage}
-            />
-            <Router.Route
               path='/confirmation_tokens/:id'
               render={this.renderEmailConfirmationPage}
             />
@@ -228,6 +224,10 @@ export class ApplicationController extends React.Component<Properties, State> {
               render={this.renderWhatIsNea}
             />
             <Router.Route render={this.renderErrorPage404} />
+            <Router.Route
+              path='/'
+              render={this.renderHomePage}
+            />
           </Router.Switch>
         </Shell>
       </div>);
