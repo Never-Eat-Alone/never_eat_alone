@@ -18,11 +18,11 @@ export class UserProfileImageDatabase {
       Promise<UserProfileImage> => {
     const result = await this.pool.query('SELECT * FROM user_profile_images \
       WHERE user_id = $1', [userId]);
-    if (result.rows.length === 0) {
+    if (!result || !result.rows || result.rows.length === 0) {
       return UserProfileImage.NoImage();
     }
-    return new UserProfileImage(parseInt(result.rows[0].user_id), parseInt(
-      result.rows[0].id), result.rows[0].src);
+    return new UserProfileImage(parseInt(result.rows[0].id),
+      parseInt(result.rows[0].user_id), result.rows[0].src);
   }
 
   public uploadProfileImage = async (userId: number,
