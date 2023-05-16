@@ -25,6 +25,11 @@ export class DemoSignUpPageModel extends NeverEatAlone.SignUpPageModel {
     return this._defaultImage;
   }
 
+  public async updateProfileImageByAvatar(avatar: NeverEatAlone.Avatar):
+      Promise<NeverEatAlone.UserProfileImage> {
+    return this._defaultImage;
+  }
+
   public async signUp(password: string): Promise<boolean> {
     return Boolean(password);
   }

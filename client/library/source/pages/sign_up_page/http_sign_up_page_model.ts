@@ -50,7 +50,24 @@ export class HttpSignUpPageModel extends SignUpPageModel {
       console.log('uploaded image successfully', UserProfileImage.fromJson(responseObject.userProfileImage));
       return UserProfileImage.fromJson(responseObject.userProfileImage);
     }
-    console.log('gailed to upload image and returning noImage', UserProfileImage.NoImage());
+    console.log('failed to upload image and returning noImage', UserProfileImage.NoImage());
+    //this is the problem, need to create the image with the user id and defaulr src for default image
+    return UserProfileImage.NoImage();
+  }
+
+  public async updateProfileImageByAvatar(avatar: Avatar):
+      Promise<UserProfileImage> {
+    const response = await fetch(
+      `/api/update_profile_image_by_avatar/${this._account.id}`, {
+      method: 'POST',
+      body: avatar.toJson()
+    });
+    if (response.status === 201 || response.status === 200) {
+      const responseObject = await response.json();
+      console.log('updated image successfully', UserProfileImage.fromJson(responseObject.userProfileImage));
+      return UserProfileImage.fromJson(responseObject.userProfileImage);
+    }
+    console.log('failed to upload image and returning noImage', UserProfileImage.NoImage());
     //this is the problem, need to create the image with the user id and defaulr src for default image
     return UserProfileImage.NoImage();
   }

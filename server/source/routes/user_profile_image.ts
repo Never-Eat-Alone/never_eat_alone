@@ -1,5 +1,6 @@
 import * as multer from 'multer';
-import { UserProfileImage } from '../../../client/library/source/definitions';
+import { Avatar, UserProfileImage
+} from '../../../client/library/source/definitions';
 import { UserProfileImageDatabase } from '../postgres/queries';
 
 /** UserProfileImage Routes class. */
@@ -17,6 +18,8 @@ export class UserProfileImageRoutes {
       this.getUserProfileImageByUserId);
     app.post('/api/upload_profile_image/:userId', upload.single(
       'userProfileImage'), this.uploadUserProfileImage);
+    app.post('/api/update_profile_image_by_avatar/:userId',
+      this.updateProfileImageByAvatar);
 
     this.userProfileImageDatabase = userProfileImageDatabase;
   }
@@ -59,6 +62,20 @@ export class UserProfileImageRoutes {
     }
     console.log('response status 201 with userProfileImage', uploadedImage.id, uploadedImage.userId, uploadedImage.src);
     response.status(201).json({ userProfileImage: uploadedImage.toJson() });
+  }
+
+  private updateProfileImageByAvatar = async (request, response) => {
+    const userId = parseInt(request.params.userId);
+    const avatar = Avatar.fromJson(request.body.avatar);
+    try {
+      const newImage = 
+        await this.userProfileImageDatabase.updateProfileImageByAvatar(userId,
+          avatar);
+      response.status(200).json({ userProfileImage: newImage.toJson() });
+    } catch (error) {
+      console.log('', error);
+      response.status(500).send();
+    }
   }
 
   private userProfileImageDatabase: UserProfileImageDatabase;

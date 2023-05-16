@@ -122,13 +122,18 @@ export class SignUpPageController extends React.Component<Properties, State> {
     }
   }
 
-  private handleAvatarClick = (avatar: Avatar) => {
+  private handleAvatarClick = async (avatar: Avatar) => {
     console.log('handleAvatarClick', new UserProfileImage(avatar.id, this.props.account.id,
       avatar.src));
-    this.setState({
-      userProfileImage: new UserProfileImage(avatar.id, this.props.account.id,
-        avatar.src)
-    });
+    try {
+      const newImage = await this.props.model.updateProfileImageByAvatar(
+        avatar);
+      this.setState({ userProfileImage: newImage });
+    } catch {
+      this.setState({
+        profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NO_CONNECTION
+      });
+    }
   }
 
   private handleDisplayNameChange = (newName: string) => {

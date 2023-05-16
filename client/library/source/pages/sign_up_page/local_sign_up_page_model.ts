@@ -16,6 +16,11 @@ export class LocalSignUpPageModel extends SignUpPageModel {
     return this._defaultImage;
   }
 
+  public async updateProfileImageByAvatar(avatar: Avatar):
+      Promise<UserProfileImage> {
+    return this._defaultImage;
+  }
+
   public async signUp(password: string): Promise<boolean> {
     return Boolean(password);
   }

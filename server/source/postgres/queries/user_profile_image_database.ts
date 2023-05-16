@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { Pool } from 'pg';
-import { UserProfileImage
+import { Avatar, UserProfileImage
 } from '../../../../client/library/source/definitions';
 
 /** UserProfileImage related database manipulations class. */
@@ -59,6 +59,36 @@ export class UserProfileImageDatabase {
       return UserProfileImage.NoImage();
     }
     console.log('returning the uploaded image with id', parseInt(result.rows[0].id), parseInt(
+      result.rows[0].user_id), result.rows[0].src);
+    return new UserProfileImage(parseInt(result.rows[0].id), parseInt(
+      result.rows[0].user_id), result.rows[0].src);
+  }
+
+  public updateProfileImageByAvatar = async (userId: number, avatar: Avatar):
+      Promise<UserProfileImage> => {
+    const existingImageResult = await this.pool.query(
+      'SELECT * FROM user_profile_images WHERE user_id = $1', [userId]);
+    let result;
+    console.log('existingImageResult', existingImageResult.rows);
+    if (existingImageResult.rows.length > 0) {
+      // User already has a profile image, update the record.
+      result = await this.pool.query(`
+        UPDATE user_profile_images SET src = $1, updated_at = DEFAULT WHERE
+        user_id = $2 RETURNING *`, [avatar.src, userId]);
+      console.log('UPDATE user_profile_images by avatar src');
+    } else {
+      // User doesn't have a profile image, insert a new record.
+      result = await this.pool.query(`
+        INSERT INTO user_profile_images (user_id, src, created_at, updated_at)
+        VALUES ($1, $2, DEFAULT, DEFAULT) RETURNING *`,
+        [userId, avatar.src]);
+      console.log('INSERT INTO user_profile_images');
+    }
+    if (!result || !result.rows || result.rows.length === 0) {
+      console.log('failed in uploading and set the image to NoImage()');
+      return UserProfileImage.NoImage();
+    }
+    console.log('returning the updated image with id', parseInt(result.rows[0].id), parseInt(
       result.rows[0].user_id), result.rows[0].src);
     return new UserProfileImage(parseInt(result.rows[0].id), parseInt(
       result.rows[0].user_id), result.rows[0].src);
