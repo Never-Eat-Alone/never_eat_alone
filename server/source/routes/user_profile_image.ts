@@ -25,17 +25,21 @@ export class UserProfileImageRoutes {
   private getUserProfileImageByUserId = async (request, response) => {
     const userId = parseInt(request.params.userId);
     let image: UserProfileImage;
+    console.log('Running getUserProfileImageByUserId with userId', userId);
     try {
+      console.log('loadProfileImageByUserId');
       image = await this.userProfileImageDatabase.loadProfileImageByUserId(
         userId);
+      console.log('image load successfully', image);
     } catch (error) {
+      console.log('loadProfileImageByUserId failed', error);
       response.status(500).json({
         userProfileImage: UserProfileImage.NoImage(),
         message: 'DATABASE_ERROR'
       });
-      console.log(error);
       return;
     }
+    console.log('response 200 userProfileImage', image.toJson());
     response.status(200).json({ userProfileImage: image.toJson() });
   }
 
@@ -43,14 +47,17 @@ export class UserProfileImageRoutes {
     const userId = parseInt(request.params.userId);
     const userProfileImageFile = request.file;
     let uploadedImage: UserProfileImage;
+    console.log('uploadUserProfileImage userId', userId, 'userProfileImageFile', userProfileImageFile);
     try {
       uploadedImage = await this.userProfileImageDatabase.uploadProfileImage(
         userId, userProfileImageFile);
+      console.log('image uploaded in db successfully.');
     } catch (error) {
+      console.log('uploadUserProfileImage failed', error);
       response.status(500).json({ message: 'DATABASE_ERROR' });
-      console.log(error);
       return;
     }
+    console.log('response status 201 with userProfileImage', uploadedImage.id, uploadedImage.userId, uploadedImage.src);
     response.status(201).json({ userProfileImage: uploadedImage.toJson() });
   }
 

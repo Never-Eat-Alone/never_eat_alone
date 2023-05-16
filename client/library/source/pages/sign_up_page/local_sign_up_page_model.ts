@@ -2,8 +2,8 @@ import { Avatar, User, UserProfileImage } from '../../definitions';
 import { SignUpPageModel } from './sign_up_page_model';
 
 export class LocalSignUpPageModel extends SignUpPageModel {
-  constructor(account: User, defaultImage: UserProfileImage,
-      avatars: Avatar[]) {
+  constructor(account: User, defaultImage: UserProfileImage, avatars: Avatar[]
+      ) {
     super();
     this._account = account;
     this._defaultImage = defaultImage;

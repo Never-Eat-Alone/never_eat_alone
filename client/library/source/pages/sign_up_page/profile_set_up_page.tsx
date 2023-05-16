@@ -10,9 +10,14 @@ interface Properties {
   /** The user display name entered when they requested an account. */
   displayName: string;
 
+  /** The image user selected as profile picture. */
   selectedImage: UserProfileImage;
 
+  /** The app avatars displayed on set up profile page. */
   avatars: Avatar[];
+
+  /** The error code that applies to the ProfileSetUpPage. */
+  errorCode: ProfileSetUpPage.ErrorCode;
 
   /** Indicates the upload image button is clicked. */
   onUploadImageClick: (imageFile: File) => void;
@@ -20,11 +25,14 @@ interface Properties {
   /** Indicates the let's go button is clicked. */
   onLetsGoClick: (displayName: string, image: UserProfileImage) => void;
 
+  /** Indicates the user clicked on an avatar image. */
   onAvatarClick: (avatar: Avatar) => void;
 
+  /** Indiciates the display name field has changed. */
   onDisplayNameChange: (newName: string) => void;
 }
 
+/** Displays the ProfileSetUpPage. */
 export class ProfileSetUpPage extends React.Component<Properties> {
   public render(): JSX.Element {
     const contentContainerStyle = (this.props.displayMode ===
@@ -130,7 +138,6 @@ export class ProfileSetUpPage extends React.Component<Properties> {
 export namespace ProfileSetUpPage {
   export enum ErrorCode {
     NONE,
-    UPLOAD_IMAGE_FAILED,
     NO_CONNECTION
   }
 }

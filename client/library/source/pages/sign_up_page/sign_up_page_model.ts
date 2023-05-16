@@ -1,4 +1,4 @@
-import { Avatar, UserProfileImage, User } from '../../definitions';
+import { Avatar, UserProfileImage } from '../../definitions';
 
 export abstract class SignUpPageModel {
   public abstract load(): Promise<void>;
