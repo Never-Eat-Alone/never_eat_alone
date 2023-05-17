@@ -19,10 +19,10 @@ export class UserProfileImageInput extends React.Component<Properties> {
   private onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = (() => {
       if (!event.target.value.trim()) {
-        return NeverEatAlone.UserProfileImage.NoImage();
+        return NeverEatAlone.UserProfileImage.default(this.props.value.userId);
       }
-      return new NeverEatAlone.UserProfileImage(this.props.value.id,
-        this.props.value.userId, event.target.value);
+      return new NeverEatAlone.UserProfileImage(this.props.value.userId,
+        event.target.value);
     })();
     this.props.update(newValue);
   }

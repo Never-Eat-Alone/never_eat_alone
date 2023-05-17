@@ -192,7 +192,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
       isCuisineInputFocued: false,
       isLocationInputFocused: false,
       isChangeBanner: false,
-      newProfileImage: UserProfileImage.NoImage()
+      newProfileImage: null
     };
     this._languageDropdownRef = React.createRef<HTMLDivElement>();
     this._cuisineDropdownRef = React.createRef<HTMLDivElement>();
@@ -764,7 +764,8 @@ export class EditProfilePage extends React.Component<Properties, State> {
 
   private handleChangeProfileImageClick = (event: React.ChangeEvent<
       HTMLInputElement>) => {
-    const newImage = new UserProfileImage(-1, -1, event.currentTarget.src);
+    const newImage = new UserProfileImage(this.props.profileImage.userId,
+      event.currentTarget.src);
     this.setState({ newProfileImage: newImage });
   }
 

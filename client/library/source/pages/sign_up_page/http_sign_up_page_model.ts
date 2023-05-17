@@ -18,7 +18,7 @@ export class HttpSignUpPageModel extends SignUpPageModel {
       return;
     }
     const responseObject = await response.json();
-    let userProfileImage = UserProfileImage.NoImage();
+    let userProfileImage: UserProfileImage;
     if (responseObject.userProfileImage) {
       userProfileImage = UserProfileImage.fromJson(
         responseObject.userProfileImage);
@@ -50,9 +50,9 @@ export class HttpSignUpPageModel extends SignUpPageModel {
       console.log('uploaded image successfully', UserProfileImage.fromJson(responseObject.userProfileImage));
       return UserProfileImage.fromJson(responseObject.userProfileImage);
     }
-    console.log('failed to upload image and returning noImage', UserProfileImage.NoImage());
+    console.log('failed to upload image and returning default image', UserProfileImage.default(this._account.id));
     //this is the problem, need to create the image with the user id and defaulr src for default image
-    return UserProfileImage.NoImage();
+    return UserProfileImage.default(this._account.id);
   }
 
   public async updateProfileImageByAvatar(avatar: Avatar):
@@ -67,9 +67,9 @@ export class HttpSignUpPageModel extends SignUpPageModel {
       console.log('updated image successfully', UserProfileImage.fromJson(responseObject.userProfileImage));
       return UserProfileImage.fromJson(responseObject.userProfileImage);
     }
-    console.log('failed to upload image and returning noImage', UserProfileImage.NoImage());
+    console.log('failed to upload image and returning default image', UserProfileImage.default(this._account.id));
     //this is the problem, need to create the image with the user id and defaulr src for default image
-    return UserProfileImage.NoImage();
+    return UserProfileImage.default(this._account.id);
   }
 
   public async signUp(password: string): Promise<boolean> {

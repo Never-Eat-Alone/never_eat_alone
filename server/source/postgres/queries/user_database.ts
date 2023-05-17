@@ -336,10 +336,8 @@ export class UserDatabase {
         UserStatus[userResult.rows[0].user_status as keyof typeof UserStatus],
         new Date(Date.parse(userResult.rows[0].created_at))),
       userProfileImage: new UserProfileImage(
-        parseInt(imageResult.rows[0].id),
         parseInt(imageResult.rows[0].user_id),
-        imageResult.rows[0].src
-      )
+        imageResult.rows[0].src)
     };
   }
 

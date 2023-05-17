@@ -22,6 +22,7 @@ interface State {
   isSetUpPage: boolean;
   redirect: string;
   avatars: Avatar[];
+  selectedAvatar: Avatar | null;
 }
 
 export class SignUpPageController extends React.Component<Properties, State> {
@@ -34,10 +35,11 @@ export class SignUpPageController extends React.Component<Properties, State> {
       email: '',
       isSetUpPage: false,
       displayName: '',
-      userProfileImage: UserProfileImage.NoImage(),
+      userProfileImage: null,
       password: '',
       redirect: null,
-      avatars: []
+      avatars: [],
+      selectedAvatar: null
     };
   }
 
@@ -57,6 +59,7 @@ export class SignUpPageController extends React.Component<Properties, State> {
         displayName={this.state.displayName}
         selectedImage={this.state.userProfileImage}
         avatars={this.state.avatars}
+        selectedAvatar={this.state.selectedAvatar}
         errorCode={this.state.profileSetUpPageErrorCode}
         onUploadImageClick={this.handleUploadImageClick}
         onLetsGoClick={this.handleLetsGoClick}
@@ -105,6 +108,10 @@ export class SignUpPageController extends React.Component<Properties, State> {
     }
   }
 
+  private handleAvatarSelection = (avatar: Avatar) => {
+    this.setState({ selectedAvatar: avatar });
+  }
+
   private handleUploadImageClick = async (uploadedImageFile: File) => {
     console.log('Running handleUploadImageClick');
     try {
@@ -116,14 +123,14 @@ export class SignUpPageController extends React.Component<Properties, State> {
     } catch {
       console.log('uploadImage failed');
       this.setState({
-        userProfileImage: UserProfileImage.NoImage(),
+        userProfileImage: UserProfileImage.default(this.props.account.id),
         profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NO_CONNECTION
       });
     }
   }
 
   private handleAvatarClick = async (avatar: Avatar) => {
-    console.log('handleAvatarClick', new UserProfileImage(avatar.id, this.props.account.id,
+    console.log('handleAvatarClick', new UserProfileImage(this.props.account.id,
       avatar.src));
     try {
       const newImage = await this.props.model.updateProfileImageByAvatar(
@@ -141,21 +148,15 @@ export class SignUpPageController extends React.Component<Properties, State> {
     this.setState({ displayName: newName });
   }
 
-  private handleLetsGoClick = async (displayName: string,
-      image: UserProfileImage) => {
+  private handleLetsGoClick = async () => {
     console.log('Running handleLetsGoClick');
     try {
-      await this.props.model.setUpProfile(displayName, image);
-      console.log('setUpProfile succesfully for displayname', displayName, 'userProfileImage', image);
-      this.setState({
-        displayName: displayName,
-        userProfileImage: image,
-        redirect: '/'
-      });
+      await this.props.model.setUpProfile(this.state.displayName,
+        this.state.userProfileImage);
+      console.log('setUpProfile succesfully for displayname', this.state.displayName, 'userProfileImage', this.state.userProfileImage);
+      this.setState({ redirect: '/' });
     } catch {
       this.setState({
-        displayName: displayName,
-        userProfileImage: image,
         profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NO_CONNECTION
       });
     }

@@ -37,7 +37,7 @@ export class UserProfileImageRoutes {
     } catch (error) {
       console.log('loadProfileImageByUserId failed', error);
       response.status(500).json({
-        userProfileImage: UserProfileImage.NoImage(),
+        userProfileImage: UserProfileImage.default(userId),
         message: 'DATABASE_ERROR'
       });
       return;
@@ -60,7 +60,7 @@ export class UserProfileImageRoutes {
       response.status(500).json({ message: 'DATABASE_ERROR' });
       return;
     }
-    console.log('response status 201 with userProfileImage', uploadedImage.id, uploadedImage.userId, uploadedImage.src);
+    console.log('response status 201 with userProfileImage', uploadedImage.userId, uploadedImage.src);
     response.status(201).json({ userProfileImage: uploadedImage.toJson() });
   }
 

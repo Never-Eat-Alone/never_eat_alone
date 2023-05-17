@@ -16,6 +16,9 @@ interface Properties {
   /** The app avatars displayed on set up profile page. */
   avatars: Avatar[];
 
+  /** the avatar that user selected as profile image. */
+  selectedAvatar: Avatar;
+
   /** The error code that applies to the ProfileSetUpPage. */
   errorCode: ProfileSetUpPage.ErrorCode;
 
@@ -23,7 +26,7 @@ interface Properties {
   onUploadImageClick: (imageFile: File) => void;
 
   /** Indicates the let's go button is clicked. */
-  onLetsGoClick: (displayName: string, image: UserProfileImage) => void;
+  onLetsGoClick: () => void;
 
   /** Indicates the user clicked on an avatar image. */
   onAvatarClick: (avatar: Avatar) => void;
@@ -41,13 +44,28 @@ export class ProfileSetUpPage extends React.Component<Properties> {
       MOBILE_CONTENT_STYLE || CONTENT_STYLE);
     const avatars = [];
     for (const avatar of this.props.avatars) {
-      avatars.push(<AvatarWithCheckMark key={avatar.id} imageSrc={avatar.src}
-        isMarked={avatar.id === this.props.selectedImage.id}
+      avatars.push(<AvatarWithCheckMark key={avatar.src}
+        imageSrc={avatar.src}
+        isMarked={avatar.id === this.props.selectedAvatar.id}
         onClick={() => this.props.onAvatarClick(avatar)} />);
     }
     const isDisplayName = this.props.displayName.length !== 0;
     const nameErrorMessage = (!isDisplayName && 'Please enter a display name.'
       || '');
+    const selectedProfileImage = (() => {
+      if (this.props.selectedImage) {
+        return <img
+          style={ICON_STYLE}
+          src={this.props.selectedImage.src}
+          alt='Selected Picture'
+        />;
+      }
+      return <img
+        style={ICON_STYLE}
+        src={this.props.selectedAvatar.src}
+        alt='Selected Avatar'
+      />;
+    })();
     const content = ((contentContainerStyle: React.CSSProperties,
         contentStyle: React.CSSProperties) => {
       return (
@@ -56,11 +74,7 @@ export class ProfileSetUpPage extends React.Component<Properties> {
             <div style={TITLE_STYLE} >SUCCESS! LET’S SET UP YOUR PROFILE.</div>
             <div style={ROW_CONTAINER_STYLE} >
               <div style={ICON_CONTAINER_STYLE} >
-                <img
-                  style={ICON_STYLE}
-                  src={this.props.selectedImage.src}
-                  alt='Profile Picture'
-                />
+                {selectedProfileImage}
               </div>
             </div>
             <div style={DISPLAY_NAME_ROW_STYLE} >
@@ -91,8 +105,7 @@ export class ProfileSetUpPage extends React.Component<Properties> {
               <PrimaryTextButton
                 label="Let’s go!"
                 style={LETS_GO_BUTTON_STYLE}
-                onClick={() => this.props.onLetsGoClick(this.props.displayName,
-                  this.props.selectedImage)}
+                onClick={this.props.onLetsGoClick}
                 disabled={!isDisplayName}
               />
             </div>

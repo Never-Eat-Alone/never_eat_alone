@@ -46,7 +46,7 @@ export class Header extends React.Component<Properties> {
           displayMode={this.props.displayMode}
           userId={this.props.account.id}
           imageSrc={this.props.profileImage.src ||
-            'resources/header/icons/avatar_default.svg'}
+            UserProfileImage.default(this.props.account.id).src}
           onLogOut={this.props.onLogOut}
           style={PROFILE_MENU_STYLE}
         />);

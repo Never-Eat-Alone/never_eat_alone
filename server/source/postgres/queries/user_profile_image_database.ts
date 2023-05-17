@@ -19,10 +19,10 @@ export class UserProfileImageDatabase {
     const result = await this.pool.query('SELECT * FROM user_profile_images \
       WHERE user_id = $1', [userId]);
     if (!result || !result.rows || result.rows.length === 0) {
-      return UserProfileImage.NoImage();
+      return UserProfileImage.default(userId);
     }
-    return new UserProfileImage(parseInt(result.rows[0].id),
-      parseInt(result.rows[0].user_id), result.rows[0].src);
+    return new UserProfileImage(parseInt(result.rows[0].user_id),
+      result.rows[0].src);
   }
 
   public uploadProfileImage = async (userId: number,
@@ -55,13 +55,13 @@ export class UserProfileImageDatabase {
       console.log('INSERT INTO user_profile_images');
     }
     if (!result || !result.rows || result.rows.length === 0) {
-      console.log('failed in uploading and set the image to NoImage()');
-      return UserProfileImage.NoImage();
+      console.log('failed in uploading and set the image to default');
+      return UserProfileImage.default(userId);
     }
-    console.log('returning the uploaded image with id', parseInt(result.rows[0].id), parseInt(
+    console.log('returning the uploaded image with id', parseInt(
       result.rows[0].user_id), result.rows[0].src);
-    return new UserProfileImage(parseInt(result.rows[0].id), parseInt(
-      result.rows[0].user_id), result.rows[0].src);
+    return new UserProfileImage(parseInt(result.rows[0].user_id),
+      result.rows[0].src);
   }
 
   public updateProfileImageByAvatar = async (userId: number, avatar: Avatar):
@@ -84,14 +84,10 @@ export class UserProfileImageDatabase {
         [userId, avatar.src]);
       console.log('INSERT INTO user_profile_images');
     }
-    if (!result || !result.rows || result.rows.length === 0) {
-      console.log('failed in uploading and set the image to NoImage()');
-      return UserProfileImage.NoImage();
-    }
-    console.log('returning the updated image with id', parseInt(result.rows[0].id), parseInt(
+    console.log('returning the updated image with id', parseInt(
       result.rows[0].user_id), result.rows[0].src);
-    return new UserProfileImage(parseInt(result.rows[0].id), parseInt(
-      result.rows[0].user_id), result.rows[0].src);
+    return new UserProfileImage(parseInt(result.rows[0].user_id),
+      result.rows[0].src);
   }
 
   /** The postgress pool connection. */

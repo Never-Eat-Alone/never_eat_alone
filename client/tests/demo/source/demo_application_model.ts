@@ -15,8 +15,13 @@ import { DemoSignUpPageModel } from './demo_sign_up_page_model';
 /** Implements the ApplicationModel for demo purposes. */
 export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
   public async load(): Promise<void> {
-    this._headerModel = new NeverEatAlone.LocalHeaderModel(
-      NeverEatAlone.UserProfileImage.NoImage());
+    const userArthur = new NeverEatAlone.User(2, 'Arthur', 'arthur@gmail.com',
+      'arthur123', NeverEatAlone.UserStatus.ACTIVE, new Date(2022, 10, 11, 1, 5,
+      35));
+    const arthurProfileImage = new NeverEatAlone.UserProfileImage(2,
+      'resources/images/profileguy3.jpeg');
+    this._account = userArthur;
+    this._headerModel = new NeverEatAlone.LocalHeaderModel(arthurProfileImage);
     const imageListEmpty: NeverEatAlone.SocialMediaImage[] = [];
     const imageListSample: NeverEatAlone.SocialMediaImage[] = [
       new NeverEatAlone.SocialMediaImage(1, 'resources/images/2.jpg'),
@@ -147,14 +152,8 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     this._homePageModel = homePageModelGuestUser;
     const userEmma = new NeverEatAlone.User(1, 'Emma', 'emma@gmail.com', 'emma',
       NeverEatAlone.UserStatus.ACTIVE, new Date(2022, 11, 1, 10, 20, 30));
-    const emmaProfileImage = new NeverEatAlone.UserProfileImage(1, 1,
+    const emmaProfileImage = new NeverEatAlone.UserProfileImage(1,
       'resources/images/profile5.jpeg');
-    const userArthur = new NeverEatAlone.User(2, 'Arthur', 'arthur@gmail.com',
-      'arthur123', NeverEatAlone.UserStatus.ACTIVE, new Date(2022, 10, 11, 1, 5,
-      35));
-    this._account = userArthur;
-    const arthurProfileImage = new NeverEatAlone.UserProfileImage(2, 2,
-      'resources/images/profileguy3.jpeg');
     const attendeeList1: NeverEatAlone.Attendee[] = [
       new NeverEatAlone.Attendee(userEmma.id, 1, userEmma.name, 0,
         NeverEatAlone.AttendeeStatus.GOING, emmaProfileImage.src, new Date()),
@@ -426,12 +425,12 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       const src = `resources/profile_set_up_page/icons/profile-image-${i}.svg`;
       avatars.push(new NeverEatAlone.Avatar(Date.now() + i, src));
     }
-    const arthurDefaultImage = new NeverEatAlone.UserProfileImage(avatars[0].id,
-      userArthur.id, avatars[0].src);
+    const arthurDefaultImage = new NeverEatAlone.UserProfileImage(userArthur.id,
+      avatars[0].src);
     const demoSignUpPageModel1 = new DemoSignUpPageModel(userArthur,
       avatars, arthurDefaultImage);
-    const emmaDefaultImage = new NeverEatAlone.UserProfileImage(avatars[0].id,
-      userEmma.id, avatars[1].src);
+    const emmaDefaultImage = new NeverEatAlone.UserProfileImage(userEmma.id,
+      avatars[1].src);
     const demoSignUpPageModel2 = new DemoSignUpPageModel(userEmma,
       avatars, emmaDefaultImage);
     this._signUpPageModelMap.set(1, demoSignUpPageModel1);

@@ -194,7 +194,7 @@ export class UserRoutes {
       response.redirect(303, 'http://nevereatalone.net/log_in');
       return;
     }
-    let userProfileImage = UserProfileImage.NoImage();
+    let userProfileImage = UserProfileImage.default(user.id);
     try {
       userProfileImage = 
         await this.userProfileImageDatabase.loadProfileImageByUserId(userId);

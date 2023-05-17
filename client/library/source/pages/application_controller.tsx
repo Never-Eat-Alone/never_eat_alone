@@ -66,7 +66,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       isLogInButtonClicked: false,
       isInviteAFoodieButtonClicked: false,
       isPartnerWithUsButtonClicked: false,
-      accountProfileImage: UserProfileImage.NoImage(),
+      accountProfileImage: UserProfileImage.default(User.makeGuest().id),
       loggedIn: false
     };
   }
@@ -281,7 +281,12 @@ export class ApplicationController extends React.Component<Properties, State> {
       account: user,
       loggedIn: true
     }, () => {
-      this.props.model.load().catch((error) => {
+      this.props.model.load().then(() => {
+        this.setState({
+          accountProfileImage: this.props.model.headerModel.profileImage,
+          account: this.props.model.account
+        })
+      }).catch((error) => {
         this.setState({ hasError: true });
       });
     });

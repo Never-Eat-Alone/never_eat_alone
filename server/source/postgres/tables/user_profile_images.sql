@@ -1,5 +1,4 @@
 CREATE TABLE IF NOT EXISTS user_profile_images (
-  id            SERIAL       PRIMARY KEY,
   user_id       INTEGER                        NOT NULL UNIQUE,
   src           TEXT                           NOT NULL,
   created_at    TIMESTAMP                      DEFAULT NOW(),
