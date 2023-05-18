@@ -29,12 +29,15 @@ export class HttpSignUpPageModel extends SignUpPageModel {
       avatars = arrayFromJson(Avatar, responseObject.avatars);
       console.log('avatars', avatars);
     }
-    this._model = new LocalSignUpPageModel(this._account, userProfileImage,
-      avatars);
+    this._model = new LocalSignUpPageModel(this._account, avatars);
     this._model.load();
   }
 
-  public async uploadImage(userProfileImageFile: File):
+  public addUploadedImage(newImage: UserProfileImage): void {
+    this._model.addUploadedImage(newImage);
+  }
+
+  public async uploadImageFile(userProfileImageFile: File):
       Promise<UserProfileImage> {
     const formData = new FormData();
     formData.append('userProfileImage', userProfileImageFile);
@@ -48,24 +51,9 @@ export class HttpSignUpPageModel extends SignUpPageModel {
     if (response.status === 201) {
       const responseObject = await response.json();
       console.log('uploaded image successfully', UserProfileImage.fromJson(responseObject.userProfileImage));
-      return UserProfileImage.fromJson(responseObject.userProfileImage);
-    }
-    console.log('failed to upload image and returning default image', UserProfileImage.default(this._account.id));
-    //this is the problem, need to create the image with the user id and defaulr src for default image
-    return UserProfileImage.default(this._account.id);
-  }
-
-  public async updateProfileImageByAvatar(avatar: Avatar):
-      Promise<UserProfileImage> {
-    const response = await fetch(
-      `/api/update_profile_image_by_avatar/${this._account.id}`, {
-      method: 'POST',
-      body: avatar.toJson()
-    });
-    if (response.status === 201 || response.status === 200) {
-      const responseObject = await response.json();
-      console.log('updated image successfully', UserProfileImage.fromJson(responseObject.userProfileImage));
-      return UserProfileImage.fromJson(responseObject.userProfileImage);
+      const uploadedImage = UserProfileImage.fromJson(responseObject.userProfileImage);
+      this.addUploadedImage(uploadedImage);
+      return uploadedImage;
     }
     console.log('failed to upload image and returning default image', UserProfileImage.default(this._account.id));
     //this is the problem, need to create the image with the user id and defaulr src for default image
@@ -88,8 +76,8 @@ export class HttpSignUpPageModel extends SignUpPageModel {
     return false;
   }
 
-  public async setUpProfile(displayName: string, image: UserProfileImage):
-      Promise<void> {
+  public async setUpProfile(displayName: string, image: UserProfileImage |
+      Avatar): Promise<void> {
     await fetch(`/api/set_up_profile/${this._account.id}`, {
       method: 'POST',
       headers: {
@@ -100,10 +88,6 @@ export class HttpSignUpPageModel extends SignUpPageModel {
         'image': image.toJson()
       })
     });
-  }
-
-  public get defaultImage(): UserProfileImage {
-    return this._model.defaultImage;
   }
 
   public get avatars(): Avatar[] {

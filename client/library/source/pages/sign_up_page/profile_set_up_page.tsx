@@ -11,13 +11,13 @@ interface Properties {
   displayName: string;
 
   /** The image user selected as profile picture. */
-  selectedImage: UserProfileImage;
+  selectedImage?: UserProfileImage;
 
   /** The app avatars displayed on set up profile page. */
   avatars: Avatar[];
 
   /** the avatar that user selected as profile image. */
-  selectedAvatar: Avatar;
+  selectedAvatar?: Avatar;
 
   /** The error code that applies to the ProfileSetUpPage. */
   errorCode: ProfileSetUpPage.ErrorCode;
@@ -44,9 +44,15 @@ export class ProfileSetUpPage extends React.Component<Properties> {
       MOBILE_CONTENT_STYLE || CONTENT_STYLE);
     const avatars = [];
     for (const avatar of this.props.avatars) {
+      const isMarked = (() => {
+        if (this.props.selectedAvatar) {
+          return avatar.id === this.props.selectedAvatar.id;
+        }
+        return false;
+      })();
       avatars.push(<AvatarWithCheckMark key={avatar.src}
         imageSrc={avatar.src}
-        isMarked={avatar.id === this.props.selectedAvatar.id}
+        isMarked={isMarked}
         onClick={() => this.props.onAvatarClick(avatar)} />);
     }
     const isDisplayName = this.props.displayName.length !== 0;
