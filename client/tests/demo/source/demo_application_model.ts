@@ -425,14 +425,10 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       const src = `resources/profile_set_up_page/icons/profile-image-${i}.svg`;
       avatars.push(new NeverEatAlone.Avatar(Date.now() + i, src));
     }
-    const arthurDefaultImage = new NeverEatAlone.UserProfileImage(userArthur.id,
-      avatars[0].src);
     const demoSignUpPageModel1 = new DemoSignUpPageModel(userArthur,
-      avatars, arthurDefaultImage);
-    const emmaDefaultImage = new NeverEatAlone.UserProfileImage(userEmma.id,
-      avatars[1].src);
+      avatars);
     const demoSignUpPageModel2 = new DemoSignUpPageModel(userEmma,
-      avatars, emmaDefaultImage);
+      avatars);
     this._signUpPageModelMap.set(1, demoSignUpPageModel1);
     this._signUpPageModelMap.set(2, demoSignUpPageModel2);
     this._googleClientId = '';
