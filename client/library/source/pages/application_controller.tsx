@@ -48,7 +48,7 @@ interface State {
   isLogInButtonClicked: boolean;
   isInviteAFoodieButtonClicked: boolean;
   isPartnerWithUsButtonClicked: boolean;
-  accountProfileImage: UserProfileImage;
+  accountProfileImageSrc: string;
   loggedIn: boolean;
 }
 
@@ -66,7 +66,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       isLogInButtonClicked: false,
       isInviteAFoodieButtonClicked: false,
       isPartnerWithUsButtonClicked: false,
-      accountProfileImage: UserProfileImage.default(User.makeGuest().id),
+      accountProfileImageSrc: null,
       loggedIn: false
     };
   }
@@ -118,7 +118,7 @@ export class ApplicationController extends React.Component<Properties, State> {
         <Shell
           displayMode={this.state.displayMode}
           account={this.state.account}
-          profileImageSrc={this.state.accountProfileImage.src}
+          profileImageSrc={this.state.accountProfileImageSrc}
           headerModel={this.props.model.headerModel}
           headerStyle={this.handleHeaderAndFooter(pathname).headerStyle}
           onLogOut={this.handleLogOut}
@@ -240,7 +240,8 @@ export class ApplicationController extends React.Component<Properties, State> {
         {
           isLoaded: true,
           hasError: false,
-          account: this.props.model.account
+          account: this.props.model.account,
+          accountProfileImageSrc: this.props.model.accountProfileImageSrc
         },
         () => {
           this.setState({ loggedIn: this.isLoggedIn() });
@@ -259,7 +260,8 @@ export class ApplicationController extends React.Component<Properties, State> {
           {
             isLoaded: true,
             hasError: false,
-            account: this.props.model.account
+            account: this.props.model.account,
+            accountProfileImageSrc: this.props.model.accountProfileImageSrc
           },
           () => {
             this.setState({ loggedIn: this.isLoggedIn() });
@@ -283,7 +285,7 @@ export class ApplicationController extends React.Component<Properties, State> {
     }, () => {
       this.props.model.load().then(() => {
         this.setState({
-          accountProfileImage: this.props.model.headerModel.profileImage,
+          accountProfileImageSrc: this.props.model.headerModel.profileImage,
           account: this.props.model.account
         })
       }).catch((error) => {
@@ -421,7 +423,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       this.handleJoinEvent(diningEventId);
     } else {
       this.props.model.getDiningEventPageModel(diningEventId).joinEvent(
-        this.state.account, this.state.accountProfileImage.src).then(() => {
+        this.state.account, this.state.accountProfileImageSrc.src).then(() => {
           this.forceUpdate();
         });
     }

@@ -9,6 +9,7 @@ interface Properties {
   displayMode: DisplayMode;
   account: User;
   model: SignUpPageModel;
+  onSignUpSuccess: (account: User, imageSrc: string) => void;
 }
 
 interface State {
@@ -34,7 +35,7 @@ export class SignUpPageController extends React.Component<Properties, State> {
       profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NONE,
       email: '',
       isSetUpPage: false,
-      displayName: '',
+      displayName: this.props.account.name,
       userProfileImage: null,
       password: '',
       redirect: null,
