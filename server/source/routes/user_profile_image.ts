@@ -33,17 +33,15 @@ export class UserProfileImageRoutes {
       console.log('loadProfileImageByUserId');
       image = await this.userProfileImageDatabase.loadProfileImageByUserId(
         userId);
-      console.log('image load successfully', image);
+      console.log('response 200 userProfileImage', image.toJson());
+    response.status(200).json({ userProfileImage: image.toJson() });
     } catch (error) {
       console.log('loadProfileImageByUserId failed', error);
       response.status(500).json({
         userProfileImage: UserProfileImage.default(userId),
         message: 'DATABASE_ERROR'
       });
-      return;
     }
-    console.log('response 200 userProfileImage', image.toJson());
-    response.status(200).json({ userProfileImage: image.toJson() });
   }
 
   private uploadUserProfileImage = async (request, response) => {

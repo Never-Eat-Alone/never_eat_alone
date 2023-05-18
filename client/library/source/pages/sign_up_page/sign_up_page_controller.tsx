@@ -9,7 +9,8 @@ interface Properties {
   displayMode: DisplayMode;
   account: User;
   model: SignUpPageModel;
-  onSignUpSuccess: (account: User, imageSrc: string) => void;
+  onSignUpSuccess: (account: User, accountProfileImage: UserProfileImage
+    ) => void;
 }
 
 interface State {
@@ -21,7 +22,6 @@ interface State {
   displayName: string;
   userProfileImage: UserProfileImage;
   isSetUpPage: boolean;
-  redirect: string;
   avatars: Avatar[];
   selectedAvatar: Avatar;
 }
@@ -38,16 +38,12 @@ export class SignUpPageController extends React.Component<Properties, State> {
       displayName: this.props.account.name,
       userProfileImage: null,
       password: '',
-      redirect: null,
       avatars: [],
       selectedAvatar: null
     };
   }
 
   public render(): JSX.Element {
-    if (this.state.redirect) {
-      return <Router.Redirect to={this.state.redirect} />;
-    }
     if (!this.state.isLoaded || this.state.signUpPageErrorCode ===
         SignUpPage.ErrorCode.NO_CONNECTION ||
         this.state.profileSetUpPageErrorCode ===
@@ -144,17 +140,19 @@ export class SignUpPageController extends React.Component<Properties, State> {
   private handleLetsGoClick = async () => {
     console.log('Running handleLetsGoClick');
     try {
+      let account: User;
+      let accountProfileImage: UserProfileImage;
       if (this.state.userProfileImage) {
-        await this.props.model.setUpProfile(this.state.displayName,
-          this.state.userProfileImage);
+        { account, accountProfileImage } = await this.props.model.setUpProfile(
+          this.state.displayName, this.state.userProfileImage);
       } else {
-        await this.props.model.setUpProfile(this.state.displayName,
-          this.state.selectedAvatar);
+        { account, accountProfileImage } = await this.props.model.setUpProfile(
+          this.state.displayName, this.state.selectedAvatar);
       }
       console.log('setUpProfile succesfully for displayname',
         this.state.displayName, 'userProfileImage',
         this.state.userProfileImage, 'avatar', this.state.selectedAvatar);
-      this.setState({ redirect: '/' });
+      this.props.onSignUpSuccess(account, accountProfileImage);
     } catch {
       this.setState({
         profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NO_CONNECTION

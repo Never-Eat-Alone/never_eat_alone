@@ -1,8 +1,7 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { Modal } from '../components';
-import { DisplayMode, getDisplayMode, User, UserProfileImage, UserStatus
-} from '../definitions';
+import { DisplayMode, getDisplayMode, User, UserStatus, UserProfileImage } from '../definitions';
 import { InviteAFoodieModalController, JoinModalController,
   LogInModalController, PartnerWithUsModalController } from '../modals';
 import { ApplicationModel } from './application_model';
@@ -40,6 +39,7 @@ interface Properties extends Router.RouteComponentProps<TParams> {
 interface State {
   displayMode: DisplayMode;
   account: User;
+  accountProfileImageSrc: string;
   isLoaded: boolean;
   hasError: boolean;
   redirect: string;
@@ -48,7 +48,6 @@ interface State {
   isLogInButtonClicked: boolean;
   isInviteAFoodieButtonClicked: boolean;
   isPartnerWithUsButtonClicked: boolean;
-  accountProfileImageSrc: string;
   loggedIn: boolean;
 }
 
@@ -58,6 +57,7 @@ export class ApplicationController extends React.Component<Properties, State> {
     this.state = {
       displayMode: DisplayMode.DESKTOP,
       account: User.makeGuest(),
+      accountProfileImageSrc: null,
       isLoaded: false,
       hasError: false,
       redirect: null,
@@ -66,7 +66,6 @@ export class ApplicationController extends React.Component<Properties, State> {
       isLogInButtonClicked: false,
       isInviteAFoodieButtonClicked: false,
       isPartnerWithUsButtonClicked: false,
-      accountProfileImageSrc: null,
       loggedIn: false
     };
   }
@@ -118,13 +117,11 @@ export class ApplicationController extends React.Component<Properties, State> {
         <Shell
           displayMode={this.state.displayMode}
           account={this.state.account}
-          profileImageSrc={this.state.accountProfileImageSrc}
-          headerModel={this.props.model.headerModel}
+          accountProfileImageSrc={this.state.accountProfileImageSrc}
           headerStyle={this.handleHeaderAndFooter(pathname).headerStyle}
           onLogOut={this.handleLogOut}
           onLogInButton={this.handleLogInButton}
           onJoinButton={this.handleJoinButton}
-          onButtonWithDropDownClick={this.handleButtonWithDropDownClick}
           onInviteAFoodieButton={this.handleInviteAFoodieButton}
         >
           {JoinModal}
@@ -285,7 +282,7 @@ export class ApplicationController extends React.Component<Properties, State> {
     }, () => {
       this.props.model.load().then(() => {
         this.setState({
-          accountProfileImageSrc: this.props.model.headerModel.profileImage,
+          accountProfileImageSrc: this.props.model.accountProfileImageSrc,
           account: this.props.model.account
         })
       }).catch((error) => {
@@ -338,11 +335,19 @@ export class ApplicationController extends React.Component<Properties, State> {
     this.setState({ isPartnerWithUsButtonClicked: false });
   }
 
-  private handleLogInSuccess = async (user: User) => {
+  private handleLogInSuccess = (account: User) => {
     if (this.state.isLogInButtonClicked) {
       this.handleLogInModalClose();
     }
-    this.updateAccount(user);
+    this.updateAccount(account);
+  }
+
+  private handleSignUpSuccess = (account: User,
+      accountProfileImage: UserProfileImage) => {
+    this.setState({
+      account: account,
+      accountProfileImageSrc: accountProfileImage.src
+    });
   }
 
   private handleLogOut = async () => {
@@ -351,8 +356,6 @@ export class ApplicationController extends React.Component<Properties, State> {
       this.updateAccount(User.makeGuest());
     }
   }
-
-  private handleButtonWithDropDownClick = (label: string) => {}
 
   private renderEmailConfirmationPage = (
       {match}: Router.RouteComponentProps<TParams>) => {
@@ -464,6 +467,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       displayMode={this.state.displayMode}
       account={this.state.account}
       model={this.props.model.getSignUpPageModel(id)}
+      onSignUpSuccess={this.handleSignUpSuccess}
     />;
   }
 

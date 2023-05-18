@@ -1,4 +1,3 @@
-import { HeaderModel, HttpHeaderModel } from '../components';
 import { User } from '../definitions';
 import { HttpInviteAFoodieModel, InviteAFoodieModel
 } from '../modals/invite_a_foodie_modal';
@@ -35,10 +34,18 @@ export class HttpApplicationModel extends ApplicationModel {
     } else {
       account = User.makeGuest();
     }
+    let accountProfileImageSrc = '';
+    if (account && account.id !== -1) {
+      const imageResponse = await fetch(
+        `/api/user_profile_image/${account.id}`);
+      if (imageResponse.status === 200) {
+        const responseObject = await imageResponse.json();
+        accountProfileImageSrc = responseObject.userProfileImage.src;
+      }
+    }
     const googleClientIdResponse = await fetch('/api/google_client_id');
     const googleClientIdObject = await googleClientIdResponse.json();
     const googleClientId = googleClientIdObject.google_client_id;
-    const headerModel = new HttpHeaderModel(account);
     const homePageModel = new HttpHomePageModel(account);
     const inviteAFoodieModel = new HttpInviteAFoodieModel(account);
     const joinModel = new HttpJoinModel();
@@ -47,7 +54,7 @@ export class HttpApplicationModel extends ApplicationModel {
     const deletedAccountSurveyModel = new HttpDeletedAccountSurveyModel();
     const deactivateAccountSurveyModel = new HttpDeactivateAccountSurveyModel();
     const forgotPasswordPageModel = new HttpForgotPasswordPageModel();
-    this._model = new LocalApplicationModel(account, headerModel,
+    this._model = new LocalApplicationModel(account, accountProfileImageSrc,
       homePageModel,
       inviteAFoodieModel, joinModel, partnerWithUsModel, logInModel,
       deletedAccountSurveyModel, deactivateAccountSurveyModel,
@@ -59,8 +66,8 @@ export class HttpApplicationModel extends ApplicationModel {
     return this._model.account;
   }
 
-  public get headerModel(): HeaderModel {
-    return this._model.headerModel;
+  public get accountProfileImageSrc(): string {
+    return this._model.accountProfileImageSrc;
   }
 
   public get homePageModel(): HomePageModel {
