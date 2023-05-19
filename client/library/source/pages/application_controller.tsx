@@ -357,6 +357,8 @@ export class ApplicationController extends React.Component<Properties, State> {
       account: account,
       accountProfileImageSrc: accountProfileImage.src,
       isSignedUp: true
+    }, () => {
+      this.props.history.push('/');
     });
   }
 
