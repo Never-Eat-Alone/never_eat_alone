@@ -50,6 +50,7 @@ interface State {
   isInviteAFoodieButtonClicked: boolean;
   isPartnerWithUsButtonClicked: boolean;
   loggedIn: boolean;
+  isSignedUp: boolean;
 }
 
 export class ApplicationController extends React.Component<Properties, State> {
@@ -67,7 +68,8 @@ export class ApplicationController extends React.Component<Properties, State> {
       isLogInButtonClicked: false,
       isInviteAFoodieButtonClicked: false,
       isPartnerWithUsButtonClicked: false,
-      loggedIn: false
+      loggedIn: false,
+      isSignedUp: false
     };
   }
 
@@ -254,7 +256,8 @@ export class ApplicationController extends React.Component<Properties, State> {
 
   public async componentDidUpdate(prevProps: Properties,
       prevState: State): Promise<void> {
-    if (prevState.loggedIn !== this.state.loggedIn) {
+    if (prevState.loggedIn !== this.state.loggedIn ||
+        prevState.isSignedUp !== this.state.isSignedUp) {
       try {
         await this.props.model.load();
         this.setState(
@@ -266,6 +269,9 @@ export class ApplicationController extends React.Component<Properties, State> {
           },
           () => {
             this.setState({ loggedIn: this.isLoggedIn() });
+            if (this.state.isSignedUp) {
+              this.setState({ redirect: '/' });
+            }
           }
         );
       } catch (error) {
@@ -348,10 +354,11 @@ export class ApplicationController extends React.Component<Properties, State> {
 
   private handleSignUpSuccess = (account: User,
       accountProfileImage: UserProfileImage) => {
+    console.log('handleSignUpSuccess', accountProfileImage, account);
     this.setState({
       account: account,
       accountProfileImageSrc: accountProfileImage.src,
-      redirect: '/'
+      isSignedUp: true
     });
   }
 
