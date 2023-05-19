@@ -50,6 +50,7 @@ interface State {
   isPartnerWithUsButtonClicked: boolean;
   loggedIn: boolean;
   isSignedUp: boolean;
+  redirect: string | null;
 }
 
 export class ApplicationController extends React.Component<Properties, State> {
@@ -67,11 +68,15 @@ export class ApplicationController extends React.Component<Properties, State> {
       isInviteAFoodieButtonClicked: false,
       isPartnerWithUsButtonClicked: false,
       loggedIn: false,
-      isSignedUp: false
+      isSignedUp: false,
+      redirect: null
     };
   }
 
   public render(): JSX.Element {
+    if (this.state.redirect) {
+      return <Router.Redirect to={this.state.redirect} />;
+    }
     if (this.state.hasError) {
       return <ErrorPage500 displayMode={this.state.displayMode} />;
     }
@@ -264,6 +269,10 @@ export class ApplicationController extends React.Component<Properties, State> {
           },
           () => {
             this.setState({ loggedIn: this.isLoggedIn() });
+            if (this.state.isSignedUp) {
+              console.log('redirect to /');
+              this.setState({ redirect: '/' });
+            }
           }
         );
       } catch (error) {
