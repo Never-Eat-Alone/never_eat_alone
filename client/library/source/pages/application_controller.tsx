@@ -1,7 +1,8 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { Modal } from '../components';
-import { DisplayMode, getDisplayMode, User, UserStatus, UserProfileImage } from '../definitions';
+import { DisplayMode, getDisplayMode, User, UserProfileImage, UserStatus
+} from '../definitions';
 import { InviteAFoodieModalController, JoinModalController,
   LogInModalController, PartnerWithUsModalController } from '../modals';
 import { ApplicationModel } from './application_model';
@@ -426,7 +427,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       this.handleJoinEvent(diningEventId);
     } else {
       this.props.model.getDiningEventPageModel(diningEventId).joinEvent(
-        this.state.account, this.state.accountProfileImageSrc.src).then(() => {
+        this.state.account, this.state.accountProfileImageSrc).then(() => {
           this.forceUpdate();
         });
     }

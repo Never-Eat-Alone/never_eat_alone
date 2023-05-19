@@ -7,7 +7,8 @@ export class HttpSignUpPageModel extends SignUpPageModel {
   constructor(account: User) {
     super();
     this._account = account;
-    console.log('HttpSignUpPageModel constructor for accountid', this._account.id);
+    console.log('HttpSignUpPageModel constructor for accountid',
+      this._account.id);
   }
 
   public async load(): Promise<void> {
@@ -77,8 +78,9 @@ export class HttpSignUpPageModel extends SignUpPageModel {
   }
 
   public async setUpProfile(displayName: string, image: UserProfileImage |
-      Avatar): Promise<void> {
-    await fetch(`/api/set_up_profile/${this._account.id}`, {
+      Avatar): Promise<{ account: User, accountProfileImage: UserProfileImage }
+      > {
+    const response = await fetch(`/api/set_up_profile/${this._account.id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -88,6 +90,20 @@ export class HttpSignUpPageModel extends SignUpPageModel {
         'image': image.toJson()
       })
     });
+    if (response.status !== 200) {
+      console.log('Failed to save the account updates.');
+      return {
+        account: this._account,
+        accountProfileImage: UserProfileImage.default(this._account.id)
+      };
+    } else {
+      const responseObject = await response.json();
+      return {
+        account: User.fromJson(responseObject.account),
+        accountProfileImage: UserProfileImage.fromJson(
+          responseObject.accountProfileImage)
+      };
+    }
   }
 
   public get avatars(): Avatar[] {

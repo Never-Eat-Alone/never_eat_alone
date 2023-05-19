@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as Router from 'react-router-dom';
 import { Avatar, DisplayMode, User, UserProfileImage } from '../../definitions';
 import { ProfileSetUpPage } from './profile_set_up_page';
 import { SignUpPage } from './sign_up_page';
@@ -140,19 +139,18 @@ export class SignUpPageController extends React.Component<Properties, State> {
   private handleLetsGoClick = async () => {
     console.log('Running handleLetsGoClick');
     try {
-      let account: User;
-      let accountProfileImage: UserProfileImage;
+      let result;
       if (this.state.userProfileImage) {
-        { account, accountProfileImage } = await this.props.model.setUpProfile(
-          this.state.displayName, this.state.userProfileImage);
+        result = await this.props.model.setUpProfile(this.state.displayName,
+          this.state.userProfileImage);
       } else {
-        { account, accountProfileImage } = await this.props.model.setUpProfile(
-          this.state.displayName, this.state.selectedAvatar);
+        result = await this.props.model.setUpProfile(this.state.displayName,
+          this.state.selectedAvatar);
       }
       console.log('setUpProfile succesfully for displayname',
         this.state.displayName, 'userProfileImage',
         this.state.userProfileImage, 'avatar', this.state.selectedAvatar);
-      this.props.onSignUpSuccess(account, accountProfileImage);
+      this.props.onSignUpSuccess(result.account, result.accountProfileImage);
     } catch {
       this.setState({
         profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NO_CONNECTION
