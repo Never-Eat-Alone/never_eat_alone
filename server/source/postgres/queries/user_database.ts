@@ -317,29 +317,30 @@ export class UserDatabase {
     return true;
   }
 
-  public saveUserProfile = async (image: UserProfileImage, displayName: string):
-      Promise<{ user: any, userProfileImage: UserProfileImage }> => {
-    const userResult = await this.pool.query(`
-      UPDATE users SET name = $1 WHERE id = $2
-      RETURNING *
-    `, [displayName, image.userId]);
-    const imageResult = await this.pool.query(`
-      INSERT INTO user_profile_images (user_id, src)
+  public saveUserProfile = async (userId: number, imageSrc: string,
+      displayName: string): Promise<{ account: User,
+      accountProfileImage: UserProfileImage }> => {
+    const userQueryResult = await this.pool.query(
+      `UPDATE users SET name = $1 WHERE id = $2 RETURNING *`,
+      [displayName, userId]);
+    const userProfileImageQueryResult = await this.pool.query(
+      `INSERT INTO user_profile_images (user_id, src)
       VALUES ($1, $2)
       ON CONFLICT (user_id)
       DO UPDATE SET src = EXCLUDED.src, updated_at = NOW()
-      RETURNING *
-    `, [image.userId, image.src]);
+      RETURNING *`,
+      [userId, imageSrc]);
+    const account = new User(
+      parseInt(userQueryResult.rows[0].id), userQueryResult.rows[0].name,
+      userQueryResult.rows[0].email, userQueryResult.rows[0].user_name,
+      UserStatus[userQueryResult.rows[0].user_status as keyof typeof
+      UserStatus], new Date(Date.parse(userQueryResult.rows[0].created_at)));
+    const accountProfileImage = new UserProfileImage(parseInt(
+      userProfileImageQueryResult.rows[0].user_id),
+      userProfileImageQueryResult.rows[0].src);
     return {
-      user: new User(parseInt(userResult.rows[0].id), userResult.rows[0].name,
-        userResult.rows[0].email, userResult.rows[0].user_name,
-        UserStatus[userResult.rows[0].user_status as keyof typeof UserStatus],
-        new Date(Date.parse(userResult.rows[0].created_at))),
-      userProfileImage: new UserProfileImage(
-        parseInt(imageResult.rows[0].id),
-        parseInt(imageResult.rows[0].user_id),
-        imageResult.rows[0].src
-      )
+      account: account,
+      accountProfileImage: accountProfileImage
     };
   }
 

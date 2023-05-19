@@ -709,14 +709,14 @@ export function loadComponentSchemas(): ComponentSchema[] {
       DisplayModeInput),
     new PropertySchema('displayName', 'Riley Spire', TextInput),
     new PropertySchema('selectedImage', new NeverEatAlone.UserProfileImage(
-      1, 1, 'resources/profile_set_up_page/icons/profile-image-0.svg'),
+      1, 'resources/profile_set_up_page/icons/profile-image-0.svg'),
       UserProfileImageInput),
-    new PropertySchema('avatars', [new NeverEatAlone.UserProfileImage(1, 1,
+    new PropertySchema('avatars', [new NeverEatAlone.UserProfileImage(1,
       'resources/profile_set_up_page/icons/profile-image-0.svg'),
-      new NeverEatAlone.UserProfileImage(2, 1,
+      new NeverEatAlone.UserProfileImage(1,
         'resources/profile_set_up_page/icons/profile-image-1.svg')],
       ArrayInput(new PropertySchema('selectedImage',
-        new NeverEatAlone.UserProfileImage(1, 1,
+        new NeverEatAlone.UserProfileImage(1,
         'resources/profile_set_up_page/icons/profile-image-0.svg'),
         UserProfileImageInput)))], [
     new SignalSchema('onLetsGoClick', '', []),

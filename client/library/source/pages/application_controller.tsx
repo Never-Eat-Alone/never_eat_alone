@@ -40,16 +40,17 @@ interface Properties extends Router.RouteComponentProps<TParams> {
 interface State {
   displayMode: DisplayMode;
   account: User;
+  accountProfileImageSrc: string;
   isLoaded: boolean;
   hasError: boolean;
-  redirect: string;
   lastPage: string;
   isJoinButtonClicked: boolean;
   isLogInButtonClicked: boolean;
   isInviteAFoodieButtonClicked: boolean;
   isPartnerWithUsButtonClicked: boolean;
-  accountProfileImage: UserProfileImage;
   loggedIn: boolean;
+  isSignedUp: boolean;
+  redirect: string | null;
 }
 
 export class ApplicationController extends React.Component<Properties, State> {
@@ -58,20 +59,24 @@ export class ApplicationController extends React.Component<Properties, State> {
     this.state = {
       displayMode: DisplayMode.DESKTOP,
       account: User.makeGuest(),
+      accountProfileImageSrc: null,
       isLoaded: false,
       hasError: false,
-      redirect: null,
       lastPage: '/',
       isJoinButtonClicked: false,
       isLogInButtonClicked: false,
       isInviteAFoodieButtonClicked: false,
       isPartnerWithUsButtonClicked: false,
-      accountProfileImage: UserProfileImage.NoImage(),
-      loggedIn: false
+      loggedIn: false,
+      isSignedUp: false,
+      redirect: null
     };
   }
 
   public render(): JSX.Element {
+    if (this.state.redirect) {
+      return <Router.Redirect to={this.state.redirect} />;
+    }
     if (this.state.hasError) {
       return <ErrorPage500 displayMode={this.state.displayMode} />;
     }
@@ -118,13 +123,11 @@ export class ApplicationController extends React.Component<Properties, State> {
         <Shell
           displayMode={this.state.displayMode}
           account={this.state.account}
-          profileImageSrc={this.state.accountProfileImage.src}
-          headerModel={this.props.model.headerModel}
+          accountProfileImageSrc={this.state.accountProfileImageSrc}
           headerStyle={this.handleHeaderAndFooter(pathname).headerStyle}
           onLogOut={this.handleLogOut}
           onLogInButton={this.handleLogInButton}
           onJoinButton={this.handleJoinButton}
-          onButtonWithDropDownClick={this.handleButtonWithDropDownClick}
           onInviteAFoodieButton={this.handleInviteAFoodieButton}
         >
           {JoinModal}
@@ -240,7 +243,8 @@ export class ApplicationController extends React.Component<Properties, State> {
         {
           isLoaded: true,
           hasError: false,
-          account: this.props.model.account
+          account: this.props.model.account,
+          accountProfileImageSrc: this.props.model.accountProfileImageSrc
         },
         () => {
           this.setState({ loggedIn: this.isLoggedIn() });
@@ -252,24 +256,28 @@ export class ApplicationController extends React.Component<Properties, State> {
 
   public async componentDidUpdate(prevProps: Properties,
       prevState: State): Promise<void> {
-    if (prevState.loggedIn !== this.state.loggedIn) {
+    if (prevState.loggedIn !== this.state.loggedIn ||
+        prevState.isSignedUp !== this.state.isSignedUp) {
       try {
         await this.props.model.load();
         this.setState(
           {
             isLoaded: true,
             hasError: false,
-            account: this.props.model.account
+            account: this.props.model.account,
+            accountProfileImageSrc: this.props.model.accountProfileImageSrc
           },
           () => {
             this.setState({ loggedIn: this.isLoggedIn() });
+            if (this.state.isSignedUp) {
+              this.setState({ redirect: '/' });
+            }
           }
         );
       } catch (error) {
         this.setState({ isLoaded: true, hasError: true });
       }
     }
-    return;
   }
 
   public componentWillUnmount(): void {
@@ -281,7 +289,12 @@ export class ApplicationController extends React.Component<Properties, State> {
       account: user,
       loggedIn: true
     }, () => {
-      this.props.model.load().catch((error) => {
+      this.props.model.load().then(() => {
+        this.setState({
+          accountProfileImageSrc: this.props.model.accountProfileImageSrc,
+          account: this.props.model.account
+        })
+      }).catch((error) => {
         this.setState({ hasError: true });
       });
     });
@@ -331,11 +344,20 @@ export class ApplicationController extends React.Component<Properties, State> {
     this.setState({ isPartnerWithUsButtonClicked: false });
   }
 
-  private handleLogInSuccess = async (user: User) => {
+  private handleLogInSuccess = (account: User) => {
     if (this.state.isLogInButtonClicked) {
       this.handleLogInModalClose();
     }
-    this.updateAccount(user);
+    this.updateAccount(account);
+  }
+
+  private handleSignUpSuccess = (account: User,
+      accountProfileImage: UserProfileImage) => {
+    this.setState({
+      account: account,
+      accountProfileImageSrc: accountProfileImage.src,
+      isSignedUp: true
+    });
   }
 
   private handleLogOut = async () => {
@@ -344,8 +366,6 @@ export class ApplicationController extends React.Component<Properties, State> {
       this.updateAccount(User.makeGuest());
     }
   }
-
-  private handleButtonWithDropDownClick = (label: string) => {}
 
   private renderEmailConfirmationPage = (
       {match}: Router.RouteComponentProps<TParams>) => {
@@ -416,7 +436,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       this.handleJoinEvent(diningEventId);
     } else {
       this.props.model.getDiningEventPageModel(diningEventId).joinEvent(
-        this.state.account, this.state.accountProfileImage.src).then(() => {
+        this.state.account, this.state.accountProfileImageSrc).then(() => {
           this.forceUpdate();
         });
     }
@@ -457,6 +477,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       displayMode={this.state.displayMode}
       account={this.state.account}
       model={this.props.model.getSignUpPageModel(id)}
+      onSignUpSuccess={this.handleSignUpSuccess}
     />;
   }
 

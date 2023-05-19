@@ -11,7 +11,7 @@ export class DemoLogInModel extends NeverEatAlone.LogInModel {
   public async logIn(email: string, password: string, rememberMe: boolean):
       Promise<NeverEatAlone.User> {
     let tempUser = NeverEatAlone.User.makeGuest();
-    let tempProfileImage = NeverEatAlone.UserProfileImage.NoImage();
+    let tempProfileImage = NeverEatAlone.UserProfileImage.default(tempUser.id);
     for (const user of this._userList) {
       if (user.email === email && password === '123') {
         tempUser = user;

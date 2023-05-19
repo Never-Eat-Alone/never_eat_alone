@@ -194,7 +194,7 @@ export class UserRoutes {
       response.redirect(303, 'http://nevereatalone.net/log_in');
       return;
     }
-    let userProfileImage = UserProfileImage.NoImage();
+    let userProfileImage = UserProfileImage.default(user.id);
     try {
       userProfileImage = 
         await this.userProfileImageDatabase.loadProfileImageByUserId(userId);
@@ -219,16 +219,20 @@ export class UserRoutes {
   }
 
   private setUpProfile = async (request, response) => {
+    const userId = parseInt(request.params.id);
     const displayName = request.body.displayName;
-    const image = UserProfileImage.fromJson(request.body.image);
+    const imageSrc = request.body.image.src;
     try {
-      await this.userDatabase.saveUserProfile(image, displayName);
+      const result = await this.userDatabase.saveUserProfile(userId, imageSrc,
+        displayName);
+      response.status(200).json({
+        account: result.account.toJson(),
+        accountProfileImage: result.accountProfileImage.toJson()
+      });
     } catch (error) {
       console.log('Failed at saveUserProfile', error);
       response.status(500).send();
-      return;
     }
-    response.status(201).send();
   }
 
   private setUpPassword = async (request, response) => {
@@ -540,7 +544,8 @@ export class UserRoutes {
     try {
       await this.sendPartnerWithUsRecievedConfirmationEmail(email, name);
     } catch (error) {
-      console.log('sendPartnerWithUsRecievedConfirmationEmail', error);
+      console.log('Failed at sendPartnerWithUsRecievedConfirmationEmail',
+        error);
       response.status(500).send();
       return;
     }

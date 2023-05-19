@@ -204,7 +204,7 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
       })
     });
     if (response.status !== 201) {
-      return UserProfileImage.NoImage();
+      return UserProfileImage.default(this._profileId);
     }
     const responseObject = await response.json();
     return UserProfileImage.fromJson(responseObject.userProfileImage);
