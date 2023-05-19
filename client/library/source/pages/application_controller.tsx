@@ -74,9 +74,6 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   public render(): JSX.Element {
-    if (this.state.redirect) {
-      return <Router.Redirect to={this.state.redirect} />;
-    }
     if (this.state.hasError) {
       return <ErrorPage500 displayMode={this.state.displayMode} />;
     }
@@ -270,7 +267,8 @@ export class ApplicationController extends React.Component<Properties, State> {
           () => {
             this.setState({ loggedIn: this.isLoggedIn() });
             if (this.state.isSignedUp) {
-              this.setState({ redirect: '/' });
+              // this.setState({ redirect: '/' });
+              this.props.history.push('/');
             }
           }
         );
@@ -357,8 +355,6 @@ export class ApplicationController extends React.Component<Properties, State> {
       account: account,
       accountProfileImageSrc: accountProfileImage.src,
       isSignedUp: true
-    }, () => {
-      this.props.history.push('/');
     });
   }
 
