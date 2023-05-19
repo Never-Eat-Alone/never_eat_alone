@@ -72,10 +72,8 @@ export class SignUpPageController extends React.Component<Properties, State> {
   }
 
   public async componentDidMount(): Promise<void> {
-    console.log('Running componentDidMount');
     try {
       await this.props.model.load();
-      console.log('model is loaded. avatars', this.props.model.avatars);
       this.setState({
         isLoaded: true,
         userProfileImage: null,
@@ -83,7 +81,6 @@ export class SignUpPageController extends React.Component<Properties, State> {
         selectedAvatar: this.props.model.avatars[0]
       });
     } catch {
-      console.log('error happened in loading the Singup model');
       this.setState({
         isLoaded: true,
         signUpPageErrorCode: SignUpPage.ErrorCode.NO_CONNECTION,
@@ -113,16 +110,13 @@ export class SignUpPageController extends React.Component<Properties, State> {
   }
 
   private handleUploadImageClick = async (uploadedImageFile: File) => {
-    console.log('Running handleUploadImageClick');
     try {
       const image = await this.props.model.uploadImageFile(uploadedImageFile);
-      console.log('uploadImage was successfull', image);
       this.setState({
         userProfileImage: image,
         selectedAvatar: null
       });
     } catch {
-      console.log('uploadImage failed');
       this.setState({
         selectedAvatar: this.props.model.avatars[0],
         userProfileImage: null,
@@ -132,12 +126,10 @@ export class SignUpPageController extends React.Component<Properties, State> {
   }
 
   private handleDisplayNameChange = (newName: string) => {
-    console.log('handleDisplayNameChange displayName', newName);
     this.setState({ displayName: newName });
   }
 
   private handleLetsGoClick = async () => {
-    console.log('Running handleLetsGoClick');
     try {
       let result;
       if (this.state.userProfileImage) {
@@ -147,9 +139,6 @@ export class SignUpPageController extends React.Component<Properties, State> {
         result = await this.props.model.setUpProfile(this.state.displayName,
           this.state.selectedAvatar);
       }
-      console.log('setUpProfile succesfully for displayname',
-        this.state.displayName, 'userProfileImage',
-        this.state.userProfileImage, 'avatar', this.state.selectedAvatar);
       this.props.onSignUpSuccess(result.account, result.accountProfileImage);
     } catch {
       this.setState({

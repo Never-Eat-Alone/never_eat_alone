@@ -270,7 +270,6 @@ export class ApplicationController extends React.Component<Properties, State> {
           () => {
             this.setState({ loggedIn: this.isLoggedIn() });
             if (this.state.isSignedUp) {
-              console.log('redirect to /');
               this.setState({ redirect: '/' });
             }
           }
@@ -354,7 +353,6 @@ export class ApplicationController extends React.Component<Properties, State> {
 
   private handleSignUpSuccess = (account: User,
       accountProfileImage: UserProfileImage) => {
-    console.log('handleSignUpSuccess', accountProfileImage, account);
     this.setState({
       account: account,
       accountProfileImageSrc: accountProfileImage.src,

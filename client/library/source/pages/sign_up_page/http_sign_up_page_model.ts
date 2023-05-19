@@ -7,14 +7,10 @@ export class HttpSignUpPageModel extends SignUpPageModel {
   constructor(account: User) {
     super();
     this._account = account;
-    console.log('HttpSignUpPageModel constructor for accountid',
-      this._account.id);
   }
 
   public async load(): Promise<void> {
-    console.log('load');
     const response = await fetch(`/api/sign_up/${this._account.id}`);
-    console.log('response status', response.status);
     if (response.status !== 200) {
       return;
     }
@@ -23,12 +19,10 @@ export class HttpSignUpPageModel extends SignUpPageModel {
     if (responseObject.userProfileImage) {
       userProfileImage = UserProfileImage.fromJson(
         responseObject.userProfileImage);
-      console.log('userProfileImage', userProfileImage);
     }
     let avatars: Avatar[] = [];
     if (responseObject.avatars && responseObject.avatars.length > 0) {
       avatars = arrayFromJson(Avatar, responseObject.avatars);
-      console.log('avatars', avatars);
     }
     this._model = new LocalSignUpPageModel(this._account, avatars);
     this._model.load();
@@ -42,22 +36,18 @@ export class HttpSignUpPageModel extends SignUpPageModel {
       Promise<UserProfileImage> {
     const formData = new FormData();
     formData.append('userProfileImage', userProfileImageFile);
-    console.log('uloading image', `/api/upload_profile_image/${this._account.id}`);
     const response = await fetch(
       `/api/upload_profile_image/${this._account.id}`, {
       method: 'POST',
       body: formData
     });
-    console.log('response.status', response.status);
     if (response.status === 201) {
       const responseObject = await response.json();
-      console.log('uploaded image successfully', UserProfileImage.fromJson(responseObject.userProfileImage));
-      const uploadedImage = UserProfileImage.fromJson(responseObject.userProfileImage);
+      const uploadedImage = UserProfileImage.fromJson(
+        responseObject.userProfileImage);
       this.addUploadedImage(uploadedImage);
       return uploadedImage;
     }
-    console.log('failed to upload image and returning default image', UserProfileImage.default(this._account.id));
-    //this is the problem, need to create the image with the user id and defaulr src for default image
     return UserProfileImage.default(this._account.id);
   }
 
@@ -91,7 +81,6 @@ export class HttpSignUpPageModel extends SignUpPageModel {
       })
     });
     if (response.status !== 200) {
-      console.log('Failed to save the account updates.');
       return {
         account: this._account,
         accountProfileImage: UserProfileImage.default(this._account.id)

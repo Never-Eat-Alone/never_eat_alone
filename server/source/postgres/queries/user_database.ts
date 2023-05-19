@@ -320,7 +320,6 @@ export class UserDatabase {
   public saveUserProfile = async (userId: number, imageSrc: string,
       displayName: string): Promise<{ account: User,
       accountProfileImage: UserProfileImage }> => {
-    console.log('Running saveUserProfile');
     const userQueryResult = await this.pool.query(
       `UPDATE users SET name = $1 WHERE id = $2 RETURNING *`,
       [displayName, userId]);
@@ -339,7 +338,6 @@ export class UserDatabase {
     const accountProfileImage = new UserProfileImage(parseInt(
       userProfileImageQueryResult.rows[0].user_id),
       userProfileImageQueryResult.rows[0].src);
-    console.log('account', account, 'profileImage', accountProfileImage);
     return {
       account: account,
       accountProfileImage: accountProfileImage

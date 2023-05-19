@@ -544,7 +544,8 @@ export class UserRoutes {
     try {
       await this.sendPartnerWithUsRecievedConfirmationEmail(email, name);
     } catch (error) {
-      console.log('sendPartnerWithUsRecievedConfirmationEmail', error);
+      console.log('Failed at sendPartnerWithUsRecievedConfirmationEmail',
+        error);
       response.status(500).send();
       return;
     }
