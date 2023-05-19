@@ -43,7 +43,6 @@ interface State {
   accountProfileImageSrc: string;
   isLoaded: boolean;
   hasError: boolean;
-  redirect: string;
   lastPage: string;
   isJoinButtonClicked: boolean;
   isLogInButtonClicked: boolean;
@@ -62,7 +61,6 @@ export class ApplicationController extends React.Component<Properties, State> {
       accountProfileImageSrc: null,
       isLoaded: false,
       hasError: false,
-      redirect: null,
       lastPage: '/',
       isJoinButtonClicked: false,
       isLogInButtonClicked: false,
@@ -79,9 +77,6 @@ export class ApplicationController extends React.Component<Properties, State> {
     }
     if (!this.state.isLoaded) {
       return <div />;
-    }
-    if (this.state.redirect) {
-      return <Router.Redirect to={this.state.redirect} />;
     }
     const pathname = this.props.location.pathname;
     const JoinModal = (this.state.isJoinButtonClicked &&
@@ -269,16 +264,12 @@ export class ApplicationController extends React.Component<Properties, State> {
           },
           () => {
             this.setState({ loggedIn: this.isLoggedIn() });
-            if (this.state.isSignedUp) {
-              this.setState({ redirect: '/' });
-            }
           }
         );
       } catch (error) {
         this.setState({ isLoaded: true, hasError: true });
       }
     }
-    return;
   }
 
   public componentWillUnmount(): void {
