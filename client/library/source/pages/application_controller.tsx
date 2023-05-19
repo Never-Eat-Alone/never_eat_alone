@@ -78,6 +78,9 @@ export class ApplicationController extends React.Component<Properties, State> {
     if (!this.state.isLoaded) {
       return <div />;
     }
+    if (this.state.redirect) {
+      return <Router.Redirect to={this.state.redirect} />;
+    }
     const pathname = this.props.location.pathname;
     const JoinModal = (this.state.isJoinButtonClicked &&
       <Modal>
@@ -347,7 +350,8 @@ export class ApplicationController extends React.Component<Properties, State> {
       accountProfileImage: UserProfileImage) => {
     this.setState({
       account: account,
-      accountProfileImageSrc: accountProfileImage.src
+      accountProfileImageSrc: accountProfileImage.src,
+      redirect: '/'
     });
   }
 
