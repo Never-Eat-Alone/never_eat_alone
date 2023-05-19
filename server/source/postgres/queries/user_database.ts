@@ -332,7 +332,7 @@ export class UserDatabase {
       RETURNING *`,
       [userId, imageSrc]);
     const account = new User(
-      parseInt(userQueryResult.rows[0].user_id), userQueryResult.rows[0].name,
+      parseInt(userQueryResult.rows[0].id), userQueryResult.rows[0].name,
       userQueryResult.rows[0].email, userQueryResult.rows[0].user_name,
       UserStatus[userQueryResult.rows[0].user_status as keyof typeof
       UserStatus], new Date(Date.parse(userQueryResult.rows[0].created_at)));
