@@ -30,12 +30,18 @@ export class DemoSignUpPageModel extends NeverEatAlone.SignUpPageModel {
 
   public async setUpProfile(displayName: string,
       image: NeverEatAlone.UserProfileImage | NeverEatAlone.Avatar):
-      Promise<void> {
+      Promise<{ account: NeverEatAlone.User,
+      accountProfileImage: NeverEatAlone.UserProfileImage }> {
     const tempAccount = new NeverEatAlone.User(this._account.id, displayName,
       this._account.email, this._account.userName, this._account.userStatus,
       this._account.createdAt);
     this._account = tempAccount;
     this._imageSrc = image.src;
+    return {
+      account: this._account,
+      accountProfileImage: new NeverEatAlone.UserProfileImage(
+        this._account.id, image.src)
+    };
   }
 
   private _account: NeverEatAlone.User;

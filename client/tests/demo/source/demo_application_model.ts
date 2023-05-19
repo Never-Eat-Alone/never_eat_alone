@@ -21,7 +21,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const arthurProfileImage = new NeverEatAlone.UserProfileImage(2,
       'resources/images/profileguy3.jpeg');
     this._account = userArthur;
-    this._headerModel = new NeverEatAlone.LocalHeaderModel(arthurProfileImage);
+    this._accountProfileImageSrc = arthurProfileImage.src;
     const imageListEmpty: NeverEatAlone.SocialMediaImage[] = [];
     const imageListSample: NeverEatAlone.SocialMediaImage[] = [
       new NeverEatAlone.SocialMediaImage(1, 'resources/images/2.jpg'),
@@ -438,17 +438,16 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     this._emailConfirmationPageModelMap.set(
       'e2a25428e17ec7b6e61e6ab514f64776b84e224bcde140f88718cc2d814089d9',
       demoEmailConfirmationPageModel1);
-    await Promise.all([this._headerModel.load(), this._homePageModel.load(),
+    await Promise.all([this._homePageModel.load(),
       this._inviteAFoodieModel.load()]);
-    return;
   }
 
   public get account(): NeverEatAlone.User {
     return this._account;
   }
 
-  public get headerModel(): NeverEatAlone.HeaderModel {
-    return this._headerModel;
+  public get accountProfileImageSrc(): string {
+    return this._accountProfileImageSrc;
   }
 
   public get homePageModel(): NeverEatAlone.HomePageModel {
@@ -548,7 +547,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
   }
 
   private _account: NeverEatAlone.User;
-  private _headerModel: NeverEatAlone.HeaderModel;
+  private _accountProfileImageSrc: string;
   private _homePageModel: NeverEatAlone.HomePageModel;
   private _diningEventModelMap: Map<number, NeverEatAlone.DiningEventPageModel>;
   private _inviteAFoodieModel: NeverEatAlone.InviteAFoodieModel;

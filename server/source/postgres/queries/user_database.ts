@@ -1,6 +1,6 @@
 import * as Hash from 'hash.js';
 import { Pool } from 'pg';
-import { Avatar, User, UserStatus
+import { Avatar, User, UserStatus, UserProfileImage
 } from '../../../../client/library/source/definitions';
 import * as Crypto from 'crypto';
 
@@ -318,14 +318,30 @@ export class UserDatabase {
   }
 
   public saveUserProfile = async (userId: number, imageSrc: string,
-      displayName: string): Promise<void> => {
-    await this.pool.query(`UPDATE users SET name = $1 WHERE id = $2`,
+      displayName: string): Promise<{ account: User,
+      accountProfileImage: UserProfileImage }> => {
+    const userQueryResult = await this.pool.query(
+      `UPDATE users SET name = $1 WHERE id = $2 RETURNING *`,
       [displayName, userId]);
-    await this.pool.query(`INSERT INTO user_profile_images (user_id, src)
+    const userProfileImageQueryResult = await this.pool.query(
+      `INSERT INTO user_profile_images (user_id, src)
       VALUES ($1, $2)
       ON CONFLICT (user_id)
-      DO UPDATE SET src = EXCLUDED.src, updated_at = NOW()`,
+      DO UPDATE SET src = EXCLUDED.src, updated_at = NOW()
+      RETURNING *`,
       [userId, imageSrc]);
+    const account = new User(
+      parseInt(userQueryResult.rows[0].id), userQueryResult.rows[0].name,
+      userQueryResult.rows[0].email, userQueryResult.rows[0].user_name,
+      UserStatus[userQueryResult.rows[0].user_status as keyof typeof
+      UserStatus], new Date(Date.parse(userQueryResult.rows[0].created_at)));
+    const accountProfileImage = new UserProfileImage(parseInt(
+      userProfileImageQueryResult.rows[0].user_id),
+      userProfileImageQueryResult.rows[0].src);
+    return {
+      account: account,
+      accountProfileImage: accountProfileImage
+    };
   }
 
   /** The postgress pool connection. */

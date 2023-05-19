@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as Router from 'react-router-dom';
 import { Avatar, DisplayMode, User, UserProfileImage } from '../../definitions';
 import { ProfileSetUpPage } from './profile_set_up_page';
 import { SignUpPage } from './sign_up_page';
@@ -9,6 +8,8 @@ interface Properties {
   displayMode: DisplayMode;
   account: User;
   model: SignUpPageModel;
+  onSignUpSuccess: (account: User, accountProfileImage: UserProfileImage
+    ) => void;
 }
 
 interface State {
@@ -20,7 +21,6 @@ interface State {
   displayName: string;
   userProfileImage: UserProfileImage;
   isSetUpPage: boolean;
-  redirect: string;
   avatars: Avatar[];
   selectedAvatar: Avatar;
 }
@@ -34,19 +34,15 @@ export class SignUpPageController extends React.Component<Properties, State> {
       profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NONE,
       email: '',
       isSetUpPage: false,
-      displayName: '',
+      displayName: this.props.account.name,
       userProfileImage: null,
       password: '',
-      redirect: null,
       avatars: [],
       selectedAvatar: null
     };
   }
 
   public render(): JSX.Element {
-    if (this.state.redirect) {
-      return <Router.Redirect to={this.state.redirect} />;
-    }
     if (!this.state.isLoaded || this.state.signUpPageErrorCode ===
         SignUpPage.ErrorCode.NO_CONNECTION ||
         this.state.profileSetUpPageErrorCode ===
@@ -76,10 +72,8 @@ export class SignUpPageController extends React.Component<Properties, State> {
   }
 
   public async componentDidMount(): Promise<void> {
-    console.log('Running componentDidMount');
     try {
       await this.props.model.load();
-      console.log('model is loaded. avatars', this.props.model.avatars);
       this.setState({
         isLoaded: true,
         userProfileImage: null,
@@ -87,7 +81,6 @@ export class SignUpPageController extends React.Component<Properties, State> {
         selectedAvatar: this.props.model.avatars[0]
       });
     } catch {
-      console.log('error happened in loading the Singup model');
       this.setState({
         isLoaded: true,
         signUpPageErrorCode: SignUpPage.ErrorCode.NO_CONNECTION,
@@ -117,16 +110,13 @@ export class SignUpPageController extends React.Component<Properties, State> {
   }
 
   private handleUploadImageClick = async (uploadedImageFile: File) => {
-    console.log('Running handleUploadImageClick');
     try {
       const image = await this.props.model.uploadImageFile(uploadedImageFile);
-      console.log('uploadImage was successfull', image);
       this.setState({
         userProfileImage: image,
         selectedAvatar: null
       });
     } catch {
-      console.log('uploadImage failed');
       this.setState({
         selectedAvatar: this.props.model.avatars[0],
         userProfileImage: null,
@@ -136,24 +126,20 @@ export class SignUpPageController extends React.Component<Properties, State> {
   }
 
   private handleDisplayNameChange = (newName: string) => {
-    console.log('handleDisplayNameChange displayName', newName);
     this.setState({ displayName: newName });
   }
 
   private handleLetsGoClick = async () => {
-    console.log('Running handleLetsGoClick');
     try {
+      let result;
       if (this.state.userProfileImage) {
-        await this.props.model.setUpProfile(this.state.displayName,
+        result = await this.props.model.setUpProfile(this.state.displayName,
           this.state.userProfileImage);
       } else {
-        await this.props.model.setUpProfile(this.state.displayName,
+        result = await this.props.model.setUpProfile(this.state.displayName,
           this.state.selectedAvatar);
       }
-      console.log('setUpProfile succesfully for displayname',
-        this.state.displayName, 'userProfileImage',
-        this.state.userProfileImage, 'avatar', this.state.selectedAvatar);
-      this.setState({ redirect: '/' });
+      this.props.onSignUpSuccess(result.account, result.accountProfileImage);
     } catch {
       this.setState({
         profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NO_CONNECTION

@@ -223,8 +223,12 @@ export class UserRoutes {
     const displayName = request.body.displayName;
     const imageSrc = request.body.image.src;
     try {
-      await this.userDatabase.saveUserProfile(userId, imageSrc, displayName);
-      response.status(201).send();
+      const result = await this.userDatabase.saveUserProfile(userId, imageSrc,
+        displayName);
+      response.status(200).json({
+        account: result.account.toJson(),
+        accountProfileImage: result.accountProfileImage.toJson()
+      });
     } catch (error) {
       console.log('Failed at saveUserProfile', error);
       response.status(500).send();
@@ -540,7 +544,8 @@ export class UserRoutes {
     try {
       await this.sendPartnerWithUsRecievedConfirmationEmail(email, name);
     } catch (error) {
-      console.log('sendPartnerWithUsRecievedConfirmationEmail', error);
+      console.log('Failed at sendPartnerWithUsRecievedConfirmationEmail',
+        error);
       response.status(500).send();
       return;
     }

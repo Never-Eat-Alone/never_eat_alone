@@ -1,5 +1,4 @@
-import { HeaderModel } from '../components';
-import { User, UserStatus } from '../definitions';
+import { User } from '../definitions';
 import { InviteAFoodieModel } from '../modals';
 import { JoinModel } from '../modals/join_modal';
 import { LogInModel } from '../modals/log_in_modal';
@@ -17,7 +16,7 @@ import { SettingsPageModel } from './settings_page';
 import { SignUpPageModel } from './sign_up_page';
 
 export class LocalApplicationModel extends ApplicationModel {
-  constructor(account: User, headerModel: HeaderModel,
+  constructor(account: User, accountProfileImageSrc: string,
       homePageModel: HomePageModel, inviteAFoodieModel: InviteAFoodieModel,
       joinModel: JoinModel, partnerWithUsModel: PartnerWithUsModel,
       logInModel: LogInModel,
@@ -27,7 +26,7 @@ export class LocalApplicationModel extends ApplicationModel {
       googleClientId: string) {
     super();
     this._account = account;
-    this._headerModel = headerModel;
+    this._accountProfileImageSrc = accountProfileImageSrc;
     this._homepageModel = homePageModel;
     this._inviteAFoodieModel = inviteAFoodieModel;
     this._joinModel = joinModel;
@@ -47,7 +46,7 @@ export class LocalApplicationModel extends ApplicationModel {
   }
 
   public async load(): Promise<void> {
-    await Promise.all([this._headerModel.load(), this._homepageModel.load(),
+    await Promise.all([this._homepageModel.load(),
       this._inviteAFoodieModel.load()]);
   }
 
@@ -55,8 +54,8 @@ export class LocalApplicationModel extends ApplicationModel {
     return this._account;;
   }
 
-  public get headerModel(): HeaderModel {
-    return this._headerModel;
+  public get accountProfileImageSrc(): string {
+    return this._accountProfileImageSrc;
   }
 
   public get homePageModel(): HomePageModel {
@@ -150,7 +149,7 @@ export class LocalApplicationModel extends ApplicationModel {
   }
 
   private _account: User;
-  private _headerModel: HeaderModel;
+  private _accountProfileImageSrc: string;
   private _homepageModel: HomePageModel;
   private _inviteAFoodieModel: InviteAFoodieModel;
   private _joinModel: JoinModel;

@@ -28,39 +28,31 @@ export class UserProfileImageRoutes {
   private getUserProfileImageByUserId = async (request, response) => {
     const userId = parseInt(request.params.userId);
     let image: UserProfileImage;
-    console.log('Running getUserProfileImageByUserId with userId', userId);
     try {
-      console.log('loadProfileImageByUserId');
       image = await this.userProfileImageDatabase.loadProfileImageByUserId(
         userId);
-      console.log('image load successfully', image);
+    response.status(200).json({ userProfileImage: image.toJson() });
     } catch (error) {
-      console.log('loadProfileImageByUserId failed', error);
+      console.log('Failed at loadProfileImageByUserId.', error);
       response.status(500).json({
         userProfileImage: UserProfileImage.default(userId),
         message: 'DATABASE_ERROR'
       });
-      return;
     }
-    console.log('response 200 userProfileImage', image.toJson());
-    response.status(200).json({ userProfileImage: image.toJson() });
   }
 
   private uploadUserProfileImage = async (request, response) => {
     const userId = parseInt(request.params.userId);
     const userProfileImageFile = request.file;
     let uploadedImage: UserProfileImage;
-    console.log('uploadUserProfileImage userId', userId, 'userProfileImageFile', userProfileImageFile);
     try {
       uploadedImage = await this.userProfileImageDatabase.uploadProfileImage(
         userId, userProfileImageFile);
-      console.log('image uploaded in db successfully.');
     } catch (error) {
-      console.log('uploadUserProfileImage failed', error);
+      console.log('Failed at uploadUserProfileImage.', error);
       response.status(500).json({ message: 'DATABASE_ERROR' });
       return;
     }
-    console.log('response status 201 with userProfileImage', uploadedImage.userId, uploadedImage.src);
     response.status(201).json({ userProfileImage: uploadedImage.toJson() });
   }
 
@@ -73,7 +65,7 @@ export class UserProfileImageRoutes {
           avatar);
       response.status(200).json({ userProfileImage: newImage.toJson() });
     } catch (error) {
-      console.log('', error);
+      console.log('Failed at updateProfileImageByAvatar.', error);
       response.status(500).send();
     }
   }

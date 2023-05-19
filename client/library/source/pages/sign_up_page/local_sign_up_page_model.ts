@@ -28,12 +28,17 @@ export class LocalSignUpPageModel extends SignUpPageModel {
   }
 
   public async setUpProfile(displayName: string, image: UserProfileImage |
-      Avatar): Promise<void> {
+      Avatar): Promise<{ account: User, accountProfileImage: UserProfileImage }
+      > {
     const tempAccount = new User(this._account.id, displayName,
       this._account.email, this._account.userName, this._account.userStatus,
       this._account.createdAt);
     this._account = tempAccount;
     this._imageSrc = image.src;
+    return {
+      account: this._account,
+      accountProfileImage: new UserProfileImage(this._account.id, image.src)
+    };
   }
 
   private _avatars: Avatar[];
