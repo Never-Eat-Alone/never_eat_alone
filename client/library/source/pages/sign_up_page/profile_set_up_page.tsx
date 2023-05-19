@@ -43,17 +43,19 @@ export class ProfileSetUpPage extends React.Component<Properties> {
     const contentStyle = (this.props.displayMode === DisplayMode.MOBILE &&
       MOBILE_CONTENT_STYLE || CONTENT_STYLE);
     const avatars = [];
-    for (const avatar of this.props.avatars) {
-      const isMarked = (() => {
-        if (this.props.selectedAvatar) {
-          return avatar.id === this.props.selectedAvatar.id;
-        }
-        return false;
-      })();
-      avatars.push(<AvatarWithCheckMark key={avatar.src}
-        imageSrc={avatar.src}
-        isMarked={isMarked}
-        onClick={() => this.props.onAvatarClick(avatar)} />);
+    if (this.props.avatars && this.props.avatars.length > 0) {
+      for (const avatar of this.props.avatars) {
+        const isMarked = (() => {
+          if (this.props.selectedAvatar) {
+            return avatar.id === this.props.selectedAvatar.id;
+          }
+          return false;
+        })();
+        avatars.push(<AvatarWithCheckMark key={avatar.src}
+          imageSrc={avatar.src}
+          isMarked={isMarked}
+          onClick={() => this.props.onAvatarClick(avatar)} />);
+      }
     }
     const isDisplayName = this.props.displayName.length !== 0;
     const nameErrorMessage = (!isDisplayName && 'Please enter a display name.'

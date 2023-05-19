@@ -43,10 +43,9 @@ export class SignUpPageController extends React.Component<Properties, State> {
   }
 
   public render(): JSX.Element {
-    if (!this.state.isLoaded || this.state.signUpPageErrorCode ===
-        SignUpPage.ErrorCode.NO_CONNECTION ||
-        this.state.profileSetUpPageErrorCode ===
-        ProfileSetUpPage.ErrorCode.NO_CONNECTION) {
+    if (!this.state.isLoaded || this.state.signUpPageErrorCode !==
+        SignUpPage.ErrorCode.NONE || this.state.profileSetUpPageErrorCode !==
+        ProfileSetUpPage.ErrorCode.NONE) {
       return <div />;
     }
     if (this.state.isSetUpPage) {
