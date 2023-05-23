@@ -21,7 +21,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const arthurProfileImage = new NeverEatAlone.UserProfileImage(2,
       'resources/images/profileguy3.jpeg');
     this._account = userArthur;
-    this._accountProfileImageSrc = arthurProfileImage.src;
+    this._accountProfileImage = arthurProfileImage;
     const imageListEmpty: NeverEatAlone.SocialMediaImage[] = [];
     const imageListSample: NeverEatAlone.SocialMediaImage[] = [
       new NeverEatAlone.SocialMediaImage(1, 'resources/images/2.jpg'),
@@ -420,15 +420,10 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     this._deactivateAccountSurveyModel = new DemoDeactivateAccountSurveyModel();
     // Loading all models with load method.
     this._signUpPageModelMap = new Map();
-    const avatars: NeverEatAlone.Avatar[] = [];
-    for (let i = 0; i < 20; ++i) {
-      const src = `resources/profile_set_up_page/icons/profile-image-${i}.svg`;
-      avatars.push(new NeverEatAlone.Avatar(Date.now() + i, src));
-    }
     const demoSignUpPageModel1 = new DemoSignUpPageModel(userArthur,
-      avatars);
+      arthurProfileImage);
     const demoSignUpPageModel2 = new DemoSignUpPageModel(userEmma,
-      avatars);
+      emmaProfileImage);
     this._signUpPageModelMap.set(1, demoSignUpPageModel1);
     this._signUpPageModelMap.set(2, demoSignUpPageModel2);
     this._googleClientId = '';
@@ -446,8 +441,8 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return this._account;
   }
 
-  public get accountProfileImageSrc(): string {
-    return this._accountProfileImageSrc;
+  public get accountProfileImage(): NeverEatAlone.UserProfileImage {
+    return this._accountProfileImage;
   }
 
   public get homePageModel(): NeverEatAlone.HomePageModel {
@@ -547,7 +542,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
   }
 
   private _account: NeverEatAlone.User;
-  private _accountProfileImageSrc: string;
+  private _accountProfileImage: NeverEatAlone.UserProfileImage;
   private _homePageModel: NeverEatAlone.HomePageModel;
   private _diningEventModelMap: Map<number, NeverEatAlone.DiningEventPageModel>;
   private _inviteAFoodieModel: NeverEatAlone.InviteAFoodieModel;

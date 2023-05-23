@@ -2,7 +2,7 @@ import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 import { AvatarWithCheckMark, NameInputFieldWithCounterInside, PrimaryTextButton
 } from '../../components';
-import { Avatar, DisplayMode, UserProfileImage } from '../../definitions';
+import { DisplayMode, UserProfileImage } from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -11,13 +11,9 @@ interface Properties {
   displayName: string;
 
   /** The image user selected as profile picture. */
-  selectedImage?: UserProfileImage;
+  selectedImage: UserProfileImage;
 
-  /** The app avatars displayed on set up profile page. */
-  avatars: Avatar[];
-
-  /** the avatar that user selected as profile image. */
-  selectedAvatar?: Avatar;
+  userId: number;
 
   /** The error code that applies to the ProfileSetUpPage. */
   errorCode: ProfileSetUpPage.ErrorCode;
@@ -26,54 +22,62 @@ interface Properties {
   onUploadImageClick: (imageFile: File) => void;
 
   /** Indicates the let's go button is clicked. */
-  onLetsGoClick: () => void;
+  onLetsGoClick: (displayName: string, selectedImage: UserProfileImage) => void;
+}
 
-  /** Indicates the user clicked on an avatar image. */
-  onAvatarClick: (avatar: Avatar) => void;
-
-  /** Indiciates the display name field has changed. */
-  onDisplayNameChange: (newName: string) => void;
+interface State {
+  selectedImage: UserProfileImage;
+  displayName: string;
 }
 
 /** Displays the ProfileSetUpPage. */
-export class ProfileSetUpPage extends React.Component<Properties> {
+export class ProfileSetUpPage extends React.Component<Properties, State> {
+  constructor(props: Properties) {
+    super(props);
+    this.state = {
+      selectedImage: this.props.selectedImage,
+      displayName: this.props.displayName
+    };
+    this._avatarSrcList = [
+      '/resources/avatars/profile-image-0.svg',
+      '/resources/avatars/profile-image-1.svg',
+      '/resources/avatars/profile-image-2.svg',
+      '/resources/avatars/profile-image-3.svg',
+      '/resources/avatars/profile-image-4.svg',
+      '/resources/avatars/profile-image-5.svg',
+      '/resources/avatars/profile-image-6.svg',
+      '/resources/avatars/profile-image-7.svg',
+      '/resources/avatars/profile-image-8.svg',
+      '/resources/avatars/profile-image-9.svg',
+      '/resources/avatars/profile-image-10.svg',
+      '/resources/avatars/profile-image-11.svg',
+      '/resources/avatars/profile-image-12.svg',
+      '/resources/avatars/profile-image-13.svg',
+      '/resources/avatars/profile-image-14.svg',
+      '/resources/avatars/profile-image-15.svg',
+      '/resources/avatars/profile-image-16.svg',
+      '/resources/avatars/profile-image-17.svg',
+      '/resources/avatars/profile-image-18.svg',
+      '/resources/avatars/profile-image-19.svg'
+    ];
+  }
+
   public render(): JSX.Element {
     const contentContainerStyle = (this.props.displayMode ===
       DisplayMode.MOBILE && MOBILE_CONTAINER_STYLE || CONTENT_CONTAINER_STYLE);
     const contentStyle = (this.props.displayMode === DisplayMode.MOBILE &&
       MOBILE_CONTENT_STYLE || CONTENT_STYLE);
     const avatars = [];
-    if (this.props.avatars?.length > 0) {
-      for (const avatar of this.props.avatars) {
-        const isMarked = (() => {
-          if (this.props.selectedAvatar) {
-            return avatar.id === this.props.selectedAvatar.id;
-          }
-          return false;
-        })();
-        avatars.push(<AvatarWithCheckMark key={avatar.src}
-          imageSrc={avatar.src}
-          isMarked={isMarked}
-          onClick={() => this.props.onAvatarClick(avatar)} />);
-      }
+    for (const avatarSrc of this._avatarSrcList) {
+      const isMarked = avatarSrc === this.state.selectedImage.src;
+      avatars.push(<AvatarWithCheckMark key={avatarSrc}
+        imageSrc={avatarSrc}
+        isMarked={isMarked}
+        onClick={() => this.handleAvatarClick(avatarSrc)} />);
     }
-    const isDisplayName = this.props.displayName.length !== 0;
+    const isDisplayName = this.state.displayName.length !== 0;
     const nameErrorMessage = (!isDisplayName && 'Please enter a display name.'
       || '');
-    const selectedProfileImage = (() => {
-      if (this.props.selectedImage) {
-        return <img
-          style={ICON_STYLE}
-          src={this.props.selectedImage.src}
-          alt='Selected Picture'
-        />;
-      }
-      return <img
-        style={ICON_STYLE}
-        src={this.props.selectedAvatar.src}
-        alt='Selected Avatar'
-      />;
-    })();
     const content = ((contentContainerStyle: React.CSSProperties,
         contentStyle: React.CSSProperties) => {
       return (
@@ -82,18 +86,22 @@ export class ProfileSetUpPage extends React.Component<Properties> {
             <div style={TITLE_STYLE} >SUCCESS! LET’S SET UP YOUR PROFILE.</div>
             <div style={ROW_CONTAINER_STYLE} >
               <div style={ICON_CONTAINER_STYLE} >
-                {selectedProfileImage}
+              <img
+                style={ICON_STYLE}
+                src={this.state.selectedImage.src}
+                alt='Selected Picture'
+              />
               </div>
             </div>
             <div style={DISPLAY_NAME_ROW_STYLE} >
-              <div style={DISPLAY_NAME_STYLE} >{this.props.displayName}</div>
+              <div style={DISPLAY_NAME_STYLE} >{this.state.displayName}</div>
             </div>
             <NameInputFieldWithCounterInside
               style={NAME_FIELD_STYLE}
-              counterValue={this.props.displayName.length}
+              counterValue={this.state.displayName.length}
               maxValue={20}
               placeholder='Display Name (20 characters max.)'
-              value={this.props.displayName}
+              value={this.state.displayName}
               onChange={this.handleNameChange}
               hasError={!isDisplayName}
             />
@@ -113,7 +121,8 @@ export class ProfileSetUpPage extends React.Component<Properties> {
               <PrimaryTextButton
                 label="Let’s go!"
                 style={LETS_GO_BUTTON_STYLE}
-                onClick={this.props.onLetsGoClick}
+                onClick={() => this.props.onLetsGoClick(this.state.displayName,
+                  this.state.selectedImage)}
                 disabled={!isDisplayName}
               />
             </div>
@@ -131,7 +140,13 @@ export class ProfileSetUpPage extends React.Component<Properties> {
 
   /** Handles the change in display name inputfield. */
   private handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.props.onDisplayNameChange(event.target.value);
+    this.setState({ displayName: event.target.value });
+  }
+
+  private handleAvatarClick = (avatarSrc: string) => {
+    this.setState({
+      selectedImage: new UserProfileImage(this.props.userId, avatarSrc)
+    });
   }
 
   private handleUploadImageClick = () => {
@@ -154,6 +169,8 @@ export class ProfileSetUpPage extends React.Component<Properties> {
   // Trigger the click event to open the file picker dialog
   input.click();
   }
+
+  private _avatarSrcList: string[];
 }
 
 export namespace ProfileSetUpPage {

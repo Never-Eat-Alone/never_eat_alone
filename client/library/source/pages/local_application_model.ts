@@ -1,4 +1,4 @@
-import { User } from '../definitions';
+import { User, UserProfileImage } from '../definitions';
 import { InviteAFoodieModel } from '../modals';
 import { JoinModel } from '../modals/join_modal';
 import { LogInModel } from '../modals/log_in_modal';
@@ -16,7 +16,7 @@ import { SettingsPageModel } from './settings_page';
 import { SignUpPageModel } from './sign_up_page';
 
 export class LocalApplicationModel extends ApplicationModel {
-  constructor(account: User, accountProfileImageSrc: string,
+  constructor(account: User, accountProfileImage: UserProfileImage,
       homePageModel: HomePageModel, inviteAFoodieModel: InviteAFoodieModel,
       joinModel: JoinModel, partnerWithUsModel: PartnerWithUsModel,
       logInModel: LogInModel,
@@ -26,7 +26,7 @@ export class LocalApplicationModel extends ApplicationModel {
       googleClientId: string) {
     super();
     this._account = account;
-    this._accountProfileImageSrc = accountProfileImageSrc;
+    this._accountProfileImage = accountProfileImage;
     this._homepageModel = homePageModel;
     this._inviteAFoodieModel = inviteAFoodieModel;
     this._joinModel = joinModel;
@@ -54,8 +54,8 @@ export class LocalApplicationModel extends ApplicationModel {
     return this._account;;
   }
 
-  public get accountProfileImageSrc(): string {
-    return this._accountProfileImageSrc;
+  public get accountProfileImage(): UserProfileImage {
+    return this._accountProfileImage;
   }
 
   public get homePageModel(): HomePageModel {
@@ -149,7 +149,7 @@ export class LocalApplicationModel extends ApplicationModel {
   }
 
   private _account: User;
-  private _accountProfileImageSrc: string;
+  private _accountProfileImage: UserProfileImage;
   private _homepageModel: HomePageModel;
   private _inviteAFoodieModel: InviteAFoodieModel;
   private _joinModel: JoinModel;

@@ -1,35 +1,11 @@
-import { arrayFromJson, Avatar, User, UserProfileImage
-} from '../../definitions';
-import { LocalSignUpPageModel } from './local_sign_up_page_model';
+import { User, UserProfileImage } from '../../definitions';
 import { SignUpPageModel } from './sign_up_page_model';
 
 export class HttpSignUpPageModel extends SignUpPageModel {
-  constructor(account: User) {
+  constructor(account: User, accountProfileImage: UserProfileImage) {
     super();
     this._account = account;
-  }
-
-  public async load(): Promise<void> {
-    const response = await fetch(`/api/sign_up/${this._account.id}`);
-    if (response.status !== 200) {
-      return;
-    }
-    const responseObject = await response.json();
-    let userProfileImage: UserProfileImage;
-    if (responseObject.userProfileImage) {
-      userProfileImage = UserProfileImage.fromJson(
-        responseObject.userProfileImage);
-    }
-    let avatars: Avatar[] = [];
-    if (responseObject.avatars?.length > 0) {
-      avatars = arrayFromJson(Avatar, responseObject.avatars);
-    }
-    this._model = new LocalSignUpPageModel(this._account, avatars);
-    this._model.load();
-  }
-
-  public addUploadedImage(newImage: UserProfileImage): void {
-    this._model.addUploadedImage(newImage);
+    this._accountProfileImage = accountProfileImage;
   }
 
   public async uploadImageFile(userProfileImageFile: File):
@@ -45,14 +21,15 @@ export class HttpSignUpPageModel extends SignUpPageModel {
       const responseObject = await response.json();
       const uploadedImage = UserProfileImage.fromJson(
         responseObject.userProfileImage);
-      this.addUploadedImage(uploadedImage);
+      //this.addUploadedImage(uploadedImage);
       return uploadedImage;
     }
-    return UserProfileImage.default(this._account.id);
+    // If the upload fails, the image is set to the last image.
+    return this._accountProfileImage;
   }
 
   public async signUp(password: string): Promise<boolean> {
-    const response = await fetch(`/api/sign_up/${this._account.id}`, {
+    const response = await fetch(`/api/set_up_password/${this._account.id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -67,9 +44,8 @@ export class HttpSignUpPageModel extends SignUpPageModel {
     return false;
   }
 
-  public async setUpProfile(displayName: string, image: UserProfileImage |
-      Avatar): Promise<{ account: User, accountProfileImage: UserProfileImage }
-      > {
+  public async setUpProfile(displayName: string, image: UserProfileImage):
+      Promise<{ account: User, accountProfileImage: UserProfileImage }> {
     const response = await fetch(`/api/set_up_profile/${this._account.id}`, {
       method: 'POST',
       headers: {
@@ -83,22 +59,18 @@ export class HttpSignUpPageModel extends SignUpPageModel {
     if (response.status !== 200) {
       return {
         account: this._account,
-        accountProfileImage: UserProfileImage.default(this._account.id)
+        accountProfileImage: this._accountProfileImage
       };
     } else {
       const responseObject = await response.json();
       return {
-        account: User.fromJson(responseObject.account),
+        account: User.fromJson(responseObject.user),
         accountProfileImage: UserProfileImage.fromJson(
-          responseObject.accountProfileImage)
+          responseObject.userProfileImage)
       };
     }
   }
 
-  public get avatars(): Avatar[] {
-    return this._model.avatars;
-  }
-
-  private _model: SignUpPageModel;
   private _account: User;
+  private _accountProfileImage: UserProfileImage;
 }

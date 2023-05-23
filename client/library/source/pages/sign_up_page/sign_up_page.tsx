@@ -10,6 +10,8 @@ interface Properties {
   /** The email user requested an account for. */
   email: string;
 
+  password: string;
+
   /** The error code on the sign up page. */
   errorCode: SignUpPage.ErrorCode;
 
@@ -27,8 +29,8 @@ export class SignUpPage extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props);
     this.state = {
-      password: '',
-      confirmPassword: '',
+      password: this.props.password,
+      confirmPassword: this.props.password,
       hasChanged: false
     };
   }

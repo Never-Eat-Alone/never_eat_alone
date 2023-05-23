@@ -40,16 +40,14 @@ interface Properties extends Router.RouteComponentProps<TParams> {
 interface State {
   displayMode: DisplayMode;
   account: User;
-  accountProfileImageSrc: string;
+  accountProfileImage: UserProfileImage;
   isLoaded: boolean;
   hasError: boolean;
-  lastPage: string;
   isJoinButtonClicked: boolean;
   isLogInButtonClicked: boolean;
   isInviteAFoodieButtonClicked: boolean;
   isPartnerWithUsButtonClicked: boolean;
   loggedIn: boolean;
-  redirect: string | null;
 }
 
 export class ApplicationController extends React.Component<Properties, State> {
@@ -58,16 +56,14 @@ export class ApplicationController extends React.Component<Properties, State> {
     this.state = {
       displayMode: DisplayMode.DESKTOP,
       account: User.makeGuest(),
-      accountProfileImageSrc: null,
+      accountProfileImage: UserProfileImage.default(-1),
       isLoaded: false,
       hasError: false,
-      lastPage: '/',
       isJoinButtonClicked: false,
       isLogInButtonClicked: false,
       isInviteAFoodieButtonClicked: false,
       isPartnerWithUsButtonClicked: false,
-      loggedIn: false,
-      redirect: null
+      loggedIn: false
     };
   }
 
@@ -118,7 +114,7 @@ export class ApplicationController extends React.Component<Properties, State> {
         <Shell
           displayMode={this.state.displayMode}
           account={this.state.account}
-          accountProfileImageSrc={this.state.accountProfileImageSrc}
+          accountProfileImageSrc={this.state.accountProfileImage.src}
           headerStyle={this.handleHeaderAndFooter(pathname).headerStyle}
           onLogOut={this.handleLogOut}
           onLogInButton={this.handleLogInButton}
@@ -239,7 +235,7 @@ export class ApplicationController extends React.Component<Properties, State> {
           isLoaded: true,
           hasError: false,
           account: this.props.model.account,
-          accountProfileImageSrc: this.props.model.accountProfileImageSrc
+          accountProfileImage: this.props.model.accountProfileImage
         },
         () => {
           this.setState({ loggedIn: this.isLoggedIn() });
@@ -259,7 +255,7 @@ export class ApplicationController extends React.Component<Properties, State> {
             isLoaded: true,
             hasError: false,
             account: this.props.model.account,
-            accountProfileImageSrc: this.props.model.accountProfileImageSrc
+            accountProfileImage: this.props.model.accountProfileImage
           },
           () => {
             this.setState({ loggedIn: this.isLoggedIn() });
@@ -281,7 +277,7 @@ export class ApplicationController extends React.Component<Properties, State> {
     }, () => {
       this.props.model.load().then(() => {
         this.setState({
-          accountProfileImageSrc: this.props.model.accountProfileImageSrc,
+          accountProfileImage: this.props.model.accountProfileImage,
           account: this.props.model.account
         })
       }).catch((error) => {
@@ -341,11 +337,11 @@ export class ApplicationController extends React.Component<Properties, State> {
     this.updateAccount(account);
   }
 
-  private handleSignUpSuccess = (account: User,
-      accountProfileImage: UserProfileImage) => {
+  private handleSignUpSuccess = (account: User, accountProfileImage:
+      UserProfileImage) => {
     this.setState({
       account: account,
-      accountProfileImageSrc: accountProfileImage.src
+      accountProfileImage: accountProfileImage
     });
   }
 
@@ -425,7 +421,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       this.handleJoinEvent(diningEventId);
     } else {
       this.props.model.getDiningEventPageModel(diningEventId).joinEvent(
-        this.state.account, this.state.accountProfileImageSrc).then(() => {
+        this.state.account, this.state.accountProfileImage.src).then(() => {
           this.forceUpdate();
         });
     }
@@ -466,6 +462,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       {...this.props}
       displayMode={this.state.displayMode}
       account={this.state.account}
+      accountProfileImage={this.state.accountProfileImage}
       model={this.props.model.getSignUpPageModel(id)}
       onSignUpSuccess={this.handleSignUpSuccess}
     />;

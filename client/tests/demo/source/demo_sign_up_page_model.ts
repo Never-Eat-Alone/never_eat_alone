@@ -1,50 +1,37 @@
 import * as NeverEatAlone from 'never_eat_alone';
 
 export class DemoSignUpPageModel extends NeverEatAlone.SignUpPageModel {
-  constructor(account: NeverEatAlone.User, avatars: NeverEatAlone.Avatar[]) {
+  constructor(account: NeverEatAlone.User, accountProfileImage:
+      NeverEatAlone.UserProfileImage) {
     super();
     this._account = account;
-    this._avatars = avatars;
-    this._imageSrc = NeverEatAlone.UserProfileImage.default(
-      this._account.id).src;
-  }
-
-  public async load(): Promise<void> {}
-
-  public get avatars(): NeverEatAlone.Avatar[] {
-    return this._avatars;
+    this._accountProfileImage = accountProfileImage;
   }
 
   public addUploadedImage(newImage: NeverEatAlone.UserProfileImage): void {
-    this._imageSrc = newImage.src;
+    this._accountProfileImage = newImage;
   }
 
   public async uploadImageFile(imageFile: File):
       Promise<NeverEatAlone.UserProfileImage> {
-    return new NeverEatAlone.UserProfileImage(this._account.id, this._imageSrc);
+    return this._accountProfileImage;
   }
 
   public async signUp(password: string): Promise<boolean> {
     return Boolean(password);
   }
 
-  public async setUpProfile(displayName: string,
-      image: NeverEatAlone.UserProfileImage | NeverEatAlone.Avatar):
-      Promise<{ account: NeverEatAlone.User,
+  public async setUpProfile(displayName: string, image:
+      NeverEatAlone.UserProfileImage): Promise<{ account: NeverEatAlone.User,
       accountProfileImage: NeverEatAlone.UserProfileImage }> {
-    const tempAccount = new NeverEatAlone.User(this._account.id, displayName,
-      this._account.email, this._account.userName, this._account.userStatus,
-      this._account.createdAt);
-    this._account = tempAccount;
-    this._imageSrc = image.src;
     return {
-      account: this._account,
-      accountProfileImage: new NeverEatAlone.UserProfileImage(
-        this._account.id, image.src)
+      account: new NeverEatAlone.User(this._account.id, displayName,
+        this._account.email, this._account.userName, this._account.userStatus,
+        this._account.createdAt),
+      accountProfileImage: image
     };
   }
 
   private _account: NeverEatAlone.User;
-  private _avatars: NeverEatAlone.Avatar[];
-  private _imageSrc: string;
+  private _accountProfileImage: NeverEatAlone.UserProfileImage;
 }

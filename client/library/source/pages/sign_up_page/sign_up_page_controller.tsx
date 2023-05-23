@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
-import { Avatar, DisplayMode, User, UserProfileImage } from '../../definitions';
+import { DisplayMode, User, UserProfileImage } from '../../definitions';
 import { ProfileSetUpPage } from './profile_set_up_page';
 import { SignUpPage } from './sign_up_page';
 import { SignUpPageModel } from './sign_up_page_model';
@@ -8,6 +8,7 @@ import { SignUpPageModel } from './sign_up_page_model';
 interface Properties extends Router.RouteComponentProps {
   displayMode: DisplayMode;
   account: User;
+  accountProfileImage: UserProfileImage;
   model: SignUpPageModel;
   onSignUpSuccess: (account: User, accountProfileImage: UserProfileImage
     ) => void;
@@ -15,15 +16,11 @@ interface Properties extends Router.RouteComponentProps {
 
 interface State {
   isLoaded: boolean;
-  email: string;
   signUpPageErrorCode: SignUpPage.ErrorCode;
   profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode;
-  password: string;
-  displayName: string;
-  userProfileImage: UserProfileImage;
   isSetUpPage: boolean;
-  avatars: Avatar[];
-  selectedAvatar: Avatar;
+  password: string;
+  accountProfileImage: UserProfileImage;
 }
 
 export class SignUpPageController extends React.Component<Properties, State> {
@@ -33,13 +30,9 @@ export class SignUpPageController extends React.Component<Properties, State> {
       isLoaded: false,
       signUpPageErrorCode: SignUpPage.ErrorCode.NONE,
       profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NONE,
-      email: '',
       isSetUpPage: false,
-      displayName: this.props.account.name,
-      userProfileImage: null,
       password: '',
-      avatars: [],
-      selectedAvatar: null
+      accountProfileImage: this.props.accountProfileImage
     };
   }
 
@@ -52,47 +45,27 @@ export class SignUpPageController extends React.Component<Properties, State> {
     if (this.state.isSetUpPage) {
       return <ProfileSetUpPage
         displayMode={this.props.displayMode}
-        displayName={this.state.displayName}
-        selectedImage={this.state.userProfileImage}
-        avatars={this.state.avatars}
-        selectedAvatar={this.state.selectedAvatar}
+        displayName={this.props.account.name}
+        userId={this.props.account.id}
+        selectedImage={this.state.accountProfileImage}
         errorCode={this.state.profileSetUpPageErrorCode}
         onUploadImageClick={this.handleUploadImageClick}
         onLetsGoClick={this.handleLetsGoClick}
-        onAvatarClick={this.handleAvatarSelection}
-        onDisplayNameChange={this.handleDisplayNameChange}
       />;
     }
     return <SignUpPage
       displayMode={this.props.displayMode}
       email={this.props.account.email}
+      password={this.state.password}
       errorCode={this.state.signUpPageErrorCode}
       onSignUp={this.handleSignUp}
     />;
   }
 
-  public async componentDidMount(): Promise<void> {
-    try {
-      await this.props.model.load();
-      this.setState({
-        isLoaded: true,
-        userProfileImage: null,
-        avatars: this.props.model.avatars,
-        selectedAvatar: this.props.model.avatars[0]
-      });
-    } catch {
-      this.setState({
-        isLoaded: true,
-        signUpPageErrorCode: SignUpPage.ErrorCode.NO_CONNECTION,
-        profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NO_CONNECTION
-      });
-    }
-  }
-
   private handleSignUp = async (password: string) => {
     try {
       const isSignedUp = await this.props.model.signUp(password);
-      this.setState({ isSetUpPage: isSignedUp, password: password });
+      this.setState({ isSetUpPage: isSignedUp });
     } catch {
       this.setState({
         signUpPageErrorCode: SignUpPage.ErrorCode.NO_CONNECTION,
@@ -102,43 +75,25 @@ export class SignUpPageController extends React.Component<Properties, State> {
     }
   }
 
-  private handleAvatarSelection = (avatar: Avatar) => {
-    this.setState({
-      selectedAvatar: avatar,
-      userProfileImage: null
-    });
-  }
-
   private handleUploadImageClick = async (uploadedImageFile: File) => {
     try {
       const image = await this.props.model.uploadImageFile(uploadedImageFile);
       this.setState({
-        userProfileImage: image,
-        selectedAvatar: null
+        accountProfileImage: image
       });
     } catch {
       this.setState({
-        selectedAvatar: this.props.model.avatars[0],
-        userProfileImage: null,
+        accountProfileImage: this.props.accountProfileImage,
         profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NO_CONNECTION
       });
     }
   }
 
-  private handleDisplayNameChange = (newName: string) => {
-    this.setState({ displayName: newName });
-  }
-
-  private handleLetsGoClick = async () => {
+  private handleLetsGoClick = async (displayName: string,
+      selectedProfileImage: UserProfileImage) => {
     try {
-      let result;
-      if (this.state.userProfileImage) {
-        result = await this.props.model.setUpProfile(this.state.displayName,
-          this.state.userProfileImage);
-      } else {
-        result = await this.props.model.setUpProfile(this.state.displayName,
-          this.state.selectedAvatar);
-      }
+      const result = await this.props.model.setUpProfile(displayName,
+        selectedProfileImage);
       this.props.onSignUpSuccess(result.account, result.accountProfileImage);
       this.props.history.push('/');
     } catch {

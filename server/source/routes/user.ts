@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as Hash from 'hash.js';
-import { arrayToJson, Avatar, InviteEmail, User, UserInvitationCode, UserStatus,
-  UserProfileImage } from '../../../client/library/source/definitions';
+import { InviteEmail, User, UserInvitationCode, UserStatus, UserProfileImage
+} from '../../../client/library/source/definitions';
 import { UserDatabase } from '../postgres/queries/user_database';
 import { UserProfileImageDatabase } from '../postgres/queries';
 
@@ -23,7 +23,7 @@ export class UserRoutes {
 
     /** Route for the guest user to set up an account. */
     app.get('/api/sign_up/:id', this.signUp);
-    app.post('/api/sign_up/:id', this.setUpPassword);
+    app.post('/api/set_up_password/:id', this.setUpPassword);
     app.post('/api/set_up_profile/:id', this.setUpProfile);
 
     /** Route for the user log in. */
@@ -202,19 +202,9 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
-    let avatars: Avatar[] = [];
-    try {
-      const tempAvatars = await this.userDatabase.loadAvatars();
-      avatars = [...tempAvatars];
-    } catch (error) {
-      console.log('Failed at loadAvatars', error);
-      response.status(500).send();
-      return;
-    }
     response.status(200).json({
       email: user.email,
-      userProfileImage: userProfileImage.toJson(),
-      avatars: arrayToJson(avatars)
+      userProfileImage: userProfileImage.toJson()
     });
   }
 
