@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { Pool } from 'pg';
-import { Avatar, UserProfileImage
+import { UserProfileImage
 } from '../../../../client/library/source/definitions';
 
 /** UserProfileImage related database manipulations class. */
@@ -18,7 +18,7 @@ export class UserProfileImageDatabase {
       Promise<UserProfileImage> => {
     const result = await this.pool.query('SELECT * FROM user_profile_images \
       WHERE user_id = $1', [userId]);
-    if (!result || !result.rows || result.rows.length === 0) {
+    if (!result?.rows?.length) {
       return UserProfileImage.default(userId);
     }
     return new UserProfileImage(parseInt(result.rows[0].user_id),
@@ -52,27 +52,6 @@ export class UserProfileImageDatabase {
     }
     if (!result || !result.rows || result.rows.length === 0) {
       return UserProfileImage.default(userId);
-    }
-    return new UserProfileImage(parseInt(result.rows[0].user_id),
-      result.rows[0].src);
-  }
-
-  public updateProfileImageByAvatar = async (userId: number, avatar: Avatar):
-      Promise<UserProfileImage> => {
-    const existingImageResult = await this.pool.query(
-      'SELECT * FROM user_profile_images WHERE user_id = $1', [userId]);
-    let result;
-    if (existingImageResult.rows.length > 0) {
-      // User already has a profile image, update the record.
-      result = await this.pool.query(`
-        UPDATE user_profile_images SET src = $1, updated_at = DEFAULT WHERE
-        user_id = $2 RETURNING *`, [avatar.src, userId]);
-    } else {
-      // User doesn't have a profile image, insert a new record.
-      result = await this.pool.query(`
-        INSERT INTO user_profile_images (user_id, src, created_at, updated_at)
-        VALUES ($1, $2, DEFAULT, DEFAULT) RETURNING *`,
-        [userId, avatar.src]);
     }
     return new UserProfileImage(parseInt(result.rows[0].user_id),
       result.rows[0].src);

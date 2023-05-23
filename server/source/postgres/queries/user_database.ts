@@ -1,6 +1,6 @@
 import * as Hash from 'hash.js';
 import { Pool } from 'pg';
-import { Avatar, User, UserStatus, UserProfileImage
+import { User, UserStatus, UserProfileImage
 } from '../../../../client/library/source/definitions';
 import * as Crypto from 'crypto';
 
@@ -45,17 +45,6 @@ export class UserDatabase {
       return '';
     }
     return result.rows[0].invite_code;
-  }
-
-  public loadAvatars = async (): Promise<Avatar[]> => {
-    const result = await this.pool.query('SELECT * FROM avatars');
-    const avatars: Avatar[] = [];
-    if (result?.rows?.length > 0) {
-      for (const row of result.rows) {
-        avatars.push(new Avatar(parseInt(row.id), row.src));
-      }
-    }
-    return avatars;
   }
 
   /**

@@ -20,8 +20,8 @@ export class HttpSignUpPageModel extends SignUpPageModel {
     if (response.status === 201) {
       const responseObject = await response.json();
       const uploadedImage = UserProfileImage.fromJson(
-        responseObject.userProfileImage);
-      //this.addUploadedImage(uploadedImage);
+        responseObject.accountProfileImage);
+      console.log('uploaded image', uploadedImage?.src);
       return uploadedImage;
     }
     // If the upload fails, the image is set to the last image.
@@ -66,7 +66,7 @@ export class HttpSignUpPageModel extends SignUpPageModel {
       return {
         account: User.fromJson(responseObject.user),
         accountProfileImage: UserProfileImage.fromJson(
-          responseObject.userProfileImage)
+          responseObject.accountProfileImage)
       };
     }
   }

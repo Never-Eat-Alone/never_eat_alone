@@ -41,7 +41,7 @@ export class HttpApplicationModel extends ApplicationModel {
       if (imageResponse.status === 200) {
         const responseObject = await imageResponse.json();
         accountProfileImage = UserProfileImage.fromJson(
-          responseObject.userProfileImage);
+          responseObject.accountProfileImage);
       }
     }
     const googleClientIdResponse = await fetch('/api/google_client_id');

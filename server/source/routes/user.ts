@@ -194,18 +194,16 @@ export class UserRoutes {
       response.redirect(303, 'http://nevereatalone.net/log_in');
       return;
     }
-    let userProfileImage = UserProfileImage.default(user.id);
     try {
-      userProfileImage = 
+      const accountProfileImage = 
         await this.userProfileImageDatabase.loadProfileImageByUserId(userId);
+      response.status(200).json({
+        email: user.email,
+        accountProfileImage: accountProfileImage.toJson()
+      });
     } catch (error) {
       response.status(500).send();
-      return;
     }
-    response.status(200).json({
-      email: user.email,
-      userProfileImage: userProfileImage.toJson()
-    });
   }
 
   private setUpProfile = async (request, response) => {
