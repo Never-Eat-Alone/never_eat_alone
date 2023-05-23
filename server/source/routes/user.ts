@@ -195,12 +195,7 @@ export class UserRoutes {
       return;
     }
     try {
-      const accountProfileImage = 
-        await this.userProfileImageDatabase.loadProfileImageByUserId(userId);
-      response.status(200).json({
-        email: user.email,
-        accountProfileImage: accountProfileImage.toJson()
-      });
+      response.status(200).send();
     } catch (error) {
       response.status(500).send();
     }
@@ -209,10 +204,10 @@ export class UserRoutes {
   private setUpProfile = async (request, response) => {
     const userId = parseInt(request.params.id);
     const displayName = request.body.displayName;
-    const imageSrc = request.body.image.src;
+    const accountProfileImage = request.body.accountProfileImage;
     try {
-      const result = await this.userDatabase.saveUserProfile(userId, imageSrc,
-        displayName);
+      const result = await this.userDatabase.saveUserProfile(userId,
+        accountProfileImage.src, displayName);
       response.status(200).json({
         account: result.account.toJson(),
         accountProfileImage: result.accountProfileImage.toJson()

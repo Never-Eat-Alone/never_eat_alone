@@ -62,6 +62,20 @@ export class SignUpPageController extends React.Component<Properties, State> {
     />;
   }
 
+  public async componentDidMount(): Promise<void> {
+    try {
+      const response = await fetch(`/api/sign_up/${this.props.account.id}`);
+      if (response.status === 200) {
+        this.setState({ isLoaded: true });
+      }
+    } catch {
+      this.setState({
+        isLoaded: true,
+        signUpPageErrorCode: SignUpPage.ErrorCode.NO_CONNECTION
+      });
+    }
+  }
+
   private handleSignUp = async (password: string) => {
     try {
       const isSignedUp = await this.props.model.signUp(password);

@@ -53,7 +53,7 @@ export class HttpSignUpPageModel extends SignUpPageModel {
       },
       body: JSON.stringify({
         'displayName': displayName,
-        'image': image.toJson()
+        'accountProfileImage': image.toJson()
       })
     });
     if (response.status !== 200) {
