@@ -49,7 +49,7 @@ interface State {
   isInviteAFoodieButtonClicked: boolean;
   isPartnerWithUsButtonClicked: boolean;
   loggedIn: boolean;
-  isSignedUp: boolean;
+  //isSignedUp: boolean;
   redirect: string | null;
 }
 
@@ -68,7 +68,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       isInviteAFoodieButtonClicked: false,
       isPartnerWithUsButtonClicked: false,
       loggedIn: false,
-      isSignedUp: false,
+      //isSignedUp: false,
       redirect: null
     };
   }
@@ -253,8 +253,8 @@ export class ApplicationController extends React.Component<Properties, State> {
 
   public async componentDidUpdate(prevProps: Properties,
       prevState: State): Promise<void> {
-    if (prevState.loggedIn !== this.state.loggedIn ||
-        prevState.isSignedUp !== this.state.isSignedUp) {
+        //|| prevState.isSignedUp !== this.state.isSignedUp
+    if (prevState.loggedIn !== this.state.loggedIn) {
       try {
         await this.props.model.load();
         this.setState(
@@ -266,12 +266,12 @@ export class ApplicationController extends React.Component<Properties, State> {
           },
           () => {
             this.setState({ loggedIn: this.isLoggedIn() });
+            /**
             if (this.state.isSignedUp) {
               // this.setState({ redirect: '/' });
               this.props.history.push('/');
-            }
-          }
-        );
+            }*/
+          });
       } catch (error) {
         this.setState({ isLoaded: true, hasError: true });
       }
@@ -354,7 +354,7 @@ export class ApplicationController extends React.Component<Properties, State> {
     this.setState({
       account: account,
       accountProfileImageSrc: accountProfileImage.src,
-      isSignedUp: true
+      //isSignedUp: true
     });
   }
 
@@ -472,6 +472,7 @@ export class ApplicationController extends React.Component<Properties, State> {
   private renderSignUp = ({match}: Router.RouteComponentProps<TParams>) => {
     const id = Number(match.params.id);
     return <SignUpPageController
+      {...this.props}
       displayMode={this.state.displayMode}
       account={this.state.account}
       model={this.props.model.getSignUpPageModel(id)}

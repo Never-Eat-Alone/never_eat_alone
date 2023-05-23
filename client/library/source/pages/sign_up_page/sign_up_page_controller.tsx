@@ -1,10 +1,11 @@
 import * as React from 'react';
+import * as Router from 'react-router-dom';
 import { Avatar, DisplayMode, User, UserProfileImage } from '../../definitions';
 import { ProfileSetUpPage } from './profile_set_up_page';
 import { SignUpPage } from './sign_up_page';
 import { SignUpPageModel } from './sign_up_page_model';
 
-interface Properties {
+interface Properties extends Router.RouteComponentProps {
   displayMode: DisplayMode;
   account: User;
   model: SignUpPageModel;
@@ -139,6 +140,7 @@ export class SignUpPageController extends React.Component<Properties, State> {
           this.state.selectedAvatar);
       }
       this.props.onSignUpSuccess(result.account, result.accountProfileImage);
+      this.props.history.push('/');
     } catch {
       this.setState({
         profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NO_CONNECTION
