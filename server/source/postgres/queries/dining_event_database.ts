@@ -33,7 +33,7 @@ export class DiningEventDatabase {
       tempResult = await this.pool.query(
         "SELECT COUNT (event_id) AS total FROM attendees WHERE event_id = $1 \
         AND status = 'GOING'", [row.de_id]);
-      if (tempResult.rows && tempResult.rows.length !== 0) {
+      if (tempResult.rows?.length !== 0) {
         numberOfAttendees = parseInt(tempResult.rows[0].total);
         numberOfSeatsAvailable -= numberOfAttendees;
       }
@@ -41,7 +41,7 @@ export class DiningEventDatabase {
       tempResult = await this.pool.query("SELECT * FROM attendees WHERE \
         event_id = $1 AND user_id = $2 AND status = 'GOING'", [row.de_id,
         userId]);
-      if (tempResult.rows && tempResult.rows.length !== 0) {
+      if (tempResult.rows?.length !== 0) {
         isAttending = true;
       }
       const event = new EventCardSummary(parseInt(row.de_id), row.de_title,
@@ -79,7 +79,7 @@ export class DiningEventDatabase {
       tempResult = await this.pool.query(
         "SELECT COUNT (event_id) AS total FROM attendees WHERE event_id = $1 \
         AND status = 'GOING'", [row.event_id]);
-      if (tempResult.rows && tempResult.rows.length !== 0) {
+      if (tempResult.rows?.length !== 0) {
         numberOfAttendees = parseInt(tempResult.rows[0].total);
         numberOfSeatsAvailable -= numberOfAttendees;
       }

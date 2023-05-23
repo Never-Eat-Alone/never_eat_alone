@@ -13,8 +13,7 @@ interface Properties {
 /** A payment record input. */
 export class PaymentRecordInput extends React.Component<Properties> {
   public render(): JSX.Element {
-    return <input value={this.props.value &&
-      this.props.value.paymentTransactions &&
+    return <input value={this.props.value?.paymentTransactions &&
       this.props.value.paymentTransactions[0].amount.toFixed() ||
       '0.00'} onChange={this.onChange} />;
   }

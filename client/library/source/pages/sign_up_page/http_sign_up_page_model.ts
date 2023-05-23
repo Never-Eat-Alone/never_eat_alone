@@ -21,7 +21,7 @@ export class HttpSignUpPageModel extends SignUpPageModel {
         responseObject.userProfileImage);
     }
     let avatars: Avatar[] = [];
-    if (responseObject.avatars && responseObject.avatars.length > 0) {
+    if (responseObject.avatars?.length > 0) {
       avatars = arrayFromJson(Avatar, responseObject.avatars);
     }
     this._model = new LocalSignUpPageModel(this._account, avatars);

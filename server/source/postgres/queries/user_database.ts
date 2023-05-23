@@ -50,7 +50,7 @@ export class UserDatabase {
   public loadAvatars = async (): Promise<Avatar[]> => {
     const result = await this.pool.query('SELECT * FROM avatars');
     const avatars: Avatar[] = [];
-    if (result && result.rows && result.rows.length > 0) {
+    if (result?.rows?.length > 0) {
       for (const row of result.rows) {
         avatars.push(new Avatar(parseInt(row.id), row.src));
       }

@@ -95,12 +95,7 @@ export class PaymentReceiptModal extends React.Component<Properties, State> {
         if (payment.status !== PaymentStatus.CHARGED) {
           continue;
         }
-        if (!processedAtDate) {
-          processedAtDate = payment.processedAt;
-        } else {
-          processedAtDate = (processedAtDate > payment.processedAt &&
-            payment.processedAt || processedAtDate);
-        }
+        processedAtDate = payment.processedAt;
         const newFee = payment.amount;
         totalFee += newFee;
         const newTaxAmount = (newFee * payment.taxRate / 100);

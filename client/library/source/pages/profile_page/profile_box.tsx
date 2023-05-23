@@ -83,7 +83,7 @@ export class ProfileBox extends React.Component<Properties> {
       return null;
     })();
     const languageSection = (() => {
-      if (this.props.languageList && this.props.languageList.length !== 0) {
+      if (this.props.languageList?.length !== 0) {
         return (
           <div style={LANGUAGE_ROW_STYLE} >
             <img
@@ -147,7 +147,7 @@ export class ProfileBox extends React.Component<Properties> {
       return <div style={CUISINE_ROW_STYLE} >{cuisineList}</div>;
     })();
     const editProfileButton = (() => {
-      if (this.props.account && this.props.account.id !== -1 &&
+      if (this.props.account?.id !== -1 &&
           this.props.account.id === this.props.profileId) {
         return <SecondaryButtonNavLink
           style={EDIT_BUTTON_STYLE}

@@ -100,13 +100,13 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
     }
     const cardsOnFile = (() => {
       const cards = [];
-      if (this.props.defaultCard && this.props.defaultCard.id !== -1) {
+      if (this.props.defaultCard?.id !== -1) {
         cards.push(<PaymentCardRow key={this.props.defaultCard.id}
           isDefault displayMode={this.props.displayMode}
           card={this.props.defaultCard}
           onClick={() => this.handleCardClick(this.props.defaultCard)} />);
       }
-      if (this.props.paymentCards && this.props.paymentCards.length !== 0) {
+      if (this.props.paymentCards?.length !== 0) {
         for (const card of this.props.paymentCards) {
           if (card.id === this.props.defaultCard.id) {
             continue;

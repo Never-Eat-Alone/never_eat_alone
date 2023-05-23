@@ -39,7 +39,7 @@ export class Header extends React.Component<Properties> {
       return HEADER_MOBILE_STYLE;
     })();
     const rightSideButtons = [];
-    if (this.props.account && this.props.account.id !== -1) {
+    if (this.props.account?.id !== -1) {
       rightSideButtons.push(
         <ProfileMenu
           key='ProfileMenu'

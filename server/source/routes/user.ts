@@ -48,7 +48,7 @@ export class UserRoutes {
 
   /** Returns the current logged in user. */
   private getCurrentUser = async (request, response) => {
-    if (request.session && request.session.user) {
+    if (request.session?.user) {
       let user: User;
       try {
         user = await this.userDatabase.loadUserBySessionId(
@@ -340,7 +340,7 @@ export class UserRoutes {
       await this.sgmail.send(message);
     } catch (error) {
       console.error(`Error sending email: ${error}`);
-      if (error.response && error.response.body && error.response.body.errors) {
+      if (error.response?.body?.errors) {
         console.error('Error details:', error.response.body.errors);
       }
     }

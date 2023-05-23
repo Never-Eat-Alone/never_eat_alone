@@ -43,7 +43,7 @@ export class ProfileSetUpPage extends React.Component<Properties> {
     const contentStyle = (this.props.displayMode === DisplayMode.MOBILE &&
       MOBILE_CONTENT_STYLE || CONTENT_STYLE);
     const avatars = [];
-    if (this.props.avatars && this.props.avatars.length > 0) {
+    if (this.props.avatars?.length > 0) {
       for (const avatar of this.props.avatars) {
         const isMarked = (() => {
           if (this.props.selectedAvatar) {

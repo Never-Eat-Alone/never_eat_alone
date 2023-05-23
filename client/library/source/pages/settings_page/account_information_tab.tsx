@@ -276,8 +276,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
         </>);
     }
     const socialAccountButtons = [];
-    if (this.props.linkedSocialAccounts &&
-        this.props.linkedSocialAccounts.length !== 0) {
+    if (this.props.linkedSocialAccounts?.length !== 0) {
       let isGoogle, isFacebook = false;
       for (const account of this.props.linkedSocialAccounts) {
         if (account.accountType === SocialAccountType.GOOGLE) {

@@ -13,9 +13,8 @@ interface Properties {
 /** A payment card input. */
 export class PaymentCardInput extends React.Component<Properties> {
   public render(): JSX.Element {
-    return <input value={this.props.value && this.props.value.cardNumber&&
-      this.props.value.cardNumber.toString().slice(-4) || ''}
-      onChange={this.onChange} />;
+    return <input value={this.props.value?.cardNumber?.toString().slice(-4) ||
+      ''} onChange={this.onChange} />;
   }
 
   private onChange = (event: React.ChangeEvent<HTMLInputElement>) => {

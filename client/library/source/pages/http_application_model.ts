@@ -35,7 +35,7 @@ export class HttpApplicationModel extends ApplicationModel {
       account = User.makeGuest();
     }
     let accountProfileImageSrc = '';
-    if (account && account.id !== -1) {
+    if (account?.id !== -1) {
       const imageResponse = await fetch(
         `/api/user_profile_image/${account.id}`);
       if (imageResponse.status === 200) {
