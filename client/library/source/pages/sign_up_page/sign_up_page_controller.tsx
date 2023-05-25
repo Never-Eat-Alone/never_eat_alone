@@ -90,12 +90,15 @@ export class SignUpPageController extends React.Component<Properties, State> {
   }
 
   private handleUploadImageClick = async (uploadedImageFile: File) => {
+    console.log('handleUploadImageClick', uploadedImageFile);
     try {
       const image = await this.props.model.uploadImageFile(uploadedImageFile);
+      console.log('uploaded image', image, image.src);
       this.setState({
         accountProfileImage: image
       });
     } catch {
+      console.log('upload failed');
       this.setState({
         accountProfileImage: this.props.accountProfileImage,
         profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NO_CONNECTION
@@ -106,10 +109,8 @@ export class SignUpPageController extends React.Component<Properties, State> {
   private handleLetsGoClick = async (displayName: string,
       selectedProfileImage: UserProfileImage) => {
     try {
-      console.log('handleLetsGoClick displayname', displayName, 'imagesrc', selectedProfileImage.src);
       const result = await this.props.model.setUpProfile(displayName,
         selectedProfileImage);
-        console.log('running onSignUpSuccess for account', result.account, 'accountProfileImage', result.accountProfileImage);
       this.props.onSignUpSuccess(result.account, result.accountProfileImage);
       this.props.history.push('/');
     } catch {

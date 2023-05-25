@@ -17,10 +17,12 @@ export class HttpSignUpPageModel extends SignUpPageModel {
       method: 'POST',
       body: formData
     });
+    console.log('/api/upload_profile_image response status', response.status);
     if (response.status === 201) {
       const responseObject = await response.json();
       const uploadedImage = UserProfileImage.fromJson(
         responseObject.accountProfileImage);
+      console.log('uploadedimade', uploadedImage);
       return uploadedImage;
     }
     // If the upload fails, the image is set to the last image.
