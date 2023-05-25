@@ -102,7 +102,7 @@ export class UserRoutes {
         return;
       }
     }
-    if (user?.id === -1) {
+    if (!user || user.id === -1) {
       try {
         user = await this.userDatabase.addGuestUserRequest(name, email,
           referralCode);
