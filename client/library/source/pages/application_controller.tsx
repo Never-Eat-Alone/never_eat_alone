@@ -463,7 +463,6 @@ export class ApplicationController extends React.Component<Properties, State> {
       {...this.props}
       displayMode={this.state.displayMode}
       account={this.state.account}
-      accountProfileImage={this.state.accountProfileImage}
       model={this.props.model.getSignUpPageModel(id)}
       onSignUpSuccess={this.handleSignUpSuccess}
     />;

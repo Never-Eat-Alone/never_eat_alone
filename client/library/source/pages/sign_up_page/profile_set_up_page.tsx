@@ -21,23 +21,18 @@ interface Properties {
   /** Indicates the upload image button is clicked. */
   onUploadImageClick: (imageFile: File) => void;
 
-  /** Indicates the let's go button is clicked. */
-  onLetsGoClick: (displayName: string, selectedImage: UserProfileImage) => void;
-}
+  onAvatarClick: (src: string) => void;
 
-interface State {
-  selectedImage: UserProfileImage;
-  displayName: string;
+  onDisplayNameChange: (newDisplayName: string) => void;
+
+  /** Indicates the let's go button is clicked. */
+  onLetsGoClick: () => void;
 }
 
 /** Displays the ProfileSetUpPage. */
-export class ProfileSetUpPage extends React.Component<Properties, State> {
+export class ProfileSetUpPage extends React.Component<Properties> {
   constructor(props: Properties) {
     super(props);
-    this.state = {
-      selectedImage: this.props.selectedImage,
-      displayName: this.props.displayName
-    };
     this._avatarSrcList = [
       '/resources/avatars/profile-image-0.svg',
       '/resources/avatars/profile-image-1.svg',
@@ -69,13 +64,13 @@ export class ProfileSetUpPage extends React.Component<Properties, State> {
       MOBILE_CONTENT_STYLE || CONTENT_STYLE);
     const avatars = [];
     for (const avatarSrc of this._avatarSrcList) {
-      const isMarked = avatarSrc === this.state.selectedImage.src;
+      const isMarked = avatarSrc === this.props.selectedImage.src;
       avatars.push(<AvatarWithCheckMark key={avatarSrc}
         imageSrc={avatarSrc}
         isMarked={isMarked}
-        onClick={() => this.handleAvatarClick(avatarSrc)} />);
+        onClick={() => this.props.onAvatarClick(avatarSrc)} />);
     }
-    const isDisplayName = this.state.displayName.length !== 0;
+    const isDisplayName = this.props.displayName.length !== 0;
     const nameErrorMessage = (!isDisplayName && 'Please enter a display name.'
       || '');
     const content = ((contentContainerStyle: React.CSSProperties,
@@ -88,20 +83,20 @@ export class ProfileSetUpPage extends React.Component<Properties, State> {
               <div style={ICON_CONTAINER_STYLE} >
               <img
                 style={ICON_STYLE}
-                src={this.state.selectedImage.src}
+                src={this.props.selectedImage.src}
                 alt='Selected Picture'
               />
               </div>
             </div>
             <div style={DISPLAY_NAME_ROW_STYLE} >
-              <div style={DISPLAY_NAME_STYLE} >{this.state.displayName}</div>
+              <div style={DISPLAY_NAME_STYLE} >{this.props.displayName}</div>
             </div>
             <NameInputFieldWithCounterInside
               style={NAME_FIELD_STYLE}
-              counterValue={this.state.displayName.length}
+              counterValue={this.props.displayName.length}
               maxValue={20}
               placeholder='Display Name (20 characters max.)'
-              value={this.state.displayName}
+              value={this.props.displayName}
               onChange={this.handleNameChange}
               hasError={!isDisplayName}
             />
@@ -121,8 +116,7 @@ export class ProfileSetUpPage extends React.Component<Properties, State> {
               <PrimaryTextButton
                 label="Let’s go!"
                 style={LETS_GO_BUTTON_STYLE}
-                onClick={() => this.props.onLetsGoClick(this.state.displayName,
-                  this.state.selectedImage)}
+                onClick={this.props.onLetsGoClick}
                 disabled={!isDisplayName}
               />
             </div>
@@ -140,13 +134,7 @@ export class ProfileSetUpPage extends React.Component<Properties, State> {
 
   /** Handles the change in display name inputfield. */
   private handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ displayName: event.target.value });
-  }
-
-  private handleAvatarClick = (avatarSrc: string) => {
-    this.setState({
-      selectedImage: new UserProfileImage(this.props.userId, avatarSrc)
-    });
+    this.props.onDisplayNameChange(event.target.value);
   }
 
   private handleUploadImageClick = () => {
