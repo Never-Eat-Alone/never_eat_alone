@@ -106,8 +106,10 @@ export class SignUpPageController extends React.Component<Properties, State> {
   private handleLetsGoClick = async (displayName: string,
       selectedProfileImage: UserProfileImage) => {
     try {
+      console.log('handleLetsGoClick displayname', displayName, 'imagesrc', selectedProfileImage.src);
       const result = await this.props.model.setUpProfile(displayName,
         selectedProfileImage);
+        console.log('running onSignUpSuccess for account', result.account, 'accountProfileImage', result.accountProfileImage);
       this.props.onSignUpSuccess(result.account, result.accountProfileImage);
       this.props.history.push('/');
     } catch {
