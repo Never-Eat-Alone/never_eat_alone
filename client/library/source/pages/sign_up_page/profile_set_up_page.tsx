@@ -1,4 +1,5 @@
 import { css, StyleSheet } from 'aphrodite';
+import imageCompression from 'browser-image-compression';
 import * as React from 'react';
 import { AvatarWithCheckMark, NameInputFieldWithCounterInside, PrimaryTextButton
 } from '../../components';
@@ -144,18 +145,28 @@ export class ProfileSetUpPage extends React.Component<Properties> {
     input.accept = 'image/*'; // Accept only image files
     input.style.display = 'none';
 
-  // Listen for the 'change' event to get the selected image file
-  input.addEventListener('change', (event) => {
-    const target = event.target as HTMLInputElement;
-    const file = target.files && target.files[0];
-    if (file) {
-      // Call the onUploadImageClick prop with the selected image file
-      this.props.onUploadImageClick(file);
-    }
-  });
+    // Listen for the 'change' event to get the selected image file
+    input.addEventListener('change', async (event) => {
+      const target = event.target as HTMLInputElement;
+      const file = target.files && target.files[0];
+      if (file) {
+        try {
+          // Compression options
+          const options = {
+            maxSizeMB: 1,
+            maxWidthOrHeight: 1920,
+            useWebWorker: true,
+          };
+          const compressedFile = await imageCompression(file, options);
+          this.props.onUploadImageClick(compressedFile);
+        } catch (error) {
+          console.error("Image compression failed:", error);
+        }
+      }
+    });
 
-  // Trigger the click event to open the file picker dialog
-  input.click();
+    // Trigger the click event to open the file picker dialog
+    input.click();
   }
 
   private _avatarSrcList: string[];

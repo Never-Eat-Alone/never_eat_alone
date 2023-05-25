@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "aphrodite": "2.4.0",
+    "browser-image-compression": "^2.0.2",
     "date-fns": "2.29.3",
     "email-validator": "2.0.4",
     "path-to-regexp": "6.2.1",
