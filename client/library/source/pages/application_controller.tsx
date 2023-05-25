@@ -114,7 +114,7 @@ export class ApplicationController extends React.Component<Properties, State> {
         <Shell
           displayMode={this.state.displayMode}
           account={this.state.account}
-          accountProfileImageSrc={this.state.accountProfileImage.src}
+          accountProfileImageSrc={this.state.accountProfileImage?.src}
           headerStyle={this.handleHeaderAndFooter(pathname).headerStyle}
           onLogOut={this.handleLogOut}
           onLogInButton={this.handleLogInButton}
@@ -229,7 +229,9 @@ export class ApplicationController extends React.Component<Properties, State> {
     this.handleSize();
     window.addEventListener('resize', this.handleSize);
     try {
+      console.log('componentDidMount');
       await this.props.model.load();
+      console.log('model loaded with accountProfileImage', this.props.model.accountProfileImage);
       this.setState(
         {
           isLoaded: true,
