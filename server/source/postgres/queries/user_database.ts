@@ -25,6 +25,9 @@ export class UserDatabase {
 
   public assingInvitationCodeToUserId = async (userId: number): Promise<
       void> => {
+    if (userId === -1) {
+      return;
+    }
     const inviteCode = generateInvitationCode();
     await this.pool.query(`
       INSERT INTO user_invitation_codes (invite_code, user_id, created_at,
@@ -41,7 +44,7 @@ export class UserDatabase {
     const result = await this.pool.query(`
       SELECT invite_code FROM user_invitation_codes WHERE user_id = $1`,
       [userId]);
-    if (!result || !result.rows || result.rows.length === 0) {
+    if (result.rows?.length === 0) {
       return '';
     }
     return result.rows[0].invite_code;
@@ -78,7 +81,7 @@ export class UserDatabase {
   public loadUserByEmail = async (email: string): Promise<User> => {
     const result =
       await this.pool.query('SELECT * FROM users WHERE email = $1', [email]);
-    if (!result || !result.rows || result.rows.length === 0) {
+    if (result.rows?.length === 0) {
       return User.makeGuest();
     }
     return new User(parseInt(result.rows[0].id), result.rows[0].name,
@@ -91,9 +94,12 @@ export class UserDatabase {
    * @param id - User id.
    */
   public loadUserById = async (id: number): Promise<User> => {
+    if (id === -1) {
+      return User.makeGuest();
+    }
     const result = await this.pool.query('SELECT * FROM users WHERE id = $1',
       [id]);
-    if (!result || !result.rows || result.rows.length === 0) {
+    if (result.rows?.length === 0) {
       return User.makeGuest();
     }
     return new User(parseInt(result.rows[0].id), result.rows[0].name,
@@ -109,12 +115,12 @@ export class UserDatabase {
     const guest = User.makeGuest();
     const result = await this.pool.query(
       'SELECT * FROM user_sessions WHERE sid = $1', [id]);
-    if (!result.rows || result.rows.length === 0 || !result.rows[0].user_id) {
+    if (result.rows?.length === 0 || !result.rows[0].user_id) {
       return guest;
     }
     const userResult = await this.pool.query(
       'SELECT * FROM users WHERE id = $1', [parseInt(result.rows[0].user_id)]);
-    if (!userResult.rows || userResult.rows.length === 0) {
+    if (userResult.rows?.length === 0) {
       return guest;
     }
     const user = new User(
@@ -133,11 +139,14 @@ export class UserDatabase {
    */
   public validatePassword = async (userId: number, password: string): Promise<
       boolean> => {
+    if (userId === -1) {
+      return false;
+    }
     const hashedEnteredPass =
       Hash.sha256().update(password + userId).digest('hex');
     const result = await this.pool.query(
       'SELECT * FROM user_credentials WHERE user_id = $1', [userId]);
-    if (!result.rows || result.rows.length === 0 ||
+    if (result.rows?.length === 0 ||
         hashedEnteredPass !== result.rows[0].hashed_pass) {
       return false;
     }

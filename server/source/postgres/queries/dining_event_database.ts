@@ -17,7 +17,7 @@ export class DiningEventDatabase {
       re.price_range AS re_price_range, de.total_capacity, de.color_code AS \
       de_color_code FROM dining_events AS de JOIN restaurants AS re ON \
       de.restaurant_id = re.id ORDER BY start_at DESC LIMIT $1', [7]);
-    if (!result || result.rows.length === 0) {
+    if (result.rows?.length === 0) {
       return [];
     }
     const events: EventCardSummary[] = [];
@@ -38,11 +38,13 @@ export class DiningEventDatabase {
         numberOfSeatsAvailable -= numberOfAttendees;
       }
       let isAttending: boolean = false;
-      tempResult = await this.pool.query("SELECT * FROM attendees WHERE \
+      if (userId !== -1) {
+        tempResult = await this.pool.query("SELECT * FROM attendees WHERE \
         event_id = $1 AND user_id = $2 AND status = 'GOING'", [row.de_id,
         userId]);
-      if (tempResult.rows?.length !== 0) {
-        isAttending = true;
+        if (tempResult.rows?.length !== 0) {
+          isAttending = true;
+        }
       }
       const event = new EventCardSummary(parseInt(row.de_id), row.de_title,
         new Date(Date.parse(row.start_at)), new Date(Date.parse(row.end_at)),
@@ -63,7 +65,7 @@ export class DiningEventDatabase {
       ON att.event_id = de.id JOIN restaurants AS re ON \
       re.id = de.restaurant_id WHERE att.user_id = $1 AND att.status = 'GOING' \
       AND de.start_at >= NOW() ORDER BY de.start_at ASC", [userId]);
-    if (!result || result.rows.length === 0) {
+    if (result.rows?.length === 0) {
       return [];
     }
     const events: EventCardSummary[] = [];

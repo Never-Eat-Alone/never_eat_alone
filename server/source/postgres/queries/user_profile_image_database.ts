@@ -50,7 +50,7 @@ export class UserProfileImageDatabase {
         VALUES ($1, $2, DEFAULT, DEFAULT) RETURNING *`,
         [userId, relativeFilePath]);
     }
-    if (!result || !result.rows || result.rows.length === 0) {
+    if (result.rows?.length === 0) {
       return UserProfileImage.default(userId);
     }
     return new UserProfileImage(parseInt(result.rows[0].user_id),

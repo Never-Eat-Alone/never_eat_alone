@@ -58,6 +58,7 @@ export class HomePageController extends React.Component<Properties, State> {
   public async componentDidMount(): Promise<void> {
     try {
       await this.props.model.load();
+      console.log('componentDidMount', this.props.model, this.props.model.imageList);
       this.setState({
         isLoaded: true,
         errorCode: HomePage.ErrorCode.NONE
