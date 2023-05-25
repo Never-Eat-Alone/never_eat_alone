@@ -102,7 +102,7 @@ export class UserRoutes {
         return;
       }
     }
-    if (!user || user.id === -1) {
+    if (user?.id === -1) {
       try {
         user = await this.userDatabase.addGuestUserRequest(name, email,
           referralCode);
@@ -170,6 +170,10 @@ export class UserRoutes {
 
   private signUp = async (request, response) => {
     const userId = parseInt(request.params.id);
+    if (userId === -1) {
+      response.redirect(303, 'http://nevereatalone.net/join');
+      return;
+    }
     let user = User.makeGuest();
     try {
       user = await this.userDatabase.loadUserById(userId);
@@ -178,7 +182,7 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
-    if (!user || user.id === -1 || user.userStatus !== UserStatus.ACTIVE) {
+    if (user?.id === -1 || user.userStatus !== UserStatus.ACTIVE) {
       response.redirect(303, 'http://nevereatalone.net/join');
       return;
     }
@@ -194,20 +198,22 @@ export class UserRoutes {
       response.redirect(303, 'http://nevereatalone.net/log_in');
       return;
     }
-    try {
-      response.status(200).send();
-    } catch (error) {
-      response.status(500).send();
-    }
+    response.status(200).send();
   }
 
   private setUpProfile = async (request, response) => {
     const userId = parseInt(request.params.id);
     const displayName = request.body.displayName;
     const accountProfileImage = request.body.accountProfileImage;
+    console.log('setUpProfile for userID', userId, 'displayName', displayName, accountProfileImage.src);
+    if (userId === -1) {
+      response.status(400).send();
+    }
     try {
+      console.log('Running saveUserProfile');
       const result = await this.userDatabase.saveUserProfile(userId,
         accountProfileImage.src, displayName);
+      console.log('result account', result.account, result.accountProfileImage);
       response.status(200).json({
         account: result.account.toJson(),
         accountProfileImage: result.accountProfileImage.toJson()

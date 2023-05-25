@@ -55,6 +55,7 @@ export class HttpSignUpPageModel extends SignUpPageModel {
         'accountProfileImage': image.toJson()
       })
     });
+    console.log('response status of fetch /api/set_up_profile', response.status);
     if (response.status !== 200) {
       return {
         account: this._account,
@@ -63,7 +64,7 @@ export class HttpSignUpPageModel extends SignUpPageModel {
     } else {
       const responseObject = await response.json();
       return {
-        account: User.fromJson(responseObject.user),
+        account: User.fromJson(responseObject.account),
         accountProfileImage: UserProfileImage.fromJson(
           responseObject.accountProfileImage)
       };
