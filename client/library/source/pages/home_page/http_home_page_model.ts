@@ -48,7 +48,6 @@ export class HttpHomePageModel extends HomePageModel {
           futureEvent));
       }
     }
-    console.log('creating localhomepage model with imagelist', imageList, 'eventlist', eventList, userEventTagList);
     this._model = new LocalHomePageModel(imageList, eventList, userEventTagList,
       userFutureEventCardSummaryList, totalEventsAttendedThisMonth);
     this._model.load();

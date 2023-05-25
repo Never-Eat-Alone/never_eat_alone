@@ -30,7 +30,6 @@ export class SocialMediaImageRoutes {
       });
       return;
     }
-    console.log('imageList', imageList);
     response.status(200).json({ socialMediaImages: arrayToJson(imageList) });
   }
 

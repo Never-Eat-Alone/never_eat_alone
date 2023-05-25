@@ -229,9 +229,7 @@ export class ApplicationController extends React.Component<Properties, State> {
     this.handleSize();
     window.addEventListener('resize', this.handleSize);
     try {
-      console.log('componentDidMount');
       await this.props.model.load();
-      console.log('model loaded with accountProfileImage', this.props.model.accountProfileImage);
       this.setState(
         {
           isLoaded: true,

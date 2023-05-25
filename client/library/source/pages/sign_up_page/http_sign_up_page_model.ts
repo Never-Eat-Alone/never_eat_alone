@@ -21,7 +21,6 @@ export class HttpSignUpPageModel extends SignUpPageModel {
       const responseObject = await response.json();
       const uploadedImage = UserProfileImage.fromJson(
         responseObject.accountProfileImage);
-      console.log('uploaded image', uploadedImage?.src);
       return uploadedImage;
     }
     // If the upload fails, the image is set to the last image.
