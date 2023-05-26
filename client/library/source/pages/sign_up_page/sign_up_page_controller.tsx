@@ -46,7 +46,7 @@ export class SignUpPageController extends React.Component<Properties, State> {
     if (this.state.isSetUpPage) {
       return <ProfileSetUpPage
         displayMode={this.props.displayMode}
-        displayName={this.props.account.name}
+        displayName={this.state.displayName}
         userId={this.props.account.id}
         selectedImage={this.state.accountProfileImage}
         errorCode={this.state.profileSetUpPageErrorCode}
