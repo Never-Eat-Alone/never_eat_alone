@@ -339,7 +339,6 @@ export class ApplicationController extends React.Component<Properties, State> {
 
   private handleSignUpSuccess = (account: User, accountProfileImage:
       UserProfileImage) => {
-    console.log('handleSignUpSuccess for user', account.name);
     this.setState({
       account: account,
       accountProfileImage: accountProfileImage

@@ -43,7 +43,6 @@ export class UserProfileImageRoutes {
     const userId = parseInt(request.params.userId);
     const userProfileImageFile = request.file;
     let uploadedImage: UserProfileImage;
-    console.log('uploadUserProfileImage for userID', userId);
     try {
       uploadedImage = await this.userProfileImageDatabase.uploadProfileImage(
         userId, userProfileImageFile);
@@ -52,7 +51,6 @@ export class UserProfileImageRoutes {
       response.status(500).json({ message: 'DATABASE_ERROR' });
       return;
     }
-    console.log('responding accountProfileImage', uploadedImage);
     response.status(201).json({ accountProfileImage: uploadedImage.toJson() });
   }
 

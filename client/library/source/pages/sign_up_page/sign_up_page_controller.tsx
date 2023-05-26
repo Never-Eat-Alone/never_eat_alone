@@ -93,15 +93,12 @@ export class SignUpPageController extends React.Component<Properties, State> {
   }
 
   private handleUploadImageClick = async (uploadedImageFile: File) => {
-    console.log('handleUploadImageClick', uploadedImageFile);
     try {
       const image = await this.props.model.uploadImageFile(uploadedImageFile);
-      console.log('updating image', image, image.src);
       this.setState({
         accountProfileImage: image
       });
     } catch {
-      console.log('upload failed');
       this.setState({
         profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NO_CONNECTION,
         accountProfileImage: UserProfileImage.default(this.props.account.id)

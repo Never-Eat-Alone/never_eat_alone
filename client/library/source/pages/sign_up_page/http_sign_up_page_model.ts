@@ -17,12 +17,10 @@ export class HttpSignUpPageModel extends SignUpPageModel {
       method: 'POST',
       body: formData
     });
-    console.log('/api/upload_profile_image response status', response.status);
     if (response.status === 201) {
       const responseObject = await response.json();
       const uploadedImage = UserProfileImage.fromJson(
         responseObject.accountProfileImage);
-      console.log('uploadedimade', uploadedImage);
       return uploadedImage;
     }
     // If the upload fails, the image is set to the last image.
@@ -57,7 +55,6 @@ export class HttpSignUpPageModel extends SignUpPageModel {
         'accountProfileImage': image.toJson()
       })
     });
-    console.log('response status of fetch /api/set_up_profile', response.status);
     if (response.status !== 200) {
       return {
         account: this._account,

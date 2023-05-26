@@ -39,24 +39,20 @@ export class UserProfileImageDatabase {
       'SELECT * FROM user_profile_images WHERE user_id = $1', [userId]);
     let result;
     if (existingImageResult?.rows?.length > 0) {
-      console.log('UPDATE user_profile_images');
       // User already has a profile image, update the record.
       result = await this.pool.query(`
         UPDATE user_profile_images SET src = $1, updated_at = DEFAULT WHERE
         user_id = $2 RETURNING *`, [relativeFilePath, userId]);
     } else {
       // User doesn't have a profile image, insert a new record.
-      console.log('INSERT INTO user_profile_images', relativeFilePath);
       result = await this.pool.query(`
         INSERT INTO user_profile_images (user_id, src, created_at, updated_at)
         VALUES ($1, $2, DEFAULT, DEFAULT) RETURNING *`,
         [userId, relativeFilePath]);
     }
     if (result?.rows?.length === 0) {
-      console.log('Failed to upload the user profile image.');
       return UserProfileImage.default(userId);
     }
-    console.log('uploaded the image with this src in db:', result.rows[0].src);
     return new UserProfileImage(parseInt(result.rows[0].user_id),
       result.rows[0].src);
   }
