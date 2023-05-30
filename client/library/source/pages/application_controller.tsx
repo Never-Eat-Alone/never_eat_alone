@@ -56,7 +56,7 @@ export class ApplicationController extends React.Component<Properties, State> {
     this.state = {
       displayMode: DisplayMode.DESKTOP,
       account: User.makeGuest(),
-      accountProfileImage: UserProfileImage.default(-1),
+      accountProfileImage: UserProfileImage.default(),
       isLoaded: false,
       hasError: false,
       isJoinButtonClicked: false,
