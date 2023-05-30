@@ -279,7 +279,7 @@ export class ApplicationController extends React.Component<Properties, State> {
         this.setState({
           accountProfileImage: this.props.model.accountProfileImage,
           account: this.props.model.account
-        })
+        });
       }).catch((error) => {
         this.setState({ hasError: true });
       });

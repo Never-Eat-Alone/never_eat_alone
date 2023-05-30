@@ -3,7 +3,7 @@ export class UserProfileImage {
     return new UserProfileImage(value.userId, value.src);
   }
 
-  public static default(userId: number): UserProfileImage {
+  public static default(userId: number = -1): UserProfileImage {
     return new UserProfileImage(userId, '/resources/avatars/profile-image-0.svg'
       );
   }
