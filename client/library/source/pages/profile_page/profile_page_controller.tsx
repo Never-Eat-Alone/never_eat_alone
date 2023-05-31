@@ -37,7 +37,7 @@ export class ProfilePageController extends React.Component<Properties, State> {
     if (!this.state.isLoaded || this.state.hasError) {
       return <div />;
     }
-    const coverImageSrc = (this.props.model.coverImage.id === -1 && '' ||
+    const coverImageSrc = (this.props.model.coverImage.profileId === -1 && '' ||
       this.props.model.coverImage.src);
     return <ProfilePage
       account={this.props.account}

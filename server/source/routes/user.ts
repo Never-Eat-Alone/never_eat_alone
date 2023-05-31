@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as Hash from 'hash.js';
-import { InviteEmail, User, UserInvitationCode, UserStatus, UserProfileImage
+import { InviteEmail, User, UserInvitationCode, UserStatus, UserProfileImage, CoverImage
 } from '../../../client/library/source/definitions';
 import { UserDatabase } from '../postgres/queries/user_database';
 import { UserProfileImageDatabase } from '../postgres/queries';
@@ -40,6 +40,8 @@ export class UserRoutes {
     app.post('/api/send_partner_with_us_email', this.sendPartnerWithUsEmail);
     app.post('/api/send_recovery_email', this.sendRecoveryEmail);
     app.post('/api/resend_recovery_email', this.resendRecoveryEmail);
+
+    app.get('/api/profile_page/:id', this.getProfilePage);
 
     this.userDatabase = userDatabase;
     this.userProfileImageDatabase = userProfileImageDatabase;
@@ -630,6 +632,40 @@ export class UserRoutes {
       return;
     }
     response.status(200).send();
+  }
+
+  private getProfilePage = async (request, response) => {
+    const userId = parseInt(request.params.id);
+    let user: User;
+    try {
+      user = await this.userDatabase.loadUserById(userId);
+    } catch (error) {
+      console.log('Failed at loadUserById', error);
+      response.status(500).send();
+      return;
+    }
+    if (user?.id === -1) {
+      // User doesn't exist
+      response.status(400).send();
+      return;
+    }
+    const coverImage = new CoverImage();
+    response.status(200).json({
+      coverImage: '',
+      profileImageSrc: '',
+      name: user.name,
+      userName: user.userName,
+      createdAt: user.createdAt,
+      biography: '',
+      location: '',
+      languageList: [],
+      facebookLink: '',
+      twitterLink: '',
+      instagramLink: '',
+      favoriteCuisineList: [],
+      upcomingEventList: [],
+      pastEventList: []
+    });
   }
 
   private userDatabase: UserDatabase;

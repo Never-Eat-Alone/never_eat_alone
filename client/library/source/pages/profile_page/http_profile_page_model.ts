@@ -15,7 +15,8 @@ export class HttpProfilePageModel extends ProfilePageModel {
   public async load(): Promise<void> {
     const response = await fetch(`/api/profile_page/${this._profileId}`);
     if (response.status !== 200) {
-      return;
+      throw new Error(`Failed to load profile page. Status: ${
+        response.status}`);
     }
     const responseObject = await response.json();
     const coverImage = responseObject.coverImage;
