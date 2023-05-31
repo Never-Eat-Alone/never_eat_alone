@@ -20,14 +20,15 @@ export class DiningEventRoutes {
 
   private getHomePageDiningEventCardSummaries = async (request, response) => {
     const userId = parseInt(request.params.userId);
-    let diningEventCardSummaryList: EventCardSummary[];
+    let diningEventCardSummaryList: EventCardSummary[] = [];
     try {
       diningEventCardSummaryList =
         await this.diningEventDatabase.loadHomePageDiningEventCardSummaries(
           userId);
     } catch (error) {
-      response.status(400).json({
-        diningEventCardSummaryList: [],
+      console.log('Failed at loadHomePageDiningEventCardSummaries', error);
+      response.status(500).json({
+        diningEventCardSummaryList: diningEventCardSummaryList,
         message: 'DATABASE_ERROR'
       });
       return;
@@ -39,13 +40,17 @@ export class DiningEventRoutes {
 
   private getUserFutureDiningEventCardSummaries = async (request, response) => {
     const userId = parseInt(request.params.userId);
-    let userFutureEventCardSummaryList: EventCardSummary[];
+    let userFutureEventCardSummaryList: EventCardSummary[] = [];
+    if (userId === -1) {
+      response.status(200).json({ userFutureEventCardSummaryList: [] });
+      return;
+    }
     try {
       userFutureEventCardSummaryList =
         await this.diningEventDatabase.loadUserFutureDiningEventCardSummaries(
           userId);
     } catch (error) {
-      response.status(400).json({
+      response.status(500).json({
         userFutureEventCardSummaryList: [],
         message: 'DATABASE_ERROR'
       });

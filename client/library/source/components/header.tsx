@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DisplayMode, User, UserProfileImage } from '../definitions';
+import { DisplayMode, User } from '../definitions';
 import { HeaderLogo } from './header_logo';
 import { WhiteNavLink } from './nav_link';
 import { ProfileMenu } from './profile_menu';
@@ -13,7 +13,7 @@ interface Properties {
   account: User;
 
   /** Represents the user profile image. */
-  profileImage: UserProfileImage;
+  accountProfileImageSrc: string;
 
   headerStyle?: React.CSSProperties;
 
@@ -39,14 +39,13 @@ export class Header extends React.Component<Properties> {
       return HEADER_MOBILE_STYLE;
     })();
     const rightSideButtons = [];
-    if (this.props.account && this.props.account.id !== -1) {
+    if (this.props.account?.id !== -1) {
       rightSideButtons.push(
         <ProfileMenu
           key='ProfileMenu'
           displayMode={this.props.displayMode}
           userId={this.props.account.id}
-          imageSrc={this.props.profileImage.src ||
-            'resources/header/icons/avatar_default.svg'}
+          imageSrc={this.props.accountProfileImageSrc}
           onLogOut={this.props.onLogOut}
           style={PROFILE_MENU_STYLE}
         />);

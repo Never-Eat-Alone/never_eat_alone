@@ -74,7 +74,7 @@ export class HomePage extends React.Component<Properties> {
         <ExploreEventsSummary
           displayMode={this.props.displayMode}
           eventList={this.props.eventList}
-          isLoggedIn={this.props.account && this.props.account.id !== -1}
+          isLoggedIn={this.props.account?.id !== -1}
         />
         <AlbumSummary
           displayMode={this.props.displayMode}

@@ -1,6 +1,6 @@
 import * as Hash from 'hash.js';
 import { Pool } from 'pg';
-import { Avatar, User, UserStatus, UserProfileImage
+import { User, UserStatus, UserProfileImage
 } from '../../../../client/library/source/definitions';
 import * as Crypto from 'crypto';
 
@@ -25,6 +25,9 @@ export class UserDatabase {
 
   public assingInvitationCodeToUserId = async (userId: number): Promise<
       void> => {
+    if (userId === -1) {
+      return;
+    }
     const inviteCode = generateInvitationCode();
     await this.pool.query(`
       INSERT INTO user_invitation_codes (invite_code, user_id, created_at,
@@ -41,21 +44,10 @@ export class UserDatabase {
     const result = await this.pool.query(`
       SELECT invite_code FROM user_invitation_codes WHERE user_id = $1`,
       [userId]);
-    if (!result || !result.rows || result.rows.length === 0) {
+    if (result.rows?.length === 0) {
       return '';
     }
     return result.rows[0].invite_code;
-  }
-
-  public loadAvatars = async (): Promise<Avatar[]> => {
-    const result = await this.pool.query('SELECT * FROM avatars');
-    const avatars: Avatar[] = [];
-    if (result && result.rows && result.rows.length > 0) {
-      for (const row of result.rows) {
-        avatars.push(new Avatar(parseInt(row.id), row.src));
-      }
-    }
-    return avatars;
   }
 
   /**
@@ -89,7 +81,7 @@ export class UserDatabase {
   public loadUserByEmail = async (email: string): Promise<User> => {
     const result =
       await this.pool.query('SELECT * FROM users WHERE email = $1', [email]);
-    if (!result || !result.rows || result.rows.length === 0) {
+    if (result.rows?.length === 0) {
       return User.makeGuest();
     }
     return new User(parseInt(result.rows[0].id), result.rows[0].name,
@@ -102,9 +94,12 @@ export class UserDatabase {
    * @param id - User id.
    */
   public loadUserById = async (id: number): Promise<User> => {
+    if (id === -1) {
+      return User.makeGuest();
+    }
     const result = await this.pool.query('SELECT * FROM users WHERE id = $1',
       [id]);
-    if (!result || !result.rows || result.rows.length === 0) {
+    if (result.rows?.length === 0) {
       return User.makeGuest();
     }
     return new User(parseInt(result.rows[0].id), result.rows[0].name,
@@ -120,12 +115,12 @@ export class UserDatabase {
     const guest = User.makeGuest();
     const result = await this.pool.query(
       'SELECT * FROM user_sessions WHERE sid = $1', [id]);
-    if (!result.rows || result.rows.length === 0 || !result.rows[0].user_id) {
+    if (result.rows?.length === 0 || !result.rows[0].user_id) {
       return guest;
     }
     const userResult = await this.pool.query(
       'SELECT * FROM users WHERE id = $1', [parseInt(result.rows[0].user_id)]);
-    if (!userResult.rows || userResult.rows.length === 0) {
+    if (userResult.rows?.length === 0) {
       return guest;
     }
     const user = new User(
@@ -144,11 +139,14 @@ export class UserDatabase {
    */
   public validatePassword = async (userId: number, password: string): Promise<
       boolean> => {
+    if (userId === -1) {
+      return false;
+    }
     const hashedEnteredPass =
       Hash.sha256().update(password + userId).digest('hex');
     const result = await this.pool.query(
       'SELECT * FROM user_credentials WHERE user_id = $1', [userId]);
-    if (!result.rows || result.rows.length === 0 ||
+    if (result.rows?.length === 0 ||
         hashedEnteredPass !== result.rows[0].hashed_pass) {
       return false;
     }
@@ -317,29 +315,30 @@ export class UserDatabase {
     return true;
   }
 
-  public saveUserProfile = async (image: UserProfileImage, displayName: string):
-      Promise<{ user: any, userProfileImage: UserProfileImage }> => {
-    const userResult = await this.pool.query(`
-      UPDATE users SET name = $1 WHERE id = $2
-      RETURNING *
-    `, [displayName, image.userId]);
-    const imageResult = await this.pool.query(`
-      INSERT INTO user_profile_images (user_id, src)
+  public saveUserProfile = async (userId: number, imageSrc: string,
+      displayName: string): Promise<{ account: User,
+      accountProfileImage: UserProfileImage }> => {
+    const userQueryResult = await this.pool.query(
+      `UPDATE users SET name = $1 WHERE id = $2 RETURNING *`,
+      [displayName, userId]);
+    const userProfileImageQueryResult = await this.pool.query(
+      `INSERT INTO user_profile_images (user_id, src)
       VALUES ($1, $2)
       ON CONFLICT (user_id)
       DO UPDATE SET src = EXCLUDED.src, updated_at = NOW()
-      RETURNING *
-    `, [image.userId, image.src]);
+      RETURNING *`,
+      [userId, imageSrc]);
+    const account = new User(
+      parseInt(userQueryResult.rows[0].id), userQueryResult.rows[0].name,
+      userQueryResult.rows[0].email, userQueryResult.rows[0].user_name,
+      UserStatus[userQueryResult.rows[0].user_status as keyof typeof
+      UserStatus], new Date(Date.parse(userQueryResult.rows[0].created_at)));
+    const accountProfileImage = new UserProfileImage(parseInt(
+      userProfileImageQueryResult.rows[0].user_id),
+      userProfileImageQueryResult.rows[0].src);
     return {
-      user: new User(parseInt(userResult.rows[0].id), userResult.rows[0].name,
-        userResult.rows[0].email, userResult.rows[0].user_name,
-        UserStatus[userResult.rows[0].user_status as keyof typeof UserStatus],
-        new Date(Date.parse(userResult.rows[0].created_at))),
-      userProfileImage: new UserProfileImage(
-        parseInt(imageResult.rows[0].id),
-        parseInt(imageResult.rows[0].user_id),
-        imageResult.rows[0].src
-      )
+      account: account,
+      accountProfileImage: accountProfileImage
     };
   }
 

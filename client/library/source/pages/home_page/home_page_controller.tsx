@@ -36,23 +36,23 @@ export class HomePageController extends React.Component<Properties, State> {
   }
 
   public render(): JSX.Element {
-    if (this.state.isLoaded && this.state.errorCode ===
+    if (!this.state.isLoaded || this.state.errorCode !==
         HomePage.ErrorCode.NONE) {
-      return (
-        <HomePage
-          displayMode={this.props.displayMode}
-          account={this.props.account}
-          imageList={this.props.model.imageList}
-          eventList={this.props.model.eventList}
-          userEventTagList={this.props.model.userEventTagList}
-          userFutureEventList={this.props.model.userFutureEventList}
-          userTotalEventsThisMonth={this.props.model.userTotalEventsThisMonth}
-          errorCode={this.state.errorCode}
-          onJoinButton={this.props.onJoinButton}
-          onPartnerWithUsButton={this.props.onPartnerWithUsButton}
-        />);
+      return <div />;
     }
-    return <div />;
+    return (
+      <HomePage
+        displayMode={this.props.displayMode}
+        account={this.props.account}
+        imageList={this.props.model.imageList}
+        eventList={this.props.model.eventList}
+        userEventTagList={this.props.model.userEventTagList}
+        userFutureEventList={this.props.model.userFutureEventList}
+        userTotalEventsThisMonth={this.props.model.userTotalEventsThisMonth}
+        errorCode={this.state.errorCode}
+        onJoinButton={this.props.onJoinButton}
+        onPartnerWithUsButton={this.props.onPartnerWithUsButton}
+      />);
   }
 
   public async componentDidMount(): Promise<void> {
@@ -68,6 +68,5 @@ export class HomePageController extends React.Component<Properties, State> {
         errorCode: HomePage.ErrorCode.NO_CONNECTION
       });
     }
-    return;
   }
 }

@@ -1,5 +1,4 @@
-import { HeaderModel, HttpHeaderModel } from '../components';
-import { User } from '../definitions';
+import { User, UserProfileImage } from '../definitions';
 import { HttpInviteAFoodieModel, InviteAFoodieModel
 } from '../modals/invite_a_foodie_modal';
 import { HttpJoinModel, JoinModel } from '../modals/join_modal';
@@ -35,10 +34,19 @@ export class HttpApplicationModel extends ApplicationModel {
     } else {
       account = User.makeGuest();
     }
+    let accountProfileImage;
+    if (account?.id !== -1) {
+      const imageResponse = await fetch(
+        `/api/user_profile_image/${account.id}`);
+      if (imageResponse.status === 200) {
+        const responseObject = await imageResponse.json();
+        accountProfileImage = UserProfileImage.fromJson(
+          responseObject.accountProfileImage);
+      }
+    }
     const googleClientIdResponse = await fetch('/api/google_client_id');
     const googleClientIdObject = await googleClientIdResponse.json();
     const googleClientId = googleClientIdObject.google_client_id;
-    const headerModel = new HttpHeaderModel(account);
     const homePageModel = new HttpHomePageModel(account);
     const inviteAFoodieModel = new HttpInviteAFoodieModel(account);
     const joinModel = new HttpJoinModel();
@@ -47,10 +55,9 @@ export class HttpApplicationModel extends ApplicationModel {
     const deletedAccountSurveyModel = new HttpDeletedAccountSurveyModel();
     const deactivateAccountSurveyModel = new HttpDeactivateAccountSurveyModel();
     const forgotPasswordPageModel = new HttpForgotPasswordPageModel();
-    this._model = new LocalApplicationModel(account, headerModel,
-      homePageModel,
-      inviteAFoodieModel, joinModel, partnerWithUsModel, logInModel,
-      deletedAccountSurveyModel, deactivateAccountSurveyModel,
+    this._model = new LocalApplicationModel(account, accountProfileImage,
+      homePageModel, inviteAFoodieModel, joinModel, partnerWithUsModel,
+      logInModel, deletedAccountSurveyModel, deactivateAccountSurveyModel,
       forgotPasswordPageModel, googleClientId);
     await this._model.load();
   }
@@ -59,8 +66,8 @@ export class HttpApplicationModel extends ApplicationModel {
     return this._model.account;
   }
 
-  public get headerModel(): HeaderModel {
-    return this._model.headerModel;
+  public get accountProfileImage(): UserProfileImage {
+    return this._model.accountProfileImage;
   }
 
   public get homePageModel(): HomePageModel {
@@ -159,7 +166,8 @@ export class HttpApplicationModel extends ApplicationModel {
   public getSignUpPageModel(id: number): SignUpPageModel {
     let signUpPageModel = this._model.getSignUpPageModel(id);
     if (!signUpPageModel) {
-      signUpPageModel = new HttpSignUpPageModel(this._model.account);
+      signUpPageModel = new HttpSignUpPageModel(this._model.account,
+        this._model.accountProfileImage);
       this.addSignUpPageModel(id, signUpPageModel);
     }
     return signUpPageModel;
@@ -174,8 +182,8 @@ export class HttpApplicationModel extends ApplicationModel {
     this._model.addEmailConfirmationPageModel(id, emailConfirmationPageModel);
   }
 
-  public getEmailConfirmationPageModel(tokenId: string
-      ): EmailConfirmationPageModel {
+  public getEmailConfirmationPageModel(tokenId: string):
+      EmailConfirmationPageModel {
     let emailConfirmationPageModel = this._model.getEmailConfirmationPageModel(
       tokenId);
     if (!emailConfirmationPageModel) {

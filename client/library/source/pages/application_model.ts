@@ -1,5 +1,4 @@
-import { HeaderModel } from '../components';
-import { User } from '../definitions';
+import { User, UserProfileImage } from '../definitions';
 import { InviteAFoodieModel } from '../modals';
 import { JoinModel } from '../modals/join_modal';
 import { LogInModel } from '../modals/log_in_modal';
@@ -18,7 +17,7 @@ import { SignUpPageModel } from './sign_up_page';
 export abstract class ApplicationModel {
   public abstract load(): Promise<void>;
   public abstract get account(): User;
-  public abstract get headerModel(): HeaderModel;
+  public abstract get accountProfileImage(): UserProfileImage;
   public abstract get homePageModel(): HomePageModel;
   public abstract addDiningEventPageModel(id: number,
     diningEventPageModel: DiningEventPageModel): void;

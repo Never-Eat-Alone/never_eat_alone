@@ -63,19 +63,17 @@ interface Properties {
 /** Displays the user's profile page. */
 export class ProfilePage extends React.Component<Properties> {
   public render(): JSX.Element {
-    const pastEvents = (this.props.pastEventList &&
-      this.props.pastEventList.length !== 0 &&
+    const pastEvents = (this.props.pastEventList?.length !== 0 &&
       <ProfilePastEvents
         displayMode={this.props.displayMode}
         eventList={this.props.pastEventList}
-        isLoggedIn={this.props.account && this.props.account.id !== -1}
+        isLoggedIn={this.props.account?.id !== -1}
       /> || null);
-    const upcomingEvents = (this.props.upcomingEventList &&
-      this.props.upcomingEventList.length !== 0 &&
+    const upcomingEvents = (this.props.upcomingEventList?.length !== 0 &&
       <ProfileUpcomingEvents
         displayMode={this.props.displayMode}
         eventList={this.props.upcomingEventList}
-        isLoggedIn={this.props.account && this.props.account.id !== -1}
+        isLoggedIn={this.props.account?.id !== -1}
       /> || null);
     const { containerStyle, coverImageStyle, profileBoxStyle,
         eventsContainerStyle } = (() => {

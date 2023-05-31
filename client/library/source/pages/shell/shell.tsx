@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Footer, HeaderController, HeaderModel } from '../../components';
+import { Footer, Header } from '../../components';
 import { DisplayMode, User } from '../../definitions';
 
 interface Properties {
@@ -9,10 +9,7 @@ interface Properties {
   /** The current session user. */
   account: User;
 
-  profileImageSrc: string;
-
-  /** The model used for the Header. */
-  headerModel: HeaderModel;
+  accountProfileImageSrc: string;
 
   /** The background color for the header. */
   headerStyle?: React.CSSProperties;
@@ -32,9 +29,6 @@ interface Properties {
   /** Indicates the join button is clicked. */
   onJoinButton: () => void;
 
-  /** Indicates a button is clicked on header. */
-  onButtonWithDropDownClick: (label: string) => void;
-
   /** Indicates the invite a foodie button is clicked. */
   onInviteAFoodieButton: () => void;
 }
@@ -49,15 +43,14 @@ export class Shell extends React.Component<Properties> {
   public render(): JSX.Element {
     return (
       <div style={CONTAINER_STYLE} >
-        <HeaderController
+        <Header
           account={this.props.account}
           displayMode={this.props.displayMode}
-          model={this.props.headerModel}
+          accountProfileImageSrc={this.props.accountProfileImageSrc}
+          headerStyle={this.props.headerStyle}
           onLogOut={this.props.onLogOut}
           onLogInButton={this.props.onLogInButton}
           onJoinButton={this.props.onJoinButton}
-          onButtonClick={this.props.onButtonWithDropDownClick}
-          headerStyle={this.props.headerStyle}
         />
           {this.props.children}
         <Footer

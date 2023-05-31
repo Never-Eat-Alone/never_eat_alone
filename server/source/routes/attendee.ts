@@ -23,15 +23,14 @@ export class AttendeeRoutes {
       eventTagList = await this.attendeeDatabase.loadHomePageEventTagList(
         userId);
     } catch (error) {
-      response.status(400).json({
+      console.log('Failed at loadHomePageEventTagList', error);
+      response.status(500).json({
         eventTagList: [],
         message: 'DATABASE_ERROR'
       });
       return;
     }
-    response.status(200).json({
-      eventTagList: arrayToJson(eventTagList)
-    });
+    response.status(200).json({ eventTagList: arrayToJson(eventTagList) });
   }
 
   private attendeeDatabase: AttendeeDatabase;

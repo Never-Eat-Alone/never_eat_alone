@@ -1,8 +1,9 @@
 import { css, StyleSheet } from 'aphrodite';
+import imageCompression from 'browser-image-compression';
 import * as React from 'react';
 import { AvatarWithCheckMark, NameInputFieldWithCounterInside, PrimaryTextButton
 } from '../../components';
-import { Avatar, DisplayMode, UserProfileImage } from '../../definitions';
+import { DisplayMode, UserProfileImage } from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -10,32 +11,65 @@ interface Properties {
   /** The user display name entered when they requested an account. */
   displayName: string;
 
+  /** The image user selected as profile picture. */
   selectedImage: UserProfileImage;
 
-  avatars: Avatar[];
+  userId: number;
+
+  /** The error code that applies to the ProfileSetUpPage. */
+  errorCode: ProfileSetUpPage.ErrorCode;
 
   /** Indicates the upload image button is clicked. */
   onUploadImageClick: (imageFile: File) => void;
 
+  onAvatarClick: (src: string) => void;
+
+  onDisplayNameChange: (newDisplayName: string) => void;
+
   /** Indicates the let's go button is clicked. */
-  onLetsGoClick: (displayName: string, image: UserProfileImage) => void;
-
-  onAvatarClick: (avatar: Avatar) => void;
-
-  onDisplayNameChange: (newName: string) => void;
+  onLetsGoClick: () => void;
 }
 
+/** Displays the ProfileSetUpPage. */
 export class ProfileSetUpPage extends React.Component<Properties> {
+  constructor(props: Properties) {
+    super(props);
+    this._avatarSrcList = [
+      '/resources/avatars/profile-image-0.svg',
+      '/resources/avatars/profile-image-1.svg',
+      '/resources/avatars/profile-image-2.svg',
+      '/resources/avatars/profile-image-3.svg',
+      '/resources/avatars/profile-image-4.svg',
+      '/resources/avatars/profile-image-5.svg',
+      '/resources/avatars/profile-image-6.svg',
+      '/resources/avatars/profile-image-7.svg',
+      '/resources/avatars/profile-image-8.svg',
+      '/resources/avatars/profile-image-9.svg',
+      '/resources/avatars/profile-image-10.svg',
+      '/resources/avatars/profile-image-11.svg',
+      '/resources/avatars/profile-image-12.svg',
+      '/resources/avatars/profile-image-13.svg',
+      '/resources/avatars/profile-image-14.svg',
+      '/resources/avatars/profile-image-15.svg',
+      '/resources/avatars/profile-image-16.svg',
+      '/resources/avatars/profile-image-17.svg',
+      '/resources/avatars/profile-image-18.svg',
+      '/resources/avatars/profile-image-19.svg'
+    ];
+  }
+
   public render(): JSX.Element {
     const contentContainerStyle = (this.props.displayMode ===
       DisplayMode.MOBILE && MOBILE_CONTAINER_STYLE || CONTENT_CONTAINER_STYLE);
     const contentStyle = (this.props.displayMode === DisplayMode.MOBILE &&
       MOBILE_CONTENT_STYLE || CONTENT_STYLE);
     const avatars = [];
-    for (const avatar of this.props.avatars) {
-      avatars.push(<AvatarWithCheckMark key={avatar.id} imageSrc={avatar.src}
-        isMarked={avatar.id === this.props.selectedImage.id}
-        onClick={() => this.props.onAvatarClick(avatar)} />);
+    for (const avatarSrc of this._avatarSrcList) {
+      const isMarked = avatarSrc === this.props.selectedImage.src;
+      avatars.push(<AvatarWithCheckMark key={avatarSrc}
+        imageSrc={avatarSrc}
+        isMarked={isMarked}
+        onClick={() => this.props.onAvatarClick(avatarSrc)} />);
     }
     const isDisplayName = this.props.displayName.length !== 0;
     const nameErrorMessage = (!isDisplayName && 'Please enter a display name.'
@@ -48,11 +82,11 @@ export class ProfileSetUpPage extends React.Component<Properties> {
             <div style={TITLE_STYLE} >SUCCESS! LET’S SET UP YOUR PROFILE.</div>
             <div style={ROW_CONTAINER_STYLE} >
               <div style={ICON_CONTAINER_STYLE} >
-                <img
-                  style={ICON_STYLE}
-                  src={this.props.selectedImage.src}
-                  alt='Profile Picture'
-                />
+              <img
+                style={ICON_STYLE}
+                src={this.props.selectedImage.src}
+                alt='Selected Picture'
+              />
               </div>
             </div>
             <div style={DISPLAY_NAME_ROW_STYLE} >
@@ -83,8 +117,7 @@ export class ProfileSetUpPage extends React.Component<Properties> {
               <PrimaryTextButton
                 label="Let’s go!"
                 style={LETS_GO_BUTTON_STYLE}
-                onClick={() => this.props.onLetsGoClick(this.props.displayName,
-                  this.props.selectedImage)}
+                onClick={this.props.onLetsGoClick}
                 disabled={!isDisplayName}
               />
             </div>
@@ -112,25 +145,36 @@ export class ProfileSetUpPage extends React.Component<Properties> {
     input.accept = 'image/*'; // Accept only image files
     input.style.display = 'none';
 
-  // Listen for the 'change' event to get the selected image file
-  input.addEventListener('change', (event) => {
-    const target = event.target as HTMLInputElement;
-    const file = target.files && target.files[0];
-    if (file) {
-      // Call the onUploadImageClick prop with the selected image file
-      this.props.onUploadImageClick(file);
-    }
-  });
+    // Listen for the 'change' event to get the selected image file
+    input.addEventListener('change', async (event) => {
+      const target = event.target as HTMLInputElement;
+      const file = target.files && target.files[0];
+      if (file) {
+        try {
+          // Compression options
+          const options = {
+            maxSizeMB: 1,
+            maxWidthOrHeight: 1920,
+            useWebWorker: true,
+          };
+          const compressedFile = await imageCompression(file, options);
+          this.props.onUploadImageClick(compressedFile);
+        } catch (error) {
+          console.error("Image compression failed:", error);
+        }
+      }
+    });
 
-  // Trigger the click event to open the file picker dialog
-  input.click();
+    // Trigger the click event to open the file picker dialog
+    input.click();
   }
+
+  private _avatarSrcList: string[];
 }
 
 export namespace ProfileSetUpPage {
   export enum ErrorCode {
     NONE,
-    UPLOAD_IMAGE_FAILED,
     NO_CONNECTION
   }
 }

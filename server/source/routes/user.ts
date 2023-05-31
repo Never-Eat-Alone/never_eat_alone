@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as Hash from 'hash.js';
-import { arrayToJson, Avatar, InviteEmail, User, UserInvitationCode, UserStatus,
-  UserProfileImage } from '../../../client/library/source/definitions';
+import { InviteEmail, User, UserInvitationCode, UserStatus, UserProfileImage
+} from '../../../client/library/source/definitions';
 import { UserDatabase } from '../postgres/queries/user_database';
 import { UserProfileImageDatabase } from '../postgres/queries';
 
@@ -23,7 +23,7 @@ export class UserRoutes {
 
     /** Route for the guest user to set up an account. */
     app.get('/api/sign_up/:id', this.signUp);
-    app.post('/api/sign_up/:id', this.setUpPassword);
+    app.post('/api/set_up_password/:id', this.setUpPassword);
     app.post('/api/set_up_profile/:id', this.setUpProfile);
 
     /** Route for the user log in. */
@@ -48,7 +48,7 @@ export class UserRoutes {
 
   /** Returns the current logged in user. */
   private getCurrentUser = async (request, response) => {
-    if (request.session && request.session.user) {
+    if (request.session?.user) {
       let user: User;
       try {
         user = await this.userDatabase.loadUserBySessionId(
@@ -170,6 +170,10 @@ export class UserRoutes {
 
   private signUp = async (request, response) => {
     const userId = parseInt(request.params.id);
+    if (userId === -1) {
+      response.redirect(303, 'http://nevereatalone.net/join');
+      return;
+    }
     let user = User.makeGuest();
     try {
       user = await this.userDatabase.loadUserById(userId);
@@ -178,7 +182,7 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
-    if (!user || user.id === -1 || user.userStatus !== UserStatus.ACTIVE) {
+    if (user?.id === -1 || user.userStatus !== UserStatus.ACTIVE) {
       response.redirect(303, 'http://nevereatalone.net/join');
       return;
     }
@@ -194,41 +198,30 @@ export class UserRoutes {
       response.redirect(303, 'http://nevereatalone.net/log_in');
       return;
     }
-    let userProfileImage = UserProfileImage.NoImage();
-    try {
-      userProfileImage = 
-        await this.userProfileImageDatabase.loadProfileImageByUserId(userId);
-    } catch (error) {
-      response.status(500).send();
-      return;
-    }
-    let avatars: Avatar[] = [];
-    try {
-      const tempAvatars = await this.userDatabase.loadAvatars();
-      avatars = [...tempAvatars];
-    } catch (error) {
-      console.log('Failed at loadAvatars', error);
-      response.status(500).send();
-      return;
-    }
-    response.status(200).json({
-      email: user.email,
-      userProfileImage: userProfileImage.toJson(),
-      avatars: arrayToJson(avatars)
-    });
+    response.status(200).send();
   }
 
   private setUpProfile = async (request, response) => {
+    const userId = parseInt(request.params.id);
     const displayName = request.body.displayName;
-    const image = UserProfileImage.fromJson(request.body.image);
+    const accountProfileImage = request.body.accountProfileImage;
+    console.log('setUpProfile for userID', userId, 'displayName', displayName, accountProfileImage.src);
+    if (userId === -1) {
+      response.status(400).send();
+    }
     try {
-      await this.userDatabase.saveUserProfile(image, displayName);
+      console.log('Running saveUserProfile');
+      const result = await this.userDatabase.saveUserProfile(userId,
+        accountProfileImage.src, displayName);
+      console.log('result account', result.account, result.accountProfileImage);
+      response.status(200).json({
+        account: result.account.toJson(),
+        accountProfileImage: result.accountProfileImage.toJson()
+      });
     } catch (error) {
       console.log('Failed at saveUserProfile', error);
       response.status(500).send();
-      return;
     }
-    response.status(201).send();
   }
 
   private setUpPassword = async (request, response) => {
@@ -336,7 +329,7 @@ export class UserRoutes {
       await this.sgmail.send(message);
     } catch (error) {
       console.error(`Error sending email: ${error}`);
-      if (error.response && error.response.body && error.response.body.errors) {
+      if (error.response?.body?.errors) {
         console.error('Error details:', error.response.body.errors);
       }
     }
@@ -540,7 +533,8 @@ export class UserRoutes {
     try {
       await this.sendPartnerWithUsRecievedConfirmationEmail(email, name);
     } catch (error) {
-      console.log('sendPartnerWithUsRecievedConfirmationEmail', error);
+      console.log('Failed at sendPartnerWithUsRecievedConfirmationEmail',
+        error);
       response.status(500).send();
       return;
     }

@@ -13,7 +13,7 @@ export class SocialMediaImageDatabase {
       SocialMediaImage[]> => {
     const result = await this.pool.query('SELECT * FROM social_media_images \
       ORDER BY created_at DESC');
-    if (!result || result.rows.length === 0) {
+    if (result.rows?.length === 0) {
       return [];
     }
     const images: SocialMediaImage[] = [];

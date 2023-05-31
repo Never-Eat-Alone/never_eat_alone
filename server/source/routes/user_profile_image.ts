@@ -1,5 +1,6 @@
 import * as multer from 'multer';
-import { UserProfileImage } from '../../../client/library/source/definitions';
+import { UserProfileImage
+} from '../../../client/library/source/definitions';
 import { UserProfileImageDatabase } from '../postgres/queries';
 
 /** UserProfileImage Routes class. */
@@ -28,15 +29,14 @@ export class UserProfileImageRoutes {
     try {
       image = await this.userProfileImageDatabase.loadProfileImageByUserId(
         userId);
+      response.status(200).json({ accountProfileImage: image.toJson() });
     } catch (error) {
+      console.log('Failed at loadProfileImageByUserId.', error);
       response.status(500).json({
-        userProfileImage: UserProfileImage.NoImage(),
+        accountProfileImage: UserProfileImage.default(userId),
         message: 'DATABASE_ERROR'
       });
-      console.log(error);
-      return;
     }
-    response.status(200).json({ userProfileImage: image.toJson() });
   }
 
   private uploadUserProfileImage = async (request, response) => {
@@ -47,11 +47,11 @@ export class UserProfileImageRoutes {
       uploadedImage = await this.userProfileImageDatabase.uploadProfileImage(
         userId, userProfileImageFile);
     } catch (error) {
+      console.log('Failed at uploadUserProfileImage.', error);
       response.status(500).json({ message: 'DATABASE_ERROR' });
-      console.log(error);
       return;
     }
-    response.status(201).json({ userProfileImage: uploadedImage.toJson() });
+    response.status(201).json({ accountProfileImage: uploadedImage.toJson() });
   }
 
   private userProfileImageDatabase: UserProfileImageDatabase;

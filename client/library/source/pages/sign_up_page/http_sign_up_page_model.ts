@@ -1,35 +1,14 @@
-import { arrayFromJson, Avatar, User, UserProfileImage
-} from '../../definitions';
-import { LocalSignUpPageModel } from './local_sign_up_page_model';
+import { User, UserProfileImage } from '../../definitions';
 import { SignUpPageModel } from './sign_up_page_model';
 
 export class HttpSignUpPageModel extends SignUpPageModel {
-  constructor(account: User) {
+  constructor(account: User, accountProfileImage: UserProfileImage) {
     super();
     this._account = account;
+    this._accountProfileImage = accountProfileImage;
   }
 
-  public async load(): Promise<void> {
-    const response = await fetch(`/api/sign_up/${this._account.id}`);
-    if (response.status !== 200) {
-      return;
-    }
-    const responseObject = await response.json();
-    let userProfileImage = UserProfileImage.NoImage();
-    if (responseObject.userProfileImage) {
-      userProfileImage = UserProfileImage.fromJson(
-        responseObject.userProfileImage);
-    }
-    let avatars: Avatar[] = [];
-    if (responseObject.avatars && responseObject.avatars.length > 0) {
-      avatars = arrayFromJson(Avatar, responseObject.avatars);
-    }
-    this._model = new LocalSignUpPageModel(this._account, userProfileImage,
-      avatars);
-    this._model.load();
-  }
-
-  public async uploadImage(userProfileImageFile: File):
+  public async uploadImageFile(userProfileImageFile: File):
       Promise<UserProfileImage> {
     const formData = new FormData();
     formData.append('userProfileImage', userProfileImageFile);
@@ -40,13 +19,16 @@ export class HttpSignUpPageModel extends SignUpPageModel {
     });
     if (response.status === 201) {
       const responseObject = await response.json();
-      return UserProfileImage.fromJson(responseObject.userProfileImage);
+      const uploadedImage = UserProfileImage.fromJson(
+        responseObject.accountProfileImage);
+      return uploadedImage;
     }
-    return UserProfileImage.NoImage();
+    // If the upload fails, the image is set to the last image.
+    return this._accountProfileImage;
   }
 
   public async signUp(password: string): Promise<boolean> {
-    const response = await fetch(`/api/sign_up/${this._account.id}`, {
+    const response = await fetch(`/api/set_up_password/${this._account.id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -62,27 +44,32 @@ export class HttpSignUpPageModel extends SignUpPageModel {
   }
 
   public async setUpProfile(displayName: string, image: UserProfileImage):
-      Promise<void> {
-    await fetch(`/api/set_up_profile/${this._account.id}`, {
+      Promise<{ account: User, accountProfileImage: UserProfileImage }> {
+    const response = await fetch(`/api/set_up_profile/${this._account.id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         'displayName': displayName,
-        'image': image.toJson()
+        'accountProfileImage': image.toJson()
       })
     });
+    if (response.status !== 200) {
+      return {
+        account: this._account,
+        accountProfileImage: this._accountProfileImage
+      };
+    } else {
+      const responseObject = await response.json();
+      return {
+        account: User.fromJson(responseObject.account),
+        accountProfileImage: UserProfileImage.fromJson(
+          responseObject.accountProfileImage)
+      };
+    }
   }
 
-  public get defaultImage(): UserProfileImage {
-    return this._model.defaultImage;
-  }
-
-  public get avatars(): Avatar[] {
-    return this._model.avatars;
-  }
-
-  private _model: SignUpPageModel;
   private _account: User;
+  private _accountProfileImage: UserProfileImage;
 }

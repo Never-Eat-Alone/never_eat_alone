@@ -18,11 +18,11 @@ export class UserProfileImageDatabase {
       Promise<UserProfileImage> => {
     const result = await this.pool.query('SELECT * FROM user_profile_images \
       WHERE user_id = $1', [userId]);
-    if (result.rows.length === 0) {
-      return UserProfileImage.NoImage();
+    if (!result?.rows?.length) {
+      return UserProfileImage.default(userId);
     }
-    return new UserProfileImage(parseInt(result.rows[0].user_id), parseInt(
-      result.rows[0].id), result.rows[0].src);
+    return new UserProfileImage(parseInt(result.rows[0].user_id),
+      result.rows[0].src);
   }
 
   public uploadProfileImage = async (userId: number,
@@ -38,7 +38,7 @@ export class UserProfileImageDatabase {
     const existingImageResult = await this.pool.query(
       'SELECT * FROM user_profile_images WHERE user_id = $1', [userId]);
     let result;
-    if (existingImageResult.rows.length > 0) {
+    if (existingImageResult?.rows?.length > 0) {
       // User already has a profile image, update the record.
       result = await this.pool.query(`
         UPDATE user_profile_images SET src = $1, updated_at = DEFAULT WHERE
@@ -50,11 +50,11 @@ export class UserProfileImageDatabase {
         VALUES ($1, $2, DEFAULT, DEFAULT) RETURNING *`,
         [userId, relativeFilePath]);
     }
-    if (!result || !result.rows || result.rows.length === 0) {
-      return UserProfileImage.NoImage();
+    if (result?.rows?.length === 0) {
+      return UserProfileImage.default(userId);
     }
-    return new UserProfileImage(parseInt(result.rows[0].id), parseInt(
-      result.rows[0].user_id), result.rows[0].src);
+    return new UserProfileImage(parseInt(result.rows[0].user_id),
+      result.rows[0].src);
   }
 
   /** The postgress pool connection. */
