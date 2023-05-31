@@ -160,6 +160,7 @@ function runExpress(pool: Pool, config: any) {
         'user_credentials',
         'user_profile_images',
         'social_media_images',
+        'user_cover_images',
         'cuisines',
         'locations',
         'restaurants',

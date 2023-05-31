@@ -1,7 +1,9 @@
 import * as fs from 'fs';
 import * as Hash from 'hash.js';
-import { InviteEmail, User, UserInvitationCode, UserStatus, UserProfileImage, CoverImage
-} from '../../../client/library/source/definitions';
+import { CoverImage, InviteEmail, User, UserInvitationCode, UserProfileImage,
+  UserStatus } from '../../../client/library/source/definitions';
+import { UserCoverImageDatabase } from
+'../postgres/queries/user_cover_image_database';
 import { UserDatabase } from '../postgres/queries/user_database';
 import { UserProfileImageDatabase } from '../postgres/queries';
 
@@ -14,7 +16,8 @@ export class UserRoutes {
    * @param sgmail - SendGrid api.
    */
   constructor(app: any, userDatabase: UserDatabase,
-      userProfileImageDatabase: UserProfileImageDatabase, sgmail: any) {
+      userProfileImageDatabase: UserProfileImageDatabase,
+      userCoverImageDatabase: UserCoverImageDatabase, sgmail: any) {
     /** Route to get the current logged in user. */
     app.get('/api/current_user', this.getCurrentUser);
 
@@ -45,6 +48,7 @@ export class UserRoutes {
 
     this.userDatabase = userDatabase;
     this.userProfileImageDatabase = userProfileImageDatabase;
+    this.userCoverImageDatabase = userCoverImageDatabase;
     this.sgmail = sgmail;
   }
 
@@ -206,16 +210,15 @@ export class UserRoutes {
   private setUpProfile = async (request, response) => {
     const userId = parseInt(request.params.id);
     const displayName = request.body.displayName;
-    const accountProfileImage = request.body.accountProfileImage;
-    console.log('setUpProfile for userID', userId, 'displayName', displayName, accountProfileImage.src);
+    const accountProfileImage = UserProfileImage.fromJson(
+      request.body.accountProfileImage);
     if (userId === -1) {
       response.status(400).send();
+      return;
     }
     try {
-      console.log('Running saveUserProfile');
       const result = await this.userDatabase.saveUserProfile(userId,
         accountProfileImage.src, displayName);
-      console.log('result account', result.account, result.accountProfileImage);
       response.status(200).json({
         account: result.account.toJson(),
         accountProfileImage: result.accountProfileImage.toJson()
@@ -649,9 +652,18 @@ export class UserRoutes {
       response.status(400).send();
       return;
     }
-    const coverImage = new CoverImage();
+    let coverImage = CoverImage.default(userId);
+    try {
+      coverImage = await this.userCoverImageDatabase.loadCoverImageByUserId(
+        userId);
+    } catch (error) {
+      console.log('Failed at loadUserById', error);
+      response.status(500).send();
+      return;
+    }
+
     response.status(200).json({
-      coverImage: '',
+      coverImage: coverImage.toJson(),
       profileImageSrc: '',
       name: user.name,
       userName: user.userName,
@@ -670,6 +682,7 @@ export class UserRoutes {
 
   private userDatabase: UserDatabase;
   private userProfileImageDatabase: UserProfileImageDatabase;
+  private userCoverImageDatabase: UserCoverImageDatabase;
 
   /** The Sendgrid mailing api. */
   private sgmail: any;
