@@ -6,7 +6,9 @@ CREATE TABLE IF NOT EXISTS users (
   user_status   user_status_enum               DEFAULT 'PENDING',
   created_at    TIMESTAMP                      DEFAULT NOW(),
   updated_at    TIMESTAMP                      DEFAULT NOW(),
-  referral_code VARCHAR(255)
+  referral_code VARCHAR(255)                                ,
+  biography     TEXT                                        ,
+  location_id   INTEGER
 );
 
 INSERT INTO users (
@@ -15,7 +17,9 @@ INSERT INTO users (
   user_name,
   user_status,
   created_at,
-  referral_code
+  referral_code,
+  biography,
+  location_id
 )
 VALUES
   ('Shahrzad',
@@ -23,145 +27,187 @@ VALUES
   'shahrzad',
   'PENDING',
   '2020-01-01 14:35',
-  ''
+  '',
+  '',
+  1
   ),
   ('Aurora',
   'amazing.aurora84@gmail.com',
   'amazing_aurora',
   'BANNED',
   '2020-01-02 10:35',
-  'Arthur'
+  'Arthur',
+  '',
+  2
   ),
   ('Alexa',
   'info@nevereatalone.net',
   'Queen',
   'DELETED',
   '2020-01-01 11:55',
-  'Sheryl'
+  'Sheryl',
+  '',
+  3
   ),
   ('Elena',
   'nevereatalonetoronto@gmail.com',
   'travel_queen',
   'ACTIVE',
   '2020-03-01 09:30',
-  '@shahrzad'
+  '@shahrzad',
+  'Work in progress',
+  4
   ),
   ('Sheryl',
   'shahrzad@nevereatalone.net',
   'mk3622',
   'ACTIVE',
   '2020-03-01 23:14',
-  'meetup'
+  'meetup',
+  'Wow',
+  5
   ),
   ('Sofia',
   'shahrzadmasoumnia@gmail.com',
   '',
   'PENDING',
   '2020-04-15 04:47:23',
-  ''
+  '',
+  '',
+  6
   ),
   ('Alexa',
   'shahrzad@spiretrading.com',
   'foodie98',
   'PENDING',
   '2020-05-14 14:24',
-  ''
+  '',
+  '',
+  1
   ),
   ('Sara',
   'shahrzad_masoumnia@yahoo.com',
   'peddington',
   'DEACTIVE',
   '2020-09-14 03:15',
-  ''
+  '',
+  '',
+  4
   ),
   ('Lena',
   'shahrzad+1@nevereatalone.net',
   'lena_palma',
   'ACTIVE',
   '2021-04-10 02:47:23',
-  ''
+  '',
+  'Coffee, Tea, and Chocolate',
+  8
   ),
   ('John',
   'shahrzad+2@nevereatalone.net',
   'jk_fitness',
   'ACTIVE',
   '2020-12-12 04:25:13',
-  ''
+  '',
+  'I''m John and looking to go for drinks after work on Bay St.',
+  5
   ),
   ('Ken',
   'shahrzad+3@nevereatalone.net',
   'applejuice',
   'ACTIVE',
   '2020-03-01 02:47:23',
-  ''
+  '',
+  'Too many place to eat, too little time',
+  2
   ),
   ('Maria',
   'shahrzad+4@nevereatalone.net',
   'coffeeLover',
   'ACTIVE',
   '2020-04-15 04:47:23',
-  ''
+  '',
+  'New to the city. Show me around please.',
+  6
   ),
   ('Anna',
   'shahrzad+5@nevereatalone.net',
   'free2020',
   'ACTIVE',
   '2020-03-09 04:02:23',
-  ''
+  '',
+  '',
+  3
   ),
   ('Mary Miller',
   'shahrzad+6@nevereatalone.net',
   'van_mill',
   'ACTIVE',
   '2020-03-09 04:02:23',
-  ''
+  '',
+  'I like afternoon tea.',
+  1
   ),
   ('Jess',
   'shahrzad+7@nevereatalone.net',
   'j12445',
   'ACTIVE',
   '2020-03-09 04:02:23',
-  ''
+  '',
+  'Hi',
+  8
   ),
   ('Rob Smith',
   'shahrzad+8@nevereatalone.net',
   'rob',
   'ACTIVE',
   '2020-03-09 04:02:23',
-  ''
+  '',
+  'St Clair West resident, looking to try the pubs in the area.',
+  5
   ),
   ('Bobby MacDonald',
   'shahrzad+9@nevereatalone.net',
   '',
   'ACTIVE',
   '2020-03-09 04:02:23',
-  ''
+  '',
+  'Hello NEA friends! I''m new here and love to explore the city.',
+  5
   ),
   ('Anna',
   'shahrzad+10@nevereatalone.net',
   'hiking_buddy',
   'ACTIVE',
   '2020-03-09 04:02:23',
-  ''
+  '',
+  'Anyone down to try sushi places? :)',
+  3
   ),
   ('Alexandra Richardson',
   'shahrzad+11@nevereatalone.net',
   'chefAlex',
   'ACTIVE',
   '2020-03-09 04:02:23',
-  ''
+  '',
+  'Meetup Memebr, Ski Lover',
+  1
   ),
   ('Patrick Hernández',
   'shahrzad+12@nevereatalone.net',
   '',
   'PENDING',
   '2020-03-09 04:02:23',
-  ''
+  '',
+  'Meetup Memebr',
+  2
   ),
   ('Kranar',
   'kamal@spiretrading.com',
   'Kranar',
   'ACTIVE',
   '2021-03-09 04:02:23',
-  'Sheryl'
+  'Sheryl',
+  'Meetup Memebr, Cheesecake for life!',
+  2
   );

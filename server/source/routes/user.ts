@@ -661,13 +661,22 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
+    let profileImage = UserProfileImage.default(userId);
+    try {
+      profileImage =
+        await this.userProfileImageDatabase.loadProfileImageByUserId(userId);
+    } catch (error) {
+      console.log('Failed at loadProfileImageByUserId', error);
+      response.status(500).send();
+      return;
+    }
 
     response.status(200).json({
       coverImage: coverImage.toJson(),
-      profileImageSrc: '',
+      profileImageSrc: profileImage.src,
       name: user.name,
       userName: user.userName,
-      createdAt: user.createdAt,
+      createdAt: user.createdAt.toISOString(),
       biography: '',
       location: '',
       languageList: [],
