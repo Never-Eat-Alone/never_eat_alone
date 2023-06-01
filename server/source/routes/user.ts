@@ -1,7 +1,8 @@
 import * as fs from 'fs';
 import * as Hash from 'hash.js';
-import { CoverImage, InviteEmail, Language, Location, User, UserInvitationCode,
-  UserProfileImage, UserStatus
+import { arrayToJson, CoverImage, Cuisine, EventCardSummary, InviteEmail,
+  Language, Location, User, UserInvitationCode, UserProfileImage,
+  UserProfileSocialAccount, UserStatus
 } from '../../../client/library/source/definitions';
 import { UserCoverImageDatabase } from
 '../postgres/queries/user_cover_image_database';
@@ -640,29 +641,50 @@ export class UserRoutes {
 
   private getProfilePage = async (request, response) => {
     const userId = parseInt(request.params.id);
-    let user: User;
+    let user: User = User.makeGuest();
+    let coverImage = CoverImage.default(userId);
+    let profileImage = UserProfileImage.default(userId);
+    let biography = '';
+    let location = Location.empty();
+    let languageList: Language[] = [];
+    let socialAccounts: UserProfileSocialAccount[] = [];
+    let favoriteCuisineList: Cuisine[] = [];
+    let upcomingEventList: EventCardSummary[] = [];
+    let pastEventList: EventCardSummary[] = [];
+    let jsonResponse = {
+      coverImage: coverImage.toJson(),
+      profileImageSrc: profileImage.src,
+      name: user.name,
+      userName: user.userName,
+      createdAt: user.createdAt.toISOString(),
+      biography: biography,
+      location: location.toJson(),
+      languageList: arrayToJson(languageList),
+      socialAccounts: arrayToJson(socialAccounts),
+      favoriteCuisineList: arrayToJson(favoriteCuisineList),
+      upcomingEventList: arrayToJson(upcomingEventList),
+      pastEventList: arrayToJson(pastEventList)
+    };
     try {
       user = await this.userDatabase.loadUserById(userId);
     } catch (error) {
       console.log('Failed at loadUserById', error);
-      response.status(500).send();
+      response.status(500).json(jsonResponse);
       return;
     }
-    if (user?.id === -1) {
+    if (userId === -1 || user?.id === -1) {
       // User doesn't exist
-      response.status(400).send();
+      response.status(400).json(jsonResponse);
       return;
     }
-    let coverImage = CoverImage.default(userId);
     try {
       coverImage = await this.userCoverImageDatabase.loadCoverImageByUserId(
         userId);
     } catch (error) {
       console.log('Failed at loadUserById', error);
-      response.status(500).send();
+      response.status(500).json(jsonResponse);
       return;
     }
-    let profileImage = UserProfileImage.default(userId);
     try {
       profileImage =
         await this.userProfileImageDatabase.loadProfileImageByUserId(userId);
@@ -671,7 +693,6 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
-    let biography = '';
     try {
       biography = await this.userDatabase.loadBiographyByUserId(userId);
     } catch (error) {
@@ -679,7 +700,6 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
-    let location = Location.empty();
     try {
       location = await this.userDatabase.loadUserLocationByUserId(userId);
     } catch (error) {
@@ -687,7 +707,6 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
-    let languageList: Language[] = [];
     try {
       languageList = await this.userDatabase.loadUserLanguagesByUserId(userId);
     } catch (error) {
@@ -695,23 +714,14 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
+    try {
+      socialAccounts =
+        await this.userDatabase.loadUserProfileSocialAccountsByUserId(userId);
+    } catch (error) {
 
-    response.status(200).json({
-      coverImage: coverImage.toJson(),
-      profileImageSrc: profileImage.src,
-      name: user.name,
-      userName: user.userName,
-      createdAt: user.createdAt.toISOString(),
-      biography: biography,
-      location: location,
-      languageList: languageList,
-      facebookLink: '',
-      twitterLink: '',
-      instagramLink: '',
-      favoriteCuisineList: [],
-      upcomingEventList: [],
-      pastEventList: []
-    });
+    }
+
+    response.status(statusCode).json();
   }
 
   private userDatabase: UserDatabase;

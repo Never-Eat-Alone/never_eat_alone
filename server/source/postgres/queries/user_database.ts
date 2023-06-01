@@ -395,7 +395,8 @@ export class UserDatabase {
     const userProfilesocialAccounts: UserProfileSocialAccount[] =
       result.rows.map((row) => {
         const account = new UserProfileSocialAccount(
-          row.platform as SocialAccountType, row.link);
+          SocialAccountType[row.platform as keyof typeof SocialAccountType],
+          row.link);
         // ... set other properties specific to user profile social accounts
         return account;
     });

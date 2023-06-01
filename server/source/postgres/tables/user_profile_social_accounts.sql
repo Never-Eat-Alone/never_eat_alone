@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS user_profile_social_accounts (
   FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
-INSERT INTO user_profile_images (
+INSERT INTO user_profile_social_accounts (
   user_id,
   platform,
   link
