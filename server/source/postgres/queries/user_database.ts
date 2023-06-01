@@ -1,6 +1,7 @@
 import * as Hash from 'hash.js';
 import { Pool } from 'pg';
-import { Location, User, UserStatus, UserProfileImage, Language
+import { Language, Location, SocialAccountType, User, UserStatus,
+  UserProfileImage, UserProfileSocialAccount
 } from '../../../../client/library/source/definitions';
 import * as Crypto from 'crypto';
 
@@ -382,6 +383,24 @@ export class UserDatabase {
     }
     return languages;
   }
+
+  public loadUserProfileSocialAccountsByUserId = async (userId: number):
+      Promise<UserProfileSocialAccount[]> => {
+    // Query the user profile social accounts table based on user_id
+    const result = await this.pool.query(`
+      SELECT * FROM user_profile_social_accounts WHERE user_id = $1`, [userId]);
+    if (result.rows?.length === 0) {
+      return [];
+    }
+    const userProfilesocialAccounts: UserProfileSocialAccount[] =
+      result.rows.map((row) => {
+        const account = new UserProfileSocialAccount(
+          row.platform as SocialAccountType, row.link);
+        // ... set other properties specific to user profile social accounts
+        return account;
+    });
+    return userProfilesocialAccounts;
+  };
 
   /** The postgress pool connection. */
   private pool: Pool;
