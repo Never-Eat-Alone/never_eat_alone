@@ -670,7 +670,15 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
-
+    let biography = '';
+    try {
+      biography = await this.userDatabase.loadBiographyByUserId(userId);
+    } catch (error) {
+      console.log('Failed at loadBiographyByUserId', error);
+      response.status(500).send();
+      return;
+    }
+    
     response.status(200).json({
       coverImage: coverImage.toJson(),
       profileImageSrc: profileImage.src,
