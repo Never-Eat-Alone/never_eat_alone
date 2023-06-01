@@ -1,7 +1,8 @@
 import * as fs from 'fs';
 import * as Hash from 'hash.js';
-import { CoverImage, InviteEmail, User, UserInvitationCode, UserProfileImage,
-  UserStatus } from '../../../client/library/source/definitions';
+import { CoverImage, InviteEmail, Language, Location, User, UserInvitationCode,
+  UserProfileImage, UserStatus
+} from '../../../client/library/source/definitions';
 import { UserCoverImageDatabase } from
 '../postgres/queries/user_cover_image_database';
 import { UserDatabase } from '../postgres/queries/user_database';
@@ -678,16 +679,32 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
-    
+    let location = Location.empty();
+    try {
+      location = await this.userDatabase.loadUserLocationByUserId(userId);
+    } catch (error) {
+      console.log('Failed at loadLocationByUserId', error);
+      response.status(500).send();
+      return;
+    }
+    let languageList: Language[] = [];
+    try {
+      languageList = await this.userDatabase.loadUserLanguagesByUserId(userId);
+    } catch (error) {
+      console.log('Failed at loadUserLanguagesByUserId', error);
+      response.status(500).send();
+      return;
+    }
+
     response.status(200).json({
       coverImage: coverImage.toJson(),
       profileImageSrc: profileImage.src,
       name: user.name,
       userName: user.userName,
       createdAt: user.createdAt.toISOString(),
-      biography: '',
-      location: '',
-      languageList: [],
+      biography: biography,
+      location: location,
+      languageList: languageList,
       facebookLink: '',
       twitterLink: '',
       instagramLink: '',

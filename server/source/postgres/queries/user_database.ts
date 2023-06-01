@@ -1,6 +1,6 @@
 import * as Hash from 'hash.js';
 import { Pool } from 'pg';
-import { User, UserStatus, UserProfileImage
+import { Location, User, UserStatus, UserProfileImage, Language
 } from '../../../../client/library/source/definitions';
 import * as Crypto from 'crypto';
 
@@ -353,6 +353,34 @@ export class UserDatabase {
       return '';
     }
     return result.rows[0].biography;
+  }
+
+  public loadUserLocationByUserId = async (userId: number): Promise<
+      Location> => {
+    const result = await this.pool.query('SELECT lo.* FROM locations AS lo \
+      JOIN users ON users.location_id = lo.id WHERE users.id = $1', [userId]);
+    if (result.rows?.length === 0) {
+      return Location.empty();
+    }
+    return new Location(parseInt(result.rows[0].id),
+      result.rows[0].address_line_one, result.rows[0].address_line_two,
+      result.rows[0].city, result.rows[0].province, result.rows[0].country,
+      result.rows[0].postal_code, result.rows[0].neighbourhood);
+  }
+
+  public loadUserLanguagesByUserId = async (userId: number): Promise<
+      Language[]> => {
+    const result = await this.pool.query(
+      `SELECT l.* FROM languages AS l INNER JOIN user_languages AS ul ON 
+      l.id = ul.language_id WHERE ul.user_id = $1`, [userId]);
+    if (result.rows?.length === 0) {
+      return [];
+    }
+    const languages: Language[] = [];
+    for (const row of result.rows) {
+      languages.push(new Language(parseInt(row.id), row.code, row.name));
+    }
+    return languages;
   }
 
   /** The postgress pool connection. */
