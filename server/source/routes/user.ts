@@ -690,7 +690,7 @@ export class UserRoutes {
         await this.userProfileImageDatabase.loadProfileImageByUserId(userId);
     } catch (error) {
       console.log('Failed at loadProfileImageByUserId', error);
-      response.status(500).send();
+      response.status(500).json(jsonResponse);
       return;
     }
     try {
@@ -704,24 +704,25 @@ export class UserRoutes {
       location = await this.userDatabase.loadUserLocationByUserId(userId);
     } catch (error) {
       console.log('Failed at loadLocationByUserId', error);
-      response.status(500).send();
+      response.status(500).json(jsonResponse);
       return;
     }
     try {
       languageList = await this.userDatabase.loadUserLanguagesByUserId(userId);
     } catch (error) {
       console.log('Failed at loadUserLanguagesByUserId', error);
-      response.status(500).send();
+      response.status(500).json(jsonResponse);
       return;
     }
     try {
       socialAccounts =
         await this.userDatabase.loadUserProfileSocialAccountsByUserId(userId);
     } catch (error) {
-
+      console.log('Failed at loadUserProfileSocialAccountsByUserId', error);
+      response.status(500).json(jsonResponse);
+      return;
     }
-
-    response.status(statusCode).json();
+    response.status(200).json(jsonResponse);
   }
 
   private userDatabase: UserDatabase;
