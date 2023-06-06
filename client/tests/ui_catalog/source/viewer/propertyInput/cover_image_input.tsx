@@ -21,8 +21,7 @@ export class CoverImageInput extends React.Component<Properties> {
       if (!event.target.value.trim()) {
         return NeverEatAlone.CoverImage.default();
       }
-      return new NeverEatAlone.CoverImage(Date.now(), event.target.value,
-        'Cover Image');
+      return new NeverEatAlone.CoverImage(Date.now(), event.target.value);
     })();
     this.props.update(newValue);
   }
