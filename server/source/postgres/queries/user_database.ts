@@ -356,6 +356,18 @@ export class UserDatabase {
     return result.rows[0].biography;
   }
 
+  /** Returns a user's address based on user id.
+   * @param userId - User's id number'.
+   */
+  public loadAddressByUserId = async (userId: number): Promise<string> => {
+    const result = await this.pool.query(
+      'SELECT address FROM users WHERE id = $1', [userId]);
+    if (result.rows?.length === 0) {
+      return '';
+    }
+    return result.rows[0].address;
+  }
+
   public loadUserLocationByUserId = async (userId: number): Promise<
       Location> => {
     const result = await this.pool.query('SELECT lo.* FROM locations AS lo \

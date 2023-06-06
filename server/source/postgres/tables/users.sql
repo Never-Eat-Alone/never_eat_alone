@@ -1,14 +1,15 @@
 CREATE TABLE IF NOT EXISTS users (
-  id            SERIAL             PRIMARY KEY                  ,
-  name          VARCHAR(255)                                    ,
-  email         VARCHAR(255)       UNIQUE                       ,
-  user_name     VARCHAR(255)                                    ,
-  user_status   user_status_enum               DEFAULT 'PENDING',
-  created_at    TIMESTAMP                      DEFAULT NOW(),
-  updated_at    TIMESTAMP                      DEFAULT NOW(),
-  referral_code VARCHAR(255)                                ,
-  biography     TEXT                                        ,
-  location_id   INTEGER
+  id              SERIAL             PRIMARY KEY                  ,
+  name            VARCHAR(255)                                    ,
+  email           VARCHAR(255)       UNIQUE                       ,
+  user_name       VARCHAR(255)                                    ,
+  user_status     user_status_enum               DEFAULT 'PENDING',
+  created_at      TIMESTAMP                      DEFAULT NOW(),
+  updated_at      TIMESTAMP                      DEFAULT NOW(),
+  referral_code   VARCHAR(255)                                ,
+  biography       TEXT                                        ,
+  location_id     INTEGER                                     ,
+  profile_address TEXT      
 );
 
 INSERT INTO users (
@@ -19,7 +20,8 @@ INSERT INTO users (
   created_at,
   referral_code,
   biography,
-  location_id
+  location_id,
+  profile_address
 )
 VALUES
   ('Shahrzad',
@@ -29,7 +31,8 @@ VALUES
   '2020-01-01 14:35',
   '',
   '',
-  1
+  1,
+  'Yorkville, Toronto, ON'
   ),
   ('Aurora',
   'amazing.aurora84@gmail.com',
@@ -38,7 +41,8 @@ VALUES
   '2020-01-02 10:35',
   'Arthur',
   '',
-  2
+  2,
+  'Milton, ON'
   ),
   ('Alexa',
   'info@nevereatalone.net',
@@ -47,7 +51,8 @@ VALUES
   '2020-01-01 11:55',
   'Sheryl',
   '',
-  3
+  3,
+  'Toronto, ON, CA'
   ),
   ('Elena',
   'nevereatalonetoronto@gmail.com',
@@ -56,7 +61,8 @@ VALUES
   '2020-03-01 09:30',
   '@shahrzad',
   'Work in progress',
-  4
+  4,
+  'London, England'
   ),
   ('Sheryl',
   'shahrzad@nevereatalone.net',
@@ -65,7 +71,8 @@ VALUES
   '2020-03-01 23:14',
   'meetup',
   'Wow',
-  5
+  5,
+  'Downtown Toronto'
   ),
   ('Sofia',
   'shahrzadmasoumnia@gmail.com',
@@ -74,7 +81,8 @@ VALUES
   '2020-04-15 04:47:23',
   '',
   '',
-  6
+  6,
+  'Midtown Toronto'
   ),
   ('Alexa',
   'shahrzad@spiretrading.com',
@@ -83,7 +91,8 @@ VALUES
   '2020-05-14 14:24',
   '',
   '',
-  1
+  1,
+  'Scarborough, ON'
   ),
   ('Sara',
   'shahrzad_masoumnia@yahoo.com',
@@ -92,7 +101,8 @@ VALUES
   '2020-09-14 03:15',
   '',
   '',
-  4
+  4,
+  'Mississauga'
   ),
   ('Lena',
   'shahrzad+1@nevereatalone.net',
@@ -101,7 +111,8 @@ VALUES
   '2021-04-10 02:47:23',
   '',
   'Coffee, Tea, and Chocolate',
-  8
+  8,
+  'North York, ON'
   ),
   ('John',
   'shahrzad+2@nevereatalone.net',
@@ -110,7 +121,8 @@ VALUES
   '2020-12-12 04:25:13',
   '',
   'I''m John and looking to go for drinks after work on Bay St.',
-  5
+  5,
+  'Etobicoke'
   ),
   ('Ken',
   'shahrzad+3@nevereatalone.net',
@@ -119,7 +131,8 @@ VALUES
   '2020-03-01 02:47:23',
   '',
   'Too many place to eat, too little time',
-  2
+  2,
+  'Richmond hill'
   ),
   ('Maria',
   'shahrzad+4@nevereatalone.net',
@@ -128,7 +141,8 @@ VALUES
   '2020-04-15 04:47:23',
   '',
   'New to the city. Show me around please.',
-  6
+  6,
+  'Bradford, ON'
   ),
   ('Anna',
   'shahrzad+5@nevereatalone.net',
@@ -137,7 +151,8 @@ VALUES
   '2020-03-09 04:02:23',
   '',
   '',
-  3
+  3,
+  'Toronto, CA'
   ),
   ('Mary Miller',
   'shahrzad+6@nevereatalone.net',
@@ -146,7 +161,8 @@ VALUES
   '2020-03-09 04:02:23',
   '',
   'I like afternoon tea.',
-  1
+  1,
+  'Toronto, CA'
   ),
   ('Jess',
   'shahrzad+7@nevereatalone.net',
@@ -155,7 +171,8 @@ VALUES
   '2020-03-09 04:02:23',
   '',
   'Hi',
-  8
+  8,
+  'Montreal, QC'
   ),
   ('Rob Smith',
   'shahrzad+8@nevereatalone.net',
@@ -164,7 +181,8 @@ VALUES
   '2020-03-09 04:02:23',
   '',
   'St Clair West resident, looking to try the pubs in the area.',
-  5
+  5,
+  'Toronto, ON'
   ),
   ('Bobby MacDonald',
   'shahrzad+9@nevereatalone.net',
@@ -173,7 +191,8 @@ VALUES
   '2020-03-09 04:02:23',
   '',
   'Hello NEA friends! I''m new here and love to explore the city.',
-  5
+  5,
+  'Toronto, ON'
   ),
   ('Anna',
   'shahrzad+10@nevereatalone.net',
@@ -182,7 +201,8 @@ VALUES
   '2020-03-09 04:02:23',
   '',
   'Anyone down to try sushi places? :)',
-  3
+  3,
+  'Toronto, ON'
   ),
   ('Alexandra Richardson',
   'shahrzad+11@nevereatalone.net',
@@ -191,7 +211,8 @@ VALUES
   '2020-03-09 04:02:23',
   '',
   'Meetup Memebr, Ski Lover',
-  1
+  1,
+  'Toronto, ON'
   ),
   ('Patrick Hernández',
   'shahrzad+12@nevereatalone.net',
@@ -200,7 +221,8 @@ VALUES
   '2020-03-09 04:02:23',
   '',
   'Meetup Memebr',
-  2
+  2,
+  'Toronto, ON'
   ),
   ('Kranar',
   'kamal@spiretrading.com',
@@ -209,5 +231,6 @@ VALUES
   '2021-03-09 04:02:23',
   'Sheryl',
   'Meetup Memebr, Cheesecake for life!',
-  2
+  2,
+  'Toronto, ON'
   );

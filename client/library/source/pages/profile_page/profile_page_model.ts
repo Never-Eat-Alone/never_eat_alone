@@ -1,4 +1,4 @@
-import { CityProvince, CoverImage, Cuisine, EventCardSummary, Language
+import { CoverImage, Cuisine, EventCardSummary, Language
 } from '../../definitions';
 
 export abstract class ProfilePageModel {
@@ -13,7 +13,7 @@ export abstract class ProfilePageModel {
   public abstract get userName(): string;
   public abstract get createdAt(): Date;
   public abstract get biography(): string;
-  public abstract get location(): CityProvince;
+  public abstract get address(): string;
   public abstract get languageList(): Language[];
   public abstract get facebookLink(): string;
   public abstract get twitterLink(): string;

@@ -49,7 +49,7 @@ export class ProfilePageController extends React.Component<Properties, State> {
       userName={this.props.model.userName}
       memberSince={this.props.model.createdAt}
       biography={this.props.model.biography}
-      location={this.props.model.location}
+      address={this.props.model.address}
       languageList={this.props.model.languageList}
       facebookLink={this.props.model.facebookLink}
       twitterLink={this.props.model.twitterLink}

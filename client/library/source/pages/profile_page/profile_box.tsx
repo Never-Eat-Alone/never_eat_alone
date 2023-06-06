@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { EllipsisDropdownMenu, FacebookButton, InstagramButton,
   SecondaryButtonNavLink, TwitterButton } from '../../components';
-import { CityProvince, Cuisine, Language, User } from '../../definitions';
+import { Cuisine, Language, User } from '../../definitions';
 
 interface Properties {
 
@@ -27,7 +27,7 @@ interface Properties {
   biography: string;
 
   /** The user's location. */
-  location: CityProvince;
+  address: string;
 
   /** List of the languages the user can speak. */
   languageList: Language[];
@@ -66,7 +66,7 @@ export class ProfileBox extends React.Component<Properties> {
       return null;
     })();
     const locationSection = (() => {
-      if (this.props.location) {
+      if (this.props.address) {
         return (
           <div style={LOCATION_ROW_STYLE} >
             <img
@@ -74,10 +74,7 @@ export class ProfileBox extends React.Component<Properties> {
               src='resources/profile_box/icons/location.svg'
               alt='Location Icon'
             />
-            <p style={TEXT_STYLE} >
-              {this.props.location.city}, {this.props.location.province},&nbsp;
-              {this.props.location.country}
-            </p>
+            <p style={TEXT_STYLE} >{this.props.address}</p>
           </div>);
       }
       return null;
