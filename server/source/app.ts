@@ -174,7 +174,9 @@ function runExpress(pool: Pool, config: any) {
         'delete_account_survey',
         'deactivate_account_survey',
         'attendees',
-        'user_profile_social_accounts'
+        'user_profile_social_accounts',
+        'languages',
+        'user_languages'
       ]);
       app.listen(config.port, async () => {
         console.log('Server started successfully.');

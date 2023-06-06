@@ -640,6 +640,7 @@ export class UserRoutes {
   }
 
   private getProfilePage = async (request, response) => {
+    console.log('running getProfilePage');
     const userId = parseInt(request.params.id);
     let user: User = User.makeGuest();
     let coverImage = CoverImage.default(userId);
@@ -651,6 +652,7 @@ export class UserRoutes {
     let favoriteCuisineList: Cuisine[] = [];
     let upcomingEventList: EventCardSummary[] = [];
     let pastEventList: EventCardSummary[] = [];
+    console.log('userId', userId);
     let jsonResponse = {
       coverImage: coverImage.toJson(),
       profileImageSrc: profileImage.src,
@@ -667,6 +669,7 @@ export class UserRoutes {
     };
     try {
       user = await this.userDatabase.loadUserById(userId);
+      console.log('user', user);
     } catch (error) {
       console.log('Failed at loadUserById', error);
       response.status(500).json(jsonResponse);
