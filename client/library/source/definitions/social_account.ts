@@ -5,13 +5,15 @@ export class SocialAccount {
   public static fromJson(value: any): SocialAccount {
     return new SocialAccount(
       value.provider as SocialAccountType,
-      value.accessToken
+      value.accessToken,
+      value.email
     );
   }
 
-  constructor(provider: SocialAccountType, accessToken: string) {
+  constructor(provider: SocialAccountType, accessToken: string, email: string) {
     this._provider = provider;
     this._accessToken = accessToken;
+    this._email = email;
   }
 
   public get provider(): SocialAccountType {
@@ -20,6 +22,10 @@ export class SocialAccount {
 
   public get accessToken(): string {
     return this._accessToken;
+  }
+
+  public get email(): string {
+    return this._email;
   }
 
   // Verify the access token
@@ -88,10 +94,12 @@ export class SocialAccount {
   public toJson() {
     return {
       provider: this._provider.toString(),
-      accessToken: this._accessToken
+      accessToken: this._accessToken,
+      email: this._email
     }
   }
 
   private _provider: SocialAccountType;
   private _accessToken: string;
+  private _email: string;
 }

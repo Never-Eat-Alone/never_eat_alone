@@ -13,7 +13,7 @@ interface Properties {
 /** A SocialAccount input. */
 export class SocialAccountInput extends React.Component<Properties> {
   public render(): JSX.Element {
-    return <input value={this.props.value.socialAccountEmail}
+    return <input value={this.props.value.email}
       onChange={this.onChange} />;
   }
 
