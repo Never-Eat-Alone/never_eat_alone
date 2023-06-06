@@ -327,7 +327,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const emmaLocation = barrie;
     const demoProfilePageModel1 = new NeverEatAlone.LocalProfilePageModel(1,
       emmaCoverImage, emmaProfileImage.src, userEmma.name,
-      userEmma.userName, userEmma.createdAt, emmaBio, emmaLocation,
+      userEmma.userName, userEmma.createdAt, emmaBio, 'Toronto, ON',
       emmaLanguageList, '', '', emmaInstagramLink, emmaFavoriteCuisines, [],
       [eventCardSummary1]);
     this._profilePageModelMap.set(1, demoProfilePageModel1);
@@ -336,7 +336,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const demoProfilePageModel2 = new NeverEatAlone.LocalProfilePageModel(2,
       arthurCoverImage, arthurProfileImage.src, userArthur.name,
       userArthur.userName, userArthur.createdAt, 'Ready to explore Toronto.',
-      vancouver, arthurLanguageList, 'www.facebook.com/arthur_van',
+      'Toronto', arthurLanguageList, 'www.facebook.com/arthur_van',
       'www.twitter.com/@vanfan', '', arthurFavoriteCuisines, [eventCardSummary7
       ], [eventCardSummary1, eventCardSummary60]);
     this._profilePageModelMap.set(2, demoProfilePageModel2);
@@ -344,7 +344,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const lucyCoverImage = coverImage5;
     const demoProfilePageModel3 = new NeverEatAlone.LocalProfilePageModel(3,
       lucyCoverImage, 'resources/images/profile2.jpeg', 'Lucy', 'lu2d3',
-      new Date(2022, 4, 2, 2, 30, 40), 'Matcha everything!', toronto,
+      new Date(2022, 4, 2, 2, 30, 40), 'Matcha everything!', 'Toronto, CA',
       lucyLanguageList, '', '', '', lucyFavoriteCuisines, [eventCardSummary5],
       []);
     this._profilePageModelMap.set(3, demoProfilePageModel3);
