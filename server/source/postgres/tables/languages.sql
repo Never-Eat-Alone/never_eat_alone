@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS languages (
   id   SERIAL       PRIMARY KEY,
-  code VARCHAR(2)   UNIQUE,
+  code VARCHAR(3)   UNIQUE,
   name VARCHAR(100) NOT NULL
 );
 
