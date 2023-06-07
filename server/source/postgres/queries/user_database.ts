@@ -361,11 +361,11 @@ export class UserDatabase {
    */
   public loadAddressByUserId = async (userId: number): Promise<string> => {
     const result = await this.pool.query(
-      'SELECT address FROM users WHERE id = $1', [userId]);
+      'SELECT profile_address FROM users WHERE id = $1', [userId]);
     if (result.rows?.length === 0) {
       return '';
     }
-    return result.rows[0].address;
+    return result.rows[0].profile_address;
   }
 
   public loadUserLocationByUserId = async (userId: number): Promise<
