@@ -37,13 +37,11 @@ export class ProfilePageController extends React.Component<Properties, State> {
     if (!this.state.isLoaded || this.state.hasError) {
       return <div />;
     }
-    const coverImageSrc = (this.props.model.coverImage.profileId === -1 && '' ||
-      this.props.model.coverImage.src);
     return <ProfilePage
       account={this.props.account}
       displayMode={this.props.displayMode}
       profileId={this.props.model.profileId}
-      coverImageSrc={coverImageSrc}
+      coverImageSrc={this.props.model.coverImage.src}
       profileImageSrc={this.props.model.profileImageSrc}
       displayName={this.props.model.name}
       userName={this.props.model.userName}
@@ -68,6 +66,5 @@ export class ProfilePageController extends React.Component<Properties, State> {
     } catch {
       this.setState({ isLoaded: true, hasError: true });
     }
-    return;
   }
 }

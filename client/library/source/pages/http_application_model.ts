@@ -110,9 +110,12 @@ export class HttpApplicationModel extends ApplicationModel {
   }
 
   public getProfilePageModel(id: number): ProfilePageModel {
+    console.log('running getProfilePageModel', id);
     let profilePageModel = this._model.getProfilePageModel(id);
+    console.log('profilePageModel', profilePageModel);
     if (!profilePageModel) {
       profilePageModel = new HttpProfilePageModel(id);
+      console.log('added new httpmodel', profilePageModel);
       this._model.addProfilePageModel(id, profilePageModel);
     }
     return profilePageModel;

@@ -21,11 +21,11 @@ export class HttpProfilePageModel extends ProfilePageModel {
     const responseObject = await response.json();
     const coverImage = CoverImage.fromJson(responseObject.coverImage);
     const profileImageSrc = responseObject.profileImageSrc;
-    const name = responseObject.name;
-    const userName = responseObject.userName;
+    const name: string = responseObject.name;
+    const userName: string = responseObject.userName;
     const createdAt = new Date(Date.parse(responseObject.createdAt));
-    const biography = responseObject.biography;
-    const address = responseObject.address;
+    const biography: string = responseObject.biography;
+    const address: string = responseObject.address;
     const languageList: Language[] = arrayFromJson(Language,
       responseObject.languageList);
     const socialAccounts: UserProfileSocialAccount[] = arrayFromJson(
@@ -42,10 +42,12 @@ export class HttpProfilePageModel extends ProfilePageModel {
       EventCardSummary, responseObject.upcomingEventList);
     const pastEventList: EventCardSummary[] = arrayFromJson(EventCardSummary,
       responseObject.pastEventList);
+    console.log('loading the profile page model');
     this._model = new LocalProfilePageModel(this._profileId, coverImage,
       profileImageSrc, name, userName, createdAt, biography, address,
       languageList, facebookLink, twitterLink, instagramLink,
       favoriteCuisineList, upcomingEventList, pastEventList);
+    console.log('created the model and loading', this._model);
     await this._model.load();
   }
 
