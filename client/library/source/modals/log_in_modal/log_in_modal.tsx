@@ -210,11 +210,11 @@ export class LogInModal extends React.Component<Properties, State> {
     }
   }
 
-  private handleLogIn = () => {
+  private handleLogIn = async () => {
     const isPass = this.checkPasswordField();
     const isEmail = this.checkEmail();
     if (isEmail && isPass) {
-      this.props.onLogIn(this.state.email, this.state.password,
+      await this.props.onLogIn(this.state.email, this.state.password,
         this.state.isRememberMe);
     }
   }
