@@ -640,7 +640,6 @@ export class UserRoutes {
   }
 
   private getProfilePage = async (request, response) => {
-    console.log('running getProfilePage');
     const userId = parseInt(request.params.id);
     let user: User = User.makeGuest();
     let coverImage = CoverImage.default(userId);
@@ -652,7 +651,6 @@ export class UserRoutes {
     let favoriteCuisineList: Cuisine[] = [];
     let upcomingEventList: EventCardSummary[] = [];
     let pastEventList: EventCardSummary[] = [];
-    console.log('userId', userId);
     let jsonResponse = {
       coverImage: coverImage.toJson(),
       profileImageSrc: profileImage.src,
@@ -669,7 +667,6 @@ export class UserRoutes {
     };
     try {
       user = await this.userDatabase.loadUserById(userId);
-      console.log('user', user);
     } catch (error) {
       console.log('Failed at loadUserById', error);
       response.status(500).json(jsonResponse);
@@ -683,7 +680,6 @@ export class UserRoutes {
     try {
       coverImage = await this.userCoverImageDatabase.loadCoverImageByUserId(
         userId);
-      console.log('coverimag', coverImage.src);
     } catch (error) {
       console.log('Failed at loadUserById', error);
       response.status(500).json(jsonResponse);
@@ -692,7 +688,6 @@ export class UserRoutes {
     try {
       profileImage =
         await this.userProfileImageDatabase.loadProfileImageByUserId(userId);
-        console.log('profile image', profileImage.src);
     } catch (error) {
       console.log('Failed at loadProfileImageByUserId', error);
       response.status(500).json(jsonResponse);
@@ -700,7 +695,6 @@ export class UserRoutes {
     }
     try {
       biography = await this.userDatabase.loadBiographyByUserId(userId);
-      console.log('bio', biography);
     } catch (error) {
       console.log('Failed at loadBiographyByUserId', error);
       response.status(500).json(jsonResponse);
@@ -708,7 +702,6 @@ export class UserRoutes {
     }
     try {
       address = await this.userDatabase.loadAddressByUserId(userId);
-      console.log('address', address);
     } catch (error) {
       console.log('Failed at loadAddressByUserId', error);
       response.status(500).json(jsonResponse);
@@ -716,7 +709,6 @@ export class UserRoutes {
     }
     try {
       languageList = await this.userDatabase.loadUserLanguagesByUserId(userId);
-      console.log('lan list', languageList);
     } catch (error) {
       console.log('Failed at loadUserLanguagesByUserId', error);
       response.status(500).json(jsonResponse);
@@ -725,13 +717,11 @@ export class UserRoutes {
     try {
       socialAccounts =
         await this.userDatabase.loadUserProfileSocialAccountsByUserId(userId);
-      console.log('social accounts', socialAccounts);
     } catch (error) {
       console.log('Failed at loadUserProfileSocialAccountsByUserId', error);
       response.status(500).json(jsonResponse);
       return;
     }
-    console.log('json response', jsonResponse);
     response.status(200).json(jsonResponse);
   }
 

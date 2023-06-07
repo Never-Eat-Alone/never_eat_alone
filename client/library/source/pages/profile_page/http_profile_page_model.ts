@@ -42,12 +42,10 @@ export class HttpProfilePageModel extends ProfilePageModel {
       EventCardSummary, responseObject.upcomingEventList);
     const pastEventList: EventCardSummary[] = arrayFromJson(EventCardSummary,
       responseObject.pastEventList);
-    console.log('loading the profile page model');
     this._model = new LocalProfilePageModel(this._profileId, coverImage,
       profileImageSrc, name, userName, createdAt, biography, address,
       languageList, facebookLink, twitterLink, instagramLink,
       favoriteCuisineList, upcomingEventList, pastEventList);
-    console.log('created the model and loading', this._model);
     await this._model.load();
   }
 

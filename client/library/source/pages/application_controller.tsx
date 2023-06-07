@@ -242,11 +242,8 @@ export class ApplicationController extends React.Component<Properties, State> {
 /** 
   public async componentDidUpdate(prevProps: Properties,
       prevState: State): Promise<void> {
-    console.log('componentDidUpdate');
     if (prevState.account.id !== this.state.account.id) {
-      console.log('prevState.account.id !== this.state.account.id');
       try {
-        console.log('loading the app model');
         await this.props.model.load();
         this.setState(
           {
