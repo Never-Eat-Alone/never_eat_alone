@@ -54,6 +54,7 @@ const initializePostgres = async (pool, dir, label, tableNames = []) => {
     await new Promise<void>((resolve, reject) => {
       pool.query(isValue, (error, results) => {
         if (error) {
+          console.error('Failed to create table', error);
           reject(error);
           return;
         }
@@ -61,16 +62,13 @@ const initializePostgres = async (pool, dir, label, tableNames = []) => {
           const query = fs.readFileSync(dir + `${value}.sql`).toString();
           pool.query(query, (error, results) => {
             if (error) {
+              console.error(error);
               reject(error);
               return;
             }
-            console.log(`${value} ${label} was successfully created.`);
-            resolve();
           });
-        } else {
-          console.log(`${value} ${label} already exist.`);
-          resolve();
         }
+        resolve();
       });
     });
   }
@@ -178,9 +176,7 @@ function runExpress(pool: Pool, config: any) {
         'languages',
         'user_languages'
       ]);
-      app.listen(config.port, async () => {
-        console.log('Server started successfully.');
-      });
+      app.listen(config.port, async () => {});
     } catch (error) {
       console.error('Error initializing tables:', error);
     }

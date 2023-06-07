@@ -26,7 +26,7 @@ export class DiningEventRoutes {
         await this.diningEventDatabase.loadHomePageDiningEventCardSummaries(
           userId);
     } catch (error) {
-      console.log('Failed at loadHomePageDiningEventCardSummaries', error);
+      console.error('Failed at loadHomePageDiningEventCardSummaries', error);
       response.status(500).json({
         diningEventCardSummaryList: diningEventCardSummaryList,
         message: 'DATABASE_ERROR'

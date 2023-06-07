@@ -60,9 +60,7 @@ export class GoogleLogInButton extends React.Component<Properties> {
       const includeAuthorizationData = true;
       this.props.onSuccess(googleUser.getBasicProfile().getEmail(),
         googleUser.getAuthResponse(includeAuthorizationData));
-    }, (error: any) => {
-      console.log(error);
-    });
+    }, (error: any) => {});
   }
 
   private onPlatformLoaded = () => {

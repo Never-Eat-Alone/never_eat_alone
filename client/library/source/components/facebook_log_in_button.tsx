@@ -31,9 +31,7 @@ export class FacebookLogInButton extends React.Component<Properties> {
       const includeAuthorizationData = true;
       this.props.onSuccess(facebookUser.getBasicProfile().getEmail(),
         facebookUser.getAuthResponse(includeAuthorizationData));
-    }, (error: any) => {
-      console.log(error);
-    });
+    }, (error: any) => {});
   }
 
   private _fapiAuth: any;

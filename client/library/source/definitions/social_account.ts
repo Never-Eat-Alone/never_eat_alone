@@ -29,23 +29,23 @@ export class SocialAccount {
   }
 
   // Verify the access token
-  verifyAccessToken(): boolean {
+  public verifyAccessToken(): boolean {
     // Implementation logic here
     return true; // Placeholder return value
   }
 
   // Refresh the access token
-  refreshAccessToken(): void {
+  public refreshAccessToken(): void {
     // Implementation logic here
   }
 
   // Revoke the access token
-  revokeAccessToken(): void {
+  public revokeAccessToken(): void {
     // Implementation logic here
   }
 
   // Sign up with the social account
-  signUp(): boolean {
+  public signUp(): boolean {
     // Implementation logic here
     if (!this.verifyAccessToken()) {
       return false;
@@ -62,7 +62,7 @@ export class SocialAccount {
   }
 
   // Log in with the social account
-  logIn(): boolean {
+  public logIn(): boolean {
     // Implementation logic here
     if (!this.verifyAccessToken()) {
       return false;
@@ -82,7 +82,7 @@ export class SocialAccount {
   }
 
   // Example method: Get user data from the provider (Google/Facebook)
-  private getUserDataFromProvider(): any {
+  public getUserDataFromProvider(): any {
     // Implementation logic here
     // Make API requests to the provider to fetch user data
     // Return the user data

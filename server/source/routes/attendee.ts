@@ -23,7 +23,7 @@ export class AttendeeRoutes {
       eventTagList = await this.attendeeDatabase.loadHomePageEventTagList(
         userId);
     } catch (error) {
-      console.log('Failed at loadHomePageEventTagList', error);
+      console.error('Failed at loadHomePageEventTagList', error);
       response.status(500).json({
         eventTagList: [],
         message: 'DATABASE_ERROR'

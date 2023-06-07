@@ -31,7 +31,7 @@ export class UserProfileImageRoutes {
         userId);
       response.status(200).json({ accountProfileImage: image.toJson() });
     } catch (error) {
-      console.log('Failed at loadProfileImageByUserId.', error);
+      console.error('Failed at loadProfileImageByUserId.', error);
       response.status(500).json({
         accountProfileImage: UserProfileImage.default(userId),
         message: 'DATABASE_ERROR'
@@ -47,7 +47,7 @@ export class UserProfileImageRoutes {
       uploadedImage = await this.userProfileImageDatabase.uploadProfileImage(
         userId, userProfileImageFile);
     } catch (error) {
-      console.log('Failed at uploadUserProfileImage.', error);
+      console.error('Failed at uploadUserProfileImage.', error);
       response.status(500).json({ message: 'DATABASE_ERROR' });
       return;
     }
