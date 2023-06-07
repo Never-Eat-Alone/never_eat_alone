@@ -46,7 +46,7 @@ export class HttpProfilePageModel extends ProfilePageModel {
       profileImageSrc, name, userName, createdAt, biography, address,
       languageList, facebookLink, twitterLink, instagramLink,
       favoriteCuisineList, upcomingEventList, pastEventList);
-    this._model.load();
+    await this._model.load();
   }
 
   public get profileId(): number {

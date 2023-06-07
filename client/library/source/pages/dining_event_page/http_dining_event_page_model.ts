@@ -41,7 +41,7 @@ export class HttpDiningEventPageModel extends DiningEventPageModel {
       coverImageSrc, title, restaurant, dressCode, seating, location,
       reservationName, startTime, endTime, attendeeList, totalCapacity,
       description, isGoing, isRSVPOpen);
-    this._model.load();
+    await this._model.load();
   }
 
   public get eventId(): number {

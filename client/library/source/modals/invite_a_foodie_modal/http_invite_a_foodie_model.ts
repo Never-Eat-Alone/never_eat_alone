@@ -15,7 +15,7 @@ export class HttpInviteAFoodieModel extends InviteAFoodieModel {
     const userInvitationCode = UserInvitationCode.fromJson(
       responseObject.userInvitationCode);
     this._model = new LocalInviteAFoodieModel(userInvitationCode);
-    this._model.load();
+    await this._model.load();
   }
 
   public get userInvitationCode(): UserInvitationCode {
