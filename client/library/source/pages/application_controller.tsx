@@ -239,7 +239,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       this.setState({ isLoaded: true, hasError: true });
     }
   }
-/** 
+
   public async componentDidUpdate(prevProps: Properties,
       prevState: State): Promise<void> {
     if (prevState.account.id !== this.state.account.id) {
@@ -257,7 +257,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       }
     }
   }
-*/
+
   public componentWillUnmount(): void {
     window.removeEventListener('resize', this.handleSize);
   }

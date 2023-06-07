@@ -46,7 +46,7 @@ export class UserRoutes {
     app.post('/api/send_recovery_email', this.sendRecoveryEmail);
     app.post('/api/resend_recovery_email', this.resendRecoveryEmail);
 
-    app.get('/api/profile_page/:id', this.getProfilePage);
+    app.get('/api/profile_page/:profileId', this.getProfilePage);
 
     this.userDatabase = userDatabase;
     this.userProfileImageDatabase = userProfileImageDatabase;
@@ -640,10 +640,10 @@ export class UserRoutes {
   }
 
   private getProfilePage = async (request, response) => {
-    const userId = parseInt(request.params.id);
-    let user: User = User.makeGuest();
-    let coverImage = CoverImage.default(userId);
-    let profileImage = UserProfileImage.default(userId);
+    const profileId = parseInt(request.params.profileId);
+    let profileUser: User = User.makeGuest();
+    let coverImage = CoverImage.default(profileId);
+    let profileImage = UserProfileImage.default(profileId);
     let biography = '';
     let address = '';
     let languageList: Language[] = [];
@@ -654,9 +654,9 @@ export class UserRoutes {
     let jsonResponse = {
       coverImage: coverImage.toJson(),
       profileImageSrc: profileImage.src,
-      name: user.name,
-      userName: user.userName,
-      createdAt: user.createdAt.toISOString(),
+      name: profileUser.name,
+      userName: profileUser.userName,
+      createdAt: profileUser.createdAt.toISOString(),
       biography: biography,
       address: address,
       languageList: arrayToJson(languageList),
@@ -666,20 +666,20 @@ export class UserRoutes {
       pastEventList: arrayToJson(pastEventList)
     };
     try {
-      user = await this.userDatabase.loadUserById(userId);
+      profileUser = await this.userDatabase.loadUserById(profileId);
     } catch (error) {
       console.log('Failed at loadUserById', error);
       response.status(500).json(jsonResponse);
       return;
     }
-    if (userId === -1 || user?.id === -1) {
+    if (profileUser?.id === -1) {
       // User doesn't exist
       response.status(400).json(jsonResponse);
       return;
     }
     try {
       coverImage = await this.userCoverImageDatabase.loadCoverImageByUserId(
-        userId);
+        profileId);
     } catch (error) {
       console.log('Failed at loadUserById', error);
       response.status(500).json(jsonResponse);
@@ -687,28 +687,29 @@ export class UserRoutes {
     }
     try {
       profileImage =
-        await this.userProfileImageDatabase.loadProfileImageByUserId(userId);
+        await this.userProfileImageDatabase.loadProfileImageByUserId(profileId);
     } catch (error) {
       console.log('Failed at loadProfileImageByUserId', error);
       response.status(500).json(jsonResponse);
       return;
     }
     try {
-      biography = await this.userDatabase.loadBiographyByUserId(userId);
+      biography = await this.userDatabase.loadBiographyByUserId(profileId);
     } catch (error) {
       console.log('Failed at loadBiographyByUserId', error);
       response.status(500).json(jsonResponse);
       return;
     }
     try {
-      address = await this.userDatabase.loadAddressByUserId(userId);
+      address = await this.userDatabase.loadAddressByUserId(profileId);
     } catch (error) {
       console.log('Failed at loadAddressByUserId', error);
       response.status(500).json(jsonResponse);
       return;
     }
     try {
-      languageList = await this.userDatabase.loadUserLanguagesByUserId(userId);
+      languageList = await this.userDatabase.loadUserLanguagesByUserId(
+        profileId);
     } catch (error) {
       console.log('Failed at loadUserLanguagesByUserId', error);
       response.status(500).json(jsonResponse);
@@ -716,7 +717,8 @@ export class UserRoutes {
     }
     try {
       socialAccounts =
-        await this.userDatabase.loadUserProfileSocialAccountsByUserId(userId);
+        await this.userDatabase.loadUserProfileSocialAccountsByUserId(
+          profileId);
     } catch (error) {
       console.log('Failed at loadUserProfileSocialAccountsByUserId', error);
       response.status(500).json(jsonResponse);
