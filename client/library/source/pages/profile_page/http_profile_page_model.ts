@@ -52,7 +52,7 @@ export class HttpProfilePageModel extends ProfilePageModel {
   }
 
   public get profileId(): number {
-    return this._model.profileId;
+    return this._profileId;
   }
 
   public get coverImage(): CoverImage {
