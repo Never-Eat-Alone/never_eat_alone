@@ -22,8 +22,13 @@ export class LocalApplicationModel extends ApplicationModel {
       logInModel: LogInModel,
       deletedAccountSurveyModel: DeletedAccountSurveyModel,
       deactivateAccountSurveyModel: DeactivateAccountSurveyModel,
-      forgotPasswordPageModel: ForgotPasswordPageModel,
-      googleClientId: string) {
+      forgotPasswordPageModel: ForgotPasswordPageModel, googleClientId: string,
+      diningEventPageModelMap: Map<number, DiningEventPageModel>,
+      editProfilePageModelMap: Map<number, EditProfilePageModel>,
+      signUpPageModelMap: Map<number, SignUpPageModel>,
+      profilePageModelMap: Map<number, ProfilePageModel>,
+      settingsPageModelMap: Map<number, SettingsPageModel>,
+      emailConfirmationPageModelMap: Map<string, EmailConfirmationPageModel>) {
     super();
     this._account = account;
     this._accountProfileImage = accountProfileImage;
@@ -36,13 +41,12 @@ export class LocalApplicationModel extends ApplicationModel {
     this._deactivateAccountSurveyModel = deactivateAccountSurveyModel;
     this._forgotPasswordPageModel = forgotPasswordPageModel;
     this._googleClientId = googleClientId;
-    this._diningEventPageModelMap = new Map<number, DiningEventPageModel>();
-    this._profilePageModelMap = new Map<number, ProfilePageModel>();
-    this._editProfilePageModelMap = new Map<number, EditProfilePageModel>();
-    this._settingsPageModelMap = new Map<number, SettingsPageModel>();
-    this._signUpPageModelMap = new Map<number, SignUpPageModel>();
-    this._emailConfirmationPageModelMap = new Map<string,
-      EmailConfirmationPageModel>();
+    this._diningEventPageModelMap = diningEventPageModelMap;
+    this._editProfilePageModelMap = editProfilePageModelMap;
+    this._signUpPageModelMap = signUpPageModelMap;
+    this._profilePageModelMap = profilePageModelMap;
+    this._settingsPageModelMap = settingsPageModelMap;
+    this._emailConfirmationPageModelMap = emailConfirmationPageModelMap;
   }
 
   public async load(): Promise<void> {
@@ -158,12 +162,12 @@ export class LocalApplicationModel extends ApplicationModel {
   private _deletedAccountSurveyModel: DeletedAccountSurveyModel;
   private _deactivateAccountSurveyModel: DeactivateAccountSurveyModel;
   private _forgotPasswordPageModel: ForgotPasswordPageModel;
+  private _googleClientId: string;
   private _diningEventPageModelMap: Map<number, DiningEventPageModel>;
   private _profilePageModelMap: Map<number, ProfilePageModel>;
   private _editProfilePageModelMap: Map<number, EditProfilePageModel>;
   private _settingsPageModelMap: Map<number, SettingsPageModel>;
   private _signUpPageModelMap: Map<number, SignUpPageModel>;
-  private _googleClientId: string;
   private _emailConfirmationPageModelMap: Map<string,
     EmailConfirmationPageModel>;
 }

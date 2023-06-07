@@ -47,7 +47,6 @@ interface State {
   isLogInButtonClicked: boolean;
   isInviteAFoodieButtonClicked: boolean;
   isPartnerWithUsButtonClicked: boolean;
-  loggedIn: boolean;
 }
 
 export class ApplicationController extends React.Component<Properties, State> {
@@ -63,7 +62,6 @@ export class ApplicationController extends React.Component<Properties, State> {
       isLogInButtonClicked: false,
       isInviteAFoodieButtonClicked: false,
       isPartnerWithUsButtonClicked: false,
-      loggedIn: false
     };
   }
 
@@ -236,19 +234,19 @@ export class ApplicationController extends React.Component<Properties, State> {
           hasError: false,
           account: this.props.model.account,
           accountProfileImage: this.props.model.accountProfileImage
-        },
-        () => {
-          this.setState({ loggedIn: this.isLoggedIn() });
         });
     } catch (error) {
       this.setState({ isLoaded: true, hasError: true });
     }
   }
-
+/** 
   public async componentDidUpdate(prevProps: Properties,
       prevState: State): Promise<void> {
-    if (prevState.loggedIn !== this.state.loggedIn) {
+    console.log('componentDidUpdate');
+    if (prevState.account.id !== this.state.account.id) {
+      console.log('prevState.account.id !== this.state.account.id');
       try {
+        console.log('loading the app model');
         await this.props.model.load();
         this.setState(
           {
@@ -256,16 +254,13 @@ export class ApplicationController extends React.Component<Properties, State> {
             hasError: false,
             account: this.props.model.account,
             accountProfileImage: this.props.model.accountProfileImage
-          },
-          () => {
-            this.setState({ loggedIn: this.isLoggedIn() });
           });
       } catch (error) {
         this.setState({ isLoaded: true, hasError: true });
       }
     }
   }
-
+*/
   public componentWillUnmount(): void {
     window.removeEventListener('resize', this.handleSize);
   }
@@ -273,7 +268,6 @@ export class ApplicationController extends React.Component<Properties, State> {
   public updateAccount(user: User): void {
     this.setState({
       account: user,
-      loggedIn: true
     }, () => {
       this.props.model.load().then(() => {
         this.setState({

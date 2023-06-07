@@ -55,10 +55,19 @@ export class HttpApplicationModel extends ApplicationModel {
     const deletedAccountSurveyModel = new HttpDeletedAccountSurveyModel();
     const deactivateAccountSurveyModel = new HttpDeactivateAccountSurveyModel();
     const forgotPasswordPageModel = new HttpForgotPasswordPageModel();
+    const diningEventPageModelMap = new Map<number, DiningEventPageModel>();
+    const profilePageModelMap = new Map<number, ProfilePageModel>();
+    const editProfilePageModelMap = new Map<number, EditProfilePageModel>();
+    const settingsPageModelMap = new Map<number, SettingsPageModel>();
+    const signUpPageModelMap = new Map<number, SignUpPageModel>();
+    const emailConfirmationPageModelMap = new Map<string,
+      EmailConfirmationPageModel>();
     this._model = new LocalApplicationModel(account, accountProfileImage,
       homePageModel, inviteAFoodieModel, joinModel, partnerWithUsModel,
       logInModel, deletedAccountSurveyModel, deactivateAccountSurveyModel,
-      forgotPasswordPageModel, googleClientId);
+      forgotPasswordPageModel, googleClientId, diningEventPageModelMap,
+      editProfilePageModelMap, signUpPageModelMap, profilePageModelMap,
+      settingsPageModelMap, emailConfirmationPageModelMap);
     await this._model.load();
   }
 
