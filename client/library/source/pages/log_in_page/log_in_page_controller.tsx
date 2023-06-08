@@ -49,7 +49,8 @@ export class LogInPageController extends React.Component<Properties, State> {
     try {
       const user = await this.props.model.logIn(email, password,
         rememberMe);
-      if (user.userStatus === UserStatus.ACTIVE) {
+      if (user.id !== -1 && (user.userStatus === UserStatus.ACTIVE ||
+          user.userStatus === UserStatus.DEACTIVE)) {
         this.props.onLogInSuccess(user);
       } else {
         this.setState({ errorCode: LogInPage.ErrorCode.LOGIN_FAILED });

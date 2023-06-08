@@ -26,7 +26,7 @@ import { HttpSignUpPageModel, SignUpPageModel } from './sign_up_page';
 
 export class HttpApplicationModel extends ApplicationModel {
   public async load(): Promise<void> {
-    if(this._model) {
+    if (this._model) {
       return;
     }
     const response = await fetch('/api/current_user');
@@ -37,7 +37,7 @@ export class HttpApplicationModel extends ApplicationModel {
     } else {
       account = User.makeGuest();
     }
-    let accountProfileImage;
+    let accountProfileImage: UserProfileImage;
     if (account?.id !== -1) {
       const imageResponse = await fetch(
         `/api/user_profile_image/${account.id}`);
@@ -72,6 +72,13 @@ export class HttpApplicationModel extends ApplicationModel {
       editProfilePageModelMap, signUpPageModelMap, profilePageModelMap,
       settingsPageModelMap, emailConfirmationPageModelMap);
     await this._model.load();
+  }
+
+  public async setAccount(account: User, accountProfileImage: UserProfileImage, 
+      homePageModel: HomePageModel, inviteAFoodieModel: InviteAFoodieModel):
+      Promise<void> {
+    this._model.setAccount(account, accountProfileImage, homePageModel,
+      inviteAFoodieModel);
   }
 
   public get account(): User {

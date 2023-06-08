@@ -54,8 +54,17 @@ export class LocalApplicationModel extends ApplicationModel {
       this._inviteAFoodieModel.load()]);
   }
 
+  public async setAccount(newAccount: User, profileImage: UserProfileImage,
+      homePageModel: HomePageModel, inviteAFoodieModel: InviteAFoodieModel):
+      Promise<void> {
+    this._account = newAccount;
+    this._accountProfileImage = profileImage;
+    this._homepageModel = homePageModel;
+    this._inviteAFoodieModel = inviteAFoodieModel;
+  }
+
   public get account(): User {
-    return this._account;;
+    return this._account;
   }
 
   public get accountProfileImage(): UserProfileImage {
