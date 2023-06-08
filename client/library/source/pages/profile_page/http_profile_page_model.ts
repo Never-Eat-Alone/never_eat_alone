@@ -13,6 +13,9 @@ export class HttpProfilePageModel extends ProfilePageModel {
    * methods.
    */
   public async load(): Promise<void> {
+    if(this._model) {
+      return;
+    }
     const response = await fetch(`/api/profile_page/${this._profileId}`);
     if (response.status !== 200) {
       throw new Error(`Failed to load profile page. Status: ${

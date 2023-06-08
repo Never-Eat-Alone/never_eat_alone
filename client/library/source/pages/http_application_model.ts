@@ -26,6 +26,9 @@ import { HttpSignUpPageModel, SignUpPageModel } from './sign_up_page';
 
 export class HttpApplicationModel extends ApplicationModel {
   public async load(): Promise<void> {
+    if(this._model) {
+      return;
+    }
     const response = await fetch('/api/current_user');
     let account: User;
     if (response.status === 200) {
