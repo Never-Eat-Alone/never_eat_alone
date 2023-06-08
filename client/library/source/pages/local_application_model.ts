@@ -61,6 +61,8 @@ export class LocalApplicationModel extends ApplicationModel {
     this._accountProfileImage = profileImage;
     this._homepageModel = homePageModel;
     this._inviteAFoodieModel = inviteAFoodieModel;
+    await Promise.all([this._homepageModel.load(),
+      this._inviteAFoodieModel.load()]);
   }
 
   public get account(): User {
