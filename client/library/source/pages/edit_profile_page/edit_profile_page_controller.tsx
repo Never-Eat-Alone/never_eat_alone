@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
-import { CityProvince, CoverImage, Cuisine, DisplayMode, Language, User,
-  UserProfileImage } from '../../definitions';
+import { CoverImage, Cuisine, DisplayMode, Language, User, UserProfileImage
+} from '../../definitions';
 import { EditProfilePage } from './edit_profile_page';
 import { EditProfilePageModel } from './edit_profile_page_model';
 
@@ -18,8 +18,8 @@ interface State {
   coverImage: CoverImage;
   profileImage: UserProfileImage;
   locationValue: string;
-  selectedLocation: CityProvince;
-  suggestedLocationList: CityProvince[];
+  selectedLocation: string;
+  suggestedLocationList: string[];
   isLocationPrivate: boolean;
   biographyValue: string;
   isUpcomingEventsPrivate: boolean;
@@ -56,7 +56,7 @@ export class EditProfilePageController extends React.Component<Properties,
       profileImage: null,
       locationValue: '',
       suggestedLocationList: [],
-      selectedLocation: CityProvince.empty(),
+      selectedLocation: '',
       isLocationPrivate: false,
       languageValue: '',
       selectedLanguageList: [],
@@ -156,8 +156,7 @@ export class EditProfilePageController extends React.Component<Properties,
         isLoaded: true,
         coverImage: this.props.model.coverImage,
         profileImage: this.props.model.profileImage,
-        locationValue: `${this.props.model.selectedLocation.city}, ${
-          this.props.model.selectedLocation.province}`,
+        locationValue: this.props.model.selectedLocation,
         biographyValue: this.props.model.biographyValue,
         isPastEventsPrivate: this.props.model.isPastEventsPrivate,
         isUpcomingEventsPrivate: this.props.model.isUpcomingEventsPrivate,
@@ -281,10 +280,10 @@ export class EditProfilePageController extends React.Component<Properties,
     }));
   }
 
-  private handleLocationDropdownClick = (selectedLocation: CityProvince) => {
+  private handleLocationDropdownClick = (selectedLocation: string) => {
     this.setState({
       selectedLocation: selectedLocation,
-      locationValue: `${selectedLocation.city}, ${selectedLocation.province}`,
+      locationValue: selectedLocation,
       suggestedLocationList: [selectedLocation]
     });
   }

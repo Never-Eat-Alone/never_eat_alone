@@ -3,7 +3,7 @@ import * as React from 'react';
 import { CloseButton, InputField, InputFieldWithIcon,
   InvertedSecondaryTextButton, Modal, PublicButton, PrivateButton, RedNavLink,
   SaveCancelStickyMenu, TextareaWithCounter } from '../../components';
-import { CityProvince, CoverImage, Cuisine, DisplayMode, Language,
+import { CoverImage, Cuisine, DisplayMode, Language,
   UserProfileImage } from '../../definitions';
 import { ChooseBannerModal } from '../../modals';
 
@@ -34,7 +34,7 @@ interface Properties {
   locationValue: string;
 
   /** List of locations matched the location input field. */
-  suggestedLocationList: CityProvince[];
+  suggestedLocationList: string[];
 
   /** Whether user's language information is private or public. */
   isLanguagePrivate: boolean;
@@ -100,7 +100,7 @@ interface Properties {
   onLocationPrivacyClick: () => void;
 
   /** Indicates a location from the dropdown is clicked. */
-  onLocationDropdownClick: (selectedLocation: CityProvince) => void;
+  onLocationDropdownClick: (selectedLocation: string) => void;
 
   /** Indicates the change profile image button is clicked. */
   onChangeProfileImageClick: (newImage: UserProfileImage) => void;
@@ -281,12 +281,12 @@ export class EditProfilePage extends React.Component<Properties, State> {
           return (
             <div
                 tabIndex={0}
-                key={location.id}
+                key={location}
                 style={DROPDOWN_ROW_STYLE}
                 className={css(styles.dropdownRow)}
                 onClick={() => this.handleLocationDropdownClick(location)}
             >
-              {location.city}, {location.province}
+              {location}
             </div>);
         });
         return rows;
@@ -684,7 +684,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
     this.setState({ isLocationDropdownDisplayed: false });
   }
 
-  private handleLocationDropdownClick = (location: CityProvince) => {
+  private handleLocationDropdownClick = (location: string) => {
     this.props.onLocationDropdownClick(location);
     this.handleHideLocationDropdown();
   }

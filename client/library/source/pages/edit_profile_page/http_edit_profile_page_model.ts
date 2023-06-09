@@ -1,5 +1,6 @@
-import { arrayFromJson, arrayToJson, CityProvince, CoverImage, Cuisine,
-  Language, UserProfileImage } from '../../definitions';
+import { arrayFromJson, arrayToJson, CoverImage, Cuisine,
+  Language, UserProfileImage, UserProfileSocialAccount
+} from '../../definitions';
 import { EditProfilePageModel } from './edit_profile_page_model';
 import { LocalEditProfilePageModel } from './local_edit_profile_page_model';
 
@@ -15,8 +16,7 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
       return;
     }
     const responseObject = await response.json();
-    const locationList: CityProvince[] = arrayFromJson(CityProvince,
-      responseObject.locationList);
+    const locationList: string[] = [...responseObject.locationList];
     const languageList: Language[] = arrayFromJson(Language,
       responseObject.languageList);
     const cuisineList: Cuisine[] = arrayFromJson(Cuisine,
@@ -27,8 +27,7 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
     const profileImage = UserProfileImage.fromJson(responseObject.profileImage);
     const displayName = responseObject.displayName;
     const userName = responseObject.userName;
-    const selectedLocation = CityProvince.fromJson(
-      responseObject.selectedLocation);
+    const selectedLocation = responseObject.selectedLocation;
     const isUpcomingEventsPrivate = responseObject.isUpcomingEventsPrivate;
     const isPastEventsPrivate = responseObject.isPastEventsPrivate;
     const isLocationPrivate = responseObject.isLocationPrivate;
@@ -40,23 +39,19 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
     const selectedCuisineList: Cuisine[] = arrayFromJson(Cuisine,
       responseObject.selectedCuisineList);
     const isCuisinePrivate = responseObject.isCuisinePrivate;
-    const isFacebookPrivate = responseObject.isFacebookPrivate;
-    const isTwitterPrivate = responseObject.isTwitterPrivate;
-    const isInstagramPrivate = responseObject.isInstagramPrivate;
-    const facebookLink = responseObject.facebookLink;
-    const twitterLink = responseObject.twitterLink;
-    const instagramLink = responseObject.instagramLink;
+    const userProfileSocialAccountList: UserProfileSocialAccount[] =
+      arrayFromJson(UserProfileSocialAccount,
+        responseObject.userProfileSocialAccountList);
     this._model = new LocalEditProfilePageModel(locationList, languageList,
       cuisineList, coverImage, coverImageList, profileImage, displayName,
       userName, selectedLocation, this._profileId, isUpcomingEventsPrivate,
       isPastEventsPrivate, isLocationPrivate, isLanguagePrivate, biographyValue,
       isBiographyPrivate, selectedLanguageList, selectedCuisineList,
-      isCuisinePrivate, isFacebookPrivate, isTwitterPrivate, isInstagramPrivate,
-      facebookLink, twitterLink, instagramLink);
+      isCuisinePrivate, userProfileSocialAccountList);
     await this._model.load();
   }
 
-  public get locationList(): CityProvince[] {
+  public get locationList(): string[] {
     return this._model.locationList;
   }
 
@@ -88,7 +83,7 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
     return this._model.userName;
   }
 
-  public get selectedLocation(): CityProvince {
+  public get selectedLocation(): string {
     return this._model.selectedLocation;
   }
 
@@ -108,17 +103,14 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
     return this._model.isLocationPrivate;
   }
 
-  public async getSuggestedLocationList(value: string): Promise<
-      CityProvince[]> {
+  public async getSuggestedLocationList(value: string): Promise<string[]> {
     const response = await fetch(`/api/suggested_location_list/${value}`);
     if (response.status !== 200) {
       return [];
     }
     const responseObject = await response.json();
-    const suggestedLocationList: CityProvince[] = [];
-    for (const location of responseObject.suggestedLocationList) {
-      suggestedLocationList.push(CityProvince.fromJson(location));
-    }
+    const suggestedLocationList: string[] = [
+      ...responseObject.suggestedLocationList];
     return suggestedLocationList;
   }
 
@@ -168,28 +160,8 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
     return this._model.isCuisinePrivate;
   }
 
-  public get isFacebookPrivate(): boolean {
-    return this._model.isFacebookPrivate;
-  }
-
-  public get isTwitterPrivate(): boolean {
-    return this._model.isTwitterPrivate;
-  }
-
-  public get isInstagramPrivate(): boolean {
-    return this._model.isInstagramPrivate;
-  }
-
-  public get facebookLink(): string {
-    return this._model.facebookLink;
-  }
-
-  public get twitterLink(): string {
-    return this._model.twitterLink;
-  }
-
-  public get instagramLink(): string {
-    return this._model.instagramLink;
+  public get userProfileSocialAccountList(): UserProfileSocialAccount[] {
+    return this._model.userProfileSocialAccountList;
   }
 
   public async uploadProfileImage(newImage: UserProfileImage): Promise<
@@ -232,10 +204,8 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
       isLocationPrivate: boolean, isLanguagePrivate: boolean,
       biographyValue: string, isBiographyPrivate: boolean,
       selectedLanguageList: Language[], selectedCuisineList: Cuisine[],
-      isCuisinePrivate: boolean, isFacebookPrivate: boolean,
-      isTwitterPrivate: boolean, isInstagramPrivate: boolean,
-      facebookLink: string, twitterLink: string, instagramLink: string
-      ): Promise<boolean> {
+      isCuisinePrivate: boolean, userProfileSocialAccountList:
+      UserProfileSocialAccount[]): Promise<boolean> {
     const response = await fetch(`/api/edit_profile_page/${this._profileId}`, {
       method: 'PUT',
       headers: {
@@ -253,12 +223,8 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
         'selectedLanguageList': arrayToJson(selectedLanguageList),
         'selectedCuisineList': arrayToJson(selectedCuisineList),
         'isCuisinePrivate': isCuisinePrivate,
-        'isFacebookPrivate': isFacebookPrivate,
-        'isTwitterPrivate': isTwitterPrivate,
-        'isInstagramPrivate': isInstagramPrivate,
-        'facebookLink': facebookLink,
-        'twitterLink': twitterLink,
-        'instagramLink': instagramLink
+        'userProfileSocialAccountList': arrayToJson(
+          userProfileSocialAccountList)
       })
     });
     if (!response.ok) {

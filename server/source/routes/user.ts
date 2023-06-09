@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as Hash from 'hash.js';
 import { arrayToJson, CoverImage, Cuisine, EventCardSummary, InviteEmail,
-  Language, User, UserInvitationCode, UserProfileImage,
+  Language, SocialAccount, User, UserInvitationCode, UserProfileImage,
   UserProfileSocialAccount, UserStatus
 } from '../../../client/library/source/definitions';
 import { UserCoverImageDatabase } from
@@ -47,6 +47,7 @@ export class UserRoutes {
     app.post('/api/resend_recovery_email', this.resendRecoveryEmail);
 
     app.get('/api/profile_page/:profileId', this.getProfilePage);
+    app.get('/api/edit_profile_page/:profileId', this.getEditProfilePage);
 
     this.userDatabase = userDatabase;
     this.userProfileImageDatabase = userProfileImageDatabase;
@@ -725,6 +726,60 @@ export class UserRoutes {
       return;
     }
     response.status(200).json(jsonResponse);
+  }
+
+  private getEditProfilePage = async (request, response) => {
+    const profileId = parseInt(request.params.profileId);
+    const locationList: string[] = [];
+    const languageList: Language[] = [];
+    const cuisineList: Cuisine[] = [];
+    const coverImage = (() => {
+      return CoverImage.NoImage();
+    })();
+    const profileImage = (() => {
+      return UserProfileImage.default();
+    })();
+    const displayName = '';
+    const userName = '';
+    const selectedLocation = '';
+    const isUpcomingEventsPrivate = true;
+    const isPastEventsPrivate = true;
+    const isLocationPrivate = true;
+    const isLanguagePrivate = true;
+    const biographyValue = '';
+    const isBiographyPrivate = true;
+    const selectedLanguageList: Language[] = [];
+    const selectedCuisineList: Cuisine[] = [];
+    const isCuisinePrivate = true;
+    const isFacebookPrivate = true;
+    const isTwitterPrivate = true;
+    const isInstagramPrivate = true;
+    const userProfileSocialAccount: UserProfileSocialAccount[] = [];
+    const jsonResponse = {
+      locationList: locationList,
+      languageList: arrayToJson(languageList),
+      cuisineList: arrayToJson(cuisineList),
+      coverImage: coverImage.toJson(),
+      profileImage: profileImage.toJson(),
+      displayName: displayName,
+      userName: userName,
+      selectedLocation: selectedLocation,
+      isUpcomingEventsPrivate: isUpcomingEventsPrivate,
+      isPastEventsPrivate: isPastEventsPrivate,
+      isLocationPrivate: isLocationPrivate,
+      isLanguagePrivate: isLanguagePrivate,
+      biographyValue: biographyValue,
+      isBiographyPrivate: isBiographyPrivate,
+      selectedLanguageList: arrayToJson(selectedLanguageList),
+      selectedCuisineList: arrayToJson(selectedCuisineList),
+      isCuisinePrivate: isCuisinePrivate,
+      isFacebookPrivate: isFacebookPrivate,
+      isTwitterPrivate: isTwitterPrivate,
+      isInstagramPrivate: isInstagramPrivate,
+      userProfileSocialAccount: arrayToJson(userProfileSocialAccount),
+
+    };
+
   }
 
   private userDatabase: UserDatabase;
