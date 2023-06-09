@@ -1,7 +1,11 @@
 import * as fs from 'fs';
 import * as Hash from 'hash.js';
-import { InviteEmail, User, UserInvitationCode, UserStatus, UserProfileImage
+import { arrayToJson, CoverImage, Cuisine, EventCardSummary, InviteEmail,
+  Language, User, UserInvitationCode, UserProfileImage,
+  UserProfileSocialAccount, UserStatus
 } from '../../../client/library/source/definitions';
+import { UserCoverImageDatabase } from
+'../postgres/queries/user_cover_image_database';
 import { UserDatabase } from '../postgres/queries/user_database';
 import { UserProfileImageDatabase } from '../postgres/queries';
 
@@ -14,7 +18,8 @@ export class UserRoutes {
    * @param sgmail - SendGrid api.
    */
   constructor(app: any, userDatabase: UserDatabase,
-      userProfileImageDatabase: UserProfileImageDatabase, sgmail: any) {
+      userProfileImageDatabase: UserProfileImageDatabase,
+      userCoverImageDatabase: UserCoverImageDatabase, sgmail: any) {
     /** Route to get the current logged in user. */
     app.get('/api/current_user', this.getCurrentUser);
 
@@ -41,8 +46,11 @@ export class UserRoutes {
     app.post('/api/send_recovery_email', this.sendRecoveryEmail);
     app.post('/api/resend_recovery_email', this.resendRecoveryEmail);
 
+    app.get('/api/profile_page/:profileId', this.getProfilePage);
+
     this.userDatabase = userDatabase;
     this.userProfileImageDatabase = userProfileImageDatabase;
+    this.userCoverImageDatabase = userCoverImageDatabase;
     this.sgmail = sgmail;
   }
 
@@ -54,7 +62,7 @@ export class UserRoutes {
         user = await this.userDatabase.loadUserBySessionId(
           request.session.id);
       } catch (error) {
-        console.log('Failed at loadUserBySessionId', error);
+        console.error('Failed at loadUserBySessionId', error);
         response.status(500).send();
       }
       request.session.user = {
@@ -79,7 +87,7 @@ export class UserRoutes {
     try {
       isEmail = await this.userDatabase.isDuplicateEmail(email);
     } catch (error) {
-      console.log('Failed at isDuplicateEmail', error);
+      console.error('Failed at isDuplicateEmail', error);
       response.status(500).json({ message: 'DATABASE_ERROR' });
       return;
     }
@@ -97,7 +105,7 @@ export class UserRoutes {
           user = userByEmail;
         }
       } catch (error) {
-        console.log('Failed at loadUserByEmail', error);
+        console.error('Failed at loadUserByEmail', error);
         response.status(500).send();
         return;
       }
@@ -108,7 +116,7 @@ export class UserRoutes {
           referralCode);
       } catch (error) {
         response.status(500).json({ message: 'DATABASE_ERROR' });
-        console.log('Failed to addGuestUserRequest:', error);
+        console.error('Failed to addGuestUserRequest:', error);
         return;
       }
     }
@@ -126,7 +134,7 @@ export class UserRoutes {
     try {
       token = await this.getConfirmationToken(email, user.id);
     } catch (error) {
-      console.log('CONFIRMATION_TOKEN_ERROR in Database:', error);
+      console.error('CONFIRMATION_TOKEN_ERROR in Database:', error);
       response.status(201).json({
         user: user.toJson(),
         message: 'CONFIRMATION_TOKEN_ERROR'
@@ -139,7 +147,7 @@ export class UserRoutes {
       await this.sendEmail(email, 'info@nevereatalone.net',
         'NEA Account: Registration Request', newHtml);
     } catch (error) {
-      console.log('EMAIL_NOT_SENT', error);
+      console.error('EMAIL_NOT_SENT', error);
       response.status(201).json({
         user: user.toJson(),
         message: 'EMAIL_NOT_SENT'
@@ -153,7 +161,7 @@ export class UserRoutes {
       await this.userDatabase.assignUserIdToSid(request.session.id, user.id,
         request.session, sessionExpiration);
     } catch (error) {
-      console.log('Failed at assignUserIdToSid:', error);
+      console.error('Failed at assignUserIdToSid:', error);
       response.status(500).json({ message: 'DATABASE_ERROR' });
       return;
     }
@@ -178,7 +186,7 @@ export class UserRoutes {
     try {
       user = await this.userDatabase.loadUserById(userId);
     } catch (error) {
-      console.log('Failed at loadUserById', error);
+      console.error('Failed at loadUserById', error);
       response.status(500).send();
       return;
     }
@@ -190,7 +198,7 @@ export class UserRoutes {
     try {
       hasCredentials = await this.userDatabase.hasCredentials(userId);
     } catch (error) {
-      console.log('Failed at hasCredentials', error);
+      console.error('Failed at hasCredentials', error);
       response.status(500).send();
       return;
     }
@@ -204,22 +212,21 @@ export class UserRoutes {
   private setUpProfile = async (request, response) => {
     const userId = parseInt(request.params.id);
     const displayName = request.body.displayName;
-    const accountProfileImage = request.body.accountProfileImage;
-    console.log('setUpProfile for userID', userId, 'displayName', displayName, accountProfileImage.src);
+    const accountProfileImage = UserProfileImage.fromJson(
+      request.body.accountProfileImage);
     if (userId === -1) {
       response.status(400).send();
+      return;
     }
     try {
-      console.log('Running saveUserProfile');
       const result = await this.userDatabase.saveUserProfile(userId,
         accountProfileImage.src, displayName);
-      console.log('result account', result.account, result.accountProfileImage);
       response.status(200).json({
         account: result.account.toJson(),
         accountProfileImage: result.accountProfileImage.toJson()
       });
     } catch (error) {
-      console.log('Failed at saveUserProfile', error);
+      console.error('Failed at saveUserProfile', error);
       response.status(500).send();
     }
   }
@@ -230,7 +237,7 @@ export class UserRoutes {
     try {
       await this.userDatabase.addUserCredentials(userId, password);
     } catch (error) {
-      console.log('Failed at addUserCredentials', error);
+      console.error('Failed at addUserCredentials', error);
       response.status(500).send();
       return;
     }
@@ -262,7 +269,7 @@ export class UserRoutes {
       await this.userDatabase.assignUserIdToSid(request.session.id, user.id,
         request.session, sessionExpiration);
     } catch (error) {
-      console.log('Failed at assignUserIdToSid', error);
+      console.error('Failed at assignUserIdToSid', error);
       response.status(500).json({ message: 'DATABASE_ERROR' });
       return;
     }
@@ -289,7 +296,7 @@ export class UserRoutes {
     try {
       token = await this.userDatabase.getTokenByUserId(userId);
     } catch (error) {
-      console.log('Database failed at getTokenByUserId', error);
+      console.error('Database failed at getTokenByUserId', error);
       throw error;
     }
     if (token) {
@@ -304,7 +311,7 @@ export class UserRoutes {
       await this.userDatabase.addConfirmationToken(confirmationTokenId,
         expiresAt, userId);
     } catch (error) {
-      console.log('Database failed at addConfirmationToken.', error);
+      console.error('Database failed at addConfirmationToken.', error);
       throw error;
     }
     return confirmationTokenId;
@@ -343,7 +350,7 @@ export class UserRoutes {
     }
     request.session.destroy((err) => {
       if (err) {
-        console.log('Failed at request.session.destroy', err);
+        console.error('Failed at request.session.destroy', err);
         response.status(500).json({ message: 'SESSION_DESTROY_FAILED' });
         return;
       }
@@ -362,7 +369,7 @@ export class UserRoutes {
     try {
       isTokenValid = await this.userDatabase.isTokenValid(token);
     } catch (error) {
-      console.log('Failed at isTokenValid', error);
+      console.error('Failed at isTokenValid', error);
       response.status(500).send();
       return;
     }
@@ -375,7 +382,7 @@ export class UserRoutes {
     try {
       userIdByToken = await this.userDatabase.getUserIdByToken(token);
     } catch (error) {
-      console.log('Failed at getUserIdByToken', error);
+      console.error('Failed at getUserIdByToken', error);
       response.status(500).send();
       return;
     }
@@ -383,7 +390,7 @@ export class UserRoutes {
     try {
       user = await this.userDatabase.loadUserById(userIdByToken);
     } catch (error) {
-      console.log('Failed at loadUserById', error);
+      console.error('Failed at loadUserById', error);
       response.status(500).send();
       return;
     }
@@ -396,7 +403,7 @@ export class UserRoutes {
       try {
         hasCredentials = await this.userDatabase.hasCredentials(user.id);
       } catch (error) {
-        console.log('Failed at hasCredentials', error);
+        console.error('Failed at hasCredentials', error);
         response.status(500).send();
         return;
       }
@@ -412,7 +419,7 @@ export class UserRoutes {
       id = await this.userDatabase.updateUserStatusByConfirmationToken(
         token);
     } catch (error) {
-      console.log('Failed at updateUserStatusByConfirmationToken', error);
+      console.error('Failed at updateUserStatusByConfirmationToken', error);
       response.status(500).send();
       return;
     }
@@ -423,7 +430,7 @@ export class UserRoutes {
       await this.userDatabase.assignUserIdToSid(request.session.id, user.id,
         request.session, sessionExpiration);
     } catch (error) {
-      console.log('Failed at assignUserIdToSid', error);
+      console.error('Failed at assignUserIdToSid', error);
       response.status(500).json({ message: 'DATABASE_ERROR' });
       return;
     }
@@ -454,7 +461,7 @@ export class UserRoutes {
     } catch (error) {
       const message = "Your account is verified but we weren't able to send \
         you the sign up email. Contact info@nevereatalone.net to get help.";
-      console.log(error, message);
+      console.error(error, message);
       response.status(200).json({
         message: message
       });
@@ -470,7 +477,7 @@ export class UserRoutes {
       userInvitationCode = await this.userDatabase.loadUserInvitationCode(
         userId);
     } catch (error) {
-      console.log('Failed at loadUserInvitationCode', error);
+      console.error('Failed at loadUserInvitationCode', error);
       response.status(500).send();
       return;
     }
@@ -500,7 +507,7 @@ export class UserRoutes {
           `Your friend, ${account.name}, invited you to check out NEA`,
           newHtml);
       } catch (error) {
-        console.log('Failed at sendEmail', error);
+        console.error('Failed at sendEmail', error);
         response.status(500).send();
         return;
       }
@@ -526,14 +533,14 @@ export class UserRoutes {
       await this.sendEmail('info@nevereatalone.net', email,
         `${name}, want to partner with NEA`, newHtml);
     } catch (error) {
-      console.log('Failed at sendEmail to info@nevereatalone.net', error);
+      console.error('Failed at sendEmail to info@nevereatalone.net', error);
       response.status(500).send();
       return;
     }
     try {
       await this.sendPartnerWithUsRecievedConfirmationEmail(email, name);
     } catch (error) {
-      console.log('Failed at sendPartnerWithUsRecievedConfirmationEmail',
+      console.error('Failed at sendPartnerWithUsRecievedConfirmationEmail',
         error);
       response.status(500).send();
       return;
@@ -561,7 +568,7 @@ export class UserRoutes {
       await this.sendEmail(email, 'info@nevereatalone.net',
         'We Appreciate Your Business!', newHtml);
     } catch (error) {
-      console.log('Failed at sendEmail', error);
+      console.error('Failed at sendEmail', error);
       return error;
     }
   }
@@ -572,7 +579,7 @@ export class UserRoutes {
     try {
       user = await this.userDatabase.loadUserByEmail(email);
     } catch (error) {
-      console.log('Failed at loadUserByEmail', error);
+      console.error('Failed at loadUserByEmail', error);
       response.status(500).json({ message: 'DATABASE_ERROR' });
       return;
     }
@@ -596,7 +603,7 @@ export class UserRoutes {
       await this.sendEmail(user.email, 'info@nevereatalone.net',
         'Recovery Password Link', newHtml);
     } catch (error) {
-      console.log('Failed at sendEmail', error);
+      console.error('Failed at sendEmail', error);
       response.status(500).send();
       return;
     }
@@ -625,15 +632,104 @@ export class UserRoutes {
       await this.sendEmail(user.email, 'info@nevereatalone.net',
         'Recovery Password Link', newHtml);
     } catch (error) {
-      console.log('Failed at sendEmail', error);
+      console.error('Failed at sendEmail', error);
       response.status(500).send();
       return;
     }
     response.status(200).send();
   }
 
+  private getProfilePage = async (request, response) => {
+    const profileId = parseInt(request.params.profileId);
+    let profileUser: User = User.makeGuest();
+    let coverImage = CoverImage.default(profileId);
+    let profileImage = UserProfileImage.default(profileId);
+    let biography = '';
+    let address = '';
+    let languageList: Language[] = [];
+    let socialAccounts: UserProfileSocialAccount[] = [];
+    let favoriteCuisineList: Cuisine[] = [];
+    let upcomingEventList: EventCardSummary[] = [];
+    let pastEventList: EventCardSummary[] = [];
+    let jsonResponse = {
+      coverImage: coverImage.toJson(),
+      profileImageSrc: profileImage.src,
+      name: profileUser.name,
+      userName: profileUser.userName,
+      createdAt: profileUser.createdAt.toISOString(),
+      biography: biography,
+      address: address,
+      languageList: arrayToJson(languageList),
+      socialAccounts: arrayToJson(socialAccounts),
+      favoriteCuisineList: arrayToJson(favoriteCuisineList),
+      upcomingEventList: arrayToJson(upcomingEventList),
+      pastEventList: arrayToJson(pastEventList)
+    };
+    try {
+      profileUser = await this.userDatabase.loadUserById(profileId);
+    } catch (error) {
+      console.error('Failed at loadUserById', error);
+      response.status(500).json(jsonResponse);
+      return;
+    }
+    if (profileUser?.id === -1) {
+      // User doesn't exist
+      response.status(400).json(jsonResponse);
+      return;
+    }
+    try {
+      coverImage = await this.userCoverImageDatabase.loadCoverImageByUserId(
+        profileId);
+    } catch (error) {
+      console.error('Failed at loadUserById', error);
+      response.status(500).json(jsonResponse);
+      return;
+    }
+    try {
+      profileImage =
+        await this.userProfileImageDatabase.loadProfileImageByUserId(profileId);
+    } catch (error) {
+      console.error('Failed at loadProfileImageByUserId', error);
+      response.status(500).json(jsonResponse);
+      return;
+    }
+    try {
+      biography = await this.userDatabase.loadBiographyByUserId(profileId);
+    } catch (error) {
+      console.error('Failed at loadBiographyByUserId', error);
+      response.status(500).json(jsonResponse);
+      return;
+    }
+    try {
+      address = await this.userDatabase.loadAddressByUserId(profileId);
+    } catch (error) {
+      console.error('Failed at loadAddressByUserId', error);
+      response.status(500).json(jsonResponse);
+      return;
+    }
+    try {
+      languageList = await this.userDatabase.loadUserLanguagesByUserId(
+        profileId);
+    } catch (error) {
+      console.error('Failed at loadUserLanguagesByUserId', error);
+      response.status(500).json(jsonResponse);
+      return;
+    }
+    try {
+      socialAccounts =
+        await this.userDatabase.loadUserProfileSocialAccountsByUserId(
+          profileId);
+    } catch (error) {
+      console.error('Failed at loadUserProfileSocialAccountsByUserId', error);
+      response.status(500).json(jsonResponse);
+      return;
+    }
+    response.status(200).json(jsonResponse);
+  }
+
   private userDatabase: UserDatabase;
   private userProfileImageDatabase: UserProfileImageDatabase;
+  private userCoverImageDatabase: UserCoverImageDatabase;
 
   /** The Sendgrid mailing api. */
   private sgmail: any;

@@ -3,8 +3,9 @@ import * as Router from 'react-router-dom';
 import { Modal } from '../components';
 import { DisplayMode, getDisplayMode, User, UserProfileImage, UserStatus
 } from '../definitions';
-import { InviteAFoodieModalController, JoinModalController,
-  LogInModalController, PartnerWithUsModalController } from '../modals';
+import { HttpInviteAFoodieModel, InviteAFoodieModalController,
+  JoinModalController, LogInModalController, PartnerWithUsModalController
+} from '../modals';
 import { ApplicationModel } from './application_model';
 import { DeactivateAccountSurveyPageController }
 from './deactivate_account_survey_page';
@@ -17,7 +18,7 @@ import { EmailConfirmationPageController } from './email_confirmation_page';
 import { ErrorPage403, ErrorPage404, ErrorPage500 } from './error_page';
 import { ForgotPasswordPageController } from './forgot_password_page';
 import { HelpPage } from './help_page';
-import { HomePageController } from './home_page';
+import { HomePageController, HttpHomePageModel } from './home_page';
 import { InviteAFoodiePageController } from './invite_a_foodie_page';
 import { JoinPageController } from './join_page';
 import { LogInPageController } from './log_in_page';
@@ -47,7 +48,6 @@ interface State {
   isLogInButtonClicked: boolean;
   isInviteAFoodieButtonClicked: boolean;
   isPartnerWithUsButtonClicked: boolean;
-  loggedIn: boolean;
 }
 
 export class ApplicationController extends React.Component<Properties, State> {
@@ -63,7 +63,6 @@ export class ApplicationController extends React.Component<Properties, State> {
       isLogInButtonClicked: false,
       isInviteAFoodieButtonClicked: false,
       isPartnerWithUsButtonClicked: false,
-      loggedIn: false
     };
   }
 
@@ -236,33 +235,9 @@ export class ApplicationController extends React.Component<Properties, State> {
           hasError: false,
           account: this.props.model.account,
           accountProfileImage: this.props.model.accountProfileImage
-        },
-        () => {
-          this.setState({ loggedIn: this.isLoggedIn() });
         });
     } catch (error) {
       this.setState({ isLoaded: true, hasError: true });
-    }
-  }
-
-  public async componentDidUpdate(prevProps: Properties,
-      prevState: State): Promise<void> {
-    if (prevState.loggedIn !== this.state.loggedIn) {
-      try {
-        await this.props.model.load();
-        this.setState(
-          {
-            isLoaded: true,
-            hasError: false,
-            account: this.props.model.account,
-            accountProfileImage: this.props.model.accountProfileImage
-          },
-          () => {
-            this.setState({ loggedIn: this.isLoggedIn() });
-          });
-      } catch (error) {
-        this.setState({ isLoaded: true, hasError: true });
-      }
     }
   }
 
@@ -270,26 +245,32 @@ export class ApplicationController extends React.Component<Properties, State> {
     window.removeEventListener('resize', this.handleSize);
   }
 
-  public updateAccount(user: User): void {
-    this.setState({
-      account: user,
-      loggedIn: true
-    }, () => {
-      this.props.model.load().then(() => {
-        this.setState({
-          accountProfileImage: this.props.model.accountProfileImage,
-          account: this.props.model.account
-        });
-      }).catch((error) => {
-        this.setState({ hasError: true });
+  public async updateAccount(newUser: User): Promise<void> {
+    try {
+      const accountProfileImage = await (async () => {
+        if (newUser?.id !== -1) {
+          const imageResponse = await fetch(
+            `/api/user_profile_image/${newUser.id}`);
+          if (imageResponse.status === 200) {
+            const responseObject = await imageResponse.json();
+            return UserProfileImage.fromJson(
+              responseObject.accountProfileImage);
+          }
+          return UserProfileImage.default(newUser.id);
+        }
+        return UserProfileImage.default(-1);
+      })();
+      const homePageModel = new HttpHomePageModel(newUser);
+      const inviteAFoodieModel = new HttpInviteAFoodieModel(newUser);
+      await this.props.model.setAccount(newUser, accountProfileImage,
+        homePageModel, inviteAFoodieModel);
+      this.setState({
+        account: newUser,
+        accountProfileImage: accountProfileImage
       });
-    });
-  }
-
-  private isLoggedIn(): boolean {
-    return this.state.account.id !== -1 &&
-      (this.state.account.userStatus === UserStatus.ACTIVE ||
-      this.state.account.userStatus === UserStatus.DEACTIVE);
+    } catch {
+      this.setState({ hasError: true });
+    }
   }
 
   private handleSize = () => {

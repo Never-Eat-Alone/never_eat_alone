@@ -1,6 +1,7 @@
 import * as Hash from 'hash.js';
 import { Pool } from 'pg';
-import { User, UserStatus, UserProfileImage
+import { Language, Location, SocialAccountType, User, UserStatus,
+  UserProfileImage, UserProfileSocialAccount
 } from '../../../../client/library/source/definitions';
 import * as Crypto from 'crypto';
 
@@ -341,6 +342,78 @@ export class UserDatabase {
       accountProfileImage: accountProfileImage
     };
   }
+
+  /** Returns a user's biography based on user id.
+   * @param userId - User's id number'.
+   */
+  public loadBiographyByUserId = async (userId: number): Promise<string> => {
+    const result =
+      await this.pool.query('SELECT biography FROM users WHERE id = $1',
+        [userId]);
+    if (result.rows?.length === 0) {
+      return '';
+    }
+    return result.rows[0].biography;
+  }
+
+  /** Returns a user's address based on user id.
+   * @param userId - User's id number'.
+   */
+  public loadAddressByUserId = async (userId: number): Promise<string> => {
+    const result = await this.pool.query(
+      'SELECT profile_address FROM users WHERE id = $1', [userId]);
+    if (result.rows?.length === 0) {
+      return '';
+    }
+    return result.rows[0].profile_address;
+  }
+
+  public loadUserLocationByUserId = async (userId: number): Promise<
+      Location> => {
+    const result = await this.pool.query('SELECT lo.* FROM locations AS lo \
+      JOIN users ON users.location_id = lo.id WHERE users.id = $1', [userId]);
+    if (result.rows?.length === 0) {
+      return Location.empty();
+    }
+    return new Location(parseInt(result.rows[0].id),
+      result.rows[0].address_line_one, result.rows[0].address_line_two,
+      result.rows[0].city, result.rows[0].province, result.rows[0].country,
+      result.rows[0].postal_code, result.rows[0].neighbourhood);
+  }
+
+  public loadUserLanguagesByUserId = async (userId: number): Promise<
+      Language[]> => {
+    const result = await this.pool.query(
+      `SELECT l.* FROM languages AS l INNER JOIN user_languages AS ul ON 
+      l.id = ul.language_id WHERE ul.user_id = $1`, [userId]);
+    if (result.rows?.length === 0) {
+      return [];
+    }
+    const languages: Language[] = [];
+    for (const row of result.rows) {
+      languages.push(new Language(parseInt(row.id), row.code, row.name));
+    }
+    return languages;
+  }
+
+  public loadUserProfileSocialAccountsByUserId = async (userId: number):
+      Promise<UserProfileSocialAccount[]> => {
+    // Query the user profile social accounts table based on user_id
+    const result = await this.pool.query(`
+      SELECT * FROM user_profile_social_accounts WHERE user_id = $1`, [userId]);
+    if (result.rows?.length === 0) {
+      return [];
+    }
+    const userProfilesocialAccounts: UserProfileSocialAccount[] =
+      result.rows.map((row) => {
+        const account = new UserProfileSocialAccount(
+          SocialAccountType[row.platform as keyof typeof SocialAccountType],
+          row.link);
+        // ... set other properties specific to user profile social accounts
+        return account;
+    });
+    return userProfilesocialAccounts;
+  };
 
   /** The postgress pool connection. */
   private pool: Pool;

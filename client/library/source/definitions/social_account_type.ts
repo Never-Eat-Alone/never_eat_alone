@@ -1,4 +1,6 @@
 export enum SocialAccountType {
-  FACEBOOK,
-  GOOGLE
+  FACEBOOK = 'FACEBOOK',
+  GOOGLE = 'GOOGLE',
+  TWITTER = 'TWITTER',
+  INSTAGRAM = 'INSTAGRAM'
 };

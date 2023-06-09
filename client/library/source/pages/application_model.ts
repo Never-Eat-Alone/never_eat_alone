@@ -16,6 +16,9 @@ import { SignUpPageModel } from './sign_up_page';
 
 export abstract class ApplicationModel {
   public abstract load(): Promise<void>;
+  public abstract setAccount(account: User, accountProfileImage:
+    UserProfileImage, homePageModel: HomePageModel, inviteAFoodieModel:
+    InviteAFoodieModel): Promise<void>;
   public abstract get account(): User;
   public abstract get accountProfileImage(): UserProfileImage;
   public abstract get homePageModel(): HomePageModel;

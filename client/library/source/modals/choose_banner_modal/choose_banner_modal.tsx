@@ -47,20 +47,20 @@ export class ChooseBannerModal extends React.Component<Properties, State> {
     })();
     const imageList = [];
     for (const image of this.props.coverImageList) {
-      const border = (image.id === this.state.selectedImage.id &&
+      const border = (image.profileId === this.state.selectedImage.profileId &&
         '3px solid #5EC745' || 'none');
       imageList.push(
         <div
-            key={image.id}
+            key={image.profileId}
             style={{...IMAGE_CONTAINER_STYLE, border: border}}
             onClick={() => this.handleCoverImageClick(image)}
         >
-          <img style={IMAGE_STYLE} src={image.src} alt={image.alt} />
+          <img style={IMAGE_STYLE} src={image.src} alt='Cover Image' />
         </div>);
     }
     const noCoverImage = CoverImage.NoImage();
-    const greyCoverBorder = (this.state.selectedImage.id === noCoverImage.id &&
-      '3px solid #5EC745' || 'none');
+    const greyCoverBorder = (this.state.selectedImage.src ===
+      noCoverImage.src && '3px solid #5EC745' || 'none');
     imageList.push(
       <div
           key='No_Cover_Image'
@@ -70,7 +70,7 @@ export class ChooseBannerModal extends React.Component<Properties, State> {
         <img
           src={noCoverImage.src}
           style={GREY_IMAGE_STYLE}
-          alt={noCoverImage.alt}
+          alt='No Cover Image'
         />
       </div>);
     return (

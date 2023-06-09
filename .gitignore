@@ -13,6 +13,7 @@ client/application/application/
 client/library/library/
 client/tests/ui_catalog/library
 
+client/resources/uploads/
 # Ignore all text files
 *.txt
 

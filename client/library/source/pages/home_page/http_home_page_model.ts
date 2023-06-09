@@ -50,7 +50,7 @@ export class HttpHomePageModel extends HomePageModel {
     }
     this._model = new LocalHomePageModel(imageList, eventList, userEventTagList,
       userFutureEventCardSummaryList, totalEventsAttendedThisMonth);
-    this._model.load();
+    await this._model.load();
   }
 
   public get imageList(): SocialMediaImage[] {

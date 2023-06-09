@@ -37,7 +37,7 @@ export class HttpSettingsPageModel extends SettingsPageModel {
       isEventRemindersNotificationOn, isChangesNotificationOn,
       isSomeoneJoinedNotificationOn, isFoodieAcceptedInviteNotificationOn,
       isAnnouncementNotificationOn, defaultCard, paymentCards, paymentRecords);
-    this._model.load();
+    await this._model.load();
   }
 
   public get linkedSocialAccounts(): SocialAccount[] {

@@ -1,5 +1,5 @@
-import { arrayFromJson, CityProvince, CoverImage, Cuisine, EventCardSummary,
-  Language } from '../../definitions';
+import { arrayFromJson, CoverImage, Cuisine, EventCardSummary, Language,
+  SocialAccountType, UserProfileSocialAccount } from '../../definitions';
 import { LocalProfilePageModel } from './local_profile_page_model';
 import { ProfilePageModel } from './profile_page_model';
 
@@ -9,27 +9,36 @@ export class HttpProfilePageModel extends ProfilePageModel {
     this._profileId = profileId;
   }
 
-  /** Loads the data displayed on the profile page. Must be called before other 
+  /** Loads the data displayed on the profile page. Must be called before other
    * methods.
    */
   public async load(): Promise<void> {
-    const response = await fetch(`/api/profile_page/${this._profileId}`);
-    if (response.status !== 200) {
+    if(this._model) {
       return;
     }
+    const response = await fetch(`/api/profile_page/${this._profileId}`);
+    if (response.status !== 200) {
+      throw new Error(`Failed to load profile page. Status: ${
+        response.status}`);
+    }
     const responseObject = await response.json();
-    const coverImage = responseObject.coverImage;
+    const coverImage = CoverImage.fromJson(responseObject.coverImage);
     const profileImageSrc = responseObject.profileImageSrc;
-    const name = responseObject.name;
-    const userName = responseObject.userName;
-    const createdAt = responseObject.createdAt;
-    const biography = responseObject.biography;
-    const location = responseObject.location;
+    const name: string = responseObject.name;
+    const userName: string = responseObject.userName;
+    const createdAt = new Date(Date.parse(responseObject.createdAt));
+    const biography: string = responseObject.biography;
+    const address: string = responseObject.address;
     const languageList: Language[] = arrayFromJson(Language,
       responseObject.languageList);
-    const facebookLink = responseObject.facebookLink;
-    const twitterLink = responseObject.twitterLink;
-    const instagramLink = responseObject.instagramLink;
+    const socialAccounts: UserProfileSocialAccount[] = arrayFromJson(
+      UserProfileSocialAccount, responseObject.socialAccounts);
+    const facebookLink = socialAccounts.find((account) => account.platform ===
+      SocialAccountType.FACEBOOK)?.link;
+    const twitterLink = socialAccounts.find((account) => account.platform ===
+      SocialAccountType.TWITTER)?.link;
+    const instagramLink = socialAccounts.find((account) => account.platform ===
+      SocialAccountType.INSTAGRAM)?.link;
     const favoriteCuisineList: Cuisine[] = arrayFromJson(Cuisine,
       responseObject.favoriteCuisineList);
     const upcomingEventList: EventCardSummary[] = arrayFromJson(
@@ -37,14 +46,14 @@ export class HttpProfilePageModel extends ProfilePageModel {
     const pastEventList: EventCardSummary[] = arrayFromJson(EventCardSummary,
       responseObject.pastEventList);
     this._model = new LocalProfilePageModel(this._profileId, coverImage,
-      profileImageSrc, name, userName, createdAt, biography, location,
+      profileImageSrc, name, userName, createdAt, biography, address,
       languageList, facebookLink, twitterLink, instagramLink,
       favoriteCuisineList, upcomingEventList, pastEventList);
-    this._model.load();
+    await this._model.load();
   }
 
   public get profileId(): number {
-    return this._model.profileId;
+    return this._profileId;
   }
 
   public get coverImage(): CoverImage {
@@ -71,8 +80,8 @@ export class HttpProfilePageModel extends ProfilePageModel {
     return this._model.biography;
   }
 
-  public get location(): CityProvince {
-    return this._model.location;
+  public get address(): string {
+    return this._model.address;
   }
 
   public get languageList(): Language[] {

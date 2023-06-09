@@ -279,16 +279,16 @@ export class AccountInformationTab extends React.Component<Properties, State> {
     if (this.props.linkedSocialAccounts?.length !== 0) {
       let isGoogle, isFacebook = false;
       for (const account of this.props.linkedSocialAccounts) {
-        if (account.accountType === SocialAccountType.GOOGLE) {
+        if (account.provider === SocialAccountType.GOOGLE) {
           isGoogle = true;
           socialAccountButtons.push(
             <div
-                key={account.socialAccountEmail + 'Google'}
+                key={account.email + 'Google'}
                 style={linkButtonRowStyle}
             >
               <LinkSocialAccountButton
                 style={socialAccountButtonStyle}
-                account={account.socialAccountEmail}
+                account={account.email}
                 accountType={SocialAccountType.GOOGLE}
                 onClick={this.props.onGoogleClick}
                 disabled
@@ -303,12 +303,12 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           isFacebook = true;
           socialAccountButtons.push(
             <div
-                key={account.socialAccountEmail + 'Facebook'}
+                key={account.email + 'Facebook'}
                 style={linkButtonRowStyle}
             >
               <LinkSocialAccountButton
                 style={socialAccountButtonStyle}
-                account={account.socialAccountEmail}
+                account={account.email}
                 accountType={SocialAccountType.FACEBOOK}
                 onClick={this.props.onFacebookClick}
                 disabled

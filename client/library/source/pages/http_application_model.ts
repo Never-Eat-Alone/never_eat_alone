@@ -26,6 +26,9 @@ import { HttpSignUpPageModel, SignUpPageModel } from './sign_up_page';
 
 export class HttpApplicationModel extends ApplicationModel {
   public async load(): Promise<void> {
+    if (this._model) {
+      return;
+    }
     const response = await fetch('/api/current_user');
     let account: User;
     if (response.status === 200) {
@@ -34,16 +37,19 @@ export class HttpApplicationModel extends ApplicationModel {
     } else {
       account = User.makeGuest();
     }
-    let accountProfileImage;
-    if (account?.id !== -1) {
-      const imageResponse = await fetch(
-        `/api/user_profile_image/${account.id}`);
-      if (imageResponse.status === 200) {
-        const responseObject = await imageResponse.json();
-        accountProfileImage = UserProfileImage.fromJson(
-          responseObject.accountProfileImage);
+    const accountProfileImage = await (async () => {
+      if (account?.id !== -1) {
+        const imageResponse = await fetch(
+          `/api/user_profile_image/${account.id}`);
+        if (imageResponse.status === 200) {
+          const responseObject = await imageResponse.json();
+          return UserProfileImage.fromJson(
+            responseObject.accountProfileImage);
+        }
+        return UserProfileImage.default(account.id);
       }
-    }
+      return UserProfileImage.default(-1);
+    })();
     const googleClientIdResponse = await fetch('/api/google_client_id');
     const googleClientIdObject = await googleClientIdResponse.json();
     const googleClientId = googleClientIdObject.google_client_id;
@@ -55,11 +61,27 @@ export class HttpApplicationModel extends ApplicationModel {
     const deletedAccountSurveyModel = new HttpDeletedAccountSurveyModel();
     const deactivateAccountSurveyModel = new HttpDeactivateAccountSurveyModel();
     const forgotPasswordPageModel = new HttpForgotPasswordPageModel();
+    const diningEventPageModelMap = new Map<number, DiningEventPageModel>();
+    const profilePageModelMap = new Map<number, ProfilePageModel>();
+    const editProfilePageModelMap = new Map<number, EditProfilePageModel>();
+    const settingsPageModelMap = new Map<number, SettingsPageModel>();
+    const signUpPageModelMap = new Map<number, SignUpPageModel>();
+    const emailConfirmationPageModelMap = new Map<string,
+      EmailConfirmationPageModel>();
     this._model = new LocalApplicationModel(account, accountProfileImage,
       homePageModel, inviteAFoodieModel, joinModel, partnerWithUsModel,
       logInModel, deletedAccountSurveyModel, deactivateAccountSurveyModel,
-      forgotPasswordPageModel, googleClientId);
+      forgotPasswordPageModel, googleClientId, diningEventPageModelMap,
+      editProfilePageModelMap, signUpPageModelMap, profilePageModelMap,
+      settingsPageModelMap, emailConfirmationPageModelMap);
     await this._model.load();
+  }
+
+  public async setAccount(account: User, accountProfileImage: UserProfileImage, 
+      homePageModel: HomePageModel, inviteAFoodieModel: InviteAFoodieModel):
+      Promise<void> {
+    this._model.setAccount(account, accountProfileImage, homePageModel,
+      inviteAFoodieModel);
   }
 
   public get account(): User {

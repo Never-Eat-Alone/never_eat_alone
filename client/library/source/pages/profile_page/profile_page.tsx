@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CityProvince, Cuisine, DisplayMode, EventCardSummary, Language, User
+import { Cuisine, DisplayMode, EventCardSummary, Language, User
 } from '../../definitions';
 import { ProfileBox } from './profile_box';
 import { ProfilePastEvents } from './profile_past_events';
@@ -33,7 +33,7 @@ interface Properties {
   biography: string;
 
   /** The user's location. */
-  location: CityProvince;
+  address: string;
 
   /** List of the languages the user can speak. */
   languageList: Language[];

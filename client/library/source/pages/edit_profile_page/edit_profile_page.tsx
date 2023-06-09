@@ -393,7 +393,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
         Please enter a valid URL.
       </div> || null);
     const backgroundImageStyle = (() => {
-      if (this.props.coverImage.id === -1) {
+      if (this.props.coverImage.profileId === -1) {
         return { backgroundImage: 'none' };
       }
       return { backgroundImage: `url(${this.props.coverImage.src})` };

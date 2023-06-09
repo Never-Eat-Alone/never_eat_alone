@@ -23,7 +23,7 @@ export class SocialMediaImageRoutes {
       imageList =
         await this.socialMediaImageDatabase.loadHomePageSocialMediaImages();
     } catch (error) {
-      console.log('Failed at loadHomePageSocialMediaImages', error);
+      console.error('Failed at loadHomePageSocialMediaImages', error);
       response.status(500).json({
         socialMediaImages: [],
         message: 'DATABASE_ERROR'

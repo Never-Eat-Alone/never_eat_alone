@@ -1,11 +1,11 @@
-import { CityProvince, CoverImage, Cuisine, EventCardSummary, Language
+import { CoverImage, Cuisine, EventCardSummary, Language
 } from '../../definitions';
 import { ProfilePageModel } from './profile_page_model';
 
 export class LocalProfilePageModel extends ProfilePageModel {
   constructor(profileId: number, coverImage: CoverImage, profileImageSrc:
       string, name: string, userName: string, createdAt: Date, biography:
-      string, location: CityProvince, languageList: Language[], facebookLink:
+      string, address: string, languageList: Language[], facebookLink:
       string, twitterLink: string, instagramLink: string, favoriteCuisineList:
       Cuisine[], upcomingEventList: EventCardSummary[], pastEventList:
       EventCardSummary[]) {
@@ -17,7 +17,7 @@ export class LocalProfilePageModel extends ProfilePageModel {
     this._userName = userName;
     this._createdAt = createdAt;
     this._biography = biography;
-    this._location = location;
+    this._address = address;
     this._languageList = languageList;
     this._facebookLink = facebookLink;
     this._twitterLink = twitterLink;
@@ -57,8 +57,8 @@ export class LocalProfilePageModel extends ProfilePageModel {
     return this._biography;
   }
 
-  public get location(): CityProvince {
-    return this._location;
+  public get address(): string {
+    return this._address;
   }
 
   public get languageList(): Language[] {
@@ -96,7 +96,7 @@ export class LocalProfilePageModel extends ProfilePageModel {
   private _userName: string;
   private _createdAt: Date;
   private _biography: string;
-  private _location: CityProvince;
+  private _address: string;
   private _languageList: Language[];
   private _facebookLink: string;
   private _twitterLink: string;

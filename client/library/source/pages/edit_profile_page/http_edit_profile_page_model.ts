@@ -53,7 +53,7 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
       isBiographyPrivate, selectedLanguageList, selectedCuisineList,
       isCuisinePrivate, isFacebookPrivate, isTwitterPrivate, isInstagramPrivate,
       facebookLink, twitterLink, instagramLink);
-    this._model.load();
+    await this._model.load();
   }
 
   public get locationList(): CityProvince[] {

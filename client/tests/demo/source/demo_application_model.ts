@@ -292,12 +292,12 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       'Canada');
     const vaughan = new NeverEatAlone.CityProvince(7, 'Vaughan', 'ON',
       'Canada');
-    const englishLanguage = new NeverEatAlone.Language(1, 'English');
-    const spanishLanguage = new NeverEatAlone.Language(2, 'Spanish');
-    const mandarinLanguage = new NeverEatAlone.Language(3, 'Mandarin');
-    const germanLanguage = new NeverEatAlone.Language(4, 'German');
-    const frenchLanguage = new NeverEatAlone.Language(5, 'French');
-    const farsiLanguage = new NeverEatAlone.Language(6, 'Farsi');
+    const englishLanguage = new NeverEatAlone.Language(1, 'en', 'English');
+    const spanishLanguage = new NeverEatAlone.Language(2, 'es', 'Spanish');
+    const mandarinLanguage = new NeverEatAlone.Language(3, 'zh', 'Mandarin');
+    const germanLanguage = new NeverEatAlone.Language(4, 'de', 'German');
+    const frenchLanguage = new NeverEatAlone.Language(5, 'fr', 'French');
+    const farsiLanguage = new NeverEatAlone.Language(6, 'fa', 'Farsi');
     const emmaLanguageList = [englishLanguage];
     const arthurLanguageList = [englishLanguage, frenchLanguage];
     const lucyLanguageList = [mandarinLanguage, englishLanguage,
@@ -308,15 +308,15 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const lucyFavoriteCuisines = [seafoodCuisine, chineseCuisine];
     const eventCardSummaryList = [];
     const coverImage1 = new NeverEatAlone.CoverImage(1,
-      'resources/profile_page/images/default_banner_1.jpg', 'Taco Banner');
+      'resources/profile_page/images/default_banner_1.jpg');
     const coverImage2 = new NeverEatAlone.CoverImage(2,
-      'resources/profile_page/images/default_banner_2.jpg', 'Burger Banner');
+      'resources/profile_page/images/default_banner_2.jpg');
     const coverImage3 = new NeverEatAlone.CoverImage(3,
-      'resources/profile_page/images/default_banner_3.jpg', 'Sushi Banner');
+      'resources/profile_page/images/default_banner_3.jpg');
     const coverImage4 = new NeverEatAlone.CoverImage(4,
-      'resources/profile_page/images/default_banner_4.jpg', 'Wine Banner');
+      'resources/profile_page/images/default_banner_4.jpg');
     const coverImage5 = new NeverEatAlone.CoverImage(5,
-      'resources/profile_page/images/default_banner_5.jpg', 'Coffee Banner');
+      'resources/profile_page/images/default_banner_5.jpg');
     const coverImageList = [coverImage1, coverImage2, coverImage3, coverImage4,
       coverImage5];
     this._profilePageModelMap = new Map();
@@ -327,7 +327,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const emmaLocation = barrie;
     const demoProfilePageModel1 = new NeverEatAlone.LocalProfilePageModel(1,
       emmaCoverImage, emmaProfileImage.src, userEmma.name,
-      userEmma.userName, userEmma.createdAt, emmaBio, emmaLocation,
+      userEmma.userName, userEmma.createdAt, emmaBio, 'Toronto, ON',
       emmaLanguageList, '', '', emmaInstagramLink, emmaFavoriteCuisines, [],
       [eventCardSummary1]);
     this._profilePageModelMap.set(1, demoProfilePageModel1);
@@ -336,7 +336,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const demoProfilePageModel2 = new NeverEatAlone.LocalProfilePageModel(2,
       arthurCoverImage, arthurProfileImage.src, userArthur.name,
       userArthur.userName, userArthur.createdAt, 'Ready to explore Toronto.',
-      vancouver, arthurLanguageList, 'www.facebook.com/arthur_van',
+      'Toronto', arthurLanguageList, 'www.facebook.com/arthur_van',
       'www.twitter.com/@vanfan', '', arthurFavoriteCuisines, [eventCardSummary7
       ], [eventCardSummary1, eventCardSummary60]);
     this._profilePageModelMap.set(2, demoProfilePageModel2);
@@ -344,7 +344,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const lucyCoverImage = coverImage5;
     const demoProfilePageModel3 = new NeverEatAlone.LocalProfilePageModel(3,
       lucyCoverImage, 'resources/images/profile2.jpeg', 'Lucy', 'lu2d3',
-      new Date(2022, 4, 2, 2, 30, 40), 'Matcha everything!', toronto,
+      new Date(2022, 4, 2, 2, 30, 40), 'Matcha everything!', 'Toronto, CA',
       lucyLanguageList, '', '', '', lucyFavoriteCuisines, [eventCardSummary5],
       []);
     this._profilePageModelMap.set(3, demoProfilePageModel3);
@@ -367,10 +367,13 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       emmaInstagramLink, emmaLocation, locationList, languageList, cuisineList);
     this._editProfilePageModelMap.set(1, demoEditProfilePageModel1);
     //emma settings model
-    const emmaSocialLinks = [new NeverEatAlone.SocialAccount(userEmma.id,
-      'emma@gmail.com', NeverEatAlone.SocialAccountType.GOOGLE),
-      new NeverEatAlone.SocialAccount(userEmma.id, 'emma@yahoo.com',
-      NeverEatAlone.SocialAccountType.FACEBOOK)];
+    const emmaAccessTokenGoogle = '';
+    const emmaAccessTokenFacebook = '';
+    const emmaSocialLinks = [
+      new NeverEatAlone.SocialAccount(NeverEatAlone.SocialAccountType.GOOGLE,
+        emmaAccessTokenGoogle, 'emma@gmail.com'),
+      new NeverEatAlone.SocialAccount(NeverEatAlone.SocialAccountType.FACEBOOK,
+        emmaAccessTokenFacebook, 'emma@yahoo.com')];
     const emmaPassword = '123';
     const emmaVisaCard3333 = new NeverEatAlone.PaymentCard(1, 4520888855553333,
       'Emma McM', 12, 2027, 123, 'm4y 0v0', NeverEatAlone.CreditCardType.VISA);

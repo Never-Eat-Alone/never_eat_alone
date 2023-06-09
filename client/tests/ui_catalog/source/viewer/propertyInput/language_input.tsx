@@ -21,7 +21,8 @@ export class LanguageInput extends React.Component<Properties> {
       if (!event.target.value.trim()) {
         return NeverEatAlone.Language.empty();
       }
-      return new NeverEatAlone.Language(Date.now(), event.target.value);
+      return new NeverEatAlone.Language(Date.now(),
+        event.target.value.slice(0,2), event.target.value);
     })();
     this.props.update(newValue);
   }

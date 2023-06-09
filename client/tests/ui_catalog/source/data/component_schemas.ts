@@ -1211,20 +1211,20 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('userName', '@120498509', TextInput),
     new PropertySchema('profileUserId', 1, NumberInput),
     new PropertySchema('coverImage', new NeverEatAlone.CoverImage(2,
-      'resources/profile_page/images/default_banner_2.jpg', 'Image'),
+      'resources/profile_page/images/default_banner_2.jpg'),
       CoverImageInput),
     new PropertySchema('coverImageList', [
         new NeverEatAlone.CoverImage(2,
-          'resources/profile_page/images/default_banner_2.jpg', 'Cover'),
+          'resources/profile_page/images/default_banner_2.jpg'),
         new NeverEatAlone.CoverImage(1,
-          'resources/profile_page/images/default_banner_1.jpg', 'Cover'),
+          'resources/profile_page/images/default_banner_1.jpg'),
         new NeverEatAlone.CoverImage(3,
-          'resources/profile_page/images/default_banner_3.jpg', 'Cover'),
+          'resources/profile_page/images/default_banner_3.jpg'),
         new NeverEatAlone.CoverImage(4,
-          'resources/profile_page/images/default_banner_4.jpg', 'Cover')
+          'resources/profile_page/images/default_banner_4.jpg')
       ],
       ArrayInput(new PropertySchema('coverImage', new NeverEatAlone.CoverImage(
-        2, 'resources/profile_page/images/default_banner_2.jpg', 'Cover'),
+        2, 'resources/profile_page/images/default_banner_2.jpg'),
         CoverImageInput))),
     new PropertySchema('profileImageSrc', 'resources/images/profileguy5.jpeg',
       TextInput),
@@ -1240,16 +1240,17 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('isLanguagePrivate', false, BooleanInput),
     new PropertySchema('languageValue', '', TextInput),
     new PropertySchema('suggestedLanguageList', [new NeverEatAlone.Language(1,
-      'English'), new NeverEatAlone.Language(2, 'Spanish'),
-      new NeverEatAlone.Language(3, 'Mandarin'), new NeverEatAlone.Language(4,
-      'Farsi'), new NeverEatAlone.Language(5, 'German'),
-      new NeverEatAlone.Language(6, 'Polish')], ArrayInput(
-      new PropertySchema('language', new NeverEatAlone.Language(1, 'English'),
-      LanguageInput))),
+      'en', 'English'), new NeverEatAlone.Language(2, 'es','Spanish'),
+      new NeverEatAlone.Language(3, 'zh', 'Mandarin'),
+      new NeverEatAlone.Language(4, 'fa', 'Farsi'),
+      new NeverEatAlone.Language(5, 'de', 'German'),
+      new NeverEatAlone.Language(6, 'pl', 'Polish')], ArrayInput(
+      new PropertySchema('language', new NeverEatAlone.Language(1, 'en',
+      'English'), LanguageInput))),
     new PropertySchema('selectedLanguageList', [new NeverEatAlone.Language(1,
-      'English')], ArrayInput(
-      new PropertySchema('language', new NeverEatAlone.Language(1, 'English'),
-      LanguageInput))),
+      'en', 'English')], ArrayInput(
+      new PropertySchema('language', new NeverEatAlone.Language(1, 'en',
+      'English'), LanguageInput))),
     new PropertySchema('biographyValue', '', TextInput),
     new PropertySchema('isBiographyPrivate', false, BooleanInput),
     new PropertySchema('cuisineValue', '', TextInput),
@@ -1532,13 +1533,13 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
       DisplayModeInput),
     new PropertySchema('linkedSocialAccounts', [
-      new NeverEatAlone.SocialAccount(1, 'lucy@gmail.com',
-        NeverEatAlone.SocialAccountType.GOOGLE),
-      new NeverEatAlone.SocialAccount(1, 'lucy@gmail.com',
-        NeverEatAlone.SocialAccountType.FACEBOOK)
+      new NeverEatAlone.SocialAccount(NeverEatAlone.SocialAccountType.GOOGLE,
+        'token', 'lucy@gmail.com'),
+      new NeverEatAlone.SocialAccount(NeverEatAlone.SocialAccountType.FACEBOOK,
+        'token', 'lucy@gmail.com')
     ], ArrayInput(
-      new PropertySchema('SocialAccount', new NeverEatAlone.SocialAccount(1,
-      'lucy@gmail.com', NeverEatAlone.SocialAccountType.GOOGLE),
+      new PropertySchema('SocialAccount', new NeverEatAlone.SocialAccount(
+        NeverEatAlone.SocialAccountType.GOOGLE, 'token', 'lucy@gmail.com'),
       SocialAccountInput))),
     new PropertySchema('displayName', 'Arthur', TextInput),
     new PropertySchema('profileId', 17826, NumberInput),
