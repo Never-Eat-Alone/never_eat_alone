@@ -37,16 +37,19 @@ export class HttpApplicationModel extends ApplicationModel {
     } else {
       account = User.makeGuest();
     }
-    let accountProfileImage: UserProfileImage;
-    if (account?.id !== -1) {
-      const imageResponse = await fetch(
-        `/api/user_profile_image/${account.id}`);
-      if (imageResponse.status === 200) {
-        const responseObject = await imageResponse.json();
-        accountProfileImage = UserProfileImage.fromJson(
-          responseObject.accountProfileImage);
+    const accountProfileImage = await (async () => {
+      if (account?.id !== -1) {
+        const imageResponse = await fetch(
+          `/api/user_profile_image/${account.id}`);
+        if (imageResponse.status === 200) {
+          const responseObject = await imageResponse.json();
+          return UserProfileImage.fromJson(
+            responseObject.accountProfileImage);
+        }
+        return UserProfileImage.default(account.id);
       }
-    }
+      return UserProfileImage.default(-1);
+    })();
     const googleClientIdResponse = await fetch('/api/google_client_id');
     const googleClientIdObject = await googleClientIdResponse.json();
     const googleClientId = googleClientIdObject.google_client_id;

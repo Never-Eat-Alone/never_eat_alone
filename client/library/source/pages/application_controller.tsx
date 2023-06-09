@@ -247,24 +247,27 @@ export class ApplicationController extends React.Component<Properties, State> {
 
   public async updateAccount(newUser: User): Promise<void> {
     try {
-      let accountProfileImage: UserProfileImage;
-      if (newUser?.id !== -1) {
-        const imageResponse = await fetch(
-          `/api/user_profile_image/${newUser.id}`);
-        if (imageResponse.status === 200) {
-          const responseObject = await imageResponse.json();
-          accountProfileImage = UserProfileImage.fromJson(
-            responseObject.accountProfileImage);
+      const accountProfileImage = await (async () => {
+        if (newUser?.id !== -1) {
+          const imageResponse = await fetch(
+            `/api/user_profile_image/${newUser.id}`);
+          if (imageResponse.status === 200) {
+            const responseObject = await imageResponse.json();
+            return UserProfileImage.fromJson(
+              responseObject.accountProfileImage);
+          }
+          return UserProfileImage.default(newUser.id);
         }
-      }
+        return UserProfileImage.default(-1);
+      })();
       const homePageModel = new HttpHomePageModel(newUser);
       const inviteAFoodieModel = new HttpInviteAFoodieModel(newUser);
       await this.props.model.setAccount(newUser, accountProfileImage,
         homePageModel, inviteAFoodieModel);
-        this.setState({
-          account: newUser,
-          accountProfileImage: accountProfileImage
-        });
+      this.setState({
+        account: newUser,
+        accountProfileImage: accountProfileImage
+      });
     } catch {
       this.setState({ hasError: true });
     }
