@@ -311,11 +311,11 @@ export class ApplicationController extends React.Component<Properties, State> {
     this.setState({ isPartnerWithUsButtonClicked: false });
   }
 
-  private handleLogInSuccess = (account: User) => {
+  private handleLogInSuccess = async (account: User) => {
     if (this.state.isLogInButtonClicked) {
       this.handleLogInModalClose();
     }
-    this.updateAccount(account);
+    await this.updateAccount(account);
   }
 
   private handleSignUpSuccess = (account: User, accountProfileImage:

@@ -1,15 +1,21 @@
-import { EventCardSummary, EventTag, SocialMediaImage, User
-} from '../../definitions';
+import { EventCardSummary, EventTag, SocialMediaImage, User } from
+  '../../definitions';
+import { EmptyHomePageModel } from './empty_home_page_model';
 import { HomePageModel } from './home_page_model';
 import { LocalHomePageModel } from './local_home_page_model';
 
 export class HttpHomePageModel extends HomePageModel {
   constructor(account: User) {
     super();
+    this._isLoaded = false;
     this._account = account;
+    this._model = new EmptyHomePageModel();
   }
 
   public async load(): Promise<void> {
+    if(this._isLoaded) {
+      return;
+    }
     const imageList: SocialMediaImage[] = [];
     const imageListResponse = await fetch('/api/home_page/social_media_images');
     if (imageListResponse.status === 200) {
@@ -51,6 +57,7 @@ export class HttpHomePageModel extends HomePageModel {
     this._model = new LocalHomePageModel(imageList, eventList, userEventTagList,
       userFutureEventCardSummaryList, totalEventsAttendedThisMonth);
     await this._model.load();
+    this._isLoaded = true;
   }
 
   public get imageList(): SocialMediaImage[] {
@@ -73,6 +80,7 @@ export class HttpHomePageModel extends HomePageModel {
     return this._model.userTotalEventsThisMonth;
   }
 
+  private _isLoaded: boolean;
   private _account: User;
   private _model: HomePageModel;
 }
