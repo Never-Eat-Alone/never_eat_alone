@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS user_profile_social_accounts (
   user_id    INTEGER                   NOT NULL,
   platform   social_account_type_enum  NOT NULL,
   link       VARCHAR(255)              NOT NULL,
-  is_public  BOOLEAN                   DEFAULT TRUE,
+  is_private BOOLEAN                   DEFAULT TRUE,
   FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
@@ -11,13 +11,15 @@ INSERT INTO user_profile_social_accounts (
   user_id,
   platform,
   link,
-  is_public
+  is_private
 ) VALUES
   (1, 'FACEBOOK', 'https://www.facebook.com/google', true),
   (2, 'INSTAGRAM', 'https://www.instagram.com/google', false),
   (3, 'INSTAGRAM', 'https://www.instagram.com/apple', true),
   (4, 'TWITTER', 'https://twitter.com/microsoft', true),
   (5, 'FACEBOOK', 'https://www.facebook.com/amazon', true),
+  (5, 'INSTAGRAM', 'https://www.instagram.com/amazon', true),
+  (5, 'TWITTER', 'https://www.twitter.com/amazon', true),
   (6, 'INSTAGRAM', 'https://instagram.com/+Amazon', false),
   (7, 'INSTAGRAM', 'https://www.instagram.com/microsoft', false),
   (8, 'TWITTER', 'https://twitter.com/apple', true),

@@ -778,6 +778,7 @@ export class UserRoutes {
       isInstagramPrivate: isInstagramPrivate,
       userProfileSocialAccount: arrayToJson(userProfileSocialAccount)
     };
+    
   }
 
   private userDatabase: UserDatabase;

@@ -25,8 +25,12 @@ export abstract class EditProfilePageModel {
   public abstract get selectedLanguageList(): Language[];
   public abstract get selectedCuisineList(): Cuisine[];
   public abstract get isCuisinePrivate(): boolean;
-  public abstract get userProfileSocialAccountList():
-    UserProfileSocialAccount[];
+  public abstract get isFacebookPrivate(): boolean;
+  public abstract get isTwitterPrivate(): boolean;
+  public abstract get isInstagramPrivate(): boolean;
+  public abstract get facebookLink(): string;
+  public abstract get twitterLink(): string;
+  public abstract get instagramLink(): string;
   public abstract uploadProfileImage(newImage: UserProfileImage): Promise<
     UserProfileImage>;
   public abstract saveCoverImage(newImage: CoverImage): Promise<CoverImage>;
@@ -35,7 +39,8 @@ export abstract class EditProfilePageModel {
     isLocationPrivate: boolean, isLanguagePrivate: boolean,
     biographyValue: string, isBiographyPrivate: boolean,
     selectedLanguageList: Language[], selectedCuisineList: Cuisine[],
-    isCuisinePrivate: boolean, userProfileSocialAccountList:
-    UserProfileSocialAccount[]): Promise<
+    isCuisinePrivate: boolean, isFacebookPrivate: boolean,
+    isTwitterPrivate: boolean, isInstagramPrivate: boolean,
+    facebookLink: string, twitterLink: string, instagramLink: string): Promise<
     boolean>;
 }

@@ -1,5 +1,5 @@
-import { arrayFromJson, arrayToJson, CoverImage, Cuisine,
-  Language, UserProfileImage, UserProfileSocialAccount
+import { arrayFromJson, arrayToJson, CoverImage, Cuisine, Language,
+  SocialAccountType, UserProfileImage, UserProfileSocialAccount
 } from '../../definitions';
 import { EditProfilePageModel } from './edit_profile_page_model';
 import { LocalEditProfilePageModel } from './local_edit_profile_page_model';
@@ -39,15 +39,28 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
     const selectedCuisineList: Cuisine[] = arrayFromJson(Cuisine,
       responseObject.selectedCuisineList);
     const isCuisinePrivate = responseObject.isCuisinePrivate;
-    const userProfileSocialAccountList: UserProfileSocialAccount[] =
+    const socialAccounts: UserProfileSocialAccount[] =
       arrayFromJson(UserProfileSocialAccount,
         responseObject.userProfileSocialAccountList);
+    const isFacebookPrivate = socialAccounts.find((account) =>
+      account.platform === SocialAccountType.FACEBOOK)?.isPrivate;
+    const facebookLink = socialAccounts.find((account) => account.platform ===
+      SocialAccountType.FACEBOOK)?.link;
+    const isTwitterPrivate = socialAccounts.find((account) =>
+      account.platform === SocialAccountType.TWITTER)?.isPrivate;
+    const twitterLink = socialAccounts.find((account) => account.platform ===
+      SocialAccountType.TWITTER)?.link;
+    const isInstagramPrivate = socialAccounts.find((account) =>
+      account.platform === SocialAccountType.INSTAGRAM)?.isPrivate;
+    const instagramLink = socialAccounts.find((account) => account.platform ===
+      SocialAccountType.INSTAGRAM)?.link;
     this._model = new LocalEditProfilePageModel(locationList, languageList,
       cuisineList, coverImage, coverImageList, profileImage, displayName,
       userName, selectedLocation, this._profileId, isUpcomingEventsPrivate,
       isPastEventsPrivate, isLocationPrivate, isLanguagePrivate, biographyValue,
       isBiographyPrivate, selectedLanguageList, selectedCuisineList,
-      isCuisinePrivate, userProfileSocialAccountList);
+      isCuisinePrivate, isFacebookPrivate, isTwitterPrivate, isInstagramPrivate,
+      facebookLink, twitterLink, instagramLink);
     await this._model.load();
   }
 
@@ -160,8 +173,28 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
     return this._model.isCuisinePrivate;
   }
 
-  public get userProfileSocialAccountList(): UserProfileSocialAccount[] {
-    return this._model.userProfileSocialAccountList;
+  public get isFacebookPrivate(): boolean {
+    return this._model.isFacebookPrivate;
+  }
+
+  public get isTwitterPrivate(): boolean {
+    return this._model.isTwitterPrivate;
+  }
+
+  public get isInstagramPrivate(): boolean {
+    return this._model.isInstagramPrivate;
+  }
+
+  public get facebookLink(): string {
+    return this._model.facebookLink;
+  }
+
+  public get twitterLink(): string {
+    return this._model.twitterLink;
+  }
+
+  public get instagramLink(): string {
+    return this._model.instagramLink;
   }
 
   public async uploadProfileImage(newImage: UserProfileImage): Promise<
@@ -204,8 +237,10 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
       isLocationPrivate: boolean, isLanguagePrivate: boolean,
       biographyValue: string, isBiographyPrivate: boolean,
       selectedLanguageList: Language[], selectedCuisineList: Cuisine[],
-      isCuisinePrivate: boolean, userProfileSocialAccountList:
-      UserProfileSocialAccount[]): Promise<boolean> {
+      isCuisinePrivate: boolean, isFacebookPrivate: boolean,
+      isTwitterPrivate: boolean, isInstagramPrivate: boolean,
+      facebookLink: string, twitterLink: string, instagramLink: string
+      ): Promise<boolean> {
     const response = await fetch(`/api/edit_profile_page/${this._profileId}`, {
       method: 'PUT',
       headers: {
@@ -223,8 +258,12 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
         'selectedLanguageList': arrayToJson(selectedLanguageList),
         'selectedCuisineList': arrayToJson(selectedCuisineList),
         'isCuisinePrivate': isCuisinePrivate,
-        'userProfileSocialAccountList': arrayToJson(
-          userProfileSocialAccountList)
+        'isFacebookPrivate': isFacebookPrivate,
+        'isTwitterPrivate': isTwitterPrivate,
+        'isInstagramPrivate': isInstagramPrivate,
+        'facebookLink': facebookLink,
+        'twitterLink': twitterLink,
+        'instagramLink': instagramLink
       })
     });
     if (!response.ok) {

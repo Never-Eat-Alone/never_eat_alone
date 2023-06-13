@@ -6,14 +6,14 @@ export class UserProfileSocialAccount {
     return new UserProfileSocialAccount(
       value.platform as SocialAccountType,
       value.link,
-      value.isPublic
+      value.isPrivate
     );
   }
 
-  constructor(platform: SocialAccountType, link: string, isPublic: boolean) {
+  constructor(platform: SocialAccountType, link: string, isPrivate: boolean) {
     this._platform = platform;
     this._link = link;
-    this._isPublic = isPublic;
+    this._isPrivate = isPrivate;
   }
 
   public get platform(): SocialAccountType {
@@ -24,8 +24,8 @@ export class UserProfileSocialAccount {
     return this._link;
   }
 
-  public get isPublic(): boolean {
-    return this._isPublic;
+  public get isPrivate(): boolean {
+    return this._isPrivate;
   }
 
   /** Converts the UserProfileSocialAccount object to json. */
@@ -33,11 +33,11 @@ export class UserProfileSocialAccount {
     return {
       platform: this._platform.toString(),
       link: this._link,
-      isPublic: this._isPublic
+      isPrivate: this._isPrivate
     }
   }
 
   private _platform: SocialAccountType;
   private _link: string;
-  private _isPublic: boolean;
+  private _isPrivate: boolean;
 }
