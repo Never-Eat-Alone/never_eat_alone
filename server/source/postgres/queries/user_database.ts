@@ -408,7 +408,7 @@ export class UserDatabase {
       result.rows.map((row) => {
         const account = new UserProfileSocialAccount(
           SocialAccountType[row.platform as keyof typeof SocialAccountType],
-          row.link);
+          row.link, row.is_public);
         // ... set other properties specific to user profile social accounts
         return account;
     });

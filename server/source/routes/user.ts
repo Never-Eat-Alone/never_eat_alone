@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as Hash from 'hash.js';
 import { arrayToJson, CoverImage, Cuisine, EventCardSummary, InviteEmail,
-  Language, SocialAccount, User, UserInvitationCode, UserProfileImage,
+  Language, User, UserInvitationCode, UserProfileImage,
   UserProfileSocialAccount, UserStatus
 } from '../../../client/library/source/definitions';
 import { UserCoverImageDatabase } from
@@ -776,10 +776,8 @@ export class UserRoutes {
       isFacebookPrivate: isFacebookPrivate,
       isTwitterPrivate: isTwitterPrivate,
       isInstagramPrivate: isInstagramPrivate,
-      userProfileSocialAccount: arrayToJson(userProfileSocialAccount),
-
+      userProfileSocialAccount: arrayToJson(userProfileSocialAccount)
     };
-
   }
 
   private userDatabase: UserDatabase;
