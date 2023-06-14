@@ -725,34 +725,57 @@ export class UserRoutes {
       response.status(500).json(jsonResponse);
       return;
     }
+    try {
+      favoriteCuisineList =
+        await this.userDatabase.loadUserSelectedCuisinesByUserId(profileId);
+    } catch (error) {
+      console.error('Failed at loadUserSelectedCuisinesByUserId', error);
+      response.status(500).json(jsonResponse);
+      return;
+    }
+    try {
+      upcomingEventList =
+        await this.attendeeDatabase.loadUserUpcomingEventsByUserId(profileId);
+    } catch (error) {
+      console.error('Failed at loadUserUpcomingEventsByUserId', error);
+      response.status(500).json(jsonResponse);
+      return;
+    }
+    try {
+      pastEventList =
+        await this.attendeeDatabase.loadUserPastEventsByUserId(profileId);
+    } catch (error) {
+      console.error('Failed at loadUserPastEventsByUserId', error);
+      response.status(500).json(jsonResponse);
+      return;
+    }
+    console.log(jsonResponse);
     response.status(200).json(jsonResponse);
   }
 
   private getEditProfilePage = async (request, response) => {
     const profileId = parseInt(request.params.profileId);
-    const locationList: string[] = [];
-    const languageList: Language[] = [];
-    const cuisineList: Cuisine[] = [];
+    let languageList: Language[] = [];
+    let cuisineList: Cuisine[] = [];
     let coverImage = CoverImage.NoImage();
     let profileImage = UserProfileImage.default();
     let displayName = '';
     let userName = '';
     let selectedLocation = '';
-    const isUpcomingEventsPrivate = true;
-    const isPastEventsPrivate = true;
-    const isLocationPrivate = true;
-    const isLanguagePrivate = true;
-    const biographyValue = '';
-    const isBiographyPrivate = true;
-    const selectedLanguageList: Language[] = [];
-    const selectedCuisineList: Cuisine[] = [];
-    const isCuisinePrivate = true;
-    const isFacebookPrivate = true;
-    const isTwitterPrivate = true;
-    const isInstagramPrivate = true;
-    const userProfileSocialAccount: UserProfileSocialAccount[] = [];
+    let isUpcomingEventsPrivate = true;
+    let isPastEventsPrivate = true;
+    let isLocationPrivate = true;
+    let isLanguagePrivate = true;
+    let biographyValue = '';
+    let isBiographyPrivate = true;
+    let selectedLanguageList: Language[] = [];
+    let selectedCuisineList: Cuisine[] = [];
+    let isCuisinePrivate = true;
+    let isFacebookPrivate = true;
+    let isTwitterPrivate = true;
+    let isInstagramPrivate = true;
+    let userProfileSocialAccount: UserProfileSocialAccount[] = [];
     const jsonResponse = {
-      locationList: locationList,
       languageList: arrayToJson(languageList),
       cuisineList: arrayToJson(cuisineList),
       coverImage: coverImage.toJson(),
@@ -804,6 +827,30 @@ export class UserRoutes {
       response.status(500).json(jsonResponse);
       return;
     }
+    try {
+      biographyValue = await this.userDatabase.loadBiographyByUserId(profileId);
+    } catch (error) {
+      console.error('Failed at loadBiographyByUserId', error);
+      response.status(500).json(jsonResponse);
+      return;
+    }
+    try {
+      selectedLocation = await this.userDatabase.loadAddressByUserId(profileId);
+    } catch (error) {
+      console.error('Failed at loadAddressByUserId', error);
+      response.status(500).json(jsonResponse);
+      return;
+    }
+    try {
+      languageList = await this.userDatabase.loadUserLanguagesByUserId(
+        profileId);
+    } catch (error) {
+      console.error('Failed at loadUserLanguagesByUserId', error);
+      response.status(500).json(jsonResponse);
+      return;
+    }
+    console.log(jsonResponse);
+    response.status(200).json(jsonResponse);
   }
 
   private userDatabase: UserDatabase;

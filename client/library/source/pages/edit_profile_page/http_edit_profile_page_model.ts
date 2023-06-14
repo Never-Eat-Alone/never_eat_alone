@@ -16,7 +16,7 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
       return;
     }
     const responseObject = await response.json();
-    const locationList: string[] = [...responseObject.locationList];
+    const locationList: string[] = [];
     const languageList: Language[] = arrayFromJson(Language,
       responseObject.languageList);
     const cuisineList: Cuisine[] = arrayFromJson(Cuisine,
