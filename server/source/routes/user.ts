@@ -733,15 +733,11 @@ export class UserRoutes {
     const locationList: string[] = [];
     const languageList: Language[] = [];
     const cuisineList: Cuisine[] = [];
-    const coverImage = (() => {
-      return CoverImage.NoImage();
-    })();
-    const profileImage = (() => {
-      return UserProfileImage.default();
-    })();
-    const displayName = '';
-    const userName = '';
-    const selectedLocation = '';
+    let coverImage = CoverImage.NoImage();
+    let profileImage = UserProfileImage.default();
+    let displayName = '';
+    let userName = '';
+    let selectedLocation = '';
     const isUpcomingEventsPrivate = true;
     const isPastEventsPrivate = true;
     const isLocationPrivate = true;
@@ -778,7 +774,36 @@ export class UserRoutes {
       isInstagramPrivate: isInstagramPrivate,
       userProfileSocialAccount: arrayToJson(userProfileSocialAccount)
     };
-    
+    try {
+      const profileUser = await this.userDatabase.loadUserById(profileId);
+      if (profileUser?.id === -1) {
+        // User doesn't exist
+        response.status(400).json(jsonResponse);
+        return;
+      }
+      displayName = profileUser.name;
+      userName = profileUser.userName;
+    } catch (error) {
+      console.error('Failed at loadUserById', error);
+      response.status(500).json(jsonResponse);
+      return;
+    }
+    try {
+      coverImage = await this.userCoverImageDatabase.loadCoverImageByUserId(
+        profileId);
+    } catch (error) {
+      console.error('Failed at loadUserById', error);
+      response.status(500).json(jsonResponse);
+      return;
+    }
+    try {
+      profileImage =
+        await this.userProfileImageDatabase.loadProfileImageByUserId(profileId);
+    } catch (error) {
+      console.error('Failed at loadProfileImageByUserId', error);
+      response.status(500).json(jsonResponse);
+      return;
+    }
   }
 
   private userDatabase: UserDatabase;
