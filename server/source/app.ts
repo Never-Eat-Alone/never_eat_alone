@@ -174,7 +174,8 @@ function runExpress(pool: Pool, config: any) {
         'attendees',
         'user_profile_social_accounts',
         'languages',
-        'user_languages'
+        'user_languages',
+        'user_favourite_cuisines'
       ]);
       app.listen(config.port, async () => {});
     } catch (error) {

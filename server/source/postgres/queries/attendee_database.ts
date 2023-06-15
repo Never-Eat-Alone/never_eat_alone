@@ -1,5 +1,5 @@
 import { Pool } from 'pg';
-import { EventTag } from '../../../../client/library/source/definitions';
+import { EventCardSummary, EventTag } from '../../../../client/library/source/definitions';
 
 /** Attendee related database manipulations class. */
 export class AttendeeDatabase {
@@ -11,9 +11,6 @@ export class AttendeeDatabase {
   /** Returns all the user's attended event tags in the current month. */
   public loadHomePageEventTagList = async (userId: number): Promise<
       EventTag[]> => {
-    if (userId === -1) {
-      return [];
-    }
     const result = await this.pool.query(
       "SELECT att.event_id, de.color_code, de.title FROM attendees AS att \
       JOIN dining_events AS de ON att.event_id = de.id WHERE att.user_id = $1 \
@@ -30,6 +27,30 @@ export class AttendeeDatabase {
       eventTagList.push(eventTag);
     }
     return eventTagList;
+  }
+
+  public loadUserUpcomingEventsByUserId = async (userId: number): Promise<
+      EventCardSummary[]> => {
+    const result = await this.pool.query(``, [userId]);
+    if (result.rows?.length === 0) {
+      return [];
+    }
+    const futureEventCards: EventCardSummary[] = result.rows.map((row) => {
+      const eventCard = new EventCardSummary(parseInt(row.event_id));
+    });
+    return futureEventCards;
+  }
+
+  public loadUserPastEventsByUserId = async (userId: number): Promise<
+      EventCardSummary[]> => {
+    const result = await this.pool.query(``, [userId]);
+    if (result.rows?.length === 0) {
+      return [];
+    }
+    const pastEventCards: EventCardSummary[] = result.rows.map((row) => {
+      const eventCard = new EventCardSummary(parseInt(row.event_id));
+    });
+    return pastEventCards;
   }
 
   /** The postgress pool connection. */

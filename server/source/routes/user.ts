@@ -7,7 +7,8 @@ import { arrayToJson, CoverImage, Cuisine, EventCardSummary, InviteEmail,
 import { UserCoverImageDatabase } from
 '../postgres/queries/user_cover_image_database';
 import { UserDatabase } from '../postgres/queries/user_database';
-import { UserProfileImageDatabase } from '../postgres/queries';
+import { AttendeeDatabase, UserProfileImageDatabase
+} from '../postgres/queries';
 
 /** User Routes class. */
 export class UserRoutes {
@@ -17,8 +18,8 @@ export class UserRoutes {
    * @param userProfileImageDatabase
    * @param sgmail - SendGrid api.
    */
-  constructor(app: any, userDatabase: UserDatabase,
-      userProfileImageDatabase: UserProfileImageDatabase,
+  constructor(app: any, userDatabase: UserDatabase, attendeeDatabase:
+      AttendeeDatabase, userProfileImageDatabase: UserProfileImageDatabase,
       userCoverImageDatabase: UserCoverImageDatabase, sgmail: any) {
     /** Route to get the current logged in user. */
     app.get('/api/current_user', this.getCurrentUser);
@@ -50,6 +51,7 @@ export class UserRoutes {
     app.get('/api/edit_profile_page/:profileId', this.getEditProfilePage);
 
     this.userDatabase = userDatabase;
+    this.attendeeDatabase = attendeeDatabase;
     this.userProfileImageDatabase = userProfileImageDatabase;
     this.userCoverImageDatabase = userCoverImageDatabase;
     this.sgmail = sgmail;
@@ -854,6 +856,7 @@ export class UserRoutes {
   }
 
   private userDatabase: UserDatabase;
+  private attendeeDatabase: AttendeeDatabase;
   private userProfileImageDatabase: UserProfileImageDatabase;
   private userCoverImageDatabase: UserCoverImageDatabase;
 
