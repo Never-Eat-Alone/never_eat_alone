@@ -36,4 +36,5 @@ INSERT INTO user_profile_images (
 (18, '/resources/avatars/profile-image-6.svg'),
 (19, '/resources/avatars/profile-image-7.svg'),
 (20, '/resources/avatars/profile-image-8.svg'),
-(21, '/resources/images/profileguy8.jpeg');
+(21, '/resources/images/profileguy8.jpeg'
+);

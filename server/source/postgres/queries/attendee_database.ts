@@ -1,5 +1,6 @@
 import { Pool } from 'pg';
-import { EventCardSummary, EventTag } from '../../../../client/library/source/definitions';
+import { EventCardSummary, EventTag, PriceRange
+} from '../../../../client/library/source/definitions';
 
 /** Attendee related database manipulations class. */
 export class AttendeeDatabase {
@@ -31,12 +32,26 @@ export class AttendeeDatabase {
 
   public loadUserUpcomingEventsByUserId = async (userId: number): Promise<
       EventCardSummary[]> => {
-    const result = await this.pool.query(``, [userId]);
+    const result = await this.pool.query(`
+      SELECT re.id AS re_id, de.id AS de_id, de.title AS de_title, \
+      de.start_at, de.end_at, de.cover_image_src, re.name AS re_name, \
+      re.price_range AS re_price_range, de.total_capacity, de.color_code AS \
+      de_color_code FROM dining_events AS de JOIN restaurants AS re ON \
+      de.restaurant_id = re.id ORDER BY start_at ASC JOIN attendees AS att ON  
+    `, [userId]);
     if (result.rows?.length === 0) {
       return [];
     }
+    const cuisines = (() => {
+      return [];
+    })();
     const futureEventCards: EventCardSummary[] = result.rows.map((row) => {
-      const eventCard = new EventCardSummary(parseInt(row.event_id));
+      const eventCard = new EventCardSummary(parseInt(row.de_id), row.de_title,
+        new Date(Date.parse(row.start_at)), new Date(Date.parse(row.end_at)),
+        row.re_name, PriceRange[row.re_price_range as keyof typeof PriceRange],
+        cuisines, row.cover_image_src, numberOfAttendees, numberOfSeats, true,
+        row.de_color_code);
+      return eventCard;
     });
     return futureEventCards;
   }
@@ -47,8 +62,16 @@ export class AttendeeDatabase {
     if (result.rows?.length === 0) {
       return [];
     }
+    const cuisines = (() => {
+      return [];
+    })();
     const pastEventCards: EventCardSummary[] = result.rows.map((row) => {
-      const eventCard = new EventCardSummary(parseInt(row.event_id));
+      const eventCard = new EventCardSummary(parseInt(row.de_id), row.de_title,
+        new Date(Date.parse(row.start_at)), new Date(Date.parse(row.end_at)),
+        row.re_name, PriceRange[row.re_price_range as keyof typeof PriceRange],
+        cuisines, row.cover_image_src, numberOfAttendees, numberOfSeats, true,
+        row.de_color_code);
+      return eventCard;
     });
     return pastEventCards;
   }

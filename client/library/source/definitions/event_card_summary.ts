@@ -28,10 +28,9 @@ export class EventCardSummary {
   }
 
   constructor(eventId: number, eventTitle: string, eventStartTime: Date,
-      eventEndTime: Date, restaurantName: string,
-      restaurantPriceRange: PriceRange, cuisines: Cuisine[], imageSrc: string,
-      numberOfAttendees: number, numberOfSeats: number, isAttending: boolean,
-      eventColor: string) {
+      eventEndTime: Date, restaurantName: string, restaurantPriceRange:
+      PriceRange, cuisines: Cuisine[], imageSrc: string, numberOfAttendees:
+      number, numberOfSeats: number, isAttending: boolean, eventColor: string) {
     this._eventId = eventId;
     this._eventTitle = eventTitle;
     this._eventStartTime = eventStartTime;
@@ -119,7 +118,6 @@ export class EventCardSummary {
       imageSrc: this._imageSrc,
       numberOfAttendees: this._numberOfAttendees,
       numberOfSeats: this._numberOfSeats,
-      isFollowing: this._isFollowing,
       isAttending: this._isAttending,
       eventColor: this._eventColor
     };
@@ -135,7 +133,6 @@ export class EventCardSummary {
   private _imageSrc: string;
   private _numberOfAttendees: number;
   private _numberOfSeats: number;
-  private _isFollowing: boolean;
   private _isAttending: boolean;
   private _eventColor: string;
 }
