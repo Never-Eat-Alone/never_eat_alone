@@ -45,12 +45,13 @@ export class AttendeeDatabase {
     const cuisines = (() => {
       return [];
     })();
+    const numberOfAttendees = 0;
     const futureEventCards: EventCardSummary[] = result.rows.map((row) => {
       const eventCard = new EventCardSummary(parseInt(row.de_id), row.de_title,
         new Date(Date.parse(row.start_at)), new Date(Date.parse(row.end_at)),
         row.re_name, PriceRange[row.re_price_range as keyof typeof PriceRange],
-        cuisines, row.cover_image_src, numberOfAttendees, numberOfSeats, true,
-        row.de_color_code);
+        cuisines, row.cover_image_src, numberOfAttendees,
+        parseInt(row.total_capacity), true, row.de_color_code);
       return eventCard;
     });
     return futureEventCards;
