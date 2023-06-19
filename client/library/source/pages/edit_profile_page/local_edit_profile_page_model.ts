@@ -1,5 +1,5 @@
-import { CoverImage, Cuisine, Language, UserProfileImage,
-  UserProfileSocialAccount } from '../../definitions';
+import { CoverImage, Cuisine, Language, UserProfileImage
+} from '../../definitions';
 import { EditProfilePageModel } from './edit_profile_page_model';
 
 export class LocalEditProfilePageModel extends EditProfilePageModel {

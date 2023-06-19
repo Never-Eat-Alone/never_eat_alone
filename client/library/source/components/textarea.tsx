@@ -11,7 +11,7 @@ interface Properties extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
 
 export class Textarea extends React.Component<Properties> {
   public render(): JSX.Element {
-    const { hasError, value, ...textareaProps } = this.props;
+    const { hasError, value, onValueChange, ...textareaProps } = this.props;
     return (
       <div
           style={{...CONTAINER_STYLE, ...this.props.style}}
@@ -22,10 +22,9 @@ export class Textarea extends React.Component<Properties> {
         <textarea
           {...textareaProps}
           style={TEXTAREA_STYLE}
+          value={value}
           onChange={this.handleOnChange}
-        >
-          {value}
-        </textarea>
+        />
       </div>);
   }
  
@@ -40,7 +39,8 @@ interface WithCounterProps extends Properties {
 
 export class TextareaWithCounter extends React.Component<WithCounterProps> {
   public render(): JSX.Element {
-    const { hasError, value, maxCount, ...textareaProps } = this.props;
+    const { hasError, value, onValueChange, maxCount, ...textareaProps
+      } = this.props;
     return (
       <div
           style={{...CONTAINER_STYLE, ...this.props.style}}
@@ -51,10 +51,9 @@ export class TextareaWithCounter extends React.Component<WithCounterProps> {
         <textarea
           {...textareaProps}
           style={TEXTAREA_STYLE}
+          value={value}
           onChange={this.handleOnChange}
-        >
-          {value}
-        </textarea>
+        />
         <div style={COUNTER_STYLE} >
           <CircularCounterWithCounterInside
             value={value.length}

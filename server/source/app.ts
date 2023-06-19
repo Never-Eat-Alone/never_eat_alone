@@ -130,8 +130,9 @@ function runExpress(pool: Pool, config: any) {
   const userProfileImageRoutes = new UserProfileImageRoutes(app,
     userProfileImageDatabase);
   const userCoverImageDatabase = new UserCoverImageDatabase(pool);
-  const userRoutes = new UserRoutes(app, userDatabase, userProfileImageDatabase,
-    userCoverImageDatabase, SGMail);
+  const attendeeDatabase = new AttendeeDatabase(pool);
+  const userRoutes = new UserRoutes(app, userDatabase, attendeeDatabase,
+    userProfileImageDatabase, userCoverImageDatabase, SGMail);
   const locationDatabase = new LocationDatabase(pool);
   const socialMediaImageDatabase = new SocialMediaImageDatabase(pool);
   const socialMediaImageRoutes = new SocialMediaImageRoutes(app,
@@ -145,7 +146,6 @@ function runExpress(pool: Pool, config: any) {
     deleteAccountSurveyDatabase, userDatabase, SGMail);
   const diningEventDatabase = new DiningEventDatabase(pool);
   const diningEventRoutes = new DiningEventRoutes(app, diningEventDatabase);
-  const attendeeDatabase = new AttendeeDatabase(pool);
   const attendeeRoutes = new AttendeeRoutes(app, attendeeDatabase);
   app.get('*', (request, response, next) => {
     response.sendFile(path.join(process.cwd(), 'public', 'index.html'));

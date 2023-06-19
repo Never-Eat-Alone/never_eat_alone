@@ -1,5 +1,5 @@
-import { CoverImage, Cuisine, Language, UserProfileImage,
-  UserProfileSocialAccount } from '../../definitions';
+import { CoverImage, Cuisine, Language, UserProfileImage
+} from '../../definitions';
 
 export abstract class EditProfilePageModel {
   public abstract load(): Promise<void>;

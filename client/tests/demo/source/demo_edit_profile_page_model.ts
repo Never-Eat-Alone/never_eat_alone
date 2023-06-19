@@ -12,9 +12,9 @@ export class DemoEditProfilePageModel extends
       selectedCuisineList: NeverEatAlone.Cuisine[], isCuisinePrivate: boolean,
       isFacebookPrivate: boolean, isTwitterPrivate: boolean,
       isInstagramPrivate: boolean, facebookLink: string, twitterLink: string,
-      instagramLink: string, selectedLocation: NeverEatAlone.CityProvince,
-      locationList: NeverEatAlone.CityProvince[], languageList:
-      NeverEatAlone.Language[], cuisineList: NeverEatAlone.Cuisine[]) {
+      instagramLink: string, selectedLocation: string, locationList: string[],
+      languageList: NeverEatAlone.Language[], cuisineList:
+      NeverEatAlone.Cuisine[]) {
     super();
     this._coverImage = coverImage;
     this._coverImageList = coverImageList;
@@ -47,7 +47,7 @@ export class DemoEditProfilePageModel extends
     return;
   }
 
-  public get locationList(): NeverEatAlone.CityProvince[] {
+  public get locationList(): string[] {
     return this._locationList;
   }
 
@@ -79,7 +79,7 @@ export class DemoEditProfilePageModel extends
     return this._userName;
   }
 
-  public get selectedLocation(): NeverEatAlone.CityProvince {
+  public get selectedLocation(): string {
     return this._selectedLocation;
   }
 
@@ -99,17 +99,10 @@ export class DemoEditProfilePageModel extends
     return this._isLocationPrivate;
   }
 
-  public async getSuggestedLocationList(value: string): Promise<
-      NeverEatAlone.CityProvince[]> {
-    const temp: NeverEatAlone.CityProvince[] = [];
+  public async getSuggestedLocationList(value: string): Promise<string[]> {
     const searchValue = value.toLowerCase();
-    for (const location of this._locationList) {
-      if (location.city.toLowerCase().indexOf(searchValue) !== -1 ||
-          location.province.toLowerCase().indexOf(searchValue) !== -1) {
-        temp.push(location);
-      }
-    }
-    return temp;
+    return this._locationList.filter(location =>
+      location.toLowerCase().includes(searchValue));
   }
 
   public get isLanguagePrivate(): boolean {
@@ -235,8 +228,8 @@ export class DemoEditProfilePageModel extends
   private _facebookLink: string;
   private _twitterLink: string;
   private _instagramLink: string;
-  private _selectedLocation: NeverEatAlone.CityProvince;
-  private _locationList: NeverEatAlone.CityProvince[];
+  private _selectedLocation: string;
+  private _locationList: string[];
   private _languageList: NeverEatAlone.Language[];
   private _cuisineList: NeverEatAlone.Cuisine[];
 }

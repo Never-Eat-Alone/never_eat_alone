@@ -324,7 +324,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const emmaCoverImage = coverImage2;
     const emmaBio = 'Hello everyone! My name is Emma and I would love to meet you all and try new foods.';
     const emmaInstagramLink = 'www.instagram.com/@emma12';
-    const emmaLocation = barrie;
+    const emmaLocation = 'Barrie';
     const demoProfilePageModel1 = new NeverEatAlone.LocalProfilePageModel(1,
       emmaCoverImage, emmaProfileImage.src, userEmma.name,
       userEmma.userName, userEmma.createdAt, emmaBio, 'Toronto, ON',
@@ -351,8 +351,8 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     // Setting up the _editProfilePageModel map.
     this._editProfilePageModelMap = new Map();
     // EditProfilePageModel for user1
-    const locationList = [toronto, barrie, burlington, hamilton, vancouver,
-      montreal, vaughan];
+    const locationList = ['Toronto', 'Barrie', 'Burlington', 'Hamilton',
+      'Vancouver', 'Montreal', 'Vaughan'];
     const languageList = [englishLanguage, mandarinLanguage, spanishLanguage,
       frenchLanguage, farsiLanguage, germanLanguage];
     const cuisineList = [frenchCuisine, chineseCuisine, bbqCuisine,
@@ -436,6 +436,18 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     this._emailConfirmationPageModelMap.set(
       'e2a25428e17ec7b6e61e6ab514f64776b84e224bcde140f88718cc2d814089d9',
       demoEmailConfirmationPageModel1);
+    await Promise.all([this._homePageModel.load(),
+      this._inviteAFoodieModel.load()]);
+  }
+
+  public async setAccount(newAccount: NeverEatAlone.User, profileImage:
+      NeverEatAlone.UserProfileImage, homePageModel:
+      NeverEatAlone.HomePageModel, inviteAFoodieModel:
+      NeverEatAlone.InviteAFoodieModel): Promise<void> {
+    this._account = newAccount;
+    this._accountProfileImage = profileImage;
+    this._homePageModel = homePageModel;
+    this._inviteAFoodieModel = inviteAFoodieModel;
     await Promise.all([this._homePageModel.load(),
       this._inviteAFoodieModel.load()]);
   }
