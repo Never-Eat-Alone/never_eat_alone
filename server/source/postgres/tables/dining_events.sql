@@ -44,7 +44,7 @@ INSERT INTO dining_events (
 )
 VALUES
 ('hsva(9, 67%, 100%, 1)', 5.00, 'resources/images/cover_1.jpg',
-'Let''s Go To Darbar.', 1, 'CASUAL', 'BAR', 1, 'Sheryl Miller',
+'Let''s Go To Darbar.', 5, 'CASUAL', 'BAR', 1, 'Sheryl Miller',
 '2023-04-01 18:45', '2023-04-01 20:45', 10,
 'This is the best Persian grill restaurant.', '2023-01-20 18:45',
 '2023-05-01 18:45', 'ACTIVE', 'PUBLIC', '2022-03-01 10:45',
