@@ -3,11 +3,9 @@ import { CoverImage, Cuisine, Language, UserProfileImage
 import { EditProfilePageModel } from './edit_profile_page_model';
 
 export class LocalEditProfilePageModel extends EditProfilePageModel {
-  constructor(locationList: string[], languageList: Language[],
-      favoriteCuisineList: Cuisine[], coverImage: CoverImage,
-      coverImageList: CoverImage[], profileImage: UserProfileImage,
-      displayName: string, userName: string, selectedLocation: string,
-      profileId: number, isUpcomingEventsPrivate: boolean,
+  constructor(languageList: Language[], cuisineList: Cuisine[], coverImage:
+      CoverImage, coverImageList: CoverImage[], profileImage: UserProfileImage,
+      selectedLocation: string, isUpcomingEventsPrivate: boolean,
       isPastEventsPrivate: boolean, isLocationPrivate: boolean,
       isLanguagePrivate: boolean, biographyValue: string,
       isBiographyPrivate: boolean, selectedLanguageList: Language[],
@@ -16,16 +14,12 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
       isInstagramPrivate: boolean, facebookLink: string, twitterLink: string,
       instagramLink: string) {
     super();
-    this._locationList = locationList;
     this._languageList = languageList;
-    this._cuisineList= favoriteCuisineList;
+    this._cuisineList= cuisineList;
     this._coverImage = coverImage;
     this._coverImageList = coverImageList;
     this._profileImage = profileImage;
-    this._displayName = displayName;
-    this._userName = userName;
     this._selectedLocation = selectedLocation;
-    this._profileId = profileId;
     this._isUpcomingEventsPrivate = isUpcomingEventsPrivate;
     this._isPastEventsPrivate = isPastEventsPrivate;
     this._isLocationPrivate = isLocationPrivate;
@@ -39,24 +33,18 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
     this._isTwitterPrivate = isTwitterPrivate;
     this._isInstagramPrivate = isInstagramPrivate;
     this._facebookLink = facebookLink;
-    this. _twitterLink = twitterLink;
+    this._twitterLink = twitterLink;
     this._instagramLink = instagramLink;
     this._suggestedLocationList = new Map();
-    this._suggestedLanguageList = new Map();
-    this._suggestedCuisineList = new Map();
   }
 
   public async load(): Promise<void> {}
-
-  public get locationList(): string[] {
-    return this._locationList;
-  }
 
   public get languageList(): Language[] {
     return this._languageList;
   }
 
-  public get favouriteCuisineList(): Cuisine[] {
+  public get cuisineList(): Cuisine[] {
     return this._cuisineList;
   }
 
@@ -72,20 +60,8 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
     return this._profileImage;
   }
 
-  public get displayName(): string {
-    return this._displayName;
-  }
-
-  public get userName(): string {
-    return this._userName;
-  }
-
   public get selectedLocation(): string {
     return this._selectedLocation;
-  }
-
-  public get profileId(): number {
-    return this._profileId;
   }
 
   public get isUpcomingEventsPrivate(): boolean {
@@ -112,23 +88,6 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
 
   public get isLanguagePrivate(): boolean {
     return this._isLanguagePrivate;
-  }
-
-  public addSuggestedLanguageList(value: string, languageList: Language[]
-      ): void {
-    this._suggestedLanguageList.set(value, languageList);
-  }
-
-  public async getSuggestedLanguageList(value: string): Promise<Language[]> {
-    return this._suggestedLanguageList.get(value);
-  }
-
-  public addSuggestedCuisineList(value: string, cuisineList: Cuisine[]): void {
-    this._suggestedCuisineList.set(value, cuisineList);
-  }
-
-  public async getSuggestedCuisineList(value: string): Promise<Cuisine[]> {
-    return this._suggestedCuisineList.get(value);
   }
 
   public get biographyValue(): string {
@@ -189,18 +148,18 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
 
   public async save(coverImage: CoverImage, profileImage: UserProfileImage,
       isUpcomingEventsPrivate: boolean, isPastEventsPrivate: boolean,
-      isLocationPrivate: boolean, isLanguagePrivate: boolean,
-      biographyValue: string, isBiographyPrivate: boolean,
-      selectedLanguageList: Language[], selectedCuisineList: Cuisine[],
-      isCuisinePrivate: boolean, isFacebookPrivate: boolean,
-      isTwitterPrivate: boolean, isInstagramPrivate: boolean,
-      facebookLink: string, twitterLink: string, instagramLink: string
-      ): Promise<boolean> {
+      isLocationPrivate: boolean, selectedLocation: string, isLanguagePrivate:
+      boolean, selectedLanguageList: Language[], isBiographyPrivate: boolean,
+      biographyValue: string, isFacebookPrivate: boolean, facebookLink: string,
+      isTwitterPrivate: boolean, twitterLink: string, isInstagramPrivate:
+      boolean, instagramLink: string, isCuisinePrivate: boolean,
+      selectedCuisineList: Cuisine[]): Promise<boolean> {
     this._coverImage = coverImage;
     this._profileImage = profileImage;
     this._isUpcomingEventsPrivate = isUpcomingEventsPrivate;
     this._isPastEventsPrivate = isPastEventsPrivate;
     this._isLocationPrivate = isLocationPrivate;
+    this._selectedLocation = selectedLocation;
     this._isLanguagePrivate = isLanguagePrivate;
     this._biographyValue = biographyValue;
     this._isBiographyPrivate = isBiographyPrivate;
@@ -216,16 +175,12 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
     return true;
   }
 
-  private _locationList: string[];
   private _languageList: Language[];
   private _cuisineList: Cuisine[];
   private _coverImage: CoverImage;
   private _coverImageList: CoverImage[];
   private _profileImage: UserProfileImage;
-  private _displayName: string;
-  private _userName: string;
   private _selectedLocation: string;
-  private _profileId: number;
   private _isUpcomingEventsPrivate: boolean;
   private _isPastEventsPrivate: boolean;
   private _isLocationPrivate: boolean;
@@ -242,6 +197,4 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
   private _twitterLink: string;
   private _instagramLink: string;
   private _suggestedLocationList: Map<string, string[]>;
-  private _suggestedLanguageList: Map<string, Language[]>;
-  private _suggestedCuisineList: Map<string, Cuisine[]>;
 }

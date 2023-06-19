@@ -91,9 +91,9 @@ export class EditProfilePageController extends React.Component<Properties,
     }
     return <EditProfilePage
       displayMode={this.props.displayMode}
-      displayName={this.props.model.displayName}
-      userName={this.props.model.userName}
-      profileId={this.props.model.profileId}
+      displayName={this.props.account.name}
+      userName={this.props.account.userName}
+      profileId={this.props.account.id}
       coverImage={this.state.coverImage}
       coverImageList={this.props.model.coverImageList}
       profileImage={this.state.profileImage}
@@ -165,14 +165,14 @@ export class EditProfilePageController extends React.Component<Properties,
         isLanguagePrivate: this.props.model.isLanguagePrivate,
         selectedLanguageList: this.props.model.selectedLanguageList,
         isCuisinePrivate: this.props.model.isCuisinePrivate,
-        selectedCuisineList: this.props.model.favouriteCuisineList,
+        selectedCuisineList: this.props.model.selectedCuisineList,
         isFacebookPrivate: this.props.model.isFacebookPrivate,
         isTwitterPrivate: this.props.model.isTwitterPrivate,
         isInstagramPrivate: this.props.model.isInstagramPrivate,
         facebookLink: this.props.model.facebookLink,
         twitterLink: this.props.model.twitterLink,
         instagramLink: this.props.model.instagramLink,
-        suggestedLocationList: this.props.model.locationList,
+        suggestedLocationList: [''],
         suggestedLanguageList: this.props.model.languageList,
         suggestedCuisineList: this.props.model.cuisineList
       });
@@ -185,7 +185,7 @@ export class EditProfilePageController extends React.Component<Properties,
     if (newValue.trim().length === 0) {
       this.setState({
         locationValue: newValue.trim(),
-        suggestedLocationList: this.props.model.locationList
+        suggestedLocationList: ['']
       });
       return;
     }
@@ -210,8 +210,8 @@ export class EditProfilePageController extends React.Component<Properties,
       return;
     }
     try {
-      const response = await this.props.model.getSuggestedLanguageList(
-        newValue);
+      const response = await this.props.model.languageList.filter((l) =>
+        l.name.includes(newValue));
       this.setState({
         languageValue: newValue,
         suggestedLanguageList: response
@@ -319,7 +319,7 @@ export class EditProfilePageController extends React.Component<Properties,
     this.setState({
       cuisineValue: '',
       selectedCuisineList: temp,
-      suggestedCuisineList: this.props.model.favouriteCuisineList
+      suggestedCuisineList: []
     });
   }
 
@@ -384,7 +384,7 @@ export class EditProfilePageController extends React.Component<Properties,
 
   private handleCancel = () => {
     this.setState({
-      redirect: `/users/profile/${this.props.model.profileId}`
+      redirect: `/users/profile/${this.props.account.id}`
     });
   }
 
@@ -393,15 +393,16 @@ export class EditProfilePageController extends React.Component<Properties,
       const isSaved = await this.props.model.save(this.state.coverImage,
         this.state.profileImage, this.state.isUpcomingEventsPrivate,
         this.state.isPastEventsPrivate, this.state.isLocationPrivate,
-        this.state.isLanguagePrivate, this.state.biographyValue,
-        this.state.isBiographyPrivate, this.state.selectedLanguageList,
-        this.state.selectedCuisineList, this.state.isCuisinePrivate,
-        this.state.isFacebookPrivate, this.state.isTwitterPrivate,
-        this.state.isInstagramPrivate, this.state.facebookLink,
-        this.state.twitterLink, this.state.instagramLink);
+        this.state.selectedLocation, this.state.isLanguagePrivate,
+        this.state.selectedLanguageList, this.state.isBiographyPrivate,
+        this.state.biographyValue, this.state.isFacebookPrivate,
+        this.state.facebookLink, this.state.isTwitterPrivate,
+        this.state.twitterLink, this.state.isInstagramPrivate,
+        this.state.instagramLink, this.state.isCuisinePrivate,
+        this.state.selectedCuisineList);
       if (isSaved) {
         this.setState({
-          redirect: `/users/profile/${this.props.model.profileId}`
+          redirect: `/users/profile/${this.props.account.id}`
         });
       } else {
         this.setState({ hasError: true });

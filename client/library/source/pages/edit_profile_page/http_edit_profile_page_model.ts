@@ -16,17 +16,14 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
       return;
     }
     const responseObject = await response.json();
-    const locationList: string[] = [];
     const languageList: Language[] = arrayFromJson(Language,
       responseObject.languageList);
-    const favoriteCuisineList: Cuisine[] = arrayFromJson(Cuisine,
-      responseObject.favoriteCuisineList);
+    const cuisineList: Cuisine[] = arrayFromJson(Cuisine,
+      responseObject.cuisineList);
     const coverImage = CoverImage.fromJson(responseObject.coverImage);
     const coverImageList: CoverImage[] = arrayFromJson(CoverImage,
       responseObject.coverImageList);
     const profileImage = UserProfileImage.fromJson(responseObject.profileImage);
-    const displayName = responseObject.displayName;
-    const userName = responseObject.userName;
     const selectedLocation = responseObject.selectedLocation;
     const isUpcomingEventsPrivate = responseObject.isUpcomingEventsPrivate;
     const isPastEventsPrivate = responseObject.isPastEventsPrivate;
@@ -54,27 +51,22 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
       account.platform === SocialAccountType.INSTAGRAM)?.isPrivate;
     const instagramLink = socialAccounts.find((account) => account.platform ===
       SocialAccountType.INSTAGRAM)?.link;
-    this._model = new LocalEditProfilePageModel(locationList, languageList,
-      favoriteCuisineList, coverImage, coverImageList, profileImage,
-      displayName, userName, selectedLocation, this._profileId,
-      isUpcomingEventsPrivate, isPastEventsPrivate, isLocationPrivate,
-      isLanguagePrivate, biographyValue, isBiographyPrivate,
+    this._model = new LocalEditProfilePageModel(languageList,
+      cuisineList, coverImage, coverImageList, profileImage,
+      selectedLocation, isUpcomingEventsPrivate, isPastEventsPrivate,
+      isLocationPrivate, isLanguagePrivate, biographyValue, isBiographyPrivate,
       selectedLanguageList, selectedCuisineList, isCuisinePrivate,
       isFacebookPrivate, isTwitterPrivate, isInstagramPrivate, facebookLink,
       twitterLink, instagramLink);
     await this._model.load();
   }
 
-  public get locationList(): string[] {
-    return this._model.locationList;
-  }
-
   public get languageList(): Language[] {
     return this._model.languageList;
   }
 
-  public get favouriteCuisineList(): Cuisine[] {
-    return this._model.favouriteCuisineList;
+  public get cuisineList(): Cuisine[] {
+    return this._model.cuisineList;
   }
 
   public get coverImage(): CoverImage {
@@ -89,20 +81,8 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
     return this._model.profileImage;
   }
 
-  public get displayName(): string {
-    return this._model.displayName;
-  }
-
-  public get userName(): string {
-    return this._model.userName;
-  }
-
   public get selectedLocation(): string {
     return this._model.selectedLocation;
-  }
-
-  public get profileId(): number {
-    return this._model.profileId;
   }
 
   public get isUpcomingEventsPrivate(): boolean {
@@ -130,28 +110,6 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
 
   public get isLanguagePrivate(): boolean {
     return this._model.isLanguagePrivate;
-  }
-
-  public async getSuggestedLanguageList(value: string): Promise<Language[]> {
-    const response = await fetch(`/api/suggested_language_list/${value}`);
-    if (response.status !== 200) {
-      return [];
-    }
-    const responseObject = await response.json();
-    const suggestedLanguageList: Language[] = arrayFromJson(Language,
-      responseObject.languageList);
-    return suggestedLanguageList;
-  }
-
-  public async getSuggestedCuisineList(value: string): Promise<Cuisine[]> {
-    const response = await fetch(`/api/suggested_cuisine_list/${value}`);
-    if (response.status !== 200) {
-      return [];
-    }
-    const responseObject = await response.json();
-    const suggestedCuisineList: Cuisine[] = arrayFromJson(Cuisine,
-      responseObject.cuisineList);
-    return suggestedCuisineList;
   }
 
   public get biographyValue(): string {
@@ -235,13 +193,12 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
 
   public async save(coverImage: CoverImage, profileImage: UserProfileImage,
       isUpcomingEventsPrivate: boolean, isPastEventsPrivate: boolean,
-      isLocationPrivate: boolean, isLanguagePrivate: boolean,
-      biographyValue: string, isBiographyPrivate: boolean,
-      selectedLanguageList: Language[], selectedCuisineList: Cuisine[],
-      isCuisinePrivate: boolean, isFacebookPrivate: boolean,
-      isTwitterPrivate: boolean, isInstagramPrivate: boolean,
-      facebookLink: string, twitterLink: string, instagramLink: string
-      ): Promise<boolean> {
+      isLocationPrivate: boolean, selectedLocation: string, isLanguagePrivate:
+      boolean, selectedLanguageList: Language[], isBiographyPrivate: boolean,
+      biographyValue: string, isFacebookPrivate: boolean, facebookLink: string,
+      isTwitterPrivate: boolean, twitterLink: string, isInstagramPrivate:
+      boolean, instagramLink: string, isCuisinePrivate: boolean,
+      selectedCuisineList: Cuisine[]): Promise<boolean> {
     const response = await fetch(`/api/edit_profile_page/${this._profileId}`, {
       method: 'PUT',
       headers: {
