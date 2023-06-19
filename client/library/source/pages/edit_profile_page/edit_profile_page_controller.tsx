@@ -165,7 +165,7 @@ export class EditProfilePageController extends React.Component<Properties,
         isLanguagePrivate: this.props.model.isLanguagePrivate,
         selectedLanguageList: this.props.model.selectedLanguageList,
         isCuisinePrivate: this.props.model.isCuisinePrivate,
-        selectedCuisineList: this.props.model.selectedCuisineList,
+        selectedCuisineList: this.props.model.favouriteCuisineList,
         isFacebookPrivate: this.props.model.isFacebookPrivate,
         isTwitterPrivate: this.props.model.isTwitterPrivate,
         isInstagramPrivate: this.props.model.isInstagramPrivate,
@@ -257,15 +257,11 @@ export class EditProfilePageController extends React.Component<Properties,
       });
       return;
     }
-    try {
-      const response = await this.props.model.getSuggestedCuisineList(newValue);
-      this.setState({
-        cuisineValue: newValue,
-        suggestedCuisineList: response
-      });
-    } catch {
-      this.setState({ cuisineValue: newValue, suggestedCuisineList: [] });
-    }
+    this.setState({
+      cuisineValue: newValue,
+      suggestedCuisineList: this.props.model.cuisineList.filter((c) =>
+      c.label.includes(newValue))
+    });
   }
 
   private handleLocationPrivacyClick = () => {
@@ -323,7 +319,7 @@ export class EditProfilePageController extends React.Component<Properties,
     this.setState({
       cuisineValue: '',
       selectedCuisineList: temp,
-      suggestedCuisineList: this.props.model.cuisineList
+      suggestedCuisineList: this.props.model.favouriteCuisineList
     });
   }
 

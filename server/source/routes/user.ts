@@ -729,7 +729,7 @@ export class UserRoutes {
     }
     try {
       favoriteCuisineList =
-        await this.userDatabase.loadUserSelectedCuisinesByUserId(profileId);
+        await this.userDatabase.loadUserFavouriteCuisinesByUserId(profileId);
     } catch (error) {
       console.error('Failed at loadUserSelectedCuisinesByUserId', error);
       response.status(500).json(jsonResponse);
@@ -758,7 +758,7 @@ export class UserRoutes {
   private getEditProfilePage = async (request, response) => {
     const profileId = parseInt(request.params.profileId);
     let languageList: Language[] = [];
-    let cuisineList: Cuisine[] = [];
+    let favoriteCuisineList: Cuisine[] = [];
     let coverImage = CoverImage.NoImage();
     let profileImage = UserProfileImage.default();
     let displayName = '';
@@ -779,7 +779,7 @@ export class UserRoutes {
     let userProfileSocialAccount: UserProfileSocialAccount[] = [];
     const jsonResponse = {
       languageList: arrayToJson(languageList),
-      cuisineList: arrayToJson(cuisineList),
+      favoriteCuisineList: arrayToJson(favoriteCuisineList),
       coverImage: coverImage.toJson(),
       profileImage: profileImage.toJson(),
       displayName: displayName,
@@ -848,6 +848,14 @@ export class UserRoutes {
         profileId);
     } catch (error) {
       console.error('Failed at loadUserLanguagesByUserId', error);
+      response.status(500).json(jsonResponse);
+      return;
+    }
+    try {
+      favoriteCuisineList = await this.userDatabase.loadUserFavouriteCuisinesByUserId(
+        profileId);
+    } catch (error) {
+      console.error('Failed at loadUserSelectedCuisinesByUserId', error);
       response.status(500).json(jsonResponse);
       return;
     }

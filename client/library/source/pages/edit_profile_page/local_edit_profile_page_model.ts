@@ -4,7 +4,7 @@ import { EditProfilePageModel } from './edit_profile_page_model';
 
 export class LocalEditProfilePageModel extends EditProfilePageModel {
   constructor(locationList: string[], languageList: Language[],
-      cuisineList: Cuisine[], coverImage: CoverImage,
+      favoriteCuisineList: Cuisine[], coverImage: CoverImage,
       coverImageList: CoverImage[], profileImage: UserProfileImage,
       displayName: string, userName: string, selectedLocation: string,
       profileId: number, isUpcomingEventsPrivate: boolean,
@@ -18,7 +18,7 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
     super();
     this._locationList = locationList;
     this._languageList = languageList;
-    this._cuisineList= cuisineList;
+    this._cuisineList= favoriteCuisineList;
     this._coverImage = coverImage;
     this._coverImageList = coverImageList;
     this._profileImage = profileImage;
@@ -56,7 +56,7 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
     return this._languageList;
   }
 
-  public get cuisineList(): Cuisine[] {
+  public get favouriteCuisineList(): Cuisine[] {
     return this._cuisineList;
   }
 
@@ -183,6 +183,7 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
 
   public async saveCoverImage(newImage: CoverImage): Promise<CoverImage> {
     this._coverImageList.push(newImage);
+    this._coverImage = newImage;
     return newImage;
   }
 

@@ -19,8 +19,8 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
     const locationList: string[] = [];
     const languageList: Language[] = arrayFromJson(Language,
       responseObject.languageList);
-    const cuisineList: Cuisine[] = arrayFromJson(Cuisine,
-      responseObject.cuisineList);
+    const favoriteCuisineList: Cuisine[] = arrayFromJson(Cuisine,
+      responseObject.favoriteCuisineList);
     const coverImage = CoverImage.fromJson(responseObject.coverImage);
     const coverImageList: CoverImage[] = arrayFromJson(CoverImage,
       responseObject.coverImageList);
@@ -55,12 +55,13 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
     const instagramLink = socialAccounts.find((account) => account.platform ===
       SocialAccountType.INSTAGRAM)?.link;
     this._model = new LocalEditProfilePageModel(locationList, languageList,
-      cuisineList, coverImage, coverImageList, profileImage, displayName,
-      userName, selectedLocation, this._profileId, isUpcomingEventsPrivate,
-      isPastEventsPrivate, isLocationPrivate, isLanguagePrivate, biographyValue,
-      isBiographyPrivate, selectedLanguageList, selectedCuisineList,
-      isCuisinePrivate, isFacebookPrivate, isTwitterPrivate, isInstagramPrivate,
-      facebookLink, twitterLink, instagramLink);
+      favoriteCuisineList, coverImage, coverImageList, profileImage,
+      displayName, userName, selectedLocation, this._profileId,
+      isUpcomingEventsPrivate, isPastEventsPrivate, isLocationPrivate,
+      isLanguagePrivate, biographyValue, isBiographyPrivate,
+      selectedLanguageList, selectedCuisineList, isCuisinePrivate,
+      isFacebookPrivate, isTwitterPrivate, isInstagramPrivate, facebookLink,
+      twitterLink, instagramLink);
     await this._model.load();
   }
 
@@ -72,8 +73,8 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
     return this._model.languageList;
   }
 
-  public get cuisineList(): Cuisine[] {
-    return this._model.cuisineList;
+  public get favouriteCuisineList(): Cuisine[] {
+    return this._model.favouriteCuisineList;
   }
 
   public get coverImage(): CoverImage {

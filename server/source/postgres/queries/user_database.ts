@@ -402,7 +402,7 @@ export class UserDatabase {
     return userProfilesocialAccounts;
   };
 
-  public loadUserSelectedCuisinesByUserId = async (userId: number): Promise<
+  public loadUserFavouriteCuisinesByUserId = async (userId: number): Promise<
       Cuisine[]> => {
     const result = await this.pool.query(`SELECT cu.* FROM cuisines AS cu JOIN
       user_favourite_cuisines AS u_cu ON u_cu.cuisine_id = cu.id WHERE
@@ -410,11 +410,9 @@ export class UserDatabase {
     if (result.rows?.length === 0) {
       return [];
     }
-    const userCuisines: Cuisine[] =
-      result.rows.map((row) => {
-        const cuisine = new Cuisine(parseInt(row.id), row.label,
-          row.color_code);
-        return cuisine;
+    const userCuisines: Cuisine[] = result.rows.map((row) => {
+      const cuisine = new Cuisine(parseInt(row.id), row.label, row.color_code);
+      return cuisine;
     });
     return userCuisines;
   }
