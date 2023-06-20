@@ -42,6 +42,8 @@ interface State {
   facebookInputIsValid: boolean;
   twitterInputIsValid: boolean;
   instagramInputIsValid: boolean;
+  uploadProfileImageHasError: boolean;
+  updateCoverImageHasError: boolean;
 }
 
 export class EditProfilePageController extends React.Component<Properties,
@@ -78,7 +80,9 @@ export class EditProfilePageController extends React.Component<Properties,
       instagramLink: '',
       facebookInputIsValid: true,
       twitterInputIsValid: true,
-      instagramInputIsValid: true
+      instagramInputIsValid: true,
+      uploadProfileImageHasError: false,
+      updateCoverImageHasError: false
     };
   }
 
@@ -201,7 +205,7 @@ export class EditProfilePageController extends React.Component<Properties,
     }
   }
 
-  private handleLanguageInputChange = async (newValue: string) => {
+  private handleLanguageInputChange = (newValue: string) => {
     if (newValue.trim().length === 0) {
       this.setState({
         languageValue: newValue.trim(),
@@ -209,16 +213,11 @@ export class EditProfilePageController extends React.Component<Properties,
       });
       return;
     }
-    try {
-      const response = await this.props.model.languageList.filter((l) =>
-        l.name.includes(newValue));
-      this.setState({
-        languageValue: newValue,
-        suggestedLanguageList: response
-      });
-    } catch {
-      this.setState({ languageValue: newValue, suggestedLanguageList: [] });
-    }
+    this.setState({
+      languageValue: newValue,
+      suggestedLanguageList: this.props.model.languageList.filter((l) =>
+        l.name.toLowerCase().includes(newValue.toLowerCase()))
+    });
   }
 
   private handleBiographyPrivacyClick = () => {
@@ -249,7 +248,7 @@ export class EditProfilePageController extends React.Component<Properties,
     }));
   }
 
-  private handleCuisineInputChange = async (newValue: string) => {
+  private handleCuisineInputChange = (newValue: string) => {
     if (newValue.trim().length === 0) {
       this.setState({
         cuisineValue: newValue.trim(),
@@ -260,7 +259,7 @@ export class EditProfilePageController extends React.Component<Properties,
     this.setState({
       cuisineValue: newValue,
       suggestedCuisineList: this.props.model.cuisineList.filter((c) =>
-      c.label.includes(newValue))
+        c.label.toLowerCase().includes(newValue.toLowerCase()))
     });
   }
 
@@ -339,7 +338,7 @@ export class EditProfilePageController extends React.Component<Properties,
     try {
       await this.props.model.uploadProfileImage(newImage);
     } catch {
-      //pass
+      this.setState({ uploadProfileImageHasError: true });
     }
   }
 
@@ -378,14 +377,12 @@ export class EditProfilePageController extends React.Component<Properties,
       await this.props.model.saveCoverImage(newImage);
       this.setState({ coverImage: newImage });
     } catch {
-      // pass
+      this.setState({ updateCoverImageHasError: true });
     }
   }
 
   private handleCancel = () => {
-    this.setState({
-      redirect: `/users/profile/${this.props.account.id}`
-    });
+    this.setState({ redirect: `/users/profile/${this.props.account.id}` });
   }
 
   private handleSave = async () => {
@@ -401,9 +398,7 @@ export class EditProfilePageController extends React.Component<Properties,
         this.state.instagramLink, this.state.isCuisinePrivate,
         this.state.selectedCuisineList);
       if (isSaved) {
-        this.setState({
-          redirect: `/users/profile/${this.props.account.id}`
-        });
+        this.setState({ redirect: `/users/profile/${this.props.account.id}` });
       } else {
         this.setState({ hasError: true });
       }
