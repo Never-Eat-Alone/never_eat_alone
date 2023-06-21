@@ -751,7 +751,6 @@ export class UserRoutes {
       response.status(500).json(jsonResponse);
       return;
     }
-    console.log(jsonResponse);
     response.status(200).json(jsonResponse);
   }
 
@@ -852,14 +851,13 @@ export class UserRoutes {
       return;
     }
     try {
-      favoriteCuisineList = await this.userDatabase.loadUserFavouriteCuisinesByUserId(
-        profileId);
+      favoriteCuisineList =
+        await this.userDatabase.loadUserFavouriteCuisinesByUserId(profileId);
     } catch (error) {
       console.error('Failed at loadUserSelectedCuisinesByUserId', error);
       response.status(500).json(jsonResponse);
       return;
     }
-    console.log(jsonResponse);
     response.status(200).json(jsonResponse);
   }
 
