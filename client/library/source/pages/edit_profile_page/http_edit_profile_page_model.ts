@@ -12,7 +12,7 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
   }
 
   public async load(): Promise<void> {
-    if (this._model !== ) {
+    if (!this._model.isEmpty()) {
       return;
     }
 
@@ -64,6 +64,10 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
       isFacebookPrivate, isTwitterPrivate, isInstagramPrivate, facebookLink,
       twitterLink, instagramLink);
     await this._model.load();
+  }
+
+  public isEmpty(): boolean {
+    return this._model.isEmpty();
   }
 
   public get languageList(): Language[] {

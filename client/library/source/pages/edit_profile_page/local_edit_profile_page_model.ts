@@ -46,6 +46,38 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
 
   public async load(): Promise<void> {}
 
+  public isEmpty(): boolean {
+    const emptyModel = LocalEditProfilePageModel.empty();
+    return (
+      JSON.stringify(this._languageList) === JSON.stringify(
+        emptyModel._languageList) &&
+      JSON.stringify(this._cuisineList) === JSON.stringify(
+        emptyModel._cuisineList) &&
+      this._coverImage.equals(emptyModel._coverImage) &&
+      JSON.stringify(this._coverImageList) === JSON.stringify(
+        emptyModel._coverImageList) &&
+      this._profileImage.equals(emptyModel._profileImage) &&
+      this._selectedLocation === emptyModel._selectedLocation &&
+      this._isUpcomingEventsPrivate === emptyModel._isUpcomingEventsPrivate &&
+      this._isPastEventsPrivate === emptyModel._isPastEventsPrivate &&
+      this._isLocationPrivate === emptyModel._isLocationPrivate &&
+      this._isLanguagePrivate === emptyModel._isLanguagePrivate &&
+      this._biographyValue === emptyModel._biographyValue &&
+      this._isBiographyPrivate === emptyModel._isBiographyPrivate &&
+      JSON.stringify(this._selectedLanguageList) === JSON.stringify(
+        emptyModel._selectedLanguageList) &&
+      JSON.stringify(this._selectedCuisineList) === JSON.stringify(
+        emptyModel._selectedCuisineList) &&
+      this._isCuisinePrivate === emptyModel._isCuisinePrivate &&
+      this._isFacebookPrivate === emptyModel._isFacebookPrivate &&
+      this._isTwitterPrivate === emptyModel._isTwitterPrivate &&
+      this._isInstagramPrivate === emptyModel._isInstagramPrivate &&
+      this._facebookLink === emptyModel._facebookLink &&
+      this._twitterLink === emptyModel._twitterLink &&
+      this._instagramLink === emptyModel._instagramLink
+    );
+  }
+
   public get languageList(): Language[] {
     return this._languageList;
   }

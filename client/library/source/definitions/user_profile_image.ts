@@ -21,6 +21,10 @@ export class UserProfileImage {
     return this._src;
   }
 
+  public equals(other: UserProfileImage): boolean {
+    return this._userId === other._userId && this._src === other._src;
+  }
+
   /** Converts UserProfileImage to json. */
   public toJson(): any {
     return {

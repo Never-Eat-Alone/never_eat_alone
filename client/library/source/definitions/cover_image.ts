@@ -29,6 +29,10 @@ export class CoverImage {
     return this._src;
   }
 
+  public equals(other: CoverImage): boolean {
+    return this._profileId === other._profileId && this._src === other._src;
+  }
+
   /** Converts the CoverImage to json. */
   public toJson(): any {
     return {
