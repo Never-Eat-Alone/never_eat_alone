@@ -176,7 +176,7 @@ export class EditProfilePageController extends React.Component<Properties,
         facebookLink: this.props.model.facebookLink,
         twitterLink: this.props.model.twitterLink,
         instagramLink: this.props.model.instagramLink,
-        suggestedLocationList: [''],
+        suggestedLocationList: [],
         suggestedLanguageList: this.props.model.languageList,
         suggestedCuisineList: this.props.model.cuisineList
       });
@@ -189,7 +189,7 @@ export class EditProfilePageController extends React.Component<Properties,
     if (newValue.trim().length === 0) {
       this.setState({
         locationValue: newValue.trim(),
-        suggestedLocationList: ['']
+        suggestedLocationList: []
       });
       return;
     }
