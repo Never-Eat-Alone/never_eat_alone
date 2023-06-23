@@ -18,7 +18,7 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
 
     const response = await fetch(`/api/edit_profile_page/${this._profileId}`);
     if (response.status !== 200) {
-      return;
+      throw new Error(`Load failed with response status ${response.status}`);
     }
     const responseObject = await response.json();
     const languageList: Language[] = arrayFromJson(Language,
