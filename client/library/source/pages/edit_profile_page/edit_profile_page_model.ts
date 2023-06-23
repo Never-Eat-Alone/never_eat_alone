@@ -3,13 +3,17 @@ import { CoverImage, Cuisine, Language, UserProfileImage
 
 export abstract class EditProfilePageModel {
   public abstract load(): Promise<void>;
-  // List of all languages user can select from.
+
+  /** List of all languages user can select from. */
   public abstract get languageList(): Language[];
-  // List of all cuisines user can select from.
+
+  /** List of all cuisines user can select from. */
   public abstract get cuisineList(): Cuisine[];
-  // Cover image of the user profile page.
+
+  /** Cover image of the user profile page. */
   public abstract get coverImage(): CoverImage;
-  // List of cover images user can select from such as template images.
+
+  /** List of cover images user can select from such as template images. */
   public abstract get coverImageList(): CoverImage[];
   public abstract get profileImage(): UserProfileImage;
   public abstract get selectedLocation(): string;

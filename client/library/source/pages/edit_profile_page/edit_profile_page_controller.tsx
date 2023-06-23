@@ -212,10 +212,11 @@ export class EditProfilePageController extends React.Component<Properties,
         suggestedLanguageList: this.props.model.languageList
       });
     } else {
+      const lowerCasedNewValue = newValue.toLowerCase();
       this.setState({
         languageValue: newValue,
         suggestedLanguageList: this.props.model.languageList.filter(l =>
-          l.name.toLowerCase().includes(newValue.toLowerCase()))
+          l.name.toLowerCase().includes(lowerCasedNewValue))
       });
     }
   }
@@ -255,10 +256,11 @@ export class EditProfilePageController extends React.Component<Properties,
         suggestedCuisineList: this.props.model.cuisineList
       });
     } else {
+      const lowerCasedNewValue = newValue.toLowerCase();
       this.setState({
         cuisineValue: newValue,
         suggestedCuisineList: this.props.model.cuisineList.filter(c =>
-          c.label.toLowerCase().includes(newValue.toLowerCase()))
+          c.label.toLowerCase().includes(lowerCasedNewValue))
       });
     }
   }
