@@ -11,7 +11,7 @@ export class CoverImage {
   }
 
   /** Generates the NoImage(Grey Image) Cover Image. */
-  public static NoImage(profileId: number = -1): CoverImage {
+  public static noImage(profileId: number = -1): CoverImage {
     return new CoverImage(profileId,
       'resources/edit_profile_page/icons/no_image.svg');
   }

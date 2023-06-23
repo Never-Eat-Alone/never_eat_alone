@@ -8,9 +8,14 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
   constructor(profileId: number) {
     super();
     this._profileId = profileId;
+    this._model = LocalEditProfilePageModel.empty();
   }
 
   public async load(): Promise<void> {
+    if (this._model !== ) {
+      return;
+    }
+
     const response = await fetch(`/api/edit_profile_page/${this._profileId}`);
     if (response.status !== 200) {
       return;
@@ -185,7 +190,7 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
       })
     });
     if (response.status !== 201 && response.status !== 200) {
-      return CoverImage.NoImage();
+      return CoverImage.noImage();
     }
     const responseObject = await response.json();
     return CoverImage.fromJson(responseObject.coverImage);

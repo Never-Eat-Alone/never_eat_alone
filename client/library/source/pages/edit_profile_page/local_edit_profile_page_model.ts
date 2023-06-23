@@ -3,6 +3,12 @@ import { CoverImage, Cuisine, Language, UserProfileImage
 import { EditProfilePageModel } from './edit_profile_page_model';
 
 export class LocalEditProfilePageModel extends EditProfilePageModel {
+  public static empty(): LocalEditProfilePageModel {
+    return new LocalEditProfilePageModel([], [], CoverImage.noImage(), [],
+      UserProfileImage.default(), '', true, true, true, true, '', true, [], [],
+      true, true, true, true, '', '', '');
+  }
+
   constructor(languageList: Language[], cuisineList: Cuisine[], coverImage:
       CoverImage, coverImageList: CoverImage[], profileImage: UserProfileImage,
       selectedLocation: string, isUpcomingEventsPrivate: boolean,
