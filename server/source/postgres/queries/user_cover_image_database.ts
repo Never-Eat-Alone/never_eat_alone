@@ -11,7 +11,8 @@ export class UserCoverImageDatabase {
     this.pool = pool;
   }
 
-  /** Returns the user cover image based on the user id.
+  /**
+   * Returns the user cover image based on the user id.
    * @param userId - User id.
    */
   public loadCoverImageByUserId = async (userId: number):
@@ -31,20 +32,26 @@ export class UserCoverImageDatabase {
     const absoluteFilePath = path.join(__dirname,
       '../../client/resources/uploads', fileName);
     const relativeFilePath = path.join('/resources/uploads', fileName);
-    // Save the uploaded file to the local disk.
+
+    /** Save the uploaded file to the local disk. */
     fs.writeFileSync(absoluteFilePath, imageFile.buffer);
-    // Store the file path in the database.
-    // Check if the user already has a cover image in the database.
+
+    /**
+     * Store the file path in the database.
+     * Check if the user already has a cover image in the database.
+     */
     const existingImageResult = await this.pool.query(
       'SELECT * FROM user_cover_images WHERE user_id = $1', [userId]);
     let result;
     if (existingImageResult?.rows?.length > 0) {
-      // User already has a cover image, update the record.
+
+      /** User already has a cover image, update the record. */
       result = await this.pool.query(`
         UPDATE user_cover_images SET src = $1, updated_at = DEFAULT WHERE
         user_id = $2 RETURNING *`, [relativeFilePath, userId]);
     } else {
-      // User doesn't have a cover image, insert a new record.
+
+      /** User doesn't have a cover image, insert a new record. */
       result = await this.pool.query(`
         INSERT INTO user_cover_images (user_id, src, created_at, updated_at)
         VALUES ($1, $2, DEFAULT, DEFAULT) RETURNING *`,

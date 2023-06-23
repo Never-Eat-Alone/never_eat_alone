@@ -139,19 +139,15 @@ export class ProfileSetUpPage extends React.Component<Properties> {
   }
 
   private handleUploadImageClick = () => {
-    // Create a hidden input element with the type 'file'
     const input = document.createElement('input');
     input.type = 'file';
-    input.accept = 'image/*'; // Accept only image files
+    input.accept = 'image/*';
     input.style.display = 'none';
-
-    // Listen for the 'change' event to get the selected image file
     input.addEventListener('change', async (event) => {
       const target = event.target as HTMLInputElement;
       const file = target.files && target.files[0];
       if (file) {
         try {
-          // Compression options
           const options = {
             maxSizeMB: 1,
             maxWidthOrHeight: 1920,
@@ -164,8 +160,6 @@ export class ProfileSetUpPage extends React.Component<Properties> {
         }
       }
     });
-
-    // Trigger the click event to open the file picker dialog
     input.click();
   }
 

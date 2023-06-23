@@ -276,7 +276,6 @@ export class UserRoutes {
       response.status(500).json({ message: 'DATABASE_ERROR' });
       return;
     }
-    // Set the user object in the session
     request.session.user = {
       id: user.id,
       name: user.name,
@@ -309,7 +308,8 @@ export class UserRoutes {
       email + Date.now() + userId).digest('hex');
     try {
       const expiresAt = new Date();
-      // The token expires in 24 hours.
+
+      /** The token expires in 24 hours. */
       expiresAt.setDate(expiresAt.getDate() + 1);
       await this.userDatabase.addConfirmationToken(confirmationTokenId,
         expiresAt, userId);
@@ -437,7 +437,6 @@ export class UserRoutes {
       response.status(500).json({ message: 'DATABASE_ERROR' });
       return;
     }
-    // Update the session with the user information
     request.session.user = {
       id: user.id,
       name: user.name,
@@ -676,7 +675,6 @@ export class UserRoutes {
       return;
     }
     if (profileUser?.id === -1) {
-      // User doesn't exist
       response.status(400).json(jsonResponse);
       return;
     }
@@ -758,7 +756,7 @@ export class UserRoutes {
     const profileId = parseInt(request.params.profileId);
     let languageList: Language[] = [];
     let favoriteCuisineList: Cuisine[] = [];
-    let coverImage = CoverImage.NoImage();
+    let coverImage = CoverImage.noImage();
     let profileImage = UserProfileImage.default();
     let displayName = '';
     let userName = '';
@@ -801,7 +799,6 @@ export class UserRoutes {
     try {
       const profileUser = await this.userDatabase.loadUserById(profileId);
       if (profileUser?.id === -1) {
-        // User doesn't exist
         response.status(400).json(jsonResponse);
         return;
       }

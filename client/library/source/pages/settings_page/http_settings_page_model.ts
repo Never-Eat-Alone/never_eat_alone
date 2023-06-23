@@ -88,7 +88,7 @@ export class HttpSettingsPageModel extends SettingsPageModel {
     return this._model.paymentRecords;
   }
 
-  // Payment methods tab related methods
+  /** Payment methods tab related methods */
   public async addCard(cardNumber: number, nameOnCard: string, month: number,
       year: number, securityCode: number, zipcode: string, creditCardType:
       CreditCardType): Promise<PaymentCard> {
@@ -149,7 +149,7 @@ export class HttpSettingsPageModel extends SettingsPageModel {
     return false;
   }
 
-  // Notification tab related methods
+  /** Notification tab related methods */
   public async toggleNewEventsNotification(): Promise<boolean> {
     const response = await fetch('/api/toggle_new_events_notification', {
       method: 'POST',

@@ -111,7 +111,7 @@ function runExpress(pool: Pool, config: any) {
 
   app.set('trust proxy', 1);
   if (app.get('env') === 'production') {
-    session.cookie.secure = true // serve secure cookies
+    session.cookie.secure = true
   }
   app.use(CookieParser());
   app.use(Session(session));
@@ -150,7 +150,8 @@ function runExpress(pool: Pool, config: any) {
   app.get('*', (request, response, next) => {
     response.sendFile(path.join(process.cwd(), 'public', 'index.html'));
   });
-  // Start the server after initializing the tables
+
+  /** Start the server after initializing the tables */
   const startServer = async () => {
     try {
       await initializePostgres(pool, '../source/postgres/types/', 'type');

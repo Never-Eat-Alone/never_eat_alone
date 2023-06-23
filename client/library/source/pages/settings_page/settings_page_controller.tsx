@@ -178,7 +178,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
         }));
       }
     } catch {
-      // pass
+      this.setState({ hasError: true });
     }
   }
 
@@ -191,7 +191,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
         }));
       }
     } catch {
-      // pass
+      this.setState({ hasError: true });
     }
   }
 
@@ -206,7 +206,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
         }));
       }
     } catch {
-      // pass
+      this.setState({ hasError: true });
     }
   }
 
@@ -219,7 +219,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
         }));
       }
     } catch {
-      // pass
+      this.setState({ hasError: true });
     }
   }
 
@@ -233,7 +233,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
         }));
       }
     } catch {
-      // pass
+      this.setState({ hasError: true });
     }
   }
 
@@ -246,7 +246,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
           !prevState.isFoodieAcceptedInviteNotificationOn }));
       }
     } catch {
-      // pass
+      this.setState({ hasError: true });
     }
   }
 
@@ -269,7 +269,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
           !prevState.isAnnouncementNotificationOn }));
       }
     } catch {
-      // pass
+      this.setState({ hasError: true });
     }
   }
 
@@ -387,7 +387,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
         this.props.onLogOut();
       }
     } catch {
-      //pass
+      this.setState({ hasError: true });
     }
   }
 
@@ -439,7 +439,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
         });
       }
     } catch {
-      //pass
+      this.setState({ hasError: true });
     }
   }
 
