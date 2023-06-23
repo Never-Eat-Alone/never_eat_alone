@@ -357,7 +357,7 @@ export class UserRoutes {
         response.status(500).json({ message: 'SESSION_DESTROY_FAILED' });
         return;
       }
-      response.clearCookie('connect.sid'); // Clear the session cookie
+      response.clearCookie('connect.sid');
       response.status(200).send('Session data cleared');
     });
   }

@@ -203,17 +203,18 @@ export class DemoEditProfilePageModel extends
   public async save(coverImage: NeverEatAlone.CoverImage,
       profileImage: NeverEatAlone.UserProfileImage, isUpcomingEventsPrivate:
       boolean, isPastEventsPrivate: boolean, isLocationPrivate: boolean,
-      isLanguagePrivate: boolean, biographyValue: string,
-      isBiographyPrivate: boolean, selectedLanguageList:
-      NeverEatAlone.Language[], selectedCuisineList: NeverEatAlone.Cuisine[],
-      isCuisinePrivate: boolean, isFacebookPrivate: boolean, isTwitterPrivate:
-      boolean, isInstagramPrivate: boolean, facebookLink: string, twitterLink:
-      string, instagramLink: string): Promise<boolean> {
+      selectedLocation: string, isLanguagePrivate: boolean,
+      selectedLanguageList: NeverEatAlone.Language[], isBiographyPrivate:
+      boolean, biographyValue: string, isFacebookPrivate: boolean,
+      facebookLink: string, isTwitterPrivate: boolean, twitterLink: string,
+      isInstagramPrivate: boolean, instagramLink: string, isCuisinePrivate:
+      boolean, selectedCuisineList: NeverEatAlone.Cuisine[]): Promise<boolean> {
     this._coverImage = coverImage;
     this._profileImage = profileImage;
     this._isUpcomingEventsPrivate = isUpcomingEventsPrivate;
     this._isPastEventsPrivate = isPastEventsPrivate;
     this._isLocationPrivate = isLocationPrivate;
+    this._selectedLocation = selectedLocation;
     this._isLanguagePrivate = isLanguagePrivate;
     this._biographyValue = biographyValue;
     this._isBiographyPrivate = isBiographyPrivate;
