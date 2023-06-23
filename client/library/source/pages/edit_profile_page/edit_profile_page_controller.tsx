@@ -211,13 +211,13 @@ export class EditProfilePageController extends React.Component<Properties,
         languageValue: newValue.trim(),
         suggestedLanguageList: this.props.model.languageList
       });
-      return;
+    } else {
+      this.setState({
+        languageValue: newValue,
+        suggestedLanguageList: this.props.model.languageList.filter((l) =>
+          l.name.toLowerCase().includes(newValue.toLowerCase()))
+      });
     }
-    this.setState({
-      languageValue: newValue,
-      suggestedLanguageList: this.props.model.languageList.filter((l) =>
-        l.name.toLowerCase().includes(newValue.toLowerCase()))
-    });
   }
 
   private handleBiographyPrivacyClick = () => {
@@ -254,13 +254,13 @@ export class EditProfilePageController extends React.Component<Properties,
         cuisineValue: newValue.trim(),
         suggestedCuisineList: this.props.model.cuisineList
       });
-      return;
+    } else {
+      this.setState({
+        cuisineValue: newValue,
+        suggestedCuisineList: this.props.model.cuisineList.filter((c) =>
+          c.label.toLowerCase().includes(newValue.toLowerCase()))
+      });
     }
-    this.setState({
-      cuisineValue: newValue,
-      suggestedCuisineList: this.props.model.cuisineList.filter((c) =>
-        c.label.toLowerCase().includes(newValue.toLowerCase()))
-    });
   }
 
   private handleLocationPrivacyClick = () => {
