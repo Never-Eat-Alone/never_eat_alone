@@ -369,10 +369,10 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       omakaseCuisine, persianCuisine, seafoodCuisine, steakhouseCuisine,
       traditionalCuisine];
     const demoEditProfilePageModel1 = new DemoEditProfilePageModel(
-      emmaCoverImage, coverImageList, emmaProfileImage, 'Emma', 'emma',
-      1, false, false, false, false, emmaBio, false, emmaLanguageList,
-      emmaFavoriteCuisines, false, false, false, false, '', '',
-      emmaInstagramLink, emmaLocation, locationList, languageList, cuisineList);
+      languageList, cuisineList, emmaCoverImage, coverImageList,
+      emmaProfileImage, emmaLocation, false, false, false, false, emmaBio,
+      false, emmaLanguageList, emmaFavoriteCuisines, false, false, false, false,
+      '', '', emmaInstagramLink);
     this._editProfilePageModelMap.set(1, demoEditProfilePageModel1);
 
     /** emma settings model */
