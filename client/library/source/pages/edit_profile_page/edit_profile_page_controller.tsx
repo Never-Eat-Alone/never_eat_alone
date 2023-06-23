@@ -214,7 +214,7 @@ export class EditProfilePageController extends React.Component<Properties,
     } else {
       this.setState({
         languageValue: newValue,
-        suggestedLanguageList: this.props.model.languageList.filter((l) =>
+        suggestedLanguageList: this.props.model.languageList.filter(l =>
           l.name.toLowerCase().includes(newValue.toLowerCase()))
       });
     }
@@ -257,7 +257,7 @@ export class EditProfilePageController extends React.Component<Properties,
     } else {
       this.setState({
         cuisineValue: newValue,
-        suggestedCuisineList: this.props.model.cuisineList.filter((c) =>
+        suggestedCuisineList: this.props.model.cuisineList.filter(c =>
           c.label.toLowerCase().includes(newValue.toLowerCase()))
       });
     }
