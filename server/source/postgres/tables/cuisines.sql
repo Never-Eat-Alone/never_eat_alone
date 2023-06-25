@@ -154,4 +154,5 @@ VALUES
 ('Bakery', 'hsl(142, 100%, 88%)'),
 ('Coffee shop', 'hsl(204, 100%, 92%)'),
 ('Cafe', 'hsl(1, 100%, 94%)'),
-('Middle Eastern', 'hsla(101, 100%, 92%, 1)');
+('Middle Eastern', 'hsla(101, 100%, 92%, 1)'
+);

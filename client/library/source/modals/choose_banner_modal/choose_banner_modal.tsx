@@ -58,7 +58,7 @@ export class ChooseBannerModal extends React.Component<Properties, State> {
           <img style={IMAGE_STYLE} src={image.src} alt='Cover Image' />
         </div>);
     }
-    const noCoverImage = CoverImage.NoImage();
+    const noCoverImage = CoverImage.noImage();
     const greyCoverBorder = (this.state.selectedImage.src ===
       noCoverImage.src && '3px solid #5EC745' || 'none');
     imageList.push(

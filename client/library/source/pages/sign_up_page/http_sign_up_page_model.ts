@@ -23,7 +23,8 @@ export class HttpSignUpPageModel extends SignUpPageModel {
         responseObject.accountProfileImage);
       return uploadedImage;
     }
-    // If the upload fails, the image is set to the last image.
+
+    /** If the upload fails, the image is set to the last image. */
     return this._accountProfileImage;
   }
 

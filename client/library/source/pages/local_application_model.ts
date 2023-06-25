@@ -32,7 +32,7 @@ export class LocalApplicationModel extends ApplicationModel {
     super();
     this._account = account;
     this._accountProfileImage = accountProfileImage;
-    this._homepageModel = homePageModel;
+    this._homePageModel = homePageModel;
     this._inviteAFoodieModel = inviteAFoodieModel;
     this._joinModel = joinModel;
     this._partnerWithUsModel = partnerWithUsModel;
@@ -50,7 +50,7 @@ export class LocalApplicationModel extends ApplicationModel {
   }
 
   public async load(): Promise<void> {
-    await Promise.all([this._homepageModel.load(),
+    await Promise.all([this._homePageModel.load(),
       this._inviteAFoodieModel.load()]);
   }
 
@@ -59,9 +59,9 @@ export class LocalApplicationModel extends ApplicationModel {
       Promise<void> {
     this._account = newAccount;
     this._accountProfileImage = profileImage;
-    this._homepageModel = homePageModel;
+    this._homePageModel = homePageModel;
     this._inviteAFoodieModel = inviteAFoodieModel;
-    await Promise.all([this._homepageModel.load(),
+    await Promise.all([this._homePageModel.load(),
       this._inviteAFoodieModel.load()]);
   }
 
@@ -74,7 +74,7 @@ export class LocalApplicationModel extends ApplicationModel {
   }
 
   public get homePageModel(): HomePageModel {
-    return this._homepageModel;
+    return this._homePageModel;
   }
 
   public addDiningEventPageModel(id: number, diningEventPageModel:
@@ -165,7 +165,7 @@ export class LocalApplicationModel extends ApplicationModel {
 
   private _account: User;
   private _accountProfileImage: UserProfileImage;
-  private _homepageModel: HomePageModel;
+  private _homePageModel: HomePageModel;
   private _inviteAFoodieModel: InviteAFoodieModel;
   private _joinModel: JoinModel;
   private _partnerWithUsModel: PartnerWithUsModel;

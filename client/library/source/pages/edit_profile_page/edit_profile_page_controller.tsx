@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
-import { CityProvince, CoverImage, Cuisine, DisplayMode, Language, User,
-  UserProfileImage } from '../../definitions';
+import { CoverImage, Cuisine, DisplayMode, Language, User, UserProfileImage
+} from '../../definitions';
 import { EditProfilePage } from './edit_profile_page';
 import { EditProfilePageModel } from './edit_profile_page_model';
 
@@ -18,8 +18,8 @@ interface State {
   coverImage: CoverImage;
   profileImage: UserProfileImage;
   locationValue: string;
-  selectedLocation: CityProvince;
-  suggestedLocationList: CityProvince[];
+  selectedLocation: string;
+  suggestedLocationList: string[];
   isLocationPrivate: boolean;
   biographyValue: string;
   isUpcomingEventsPrivate: boolean;
@@ -42,6 +42,8 @@ interface State {
   facebookInputIsValid: boolean;
   twitterInputIsValid: boolean;
   instagramInputIsValid: boolean;
+  uploadProfileImageHasError: boolean;
+  updateCoverImageHasError: boolean;
 }
 
 export class EditProfilePageController extends React.Component<Properties,
@@ -56,7 +58,7 @@ export class EditProfilePageController extends React.Component<Properties,
       profileImage: null,
       locationValue: '',
       suggestedLocationList: [],
-      selectedLocation: CityProvince.empty(),
+      selectedLocation: '',
       isLocationPrivate: false,
       languageValue: '',
       selectedLanguageList: [],
@@ -78,7 +80,9 @@ export class EditProfilePageController extends React.Component<Properties,
       instagramLink: '',
       facebookInputIsValid: true,
       twitterInputIsValid: true,
-      instagramInputIsValid: true
+      instagramInputIsValid: true,
+      uploadProfileImageHasError: false,
+      updateCoverImageHasError: false
     };
   }
 
@@ -91,9 +95,9 @@ export class EditProfilePageController extends React.Component<Properties,
     }
     return <EditProfilePage
       displayMode={this.props.displayMode}
-      displayName={this.props.model.displayName}
-      userName={this.props.model.userName}
-      profileId={this.props.model.profileId}
+      displayName={this.props.account.name}
+      userName={this.props.account.userName}
+      profileId={this.props.account.id}
       coverImage={this.state.coverImage}
       coverImageList={this.props.model.coverImageList}
       profileImage={this.state.profileImage}
@@ -156,8 +160,7 @@ export class EditProfilePageController extends React.Component<Properties,
         isLoaded: true,
         coverImage: this.props.model.coverImage,
         profileImage: this.props.model.profileImage,
-        locationValue: `${this.props.model.selectedLocation.city}, ${
-          this.props.model.selectedLocation.province}`,
+        locationValue: this.props.model.selectedLocation,
         biographyValue: this.props.model.biographyValue,
         isPastEventsPrivate: this.props.model.isPastEventsPrivate,
         isUpcomingEventsPrivate: this.props.model.isUpcomingEventsPrivate,
@@ -173,7 +176,7 @@ export class EditProfilePageController extends React.Component<Properties,
         facebookLink: this.props.model.facebookLink,
         twitterLink: this.props.model.twitterLink,
         instagramLink: this.props.model.instagramLink,
-        suggestedLocationList: this.props.model.locationList,
+        suggestedLocationList: [],
         suggestedLanguageList: this.props.model.languageList,
         suggestedCuisineList: this.props.model.cuisineList
       });
@@ -186,7 +189,7 @@ export class EditProfilePageController extends React.Component<Properties,
     if (newValue.trim().length === 0) {
       this.setState({
         locationValue: newValue.trim(),
-        suggestedLocationList: this.props.model.locationList
+        suggestedLocationList: []
       });
       return;
     }
@@ -202,23 +205,19 @@ export class EditProfilePageController extends React.Component<Properties,
     }
   }
 
-  private handleLanguageInputChange = async (newValue: string) => {
+  private handleLanguageInputChange = (newValue: string) => {
     if (newValue.trim().length === 0) {
       this.setState({
         languageValue: newValue.trim(),
         suggestedLanguageList: this.props.model.languageList
       });
-      return;
-    }
-    try {
-      const response = await this.props.model.getSuggestedLanguageList(
-        newValue);
+    } else {
+      const lowerCasedNewValue = newValue.toLowerCase();
       this.setState({
         languageValue: newValue,
-        suggestedLanguageList: response
+        suggestedLanguageList: this.props.model.languageList.filter(l =>
+          l.name.toLowerCase().includes(lowerCasedNewValue))
       });
-    } catch {
-      this.setState({ languageValue: newValue, suggestedLanguageList: [] });
     }
   }
 
@@ -250,22 +249,19 @@ export class EditProfilePageController extends React.Component<Properties,
     }));
   }
 
-  private handleCuisineInputChange = async (newValue: string) => {
+  private handleCuisineInputChange = (newValue: string) => {
     if (newValue.trim().length === 0) {
       this.setState({
         cuisineValue: newValue.trim(),
         suggestedCuisineList: this.props.model.cuisineList
       });
-      return;
-    }
-    try {
-      const response = await this.props.model.getSuggestedCuisineList(newValue);
+    } else {
+      const lowerCasedNewValue = newValue.toLowerCase();
       this.setState({
         cuisineValue: newValue,
-        suggestedCuisineList: response
+        suggestedCuisineList: this.props.model.cuisineList.filter(c =>
+          c.label.toLowerCase().includes(lowerCasedNewValue))
       });
-    } catch {
-      this.setState({ cuisineValue: newValue, suggestedCuisineList: [] });
     }
   }
 
@@ -281,10 +277,10 @@ export class EditProfilePageController extends React.Component<Properties,
     }));
   }
 
-  private handleLocationDropdownClick = (selectedLocation: CityProvince) => {
+  private handleLocationDropdownClick = (selectedLocation: string) => {
     this.setState({
       selectedLocation: selectedLocation,
-      locationValue: `${selectedLocation.city}, ${selectedLocation.province}`,
+      locationValue: selectedLocation,
       suggestedLocationList: [selectedLocation]
     });
   }
@@ -324,7 +320,7 @@ export class EditProfilePageController extends React.Component<Properties,
     this.setState({
       cuisineValue: '',
       selectedCuisineList: temp,
-      suggestedCuisineList: this.props.model.cuisineList
+      suggestedCuisineList: []
     });
   }
 
@@ -344,7 +340,7 @@ export class EditProfilePageController extends React.Component<Properties,
     try {
       await this.props.model.uploadProfileImage(newImage);
     } catch {
-      //pass
+      this.setState({ uploadProfileImageHasError: true });
     }
   }
 
@@ -383,14 +379,12 @@ export class EditProfilePageController extends React.Component<Properties,
       await this.props.model.saveCoverImage(newImage);
       this.setState({ coverImage: newImage });
     } catch {
-      // pass
+      this.setState({ updateCoverImageHasError: true });
     }
   }
 
   private handleCancel = () => {
-    this.setState({
-      redirect: `/users/profile/${this.props.model.profileId}`
-    });
+    this.setState({ redirect: `/users/profile/${this.props.account.id}` });
   }
 
   private handleSave = async () => {
@@ -398,16 +392,15 @@ export class EditProfilePageController extends React.Component<Properties,
       const isSaved = await this.props.model.save(this.state.coverImage,
         this.state.profileImage, this.state.isUpcomingEventsPrivate,
         this.state.isPastEventsPrivate, this.state.isLocationPrivate,
-        this.state.isLanguagePrivate, this.state.biographyValue,
-        this.state.isBiographyPrivate, this.state.selectedLanguageList,
-        this.state.selectedCuisineList, this.state.isCuisinePrivate,
-        this.state.isFacebookPrivate, this.state.isTwitterPrivate,
-        this.state.isInstagramPrivate, this.state.facebookLink,
-        this.state.twitterLink, this.state.instagramLink);
+        this.state.selectedLocation, this.state.isLanguagePrivate,
+        this.state.selectedLanguageList, this.state.isBiographyPrivate,
+        this.state.biographyValue, this.state.isFacebookPrivate,
+        this.state.facebookLink, this.state.isTwitterPrivate,
+        this.state.twitterLink, this.state.isInstagramPrivate,
+        this.state.instagramLink, this.state.isCuisinePrivate,
+        this.state.selectedCuisineList);
       if (isSaved) {
-        this.setState({
-          redirect: `/users/profile/${this.props.model.profileId}`
-        });
+        this.setState({ redirect: `/users/profile/${this.props.account.id}` });
       } else {
         this.setState({ hasError: true });
       }

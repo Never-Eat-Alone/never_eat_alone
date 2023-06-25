@@ -1,5 +1,5 @@
 export class SocialMediaImage {
-  public static NoImage(): SocialMediaImage {
+  public static noImage(): SocialMediaImage {
     return new SocialMediaImage(-1, '');
   }
 

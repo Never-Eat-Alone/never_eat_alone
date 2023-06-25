@@ -15,14 +15,12 @@ export abstract class SettingsPageModel {
   public abstract get defaultCard(): PaymentCard;
   public abstract get paymentCards(): PaymentCard[];
   public abstract get paymentRecords(): PaymentRecord[];
-  // Payment methods tab related methods
   public abstract addCard(cardNumber: number, nameOnCard: string, month: number,
     year: number, securityCode: number, zipcode: string, creditCardType:
     CreditCardType): Promise<PaymentCard>;
   public abstract updateCard(newCard: PaymentCard, isMarkedAsDefault: boolean
     ): Promise<PaymentCard>;
   public abstract deleteCard(cardId: number): Promise<boolean>;
-  // Notification tab related methods
   public abstract toggleNewEventsNotification(): Promise<boolean>;
   public abstract toggleEventJoinedNotification(): Promise<boolean>;
   public abstract toggleEventRemindersNotification(): Promise<boolean>;

@@ -29,13 +29,11 @@ export class DiningEventDatabase {
         return new Cuisine(parseInt(row.id), row.label, row.color_code);
       });
       let numberOfAttendees = 0;
-      let numberOfSeatsAvailable = parseInt(row.total_capacity);
       tempResult = await this.pool.query(
         "SELECT COUNT (event_id) AS total FROM attendees WHERE event_id = $1 \
         AND status = 'GOING'", [row.de_id]);
       if (tempResult.rows?.length !== 0) {
         numberOfAttendees = parseInt(tempResult.rows[0].total);
-        numberOfSeatsAvailable -= numberOfAttendees;
       }
       let isAttending: boolean = false;
       if (userId !== -1) {
@@ -50,7 +48,7 @@ export class DiningEventDatabase {
         new Date(Date.parse(row.start_at)), new Date(Date.parse(row.end_at)),
         row.re_name, PriceRange[row.re_price_range as keyof typeof PriceRange],
         cuisines, row.cover_image_src, numberOfAttendees,
-        numberOfSeatsAvailable, isAttending, row.de_color_code);
+        parseInt(row.total_capacity), isAttending, row.de_color_code);
       events.push(event);
     }
     return events;
@@ -77,19 +75,17 @@ export class DiningEventDatabase {
         return new Cuisine(parseInt(row.id), row.label, row.color_code);
       });
       let numberOfAttendees = 0;
-      let numberOfSeatsAvailable = parseInt(row.total_capacity);
       tempResult = await this.pool.query(
         "SELECT COUNT (event_id) AS total FROM attendees WHERE event_id = $1 \
         AND status = 'GOING'", [row.event_id]);
       if (tempResult.rows?.length !== 0) {
         numberOfAttendees = parseInt(tempResult.rows[0].total);
-        numberOfSeatsAvailable -= numberOfAttendees;
       }
       const event = new EventCardSummary(parseInt(row.event_id), row.title,
         new Date(Date.parse(row.start_at)), new Date(Date.parse(row.end_at)),
         row.name, PriceRange[row.price_range as keyof typeof PriceRange],
         cuisines, row.cover_image_src, numberOfAttendees,
-        numberOfSeatsAvailable, true, row.color_code);
+        parseInt(row.total_capacity), true, row.color_code);
       events.push(event);
     }
     return events;

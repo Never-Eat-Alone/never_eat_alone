@@ -7,7 +7,8 @@ import { arrayToJson, CoverImage, Cuisine, EventCardSummary, InviteEmail,
 import { UserCoverImageDatabase } from
 '../postgres/queries/user_cover_image_database';
 import { UserDatabase } from '../postgres/queries/user_database';
-import { UserProfileImageDatabase } from '../postgres/queries';
+import { AttendeeDatabase, UserProfileImageDatabase
+} from '../postgres/queries';
 
 /** User Routes class. */
 export class UserRoutes {
@@ -17,8 +18,8 @@ export class UserRoutes {
    * @param userProfileImageDatabase
    * @param sgmail - SendGrid api.
    */
-  constructor(app: any, userDatabase: UserDatabase,
-      userProfileImageDatabase: UserProfileImageDatabase,
+  constructor(app: any, userDatabase: UserDatabase, attendeeDatabase:
+      AttendeeDatabase, userProfileImageDatabase: UserProfileImageDatabase,
       userCoverImageDatabase: UserCoverImageDatabase, sgmail: any) {
     /** Route to get the current logged in user. */
     app.get('/api/current_user', this.getCurrentUser);
@@ -47,8 +48,10 @@ export class UserRoutes {
     app.post('/api/resend_recovery_email', this.resendRecoveryEmail);
 
     app.get('/api/profile_page/:profileId', this.getProfilePage);
+    app.get('/api/edit_profile_page/:profileId', this.getEditProfilePage);
 
     this.userDatabase = userDatabase;
+    this.attendeeDatabase = attendeeDatabase;
     this.userProfileImageDatabase = userProfileImageDatabase;
     this.userCoverImageDatabase = userCoverImageDatabase;
     this.sgmail = sgmail;
@@ -64,6 +67,7 @@ export class UserRoutes {
       } catch (error) {
         console.error('Failed at loadUserBySessionId', error);
         response.status(500).send();
+        return;
       }
       request.session.user = {
         id: user.id,
@@ -273,7 +277,6 @@ export class UserRoutes {
       response.status(500).json({ message: 'DATABASE_ERROR' });
       return;
     }
-    // Set the user object in the session
     request.session.user = {
       id: user.id,
       name: user.name,
@@ -306,7 +309,8 @@ export class UserRoutes {
       email + Date.now() + userId).digest('hex');
     try {
       const expiresAt = new Date();
-      // The token expires in 24 hours.
+
+      /** The token expires in 24 hours. */
       expiresAt.setDate(expiresAt.getDate() + 1);
       await this.userDatabase.addConfirmationToken(confirmationTokenId,
         expiresAt, userId);
@@ -354,7 +358,7 @@ export class UserRoutes {
         response.status(500).json({ message: 'SESSION_DESTROY_FAILED' });
         return;
       }
-      response.clearCookie('connect.sid'); // Clear the session cookie
+      response.clearCookie('connect.sid');
       response.status(200).send('Session data cleared');
     });
   }
@@ -434,7 +438,6 @@ export class UserRoutes {
       response.status(500).json({ message: 'DATABASE_ERROR' });
       return;
     }
-    // Update the session with the user information
     request.session.user = {
       id: user.id,
       name: user.name,
@@ -673,7 +676,6 @@ export class UserRoutes {
       return;
     }
     if (profileUser?.id === -1) {
-      // User doesn't exist
       response.status(400).json(jsonResponse);
       return;
     }
@@ -724,10 +726,155 @@ export class UserRoutes {
       response.status(500).json(jsonResponse);
       return;
     }
+    try {
+      favoriteCuisineList =
+        await this.userDatabase.loadUserFavouriteCuisinesByUserId(profileId);
+    } catch (error) {
+      console.error('Failed at loadUserSelectedCuisinesByUserId', error);
+      response.status(500).json(jsonResponse);
+      return;
+    }
+    try {
+      upcomingEventList =
+        await this.attendeeDatabase.loadUserUpcomingEventsByUserId(profileId);
+    } catch (error) {
+      console.error('Failed at loadUserUpcomingEventsByUserId', error);
+      response.status(500).json(jsonResponse);
+      return;
+    }
+    try {
+      pastEventList =
+        await this.attendeeDatabase.loadUserPastEventsByUserId(profileId);
+    } catch (error) {
+      console.error('Failed at loadUserPastEventsByUserId', error);
+      response.status(500).json(jsonResponse);
+      return;
+    }
     response.status(200).json(jsonResponse);
   }
 
+  private getEditProfilePage = async (request, response) => {
+    const profileId = parseInt(request.params.profileId);
+    if (request.session?.user) {
+      let user: User;
+      try {
+        user = await this.userDatabase.loadUserBySessionId(
+          request.session.id);
+        if (user.id !== profileId) {
+          response.status(401).send();
+          return;
+        }
+      } catch (error) {
+        console.error('Failed at loadUserBySessionId', error);
+        response.status(500).send();
+        return;
+      }
+    }
+    let languageList: Language[] = [];
+    let favoriteCuisineList: Cuisine[] = [];
+    let coverImage = CoverImage.noImage();
+    let profileImage = UserProfileImage.default();
+    let displayName = '';
+    let userName = '';
+    let selectedLocation = '';
+    let isUpcomingEventsPrivate = true;
+    let isPastEventsPrivate = true;
+    let isLocationPrivate = true;
+    let isLanguagePrivate = true;
+    let biographyValue = '';
+    let isBiographyPrivate = true;
+    let selectedLanguageList: Language[] = [];
+    let selectedCuisineList: Cuisine[] = [];
+    let isCuisinePrivate = true;
+    let isFacebookPrivate = true;
+    let isTwitterPrivate = true;
+    let isInstagramPrivate = true;
+    let userProfileSocialAccount: UserProfileSocialAccount[] = [];
+    try {
+      const profileUser = await this.userDatabase.loadUserById(profileId);
+      if (profileUser?.id === -1) {
+        response.status(400).send();
+        return;
+      }
+      displayName = profileUser.name;
+      userName = profileUser.userName;
+    } catch (error) {
+      console.error('Failed at loadUserById', error);
+      response.status(500).send();
+      return;
+    }
+    try {
+      coverImage = await this.userCoverImageDatabase.loadCoverImageByUserId(
+        profileId);
+    } catch (error) {
+      console.error('Failed at loadUserById', error);
+      response.status(500).send();
+      return;
+    }
+    try {
+      profileImage =
+        await this.userProfileImageDatabase.loadProfileImageByUserId(profileId);
+    } catch (error) {
+      console.error('Failed at loadProfileImageByUserId', error);
+      response.status(500).send();
+      return;
+    }
+    try {
+      biographyValue = await this.userDatabase.loadBiographyByUserId(profileId);
+    } catch (error) {
+      console.error('Failed at loadBiographyByUserId', error);
+      response.status(500).send();
+      return;
+    }
+    try {
+      selectedLocation = await this.userDatabase.loadAddressByUserId(profileId);
+    } catch (error) {
+      console.error('Failed at loadAddressByUserId', error);
+      response.status(500).send();
+      return;
+    }
+    try {
+      languageList = await this.userDatabase.loadUserLanguagesByUserId(
+        profileId);
+    } catch (error) {
+      console.error('Failed at loadUserLanguagesByUserId', error);
+      response.status(500).send();
+      return;
+    }
+    try {
+      favoriteCuisineList =
+        await this.userDatabase.loadUserFavouriteCuisinesByUserId(profileId);
+    } catch (error) {
+      console.error('Failed at loadUserSelectedCuisinesByUserId', error);
+      response.status(500).send();
+      return;
+    }
+    response.status(200).json({
+      languageList: arrayToJson(languageList),
+      favoriteCuisineList: arrayToJson(favoriteCuisineList),
+      coverImage: coverImage.toJson(),
+      profileImage: profileImage.toJson(),
+      displayName: displayName,
+      userName: userName,
+      selectedLocation: selectedLocation,
+      isUpcomingEventsPrivate: isUpcomingEventsPrivate,
+      isPastEventsPrivate: isPastEventsPrivate,
+      isLocationPrivate: isLocationPrivate,
+      isLanguagePrivate: isLanguagePrivate,
+      biographyValue: biographyValue,
+      isBiographyPrivate: isBiographyPrivate,
+      selectedLanguageList: arrayToJson(selectedLanguageList),
+      selectedCuisineList: arrayToJson(selectedCuisineList),
+      isCuisinePrivate: isCuisinePrivate,
+      isFacebookPrivate: isFacebookPrivate,
+      isTwitterPrivate: isTwitterPrivate,
+      isInstagramPrivate: isInstagramPrivate,
+      userProfileSocialAccount: arrayToJson(userProfileSocialAccount)
+    });
+  }
+
   private userDatabase: UserDatabase;
+  private attendeeDatabase: AttendeeDatabase;
   private userProfileImageDatabase: UserProfileImageDatabase;
   private userCoverImageDatabase: UserCoverImageDatabase;
 

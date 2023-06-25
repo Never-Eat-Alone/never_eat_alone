@@ -242,7 +242,6 @@ export class InviteAFoodieModal extends React.Component<Properties, State> {
   private handleCopy = (event: React.MouseEvent<HTMLElement>) => {
     const invitationLink = `${InviteAFoodieModal.INVITATION_URL +
       this.props.userInvitationCode.invitationCode}`;
-    // @ts-ignore
     navigator.clipboard.writeText(invitationLink);
     this.setState({
       invitationLink: 'Link copied!',

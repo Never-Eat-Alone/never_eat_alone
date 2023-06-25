@@ -97,7 +97,6 @@ export class Hero extends React.Component<Properties> {
   }
 }
 
-// Loggedin related styles
 const LOGGED_CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
@@ -105,7 +104,8 @@ const LOGGED_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'center',
   width: '100%',
-  backgroundImage: 'url(resources/home_page/illustrations/background-hero-wave.svg)',
+  backgroundImage:
+    'url(resources/home_page/illustrations/background-hero-wave.svg)',
   backgroundSize: 'cover',
   backgroundColor: '#F26B55',
   backgroundRepeat: 'no-repeat',
@@ -124,7 +124,6 @@ const MOBILE_LOGGED_CONTAINER_STYLE: React.CSSProperties = {
   minHeight: '400px'
 };
 
-// Logged in but no events styles
 const CONTAINER_NO_EVENTS: React.CSSProperties = {
   height: '151px'
 };
@@ -164,7 +163,6 @@ const MOBILE_DETAILS_NO_EVENTS_CONTAINER_STYLE: React.CSSProperties = {
   marginRight: '20px'
 };
 
-// Not Loggedin related styles
 const CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
@@ -172,7 +170,8 @@ const CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'center',
   width: '100%',
-  backgroundImage: 'url(resources/home_page/illustrations/background-hero-big.jpg)',
+  backgroundImage:
+    'url(resources/home_page/illustrations/background-hero-big.jpg)',
   backgroundSize: 'cover',
   backgroundColor: '#F24D3D',
   backgroundRepeat: 'no-repeat',
