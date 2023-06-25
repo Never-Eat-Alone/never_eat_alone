@@ -11,11 +11,8 @@ interface Properties extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
 
 export function Textarea (props: Properties) {
   const { hasError, value, onValueChange, ...textareaProps } = props;
-  const handleOnChange = React.useCallback(
-    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onValueChange(event.target.value);
-    }, [onValueChange]
-  );
+  const handleOnChange = React.useCallback(event => onValueChange(
+    event.target.value), [onValueChange]);
   return (
     <div
         style={{...CONTAINER_STYLE, ...props.style}}
@@ -38,12 +35,8 @@ interface WithCounterProps extends Properties {
 
 export function TextareaWithCounter (props: WithCounterProps) {
   const { hasError, value, onValueChange, maxCount, ...textareaProps } = props;
-  const handleOnChange = React.useCallback(
-    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-      onValueChange(event.target.value)
-    },
-      [onValueChange]
-  );
+  const handleOnChange = React.useCallback(event => onValueChange(
+    event.target.value), [onValueChange]);
   return (
     <div
         style={{...CONTAINER_STYLE, ...props.style}}

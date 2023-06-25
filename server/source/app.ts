@@ -111,7 +111,7 @@ function runExpress(pool: Pool, config: any) {
 
   app.set('trust proxy', 1);
   if (app.get('env') === 'production') {
-    session.cookie.secure = true
+    session.cookie.secure = true;
   }
   app.use(CookieParser());
   app.use(Session(session));
