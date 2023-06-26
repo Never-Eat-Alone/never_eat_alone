@@ -452,18 +452,6 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       this._inviteAFoodieModel.load()]);
   }
 
-  public async setAccount(newAccount: NeverEatAlone.User, profileImage:
-      NeverEatAlone.UserProfileImage, homePageModel:
-      NeverEatAlone.HomePageModel, inviteAFoodieModel:
-      NeverEatAlone.InviteAFoodieModel): Promise<void> {
-    this._account = newAccount;
-    this._accountProfileImage = profileImage;
-    this._homePageModel = homePageModel;
-    this._inviteAFoodieModel = inviteAFoodieModel;
-    await Promise.all([this._homePageModel.load(),
-      this._inviteAFoodieModel.load()]);
-  }
-
   public get account(): NeverEatAlone.User {
     return this._account;
   }
