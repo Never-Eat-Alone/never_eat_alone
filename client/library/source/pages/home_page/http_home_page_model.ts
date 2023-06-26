@@ -13,7 +13,7 @@ export class HttpHomePageModel extends HomePageModel {
   }
 
   public async load(): Promise<void> {
-    if(this._isLoaded) {
+    if (this._isLoaded) {
       return;
     }
     const imageList: SocialMediaImage[] = [];

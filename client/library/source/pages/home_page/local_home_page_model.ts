@@ -48,7 +48,7 @@ export class LocalHomePageModel extends HomePageModel {
   }
 
   private ensureIsLoaded(): void {
-    if(!this._isLoaded) {
+    if (!this._isLoaded) {
       throw new Error('HomePageModel not loaded.');
     }
   }

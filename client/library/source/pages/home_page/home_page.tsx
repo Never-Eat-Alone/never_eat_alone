@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { AlbumSummary, ExploreEventsSummary, Hero, PartnerWithUsSummary,
   UserUpcomingEventsSummary } from '../../components';
-import { DisplayMode, EventCardSummary, EventTag, SocialMediaImage, User
-} from '../../definitions';
+import { DisplayMode, EventCardSummary, EventTag, SocialMediaImage, User } from
+  '../../definitions';
 
 interface Properties {
   /** The current user. */
