@@ -29,14 +29,14 @@ export class HttpApplicationModel extends ApplicationModel {
     if (this._model) {
       return;
     }
-    const response = await fetch('/api/current_user');
-    let account: User;
-    if (response.status === 200) {
+    const account = await (async () => {
+      const response = await fetch('/api/current_user');
+      if (response.status !== 200) {
+        return User.makeGuest();  
+      }
       const responseObject = await response.json();
-      account = User.fromJson(responseObject.user);
-    } else {
-      account = User.makeGuest();
-    }
+      return User.fromJson(responseObject.user);
+    })();
     const accountProfileImage = await (async () => {
       if (account?.id !== -1) {
         const imageResponse = await fetch(
@@ -48,7 +48,7 @@ export class HttpApplicationModel extends ApplicationModel {
         }
         return UserProfileImage.default(account.id);
       }
-      return UserProfileImage.default(-1);
+      return UserProfileImage.default();
     })();
     const googleClientIdResponse = await fetch('/api/google_client_id');
     const googleClientIdObject = await googleClientIdResponse.json();
@@ -84,9 +84,8 @@ export class HttpApplicationModel extends ApplicationModel {
       if (response.status === 200) {
         const jasonResponse = await response.json();
         return UserProfileImage.fromJson(jasonResponse.accountProfileImage);
-      } else {
-        return UserProfileImage.default(account.id);
       }
+      return UserProfileImage.default(account.id);
     })();
     this._model.updateAccountProfileImage(newAccountImage);
   }
