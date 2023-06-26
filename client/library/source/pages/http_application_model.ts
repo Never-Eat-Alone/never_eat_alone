@@ -77,11 +77,18 @@ export class HttpApplicationModel extends ApplicationModel {
     await this._model.load();
   }
 
-  public async setAccount(account: User, accountProfileImage: UserProfileImage, 
-      homePageModel: HomePageModel, inviteAFoodieModel: InviteAFoodieModel):
-      Promise<void> {
-    this._model.setAccount(account, accountProfileImage, homePageModel,
-      inviteAFoodieModel);
+  public async setAccount(account: User): Promise<void> {
+    await this._model.setAccount(account);
+    const newAccountImage = await (async () => {
+      const response = await fetch(`/api/user_profile_image/${account.id}`);
+      if (response.status === 200) {
+        const jasonResponse = await response.json();
+        return UserProfileImage.fromJson(jasonResponse.accountProfileImage);
+      } else {
+        return UserProfileImage.default(account.id);
+      }
+    })();
+    this._model.updateAccountProfileImage(newAccountImage);
   }
 
   public get account(): User {
@@ -90,6 +97,10 @@ export class HttpApplicationModel extends ApplicationModel {
 
   public get accountProfileImage(): UserProfileImage {
     return this._model.accountProfileImage;
+  }
+
+  public updateAccountProfileImage(newImage: UserProfileImage): void {
+    this._model.updateAccountProfileImage(newImage);
   }
 
   public get homePageModel(): HomePageModel {

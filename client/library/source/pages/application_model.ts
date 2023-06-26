@@ -16,11 +16,10 @@ import { SignUpPageModel } from './sign_up_page';
 
 export abstract class ApplicationModel {
   public abstract load(): Promise<void>;
-  public abstract setAccount(account: User, accountProfileImage:
-    UserProfileImage, homePageModel: HomePageModel, inviteAFoodieModel:
-    InviteAFoodieModel): Promise<void>;
+  public abstract setAccount(account: User): Promise<void>;
   public abstract get account(): User;
   public abstract get accountProfileImage(): UserProfileImage;
+  public abstract updateAccountProfileImage(newImage: UserProfileImage): void;
   public abstract get homePageModel(): HomePageModel;
   public abstract addDiningEventPageModel(id: number,
     diningEventPageModel: DiningEventPageModel): void;

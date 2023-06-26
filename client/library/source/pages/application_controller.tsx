@@ -1,11 +1,11 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { Modal } from '../components';
-import { DisplayMode, getDisplayMode, User, UserProfileImage, UserStatus
-} from '../definitions';
+import { DisplayMode, getDisplayMode, User, UserProfileImage, UserStatus } from
+  '../definitions';
 import { HttpInviteAFoodieModel, InviteAFoodieModalController,
-  JoinModalController, LogInModalController, PartnerWithUsModalController
-} from '../modals';
+  JoinModalController, LogInModalController, PartnerWithUsModalController } from
+  '../modals';
 import { ApplicationModel } from './application_model';
 import { DeactivateAccountSurveyPageController }
 from './deactivate_account_survey_page';
@@ -41,13 +41,13 @@ interface Properties extends Router.RouteComponentProps<TParams> {
 interface State {
   displayMode: DisplayMode;
   account: User;
-  accountProfileImage: UserProfileImage;
   isLoaded: boolean;
   hasError: boolean;
   isJoinButtonClicked: boolean;
   isLogInButtonClicked: boolean;
   isInviteAFoodieButtonClicked: boolean;
   isPartnerWithUsButtonClicked: boolean;
+  accountProfileImage: UserProfileImage;
 }
 
 export class ApplicationController extends React.Component<Properties, State> {
@@ -56,13 +56,13 @@ export class ApplicationController extends React.Component<Properties, State> {
     this.state = {
       displayMode: DisplayMode.DESKTOP,
       account: User.makeGuest(),
-      accountProfileImage: UserProfileImage.default(),
       isLoaded: false,
       hasError: false,
       isJoinButtonClicked: false,
       isLogInButtonClicked: false,
       isInviteAFoodieButtonClicked: false,
       isPartnerWithUsButtonClicked: false,
+      accountProfileImage: UserProfileImage.default()
     };
   }
 
@@ -113,7 +113,7 @@ export class ApplicationController extends React.Component<Properties, State> {
         <Shell
           displayMode={this.state.displayMode}
           account={this.state.account}
-          accountProfileImageSrc={this.state.accountProfileImage?.src}
+          accountProfileImageSrc={this.state.accountProfileImage.src}
           headerStyle={this.handleHeaderAndFooter(pathname).headerStyle}
           onLogOut={this.handleLogOut}
           onLogInButton={this.handleLogInButton}
@@ -245,28 +245,12 @@ export class ApplicationController extends React.Component<Properties, State> {
     window.removeEventListener('resize', this.handleSize);
   }
 
-  public async updateAccount(newUser: User): Promise<void> {
+  private async updateAccount(newUser: User): Promise<void> {
     try {
-      const accountProfileImage = await (async () => {
-        if (newUser?.id !== -1) {
-          const imageResponse = await fetch(
-            `/api/user_profile_image/${newUser.id}`);
-          if (imageResponse.status === 200) {
-            const responseObject = await imageResponse.json();
-            return UserProfileImage.fromJson(
-              responseObject.accountProfileImage);
-          }
-          return UserProfileImage.default(newUser.id);
-        }
-        return UserProfileImage.default(-1);
-      })();
-      const homePageModel = new HttpHomePageModel(newUser);
-      const inviteAFoodieModel = new HttpInviteAFoodieModel(newUser);
-      await this.props.model.setAccount(newUser, accountProfileImage,
-        homePageModel, inviteAFoodieModel);
+      await this.props.model.setAccount(newUser);
       this.setState({
         account: newUser,
-        accountProfileImage: accountProfileImage
+        accountProfileImage: this.props.model.accountProfileImage
       });
     } catch {
       this.setState({ hasError: true });

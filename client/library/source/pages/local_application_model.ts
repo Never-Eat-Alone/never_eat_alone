@@ -19,16 +19,15 @@ export class LocalApplicationModel extends ApplicationModel {
   constructor(account: User, accountProfileImage: UserProfileImage,
       homePageModel: HomePageModel, inviteAFoodieModel: InviteAFoodieModel,
       joinModel: JoinModel, partnerWithUsModel: PartnerWithUsModel,
-      logInModel: LogInModel,
-      deletedAccountSurveyModel: DeletedAccountSurveyModel,
-      deactivateAccountSurveyModel: DeactivateAccountSurveyModel,
-      forgotPasswordPageModel: ForgotPasswordPageModel, googleClientId: string,
-      diningEventPageModelMap: Map<number, DiningEventPageModel>,
-      editProfilePageModelMap: Map<number, EditProfilePageModel>,
-      signUpPageModelMap: Map<number, SignUpPageModel>,
-      profilePageModelMap: Map<number, ProfilePageModel>,
-      settingsPageModelMap: Map<number, SettingsPageModel>,
-      emailConfirmationPageModelMap: Map<string, EmailConfirmationPageModel>) {
+      logInModel: LogInModel, deletedAccountSurveyModel:
+      DeletedAccountSurveyModel, deactivateAccountSurveyModel:
+      DeactivateAccountSurveyModel, forgotPasswordPageModel:
+      ForgotPasswordPageModel, googleClientId: string, diningEventPageModelMap:
+      Map<number, DiningEventPageModel>, editProfilePageModelMap: Map<number,
+      EditProfilePageModel>, signUpPageModelMap: Map<number, SignUpPageModel>,
+      profilePageModelMap: Map<number, ProfilePageModel>, settingsPageModelMap:
+      Map<number, SettingsPageModel>, emailConfirmationPageModelMap: Map<string,
+      EmailConfirmationPageModel>) {
     super();
     this._account = account;
     this._accountProfileImage = accountProfileImage;
@@ -54,15 +53,14 @@ export class LocalApplicationModel extends ApplicationModel {
       this._inviteAFoodieModel.load()]);
   }
 
-  public async setAccount(newAccount: User, profileImage: UserProfileImage,
-      homePageModel: HomePageModel, inviteAFoodieModel: InviteAFoodieModel):
-      Promise<void> {
+  public async setAccount(newAccount: User): Promise<void> {
     this._account = newAccount;
-    this._accountProfileImage = profileImage;
-    this._homepageModel = homePageModel;
-    this._inviteAFoodieModel = inviteAFoodieModel;
     await Promise.all([this._homepageModel.load(),
       this._inviteAFoodieModel.load()]);
+  }
+
+  public updateAccountProfileImage(newImage: UserProfileImage): void {
+    this._accountProfileImage = newImage;
   }
 
   public get account(): User {
