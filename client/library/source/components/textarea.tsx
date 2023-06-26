@@ -9,64 +9,54 @@ interface Properties extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   onValueChange: (newValue: string) => void;
 }
 
-export class Textarea extends React.Component<Properties> {
-  public render(): JSX.Element {
-    const { hasError, value, ...textareaProps } = this.props;
-    return (
-      <div
-          style={{...CONTAINER_STYLE, ...this.props.style}}
-          className={this.props.disabled && css(styles.disabled) ||
-            hasError && css(styles.hasError) ||
-            css(styles.container, styles.input)}
-      >
-        <textarea
-          {...textareaProps}
-          style={TEXTAREA_STYLE}
-          onChange={this.handleOnChange}
-        >
-          {value}
-        </textarea>
-      </div>);
-  }
- 
-  private handleOnChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    this.props.onValueChange(event.target.value);
-  }
+export function Textarea (props: Properties) {
+  const { hasError, value, onValueChange, ...textareaProps } = props;
+  const handleOnChange = React.useCallback(event => onValueChange(
+    event.target.value), [onValueChange]);
+  return (
+    <div
+        style={{...CONTAINER_STYLE, ...props.style}}
+        className={props.disabled && css(styles.disabled) ||
+          hasError && css(styles.hasError) ||
+          css(styles.container, styles.input)}
+    >
+      <textarea
+        {...textareaProps}
+        style={TEXTAREA_STYLE}
+        value={value}
+        onChange={handleOnChange}
+      />
+    </div>);
 }
 
 interface WithCounterProps extends Properties {
   maxCount: number;
 }
 
-export class TextareaWithCounter extends React.Component<WithCounterProps> {
-  public render(): JSX.Element {
-    const { hasError, value, maxCount, ...textareaProps } = this.props;
-    return (
-      <div
-          style={{...CONTAINER_STYLE, ...this.props.style}}
-          className={this.props.disabled && css(styles.disabled) ||
-            hasError && css(styles.hasError) ||
-            css(styles.container, styles.input)}
-      >
-        <textarea
-          {...textareaProps}
-          style={TEXTAREA_STYLE}
-          onChange={this.handleOnChange}
-        >
-          {value}
-        </textarea>
-        <div style={COUNTER_STYLE} >
-          <CircularCounterWithCounterInside
-            value={value.length}
-            maxValue={maxCount}
-          />
-        </div>
-      </div>);
-  }
- 
-  private handleOnChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    this.props.onValueChange(event.target.value);
-  }
+export function TextareaWithCounter (props: WithCounterProps) {
+  const { hasError, value, onValueChange, maxCount, ...textareaProps } = props;
+  const handleOnChange = React.useCallback(event => onValueChange(
+    event.target.value), [onValueChange]);
+  return (
+    <div
+        style={{...CONTAINER_STYLE, ...props.style}}
+        className={props.disabled && css(styles.disabled) ||
+          hasError && css(styles.hasError) ||
+          css(styles.container, styles.input)}
+    >
+      <textarea
+        {...textareaProps}
+        style={TEXTAREA_STYLE}
+        value={value}
+        onChange={handleOnChange}
+      />
+      <div style={COUNTER_STYLE} >
+        <CircularCounterWithCounterInside
+          value={value.length}
+          maxValue={maxCount}
+        />
+      </div>
+    </div>);
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {

@@ -1,18 +1,18 @@
 /** The possible price ranges per meal per person. */
 export enum PriceRange {
-  // Represents the $ price range.
+  /** Represents the $ price range. */
   INEXPENSIVE,
 
-  // Represents the $$ price range.
+  /** Represents the $$ price range. */
   MODERATELY_PRICED,
 
-  // Represents $$$ price range.
+  /** Represents $$$ price range. */
   EXPENSIVE,
 
-  // Represents $$$$ price range.
+  /** Represents $$$$ price range. */
   VERY_EXPENSIVE,
 
-  // Represents the price range is not known.
+  /** Represents the price range is not known. */
   UNKNOWN
 }
 

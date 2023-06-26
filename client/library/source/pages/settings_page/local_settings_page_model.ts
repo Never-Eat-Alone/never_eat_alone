@@ -76,7 +76,7 @@ export class LocalSettingsPageModel extends SettingsPageModel {
     return this._paymentRecords;
   }
 
-  // Payment methods tab related methods
+  /** Payment methods tab related methods */
   public async addCard(cardNumber: number, nameOnCard: string, month: number,
       year: number, securityCode: number, zipcode: string,
       creditCardType: CreditCardType): Promise<PaymentCard> {
@@ -93,7 +93,7 @@ export class LocalSettingsPageModel extends SettingsPageModel {
     return Boolean(cardId);
   }
 
-  // Notification tab related methods
+  /** Notification tab related methods */
   public async toggleNewEventsNotification(): Promise<boolean> {
     return true;
   }

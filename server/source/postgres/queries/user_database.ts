@@ -1,6 +1,6 @@
 import * as Hash from 'hash.js';
 import { Pool } from 'pg';
-import { Language, Location, SocialAccountType, User, UserStatus,
+import { Cuisine, Language, Location, SocialAccountType, User, UserStatus,
   UserProfileImage, UserProfileSocialAccount
 } from '../../../../client/library/source/definitions';
 import * as Crypto from 'crypto';
@@ -26,9 +26,6 @@ export class UserDatabase {
 
   public assingInvitationCodeToUserId = async (userId: number): Promise<
       void> => {
-    if (userId === -1) {
-      return;
-    }
     const inviteCode = generateInvitationCode();
     await this.pool.query(`
       INSERT INTO user_invitation_codes (invite_code, user_id, created_at,
@@ -39,9 +36,6 @@ export class UserDatabase {
   }
 
   public loadUserInvitationCode = async (userId: number): Promise<string> => {
-    if (userId === -1) {
-      return '';
-    }
     const result = await this.pool.query(`
       SELECT invite_code FROM user_invitation_codes WHERE user_id = $1`,
       [userId]);
@@ -76,7 +70,8 @@ export class UserDatabase {
     `, [sid, userId, sess, expire.toISOString()]);
   }
 
-  /** Returns a user based on the given email address.
+  /**
+   * Returns a user based on the given email address.
    * @param email - User email.
    */
   public loadUserByEmail = async (email: string): Promise<User> => {
@@ -91,13 +86,11 @@ export class UserDatabase {
       new Date(Date.parse(result.rows[0].created_at)));
   }
 
-  /** Returns a user with the given user id.
+  /**
+   * Returns a user with the given user id.
    * @param id - User id.
    */
   public loadUserById = async (id: number): Promise<User> => {
-    if (id === -1) {
-      return User.makeGuest();
-    }
     const result = await this.pool.query('SELECT * FROM users WHERE id = $1',
       [id]);
     if (result.rows?.length === 0) {
@@ -109,7 +102,8 @@ export class UserDatabase {
       new Date(Date.parse(result.rows[0].created_at)));
   }
 
-  /** Returns the user associated with the given session id.
+  /**
+   * Returns the user associated with the given session id.
    * @param id - Session id.
    */
   public loadUserBySessionId = async (id: string): Promise<User> => {
@@ -140,9 +134,6 @@ export class UserDatabase {
    */
   public validatePassword = async (userId: number, password: string): Promise<
       boolean> => {
-    if (userId === -1) {
-      return false;
-    }
     const hashedEnteredPass =
       Hash.sha256().update(password + userId).digest('hex');
     const result = await this.pool.query(
@@ -154,7 +145,8 @@ export class UserDatabase {
     return true;
   }
 
-  /** Add the new user.
+  /**
+   * Add the new user.
    * @param name - User name.
    * @param email - User email.
    * @param referralCode - User referral code.
@@ -166,7 +158,7 @@ export class UserDatabase {
       VALUES ($1, $2, DEFAULT, DEFAULT, $3)
       RETURNING *
     `, [name, email, referralCode]);
-    if (result.rows.length === 0) {
+    if (result.rows?.length === 0) {
       return User.makeGuest();
     }
     return new User(parseInt(result.rows[0].id), result.rows[0].name,
@@ -175,7 +167,8 @@ export class UserDatabase {
       new Date(Date.parse(result.rows[0].created_at)));
   }
 
-  /** Add the confirmation token to the database.
+  /**
+   * Add the confirmation token to the database.
    * @param tokenId - Confirmation token id.
    * @param expiresAt - Token expiration date.
    * @param userId - User id.
@@ -196,16 +189,19 @@ export class UserDatabase {
       Promise<void> => {
     const hashedEnteredPass =
       Hash.sha256().update(password + userId).digest('hex');
-    // Check if the user ID already exists in the table
+
+    /** Check if the user ID already exists in the table */
     const result = await this.pool.query(`
       SELECT user_id FROM user_credentials WHERE user_id = $1`, [userId]);
     if (result.rows.length > 0) {
-      // If the user ID already exists, update the password
+
+      /** If the user ID already exists, update the password */
       await this.pool.query(`
         UPDATE user_credentials SET hashed_pass = $1 WHERE user_id = $2`,
         [hashedEnteredPass, userId]);
     } else {
-      // If the user ID doesn't exist, insert the new credentials
+
+      /** If the user ID doesn't exist, insert the new credentials */
       await this.pool.query(`
         INSERT INTO user_credentials (user_id, hashed_pass) VALUES ($1, $2)`,
         [userId, hashedEnteredPass]);
@@ -270,7 +266,7 @@ export class UserDatabase {
     const result = await this.pool.query(`
       SELECT user_id FROM user_confirmation_tokens WHERE token_id = $1`,
       [token]);
-    if (!result || !result.rows || result.rows.length === 0) {
+    if (result.rows?.length === 0) {
       return -1;
     }
     return parseInt(result.rows[0].user_id);
@@ -294,7 +290,8 @@ export class UserDatabase {
       [parseInt(result.rows[0].user_id)]);
     await this.pool.query(
       'DELETE FROM user_confirmation_tokens WHERE token_id = $1', [token]);
-    // Creates the default profile image for the new confirmed user.
+
+    /** Creates the default profile image for the new confirmed user. */
     const defaultImageSrc = '/resources/avatars/profile-image-0.svg';
     await this.pool.query(`
       INSERT INTO user_profile_images (user_id, src)
@@ -302,7 +299,8 @@ export class UserDatabase {
       ON CONFLICT (user_id)
       DO UPDATE SET src = EXCLUDED.src, updated_at = NOW()
     `, [parseInt(result.rows[0].user_id), defaultImageSrc]);
-    // Assigns the user invitation code to the database.
+
+    /** Assigns the user invitation code to the database. */
     await this.assingInvitationCodeToUserId(parseInt(result.rows[0].user_id));
     return parseInt(result.rows[0].user_id);
   }
@@ -343,7 +341,8 @@ export class UserDatabase {
     };
   }
 
-  /** Returns a user's biography based on user id.
+  /**
+   * Returns a user's biography based on user id.
    * @param userId - User's id number'.
    */
   public loadBiographyByUserId = async (userId: number): Promise<string> => {
@@ -356,7 +355,8 @@ export class UserDatabase {
     return result.rows[0].biography;
   }
 
-  /** Returns a user's address based on user id.
+  /**
+   * Returns a user's address based on user id.
    * @param userId - User's id number'.
    */
   public loadAddressByUserId = async (userId: number): Promise<string> => {
@@ -398,7 +398,8 @@ export class UserDatabase {
 
   public loadUserProfileSocialAccountsByUserId = async (userId: number):
       Promise<UserProfileSocialAccount[]> => {
-    // Query the user profile social accounts table based on user_id
+
+    /** Query the user profile social accounts table based on user_id */
     const result = await this.pool.query(`
       SELECT * FROM user_profile_social_accounts WHERE user_id = $1`, [userId]);
     if (result.rows?.length === 0) {
@@ -408,12 +409,26 @@ export class UserDatabase {
       result.rows.map((row) => {
         const account = new UserProfileSocialAccount(
           SocialAccountType[row.platform as keyof typeof SocialAccountType],
-          row.link);
-        // ... set other properties specific to user profile social accounts
+          row.link, row.is_private);
         return account;
     });
     return userProfilesocialAccounts;
   };
+
+  public loadUserFavouriteCuisinesByUserId = async (userId: number): Promise<
+      Cuisine[]> => {
+    const result = await this.pool.query(`SELECT cu.* FROM cuisines AS cu JOIN
+      user_favourite_cuisines AS u_cu ON u_cu.cuisine_id = cu.id WHERE
+      u_cu.user_id = $1`, [userId]);
+    if (result.rows?.length === 0) {
+      return [];
+    }
+    const userCuisines: Cuisine[] = result.rows.map((row) => {
+      const cuisine = new Cuisine(parseInt(row.id), row.label, row.color_code);
+      return cuisine;
+    });
+    return userCuisines;
+  }
 
   /** The postgress pool connection. */
   private pool: Pool;

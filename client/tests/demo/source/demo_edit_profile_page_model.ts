@@ -2,9 +2,17 @@ import * as NeverEatAlone from 'never_eat_alone';
 
 export class DemoEditProfilePageModel extends
     NeverEatAlone.EditProfilePageModel {
-  constructor(coverImage: NeverEatAlone.CoverImage, coverImageList:
-      NeverEatAlone.CoverImage[], profileImage: NeverEatAlone.UserProfileImage,
-      displayName: string, userName: string, profileId: number,
+  public static empty(): DemoEditProfilePageModel {
+    return new DemoEditProfilePageModel([], [],
+      NeverEatAlone.CoverImage.noImage(), [],
+      NeverEatAlone.UserProfileImage.default(), '', true, true, true, true, '',
+      true, [], [], true, true, true, true, '', '', '');
+  }
+
+  constructor(languageList: NeverEatAlone.Language[], cuisineList:
+      NeverEatAlone.Cuisine[], coverImage: NeverEatAlone.CoverImage,
+      coverImageList: NeverEatAlone.CoverImage[], profileImage:
+      NeverEatAlone.UserProfileImage, selectedLocation: string,
       isUpcomingEventsPrivate: boolean, isPastEventsPrivate: boolean,
       isLocationPrivate: boolean, isLanguagePrivate: boolean,
       biographyValue: string, isBiographyPrivate: boolean,
@@ -12,16 +20,11 @@ export class DemoEditProfilePageModel extends
       selectedCuisineList: NeverEatAlone.Cuisine[], isCuisinePrivate: boolean,
       isFacebookPrivate: boolean, isTwitterPrivate: boolean,
       isInstagramPrivate: boolean, facebookLink: string, twitterLink: string,
-      instagramLink: string, selectedLocation: NeverEatAlone.CityProvince,
-      locationList: NeverEatAlone.CityProvince[], languageList:
-      NeverEatAlone.Language[], cuisineList: NeverEatAlone.Cuisine[]) {
+      instagramLink: string) {
     super();
     this._coverImage = coverImage;
     this._coverImageList = coverImageList;
     this._profileImage = profileImage;
-    this._displayName = displayName;
-    this._userName = userName;
-    this._profileId = profileId;
     this._isUpcomingEventsPrivate = isUpcomingEventsPrivate;
     this._isPastEventsPrivate = isPastEventsPrivate;
     this._isLocationPrivate = isLocationPrivate;
@@ -38,17 +41,45 @@ export class DemoEditProfilePageModel extends
     this._twitterLink = twitterLink;
     this._instagramLink = instagramLink;
     this._selectedLocation = selectedLocation;
-    this._locationList = locationList;
     this._languageList = languageList;
     this._cuisineList = cuisineList;
+    this._suggestedLocationList = new Map();
   }
 
   public async load(): Promise<void> {
     return;
   }
 
-  public get locationList(): NeverEatAlone.CityProvince[] {
-    return this._locationList;
+  public isEmpty(): boolean {
+    const emptyModel =DemoEditProfilePageModel.empty();
+    return (
+      JSON.stringify(this._languageList) === JSON.stringify(
+        emptyModel._languageList) &&
+      JSON.stringify(this._cuisineList) === JSON.stringify(
+        emptyModel._cuisineList) &&
+      this._coverImage.equals(emptyModel._coverImage) &&
+      JSON.stringify(this._coverImageList) === JSON.stringify(
+        emptyModel._coverImageList) &&
+      this._profileImage.equals(emptyModel._profileImage) &&
+      this._selectedLocation === emptyModel._selectedLocation &&
+      this._isUpcomingEventsPrivate === emptyModel._isUpcomingEventsPrivate &&
+      this._isPastEventsPrivate === emptyModel._isPastEventsPrivate &&
+      this._isLocationPrivate === emptyModel._isLocationPrivate &&
+      this._isLanguagePrivate === emptyModel._isLanguagePrivate &&
+      this._biographyValue === emptyModel._biographyValue &&
+      this._isBiographyPrivate === emptyModel._isBiographyPrivate &&
+      JSON.stringify(this._selectedLanguageList) === JSON.stringify(
+        emptyModel._selectedLanguageList) &&
+      JSON.stringify(this._selectedCuisineList) === JSON.stringify(
+        emptyModel._selectedCuisineList) &&
+      this._isCuisinePrivate === emptyModel._isCuisinePrivate &&
+      this._isFacebookPrivate === emptyModel._isFacebookPrivate &&
+      this._isTwitterPrivate === emptyModel._isTwitterPrivate &&
+      this._isInstagramPrivate === emptyModel._isInstagramPrivate &&
+      this._facebookLink === emptyModel._facebookLink &&
+      this._twitterLink === emptyModel._twitterLink &&
+      this._instagramLink === emptyModel._instagramLink
+    );
   }
 
   public get languageList(): NeverEatAlone.Language[] {
@@ -71,20 +102,8 @@ export class DemoEditProfilePageModel extends
     return this._profileImage;
   }
 
-  public get displayName(): string {
-    return this._displayName;
-  }
-
-  public get userName(): string {
-    return this._userName;
-  }
-
-  public get selectedLocation(): NeverEatAlone.CityProvince {
+  public get selectedLocation(): string {
     return this._selectedLocation;
-  }
-
-  public get profileId(): number {
-    return this._profileId;
   }
 
   public get isUpcomingEventsPrivate(): boolean {
@@ -99,17 +118,14 @@ export class DemoEditProfilePageModel extends
     return this._isLocationPrivate;
   }
 
+  public addSuggestedLocationList(value: string, locationList: string[]
+      ): void {
+    this._suggestedLocationList.set(value, locationList);
+  }
+
   public async getSuggestedLocationList(value: string): Promise<
-      NeverEatAlone.CityProvince[]> {
-    const temp: NeverEatAlone.CityProvince[] = [];
-    const searchValue = value.toLowerCase();
-    for (const location of this._locationList) {
-      if (location.city.toLowerCase().indexOf(searchValue) !== -1 ||
-          location.province.toLowerCase().indexOf(searchValue) !== -1) {
-        temp.push(location);
-      }
-    }
-    return temp;
+      string[]> {
+    return this._suggestedLocationList.get(value);
   }
 
   public get isLanguagePrivate(): boolean {
@@ -187,17 +203,18 @@ export class DemoEditProfilePageModel extends
   public async save(coverImage: NeverEatAlone.CoverImage,
       profileImage: NeverEatAlone.UserProfileImage, isUpcomingEventsPrivate:
       boolean, isPastEventsPrivate: boolean, isLocationPrivate: boolean,
-      isLanguagePrivate: boolean, biographyValue: string,
-      isBiographyPrivate: boolean, selectedLanguageList:
-      NeverEatAlone.Language[], selectedCuisineList: NeverEatAlone.Cuisine[],
-      isCuisinePrivate: boolean, isFacebookPrivate: boolean, isTwitterPrivate:
-      boolean, isInstagramPrivate: boolean, facebookLink: string, twitterLink:
-      string, instagramLink: string): Promise<boolean> {
+      selectedLocation: string, isLanguagePrivate: boolean,
+      selectedLanguageList: NeverEatAlone.Language[], isBiographyPrivate:
+      boolean, biographyValue: string, isFacebookPrivate: boolean,
+      facebookLink: string, isTwitterPrivate: boolean, twitterLink: string,
+      isInstagramPrivate: boolean, instagramLink: string, isCuisinePrivate:
+      boolean, selectedCuisineList: NeverEatAlone.Cuisine[]): Promise<boolean> {
     this._coverImage = coverImage;
     this._profileImage = profileImage;
     this._isUpcomingEventsPrivate = isUpcomingEventsPrivate;
     this._isPastEventsPrivate = isPastEventsPrivate;
     this._isLocationPrivate = isLocationPrivate;
+    this._selectedLocation = selectedLocation;
     this._isLanguagePrivate = isLanguagePrivate;
     this._biographyValue = biographyValue;
     this._isBiographyPrivate = isBiographyPrivate;
@@ -217,9 +234,6 @@ export class DemoEditProfilePageModel extends
   private _coverImage: NeverEatAlone.CoverImage;
   private _coverImageList: NeverEatAlone.CoverImage[];
   private _profileImage: NeverEatAlone.UserProfileImage;
-  private _displayName: string;
-  private _userName: string;
-  private _profileId: number;
   private _isUpcomingEventsPrivate: boolean;
   private _isPastEventsPrivate: boolean;
   private _isLocationPrivate: boolean;
@@ -235,8 +249,8 @@ export class DemoEditProfilePageModel extends
   private _facebookLink: string;
   private _twitterLink: string;
   private _instagramLink: string;
-  private _selectedLocation: NeverEatAlone.CityProvince;
-  private _locationList: NeverEatAlone.CityProvince[];
+  private _selectedLocation: string;
   private _languageList: NeverEatAlone.Language[];
   private _cuisineList: NeverEatAlone.Cuisine[];
+  private _suggestedLocationList: Map<string, string[]>;
 }
