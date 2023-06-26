@@ -3,9 +3,8 @@ import * as Router from 'react-router-dom';
 import { Modal } from '../components';
 import { DisplayMode, getDisplayMode, User, UserProfileImage, UserStatus } from
   '../definitions';
-import { HttpInviteAFoodieModel, InviteAFoodieModalController,
-  JoinModalController, LogInModalController, PartnerWithUsModalController } from
-  '../modals';
+import { InviteAFoodieModalController, JoinModalController,
+  LogInModalController, PartnerWithUsModalController } from '../modals';
 import { ApplicationModel } from './application_model';
 import { DeactivateAccountSurveyPageController }
 from './deactivate_account_survey_page';
@@ -18,7 +17,7 @@ import { EmailConfirmationPageController } from './email_confirmation_page';
 import { ErrorPage403, ErrorPage404, ErrorPage500 } from './error_page';
 import { ForgotPasswordPageController } from './forgot_password_page';
 import { HelpPage } from './help_page';
-import { HomePageController, HttpHomePageModel } from './home_page';
+import { HomePageController } from './home_page';
 import { InviteAFoodiePageController } from './invite_a_foodie_page';
 import { JoinPageController } from './join_page';
 import { LogInPageController } from './log_in_page';
@@ -313,7 +312,7 @@ export class ApplicationController extends React.Component<Properties, State> {
   private handleLogOut = async () => {
     const isLoggedOut = await this.props.model.logInModel.logOut();
     if (isLoggedOut) {
-      this.updateAccount(User.makeGuest());
+      await this.updateAccount(User.makeGuest());
     }
   }
 
