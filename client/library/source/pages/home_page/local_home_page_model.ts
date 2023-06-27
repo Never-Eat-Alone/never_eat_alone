@@ -2,9 +2,7 @@ import { EventCardSummary, EventTag, SocialMediaImage } from
   '../../definitions';
 import { HomePageModel } from './home_page_model';
 
-/**
- * Implements the HomePageModel in memory.
- */
+/** Implements the HomePageModel in memory. */
 export class LocalHomePageModel extends HomePageModel {
   constructor(imageList: SocialMediaImage[], eventList: EventCardSummary[],
       userEventTagList: EventTag[], userFutureEventList: EventCardSummary[],
@@ -48,7 +46,7 @@ export class LocalHomePageModel extends HomePageModel {
   }
 
   private ensureIsLoaded(): void {
-    if(!this._isLoaded) {
+    if (!this._isLoaded) {
       throw new Error('HomePageModel not loaded.');
     }
   }

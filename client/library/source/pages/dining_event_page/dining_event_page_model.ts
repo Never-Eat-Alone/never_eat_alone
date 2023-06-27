@@ -1,10 +1,11 @@
-import { Attendee, DressCode, Location, Restaurant, Seating, User
-} from '../../definitions';
+import { Attendee, DressCode, Location, Restaurant, Seating, User } from
+  '../../definitions';
 
 /** Base class for the model used by the DiningEventPage. */
 export abstract class DiningEventPageModel {
-  /** Loads the data to display on the DiningEventPage
-   * must be called before calling any other method of this class.
+  /**
+   * Loads the data to display on the DiningEventPage.
+   * Must be called before calling any other method of this class.
    */
   public abstract load(): Promise<void>;
   public abstract get eventId(): number;

@@ -1,22 +1,28 @@
 import { arrayFromJson, Attendee, DressCode, Location, Restaurant, Seating, User
-} from '../../definitions';
+  } from '../../definitions';
 import { DiningEventPageModel } from './dining_event_page_model';
+import { EmptyDiningEventPageModel } from './empty_dining_event_page_model';
 import { LocalDiningEventPageModel } from './local_dining_event_page_model';
 
-/** Base class for the model used by the DiningEventPage. */
 export class HttpDiningEventPageModel extends DiningEventPageModel {
   constructor(eventId: number) {
     super();
+    this._isLoaded = false;
     this._eventId = eventId;
+    this._model = new EmptyDiningEventPageModel();
   }
 
-  /** Loads the data to display on the DiningEventPage
-   * must be called before calling any other method of this class.
+  /**
+   * Loads the data to display on the DiningEventPage. Must be called before
+   * calling any other method of this class.
    */
   public async load(): Promise<void> {
+    if (this._isLoaded) {
+      return;
+    }
     const response = await fetch(`/api/dining_events/${this._eventId}`);
     if (response.status !== 200) {
-      return;
+      throw new Error(`Response status ${response.status}`);
     }
     const responseObject = await response.json();
     const eventId = responseObject.eventId;
@@ -42,6 +48,7 @@ export class HttpDiningEventPageModel extends DiningEventPageModel {
       reservationName, startTime, endTime, attendeeList, totalCapacity,
       description, isGoing, isRSVPOpen);
     await this._model.load();
+    this._isLoaded = true;
   }
 
   public get eventId(): number {
@@ -146,6 +153,7 @@ export class HttpDiningEventPageModel extends DiningEventPageModel {
     return false;
   }
 
-  private _model: DiningEventPageModel;
+  private _isLoaded: boolean;
   private _eventId: number;
+  private _model: DiningEventPageModel;
 }

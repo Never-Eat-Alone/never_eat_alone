@@ -2,8 +2,8 @@ import { css, StyleSheet } from 'aphrodite';
 import { format } from 'date-fns';
 import * as React from 'react';
 import * as Router from 'react-router-dom';
-import { PrimaryTextButton, SecondaryTextButton, SeeAllButton, SeeLessButton
-} from '../../components';
+import { PrimaryTextButton, SecondaryTextButton, SeeAllButton, SeeLessButton }
+  from '../../components';
 import { Attendee, AttendeeStatus, DisplayMode, DressCode, getDressCodeIconSrc,
   getDressCodeName, getSeatingIconSrc, getSeatingName, Location, Restaurant,
   Seating, toDollarSigns, User, UserStatus } from '../../definitions';
@@ -88,9 +88,8 @@ export class DiningEventPage extends React.Component<Properties, State> {
     })();
     const isGoing = (() => {
       if (isLoggedIn) {
-        const index = this.props.attendeeList.findIndex((a) => 
-          a.userId === this.props.account.id && a.status ===
-          AttendeeStatus.GOING);
+        const index = this.props.attendeeList.findIndex(a => a.userId ===
+          this.props.account.id && a.status === AttendeeStatus.GOING);
         if (index !== -1) {
           return true;
         }
@@ -101,7 +100,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
       if (!this.props.attendeeList) {
         return [];
       }
-      return this.props.attendeeList.filter((a) => a.status ===
+      return this.props.attendeeList.filter(a => a.status ===
         AttendeeStatus.GOING);
     })();
     const joinButton = (() => {
@@ -119,15 +118,13 @@ export class DiningEventPage extends React.Component<Properties, State> {
         };
       })();
       if (currentTime > this.props.endTime) {
-        return <PrimaryTextButton style={joinButtonStyle}
-          label='Past Event' labelStyle={joinButtonLabelStyle}
-          disabled />;
+        return <PrimaryTextButton style={joinButtonStyle} label='Past Event'
+          labelStyle={joinButtonLabelStyle} disabled />;
       }
-      if (currentTime > this.props.startTime && currentTime <
-          this.props.endTime) {
-        return <PrimaryTextButton style={joinButtonStyle}
-          label='Happening Now' labelStyle={joinButtonLabelStyle}
-          disabled />;
+      if (currentTime > this.props.startTime && currentTime < this.props.endTime
+          ) {
+        return <PrimaryTextButton style={joinButtonStyle} label='Happening Now'
+          labelStyle={joinButtonLabelStyle} disabled />;
       }
       if (isLoggedIn && isGoing) {
         return <SecondaryTextButton style={joinButtonStyle}
@@ -135,14 +132,12 @@ export class DiningEventPage extends React.Component<Properties, State> {
           onClick={this.props.onRemoveSeat} />;
       }
       if (!this.props.isRSVPOpen) {
-        return <PrimaryTextButton style={joinButtonStyle}
-          label='RSVP Close' labelStyle={joinButtonLabelStyle}
-          disabled />;
+        return <PrimaryTextButton style={joinButtonStyle} label='RSVP Close'
+          labelStyle={joinButtonLabelStyle} disabled />;
       }
       if (goingAttendeeList.length >= this.props.totalCapacity) {
-        return <PrimaryTextButton style={joinButtonStyle}
-          label='Full' labelStyle={joinButtonLabelStyle}
-          disabled />;
+        return <PrimaryTextButton style={joinButtonStyle} label='Full'
+          labelStyle={joinButtonLabelStyle} disabled />;
       }
       if (this.props.isRSVPOpen && (!isGoing || !isLoggedIn)) {
         return <PrimaryTextButton style={joinButtonStyle}
@@ -153,8 +148,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
     const { containerStyle, coverImageStyle, contentContainerStyle,
         headerContainerStyle, eventTagContainerStyle,
         detailIconTextContainerStyle, attendeesRowStyle, eventTitleStyle,
-        headerJoinButton, stickyFooter
-    } = (() => {
+        headerJoinButton, stickyFooter } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
           containerStyle: DESKTOP_CONTAINER_STYLE,
@@ -193,8 +187,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
           eventTitleStyle: MOBILE_EVENT_TITLE_STYLE,
           headerJoinButton: <div />,
           stickyFooter: (
-            <div style={STICKY_FOOTER_CONTAINER_STYLE} >{joinButton}</div>)
-        };
+            <div style={STICKY_FOOTER_CONTAINER_STYLE} >{joinButton}</div>)};
       }
     })();
     const cuisineTags = (() => {
