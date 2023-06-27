@@ -37,24 +37,26 @@ export class DiningEventPageController extends React.Component<Properties,
         DiningEventPage.ErrorCode.NONE) {
       return <div />;
     }
+    const isRSVPOpen = (this.props.model.diningEvent.rsvpOpenAt <= new Date() &&
+      this.props.model.diningEvent.rsvpCloseAt < new Date());
     return <DiningEventPage
       displayMode={this.props.displayMode}
-      eventColor={this.props.model.eventColor}
-      eventFee={this.props.model.eventFee}
-      coverImageSrc={this.props.model.coverImageSrc}
-      title={this.props.model.title}
-      restaurant={this.props.model.restaurant}
-      dressCode={this.props.model.dressCode}
-      seating={this.props.model.seating}
-      location={this.props.model.location}
-      reservationName={this.props.model.reservationName}
-      startTime={this.props.model.startTime}
-      endTime={this.props.model.endTime}
-      attendeeList={this.props.model.attendeeList}
-      totalCapacity={this.props.model.totalCapacity}
-      description={this.props.model.description}
+      eventColor={this.props.model.diningEvent.eventColor}
+      eventFee={this.props.model.diningEvent.eventFee}
+      coverImageSrc={this.props.model.diningEvent.coverImageSrc}
+      title={this.props.model.diningEvent.title}
+      restaurant={this.props.model.diningEvent.restaurant}
+      dressCode={this.props.model.diningEvent.dressCode}
+      seating={this.props.model.diningEvent.seating}
+      location={this.props.model.diningEvent.location}
+      reservationName={this.props.model.diningEvent.reservationName}
+      startTime={this.props.model.diningEvent.startAt}
+      endTime={this.props.model.diningEvent.endAt}
+      attendeeList={this.props.model.diningEvent.attendeeList}
+      totalCapacity={this.props.model.diningEvent.totalCapacity}
+      description={this.props.model.diningEvent.description}
       account={this.props.account}
-      isRSVPOpen={this.props.model.isRSVPOpen}
+      isRSVPOpen={isRSVPOpen}
       onJoinEvent={this.props.onJoinEvent}
       onRemoveSeat={this.props.onRemoveSeat}
     />;

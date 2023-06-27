@@ -36,6 +36,13 @@ export class DiningEvent {
     );
   }
 
+  public static empty(): DiningEvent {
+    return new DiningEvent(-1, '', 0, '', '', Restaurant.empty(),
+      DressCode.CASUAL, Seating.STANDARD, Location.empty(), '', new Date(),
+      new Date(), [], 0, '', new Date(), new Date(), EventStatus.DRAFT,
+      EventType.PRIVATE, new Date(), new Date());
+  }
+
   constructor(id: number, eventColor: string, eventFee: number,
       coverImageSrc: string, title: string, restaurant: Restaurant,
       dressCode: DressCode, seating: Seating, location: Location,

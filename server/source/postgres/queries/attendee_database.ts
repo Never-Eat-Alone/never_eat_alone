@@ -1,6 +1,6 @@
 import { Pool } from 'pg';
-import { Cuisine, EventCardSummary, EventTag, PriceRange
-} from '../../../../client/library/source/definitions';
+import { Cuisine, EventCardSummary, EventTag, PriceRange } from
+  '../../../../client/library/source/definitions';
 
 /** Attendee related database manipulations class. */
 export class AttendeeDatabase {
@@ -105,6 +105,16 @@ export class AttendeeDatabase {
       pastEventCards.push(eventCard);
     }
     return pastEventCards;
+  }
+
+  public isUserGoingByEventId = async (userId: number, eventId: number):
+      Promise<boolean> => {
+    const result = await this.pool.query(`SELECT * FROM attendees WHERE user_id
+      = $1 AND event_id = $2 AND status = 'GOING'`, [userId, eventId]);
+    if (result.rows?.length === 1) {
+      return true;
+    }
+    return false;
   }
 
   /** The postgress pool connection. */
