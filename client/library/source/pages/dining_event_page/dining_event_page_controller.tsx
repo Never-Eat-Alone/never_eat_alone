@@ -7,7 +7,6 @@ interface Properties {
   /** The display mode. */
   displayMode: DisplayMode;
   model: DiningEventPageModel;
-
   account: User;
 
   /** Indicates the remove seat button is clicked. */
@@ -74,6 +73,5 @@ export class DiningEventPageController extends React.Component<Properties,
         errorCode: DiningEventPage.ErrorCode.NO_CONNECTION
       });
     }
-    return;
   }
 }
