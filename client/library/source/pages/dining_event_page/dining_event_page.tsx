@@ -2,8 +2,8 @@ import { css, StyleSheet } from 'aphrodite';
 import { format } from 'date-fns';
 import * as React from 'react';
 import * as Router from 'react-router-dom';
-import { PrimaryTextButton, SecondaryTextButton, SeeAllButton, SeeLessButton
-} from '../../components';
+import { PrimaryTextButton, SecondaryTextButton, SeeAllButton, SeeLessButton }
+  from '../../components';
 import { Attendee, AttendeeStatus, DisplayMode, DressCode, getDressCodeIconSrc,
   getDressCodeName, getSeatingIconSrc, getSeatingName, Location, Restaurant,
   Seating, toDollarSigns, User, UserStatus } from '../../definitions';
@@ -88,7 +88,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
     })();
     const isGoing = (() => {
       if (isLoggedIn) {
-        const index = this.props.attendeeList.findIndex((a) => 
+        const index = this.props.attendeeList.findIndex((a) =>
           a.userId === this.props.account.id && a.status ===
           AttendeeStatus.GOING);
         if (index !== -1) {
@@ -153,8 +153,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
     const { containerStyle, coverImageStyle, contentContainerStyle,
         headerContainerStyle, eventTagContainerStyle,
         detailIconTextContainerStyle, attendeesRowStyle, eventTitleStyle,
-        headerJoinButton, stickyFooter
-    } = (() => {
+        headerJoinButton, stickyFooter } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
         return {
           containerStyle: DESKTOP_CONTAINER_STYLE,
@@ -193,8 +192,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
           eventTitleStyle: MOBILE_EVENT_TITLE_STYLE,
           headerJoinButton: <div />,
           stickyFooter: (
-            <div style={STICKY_FOOTER_CONTAINER_STYLE} >{joinButton}</div>)
-        };
+            <div style={STICKY_FOOTER_CONTAINER_STYLE} >{joinButton}</div>)};
       }
     })();
     const cuisineTags = (() => {

@@ -1,47 +1,53 @@
 import { arrayFromJson, Attendee, DressCode, Location, Restaurant, Seating, User
-} from '../../definitions';
+  } from '../../definitions';
 import { DiningEventPageModel } from './dining_event_page_model';
+import { EmptyDiningEventPageModel } from './empty_dining_event_page_model';
 import { LocalDiningEventPageModel } from './local_dining_event_page_model';
 
-/** Base class for the model used by the DiningEventPage. */
 export class HttpDiningEventPageModel extends DiningEventPageModel {
   constructor(eventId: number) {
     super();
+    this._isLoaded = false;
     this._eventId = eventId;
+    this._model = new EmptyDiningEventPageModel();
   }
 
-  /** Loads the data to display on the DiningEventPage
-   * must be called before calling any other method of this class.
+  /**
+   * Loads the data to display on the DiningEventPage. Must be called before
+   * calling any other method of this class.
    */
   public async load(): Promise<void> {
-    const response = await fetch(`/api/dining_events/${this._eventId}`);
-    if (response.status !== 200) {
+    if (this._isLoaded) {
       return;
     }
-    const responseObject = await response.json();
-    const eventId = responseObject.eventId;
-    const eventColor = responseObject.eventColor;
-    const eventFee = responseObject.eventFee;
-    const coverImageSrc = responseObject.coverImageSrc;
-    const title = responseObject.title;
-    const restaurant = Restaurant.fromJson(responseObject.restaurant);
-    const dressCode = responseObject.dressCode as DressCode;
-    const seating = responseObject.seating as Seating;
-    const location = Location.fromJson(responseObject.location);
-    const reservationName = responseObject.reservationName;
-    const startTime = new Date(Date.parse(responseObject.startTime));
-    const endTime = new Date(Date.parse(responseObject.endTime));
-    const attendeeList: Attendee[] = arrayFromJson(Attendee,
-      responseObject.attendeeList);
-    const totalCapacity = responseObject.totalCapacity;
-    const description = responseObject.description;
-    const isGoing = responseObject.isGoing;
-    const isRSVPOpen = responseObject.isRSVPOpen;
-    this._model = new LocalDiningEventPageModel(eventId, eventColor, eventFee,
-      coverImageSrc, title, restaurant, dressCode, seating, location,
-      reservationName, startTime, endTime, attendeeList, totalCapacity,
-      description, isGoing, isRSVPOpen);
+    const response = await fetch(`/api/dining_events/${this._eventId}`);
+    if (response.status === 200) {
+      const responseObject = await response.json();
+      const eventId = responseObject.eventId;
+      const eventColor = responseObject.eventColor;
+      const eventFee = responseObject.eventFee;
+      const coverImageSrc = responseObject.coverImageSrc;
+      const title = responseObject.title;
+      const restaurant = Restaurant.fromJson(responseObject.restaurant);
+      const dressCode = responseObject.dressCode as DressCode;
+      const seating = responseObject.seating as Seating;
+      const location = Location.fromJson(responseObject.location);
+      const reservationName = responseObject.reservationName;
+      const startTime = new Date(Date.parse(responseObject.startTime));
+      const endTime = new Date(Date.parse(responseObject.endTime));
+      const attendeeList: Attendee[] = arrayFromJson(Attendee,
+        responseObject.attendeeList);
+      const totalCapacity = responseObject.totalCapacity;
+      const description = responseObject.description;
+      const isGoing = responseObject.isGoing;
+      const isRSVPOpen = responseObject.isRSVPOpen;
+      this._model = new LocalDiningEventPageModel(eventId, eventColor, eventFee,
+        coverImageSrc, title, restaurant, dressCode, seating, location,
+        reservationName, startTime, endTime, attendeeList, totalCapacity,
+        description, isGoing, isRSVPOpen);
+    }
     await this._model.load();
+    this._isLoaded = true;
   }
 
   public get eventId(): number {
@@ -148,4 +154,5 @@ export class HttpDiningEventPageModel extends DiningEventPageModel {
 
   private _model: DiningEventPageModel;
   private _eventId: number;
+  private _isLoaded: boolean;
 }
