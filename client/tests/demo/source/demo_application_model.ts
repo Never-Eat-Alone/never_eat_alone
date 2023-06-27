@@ -223,17 +223,23 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     Dinner Menu: \
     \
     https://www.kiboomakase.com/";
-    const demoDiningEventModel1 = new DemoDiningEventPageModel(1, '#E1630D', 15,
-      'resources/images/3.jpg', 'A night to remmeber at the best sushi \
-      restaurant in town!', new NeverEatAlone.Restaurant(1,
+    const restaurant1 = new NeverEatAlone.Restaurant(1,
       'Yukashi Japanese Restaurant', new Date(), 1, 'One Michelin Star 2022',
       '', '4167869809', NeverEatAlone.PriceRange.VERY_EXPENSIVE, [
-      japaneseCuisine, omakaseCuisine], 'yukashi.com'),
-      NeverEatAlone.DressCode.BLACK_TIE, NeverEatAlone.Seating.PRIVATE_ROOM,
-      new NeverEatAlone.Location(1, '643a Mt Pleasant Rd', '', 'Toronto', 'ON',
-      'Canada', 'M4S 2M9', 'Midtown'), 'Alexa Perry', new Date(2022, 6, 12, 19,
-      0, 0), new Date(2022, 6, 13, 1, 0, 0), attendeeList1, 10,
-      diningEventModel1Description , false, false);
+      japaneseCuisine, omakaseCuisine], 'yukashi.com');
+    const location1 = new NeverEatAlone.Location(1, '643a Mt Pleasant Rd', '',
+      'Toronto', 'ON', 'Canada', 'M4S 2M9', 'Midtown');
+    const diningEvent1 = new NeverEatAlone.DiningEvent(1, '#E1630D', 15,
+      'resources/images/3.jpg', 'A night to remmeber at the best sushi \
+      restaurant in town!', restaurant1, NeverEatAlone.DressCode.BLACK_TIE,
+      NeverEatAlone.Seating.PRIVATE_ROOM, location1, 'Alexa Perry',
+      new Date(2022, 6, 12, 19, 0, 0), new Date(2022, 6, 13, 1, 0, 0),
+      attendeeList1, 10, diningEventModel1Description,
+      new Date(2022, 6, 12, 19, 0, 0), new Date(2022, 6, 13, 1, 0, 0),
+      NeverEatAlone.EventStatus.ACTIVE, NeverEatAlone.EventType.PUBLIC,
+      new Date(2021, 6, 12, 19, 0, 0), new Date(Date.now()));
+    const demoDiningEventModel1 = new DemoDiningEventPageModel(diningEvent1,
+      true);
     this._diningEventModelMap.set(1, demoDiningEventModel1);
 
     /** Dining event model 2 */
@@ -246,26 +252,34 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       Dinner Menu: \
       \
       https://banu.ca/menu";
-    const demoDiningEventModel2 = new DemoDiningEventPageModel(2, '#B2DFED',
-      20.00, 'resources/images/4.jpg', 'The best italian restaurant in town!',
-      new NeverEatAlone.Restaurant(2, 'Piano Piano', new Date(), 2,
-      'Piano Piano is managed by a michelin chef from Italy.', '', '6756784354',
-      NeverEatAlone.PriceRange.EXPENSIVE, [italianCuisine], 'pianopiano.com'),
-      NeverEatAlone.DressCode.CASUAL, NeverEatAlone.Seating.HIGH_TABLE,
-      new NeverEatAlone.Location(2, '', '', 'Toronto', 'ON', 'Canada', '',
-      'Midtown'), 'Alexa Perry', new Date(2023, 5, 22, 19, 30, 0), new Date(
-      2023, 6, 13, 0, 30, 0), attendeeList2, 12, diningEventModel2Description,
-      false, true);
+    const restaurant2 = new NeverEatAlone.Restaurant(2, 'Piano Piano',
+      new Date(), 2, 'Piano Piano is managed by a michelin chef from Italy.', '',
+      '6756784354', NeverEatAlone.PriceRange.EXPENSIVE, [italianCuisine],
+      'pianopiano.com');
+    const location2 = new NeverEatAlone.Location(2, '', '', 'Toronto', 'ON',
+      'Canada', '', 'Midtown');
+    const diningEvent2 = new NeverEatAlone.DiningEvent(2, '#B2DFED', 20.00,
+      'resources/images/4.jpg', 'The best italian restaurant in town!',
+      restaurant2, NeverEatAlone.DressCode.CASUAL,
+      NeverEatAlone.Seating.HIGH_TABLE, location2, 'Alexa Perry',
+      new Date(2023, 5, 22, 19, 30, 0), new Date(2023, 6, 13, 0, 30, 0),
+      attendeeList2, 12, diningEventModel2Description,
+      new Date(2023, 5, 22, 19, 30, 0), new Date(2023, 6, 13, 0, 30, 0),
+      NeverEatAlone.EventStatus.ACTIVE, NeverEatAlone.EventType.PUBLIC,
+      new Date(2021, 6, 12, 19, 0, 0), new Date(Date.now()));
+    const demoDiningEventModel2 = new DemoDiningEventPageModel(diningEvent2,
+      true);
     this._diningEventModelMap.set(2, demoDiningEventModel2);
 
     /** Dining event model 7 */
+    const restaurant7 = new NeverEatAlone.Restaurant(7, 'Le Select Bistro',
+    new Date(), 7, `Classic French food & a wine list of over 1,000 bottles, 
+    with vintage posters lining the walls.`, 'Go upstairs.', '(416) 626-6262',
+    NeverEatAlone.PriceRange.MODERATELY_PRICED, [frenchCuisine,
+    traditionalCuisine], 'https://www.leselectbistro.com/');
     const demoDiningEventModel7 = new DemoDiningEventPageModel(7, '#6A8716',
       5.00, 'resources/images/7.jpg', 'Calling all the french food lovers',
-      new NeverEatAlone.Restaurant(7, 'Le Select Bistro', new Date(), 7,
-      'Classic French food & a wine list of over 1,000 bottles, with \
-      vintage posters lining the walls.', 'Go upstairs.', '(416) 626-6262',
-      NeverEatAlone.PriceRange.MODERATELY_PRICED, [frenchCuisine,
-      traditionalCuisine], 'https://www.leselectbistro.com/'),
+      ,
       NeverEatAlone.DressCode.BUSINESS_CASUAL,
       NeverEatAlone.Seating.STANDARD, new NeverEatAlone.Location(7,
       '432 Wellington St W', '', 'Toronto', 'ON', 'CA', 'M5V 1E3',
