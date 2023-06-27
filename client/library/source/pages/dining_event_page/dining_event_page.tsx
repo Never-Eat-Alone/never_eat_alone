@@ -88,9 +88,8 @@ export class DiningEventPage extends React.Component<Properties, State> {
     })();
     const isGoing = (() => {
       if (isLoggedIn) {
-        const index = this.props.attendeeList.findIndex((a) =>
-          a.userId === this.props.account.id && a.status ===
-          AttendeeStatus.GOING);
+        const index = this.props.attendeeList.findIndex(a => a.userId ===
+          this.props.account.id && a.status === AttendeeStatus.GOING);
         if (index !== -1) {
           return true;
         }
@@ -101,7 +100,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
       if (!this.props.attendeeList) {
         return [];
       }
-      return this.props.attendeeList.filter((a) => a.status ===
+      return this.props.attendeeList.filter(a => a.status ===
         AttendeeStatus.GOING);
     })();
     const joinButton = (() => {
@@ -119,15 +118,13 @@ export class DiningEventPage extends React.Component<Properties, State> {
         };
       })();
       if (currentTime > this.props.endTime) {
-        return <PrimaryTextButton style={joinButtonStyle}
-          label='Past Event' labelStyle={joinButtonLabelStyle}
-          disabled />;
+        return <PrimaryTextButton style={joinButtonStyle} label='Past Event'
+          labelStyle={joinButtonLabelStyle} disabled />;
       }
-      if (currentTime > this.props.startTime && currentTime <
-          this.props.endTime) {
-        return <PrimaryTextButton style={joinButtonStyle}
-          label='Happening Now' labelStyle={joinButtonLabelStyle}
-          disabled />;
+      if (currentTime > this.props.startTime && currentTime < this.props.endTime
+          ) {
+        return <PrimaryTextButton style={joinButtonStyle} label='Happening Now'
+          labelStyle={joinButtonLabelStyle} disabled />;
       }
       if (isLoggedIn && isGoing) {
         return <SecondaryTextButton style={joinButtonStyle}
@@ -135,14 +132,12 @@ export class DiningEventPage extends React.Component<Properties, State> {
           onClick={this.props.onRemoveSeat} />;
       }
       if (!this.props.isRSVPOpen) {
-        return <PrimaryTextButton style={joinButtonStyle}
-          label='RSVP Close' labelStyle={joinButtonLabelStyle}
-          disabled />;
+        return <PrimaryTextButton style={joinButtonStyle} label='RSVP Close'
+          labelStyle={joinButtonLabelStyle} disabled />;
       }
       if (goingAttendeeList.length >= this.props.totalCapacity) {
-        return <PrimaryTextButton style={joinButtonStyle}
-          label='Full' labelStyle={joinButtonLabelStyle}
-          disabled />;
+        return <PrimaryTextButton style={joinButtonStyle} label='Full'
+          labelStyle={joinButtonLabelStyle} disabled />;
       }
       if (this.props.isRSVPOpen && (!isGoing || !isLoggedIn)) {
         return <PrimaryTextButton style={joinButtonStyle}

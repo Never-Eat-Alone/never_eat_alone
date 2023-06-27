@@ -152,6 +152,7 @@ export class DemoDiningEventPageModel extends
     }
   }
 
+  private _isLoaded: boolean;
   private _eventId: number;
   private _eventColor: string;
   private _eventFee: number;
@@ -169,5 +170,4 @@ export class DemoDiningEventPageModel extends
   private _description: string;
   private _isGoing: boolean;
   private _isRSVPOpen: boolean;
-  private _isLoaded: boolean;
 }

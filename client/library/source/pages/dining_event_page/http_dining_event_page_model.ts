@@ -21,31 +21,32 @@ export class HttpDiningEventPageModel extends DiningEventPageModel {
       return;
     }
     const response = await fetch(`/api/dining_events/${this._eventId}`);
-    if (response.status === 200) {
-      const responseObject = await response.json();
-      const eventId = responseObject.eventId;
-      const eventColor = responseObject.eventColor;
-      const eventFee = responseObject.eventFee;
-      const coverImageSrc = responseObject.coverImageSrc;
-      const title = responseObject.title;
-      const restaurant = Restaurant.fromJson(responseObject.restaurant);
-      const dressCode = responseObject.dressCode as DressCode;
-      const seating = responseObject.seating as Seating;
-      const location = Location.fromJson(responseObject.location);
-      const reservationName = responseObject.reservationName;
-      const startTime = new Date(Date.parse(responseObject.startTime));
-      const endTime = new Date(Date.parse(responseObject.endTime));
-      const attendeeList: Attendee[] = arrayFromJson(Attendee,
-        responseObject.attendeeList);
-      const totalCapacity = responseObject.totalCapacity;
-      const description = responseObject.description;
-      const isGoing = responseObject.isGoing;
-      const isRSVPOpen = responseObject.isRSVPOpen;
-      this._model = new LocalDiningEventPageModel(eventId, eventColor, eventFee,
-        coverImageSrc, title, restaurant, dressCode, seating, location,
-        reservationName, startTime, endTime, attendeeList, totalCapacity,
-        description, isGoing, isRSVPOpen);
+    if (response.status !== 200) {
+      throw new Error(`Response status ${response.status}`);
     }
+    const responseObject = await response.json();
+    const eventId = responseObject.eventId;
+    const eventColor = responseObject.eventColor;
+    const eventFee = responseObject.eventFee;
+    const coverImageSrc = responseObject.coverImageSrc;
+    const title = responseObject.title;
+    const restaurant = Restaurant.fromJson(responseObject.restaurant);
+    const dressCode = responseObject.dressCode as DressCode;
+    const seating = responseObject.seating as Seating;
+    const location = Location.fromJson(responseObject.location);
+    const reservationName = responseObject.reservationName;
+    const startTime = new Date(Date.parse(responseObject.startTime));
+    const endTime = new Date(Date.parse(responseObject.endTime));
+    const attendeeList: Attendee[] = arrayFromJson(Attendee,
+      responseObject.attendeeList);
+    const totalCapacity = responseObject.totalCapacity;
+    const description = responseObject.description;
+    const isGoing = responseObject.isGoing;
+    const isRSVPOpen = responseObject.isRSVPOpen;
+    this._model = new LocalDiningEventPageModel(eventId, eventColor, eventFee,
+      coverImageSrc, title, restaurant, dressCode, seating, location,
+      reservationName, startTime, endTime, attendeeList, totalCapacity,
+      description, isGoing, isRSVPOpen);
     await this._model.load();
     this._isLoaded = true;
   }
@@ -152,7 +153,7 @@ export class HttpDiningEventPageModel extends DiningEventPageModel {
     return false;
   }
 
-  private _model: DiningEventPageModel;
-  private _eventId: number;
   private _isLoaded: boolean;
+  private _eventId: number;
+  private _model: DiningEventPageModel;
 }
