@@ -1,6 +1,6 @@
 export enum AttendeeStatus {
-  GOING,
-  NOT_GOING,
-  WAITLIST,
-  NO_SHOW
+  GOING = 'GOING',
+  NOT_GOING = 'NOT_GOING',
+  WAITLIST = 'WAITLIST',
+  NO_SHOW = 'NO_SHOW'
 }

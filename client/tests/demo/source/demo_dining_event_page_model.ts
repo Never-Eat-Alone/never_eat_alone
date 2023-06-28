@@ -25,7 +25,6 @@ export class DemoDiningEventPageModel extends
 
   public async joinEvent(account: NeverEatAlone.User, profileImageSrc: string
       ): Promise<boolean> {
-    this.ensureIsLoaded();
     const index = this._diningEvent.attendeeList.findIndex(a => a.userId ===
       account.id);
     if (index !== -1) {
@@ -42,7 +41,6 @@ export class DemoDiningEventPageModel extends
   }
 
   public async removeSeat(account: NeverEatAlone.User): Promise<boolean> {
-    this.ensureIsLoaded();
     const index = this._diningEvent.attendeeList.findIndex(a => a.userId ===
       account.id);
     if (index !== -1) {

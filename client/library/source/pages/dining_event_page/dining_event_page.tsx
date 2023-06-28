@@ -58,6 +58,9 @@ interface Properties {
   /** Whether the rsvp to the event is open or not. */
   isRSVPOpen: boolean;
 
+  /** Indicates whether the user is attending this event or not. */
+  isGoing: boolean;
+
   /** Indicates the join event button is clicked. */
   onJoinEvent: () => void;
 
@@ -83,16 +86,6 @@ export class DiningEventPage extends React.Component<Properties, State> {
       if (this.props.account && this.props.account.userStatus ===
           UserStatus.ACTIVE) {
         return true;
-      }
-      return false;
-    })();
-    const isGoing = (() => {
-      if (isLoggedIn) {
-        const index = this.props.attendeeList.findIndex(a => a.userId ===
-          this.props.account.id && a.status === AttendeeStatus.GOING);
-        if (index !== -1) {
-          return true;
-        }
       }
       return false;
     })();
@@ -126,7 +119,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
         return <PrimaryTextButton style={joinButtonStyle} label='Happening Now'
           labelStyle={joinButtonLabelStyle} disabled />;
       }
-      if (isLoggedIn && isGoing) {
+      if (isLoggedIn && this.props.isGoing) {
         return <SecondaryTextButton style={joinButtonStyle}
           label='Remove Seat' labelStyle={joinButtonLabelStyle}
           onClick={this.props.onRemoveSeat} />;
@@ -139,7 +132,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
         return <PrimaryTextButton style={joinButtonStyle} label='Full'
           labelStyle={joinButtonLabelStyle} disabled />;
       }
-      if (this.props.isRSVPOpen && (!isGoing || !isLoggedIn)) {
+      if (this.props.isRSVPOpen && (!this.props.isGoing || !isLoggedIn)) {
         return <PrimaryTextButton style={joinButtonStyle}
           label='Join This Event' labelStyle={joinButtonLabelStyle}
           onClick={this.props.onJoinEvent} />;
@@ -278,7 +271,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
           </div>);
       }
       if (this.props.reservationName) {
-        const reservationName = (isLoggedIn && isGoing &&
+        const reservationName = (isLoggedIn && this.props.isGoing &&
           `Reservation: ${this.props.reservationName}` ||
           'Join to see the details');
         details.push(
@@ -328,7 +321,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
             </div>
           </div>);
       }
-      if (this.props.dressCode || this.props.dressCode === 0) {
+      if (this.props.dressCode || this.props.dressCode === 'CASUAL') {
         details.push(
           <div key='event-dress-code' style={detailIconTextContainerStyle} >
             <div style={ICON_CONTAINER_STYLE} >
@@ -367,7 +360,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
             </div>
           </div>);
       }
-      if (this.props.seating || this.props.seating === 0) {
+      if (this.props.seating || this.props.seating === 'BAR') {
         details.push(
           <div key='event-seating' style={detailIconTextContainerStyle} >
             <div style={ICON_CONTAINER_STYLE} >

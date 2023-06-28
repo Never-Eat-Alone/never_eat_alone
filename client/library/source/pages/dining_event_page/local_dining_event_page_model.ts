@@ -30,12 +30,10 @@ export class LocalDiningEventPageModel extends DiningEventPageModel {
 
   public async joinEvent(account: User, profileImageSrc: string): Promise<
       boolean> {
-    this.ensureIsLoaded();
     return Boolean(account && profileImageSrc);
   }
 
   public async removeSeat(account: User): Promise<boolean> {
-    this.ensureIsLoaded();
     return Boolean(account);
   }
 

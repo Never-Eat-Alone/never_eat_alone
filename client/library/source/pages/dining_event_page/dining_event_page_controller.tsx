@@ -57,6 +57,7 @@ export class DiningEventPageController extends React.Component<Properties,
       description={this.props.model.diningEvent.description}
       account={this.props.account}
       isRSVPOpen={isRSVPOpen}
+      isGoing={this.props.model.isGoing}
       onJoinEvent={this.props.onJoinEvent}
       onRemoveSeat={this.props.onRemoveSeat}
     />;

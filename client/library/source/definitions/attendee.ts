@@ -57,7 +57,7 @@ export class Attendee {
       eventId: this._eventId,
       name: this._name,
       guestCount: this._guestCount,
-      status: this._status,
+      status: this._status.toString(),
       profileImageSrc: this._profileImageSrc,
       updatedAt: this._updatedAt.toISOString()
     };
