@@ -1,19 +1,22 @@
 import { arrayFromJson, CoverImage, Cuisine, EventCardSummary, Language,
   SocialAccountType, UserProfileSocialAccount } from '../../definitions';
+import { EmptyProfilePageModel } from './empty_profile_page_model';
 import { LocalProfilePageModel } from './local_profile_page_model';
 import { ProfilePageModel } from './profile_page_model';
 
 export class HttpProfilePageModel extends ProfilePageModel {
   constructor(profileId: number) {
     super();
+    this._isLoaded = false;
     this._profileId = profileId;
+    this._model = new EmptyProfilePageModel();
   }
 
   /** Loads the data displayed on the profile page. Must be called before other
    * methods.
    */
   public async load(): Promise<void> {
-    if(this._model) {
+    if (this._isLoaded) {
       return;
     }
     const response = await fetch(`/api/profile_page/${this._profileId}`);
@@ -50,6 +53,7 @@ export class HttpProfilePageModel extends ProfilePageModel {
       languageList, facebookLink, twitterLink, instagramLink,
       favoriteCuisineList, upcomingEventList, pastEventList);
     await this._model.load();
+    this._isLoaded = true;
   }
 
   public get profileId(): number {
@@ -112,6 +116,7 @@ export class HttpProfilePageModel extends ProfilePageModel {
     return this._model.pastEventList;
   }
 
-  private _model: ProfilePageModel;
+  private _isLoaded: boolean;
   private _profileId: number;
+  private _model: ProfilePageModel;
 }
