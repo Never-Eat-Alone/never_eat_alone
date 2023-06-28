@@ -1,14 +1,8 @@
-import { CoverImage, Cuisine, Language, UserProfileImage
-} from '../../definitions';
+import { CoverImage, Cuisine, Language, UserProfileImage } from
+  '../../definitions';
 import { EditProfilePageModel } from './edit_profile_page_model';
 
 export class LocalEditProfilePageModel extends EditProfilePageModel {
-  public static empty(): LocalEditProfilePageModel {
-    return new LocalEditProfilePageModel([], [], CoverImage.noImage(), [],
-      UserProfileImage.default(), '', true, true, true, true, '', true, [], [],
-      true, true, true, true, '', '', '');
-  }
-
   constructor(languageList: Language[], cuisineList: Cuisine[], coverImage:
       CoverImage, coverImageList: CoverImage[], profileImage: UserProfileImage,
       selectedLocation: string, isUpcomingEventsPrivate: boolean,
@@ -20,6 +14,7 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
       isInstagramPrivate: boolean, facebookLink: string, twitterLink: string,
       instagramLink: string) {
     super();
+    this._isLoaded = false;
     this._languageList = languageList;
     this._cuisineList= cuisineList;
     this._coverImage = coverImage;
@@ -44,73 +39,52 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
     this._suggestedLocationList = new Map();
   }
 
-  public async load(): Promise<void> {}
-
-  public isEmpty(): boolean {
-    const emptyModel = LocalEditProfilePageModel.empty();
-    return (
-      JSON.stringify(this._languageList) === JSON.stringify(
-        emptyModel._languageList) &&
-      JSON.stringify(this._cuisineList) === JSON.stringify(
-        emptyModel._cuisineList) &&
-      this._coverImage.equals(emptyModel._coverImage) &&
-      JSON.stringify(this._coverImageList) === JSON.stringify(
-        emptyModel._coverImageList) &&
-      this._profileImage.equals(emptyModel._profileImage) &&
-      this._selectedLocation === emptyModel._selectedLocation &&
-      this._isUpcomingEventsPrivate === emptyModel._isUpcomingEventsPrivate &&
-      this._isPastEventsPrivate === emptyModel._isPastEventsPrivate &&
-      this._isLocationPrivate === emptyModel._isLocationPrivate &&
-      this._isLanguagePrivate === emptyModel._isLanguagePrivate &&
-      this._biographyValue === emptyModel._biographyValue &&
-      this._isBiographyPrivate === emptyModel._isBiographyPrivate &&
-      JSON.stringify(this._selectedLanguageList) === JSON.stringify(
-        emptyModel._selectedLanguageList) &&
-      JSON.stringify(this._selectedCuisineList) === JSON.stringify(
-        emptyModel._selectedCuisineList) &&
-      this._isCuisinePrivate === emptyModel._isCuisinePrivate &&
-      this._isFacebookPrivate === emptyModel._isFacebookPrivate &&
-      this._isTwitterPrivate === emptyModel._isTwitterPrivate &&
-      this._isInstagramPrivate === emptyModel._isInstagramPrivate &&
-      this._facebookLink === emptyModel._facebookLink &&
-      this._twitterLink === emptyModel._twitterLink &&
-      this._instagramLink === emptyModel._instagramLink
-    );
+  public async load(): Promise<void> {
+    this._isLoaded = true;
   }
 
   public get languageList(): Language[] {
+    this.ensureIsLoaded();
     return this._languageList;
   }
 
   public get cuisineList(): Cuisine[] {
+    this.ensureIsLoaded();
     return this._cuisineList;
   }
 
   public get coverImage(): CoverImage {
+    this.ensureIsLoaded();
     return this._coverImage;
   }
 
   public get coverImageList(): CoverImage[] {
+    this.ensureIsLoaded();
     return this._coverImageList;
   }
 
   public get profileImage(): UserProfileImage {
+    this.ensureIsLoaded();
     return this._profileImage;
   }
 
   public get selectedLocation(): string {
+    this.ensureIsLoaded();
     return this._selectedLocation;
   }
 
   public get isUpcomingEventsPrivate(): boolean {
+    this.ensureIsLoaded();
     return this._isUpcomingEventsPrivate;
   }
 
   public get isPastEventsPrivate(): boolean {
+    this.ensureIsLoaded();
     return this._isPastEventsPrivate;
   }
 
   public get isLocationPrivate(): boolean {
+    this.ensureIsLoaded();
     return this._isLocationPrivate;
   }
 
@@ -125,50 +99,62 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
   }
 
   public get isLanguagePrivate(): boolean {
+    this.ensureIsLoaded();
     return this._isLanguagePrivate;
   }
 
   public get biographyValue(): string {
+    this.ensureIsLoaded();
     return this._biographyValue;
   }
 
   public get isBiographyPrivate(): boolean {
+    this.ensureIsLoaded();
     return this._isBiographyPrivate;
   }
 
   public get selectedLanguageList(): Language[] {
+    this.ensureIsLoaded();
     return this._selectedLanguageList;
   }
 
   public get selectedCuisineList(): Cuisine[] {
+    this.ensureIsLoaded();
     return this._selectedCuisineList;
   }
 
   public get isCuisinePrivate(): boolean {
+    this.ensureIsLoaded();
     return this._isCuisinePrivate;
   }
 
   public get isFacebookPrivate(): boolean {
+    this.ensureIsLoaded();
     return this._isFacebookPrivate;
   }
 
   public get isTwitterPrivate(): boolean {
+    this.ensureIsLoaded();
     return this._isTwitterPrivate;
   }
 
   public get isInstagramPrivate(): boolean {
+    this.ensureIsLoaded();
     return this._isInstagramPrivate;
   }
 
   public get facebookLink(): string {
+    this.ensureIsLoaded();
     return this._facebookLink;
   }
 
   public get twitterLink(): string {
+    this.ensureIsLoaded();
     return this._twitterLink;
   }
 
   public get instagramLink(): string {
+    this.ensureIsLoaded();
     return this._instagramLink;
   }
 
@@ -213,6 +199,13 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
     return true;
   }
 
+  private ensureIsLoaded(): void {
+    if (!this._isLoaded) {
+      throw new Error('EditProfilePageModel not loaded.');
+    }
+  }
+
+  private _isLoaded: boolean;
   private _languageList: Language[];
   private _cuisineList: Cuisine[];
   private _coverImage: CoverImage;

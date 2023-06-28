@@ -4,8 +4,6 @@ import { CoverImage, Cuisine, Language, UserProfileImage
 export abstract class EditProfilePageModel {
   public abstract load(): Promise<void>;
 
-  public abstract isEmpty(): boolean;
-
   /** List of all languages user can select from. */
   public abstract get languageList(): Language[];
 
