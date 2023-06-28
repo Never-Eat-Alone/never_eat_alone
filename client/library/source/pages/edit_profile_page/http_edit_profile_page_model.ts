@@ -1,21 +1,22 @@
 import { arrayFromJson, arrayToJson, CoverImage, Cuisine, Language,
-  SocialAccountType, UserProfileImage, UserProfileSocialAccount
-} from '../../definitions';
+  SocialAccountType, UserProfileImage, UserProfileSocialAccount } from
+  '../../definitions';
 import { EditProfilePageModel } from './edit_profile_page_model';
+import { EmptyEditProfilePageModel } from './empty_edit_profile_page_model';
 import { LocalEditProfilePageModel } from './local_edit_profile_page_model';
 
 export class HttpEditProfilePageModel extends EditProfilePageModel {
   constructor(profileId: number) {
     super();
+    this._isLoaded = false;
     this._profileId = profileId;
-    this._model = LocalEditProfilePageModel.empty();
+    this._model = new EmptyEditProfilePageModel();
   }
 
   public async load(): Promise<void> {
-    if (!this._model.isEmpty()) {
+    if (this._isLoaded) {
       return;
     }
-
     const response = await fetch(`/api/edit_profile_page/${this._profileId}`);
     if (response.status !== 200) {
       throw new Error(`Load failed with response status ${response.status}`);
@@ -64,10 +65,7 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
       isFacebookPrivate, isTwitterPrivate, isInstagramPrivate, facebookLink,
       twitterLink, instagramLink);
     await this._model.load();
-  }
-
-  public isEmpty(): boolean {
-    return this._model.isEmpty();
+    this._isLoaded = true;
   }
 
   public get languageList(): Language[] {
@@ -239,6 +237,7 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
     return true;
   }
 
+  private _isLoaded: boolean;
   private _model: EditProfilePageModel;
   private _profileId: number;
 }
