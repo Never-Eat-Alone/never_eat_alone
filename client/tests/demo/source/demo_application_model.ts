@@ -343,9 +343,14 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
 
     /** User Profile Page Model for userEmma */
     const emmaCoverImage = coverImage2;
-    const emmaBio = 'Hello everyone! My name is Emma and I would love to meet you all and try new foods.';
+    const emmaBio = `Hello everyone! My name is Emma and I would love to meet 
+      you all and try new foods.`;
+    const arthurBio = `I host BBQ nights in my backyard! Love to meet lovely 
+      people in my area.`
     const emmaInstagramLink = 'www.instagram.com/@emma12';
+    const arthurInstagramLink = 'www.instagram.com/@arthur12'
     const emmaLocation = 'Barrie';
+    const arthurLocation = 'Toronto';
     const demoProfilePageModel1 = new NeverEatAlone.LocalProfilePageModel(1,
       emmaCoverImage, emmaProfileImage.src, userEmma.name,
       userEmma.userName, userEmma.createdAt, emmaBio, 'Toronto, ON',
@@ -375,7 +380,6 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     /** Setting up the _editProfilePageModel map. */
     this._editProfilePageModelMap = new Map();
 
-    /** EditProfilePageModel for user1 */
     const locationList = ['Toronto', 'Barrie', 'Burlington', 'Hamilton',
       'Vancouver', 'Montreal', 'Vaughan'];
     const languageList = [englishLanguage, mandarinLanguage, spanishLanguage,
@@ -385,6 +389,8 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       italianCuisine, japaneseCuisine, middleEasternCuisine, modernCuisine,
       omakaseCuisine, persianCuisine, seafoodCuisine, steakhouseCuisine,
       traditionalCuisine];
+    
+    /** Emma's edit profie page model. */
     const demoEditProfilePageModel1 = new DemoEditProfilePageModel(
       languageList, cuisineList, emmaCoverImage, coverImageList,
       emmaProfileImage, emmaLocation, false, false, false, false, emmaBio,
@@ -392,7 +398,15 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       '', '', emmaInstagramLink);
     this._editProfilePageModelMap.set(1, demoEditProfilePageModel1);
 
-    /** emma settings model */
+    /** Arthur's edit profie page model. */
+    const demoEditProfilePageModel2 = new DemoEditProfilePageModel(
+      languageList, cuisineList, arthurCoverImage, coverImageList,
+      arthurProfileImage, arthurLocation, false, false, false, false, arthurBio,
+      false, arthurLanguageList, arthurFavoriteCuisines, false, false, false,
+      false, '', '', arthurInstagramLink);
+    this._editProfilePageModelMap.set(2, demoEditProfilePageModel2);
+
+    /** Emma settings model */
     const emmaAccessTokenGoogle = '';
     const emmaAccessTokenFacebook = '';
     const emmaSocialLinks = [

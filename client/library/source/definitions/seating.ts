@@ -1,10 +1,10 @@
 export enum Seating {
-  BAR,
-  PATIO,
-  STANDARD,
-  PRIVATE_ROOM,
-  HIGH_TABLE,
-  LOUNGE
+  BAR = 'BAR',
+  PATIO = 'PATIO',
+  STANDARD = 'STANDARD',
+  PRIVATE_ROOM = 'PRIVATE_ROOM',
+  HIGH_TABLE = 'HIGH_TABLE',
+  LOUNGE = 'LOUNGE'
 }
 
 export function getSeatingIconSrc(seating: Seating) {

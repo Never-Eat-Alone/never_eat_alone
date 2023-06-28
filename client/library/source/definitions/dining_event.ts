@@ -1,4 +1,4 @@
-import { arrayFromJson } from './array_json';
+import { arrayFromJson, arrayToJson } from './array_json';
 import { Attendee } from './attendee';
 import { DressCode } from './dress_code';
 import { EventStatus } from './event_status';
@@ -166,17 +166,19 @@ export class DiningEvent {
       coverImageSrc: this._coverImageSrc,
       title: this._title,
       restaurant: this._restaurant.toJson(),
-      dressCode: this._dressCode,
-      seating: this._seating,
+      dressCode: this._dressCode.toString(),
+      seating: this._seating.toString(),
       location: this._location.toJson(),
       reservationName: this._reservationName,
       startAt: this._startAt.toISOString(),
       endAt: this._endAt.toISOString(),
+      attendeeList: arrayToJson(this._attendeeList),
+      totalCapacity: this._totalCapacity,
       description: this._description,
       rsvpOpenAt: this._rsvpOpenAt.toISOString(),
       rsvpCloseAt: this._rsvpCloseAt.toISOString(),
-      status: this._status,
-      type: this._type,
+      status: this._status.toString(),
+      type: this._type.toString(),
       createdAt: this._createdAt.toISOString(),
       updatedAt: this._updatedAt.toISOString()
     };

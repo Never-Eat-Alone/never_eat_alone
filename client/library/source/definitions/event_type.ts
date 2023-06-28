@@ -1,4 +1,4 @@
 export enum EventType {
-  PUBLIC,
-  PRIVATE
+  PUBLIC = 'PUBLIC',
+  PRIVATE = 'PRIVATE'
 }

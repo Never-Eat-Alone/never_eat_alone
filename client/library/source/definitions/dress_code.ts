@@ -1,8 +1,8 @@
 export enum DressCode {
-  CASUAL,
-  BUSINESS_CASUAL,
-  FORMAL,
-  BLACK_TIE
+  CASUAL = 'CASUAL',
+  BUSINESS_CASUAL = 'BUSINESS_CASUAL',
+  FORMAL = 'FORMAL',
+  BLACK_TIE = 'BLACK_TIE'
 }
 
 export function getDressCodeIconSrc(dressCode: DressCode) {
