@@ -1,5 +1,5 @@
-import { CoverImage, Cuisine, Language, UserProfileImage
-} from '../../definitions';
+import { CoverImage, Cuisine, Language, UserProfileImage } from
+  '../../definitions';
 import { EditProfilePageModel } from './edit_profile_page_model';
 
 export class LocalEditProfilePageModel extends EditProfilePageModel {
@@ -14,7 +14,7 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
       isInstagramPrivate: boolean, facebookLink: string, twitterLink: string,
       instagramLink: string) {
     super();
-    this._isLoaded = true;
+    this._isLoaded = false;
     this._languageList = languageList;
     this._cuisineList= cuisineList;
     this._coverImage = coverImage;
@@ -90,13 +90,11 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
 
   public addSuggestedLocationList(value: string, locationList: string[]
       ): void {
-    this.ensureIsLoaded();
     this._suggestedLocationList.set(value, locationList);
   }
 
   public async getSuggestedLocationList(value: string): Promise<
       string[]> {
-    this.ensureIsLoaded();
     return this._suggestedLocationList.get(value);
   }
 
@@ -162,13 +160,11 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
 
   public async uploadProfileImage(newImage: UserProfileImage): Promise<
       UserProfileImage> {
-    this.ensureIsLoaded();
     this._profileImage = newImage;
     return newImage;
   }
 
   public async saveCoverImage(newImage: CoverImage): Promise<CoverImage> {
-    this.ensureIsLoaded();
     this._coverImageList.push(newImage);
     this._coverImage = newImage;
     return newImage;
@@ -182,7 +178,6 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
       isTwitterPrivate: boolean, twitterLink: string, isInstagramPrivate:
       boolean, instagramLink: string, isCuisinePrivate: boolean,
       selectedCuisineList: Cuisine[]): Promise<boolean> {
-    this.ensureIsLoaded();
     this._coverImage = coverImage;
     this._profileImage = profileImage;
     this._isUpcomingEventsPrivate = isUpcomingEventsPrivate;
@@ -206,7 +201,7 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
 
   private ensureIsLoaded(): void {
     if (!this._isLoaded) {
-      throw new Error('DiningEventPageModel not loaded.');
+      throw new Error('EditProfilePageModel not loaded.');
     }
   }
 
