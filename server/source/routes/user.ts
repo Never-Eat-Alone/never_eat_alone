@@ -654,7 +654,89 @@ export class UserRoutes {
     let favoriteCuisineList: Cuisine[] = [];
     let upcomingEventList: EventCardSummary[] = [];
     let pastEventList: EventCardSummary[] = [];
-    let jsonResponse = {
+    try {
+      profileUser = await this.userDatabase.loadUserById(profileId);
+    } catch (error) {
+      console.error('Failed at loadUserById', error);
+      response.status(500).send();
+      return;
+    }
+    if (profileUser?.id === -1) {
+      response.status(400).send();
+      return;
+    }
+    try {
+      coverImage = await this.userCoverImageDatabase.loadCoverImageByUserId(
+        profileId);
+    } catch (error) {
+      console.error('Failed at loadUserById', error);
+      response.status(500).send();
+      return;
+    }
+    try {
+      profileImage =
+        await this.userProfileImageDatabase.loadProfileImageByUserId(profileId);
+    } catch (error) {
+      console.error('Failed at loadProfileImageByUserId', error);
+      response.status(500).send();
+      return;
+    }
+    try {
+      biography = await this.userDatabase.loadBiographyByUserId(profileId);
+    } catch (error) {
+      console.error('Failed at loadBiographyByUserId', error);
+      response.status(500).send();
+      return;
+    }
+    try {
+      address = await this.userDatabase.loadAddressByUserId(profileId);
+    } catch (error) {
+      console.error('Failed at loadAddressByUserId', error);
+      response.status(500).send();
+      return;
+    }
+    try {
+      languageList = await this.userDatabase.loadUserLanguagesByUserId(
+        profileId);
+    } catch (error) {
+      console.error('Failed at loadUserLanguagesByUserId', error);
+      response.status(500).send();
+      return;
+    }
+    try {
+      socialAccounts =
+        await this.userDatabase.loadUserProfileSocialAccountsByUserId(
+          profileId);
+    } catch (error) {
+      console.error('Failed at loadUserProfileSocialAccountsByUserId', error);
+      response.status(500).send();
+      return;
+    }
+    try {
+      favoriteCuisineList =
+        await this.userDatabase.loadUserFavouriteCuisinesByUserId(profileId);
+    } catch (error) {
+      console.error('Failed at loadUserSelectedCuisinesByUserId', error);
+      response.status(500).send();
+      return;
+    }
+    try {
+      upcomingEventList =
+        await this.attendeeDatabase.loadUserUpcomingEventsByUserId(profileId);
+    } catch (error) {
+      console.error('Failed at loadUserUpcomingEventsByUserId', error);
+      response.status(500).send();
+      return;
+    }
+    try {
+      pastEventList =
+        await this.attendeeDatabase.loadUserPastEventsByUserId(profileId);
+    } catch (error) {
+      console.error('Failed at loadUserPastEventsByUserId', error);
+      response.status(500).send();
+      return;
+    }
+    response.status(200).json({
       coverImage: coverImage.toJson(),
       profileImageSrc: profileImage.src,
       name: profileUser.name,
@@ -667,90 +749,7 @@ export class UserRoutes {
       favoriteCuisineList: arrayToJson(favoriteCuisineList),
       upcomingEventList: arrayToJson(upcomingEventList),
       pastEventList: arrayToJson(pastEventList)
-    };
-    try {
-      profileUser = await this.userDatabase.loadUserById(profileId);
-    } catch (error) {
-      console.error('Failed at loadUserById', error);
-      response.status(500).json(jsonResponse);
-      return;
-    }
-    if (profileUser?.id === -1) {
-      response.status(400).json(jsonResponse);
-      return;
-    }
-    try {
-      coverImage = await this.userCoverImageDatabase.loadCoverImageByUserId(
-        profileId);
-    } catch (error) {
-      console.error('Failed at loadUserById', error);
-      response.status(500).json(jsonResponse);
-      return;
-    }
-    try {
-      profileImage =
-        await this.userProfileImageDatabase.loadProfileImageByUserId(profileId);
-    } catch (error) {
-      console.error('Failed at loadProfileImageByUserId', error);
-      response.status(500).json(jsonResponse);
-      return;
-    }
-    try {
-      biography = await this.userDatabase.loadBiographyByUserId(profileId);
-    } catch (error) {
-      console.error('Failed at loadBiographyByUserId', error);
-      response.status(500).json(jsonResponse);
-      return;
-    }
-    try {
-      address = await this.userDatabase.loadAddressByUserId(profileId);
-    } catch (error) {
-      console.error('Failed at loadAddressByUserId', error);
-      response.status(500).json(jsonResponse);
-      return;
-    }
-    try {
-      languageList = await this.userDatabase.loadUserLanguagesByUserId(
-        profileId);
-    } catch (error) {
-      console.error('Failed at loadUserLanguagesByUserId', error);
-      response.status(500).json(jsonResponse);
-      return;
-    }
-    try {
-      socialAccounts =
-        await this.userDatabase.loadUserProfileSocialAccountsByUserId(
-          profileId);
-    } catch (error) {
-      console.error('Failed at loadUserProfileSocialAccountsByUserId', error);
-      response.status(500).json(jsonResponse);
-      return;
-    }
-    try {
-      favoriteCuisineList =
-        await this.userDatabase.loadUserFavouriteCuisinesByUserId(profileId);
-    } catch (error) {
-      console.error('Failed at loadUserSelectedCuisinesByUserId', error);
-      response.status(500).json(jsonResponse);
-      return;
-    }
-    try {
-      upcomingEventList =
-        await this.attendeeDatabase.loadUserUpcomingEventsByUserId(profileId);
-    } catch (error) {
-      console.error('Failed at loadUserUpcomingEventsByUserId', error);
-      response.status(500).json(jsonResponse);
-      return;
-    }
-    try {
-      pastEventList =
-        await this.attendeeDatabase.loadUserPastEventsByUserId(profileId);
-    } catch (error) {
-      console.error('Failed at loadUserPastEventsByUserId', error);
-      response.status(500).json(jsonResponse);
-      return;
-    }
-    response.status(200).json(jsonResponse);
+    });
   }
 
   private getEditProfilePage = async (request, response) => {
