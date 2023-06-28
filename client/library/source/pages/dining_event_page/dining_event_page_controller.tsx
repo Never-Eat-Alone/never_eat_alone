@@ -58,7 +58,7 @@ export class DiningEventPageController extends React.Component<Properties,
       account={this.props.account}
       isRSVPOpen={isRSVPOpen}
       isGoing={this.props.model.isGoing}
-      onJoinEvent={this.props.onJoinEvent}
+      onJoinEvent={this.handleJoinEvent}
       onRemoveSeat={this.props.onRemoveSeat}
     />;
   }
@@ -75,6 +75,14 @@ export class DiningEventPageController extends React.Component<Properties,
         isLoaded: true,
         errorCode: DiningEventPage.ErrorCode.NO_CONNECTION
       });
+    }
+  }
+
+  private handleJoinEvent = async () => {
+    if (this.props.model.diningEvent.eventFee === 0) {
+      await this.props.model.joinEvent();
+    } else {
+      this.props.onJoinEvent();
     }
   }
 }

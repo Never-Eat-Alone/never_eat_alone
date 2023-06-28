@@ -1,4 +1,4 @@
-import { DiningEvent, User } from '../../definitions';
+import { DiningEvent } from '../../definitions';
 import { DiningEventPageModel } from './dining_event_page_model';
 
 /**
@@ -18,12 +18,11 @@ export class EmptyDiningEventPageModel extends DiningEventPageModel {
     throw new Error('DiningEventPageModel not loaded.');
   }
 
-  public async joinEvent(account: User, profileImageSrc: string): Promise<
-      boolean> {
+  public async joinEvent(): Promise<boolean> {
     throw new Error('Unable to join event from empty model.');
   }
 
-  public async removeSeat(account: User): Promise<boolean> {
+  public async removeSeat(): Promise<boolean> {
     throw new Error('Unable to remove seat from empty model.');
   }
 }

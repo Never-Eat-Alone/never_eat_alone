@@ -1,4 +1,4 @@
-import { DiningEvent, User } from '../../definitions';
+import { DiningEvent } from '../../definitions';
 import { DiningEventPageModel } from './dining_event_page_model';
 import { EmptyDiningEventPageModel } from './empty_dining_event_page_model';
 import { LocalDiningEventPageModel } from './local_dining_event_page_model';
@@ -39,17 +39,12 @@ export class HttpDiningEventPageModel extends DiningEventPageModel {
     return this._model.isGoing;
   }
 
-  public async joinEvent(account: User, profileImageSrc: string): Promise<
-      boolean> {
-    const response = await fetch('/api/join_event', {
+  public async joinEvent(): Promise<boolean> {
+    const response = await fetch(`/api/join_event/${this._eventId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        'account': account.toJson(),
-        'profileImageSrc': profileImageSrc
-      })
+      }
     });
     if (response.status === 200 || response.status === 201) {
       return true;
@@ -57,15 +52,12 @@ export class HttpDiningEventPageModel extends DiningEventPageModel {
     return false;
   }
 
-  public async removeSeat(account: User): Promise<boolean> {
-    const response = await fetch('/api/remove_seat', {
+  public async removeSeat(): Promise<boolean> {
+    const response = await fetch(`/api/remove_seat/${this._eventId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        'account': account.toJson()
-      })
+      }
     });
     if (response.status === 200 || response.status === 201) {
       return true;

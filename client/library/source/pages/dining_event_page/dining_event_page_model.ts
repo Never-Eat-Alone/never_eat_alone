@@ -1,4 +1,4 @@
-import { DiningEvent, User } from '../../definitions';
+import { DiningEvent } from '../../definitions';
 
 /** Base class for the model used by the DiningEventPage. */
 export abstract class DiningEventPageModel {
@@ -9,7 +9,6 @@ export abstract class DiningEventPageModel {
   public abstract load(): Promise<void>;
   public abstract get diningEvent(): DiningEvent;
   public abstract get isGoing(): boolean;
-  public abstract joinEvent(account: User, profileImageSrc: string): Promise<
-    boolean>;
-  public abstract removeSeat(account: User): Promise<boolean>;
+  public abstract joinEvent(): Promise<boolean>;
+  public abstract removeSeat(): Promise<boolean>;
 }

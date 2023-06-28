@@ -1,4 +1,4 @@
-import { DiningEvent, User } from '../../definitions';
+import { DiningEvent } from '../../definitions';
 import { DiningEventPageModel } from './dining_event_page_model';
 
 /** Implements the DiningEventPage in memory. */
@@ -28,13 +28,12 @@ export class LocalDiningEventPageModel extends DiningEventPageModel {
     return this._isGoing;
   }
 
-  public async joinEvent(account: User, profileImageSrc: string): Promise<
-      boolean> {
-    return Boolean(account && profileImageSrc);
+  public async joinEvent(): Promise<boolean> {
+    return true;
   }
 
-  public async removeSeat(account: User): Promise<boolean> {
-    return Boolean(account);
+  public async removeSeat(): Promise<boolean> {
+    return true;
   }
 
   private ensureIsLoaded(): void {
