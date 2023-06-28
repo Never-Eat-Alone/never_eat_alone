@@ -273,18 +273,21 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
 
     /** Dining event model 7 */
     const restaurant7 = new NeverEatAlone.Restaurant(7, 'Le Select Bistro',
-    new Date(), 7, `Classic French food & a wine list of over 1,000 bottles, 
-    with vintage posters lining the walls.`, 'Go upstairs.', '(416) 626-6262',
-    NeverEatAlone.PriceRange.MODERATELY_PRICED, [frenchCuisine,
-    traditionalCuisine], 'https://www.leselectbistro.com/');
-    const demoDiningEventModel7 = new DemoDiningEventPageModel(7, '#6A8716',
-      5.00, 'resources/images/7.jpg', 'Calling all the french food lovers',
-      ,
-      NeverEatAlone.DressCode.BUSINESS_CASUAL,
-      NeverEatAlone.Seating.STANDARD, new NeverEatAlone.Location(7,
-      '432 Wellington St W', '', 'Toronto', 'ON', 'CA', 'M5V 1E3',
-      'Financial District'), 'Sheryl Miller', new Date(2023, 6, 12, 19, 0, 0),
-      new Date(2023, 6, 13, 1, 0, 0), attendeeList7, 8, 'Why not.', false,
+      new Date(), 7, `Classic French food & a wine list of over 1,000 bottles, 
+      with vintage posters lining the walls.`, 'Go upstairs.', '(416) 626-6262',
+      NeverEatAlone.PriceRange.MODERATELY_PRICED, [frenchCuisine,
+      traditionalCuisine], 'https://www.leselectbistro.com/');
+    const location7 = new NeverEatAlone.Location(7, '432 Wellington St W', '',
+      'Toronto', 'ON', 'CA', 'M5V 1E3', 'Financial District');
+    const diningEvent7 = new NeverEatAlone.DiningEvent(7, '#6A8716', 5.00,
+      'resources/images/7.jpg', 'Calling all the french food lovers',
+      restaurant7, NeverEatAlone.DressCode.BUSINESS_CASUAL,
+      NeverEatAlone.Seating.STANDARD, location7, 'Sheryl Miller', new Date(
+      2023, 7, 12, 19, 0, 0), new Date(2023, 7, 13, 1, 0, 0), attendeeList7, 8,
+      'Why not.', new Date(2023, 6, 13, 1, 0, 0), new Date(2023, 7, 12, 18, 0,
+      0), NeverEatAlone.EventStatus.ACTIVE, NeverEatAlone.EventType.PUBLIC,
+      new Date(), new Date());
+    const demoDiningEventModel7 = new DemoDiningEventPageModel(diningEvent7,
       true);
     this._diningEventModelMap.set(7, demoDiningEventModel7);
     this._inviteAFoodieModel = new NeverEatAlone.LocalInviteAFoodieModel(
