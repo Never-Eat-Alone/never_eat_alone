@@ -6,11 +6,11 @@ import { DisplayMode, getDisplayMode, User, UserProfileImage, UserStatus } from
 import { InviteAFoodieModalController, JoinModalController,
   LogInModalController, PartnerWithUsModalController } from '../modals';
 import { ApplicationModel } from './application_model';
-import { DeactivateAccountSurveyPageController }
-from './deactivate_account_survey_page';
+import { DeactivateAccountSurveyPageController } from
+  './deactivate_account_survey_page';
 import { CookiesPolicyPage } from './cookie_policy_page';
-import { DeletedAccountSurveyPageController
-} from './deleted_account_survey_page';
+import { DeletedAccountSurveyPageController } from
+  './deleted_account_survey_page';
 import { DiningEventPageController } from './dining_event_page';
 import { EditProfilePageController } from './edit_profile_page';
 import { EmailConfirmationPageController } from './email_confirmation_page';
@@ -382,20 +382,16 @@ export class ApplicationController extends React.Component<Properties, State> {
   private handleJoinEvent = (diningEventId: number) => {
     if (this.state.account.userStatus === UserStatus.GUEST) {
       this.handleLogInButton();
-      this.handleJoinEvent(diningEventId);
     } else {
-      this.props.model.getDiningEventPageModel(diningEventId).joinEvent(
-        this.state.account, this.state.accountProfileImage.src).then(() => {
-          this.forceUpdate();
+      this.props.model.getDiningEventPageModel(diningEventId).joinEvent().then(
+        () => { //this.forceUpdate(); 
         });
     }
   }
 
   private handleRemoveSeat = (diningEventId: number) => {
-    this.props.model.getDiningEventPageModel(diningEventId).removeSeat(
-      this.state.account).then(() => {
-        this.forceUpdate();
-      });
+    this.props.model.getDiningEventPageModel(diningEventId).removeSeat().then(
+      () => { this.forceUpdate(); });
   }
 
   private renderProfilePage = (
