@@ -1,5 +1,5 @@
 import { User, UserProfileImage } from '../definitions';
-import { InviteAFoodieModel } from '../modals';
+import { InviteAFoodieModel } from '../modals/invite_a_foodie_modal';
 import { JoinModel } from '../modals/join_modal';
 import { LogInModel } from '../modals/log_in_modal';
 import { ApplicationModel } from './application_model';

@@ -1,13 +1,15 @@
-import { DiningEvent } from '../../definitions';
+import { DiningEvent, User } from '../../definitions';
 import { DiningEventPageModel } from './dining_event_page_model';
 import { EmptyDiningEventPageModel } from './empty_dining_event_page_model';
 import { LocalDiningEventPageModel } from './local_dining_event_page_model';
 
 export class HttpDiningEventPageModel extends DiningEventPageModel {
-  constructor(eventId: number) {
+  constructor(eventId: number, account: User, profileImageSrc: string) {
     super();
     this._isLoaded = false;
     this._eventId = eventId;
+    this._account = account;
+    this._profileImageSrc = profileImageSrc;
     this._model = new EmptyDiningEventPageModel();
   }
 
@@ -67,5 +69,7 @@ export class HttpDiningEventPageModel extends DiningEventPageModel {
 
   private _isLoaded: boolean;
   private _eventId: number;
+  private _account: User;
+  private _profileImageSrc: string;
   private _model: DiningEventPageModel;
 }
