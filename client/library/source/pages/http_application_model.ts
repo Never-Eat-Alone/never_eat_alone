@@ -61,7 +61,8 @@ export class HttpApplicationModel extends ApplicationModel {
     const deletedAccountSurveyModel = new HttpDeletedAccountSurveyModel();
     const deactivateAccountSurveyModel = new HttpDeactivateAccountSurveyModel();
     const forgotPasswordPageModel = new HttpForgotPasswordPageModel();
-    const diningEventPageModelMap = new Map<number, DiningEventPageModel>();
+    const diningEventPageModel = new HttpDiningEventPageModel(account,
+      accountProfileImage.src);
     const profilePageModelMap = new Map<number, ProfilePageModel>();
     const editProfilePageModelMap = new Map<number, EditProfilePageModel>();
     const settingsPageModelMap = new Map<number, SettingsPageModel>();
@@ -71,7 +72,7 @@ export class HttpApplicationModel extends ApplicationModel {
     this._model = new LocalApplicationModel(account, accountProfileImage,
       homePageModel, inviteAFoodieModel, joinModel, partnerWithUsModel,
       logInModel, deletedAccountSurveyModel, deactivateAccountSurveyModel,
-      forgotPasswordPageModel, googleClientId, diningEventPageModelMap,
+      forgotPasswordPageModel, googleClientId, diningEventPageModel,
       editProfilePageModelMap, signUpPageModelMap, profilePageModelMap,
       settingsPageModelMap, emailConfirmationPageModelMap);
     await this._model.load();
@@ -106,18 +107,8 @@ export class HttpApplicationModel extends ApplicationModel {
     return this._model.homePageModel;
   }
 
-  public addDiningEventPageModel(id: number,
-      diningEventPageModel: DiningEventPageModel): void {
-    this._model.addDiningEventPageModel(id, diningEventPageModel);
-  }
-
-  public getDiningEventPageModel(id: number): DiningEventPageModel {
-    let diningEventPageModel = this._model.getDiningEventPageModel(id);
-    if (!diningEventPageModel) {
-      diningEventPageModel = new HttpDiningEventPageModel(id);
-      this._model.addDiningEventPageModel(id, diningEventPageModel);
-    }
-    return diningEventPageModel;
+  public get diningEventPageModel(): DiningEventPageModel {
+    return this._model.diningEventPageModel;
   }
 
   public get inviteAFoodieModel(): InviteAFoodieModel {

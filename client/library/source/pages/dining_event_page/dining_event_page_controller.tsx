@@ -9,6 +9,8 @@ interface Properties {
   model: DiningEventPageModel;
   account: User;
 
+  eventId: number;
+
   /** Indicates the remove seat button is clicked. */
   onRemoveSeat: () => void;
 
@@ -65,7 +67,7 @@ export class DiningEventPageController extends React.Component<Properties,
 
   public async componentDidMount(): Promise<void> {
     try {
-      await this.props.model.load();
+      await this.props.model.load(this.props.eventId);
       this.setState({
         isLoaded: true,
         errorCode: DiningEventPage.ErrorCode.NONE

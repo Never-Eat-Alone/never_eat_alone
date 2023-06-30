@@ -4,10 +4,9 @@ import { EmptyDiningEventPageModel } from './empty_dining_event_page_model';
 import { LocalDiningEventPageModel } from './local_dining_event_page_model';
 
 export class HttpDiningEventPageModel extends DiningEventPageModel {
-  constructor(eventId: number, account: User, profileImageSrc: string) {
+  constructor(account: User, profileImageSrc: string) {
     super();
     this._isLoaded = false;
-    this._eventId = eventId;
     this._account = account;
     this._profileImageSrc = profileImageSrc;
     this._model = new EmptyDiningEventPageModel();
@@ -17,19 +16,21 @@ export class HttpDiningEventPageModel extends DiningEventPageModel {
    * Loads the data to display on the DiningEventPage. Must be called before
    * calling any other method of this class.
    */
-  public async load(): Promise<void> {
+  public async load(eventId: number): Promise<void> {
     if (this._isLoaded) {
       return;
     }
-    const response = await fetch(`/api/dining_events/${this._eventId}`);
+    this._eventId = eventId;
+    const response = await fetch(`/api/dining_events/${eventId}`);
     if (response.status !== 200) {
       throw new Error(`Response status ${response.status}`);
     }
     const responseObject = await response.json();
     const diningEvent = DiningEvent.fromJson(responseObject.diningEvent);
     const isGoing = responseObject.isGoing;
-    this._model = new LocalDiningEventPageModel(diningEvent, isGoing);
-    await this._model.load();
+    this._model = new LocalDiningEventPageModel(this._account,
+      this._profileImageSrc, diningEvent, isGoing);
+    await this._model.load(eventId);
     this._isLoaded = true;
   }
 
