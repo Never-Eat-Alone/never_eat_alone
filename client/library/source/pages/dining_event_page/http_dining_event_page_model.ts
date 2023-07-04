@@ -43,7 +43,7 @@ export class HttpDiningEventPageModel extends DiningEventPageModel {
       }
     });
     this._checkResponse(response);
-    await this.load(this._eventId);
+    await this._model.joinEvent();
   }
 
   public async removeSeat(): Promise<void> {
@@ -55,7 +55,7 @@ export class HttpDiningEventPageModel extends DiningEventPageModel {
       }
     });
     this._checkResponse(response);
-    await this.load(this._eventId);
+    await this._model.removeSeat();
   }
 
   private _checkResponse(response: Response): void {

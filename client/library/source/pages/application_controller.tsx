@@ -47,6 +47,8 @@ interface State {
   isInviteAFoodieButtonClicked: boolean;
   isPartnerWithUsButtonClicked: boolean;
   accountProfileImage: UserProfileImage;
+  hasJoinedEvent: boolean;
+  hasRemovedSeat: boolean;
 }
 
 export class ApplicationController extends React.Component<Properties, State> {
@@ -61,7 +63,9 @@ export class ApplicationController extends React.Component<Properties, State> {
       isLogInButtonClicked: false,
       isInviteAFoodieButtonClicked: false,
       isPartnerWithUsButtonClicked: false,
-      accountProfileImage: UserProfileImage.default()
+      accountProfileImage: UserProfileImage.default(),
+      hasJoinedEvent: false,
+      hasRemovedSeat: false
     };
   }
 
@@ -351,7 +355,6 @@ export class ApplicationController extends React.Component<Properties, State> {
       account={this.state.account}
       eventId={id}
       onJoinEvent={this.handleJoinEvent}
-      onRemoveSeat={this.handleRemoveSeat}
     />;
   }
 
@@ -383,20 +386,6 @@ export class ApplicationController extends React.Component<Properties, State> {
   private handleJoinEvent = async () => {
     if (this.state.account.userStatus === UserStatus.GUEST) {
       this.handleLogInButton();
-    } else {
-      try {
-        await this.props.model.diningEventPageModel.joinEvent();
-      } catch {
-        this.setState({ hasError: true });
-      }
-    }
-  }
-
-  private handleRemoveSeat = async () => {
-    try {
-      await this.props.model.diningEventPageModel.removeSeat();
-    } catch {
-      this.setState({ hasError: true });
     }
   }
 
