@@ -12,8 +12,16 @@ export class HttpSettingsPageModel extends SettingsPageModel {
     this._model = new EmptySettingsPageModel();
   }
 
+  /**
+   * Loads the data to display on the SettingsPage. Must be called before
+   * calling any other method of this class.
+   */
   public async load(): Promise<void> {
+    if (this._isLoaded) {
+      return;
+    }
     const response = await fetch(`/api/settings/${this._userId}`);
+    this._checkResponse(response);
     const responseObject = await response.json();
     const linkedSocialAccounts: SocialAccount[] = arrayFromJson(SocialAccount,
       responseObject.linkedSocialAccounts);
@@ -305,6 +313,12 @@ export class HttpSettingsPageModel extends SettingsPageModel {
       return true;
     }
     return false;
+  }
+
+  private _checkResponse(response: Response): void {
+    if (!response.ok) {
+      throw new Error(`HTTP error, status = ${response.status}`);
+    }
   }
 
   private _isLoaded: boolean;

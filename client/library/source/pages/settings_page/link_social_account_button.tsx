@@ -8,9 +8,10 @@ interface Properties extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 /** Displays a social account linking button. */
-export function LinkSocialAccountButton(props: Properties) {
+export function LinkSocialAccountButton({ accountType, account, ...props }:
+    Properties) {
   const { iconSrc, label }= (() => {
-    switch (props.accountType) {
+    switch (accountType) {
       case SocialAccountType.FACEBOOK:
         return {
           iconSrc: 'resources/icons/facebook.svg',
@@ -25,7 +26,7 @@ export function LinkSocialAccountButton(props: Properties) {
   })();
   const buttonText = (() => {
     if (props.disabled) {
-      return <div style={LABEL_STYLE} >{label}: {props.account}</div>
+      return <div style={LABEL_STYLE} >{label}: {account}</div>
     }
     return (
       <div style={LABEL_STYLE} >
