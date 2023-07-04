@@ -1,12 +1,15 @@
 import { arrayFromJson, CreditCardType, PaymentCard, PaymentRecord,
   SocialAccount, User } from '../../definitions';
-import { SettingsPageModel } from './settings_page_model';
+import { EmptySettingsPageModel } from './empty_settings_page_model';
 import { LocalSettingsPageModel } from './local_settings_page_model';
+import { SettingsPageModel } from './settings_page_model';
 
 export class HttpSettingsPageModel extends SettingsPageModel {
   constructor(userId: number) {
     super();
+    this._isLoaded = false;
     this._userId = userId;
+    this._model = new EmptySettingsPageModel();
   }
 
   public async load(): Promise<void> {
@@ -38,6 +41,7 @@ export class HttpSettingsPageModel extends SettingsPageModel {
       isSomeoneJoinedNotificationOn, isFoodieAcceptedInviteNotificationOn,
       isAnnouncementNotificationOn, defaultCard, paymentCards, paymentRecords);
     await this._model.load();
+    this._isLoaded = true;
   }
 
   public get linkedSocialAccounts(): SocialAccount[] {
@@ -303,6 +307,7 @@ export class HttpSettingsPageModel extends SettingsPageModel {
     return false;
   }
 
-  private _model: SettingsPageModel;
+  private _isLoaded: boolean;
   private _userId: number;
+  private _model: SettingsPageModel;
 }

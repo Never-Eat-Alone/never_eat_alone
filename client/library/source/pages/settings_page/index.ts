@@ -1,5 +1,6 @@
 export * from './account_information_tab';
 export * from './card_details_form';
+export * from './empty_settings_page_model';
 export * from './http_settings_page_model';
 export * from './link_social_account_button';
 export * from './local_settings_page_model';
