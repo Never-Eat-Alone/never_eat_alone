@@ -12,15 +12,15 @@ export class EmptyProfilePageModel extends ProfilePageModel {
   }
 
   public get profileId(): number {
-    throw new Error('Unable to load empty model.');
+    throw new Error('ProfilePageModel not loaded.');
   }
 
   public get coverImage(): CoverImage {
-    throw new Error('Unable to load empty model.');
+    throw new Error('ProfilePageModel not loaded.');
   }
 
   public get profileImageSrc(): string {
-    throw new Error('Unable to load empty model.');
+    throw new Error('ProfilePageModel not loaded.');
   }
 
   public get name(): string {
@@ -28,46 +28,46 @@ export class EmptyProfilePageModel extends ProfilePageModel {
   }
 
   public get userName(): string {
-    throw new Error('Unable to load empty model.');
+    throw new Error('ProfilePageModel not loaded.');
   }
 
   public get createdAt(): Date {
-    throw new Error('Unable to load empty model.');
+    throw new Error('ProfilePageModel not loaded.');
   }
 
   public get biography(): string {
-    throw new Error('Unable to load empty model.');
+    throw new Error('ProfilePageModel not loaded.');
   }
 
   public get address(): string {
-    throw new Error('Unable to load empty model.');
+    throw new Error('ProfilePageModel not loaded.');
   }
 
   public get languageList(): Language[] {
-    throw new Error('Unable to load empty model.');
+    throw new Error('ProfilePageModel not loaded.');
   }
 
   public get facebookLink(): string {
-    throw new Error('Unable to load empty model.');
+    throw new Error('ProfilePageModel not loaded.');
   }
 
   public get twitterLink(): string {
-    throw new Error('Unable to load empty model.');
+    throw new Error('ProfilePageModel not loaded.');
   }
 
   public get instagramLink(): string {
-    throw new Error('Unable to load empty model.');
+    throw new Error('ProfilePageModel not loaded.');
   }
 
   public get favoriteCuisineList(): Cuisine[] {
-    throw new Error('Unable to load empty model.');
+    throw new Error('ProfilePageModel not loaded.');
   }
 
   public get upcomingEventList(): EventCardSummary[] {
-    throw new Error('Unable to load empty model.');
+    throw new Error('ProfilePageModel not loaded.');
   }
 
   public get pastEventList(): EventCardSummary[] {
-    throw new Error('Unable to load empty model.');
+    throw new Error('ProfilePageModel not loaded.');
   }
 }
