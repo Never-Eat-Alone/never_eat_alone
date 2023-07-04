@@ -23,7 +23,6 @@ import { SocialMediaImageDatabase
 import { UserDatabase } from './postgres/queries/user_database';
 import { UserProfileImageDatabase
 } from './postgres/queries/user_profile_image_database';
-import { AttendeeRoutes } from './routes/attendee';
 import { DeactivateAccountSurveyRoutes
 } from './routes/deactivate_account_survey';
 import { DeleteAccountSurveyRoutes } from './routes/delete_account_survey';
@@ -147,7 +146,6 @@ function runExpress(pool: Pool, config: any) {
   const diningEventDatabase = new DiningEventDatabase(pool);
   const diningEventRoutes = new DiningEventRoutes(app, diningEventDatabase,
     userDatabase, attendeeDatabase);
-  const attendeeRoutes = new AttendeeRoutes(app, attendeeDatabase);
   app.get('*', (request, response, next) => {
     response.sendFile(path.join(process.cwd(), 'public', 'index.html'));
   });
