@@ -161,6 +161,7 @@ function runExpress(pool: Pool, config: any) {
         'user_confirmation_tokens',
         'user_invitation_codes',
         'user_credentials',
+        'user_social_credentials',
         'user_profile_images',
         'social_media_images',
         'user_cover_images',
