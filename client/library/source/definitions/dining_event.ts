@@ -187,8 +187,6 @@ export class DiningEvent {
       const attendeeIndex = this._attendeeList.findIndex(a => a.userId ===
         userId);
       this._attendeeList[attendeeIndex] = updatedAttendee;
-    } else {
-      this._attendeeList.push(updatedAttendee);
     }
   }
 

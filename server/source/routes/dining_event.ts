@@ -1,4 +1,4 @@
-import { arrayToJson, DiningEvent, EventCardSummary } from
+import { arrayToJson, DiningEvent, EventCardSummary, EventTag, User } from
   '../../../client/library/source/definitions';
 import { AttendeeDatabase } from '../postgres/queries/attendee_database';
 import { DiningEventDatabase } from '../postgres/queries/dining_event_database';
@@ -20,8 +20,12 @@ export class DiningEventRoutes {
       this.getHomePageDiningEventCardSummaries);
     app.get('/api/home_page/user_future_events/:userId',
       this.getUserFutureDiningEventCardSummaries);
+    app.get('/api/home_page/event_tag_list/:userId',
+      this.getHomePageEventTagList);
     app.get('/api/dining_events/:eventId', this.getDiningEventPage);
-    
+    app.post('/api/dining_events/:eventId/join', this.joinEvent);
+    app.post('/api/dining_events/:eventId/remove_seat', this.removeSeat);
+
     this.diningEventDatabase = diningEventDatabase;
     this.userDatabase = userDatabase;
     this.attendeeDatabase = attendeeDatabase;
@@ -71,6 +75,23 @@ export class DiningEventRoutes {
     });
   }
 
+  private getHomePageEventTagList = async (request, response) => {
+    const userId = parseInt(request.params.userId);
+    let eventTagList: EventTag[];
+    try {
+      eventTagList = await this.attendeeDatabase.loadHomePageEventTagList(
+        userId);
+    } catch (error) {
+      console.error('Failed at loadHomePageEventTagList', error);
+      response.status(500).json({
+        eventTagList: [],
+        message: 'DATABASE_ERROR'
+      });
+      return;
+    }
+    response.status(200).json({ eventTagList: arrayToJson(eventTagList) });
+  }
+
   private getDiningEventPage = async (request, response) => {
     const eventId = parseInt(request.params.eventId);
     let diningEvent = DiningEvent.empty();
@@ -98,6 +119,58 @@ export class DiningEventRoutes {
       diningEvent: diningEvent.toJson(),
       isGoing: isGoing
     });
+  }
+
+  private joinEvent = async (request, response) => {
+    const eventId = parseInt(request.params.eventId);
+    let user = User.makeGuest();
+    if (request.session?.user) {
+      try {
+        user = await this.userDatabase.loadUserBySessionId(request.session.id);
+        if (user.id === -1) {
+          response.status(401).send();
+          return;
+        }
+      } catch (error) {
+        console.error('Failed at loadUserBySessionId', error);
+        response.status(500).send();
+        return;
+      }
+    }
+    try {
+      await this.attendeeDatabase.joinEvent(user.id, eventId);
+      response.status(200).send();
+    } catch (error) {
+      console.error('Failed at joinEvent', error);
+      response.status(500).send();
+      return;
+    }
+  }
+
+  private removeSeat = async (request, response) => {
+    const eventId = parseInt(request.params.eventId);
+    let user = User.makeGuest();
+    if (request.session?.user) {
+      try {
+        user = await this.userDatabase.loadUserBySessionId(request.session.id);
+        if (user.id === -1) {
+          response.status(401).send();
+          return;
+        }
+      } catch (error) {
+        console.error('Failed at loadUserBySessionId', error);
+        response.status(500).send();
+        return;
+      }
+    }
+    try {
+      await this.attendeeDatabase.removeSeat(user.id, eventId);
+      response.status(200).send();
+    } catch (error) {
+      console.error('Failed at removeSeat', error);
+      response.status(500).send();
+      return;
+    }
   }
 
   private diningEventDatabase: DiningEventDatabase;
