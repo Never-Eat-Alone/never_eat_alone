@@ -117,6 +117,18 @@ export class AttendeeDatabase {
     return false;
   }
 
+  public joinEvent = async (userId: number, eventId: number): Promise<void> => {
+    await this.pool.query(`INSERT INTO attendees (user_id, event_id, status,
+      guest_count) VALUES ($1, $2, 'GOING', 0) ON CONFLICT (user_id, event_id)
+      DO UPDATE SET status = 'GOING', updated_at = NOW()`, [userId, eventId]);
+  }
+
+  public removeSeat = async (userId: number, eventId: number): Promise<
+      void> => {
+    await this.pool.query(`UPDATE attendees SET status = 'NOT_GOING', updated_at
+      = NOW() WHERE user_id = $1 AND event_id = $2`, [userId, eventId]);
+  }
+
   /** The postgress pool connection. */
   private pool: Pool;
 }

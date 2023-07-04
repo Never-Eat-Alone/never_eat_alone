@@ -1,5 +1,5 @@
 import { User, UserProfileImage } from '../definitions';
-import { InviteAFoodieModel } from '../modals';
+import { InviteAFoodieModel } from '../modals/invite_a_foodie_modal';
 import { JoinModel } from '../modals/join_modal';
 import { LogInModel } from '../modals/log_in_modal';
 import { ApplicationModel } from './application_model';
@@ -22,8 +22,8 @@ export class LocalApplicationModel extends ApplicationModel {
       logInModel: LogInModel, deletedAccountSurveyModel:
       DeletedAccountSurveyModel, deactivateAccountSurveyModel:
       DeactivateAccountSurveyModel, forgotPasswordPageModel:
-      ForgotPasswordPageModel, googleClientId: string, diningEventPageModelMap:
-      Map<number, DiningEventPageModel>, editProfilePageModelMap: Map<number,
+      ForgotPasswordPageModel, googleClientId: string, diningEventPageModel:
+      DiningEventPageModel, editProfilePageModelMap: Map<number,
       EditProfilePageModel>, signUpPageModelMap: Map<number, SignUpPageModel>,
       profilePageModelMap: Map<number, ProfilePageModel>, settingsPageModelMap:
       Map<number, SettingsPageModel>, emailConfirmationPageModelMap: Map<string,
@@ -40,7 +40,7 @@ export class LocalApplicationModel extends ApplicationModel {
     this._deactivateAccountSurveyModel = deactivateAccountSurveyModel;
     this._forgotPasswordPageModel = forgotPasswordPageModel;
     this._googleClientId = googleClientId;
-    this._diningEventPageModelMap = diningEventPageModelMap;
+    this._diningEventPageModel = diningEventPageModel;
     this._editProfilePageModelMap = editProfilePageModelMap;
     this._signUpPageModelMap = signUpPageModelMap;
     this._profilePageModelMap = profilePageModelMap;
@@ -75,13 +75,8 @@ export class LocalApplicationModel extends ApplicationModel {
     return this._homePageModel;
   }
 
-  public addDiningEventPageModel(id: number, diningEventPageModel:
-      DiningEventPageModel): void {
-    this._diningEventPageModelMap.set(id, diningEventPageModel);
-  }
-
-  public getDiningEventPageModel(id: number): DiningEventPageModel {
-    return this._diningEventPageModelMap.get(id);
+  public get diningEventPageModel(): DiningEventPageModel {
+    return this._diningEventPageModel;
   }
 
   public get inviteAFoodieModel(): InviteAFoodieModel {
@@ -172,7 +167,7 @@ export class LocalApplicationModel extends ApplicationModel {
   private _deactivateAccountSurveyModel: DeactivateAccountSurveyModel;
   private _forgotPasswordPageModel: ForgotPasswordPageModel;
   private _googleClientId: string;
-  private _diningEventPageModelMap: Map<number, DiningEventPageModel>;
+  private _diningEventPageModel: DiningEventPageModel;
   private _profilePageModelMap: Map<number, ProfilePageModel>;
   private _editProfilePageModelMap: Map<number, EditProfilePageModel>;
   private _settingsPageModelMap: Map<number, SettingsPageModel>;
