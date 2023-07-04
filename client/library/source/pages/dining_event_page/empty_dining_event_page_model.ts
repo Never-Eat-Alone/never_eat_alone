@@ -14,15 +14,11 @@ export class EmptyDiningEventPageModel extends DiningEventPageModel {
     throw new Error('DiningEventPageModel not loaded.');
   }
 
-  public get isGoing(): boolean {
-    throw new Error('DiningEventPageModel not loaded.');
-  }
-
-  public async joinEvent(): Promise<boolean> {
+  public async joinEvent(): Promise<void> {
     throw new Error('Unable to join event from empty model.');
   }
 
-  public async removeSeat(): Promise<boolean> {
+  public async removeSeat(): Promise<void> {
     throw new Error('Unable to remove seat from empty model.');
   }
 }

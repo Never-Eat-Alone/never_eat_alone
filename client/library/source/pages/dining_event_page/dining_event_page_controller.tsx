@@ -41,6 +41,8 @@ export class DiningEventPageController extends React.Component<Properties,
     }
     const isRSVPOpen = (this.props.model.diningEvent.rsvpOpenAt <= new Date() &&
       this.props.model.diningEvent.rsvpCloseAt < new Date());
+    const isGoing = !!this.props.model.diningEvent.attendeeList.find(attendee =>
+      attendee.userId === this.props.account.id && attendee.status === 'GOING');
     return <DiningEventPage
       displayMode={this.props.displayMode}
       eventColor={this.props.model.diningEvent.eventColor}
@@ -59,7 +61,7 @@ export class DiningEventPageController extends React.Component<Properties,
       description={this.props.model.diningEvent.description}
       account={this.props.account}
       isRSVPOpen={isRSVPOpen}
-      isGoing={this.props.model.isGoing}
+      isGoing={isGoing}
       onJoinEvent={this.props.onJoinEvent}
       onRemoveSeat={this.props.onRemoveSeat}
     />;

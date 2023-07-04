@@ -22,14 +22,11 @@ export class HttpDiningEventPageModel extends DiningEventPageModel {
     }
     this._eventId = eventId;
     const response = await fetch(`/api/dining_events/${eventId}`);
-    if (response.status !== 200) {
-      throw new Error(`Response status ${response.status}`);
-    }
+    this._checkResponse(response);
     const responseObject = await response.json();
     const diningEvent = DiningEvent.fromJson(responseObject.diningEvent);
-    const isGoing = responseObject.isGoing;
     this._model = new LocalDiningEventPageModel(this._account,
-      this._profileImageSrc, diningEvent, isGoing);
+      this._profileImageSrc, diningEvent);
     await this._model.load(eventId);
     this._isLoaded = true;
   }
@@ -38,34 +35,33 @@ export class HttpDiningEventPageModel extends DiningEventPageModel {
     return this._model.diningEvent;
   }
 
-  public get isGoing(): boolean {
-    return this._model.isGoing;
-  }
-
-  public async joinEvent(): Promise<boolean> {
-    const response = await fetch(`/api/join_event/${this._eventId}`, {
+  public async joinEvent(): Promise<void> {
+    const response = await fetch(`/api/dining_events/${this._eventId}/join`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       }
     });
-    if (response.status === 200 || response.status === 201) {
-      return true;
-    }
-    return false;
+    this._checkResponse(response);
+    await this.load(this._eventId);
   }
 
-  public async removeSeat(): Promise<boolean> {
-    const response = await fetch(`/api/remove_seat/${this._eventId}`, {
+  public async removeSeat(): Promise<void> {
+    const response = await fetch(
+      `/api/dining_events/${this._eventId}/remove_seat`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       }
     });
-    if (response.status === 200 || response.status === 201) {
-      return true;
+    this._checkResponse(response);
+    await this.load(this._eventId);
+  }
+
+  private _checkResponse(response: Response): void {
+    if (!response.ok) {
+      throw new Error(`HTTP error, status = ${response.status}`);
     }
-    return false;
   }
 
   private _isLoaded: boolean;

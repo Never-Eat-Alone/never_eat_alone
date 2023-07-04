@@ -1,5 +1,6 @@
 import { arrayFromJson, arrayToJson } from './array_json';
 import { Attendee } from './attendee';
+import { AttendeeStatus } from './attendee_status';
 import { DressCode } from './dress_code';
 import { EventStatus } from './event_status';
 import { EventType } from './event_type';
@@ -46,10 +47,10 @@ export class DiningEvent {
   constructor(id: number, eventColor: string, eventFee: number,
       coverImageSrc: string, title: string, restaurant: Restaurant,
       dressCode: DressCode, seating: Seating, location: Location,
-      reservationName: string, startAt: Date, endAt: Date,
-      attendeeList: Attendee[], totalCapacity: number, description: string,
-      rsvpOpenAt: Date, rsvpCloseAt: Date, status: EventStatus, type: EventType,
-      createdAt: Date, updatedAt: Date) {
+      reservationName: string, startAt: Date, endAt: Date, attendeeList:
+      Attendee[], totalCapacity: number, description: string, rsvpOpenAt: Date,
+      rsvpCloseAt: Date, status: EventStatus, type: EventType, createdAt: Date,
+      updatedAt: Date) {
     this._id = id;
     this._eventColor = eventColor;
     this._eventFee = eventFee;
@@ -155,6 +156,40 @@ export class DiningEvent {
 
   public get updatedAt(): Date {
     return this._updatedAt;
+  }
+
+  public joinEvent(userId: number, userName: string, profileImageSrc: string):
+      void {
+    const attendee = this._attendeeList.find(a => a.userId === userId);
+    if (attendee && attendee.status === AttendeeStatus.GOING) {
+      return;
+    }
+    const newAttendee = new Attendee(userId, this._id, userName, 0,
+      AttendeeStatus.GOING, profileImageSrc, new Date(Date.now()));
+    if (attendee) {
+      const attendeeIndex = this._attendeeList.findIndex(a => a.userId ===
+        userId);
+      this._attendeeList[attendeeIndex] = newAttendee;
+    } else {
+      this._attendeeList.push(newAttendee);
+    }
+  }
+
+  public removeSeat(userId: number, userName: string, profileImageSrc: string):
+      void {
+    const attendee = this._attendeeList.find(a => a.userId === userId);
+    if (attendee && attendee.status === AttendeeStatus.NOT_GOING) {
+      return;
+    }
+    const updatedAttendee = new Attendee(userId, this._id, userName, 0,
+      AttendeeStatus.NOT_GOING, profileImageSrc, new Date(Date.now()));
+    if (attendee) {
+      const attendeeIndex = this._attendeeList.findIndex(a => a.userId ===
+        userId);
+      this._attendeeList[attendeeIndex] = updatedAttendee;
+    } else {
+      this._attendeeList.push(updatedAttendee);
+    }
   }
 
   /** Converts DiningEvent to json. */

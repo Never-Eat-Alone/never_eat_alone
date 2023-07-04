@@ -8,7 +8,6 @@ export abstract class DiningEventPageModel {
    */
   public abstract load(eventId: number): Promise<void>;
   public abstract get diningEvent(): DiningEvent;
-  public abstract get isGoing(): boolean;
-  public abstract joinEvent(): Promise<boolean>;
-  public abstract removeSeat(): Promise<boolean>;
+  public abstract joinEvent(): Promise<void>;
+  public abstract removeSeat(): Promise<void>;
 }

@@ -347,10 +347,11 @@ export class ApplicationController extends React.Component<Properties, State> {
     const id = Number(match.params.id);
     return <DiningEventPageController
       displayMode={this.state.displayMode}
-      model={this.props.model.getDiningEventPageModel(id)}
+      model={this.props.model.diningEventPageModel}
       account={this.state.account}
-      onJoinEvent={() => this.handleJoinEvent(id)}
-      onRemoveSeat={() => this.handleRemoveSeat(id)}
+      eventId={id}
+      onJoinEvent={this.handleJoinEvent}
+      onRemoveSeat={this.handleRemoveSeat}
     />;
   }
 
@@ -379,23 +380,21 @@ export class ApplicationController extends React.Component<Properties, State> {
     />;
   }
 
-  private handleJoinEvent = async (diningEventId: number) => {
+  private handleJoinEvent = async () => {
     if (this.state.account.userStatus === UserStatus.GUEST) {
       this.handleLogInButton();
     } else {
       try {
-        await this.props.model.getDiningEventPageModel(diningEventId)
-          .joinEvent();
+        await this.props.model.diningEventPageModel.joinEvent();
       } catch {
         this.setState({ hasError: true });
       }
     }
   }
 
-  private handleRemoveSeat = async (diningEventId: number) => {
+  private handleRemoveSeat = async () => {
     try {
-      await this.props.model.getDiningEventPageModel(diningEventId)
-        .removeSeat();
+      await this.props.model.diningEventPageModel.removeSeat();
     } catch {
       this.setState({ hasError: true });
     }

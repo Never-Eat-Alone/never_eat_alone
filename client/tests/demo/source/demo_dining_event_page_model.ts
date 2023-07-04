@@ -2,11 +2,13 @@ import * as NeverEatAlone from 'never_eat_alone';
 
 export class DemoDiningEventPageModel extends
     NeverEatAlone.DiningEventPageModel {
-  constructor(diningEvent: NeverEatAlone.DiningEvent, isGoing: boolean) {
+  constructor(account: NeverEatAlone.User, profileImageSrc: string, diningEvent:
+      NeverEatAlone.DiningEvent) {
     super();
     this._isLoaded = false;
+    this._account = account;
+    this._profileImageSrc = profileImageSrc;
     this._diningEvent = diningEvent;
-    this._isGoing = isGoing;
   }
 
   public async load(): Promise<void> {
@@ -18,36 +20,16 @@ export class DemoDiningEventPageModel extends
     return this._diningEvent;
   }
 
-  public get isGoing(): boolean {
+  public async joinEvent(): Promise<void> {
     this.ensureIsLoaded();
-    return this._isGoing;
+    this.diningEvent.joinEvent(this._account.id, this._account.name,
+      this._profileImageSrc);
   }
 
-  public async joinEvent(account: NeverEatAlone.User, profileImageSrc: string
-      ): Promise<boolean> {
-    const index = this._diningEvent.attendeeList.findIndex(a => a.userId ===
-      account.id);
-    if (index !== -1) {
-      if (this._diningEvent.attendeeList[index].status ===
-          NeverEatAlone.AttendeeStatus.GOING) {
-        return false;
-      }
-      this._diningEvent.attendeeList.splice(index, 1);
-    }
-    this._diningEvent.attendeeList.push(new NeverEatAlone.Attendee(account.id,
-      this._diningEvent.id, account.name, 0, NeverEatAlone.AttendeeStatus.GOING,
-      profileImageSrc, new Date()));
-    return true;
-  }
-
-  public async removeSeat(account: NeverEatAlone.User): Promise<boolean> {
-    const index = this._diningEvent.attendeeList.findIndex(a => a.userId ===
-      account.id);
-    if (index !== -1) {
-      this._diningEvent.attendeeList.splice(index, 1);
-      return true;
-    }
-    return false;
+  public async removeSeat(): Promise<void> {
+    this.ensureIsLoaded();
+    this._diningEvent.removeSeat(this._account.id, this._account.userName,
+      this._profileImageSrc);
   }
 
   private ensureIsLoaded(): void {
@@ -57,6 +39,7 @@ export class DemoDiningEventPageModel extends
   }
 
   private _isLoaded: boolean;
+  private _account: NeverEatAlone.User;
+  private _profileImageSrc: string;
   private _diningEvent: NeverEatAlone.DiningEvent;
-  private _isGoing: boolean;
 }
