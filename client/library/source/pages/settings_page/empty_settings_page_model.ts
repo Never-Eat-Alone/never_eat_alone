@@ -1,4 +1,4 @@
-import { CreditCardType, PaymentCard, PaymentRecord, SocialAccount, User } from
+import { PaymentCard, PaymentRecord, SocialAccount, User } from
   '../../definitions';
 import { SettingsPageModel } from './settings_page_model';
 
@@ -49,7 +49,7 @@ export class EmptySettingsPageModel extends SettingsPageModel {
     throw new Error('SettingsPageModel not loaded.');
   }
 
-  public async toggleNotificationSetting(setting: string): Promise<void> {
+  public async toggleNotificationSetting(setting: string): Promise<boolean> {
     throw new Error('SettingsPageModel not loaded.');
   }
 
@@ -67,6 +67,10 @@ export class EmptySettingsPageModel extends SettingsPageModel {
   }
 
   public async deactivateAccount(): Promise<boolean> {
+    throw new Error('SettingsPageModel not loaded.');
+  }
+
+  public async unlinkAccount(account: SocialAccount): Promise<boolean> {
     throw new Error('SettingsPageModel not loaded.');
   }
 }

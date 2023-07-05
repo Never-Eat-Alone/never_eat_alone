@@ -35,9 +35,11 @@ export class LocalSettingsPageModel extends SettingsPageModel {
     return this._notificationSettings.getSetting(setting);
   }
 
-  public async toggleNotificationSetting(setting: string): Promise<void> {
+  public async toggleNotificationSetting(setting: string): Promise<boolean> {
     this.ensureIsLoaded();
+    const newSetting = !this._notificationSettings.getSetting(setting);
     this._notificationSettings.toggleSetting(setting);
+    return newSetting;
   }
 
   public get defaultCard(): PaymentCard {
@@ -132,6 +134,17 @@ export class LocalSettingsPageModel extends SettingsPageModel {
   public async deactivateAccount(): Promise<boolean> {
     this.ensureIsLoaded();
     return true;
+  }
+
+  public async unlinkAccount(account: SocialAccount): Promise<boolean> {
+    this.ensureIsLoaded();
+    const index = this._linkedSocialAccounts.findIndex(ac => ac.provider ===
+      account.provider && ac.email === account.email);
+    if (index === -1) {
+      throw new Error(`Social account with email ${account.email} not found`);
+    }
+    this._linkedSocialAccounts = this._linkedSocialAccounts.splice(index, 1);
+    return index !== -1;
   }
 
   private ensureIsLoaded(): void {

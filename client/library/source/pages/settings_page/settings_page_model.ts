@@ -1,4 +1,4 @@
-import { CreditCardType, PaymentCard, PaymentRecord, SocialAccount, User } from
+import { PaymentCard, PaymentRecord, SocialAccount, User } from
   '../../definitions';
 
 export abstract class SettingsPageModel {
@@ -13,10 +13,11 @@ export abstract class SettingsPageModel {
   public abstract updateCard(newCard: PaymentCard, isMarkedAsDefault: boolean
     ): Promise<void>;
   public abstract deleteCard(cardId: number): Promise<void>;
-  public abstract toggleNotificationSetting(setting: string): Promise<void>;
+  public abstract toggleNotificationSetting(setting: string): Promise<boolean>;
   public abstract emailReceipt(paymentRecord: PaymentRecord): Promise<boolean>;
   public abstract SubmitHelpEmail(receiptId: number, message: string): Promise<
     boolean>;
   public abstract deleteAccount(password: string): Promise<User>;
   public abstract deactivateAccount(): Promise<boolean>;
+  public abstract unlinkAccount(account: SocialAccount): Promise<boolean>;
 }
