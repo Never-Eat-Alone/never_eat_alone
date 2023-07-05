@@ -1,4 +1,15 @@
 export class NotificationSettings {
+  public static fromJson(value: any): NotificationSettings {
+    return new NotificationSettings(
+      value.isNewEventsNotificationOn,
+      value.isEventJoinedNotificationOn,
+      value.isEventRemindersNotificationOn,
+      value.isChangesNotificationOn,
+      value.isSomeoneJoinedNotificationOn,
+      value.isFoodieAcceptedInviteNotificationOn,
+      value.isAnnouncementNotificationOn);
+  }
+
   constructor(isNewEventsNotificationOn: boolean, isEventJoinedNotificationOn:
       boolean, isEventRemindersNotificationOn: boolean, isChangesNotificationOn:
       boolean, isSomeoneJoinedNotificationOn: boolean,
@@ -25,6 +36,10 @@ export class NotificationSettings {
     } else {
       throw new Error(`Invalid setting: ${setting}`);
     }
+  }
+
+  public toJson(): any {
+    return this._settings;
   }
 
   private _settings: { [key: string]: boolean };

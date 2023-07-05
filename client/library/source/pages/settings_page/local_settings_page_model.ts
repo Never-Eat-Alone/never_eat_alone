@@ -1,27 +1,16 @@
-import { CreditCardType, PaymentCard, PaymentRecord, SocialAccount, User } from
-  '../../definitions';
+import { NotificationSettings, PaymentCard, PaymentRecord, SocialAccount, User }
+  from '../../definitions';
 import { SettingsPageModel } from './settings_page_model';
 
 export class LocalSettingsPageModel extends SettingsPageModel {
-  constructor(linkedSocialAccounts: SocialAccount[], password: string,
-      isNewEventsNotificationOn: boolean, isEventJoinedNotificationOn: boolean,
-      isEventRemindersNotificationOn: boolean, isChangesNotificationOn: boolean,
-      isSomeoneJoinedNotificationOn: boolean,
-      isFoodieAcceptedInviteNotificationOn: boolean,
-      isAnnouncementNotificationOn: boolean, defaultCard: PaymentCard,
+  constructor(linkedSocialAccounts: SocialAccount[], hashedPassword: string,
+      notificationSettings: NotificationSettings, defaultCard: PaymentCard,
       paymentCards: PaymentCard[], paymentRecords: PaymentRecord[]) {
     super();
     this._isLoaded = false;
     this._linkedSocialAccounts = linkedSocialAccounts;
-    this._password = password;
-    this._isNewEventsNotificationOn = isNewEventsNotificationOn;
-    this._isEventJoinedNotificationOn = isEventJoinedNotificationOn;
-    this._isEventRemindersNotificationOn = isEventRemindersNotificationOn;
-    this._isChangesNotificationOn = isChangesNotificationOn;
-    this._isSomeoneJoinedNotificationOn = isSomeoneJoinedNotificationOn;
-    this._isFoodieAcceptedInviteNotificationOn =
-      isFoodieAcceptedInviteNotificationOn;
-    this._isAnnouncementNotificationOn = isAnnouncementNotificationOn;
+    this._hashedPassword = hashedPassword;
+    this._notificationSettings = notificationSettings;
     this._defaultCard = defaultCard;
     this._paymentCards = paymentCards;
     this._paymentRecords = paymentRecords;
@@ -36,44 +25,19 @@ export class LocalSettingsPageModel extends SettingsPageModel {
     return this._linkedSocialAccounts;
   }
 
-  public get password(): string {
+  public get hashedPassword(): string {
     this.ensureIsLoaded();
-    return this._password;
+    return this._hashedPassword;
   }
 
-  public get isNewEventsNotificationOn(): boolean {
+  public getNotificationSetting(setting: string): boolean {
     this.ensureIsLoaded();
-    return this._isNewEventsNotificationOn;
+    return this._notificationSettings.getSetting(setting);
   }
 
-  public get isEventJoinedNotificationOn(): boolean {
+  public async toggleNotificationSetting(setting: string): Promise<void> {
     this.ensureIsLoaded();
-    return this._isEventJoinedNotificationOn;
-  }
-
-  public get isEventRemindersNotificationOn(): boolean {
-    this.ensureIsLoaded();
-    return this._isEventRemindersNotificationOn;
-  }
-
-  public get isChangesNotificationOn(): boolean {
-    this.ensureIsLoaded();
-    return this._isChangesNotificationOn;
-  }
-
-  public get isSomeoneJoinedNotificationOn(): boolean {
-    this.ensureIsLoaded();
-    return this._isSomeoneJoinedNotificationOn;
-  }
-
-  public get isFoodieAcceptedInviteNotificationOn(): boolean {
-    this.ensureIsLoaded();
-    return this._isFoodieAcceptedInviteNotificationOn;
-  }
-
-  public get isAnnouncementNotificationOn(): boolean {
-    this.ensureIsLoaded();
-    return this._isAnnouncementNotificationOn;
+    this._notificationSettings.toggleSetting(setting);
   }
 
   public get defaultCard(): PaymentCard {
@@ -92,18 +56,13 @@ export class LocalSettingsPageModel extends SettingsPageModel {
   }
 
   /** Payment methods tab related methods */
-  public async addCard(cardNumber: number, nameOnCard: string, month: number,
-      year: number, securityCode: number, zipcode: string, creditCardType:
-      CreditCardType): Promise<PaymentCard> {
+  public async addCard(card: PaymentCard): Promise<void> {
     this.ensureIsLoaded();
-    const newCard = new PaymentCard(Date.now(), cardNumber, nameOnCard, month,
-      year, securityCode, zipcode, creditCardType);
-    this._paymentCards.push(newCard);
-    return newCard;
+    this._paymentCards.push(card);
   }
 
   public async updateCard(newCard: PaymentCard, isMarkedAsDefault: boolean):
-      Promise<PaymentCard> {
+      Promise<void> {
     this.ensureIsLoaded();
     const cardIndex = this._paymentCards.findIndex(card => card.id ===
       newCard.id);
@@ -111,14 +70,11 @@ export class LocalSettingsPageModel extends SettingsPageModel {
       throw new Error(`Card with ID ${newCard.id} not found`);
     }
     this._paymentCards[cardIndex] = newCard;
-    return newCard;
   }
 
-  public async deleteCard(cardId: number): Promise<boolean> {
+  public async deleteCard(cardId: number): Promise<void> {
     this.ensureIsLoaded();
-    const initialLength = this._paymentCards.length;
     this._paymentCards = this._paymentCards.filter(card => card.id !== cardId);
-    return initialLength > this._paymentCards.length;
   }
 
   /** Notification tab related methods */
@@ -186,14 +142,8 @@ export class LocalSettingsPageModel extends SettingsPageModel {
 
   private _isLoaded: boolean;
   private _linkedSocialAccounts: SocialAccount[];
-  private _password: string;
-  private _isNewEventsNotificationOn: boolean;
-  private _isEventJoinedNotificationOn: boolean;
-  private _isEventRemindersNotificationOn: boolean;
-  private _isChangesNotificationOn: boolean;
-  private _isSomeoneJoinedNotificationOn: boolean;
-  private _isFoodieAcceptedInviteNotificationOn: boolean;
-  private _isAnnouncementNotificationOn: boolean;
+  private _hashedPassword: string;
+  private _notificationSettings: NotificationSettings;
   private _defaultCard: PaymentCard;
   private _paymentCards: PaymentCard[];
   private _paymentRecords: PaymentRecord[];

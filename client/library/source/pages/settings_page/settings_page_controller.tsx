@@ -82,7 +82,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
       displayName={this.props.account.name}
       profileId={this.props.account.id}
       email={this.props.account.email}
-      password={this.props.model.password}
+      password={this.props.model.hashedPassword}
       isNewEventsNotificationOn={this.state.isNewEventsNotificationOn}
       isEventJoinedNotificationOn={this.state.isEventJoinedNotificationOn}
       isEventRemindersNotificationOn={this.state.isEventRemindersNotificationOn}
