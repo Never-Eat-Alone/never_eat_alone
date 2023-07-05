@@ -93,22 +93,32 @@ export class LocalSettingsPageModel extends SettingsPageModel {
 
   /** Payment methods tab related methods */
   public async addCard(cardNumber: number, nameOnCard: string, month: number,
-      year: number, securityCode: number, zipcode: string,
-      creditCardType: CreditCardType): Promise<PaymentCard> {
+      year: number, securityCode: number, zipcode: string, creditCardType:
+      CreditCardType): Promise<PaymentCard> {
     this.ensureIsLoaded();
-    return new PaymentCard(Date.now(), cardNumber, nameOnCard, month, year,
-      securityCode, zipcode, creditCardType);
+    const newCard = new PaymentCard(Date.now(), cardNumber, nameOnCard, month,
+      year, securityCode, zipcode, creditCardType);
+    this._paymentCards.push(newCard);
+    return newCard;
   }
 
-  public async updateCard(newCard: PaymentCard, isMarkedAsDefault: boolean
-      ): Promise<PaymentCard> {
+  public async updateCard(newCard: PaymentCard, isMarkedAsDefault: boolean):
+      Promise<PaymentCard> {
     this.ensureIsLoaded();
+    const cardIndex = this._paymentCards.findIndex(card => card.id ===
+      newCard.id);
+    if (cardIndex === -1) {
+      throw new Error(`Card with ID ${newCard.id} not found`);
+    }
+    this._paymentCards[cardIndex] = newCard;
     return newCard;
   }
 
   public async deleteCard(cardId: number): Promise<boolean> {
     this.ensureIsLoaded();
-    return Boolean(cardId);
+    const initialLength = this._paymentCards.length;
+    this._paymentCards = this._paymentCards.filter(card => card.id !== cardId);
+    return initialLength > this._paymentCards.length;
   }
 
   /** Notification tab related methods */
@@ -170,7 +180,7 @@ export class LocalSettingsPageModel extends SettingsPageModel {
 
   private ensureIsLoaded(): void {
     if (!this._isLoaded) {
-      throw new Error('DiningEventPageModel not loaded.');
+      throw new Error('SettingsPageModel not loaded.');
     }
   }
 
