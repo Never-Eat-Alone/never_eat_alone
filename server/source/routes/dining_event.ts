@@ -18,8 +18,6 @@ export class DiningEventRoutes {
     /** Route to get the dining event card summaries on homepage. */
     app.get('/api/home_page/event_list/:userId',
       this.getHomePageDiningEventCardSummaries);
-    app.get('/api/home_page/user_future_events/:userId',
-      this.getUserFutureDiningEventCardSummaries);
     app.get('/api/home_page/event_tag_list/:userId',
       this.getHomePageEventTagList);
     app.get('/api/dining_events/:eventId', this.getDiningEventPage);
@@ -35,10 +33,12 @@ export class DiningEventRoutes {
   private getHomePageDiningEventCardSummaries = async (request, response) => {
     const userId = parseInt(request.params.userId);
     try {
-      const diningEventCardSummaryList = await this.diningEventDatabase
-        .loadHomePageDiningEventCardSummaries(userId);
+      const { exploreEventList, userUpcomingEventList } =
+        await this.diningEventDatabase.loadHomePageDiningEventCardSummaries(
+          userId);
       response.status(200).json({
-        diningEventCardSummaryList: arrayToJson(diningEventCardSummaryList)
+        exploreEventList: arrayToJson(exploreEventList),
+        userUpcomingEventList: arrayToJson(userUpcomingEventList)
       });
     } catch (error) {
       console.error('Failed at loadHomePageDiningEventCardSummaries', error);
@@ -47,30 +47,6 @@ export class DiningEventRoutes {
         message: 'DATABASE_ERROR'
       });
     }
-  }
-
-  private getUserFutureDiningEventCardSummaries = async (request, response) => {
-    const userId = parseInt(request.params.userId);
-    let userFutureEventCardSummaryList: EventCardSummary[] = [];
-    if (userId === -1) {
-      response.status(200).json({ userFutureEventCardSummaryList: [] });
-      return;
-    }
-    try {
-      userFutureEventCardSummaryList =
-        await this.diningEventDatabase.loadUserFutureDiningEventCardSummaries(
-          userId);
-    } catch (error) {
-      response.status(500).json({
-        userFutureEventCardSummaryList: [],
-        message: 'DATABASE_ERROR'
-      });
-      return;
-    }
-    response.status(200).json({
-      userFutureEventCardSummaryList: arrayToJson(
-        userFutureEventCardSummaryList)
-    });
   }
 
   private getHomePageEventTagList = async (request, response) => {
