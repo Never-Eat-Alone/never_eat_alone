@@ -1,4 +1,4 @@
-import { CreditCardType, PaymentCard, PaymentRecord, SocialAccount, User } from
+import { PaymentCard, PaymentRecord, SocialAccount, User } from
   '../../definitions';
 import { SettingsPageModel } from './settings_page_model';
 
@@ -15,35 +15,11 @@ export class EmptySettingsPageModel extends SettingsPageModel {
     throw new Error('SettingsPageModel not loaded.');
   }
 
-  public get password(): string {
+  public get hashedPassword(): string {
     throw new Error('SettingsPageModel not loaded.');
   }
 
-  public get isNewEventsNotificationOn(): boolean {
-    throw new Error('SettingsPageModel not loaded.');
-  }
-
-  public get isEventJoinedNotificationOn(): boolean {
-    throw new Error('SettingsPageModel not loaded.');
-  }
-
-  public get isEventRemindersNotificationOn(): boolean {
-    throw new Error('SettingsPageModel not loaded.');
-  }
-
-  public get isChangesNotificationOn(): boolean {
-    throw new Error('SettingsPageModel not loaded.');
-  }
-
-  public get isSomeoneJoinedNotificationOn(): boolean {
-    throw new Error('SettingsPageModel not loaded.');
-  }
-
-  public get isFoodieAcceptedInviteNotificationOn(): boolean {
-    throw new Error('SettingsPageModel not loaded.');
-  }
-
-  public get isAnnouncementNotificationOn(): boolean {
+  public getNotificationSetting(setting: string): boolean {
     throw new Error('SettingsPageModel not loaded.');
   }
 
@@ -60,46 +36,20 @@ export class EmptySettingsPageModel extends SettingsPageModel {
   }
 
   /** Payment methods tab related methods */
-  public async addCard(cardNumber: number, nameOnCard: string, month: number,
-      year: number, securityCode: number, zipcode: string, creditCardType:
-      CreditCardType): Promise<PaymentCard> {
+  public async addCard(card: PaymentCard): Promise<void> {
     throw new Error('SettingsPageModel not loaded.');
   }
 
   public async updateCard(newCard: PaymentCard, isMarkedAsDefault: boolean):
-      Promise<PaymentCard> {
+      Promise<void> {
     throw new Error('SettingsPageModel not loaded.');
   }
 
-  public async deleteCard(cardId: number): Promise<boolean> {
+  public async deleteCard(cardId: number): Promise<void> {
     throw new Error('SettingsPageModel not loaded.');
   }
 
-  public async toggleNewEventsNotification(): Promise<boolean> {
-    throw new Error('SettingsPageModel not loaded.');
-  }
-
-  public async toggleEventJoinedNotification(): Promise<boolean> {
-    throw new Error('SettingsPageModel not loaded.');
-  }
-
-  public async toggleEventRemindersNotification(): Promise<boolean> {
-    throw new Error('SettingsPageModel not loaded.');
-  }
-
-  public async toggleChangesNotification(): Promise<boolean> {
-    throw new Error('SettingsPageModel not loaded.');
-  }
-
-  public async toggleSomeoneJoinedNotification(): Promise<boolean> {
-    throw new Error('SettingsPageModel not loaded.');
-  }
-
-  public async toggleFoodieAcceptedInviteNotification(): Promise<boolean> {
-    throw new Error('SettingsPageModel not loaded.');
-  }
-
-  public async toggleAnnouncementNotification(): Promise<boolean> {
+  public async toggleNotificationSetting(setting: string): Promise<boolean> {
     throw new Error('SettingsPageModel not loaded.');
   }
 
@@ -117,6 +67,10 @@ export class EmptySettingsPageModel extends SettingsPageModel {
   }
 
   public async deactivateAccount(): Promise<boolean> {
+    throw new Error('SettingsPageModel not loaded.');
+  }
+
+  public async unlinkAccount(account: SocialAccount): Promise<boolean> {
     throw new Error('SettingsPageModel not loaded.');
   }
 }
