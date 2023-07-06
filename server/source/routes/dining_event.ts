@@ -31,24 +31,22 @@ export class DiningEventRoutes {
     this.attendeeDatabase = attendeeDatabase;
   }
 
+  /** Responds with all future events that the user has not joined yet. */
   private getHomePageDiningEventCardSummaries = async (request, response) => {
     const userId = parseInt(request.params.userId);
-    let diningEventCardSummaryList: EventCardSummary[] = [];
     try {
-      diningEventCardSummaryList =
-        await this.diningEventDatabase.loadHomePageDiningEventCardSummaries(
-          userId);
+      const diningEventCardSummaryList = await this.diningEventDatabase
+        .loadHomePageDiningEventCardSummaries(userId);
+      response.status(200).json({
+        diningEventCardSummaryList: arrayToJson(diningEventCardSummaryList)
+      });
     } catch (error) {
       console.error('Failed at loadHomePageDiningEventCardSummaries', error);
       response.status(500).json({
-        diningEventCardSummaryList: diningEventCardSummaryList,
+        diningEventCardSummaryList: [],
         message: 'DATABASE_ERROR'
       });
-      return;
     }
-    response.status(200).json({
-      diningEventCardSummaryList: arrayToJson(diningEventCardSummaryList)
-    });
   }
 
   private getUserFutureDiningEventCardSummaries = async (request, response) => {

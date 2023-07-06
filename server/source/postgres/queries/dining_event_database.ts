@@ -1,7 +1,7 @@
 import { Pool } from 'pg';
-import { Attendee, AttendeeStatus, Cuisine, DiningEvent, DressCode, EventCardSummary,
-  EventStatus, EventType, Location, PriceRange, Restaurant, Seating } from
-  '../../../../client/library/source/definitions';
+import { Attendee, AttendeeStatus, Cuisine, DiningEvent, DressCode,
+  EventCardSummary, EventStatus, EventType, Location, PriceRange, Restaurant,
+  Seating } from '../../../../client/library/source/definitions';
 
 /** SocialMediaImage related database manipulations class. */
 export class DiningEventDatabase {
@@ -13,11 +13,11 @@ export class DiningEventDatabase {
   public loadHomePageDiningEventCardSummaries = async (userId: number): Promise<
       EventCardSummary[]> => {
     const result = await this.pool.query(
-      'SELECT re.id AS re_id, de.id AS de_id, de.title AS de_title, \
-      de.start_at, de.end_at, de.cover_image_src, re.name AS re_name, \
-      re.price_range AS re_price_range, de.total_capacity, de.color_code AS \
-      de_color_code FROM dining_events AS de JOIN restaurants AS re ON \
-      de.restaurant_id = re.id ORDER BY start_at DESC LIMIT $1', [7]);
+      `SELECT re.id AS re_id, de.id AS de_id, de.title AS de_title,
+      de.start_at, de.end_at, de.cover_image_src, re.name AS re_name,
+      re.price_range AS re_price_range, de.total_capacity, de.color_code AS
+      de_color_code FROM dining_events AS de JOIN restaurants AS re ON
+      de.restaurant_id = re.id ORDER BY start_at DESC`);
     if (result.rows?.length === 0) {
       return [];
     }
