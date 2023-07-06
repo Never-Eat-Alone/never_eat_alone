@@ -1,5 +1,5 @@
-import { EventCardSummary, EventTag, SocialMediaImage, User, arrayFromJson } from
-  '../../definitions';
+import { arrayFromJson, EventCardSummary, EventTag, SocialMediaImage, User }
+  from '../../definitions';
 import { EmptyHomePageModel } from './empty_home_page_model';
 import { HomePageModel } from './home_page_model';
 import { LocalHomePageModel } from './local_home_page_model';
