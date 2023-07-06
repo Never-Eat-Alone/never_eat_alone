@@ -1,5 +1,5 @@
-import { arrayFromJson, CreditCardType, NotificationSettings, PaymentCard,
-  PaymentRecord, SocialAccount, User } from '../../definitions';
+import { arrayFromJson, NotificationSettings, PaymentCard, PaymentRecord,
+  SocialAccount, User } from '../../definitions';
 import { EmptySettingsPageModel } from './empty_settings_page_model';
 import { LocalSettingsPageModel } from './local_settings_page_model';
 import { SettingsPageModel } from './settings_page_model';
@@ -112,7 +112,7 @@ export class HttpSettingsPageModel extends SettingsPageModel {
   }
 
   /** Notification tab related methods */
-  public async toggleNotificationSetting(setting: string): Promise<void> {
+  public async toggleNotificationSetting(setting: string): Promise<boolean> {
     const response = await fetch('/api/toggle_notification_setting', {
       method: 'POST',
       headers: {
@@ -121,7 +121,7 @@ export class HttpSettingsPageModel extends SettingsPageModel {
       body: JSON.stringify({ setting })
     });
     this._checkResponse(response);
-    this._model.toggleNotificationSetting(setting);
+    return await this._model.toggleNotificationSetting(setting);
   }
 
   public async emailReceipt(paymentRecord: PaymentRecord): Promise<boolean> {
@@ -183,6 +183,17 @@ export class HttpSettingsPageModel extends SettingsPageModel {
       return true;
     }
     return false;
+  }
+
+  public async unlinkAccount(account: SocialAccount): Promise<boolean> {
+    const response = await fetch('/api/unlink_social_account', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    this._checkResponse(response);
+    return this._model.unlinkAccount(account);
   }
 
   private _checkResponse(response: Response): void {

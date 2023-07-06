@@ -39,6 +39,7 @@ interface State {
   deleteAccountPassword: string;
   deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode;
   redirect: string;
+  linkedSocialAccounts: SocialAccount[];
 }
 
 export class SettingsPageController extends React.Component<Properties, State> {
@@ -65,7 +66,8 @@ export class SettingsPageController extends React.Component<Properties, State> {
       isDeleteChecked: false,
       deleteAccountPassword: '',
       deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode.NONE,
-      redirect: null
+      redirect: null,
+      linkedSocialAccounts: []
     };
   }
 
@@ -78,7 +80,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
     }
     return <SettingsPage
       displayMode={this.props.displayMode}
-      linkedSocialAccounts={this.props.model.linkedSocialAccounts}
+      linkedSocialAccounts={this.state.linkedSocialAccounts}
       displayName={this.props.account.name}
       profileId={this.props.account.id}
       email={this.props.account.email}
@@ -161,7 +163,8 @@ export class SettingsPageController extends React.Component<Properties, State> {
           this.props.model.getNotificationSetting(
             'isAnnouncementNotificationOn'),
         paymentCards: this.props.model.paymentCards,
-        defaultCard: this.props.model.defaultCard
+        defaultCard: this.props.model.defaultCard,
+        linkedSocialAccounts: this.props.model.linkedSocialAccounts
       });
     } catch {
       this.setState({ isLoaded: true, hasError: true });
@@ -303,14 +306,11 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleRemoveLinkedAccount = async (account: SocialAccount) => {
     try {
-      // Assuming unlinkAccount returns a boolean indicating success of the operation
       const unlinkSuccess = await this.props.model.unlinkAccount(account);
-  
       if (unlinkSuccess) {
-        // If the unlinking was successful, update the state to remove that account.
-        this.setState(prevState => ({
-          linkedSocialAccounts: prevState.linkedSocialAccounts.filter(acc => acc.provider !== account.provider),
-        }));
+        this.setState({
+          linkedSocialAccounts: this.props.model.linkedSocialAccounts
+        });
       }
     } catch (error) {
       console.error(`Error unlinking ${account.provider} account`, error);

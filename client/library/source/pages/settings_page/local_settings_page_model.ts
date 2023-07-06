@@ -35,13 +35,6 @@ export class LocalSettingsPageModel extends SettingsPageModel {
     return this._notificationSettings.getSetting(setting);
   }
 
-  public async toggleNotificationSetting(setting: string): Promise<boolean> {
-    this.ensureIsLoaded();
-    const newSetting = !this._notificationSettings.getSetting(setting);
-    this._notificationSettings.toggleSetting(setting);
-    return newSetting;
-  }
-
   public get defaultCard(): PaymentCard {
     this.ensureIsLoaded();
     return this._defaultCard;
@@ -79,40 +72,11 @@ export class LocalSettingsPageModel extends SettingsPageModel {
     this._paymentCards = this._paymentCards.filter(card => card.id !== cardId);
   }
 
-  /** Notification tab related methods */
-  public async toggleNewEventsNotification(): Promise<boolean> {
+  public async toggleNotificationSetting(setting: string): Promise<boolean> {
     this.ensureIsLoaded();
-    return true;
-  }
-
-  public async toggleEventJoinedNotification(): Promise<boolean> {
-    this.ensureIsLoaded();
-    return true;
-  }
-
-  public async toggleEventRemindersNotification(): Promise<boolean> {
-    this.ensureIsLoaded();
-    return true;
-  }
-
-  public async toggleChangesNotification(): Promise<boolean> {
-    this.ensureIsLoaded();
-    return true;
-  }
-
-  public async toggleSomeoneJoinedNotification(): Promise<boolean> {
-    this.ensureIsLoaded();
-    return true;
-  }
-
-  public async toggleFoodieAcceptedInviteNotification(): Promise<boolean> {
-    this.ensureIsLoaded();
-    return true;
-  }
-
-  public async toggleAnnouncementNotification(): Promise<boolean> {
-    this.ensureIsLoaded();
-    return true;
+    const newSetting = !this._notificationSettings.getSetting(setting);
+    this._notificationSettings.toggleSetting(setting);
+    return newSetting;
   }
 
   public async emailReceipt(paymentRecord: PaymentRecord): Promise<boolean> {
