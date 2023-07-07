@@ -1,11 +1,11 @@
 import * as fs from 'fs';
 import * as Hash from 'hash.js';
 import { arrayToJson, CoverImage, Cuisine, EventCardSummary, InviteEmail,
-  Language, NotificationSettings, PaymentCard, PaymentRecord, SocialAccount, User, UserInvitationCode,
-  UserProfileImage, UserProfileSocialAccount, UserStatus } from
-  '../../../client/library/source/definitions';
+  Language, NotificationSettings, PaymentCard, PaymentRecord, SocialAccount,
+  User, UserInvitationCode, UserProfileImage, UserProfileSocialAccount,
+  UserStatus } from '../../../client/library/source/definitions';
 import { UserCoverImageDatabase } from
-'../postgres/queries/user_cover_image_database';
+  '../postgres/queries/user_cover_image_database';
 import { UserDatabase } from '../postgres/queries/user_database';
 import { AttendeeDatabase, UserProfileImageDatabase } from
   '../postgres/queries';

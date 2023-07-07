@@ -30,7 +30,8 @@ export class DiningEventDatabase {
       JOIN
         restaurants AS re ON de.restaurant_id = re.id
       WHERE
-        de.start_at > NOW()
+        de.start_at > NOW() AT TIME ZONE 'UTC' AND de.status = 'ACTIVE' AND
+        de.type = 'PUBLIC'
       ORDER BY
         de.start_at DESC
     `;
@@ -46,7 +47,7 @@ export class DiningEventDatabase {
         FROM cuisines AS cu
         JOIN restaurant_cuisines AS rc ON rc.cuisine_id = cu.id
         WHERE rc.restaurant_id = $1
-        LIMIT 10`, [row.re_id]);
+        LIMIT 10`, [parseInt(row.re_id)]);
       const cuisines = cuisinesResult.rows.map(cuisineRow => {
         return new Cuisine(parseInt(cuisineRow.id), cuisineRow.label,
           cuisineRow.color_code);
@@ -54,7 +55,7 @@ export class DiningEventDatabase {
       const attendeesResult = await this.pool.query(
         `SELECT COUNT(event_id) AS total
         FROM attendees
-        WHERE event_id = $1 AND status = 'GOING'`, [row.de_id]);
+        WHERE event_id = $1 AND status = 'GOING'`, [parseInt(row.de_id)]);
       const numberOfAttendees = parseInt(attendeesResult.rows[0].total);
       let isAttending = false;
       if (userId !== -1) {
@@ -117,7 +118,10 @@ export class DiningEventDatabase {
         );
       }
     }
-    return { exploreEventList: exploreEventList, userUpcomingEventList: userUpcomingEventList };
+    return {
+      exploreEventList: exploreEventList,
+      userUpcomingEventList: userUpcomingEventList
+    };
   }
 
   public loadDiningEventById = async (id: number): Promise<DiningEvent> => {
