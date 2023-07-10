@@ -325,15 +325,15 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const lucyFavoriteCuisines = [seafoodCuisine, chineseCuisine];
     const eventCardSummaryList = [];
     const coverImage1 = new NeverEatAlone.CoverImage(1,
-      'resources/profile_page/images/default_banner_1.jpg');
+      'resources/profile_page/images/userProfile.pattern.1-desktop.png');
     const coverImage2 = new NeverEatAlone.CoverImage(2,
-      'resources/profile_page/images/default_banner_2.jpg');
+      'resources/profile_page/images/userProfile.pattern.2-desktop.png');
     const coverImage3 = new NeverEatAlone.CoverImage(3,
-      'resources/profile_page/images/default_banner_3.jpg');
+      'resources/profile_page/images/userProfile.pattern.3-desktop.png');
     const coverImage4 = new NeverEatAlone.CoverImage(4,
-      'resources/profile_page/images/default_banner_4.jpg');
+      'resources/profile_page/images/userProfile.pattern.4-desktop.png');
     const coverImage5 = new NeverEatAlone.CoverImage(5,
-      'resources/profile_page/images/default_banner_5.jpg');
+      'resources/profile_page/images/userProfile.pattern.5-desktop.png');
     const coverImageList = [coverImage1, coverImage2, coverImage3, coverImage4,
       coverImage5];
     this._profilePageModelMap = new Map();
