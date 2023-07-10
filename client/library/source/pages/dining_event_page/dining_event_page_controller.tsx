@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DisplayMode, User } from '../../definitions';
+import { Attendee, DisplayMode, User, UserStatus } from '../../definitions';
 import { DiningEventPage } from './dining_event_page';
 import { DiningEventPageModel } from './dining_event_page_model';
 
@@ -8,9 +8,7 @@ interface Properties {
   displayMode: DisplayMode;
   model: DiningEventPageModel;
   account: User;
-
-  /** Indicates the remove seat button is clicked. */
-  onRemoveSeat: () => void;
+  eventId: number;
 
   /** Indicates the join event button is clicked. */
   onJoinEvent: () => void;
@@ -19,6 +17,7 @@ interface Properties {
 interface State {
   isLoaded: boolean;
   errorCode: DiningEventPage.ErrorCode;
+  attendeeList: Attendee[];
 }
 
 /** Implements the DiningEventPageController. */
@@ -28,7 +27,8 @@ export class DiningEventPageController extends React.Component<Properties,
     super(props);
     this.state = {
       isLoaded: false,
-      errorCode: DiningEventPage.ErrorCode.NONE
+      errorCode: DiningEventPage.ErrorCode.NONE,
+      attendeeList: []
     }
   }
 
@@ -37,8 +37,11 @@ export class DiningEventPageController extends React.Component<Properties,
         DiningEventPage.ErrorCode.NONE) {
       return <div />;
     }
-    const isRSVPOpen = (this.props.model.diningEvent.rsvpOpenAt <= new Date() &&
-      this.props.model.diningEvent.rsvpCloseAt < new Date());
+    const now = new Date();
+    const isRSVPOpen = (this.props.model.diningEvent.rsvpOpenAt <= now &&
+      this.props.model.diningEvent.rsvpCloseAt > now);
+    const isGoing = !!this.state.attendeeList.find(attendee =>
+      attendee.userId === this.props.account.id && attendee.status === 'GOING');
     return <DiningEventPage
       displayMode={this.props.displayMode}
       eventColor={this.props.model.diningEvent.eventColor}
@@ -52,29 +55,56 @@ export class DiningEventPageController extends React.Component<Properties,
       reservationName={this.props.model.diningEvent.reservationName}
       startTime={this.props.model.diningEvent.startAt}
       endTime={this.props.model.diningEvent.endAt}
-      attendeeList={this.props.model.diningEvent.attendeeList}
+      attendeeList={this.state.attendeeList}
       totalCapacity={this.props.model.diningEvent.totalCapacity}
       description={this.props.model.diningEvent.description}
       account={this.props.account}
       isRSVPOpen={isRSVPOpen}
-      isGoing={this.props.model.isGoing}
-      onJoinEvent={this.props.onJoinEvent}
-      onRemoveSeat={this.props.onRemoveSeat}
+      isGoing={isGoing}
+      onJoinEvent={this.handleJoinEvent}
+      onRemoveSeat={this.handleRemoveSeat}
     />;
   }
 
   public async componentDidMount(): Promise<void> {
     try {
-      await this.props.model.load();
+      await this.props.model.load(this.props.eventId);
       this.setState({
         isLoaded: true,
-        errorCode: DiningEventPage.ErrorCode.NONE
+        errorCode: DiningEventPage.ErrorCode.NONE,
+        attendeeList: this.props.model.diningEvent.attendeeList
       });
     } catch {
       this.setState({
         isLoaded: true,
         errorCode: DiningEventPage.ErrorCode.NO_CONNECTION
       });
+    }
+  }
+
+  private handleJoinEvent = async(): Promise<void> => {
+    if (this.props.account.userStatus === UserStatus.GUEST) {
+      this.props.onJoinEvent();
+    } else {
+      try {
+        await this.props.model.joinEvent();
+        this.setState({
+          attendeeList: this.props.model.diningEvent.attendeeList
+        });
+      } catch {
+        this.setState({ errorCode: DiningEventPage.ErrorCode.NO_CONNECTION });
+      }
+    }
+  }
+
+  private handleRemoveSeat = async(): Promise<void> => {
+    try {
+      await this.props.model.removeSeat();
+      this.setState({
+        attendeeList: this.props.model.diningEvent.attendeeList
+      });
+    } catch {
+      this.setState({ errorCode: DiningEventPage.ErrorCode.NO_CONNECTION });
     }
   }
 }

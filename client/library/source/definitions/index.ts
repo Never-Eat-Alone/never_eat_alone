@@ -16,6 +16,7 @@ export * from './event_type';
 export * from './invite_email';
 export * from './language';
 export * from './location';
+export * from './notification_settings';
 export * from './password_checks';
 export * from './payment_card';
 export * from './payment_method';

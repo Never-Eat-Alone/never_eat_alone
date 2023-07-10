@@ -208,7 +208,6 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
         new Date())
     ];
     const attendeeList7: NeverEatAlone.Attendee[] = [];
-    this._diningEventModelMap = new Map();
 
     /** Dining event model 1 */
     const diningEventModel1Description = "Elevate your favourite Kibo Sushi \
@@ -238,9 +237,8 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       new Date(2022, 6, 12, 19, 0, 0), new Date(2022, 6, 13, 1, 0, 0),
       NeverEatAlone.EventStatus.ACTIVE, NeverEatAlone.EventType.PUBLIC,
       new Date(2021, 6, 12, 19, 0, 0), new Date(Date.now()));
-    const demoDiningEventModel1 = new DemoDiningEventPageModel(diningEvent1,
-      true);
-    this._diningEventModelMap.set(1, demoDiningEventModel1);
+    const demoDiningEventModel1 = new DemoDiningEventPageModel(this._account,
+      this._accountProfileImage.src, diningEvent1);
 
     /** Dining event model 2 */
     const diningEventModel2Description = "About the restaurant: \
@@ -267,9 +265,8 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       new Date(2023, 5, 22, 19, 30, 0), new Date(2023, 6, 13, 0, 30, 0),
       NeverEatAlone.EventStatus.ACTIVE, NeverEatAlone.EventType.PUBLIC,
       new Date(2021, 6, 12, 19, 0, 0), new Date(Date.now()));
-    const demoDiningEventModel2 = new DemoDiningEventPageModel(diningEvent2,
-      true);
-    this._diningEventModelMap.set(2, demoDiningEventModel2);
+    const demoDiningEventModel2 = new DemoDiningEventPageModel(this._account,
+      this._accountProfileImage.src, diningEvent2);
 
     /** Dining event model 7 */
     const restaurant7 = new NeverEatAlone.Restaurant(7, 'Le Select Bistro',
@@ -287,9 +284,9 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       'Why not.', new Date(2023, 6, 13, 1, 0, 0), new Date(2023, 7, 12, 18, 0,
       0), NeverEatAlone.EventStatus.ACTIVE, NeverEatAlone.EventType.PUBLIC,
       new Date(), new Date());
-    const demoDiningEventModel7 = new DemoDiningEventPageModel(diningEvent7,
-      true);
-    this._diningEventModelMap.set(7, demoDiningEventModel7);
+    const demoDiningEventModel7 = new DemoDiningEventPageModel(this._account,
+      this._accountProfileImage.src, diningEvent7);
+
     this._inviteAFoodieModel = new NeverEatAlone.LocalInviteAFoodieModel(
       new NeverEatAlone.UserInvitationCode(1, 1, 'AcFTHD$5Dg'));
     this._joinModel = new DemoJoinModel();
@@ -328,15 +325,15 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const lucyFavoriteCuisines = [seafoodCuisine, chineseCuisine];
     const eventCardSummaryList = [];
     const coverImage1 = new NeverEatAlone.CoverImage(1,
-      'resources/profile_page/images/default_banner_1.jpg');
+      'resources/profile_page/images/userProfile.pattern.1-desktop.png');
     const coverImage2 = new NeverEatAlone.CoverImage(2,
-      'resources/profile_page/images/default_banner_2.jpg');
+      'resources/profile_page/images/userProfile.pattern.2-desktop.png');
     const coverImage3 = new NeverEatAlone.CoverImage(3,
-      'resources/profile_page/images/default_banner_3.jpg');
+      'resources/profile_page/images/userProfile.pattern.3-desktop.png');
     const coverImage4 = new NeverEatAlone.CoverImage(4,
-      'resources/profile_page/images/default_banner_4.jpg');
+      'resources/profile_page/images/userProfile.pattern.4-desktop.png');
     const coverImage5 = new NeverEatAlone.CoverImage(5,
-      'resources/profile_page/images/default_banner_5.jpg');
+      'resources/profile_page/images/userProfile.pattern.5-desktop.png');
     const coverImageList = [coverImage1, coverImage2, coverImage3, coverImage4,
       coverImage5];
     this._profilePageModelMap = new Map();
@@ -438,10 +435,11 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
 
     /** Setting up the settings page model. */
     this._settingsPageModelMap = new Map();
-    const demoSettingsPageModel1 = new DemoSettingsPageModel(userEmma.name,
-      emmaSocialLinks, userEmma.id, userEmma.email, emmaPassword, true, false,
-      true, true, false, true, emmaMastercard2222, emmaPaymentCards,
-      emmaPaymentRecords);
+    const emmaNotificationSettings = new NeverEatAlone.NotificationSettings(
+      true, false, true, true, false, true, false);
+    const demoSettingsPageModel1 = new DemoSettingsPageModel(emmaSocialLinks,
+      emmaPassword, emmaNotificationSettings, emmaMastercard2222,
+      emmaPaymentCards, emmaPaymentRecords);
     this._settingsPageModelMap.set(1, demoSettingsPageModel1);
 
     /** arthur settings model */
@@ -456,10 +454,11 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       'Emma McM', 12, 2027, 123, 'm4y 0v0', NeverEatAlone.CreditCardType.VISA);
     const arthurPaymentCards:NeverEatAlone.PaymentCard[] = [arthurVisa1234];
     const arthurPassword = '123';
-    const demoSettingsPageModel2 = new DemoSettingsPageModel(userArthur.name,
-      arthurSocialLinks, userArthur.id, userArthur.email, arthurPassword, false,
-      false, false, false, false, true, arthurVisa1234, arthurPaymentCards,
-      arthurPaymentRecords);
+    const arthurNotificationSettings = new NeverEatAlone.NotificationSettings(
+      false, false, false, false, false, true, true);
+    const demoSettingsPageModel2 = new DemoSettingsPageModel(arthurSocialLinks,
+      arthurPassword, arthurNotificationSettings, arthurVisa1234,
+      arthurPaymentCards, arthurPaymentRecords);
     this._settingsPageModelMap.set(2, demoSettingsPageModel2);
     this._deletedAccountSurveyModel = new DemoDeletedAccountSurveyModel();
     this._deactivateAccountSurveyModel = new DemoDeactivateAccountSurveyModel();
@@ -506,14 +505,8 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return this._homePageModel;
   }
 
-  public addDiningEventPageModel(id: number,
-      diningEventPageModel: NeverEatAlone.DiningEventPageModel): void {
-    this._diningEventModelMap.set(id, diningEventPageModel);
-  }
-
-  public getDiningEventPageModel(id: number):
-      NeverEatAlone.DiningEventPageModel {
-    return this._diningEventModelMap.get(id);
+  public get diningEventPageModel(): NeverEatAlone.DiningEventPageModel {
+    return this._diningEventPageModel;
   }
 
   public get inviteAFoodieModel(): NeverEatAlone.InviteAFoodieModel {
@@ -601,7 +594,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
   private _account: NeverEatAlone.User;
   private _accountProfileImage: NeverEatAlone.UserProfileImage;
   private _homePageModel: NeverEatAlone.HomePageModel;
-  private _diningEventModelMap: Map<number, NeverEatAlone.DiningEventPageModel>;
+  private _diningEventPageModel: NeverEatAlone.DiningEventPageModel;
   private _inviteAFoodieModel: NeverEatAlone.InviteAFoodieModel;
   private _joinModel: NeverEatAlone.JoinModel;
   private _partnerWithUsModel: NeverEatAlone.PartnerWithUsModel;

@@ -6,11 +6,11 @@ import { DisplayMode, getDisplayMode, User, UserProfileImage, UserStatus } from
 import { InviteAFoodieModalController, JoinModalController,
   LogInModalController, PartnerWithUsModalController } from '../modals';
 import { ApplicationModel } from './application_model';
-import { DeactivateAccountSurveyPageController }
-from './deactivate_account_survey_page';
+import { DeactivateAccountSurveyPageController } from
+  './deactivate_account_survey_page';
 import { CookiesPolicyPage } from './cookie_policy_page';
-import { DeletedAccountSurveyPageController
-} from './deleted_account_survey_page';
+import { DeletedAccountSurveyPageController } from
+  './deleted_account_survey_page';
 import { DiningEventPageController } from './dining_event_page';
 import { EditProfilePageController } from './edit_profile_page';
 import { EmailConfirmationPageController } from './email_confirmation_page';
@@ -47,6 +47,8 @@ interface State {
   isInviteAFoodieButtonClicked: boolean;
   isPartnerWithUsButtonClicked: boolean;
   accountProfileImage: UserProfileImage;
+  hasJoinedEvent: boolean;
+  hasRemovedSeat: boolean;
 }
 
 export class ApplicationController extends React.Component<Properties, State> {
@@ -61,7 +63,9 @@ export class ApplicationController extends React.Component<Properties, State> {
       isLogInButtonClicked: false,
       isInviteAFoodieButtonClicked: false,
       isPartnerWithUsButtonClicked: false,
-      accountProfileImage: UserProfileImage.default()
+      accountProfileImage: UserProfileImage.default(),
+      hasJoinedEvent: false,
+      hasRemovedSeat: false
     };
   }
 
@@ -347,10 +351,10 @@ export class ApplicationController extends React.Component<Properties, State> {
     const id = Number(match.params.id);
     return <DiningEventPageController
       displayMode={this.state.displayMode}
-      model={this.props.model.getDiningEventPageModel(id)}
+      model={this.props.model.diningEventPageModel}
       account={this.state.account}
-      onRemoveSeat={() => this.handleRemoveSeat(id)}
-      onJoinEvent={() => this.handleJoinEvent(id)}
+      eventId={id}
+      onJoinEvent={this.handleJoinEvent}
     />;
   }
 
@@ -379,23 +383,10 @@ export class ApplicationController extends React.Component<Properties, State> {
     />;
   }
 
-  private handleJoinEvent = (diningEventId: number) => {
+  private handleJoinEvent = async () => {
     if (this.state.account.userStatus === UserStatus.GUEST) {
       this.handleLogInButton();
-      this.handleJoinEvent(diningEventId);
-    } else {
-      this.props.model.getDiningEventPageModel(diningEventId).joinEvent(
-        this.state.account, this.state.accountProfileImage.src).then(() => {
-          this.forceUpdate();
-        });
     }
-  }
-
-  private handleRemoveSeat = (diningEventId: number) => {
-    this.props.model.getDiningEventPageModel(diningEventId).removeSeat(
-      this.state.account).then(() => {
-        this.forceUpdate();
-      });
   }
 
   private renderProfilePage = (

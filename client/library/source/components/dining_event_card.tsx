@@ -70,11 +70,11 @@ export class DiningEventCard extends React.Component<Properties> {
     })();
     const cuisine = (
       <div
-          key={this.props.cuisines[0].id}
+          key={this.props.cuisines[0]?.id}
           style={{...CUISINE_TEXT_STYLE,
-            backgroundColor: this.props.cuisines[0].colorCode}}
+            backgroundColor: this.props.cuisines[0]?.colorCode}}
       >
-        {this.props.cuisines[0].label}
+        {this.props.cuisines[0]?.label}
       </div>);
     const seats = `${this.props.numberOfAttendees}/${this.props.numberOfSeats} \
       Attendees`;

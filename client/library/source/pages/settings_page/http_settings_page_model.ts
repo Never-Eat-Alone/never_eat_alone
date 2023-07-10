@@ -1,79 +1,55 @@
-import { arrayFromJson, CreditCardType, PaymentCard, PaymentRecord,
+import { arrayFromJson, NotificationSettings, PaymentCard, PaymentRecord,
   SocialAccount, User } from '../../definitions';
-import { SettingsPageModel } from './settings_page_model';
+import { EmptySettingsPageModel } from './empty_settings_page_model';
 import { LocalSettingsPageModel } from './local_settings_page_model';
+import { SettingsPageModel } from './settings_page_model';
 
 export class HttpSettingsPageModel extends SettingsPageModel {
   constructor(userId: number) {
     super();
+    this._isLoaded = false;
     this._userId = userId;
+    this._model = new EmptySettingsPageModel();
   }
 
+  /**
+   * Loads the data to display on the SettingsPage. Must be called before
+   * calling any other method of this class.
+   */
   public async load(): Promise<void> {
+    if (this._isLoaded) {
+      return;
+    }
     const response = await fetch(`/api/settings/${this._userId}`);
+    this._checkResponse(response);
     const responseObject = await response.json();
     const linkedSocialAccounts: SocialAccount[] = arrayFromJson(SocialAccount,
       responseObject.linkedSocialAccounts);
-    const password = responseObject.password;
-    const isNewEventsNotificationOn = responseObject.isNewEventsNotificationOn;
-    const isEventJoinedNotificationOn = 
-      responseObject.isEventJoinedNotificationOn;
-    const isEventRemindersNotificationOn =
-      responseObject.isEventRemindersNotificationOn;
-    const isChangesNotificationOn = responseObject.isChangesNotificationOn;
-    const isSomeoneJoinedNotificationOn =
-      responseObject.isSomeoneJoinedNotificationOn;
-    const isFoodieAcceptedInviteNotificationOn =
-      responseObject.isFoodieAcceptedInviteNotificationOn;
-    const isAnnouncementNotificationOn =
-      responseObject.isAnnouncementNotificationOn;
+    const hashedPassword = responseObject.hashedPassword;
+    const notificationSettings = NotificationSettings.fromJson(
+      responseObject.notificationSettings);
     const defaultCard = PaymentCard.fromJson(responseObject.defaultCard);
     const paymentCards: PaymentCard[] = arrayFromJson(PaymentCard,
       responseObject.paymentCards);
     const paymentRecords: PaymentRecord[] = arrayFromJson(PaymentRecord,
       responseObject.paymentRecords);
-    this._model = new LocalSettingsPageModel(linkedSocialAccounts, password,
-      isNewEventsNotificationOn, isEventJoinedNotificationOn,
-      isEventRemindersNotificationOn, isChangesNotificationOn,
-      isSomeoneJoinedNotificationOn, isFoodieAcceptedInviteNotificationOn,
-      isAnnouncementNotificationOn, defaultCard, paymentCards, paymentRecords);
+    this._model = new LocalSettingsPageModel(linkedSocialAccounts,
+      hashedPassword, notificationSettings, defaultCard, paymentCards,
+      paymentRecords);
     await this._model.load();
+    this._isLoaded = true;
   }
 
   public get linkedSocialAccounts(): SocialAccount[] {
     return this._model.linkedSocialAccounts;
   }
 
-  public get password(): string {
-    return this._model.password;
+  public get hashedPassword(): string {
+    return this._model.hashedPassword;
   }
 
-  public get isNewEventsNotificationOn(): boolean {
-    return this._model.isNewEventsNotificationOn;
-  }
-
-  public get isEventJoinedNotificationOn(): boolean {
-    return this._model.isEventJoinedNotificationOn;
-  }
-
-  public get isEventRemindersNotificationOn(): boolean {
-    return this._model.isEventRemindersNotificationOn;
-  }
-
-  public get isChangesNotificationOn(): boolean {
-    return this._model.isChangesNotificationOn;
-  }
-
-  public get isSomeoneJoinedNotificationOn(): boolean {
-    return this._model.isSomeoneJoinedNotificationOn;
-  }
-
-  public get isFoodieAcceptedInviteNotificationOn(): boolean {
-    return this._model.isFoodieAcceptedInviteNotificationOn;
-  }
-
-  public get isAnnouncementNotificationOn(): boolean {
-    return this._model.isAnnouncementNotificationOn;
+  public getNotificationSetting(setting: string): boolean {
+    return this._model.getNotificationSetting(setting);
   }
 
   public get defaultCard(): PaymentCard {
@@ -89,157 +65,63 @@ export class HttpSettingsPageModel extends SettingsPageModel {
   }
 
   /** Payment methods tab related methods */
-  public async addCard(cardNumber: number, nameOnCard: string, month: number,
-      year: number, securityCode: number, zipcode: string, creditCardType:
-      CreditCardType): Promise<PaymentCard> {
+  public async addCard(card: PaymentCard): Promise<void> {
     const response = await fetch('/api/add_payment_card', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        'cardNumber': cardNumber,
-        'nameOnCard': nameOnCard,
-        'month': month,
-        'year': year,
-        'securityCode': securityCode,
-        'zipcode': zipcode,
-        'creditCardType': creditCardType
+        card: card.toJson()
       })
     });
-    if (response.status === 201) {
-      const responseObject = await response.json();
-      return PaymentCard.fromJson(responseObject.paymentCard);
-    }
-    return PaymentCard.noCard();
+    this._checkResponse(response);
+    const responseObject = await response.json();
+    const newCard = PaymentCard.fromJson(responseObject.paymentCard);
+    this._model.addCard(newCard);
   }
 
-  public async updateCard(newCard: PaymentCard, isMarkedAsDefault: boolean
-      ): Promise<PaymentCard> {
+  public async updateCard(newCard: PaymentCard, isMarkedAsDefault: boolean):
+      Promise<void> {
     const response = await fetch('/api/update_payment_card', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        'newCard': newCard.toJson(),
-        'isMarkedAsDefault': isMarkedAsDefault
+        newCard: newCard.toJson(),
+        isMarkedAsDefault: isMarkedAsDefault
       })
     });
-    if (response.status === 201 || response.status === 200) {
-      const responseObject = await response.json();
-      return PaymentCard.fromJson(responseObject.paymentCard);
-    }
-    return PaymentCard.noCard();
+    this._checkResponse(response);
+    const responseObject = await response.json();
+    const card = PaymentCard.fromJson(responseObject.paymentCard);
+    this._model.updateCard(card, responseObject.isMarkedAsDefault);
   }
 
-  public async deleteCard(cardId: number): Promise<boolean> {
+  public async deleteCard(cardId: number): Promise<void> {
     const response = await fetch('/api/delete_payment_card', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        'cardId': cardId
-      })
+      body: JSON.stringify({ cardId })
     });
-    if (response.status === 200 || response.status === 201) {
-      return true;
-    }
-    return false;
+    this._checkResponse(response);
+    this._model.deleteCard(cardId);
   }
 
   /** Notification tab related methods */
-  public async toggleNewEventsNotification(): Promise<boolean> {
-    const response = await fetch('/api/toggle_new_events_notification', {
+  public async toggleNotificationSetting(setting: string): Promise<boolean> {
+    const response = await fetch('/api/toggle_notification_setting', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      body: JSON.stringify({ setting })
     });
-    if (response.status === 200 || response.status === 201) {
-      return true;
-    }
-    return false;
-  }
-
-  public async toggleEventJoinedNotification(): Promise<boolean> {
-    const response = await fetch('/api/toggle_event_joined_notification', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    if (response.status === 200 || response.status === 201) {
-      return true;
-    }
-    return false;
-  }
-
-  public async toggleEventRemindersNotification(): Promise<boolean> {
-    const response = await fetch('/api/toggle_event_reminders_notification', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    if (response.status === 200 || response.status === 201) {
-      return true;
-    }
-    return false;
-  }
-
-  public async toggleChangesNotification(): Promise<boolean> {
-    const response = await fetch('/api/toggle_changes_notification', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    if (response.status === 200 || response.status === 201) {
-      return true;
-    }
-    return false;
-  }
-
-  public async toggleSomeoneJoinedNotification(): Promise<boolean> {
-    const response = await fetch('/api/toggle_someone_joined_notification', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    if (response.status === 200 || response.status === 201) {
-      return true;
-    }
-    return false;
-  }
-
-  public async toggleFoodieAcceptedInviteNotification(): Promise<boolean> {
-    const response = await fetch(
-        '/api/toggle_foodie_accepted_invite_notification', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    if (response.status === 200 || response.status === 201) {
-      return true;
-    }
-    return false;
-  }
-
-  public async toggleAnnouncementNotification(): Promise<boolean> {
-    const response = await fetch('/api/toggle_announcement_notification', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    if (response.status === 200 || response.status === 201) {
-      return true;
-    }
-    return false;
+    this._checkResponse(response);
+    return await this._model.toggleNotificationSetting(setting);
   }
 
   public async emailReceipt(paymentRecord: PaymentRecord): Promise<boolean> {
@@ -303,6 +185,24 @@ export class HttpSettingsPageModel extends SettingsPageModel {
     return false;
   }
 
-  private _model: SettingsPageModel;
+  public async unlinkAccount(account: SocialAccount): Promise<boolean> {
+    const response = await fetch('/api/unlink_social_account', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    this._checkResponse(response);
+    return this._model.unlinkAccount(account);
+  }
+
+  private _checkResponse(response: Response): void {
+    if (!response.ok) {
+      throw new Error(`HTTP error, status = ${response.status}`);
+    }
+  }
+
+  private _isLoaded: boolean;
   private _userId: number;
+  private _model: SettingsPageModel;
 }

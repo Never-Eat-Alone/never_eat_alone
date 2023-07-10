@@ -1,3 +1,4 @@
+export * from './empty_profile_page_model';
 export * from './http_profile_page_model';
 export * from './local_profile_page_model';
 export * from './profile_box';
