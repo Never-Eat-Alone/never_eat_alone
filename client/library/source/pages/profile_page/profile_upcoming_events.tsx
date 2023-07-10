@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as tinyColor from 'tinycolor2';
-import { DiningEventCard, ShowAllButton, ShowLessButton } from
-  '../../components';
+import { DiningEventCard, PrimaryButtonNavLink, ShowAllButton, ShowLessButton }
+  from '../../components';
 import { DisplayMode, EventCardSummary } from '../../definitions';
 
 interface Properties {
@@ -38,7 +38,7 @@ export class ProfileUpcomingEvents extends React.Component<Properties, State> {
             <div style={NO_EVENT_IMAGE_CONTAINER_STYLE} >
               <img
                 style={NO_EVENT_IMAGE_STYLE}
-                src='resources/icons/no_events.svg'
+                src='resources/profile_page/icons/no_events.png'
                 alt='No Events Icon'
               />
             </div>
@@ -46,6 +46,11 @@ export class ProfileUpcomingEvents extends React.Component<Properties, State> {
             <p style={NO_EVENT_DESCRIPTION_STYLE} >
               You haven’t attended any events yet, why not check out some?
             </p>
+            <PrimaryButtonNavLink
+              style={EXPLORE_EVENTS_BUTTON_STYLE}
+              to='/'
+              label='Explore Events'
+            />
           </div>
         </div>);
     }
@@ -165,6 +170,30 @@ const EVENT_CARDS_CONTAINER_STYLE: React.CSSProperties = {
   flexWrap: 'wrap',
   gap: '18px',
   width: '100%'
+};
+
+const NO_EVENT_BOLD_TEXT_STYLE: React.CSSProperties = {
+  color: 'var(--grey-black, #000)',
+  textAlign: 'center',
+  fontFamily: 'Oswald',
+  fontSize: '23px',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  lineHeight: 'normal'
+};
+
+const NO_EVENT_DESCRIPTION_STYLE: React.CSSProperties = {
+  color: '#000',
+  textAlign: 'center',
+  fontFamily: 'Source Sans Pro',
+  fontSize: '14px',
+  fontStyle: 'normal',
+  fontWeight: 300,
+  lineHeight: '18px'
+};
+
+const EXPLORE_EVENTS_BUTTON_STYLE: React.CSSProperties = {
+  marginBottom: '50px'
 };
 
 const SHOW_BUTTON_STYLE: React.CSSProperties = {
