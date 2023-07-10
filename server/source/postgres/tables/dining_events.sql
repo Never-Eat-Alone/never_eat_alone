@@ -145,7 +145,7 @@ VALUES
 ('hsva(75, 67%, 92%, 1)', 10.00, 'resources/images/cover_20.jpg',
   'Champagne Night', 20, 'BUSINESS_CASUAL', 'STANDARD', 20,
   'Alexa', '2023-03-11 18:45', '2023-03-11 20:45', 4, 'Great food',
-  '2023-03-11 18:45', '2022-03-01 18:45', 'ACTIVE', 'PUBLIC',
+  '2022-03-11 18:45', '2023-03-11 18:45', 'ACTIVE', 'PUBLIC',
   '2022-03-01 10:45', '2023-03-01 10:45'),
 ('hsva(51, 79%, 92%, 1)', 30.00, 'resources/images/cover_21.jpg',
   'Dinner at Canis', 15, 'BUSINESS_CASUAL', 'STANDARD', 15, 'John Doe',

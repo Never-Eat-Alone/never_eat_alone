@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS locations (
 );
 
 INSERT INTO locations (
+  id,
   address_line_one,
   address_line_two,
   city,

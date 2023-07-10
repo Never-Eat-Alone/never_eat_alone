@@ -1,11 +1,11 @@
 import * as fs from 'fs';
 import * as Hash from 'hash.js';
 import { arrayToJson, CoverImage, Cuisine, EventCardSummary, InviteEmail,
-  Language, PaymentCard, PaymentRecord, SocialAccount, User, UserInvitationCode,
-  UserProfileImage, UserProfileSocialAccount, UserStatus } from
-  '../../../client/library/source/definitions';
+  Language, NotificationSettings, PaymentCard, PaymentRecord, SocialAccount,
+  User, UserInvitationCode, UserProfileImage, UserProfileSocialAccount,
+  UserStatus } from '../../../client/library/source/definitions';
 import { UserCoverImageDatabase } from
-'../postgres/queries/user_cover_image_database';
+  '../postgres/queries/user_cover_image_database';
 import { UserDatabase } from '../postgres/queries/user_database';
 import { AttendeeDatabase, UserProfileImageDatabase } from
   '../postgres/queries';
@@ -892,7 +892,7 @@ export class UserRoutes {
       }
     }
     let linkedSocialAccounts: SocialAccount[] = [];
-    let password = '';
+    let hashedPassword = '12';
     let isNewEventsNotificationOn = false;
     let isEventJoinedNotificationOn = false;
     let isEventRemindersNotificationOn = false;
@@ -900,21 +900,19 @@ export class UserRoutes {
     let isSomeoneJoinedNotificationOn = false;
     let isFoodieAcceptedInviteNotificationOn = false;
     let isAnnouncementNotificationOn = false;
+    let notificationSettings: NotificationSettings = new NotificationSettings(
+      isNewEventsNotificationOn, isEventJoinedNotificationOn,
+      isEventRemindersNotificationOn, isChangesNotificationOn,
+      isSomeoneJoinedNotificationOn, isFoodieAcceptedInviteNotificationOn,
+      isAnnouncementNotificationOn);
     let defaultCard = PaymentCard.noCard();
     let paymentCards: PaymentCard[] = [];
     let paymentRecords: PaymentRecord[] = [];
-    
+
     response.status(200).json({
       linkedSocialAccounts: arrayToJson(linkedSocialAccounts),
-      password: password,
-      isNewEventsNotificationOn: isNewEventsNotificationOn,
-      isEventJoinedNotificationOn: isEventJoinedNotificationOn,
-      isEventRemindersNotificationOn: isEventRemindersNotificationOn,
-      isChangesNotificationOn: isChangesNotificationOn,
-      isSomeoneJoinedNotificationOn: isSomeoneJoinedNotificationOn,
-      isFoodieAcceptedInviteNotificationOn:
-        isFoodieAcceptedInviteNotificationOn,
-      isAnnouncementNotificationOn: isAnnouncementNotificationOn,
+      hashedPassword: hashedPassword,
+      notificationSettings: notificationSettings.toJson(),
       defaultCard: defaultCard.toJson(),
       paymentCards: arrayToJson(paymentCards),
       paymentRecords: arrayToJson(paymentRecords)

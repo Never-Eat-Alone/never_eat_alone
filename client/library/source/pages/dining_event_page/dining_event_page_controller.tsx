@@ -37,8 +37,9 @@ export class DiningEventPageController extends React.Component<Properties,
         DiningEventPage.ErrorCode.NONE) {
       return <div />;
     }
-    const isRSVPOpen = (this.props.model.diningEvent.rsvpOpenAt <= new Date() &&
-      this.props.model.diningEvent.rsvpCloseAt < new Date());
+    const now = new Date();
+    const isRSVPOpen = (this.props.model.diningEvent.rsvpOpenAt <= now &&
+      this.props.model.diningEvent.rsvpCloseAt > now);
     const isGoing = !!this.state.attendeeList.find(attendee =>
       attendee.userId === this.props.account.id && attendee.status === 'GOING');
     return <DiningEventPage

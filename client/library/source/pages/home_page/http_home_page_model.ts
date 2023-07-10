@@ -1,5 +1,5 @@
-import { EventCardSummary, EventTag, SocialMediaImage, User } from
-  '../../definitions';
+import { arrayFromJson, EventCardSummary, EventTag, SocialMediaImage, User }
+  from '../../definitions';
 import { EmptyHomePageModel } from './empty_home_page_model';
 import { HomePageModel } from './home_page_model';
 import { LocalHomePageModel } from './local_home_page_model';
@@ -24,15 +24,16 @@ export class HttpHomePageModel extends HomePageModel {
         imageList.push(SocialMediaImage.fromJson(image));
       }
     }
-    const eventList: EventCardSummary[] = [];
     const eventListResponse = await fetch(
       `/api/home_page/event_list/${this._account.id}`);
-    if (eventListResponse.status === 200) {
-      const eventListObject = await eventListResponse.json();
-      for (const event of eventListObject.diningEventCardSummaryList) {
-        eventList.push(EventCardSummary.fromJson(event));
-      }
+    if (eventListResponse.status !== 200) {
+      throw new Error('Failed to load future events.');
     }
+    const eventListObject = await eventListResponse.json();
+    const exploreEventList: EventCardSummary[] = arrayFromJson(EventCardSummary,
+      eventListObject.exploreEventList);
+    const userUpcomingEventList: EventCardSummary[] = arrayFromJson(
+      EventCardSummary, eventListObject.userUpcomingEventList);
     const userEventTagList: EventTag[] = [];
     const eventTagListResponse = await fetch(
       `/api/home_page/event_tag_list/${this._account.id}`);
@@ -42,20 +43,8 @@ export class HttpHomePageModel extends HomePageModel {
         userEventTagList.push(EventTag.fromJson(tag));
       }
     }
-    const totalEventsAttendedThisMonth = userEventTagList.length;
-    const userFutureEventCardSummaryList: EventCardSummary[] = [];
-    const userFutureEventsResponse = await fetch(
-      `/api/home_page/user_future_events/${this._account.id}`);
-    if (userFutureEventsResponse.status === 200) {
-      const userFutureEventsObject = await userFutureEventsResponse.json();
-      for (const futureEvent of
-          userFutureEventsObject.userFutureEventCardSummaryList) {
-        userFutureEventCardSummaryList.push(EventCardSummary.fromJson(
-          futureEvent));
-      }
-    }
-    this._model = new LocalHomePageModel(imageList, eventList, userEventTagList,
-      userFutureEventCardSummaryList, totalEventsAttendedThisMonth);
+    this._model = new LocalHomePageModel(imageList, exploreEventList,
+      userEventTagList, userUpcomingEventList, userEventTagList.length);
     await this._model.load();
     this._isLoaded = true;
   }
