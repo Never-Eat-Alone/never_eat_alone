@@ -1,4 +1,4 @@
-import { arrayToJson, DiningEvent, EventCardSummary, EventTag, User } from
+import { arrayToJson, DiningEvent, EventTag, User } from
   '../../../client/library/source/definitions';
 import { AttendeeDatabase } from '../postgres/queries/attendee_database';
 import { DiningEventDatabase } from '../postgres/queries/dining_event_database';

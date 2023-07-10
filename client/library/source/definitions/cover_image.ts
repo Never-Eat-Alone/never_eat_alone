@@ -7,7 +7,7 @@ export class CoverImage {
   /** Generates the default cover image. */
   public static default(profileId: number = -1): CoverImage {
     return new CoverImage(profileId,
-      'resources/profile_page/images/default_banner_3.png');
+      'resources/profile_page/images/userProfile.pattern.3-desktop.png');
   }
 
   /** Generates the NoImage(Grey Image) Cover Image. */
