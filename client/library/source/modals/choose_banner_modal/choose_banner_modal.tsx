@@ -51,7 +51,7 @@ export class ChooseBannerModal extends React.Component<Properties, State> {
         '3px solid #5EC745' || 'none');
       imageList.push(
         <div
-            key={image.profileId}
+            key={image.profileId + image.src}
             style={{...IMAGE_CONTAINER_STYLE, border: border}}
             onClick={() => this.handleCoverImageClick(image)}
         >
@@ -146,17 +146,18 @@ const CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  width: '440px',
+  padding: '50px 50px',
   boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
   borderRadius: '4px',
-  overflow: 'hidden',
-  backgroundColor: '#FFFFFF'
+  background: 'var(--grey-white, #FFF)',
+  overflow: 'overlay'
 };
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
   ...CONTAINER_STYLE,
   width: '100%',
-  maxWidth: '375px'
+  maxWidth: '375px',
+  padding: '50px 20px'
 };
 
 const CLOSE_BUTTON_STYLE: React.CSSProperties = {
@@ -171,14 +172,13 @@ const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'center',
-  padding: '50px',
-  width: '100%',
-  gap: '30px'
+  width: '340px',
+  gap: '30px',
+  overflow: 'initial'
 };
 
 const MOBILE_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
-  ...CONTENT_CONTAINER_STYLE,
-  padding: '50px 20px'
+  width: '100%'
 };
 
 const HEADING_STYLE: React.CSSProperties = {
@@ -202,11 +202,11 @@ const HEADING_STYLE: React.CSSProperties = {
 const IMAGE_SECTION_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
-  justifyContent: 'space-between',
+  justifyContent: 'flex-start',
   alignItems: 'flex-start',
   flexWrap: 'wrap',
   width: '100%',
-  gap: '15px'
+  gap: '15px 20px'
 };
 
 const IMAGE_CONTAINER_STYLE: React.CSSProperties = {
@@ -223,7 +223,8 @@ const IMAGE_CONTAINER_STYLE: React.CSSProperties = {
 const IMAGE_STYLE: React.CSSProperties = {
   width: '100%',
   height: '100%',
-  objectFit: 'cover'
+  objectFit: 'cover',
+  overflow: 'hidden'
 };
 
 const GREY_IMAGE_STYLE: React.CSSProperties = {

@@ -141,6 +141,7 @@ const HEADER_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'center',
   alignItems: 'center',
   height: '54px',
+  minHeight: '54px',
   width: '100%'
 };
 

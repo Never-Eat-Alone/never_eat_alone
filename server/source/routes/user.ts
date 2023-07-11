@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as Hash from 'hash.js';
+import * as path from 'path';
 import { arrayToJson, CoverImage, Cuisine, EventCardSummary, InviteEmail,
   Language, NotificationSettings, PaymentCard, PaymentRecord, SocialAccount,
   User, UserInvitationCode, UserProfileImage, UserProfileSocialAccount,
@@ -761,7 +762,7 @@ export class UserRoutes {
       try {
         user = await this.userDatabase.loadUserBySessionId(
           request.session.id);
-        if (user.id !== profileId) {
+        if (user.id === -1 || user.id !== profileId) {
           response.status(401).send();
           return;
         }
@@ -770,13 +771,15 @@ export class UserRoutes {
         response.status(500).send();
         return;
       }
+    } else {
+      response.status(401).send();
+      return;
     }
     let languageList: Language[] = [];
     let favoriteCuisineList: Cuisine[] = [];
     let coverImage = CoverImage.noImage();
+    let coverImageList = [];
     let profileImage = UserProfileImage.default();
-    let displayName = '';
-    let userName = '';
     let selectedLocation = '';
     let isUpcomingEventsPrivate = true;
     let isPastEventsPrivate = true;
@@ -787,18 +790,13 @@ export class UserRoutes {
     let selectedLanguageList: Language[] = [];
     let selectedCuisineList: Cuisine[] = [];
     let isCuisinePrivate = true;
-    let isFacebookPrivate = true;
-    let isTwitterPrivate = true;
-    let isInstagramPrivate = true;
-    let userProfileSocialAccount: UserProfileSocialAccount[] = [];
+    let userProfileSocialAccountList: UserProfileSocialAccount[] = [];
     try {
       const profileUser = await this.userDatabase.loadUserById(profileId);
       if (profileUser?.id === -1) {
         response.status(400).send();
         return;
       }
-      displayName = profileUser.name;
-      userName = profileUser.userName;
     } catch (error) {
       console.error('Failed at loadUserById', error);
       response.status(500).send();
@@ -811,6 +809,16 @@ export class UserRoutes {
       console.error('Failed at loadUserById', error);
       response.status(500).send();
       return;
+    }
+    const dirPath = path.join(__dirname, 'public/resources/profile_page/images'
+      );
+    try {
+      let coverSrcList = fs.readdirSync(dirPath);
+      coverImageList = coverSrcList.map(coverSrc => new CoverImage(
+        profileId, `resources/profile_page/images/${coverSrc}`));
+    } catch (err) {
+        console.error(`Unable to scan resources/profile_page/images directory:
+          ${err}`);
     }
     try {
       profileImage =
@@ -854,9 +862,8 @@ export class UserRoutes {
       languageList: arrayToJson(languageList),
       favoriteCuisineList: arrayToJson(favoriteCuisineList),
       coverImage: coverImage.toJson(),
+      coverImageList: arrayToJson(coverImageList),
       profileImage: profileImage.toJson(),
-      displayName: displayName,
-      userName: userName,
       selectedLocation: selectedLocation,
       isUpcomingEventsPrivate: isUpcomingEventsPrivate,
       isPastEventsPrivate: isPastEventsPrivate,
@@ -867,10 +874,7 @@ export class UserRoutes {
       selectedLanguageList: arrayToJson(selectedLanguageList),
       selectedCuisineList: arrayToJson(selectedCuisineList),
       isCuisinePrivate: isCuisinePrivate,
-      isFacebookPrivate: isFacebookPrivate,
-      isTwitterPrivate: isTwitterPrivate,
-      isInstagramPrivate: isInstagramPrivate,
-      userProfileSocialAccount: arrayToJson(userProfileSocialAccount)
+      userProfileSocialAccountList: arrayToJson(userProfileSocialAccountList)
     });
   }
 

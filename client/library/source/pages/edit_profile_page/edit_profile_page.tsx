@@ -192,7 +192,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
       isCuisineInputFocued: false,
       isLocationInputFocused: false,
       isChangeBanner: false,
-      newProfileImage: null
+      newProfileImage: UserProfileImage.default()
     };
     this._languageDropdownRef = React.createRef<HTMLDivElement>();
     this._cuisineDropdownRef = React.createRef<HTMLDivElement>();
@@ -504,7 +504,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
           </div>
           <InputField
             style={{...locationInputFieldStyle, ...MARGIN_STYLE}}
-            value={this.props.locationValue}
+            value={this.props.locationValue || ''}
             placeholder='City, Province'
             type='text'
             onChange={this.handleLocationInputChange}
@@ -527,7 +527,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
           </div>
           <InputField
             style={{...languageInputFieldStyle, ...MARGIN_STYLE}}
-            value={this.props.languageValue}
+            value={this.props.languageValue || ''}
             placeholder='Start typing to add a language...'
             type='text'
             onChange={this.handleLanguageInputChange}
@@ -552,7 +552,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
           <TextareaWithCounter
             style={MARGIN_STYLE}
             maxCount={280}
-            value={this.props.biographyValue}
+            value={this.props.biographyValue || ''}
             onValueChange={this.props.onBiographyInputChange}
           />
           <div style={TITLE_MARGIN_STYLE} >Social Media</div>
@@ -607,7 +607,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
           </div>
           <InputField
             style={{...cuisineInputFieldStyle, ...MARGIN_STYLE}}
-            value={this.props.cuisineValue}
+            value={this.props.cuisineValue || ''}
             placeholder='Start typing to add a cuisine...'
             type='text'
             onChange={this.handleCuisineInputChange}
