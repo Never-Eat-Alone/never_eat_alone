@@ -2,6 +2,7 @@ import { css, StyleSheet } from 'aphrodite';
 import { format } from 'date-fns';
 import * as React from 'react';
 import * as Router from 'react-router-dom';
+import * as tinyColor from 'tinycolor2';
 import { PrimaryTextButton, SecondaryTextButton, SeeAllButton, SeeLessButton }
   from '../../components';
 import { Attendee, AttendeeStatus, DisplayMode, DressCode, getDressCodeIconSrc,
@@ -433,7 +434,7 @@ export class DiningEventPage extends React.Component<Properties, State> {
             <div style={eventTagContainerStyle} >
               <svg
                   style={{...EVENT_TAG_ICON_STYLE,
-                    color: this.props.eventColor}}
+                    color: tinyColor(this.props.eventColor).toHexString()}}
                   width='18' height='31' viewBox='0 0 18 31'
                   xmlns='http://www.w3.org/2000/svg'
               >

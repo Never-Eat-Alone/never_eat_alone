@@ -33,7 +33,7 @@ export class DiningEventDatabase {
         de.start_at > NOW() AT TIME ZONE 'UTC' AND de.status = 'ACTIVE' AND
         de.type = 'PUBLIC'
       ORDER BY
-        de.start_at DESC
+        de.start_at ASC
     `;
     const result = await this.pool.query(query);
     if (result.rows?.length === 0) {
