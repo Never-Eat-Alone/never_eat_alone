@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as tinyColor from 'tinycolor2';
-import { DiningEventCard, PrimaryButtonNavLink, ShowAllButton, ShowLessButton }
-  from '../../components';
+import { DiningEventCard, ShowAllButton, ShowLessButton } from
+  '../../components';
 import { DisplayMode, EventCardSummary } from '../../definitions';
 
 interface Properties {
@@ -31,27 +31,7 @@ export class ProfileUpcomingEvents extends React.Component<Properties, State> {
     if (this.props.eventList?.length === 0) {
       return (
         <div style={CONTAINER_STYLE} >
-          <h1 style={TITLE_STYLE} >
-            Upcoming Events (0)
-          </h1>
-          <div style={NO_EVENT_CONTAINER_STYLE} >
-            <div style={NO_EVENT_IMAGE_CONTAINER_STYLE} >
-              <img
-                style={NO_EVENT_IMAGE_STYLE}
-                src='resources/profile_page/icons/no_events.png'
-                alt='No Events Icon'
-              />
-            </div>
-            <p style={NO_EVENT_BOLD_TEXT_STYLE} >Nothing here yet</p>
-            <p style={NO_EVENT_DESCRIPTION_STYLE} >
-              You haven’t attended any events yet, why not check out some?
-            </p>
-            <PrimaryButtonNavLink
-              style={EXPLORE_EVENTS_BUTTON_STYLE}
-              to='/'
-              label='Explore Events'
-            />
-          </div>
+          <h1 style={NO_EVENT_TITLE_STYLE} >Upcoming Events (0)</h1>
         </div>);
     }
     const cards = [];
@@ -78,7 +58,7 @@ export class ProfileUpcomingEvents extends React.Component<Properties, State> {
         />);
     }
     const showButton = (() => {
-      if (this.props.eventList.length <= 6) {
+      if (this.props.eventList?.length <= 6) {
         return null;
       }
       if (numberOfDisplayedCards !== this.props.eventList.length) {
@@ -135,31 +115,9 @@ const TITLE_STYLE: React.CSSProperties = {
   margin: '0px 0px 40px 0px'
 };
 
-const NO_EVENT_CONTAINER_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'flex-start',
-  gap: '10px',
-  width: '100%'
-};
-
-const NO_EVENT_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  width: '200px',
-  height: '150px',
-  backgroundColor: 'transparent',
-  marginTop: '30px'
-};
-
-const NO_EVENT_IMAGE_STYLE: React.CSSProperties = {
-  width: '100%',
-  height: '100%',
-  minWidth: '200px',
-  objectFit: 'cover'
+const NO_EVENT_TITLE_STYLE: React.CSSProperties = {
+  ...TITLE_STYLE,
+  margin: '0px 0px'
 };
 
 const EVENT_CARDS_CONTAINER_STYLE: React.CSSProperties = {
@@ -170,30 +128,6 @@ const EVENT_CARDS_CONTAINER_STYLE: React.CSSProperties = {
   flexWrap: 'wrap',
   gap: '18px',
   width: '100%'
-};
-
-const NO_EVENT_BOLD_TEXT_STYLE: React.CSSProperties = {
-  color: 'var(--grey-black, #000)',
-  textAlign: 'center',
-  fontFamily: 'Oswald',
-  fontSize: '23px',
-  fontStyle: 'normal',
-  fontWeight: 400,
-  lineHeight: 'normal'
-};
-
-const NO_EVENT_DESCRIPTION_STYLE: React.CSSProperties = {
-  color: '#000',
-  textAlign: 'center',
-  fontFamily: 'Source Sans Pro',
-  fontSize: '14px',
-  fontStyle: 'normal',
-  fontWeight: 300,
-  lineHeight: '18px'
-};
-
-const EXPLORE_EVENTS_BUTTON_STYLE: React.CSSProperties = {
-  marginBottom: '50px'
 };
 
 const SHOW_BUTTON_STYLE: React.CSSProperties = {

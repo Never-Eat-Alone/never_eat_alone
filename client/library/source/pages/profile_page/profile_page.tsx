@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { PrimaryButtonNavLink } from '../../components';
 import { Cuisine, DisplayMode, EventCardSummary, Language, User } from
   '../../definitions';
 import { ProfileBox } from './profile_box';
@@ -63,17 +64,73 @@ interface Properties {
 /** Displays the user's profile page. */
 export class ProfilePage extends React.Component<Properties> {
   public render(): JSX.Element {
-    const pastEvents = (this.props.pastEventList?.length !== 0 &&
-      <ProfilePastEvents
-        displayMode={this.props.displayMode}
-        eventList={this.props.pastEventList}
-        isLoggedIn={this.props.account?.id !== -1}
-      /> || null);
-    const upcomingEvents = (this.props.upcomingEventList?.length !== 0 &&
+    const isNoEvents = (!this.props.upcomingEventList ||
+      this.props.upcomingEventList.length === 0) && (!this.props.pastEventList
+      || this.props.pastEventList.length === 0);
+    const isAccountProfile = (this.props.account.id !== -1 &&
+      this.props.account.id === this.props.profileId);
+    const events = (() => {
+      if (isNoEvents) {
+        if (isAccountProfile) {
+          return (
+            <div style={NO_EVENT_CONTAINER_STYLE} >
+              <h1 style={NO_EVENT_TITLE_STYLE} >
+                Upcoming And Past Events
+              </h1>
+              <div style={EVENT_CONTAINER_STYLE} >
+                <div style={NO_EVENT_IMAGE_CONTAINER_STYLE} >
+                  <img
+                    style={NO_EVENT_IMAGE_STYLE}
+                    src='resources/profile_page/icons/no_event.png'
+                    alt='No Events Icon'
+                  />
+                </div>
+                <p style={NO_EVENT_BOLD_TEXT_STYLE} >Nothing here yet</p>
+                <p style={NO_EVENT_DESCRIPTION_STYLE} >
+                  You haven’t attended any events yet, why not check out some?
+                </p>
+                <PrimaryButtonNavLink
+                  style={EXPLORE_EVENTS_BUTTON_STYLE}
+                  to='/'
+                  label='Explore Events'
+                />
+              </div>
+            </div>);
+        }
+        return (
+          <div style={NO_EVENT_CONTAINER_STYLE} >
+            <h1 style={NO_EVENT_TITLE_STYLE} >
+              Upcoming And Past Events
+            </h1>
+            <div style={EVENT_CONTAINER_STYLE} >
+              <div style={NO_EVENT_IMAGE_CONTAINER_STYLE} >
+                <img
+                  style={NO_EVENT_IMAGE_STYLE}
+                  src='resources/profile_page/icons/no_see.png'
+                  alt='No Events Icon'
+                />
+              </div>
+              <p style={NO_EVENT_BOLD_TEXT_STYLE} >Nothing to see</p>
+              <p style={NO_EVENT_DESCRIPTION_STYLE} >
+                Either this user has not attended any events yet, or their 
+                events are hidden.
+              </p>
+            </div>
+          </div>);
+      }
+      return null;
+    })();
+    const upcomingEvents = (!isNoEvents &&
       <ProfileUpcomingEvents
         displayMode={this.props.displayMode}
         eventList={this.props.upcomingEventList}
-        isLoggedIn={this.props.account?.id !== -1}
+        isLoggedIn={isAccountProfile}
+      /> || null);
+    const pastEvents = (!isNoEvents &&
+      <ProfilePastEvents
+        displayMode={this.props.displayMode}
+        eventList={this.props.pastEventList}
+        isLoggedIn={isAccountProfile}
       /> || null);
     const { containerStyle, coverImageStyle, profileBoxStyle,
         eventsContainerStyle } = (() => {
@@ -112,6 +169,7 @@ export class ProfilePage extends React.Component<Properties> {
           <ProfileBox {...this.props} />
         </div>
         <div style={eventsContainerStyle} >
+          {events}
           {upcomingEvents}
           {pastEvents}
         </div>
@@ -120,40 +178,46 @@ export class ProfilePage extends React.Component<Properties> {
 }
 
 const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
   position: 'relative',
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'flex-start',
   width: '100%',
-  height: '100%',
+  height: 'max-content',
   backgroundColor: '#FFFFFF',
   gap: '58px',
-  paddingBottom: '81px'
+  paddingBottom: '81px',
+  overflow: 'initial'
 };
 
 const TABLET_CONTAINER_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'center',
   width: '100%',
-  height: '100%',
+  height: 'max-content',
   backgroundColor: '#FFFFFF',
   gap: '60px',
-  paddingBottom: '75px'
+  paddingBottom: '75px',
+  overflow: 'initial'
 };
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'center',
   width: '100%',
-  height: '100%',
+  height: 'max-content',
   backgroundColor: '#FFFFFF',
   gap: '60px',
-  paddingBottom: '55px'
+  paddingBottom: '55px',
+  overflow: 'initial'
 };
 
 const COVER_IMAGE_STYLE: React.CSSProperties = {
@@ -213,4 +277,77 @@ const MOBILE_EVENTS_CONTAINER_STYLE: React.CSSProperties = {
   gap: '60px',
   marginRight: '10px',
   marginLeft: '10px'
+};
+
+const NO_EVENT_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  width: '100%',
+  backgroundColor: 'transparent'
+};
+
+const NO_EVENT_TITLE_STYLE: React.CSSProperties = {
+  fontFamily: 'Oswald',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '23px',
+  lineHeight: '34px',
+  textTransform: 'capitalize',
+  color: '#000000',
+  padding: '0px',
+  margin: '0px 0px 40px 0px'
+};
+
+const EVENT_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  gap: '10px',
+  width: '100%'
+};
+
+const NO_EVENT_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '200px',
+  height: '150px',
+  backgroundColor: 'transparent',
+  marginTop: '30px'
+};
+
+const NO_EVENT_IMAGE_STYLE: React.CSSProperties = {
+  width: '100%',
+  height: '100%',
+  minWidth: '200px',
+  objectFit: 'cover'
+};
+
+const NO_EVENT_BOLD_TEXT_STYLE: React.CSSProperties = {
+  color: 'var(--grey-black, #000)',
+  textAlign: 'center',
+  fontFamily: 'Oswald',
+  fontSize: '23px',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  lineHeight: 'normal'
+};
+
+const NO_EVENT_DESCRIPTION_STYLE: React.CSSProperties = {
+  color: '#000',
+  textAlign: 'center',
+  fontFamily: 'Source Sans Pro',
+  fontSize: '14px',
+  fontStyle: 'normal',
+  fontWeight: 300,
+  lineHeight: '18px',
+  whiteSpace: 'pre-line'
+};
+
+const EXPLORE_EVENTS_BUTTON_STYLE: React.CSSProperties = {
+  marginBottom: '50px'
 };
