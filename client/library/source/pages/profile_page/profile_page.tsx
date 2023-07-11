@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Cuisine, DisplayMode, EventCardSummary, Language, User
-} from '../../definitions';
+import { Cuisine, DisplayMode, EventCardSummary, Language, User } from
+  '../../definitions';
 import { ProfileBox } from './profile_box';
 import { ProfilePastEvents } from './profile_past_events';
 import { ProfileUpcomingEvents } from './profile_upcoming_events';
@@ -126,6 +126,7 @@ const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'center',
   alignItems: 'flex-start',
   width: '100%',
+  height: '100%',
   backgroundColor: '#FFFFFF',
   gap: '58px',
   paddingBottom: '81px'
@@ -137,6 +138,7 @@ const TABLET_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'center',
   width: '100%',
+  height: '100%',
   backgroundColor: '#FFFFFF',
   gap: '60px',
   paddingBottom: '75px'
@@ -148,6 +150,7 @@ const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'center',
   width: '100%',
+  height: '100%',
   backgroundColor: '#FFFFFF',
   gap: '60px',
   paddingBottom: '55px'

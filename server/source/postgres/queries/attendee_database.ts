@@ -54,10 +54,10 @@ export class AttendeeDatabase {
       attendees AS att ON de.id = att.event_id
     WHERE
       de.start_at > NOW() AT TIME ZONE 'UTC' AND
-      de.status = 'ACTIVE' AND
-      att.user_id = $1
+      de.status = 'ACTIVE' AND de.type = 'PUBLIC' AND
+      att.user_id = $1 AND att.status = 'GOING'
     ORDER BY
-      de.start_at DESC
+      de.start_at ASC
     `;
     const result = await this.pool.query(query, [userId]);
     if (result.rows?.length === 0) {

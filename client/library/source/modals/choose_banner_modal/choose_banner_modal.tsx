@@ -33,26 +33,29 @@ export class ChooseBannerModal extends React.Component<Properties, State> {
   }
 
   public render(): JSX.Element {
-    const { containerStyle, contentContainerStyle } = (() => {
+    const { containerStyle, contentContainerStyle, imageContainerStyle } = (
+        () => {
       if (this.props.displayMode === DisplayMode.MOBILE) {
         return {
           containerStyle: MOBILE_CONTAINER_STYLE,
-          contentContainerStyle: MOBILE_CONTENT_CONTAINER_STYLE
+          contentContainerStyle: MOBILE_CONTENT_CONTAINER_STYLE,
+          imageContainerStyle: MOBILE_IMAGE_CONTAINER_STYLE
         };
       }
       return {
         containerStyle: CONTAINER_STYLE,
-        contentContainerStyle: CONTENT_CONTAINER_STYLE
+        contentContainerStyle: CONTENT_CONTAINER_STYLE,
+        imageContainerStyle: IMAGE_CONTAINER_STYLE
       };
     })();
     const imageList = [];
     for (const image of this.props.coverImageList) {
-      const border = (image.profileId === this.state.selectedImage.profileId &&
+      const border = (image.src === this.state.selectedImage.src &&
         '3px solid #5EC745' || 'none');
       imageList.push(
         <div
-            key={image.profileId}
-            style={{...IMAGE_CONTAINER_STYLE, border: border}}
+            key={image.profileId + image.src}
+            style={{...imageContainerStyle, border: border}}
             onClick={() => this.handleCoverImageClick(image)}
         >
           <img style={IMAGE_STYLE} src={image.src} alt='Cover Image' />
@@ -64,7 +67,7 @@ export class ChooseBannerModal extends React.Component<Properties, State> {
     imageList.push(
       <div
           key='No_Cover_Image'
-          style={{...IMAGE_CONTAINER_STYLE, border: greyCoverBorder}}
+          style={{...imageContainerStyle, border: greyCoverBorder}}
           onClick={() => this.handleCoverImageClick(noCoverImage)}
       >
         <img
@@ -146,17 +149,19 @@ const CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  width: '440px',
+  padding: '50px 50px',
   boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
   borderRadius: '4px',
-  overflow: 'hidden',
-  backgroundColor: '#FFFFFF'
+  background: 'var(--grey-white, #FFF)',
+  overflow: 'overlay',
+  margin: '74px 10px'
 };
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
   ...CONTAINER_STYLE,
   width: '100%',
-  maxWidth: '375px'
+  maxWidth: '375px',
+  padding: '50px 20px'
 };
 
 const CLOSE_BUTTON_STYLE: React.CSSProperties = {
@@ -171,14 +176,14 @@ const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'center',
-  padding: '50px',
-  width: '100%',
-  gap: '30px'
+  width: '340px',
+  gap: '30px',
+  overflow: 'initial'
 };
 
 const MOBILE_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
   ...CONTENT_CONTAINER_STYLE,
-  padding: '50px 20px'
+  width: '100%'
 };
 
 const HEADING_STYLE: React.CSSProperties = {
@@ -202,11 +207,11 @@ const HEADING_STYLE: React.CSSProperties = {
 const IMAGE_SECTION_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
-  justifyContent: 'space-between',
+  justifyContent: 'flex-start',
   alignItems: 'flex-start',
   flexWrap: 'wrap',
   width: '100%',
-  gap: '15px'
+  gap: '15px 20px'
 };
 
 const IMAGE_CONTAINER_STYLE: React.CSSProperties = {
@@ -220,10 +225,17 @@ const IMAGE_CONTAINER_STYLE: React.CSSProperties = {
   backgroundColor: '#969696'
 };
 
+const MOBILE_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  ...IMAGE_CONTAINER_STYLE,
+  width: '93px',
+  height: '93px'
+};
+
 const IMAGE_STYLE: React.CSSProperties = {
   width: '100%',
   height: '100%',
-  objectFit: 'cover'
+  objectFit: 'cover',
+  overflow: 'hidden'
 };
 
 const GREY_IMAGE_STYLE: React.CSSProperties = {
