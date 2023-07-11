@@ -29,7 +29,6 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
     const coverImage = CoverImage.fromJson(responseObject.coverImage);
     const coverImageList: CoverImage[] = arrayFromJson(CoverImage,
       responseObject.coverImageList);
-    console.log('coverimagelist', coverImageList);
     const profileImage = UserProfileImage.fromJson(responseObject.profileImage);
     const selectedLocation = responseObject.selectedLocation;
     const isUpcomingEventsPrivate = responseObject.isUpcomingEventsPrivate;

@@ -93,37 +93,6 @@ export class EditProfilePageController extends React.Component<Properties,
     if (!this.state.isLoaded || this.state.hasError) {
       return <div />;
     }
-    console.log(`
-      displayName=${this.props.account.name}
-      userName=${this.props.account.userName}
-      profileId=${this.props.account.id}
-      coverImage=${this.state.coverImage}
-      coverImageList=${this.props.model.coverImageList}
-      profileImage=${this.state.profileImage}
-      isUpcomingEventsPrivate=${this.state.isUpcomingEventsPrivate}
-      isPastEventsPrivate=${this.state.isPastEventsPrivate}
-      isLocationPrivate=${this.state.isLocationPrivate}
-      locationValue=${this.state.locationValue}
-      suggestedLocationList=${this.state.suggestedLocationList}
-      isLanguagePrivate=${this.state.isLanguagePrivate}
-      languageValue=${this.state.languageValue}
-      suggestedLanguageList=${this.state.suggestedLanguageList}
-      selectedLanguageList=${this.state.selectedLanguageList}
-      biographyValue=${this.state.biographyValue}
-      isBiographyPrivate=${this.state.isBiographyPrivate}
-      cuisineValue=${this.state.cuisineValue}
-      suggestedCuisineList=${this.state.suggestedCuisineList}
-      selectedCuisineList=${this.state.selectedCuisineList}
-      isCuisinePrivate=${this.state.isCuisinePrivate}
-      isFacebookPrivate=${this.state.isFacebookPrivate}
-      isTwitterPrivate=${this.state.isTwitterPrivate}
-      isInstagramPrivate=${this.state.isInstagramPrivate}
-      facebookLink=${this.state.facebookLink}
-      twitterLink=${this.state.twitterLink}
-      instagramLink=${this.state.instagramLink}
-      facebookInputIsValid=${this.state.facebookInputIsValid}
-      twitterInputIsValid=${this.state.twitterInputIsValid}
-      instagramInputIsValid=${this.state.instagramInputIsValid}`);
     return <EditProfilePage
       displayMode={this.props.displayMode}
       displayName={this.props.account.name}
