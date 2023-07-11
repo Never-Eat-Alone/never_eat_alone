@@ -33,26 +33,29 @@ export class ChooseBannerModal extends React.Component<Properties, State> {
   }
 
   public render(): JSX.Element {
-    const { containerStyle, contentContainerStyle } = (() => {
+    const { containerStyle, contentContainerStyle, imageContainerStyle } = (
+        () => {
       if (this.props.displayMode === DisplayMode.MOBILE) {
         return {
           containerStyle: MOBILE_CONTAINER_STYLE,
-          contentContainerStyle: MOBILE_CONTENT_CONTAINER_STYLE
+          contentContainerStyle: MOBILE_CONTENT_CONTAINER_STYLE,
+          imageContainerStyle: MOBILE_IMAGE_CONTAINER_STYLE
         };
       }
       return {
         containerStyle: CONTAINER_STYLE,
-        contentContainerStyle: CONTENT_CONTAINER_STYLE
+        contentContainerStyle: CONTENT_CONTAINER_STYLE,
+        imageContainerStyle: IMAGE_CONTAINER_STYLE
       };
     })();
     const imageList = [];
     for (const image of this.props.coverImageList) {
-      const border = (image.profileId === this.state.selectedImage.profileId &&
+      const border = (image.src === this.state.selectedImage.src &&
         '3px solid #5EC745' || 'none');
       imageList.push(
         <div
             key={image.profileId + image.src}
-            style={{...IMAGE_CONTAINER_STYLE, border: border}}
+            style={{...imageContainerStyle, border: border}}
             onClick={() => this.handleCoverImageClick(image)}
         >
           <img style={IMAGE_STYLE} src={image.src} alt='Cover Image' />
@@ -64,7 +67,7 @@ export class ChooseBannerModal extends React.Component<Properties, State> {
     imageList.push(
       <div
           key='No_Cover_Image'
-          style={{...IMAGE_CONTAINER_STYLE, border: greyCoverBorder}}
+          style={{...imageContainerStyle, border: greyCoverBorder}}
           onClick={() => this.handleCoverImageClick(noCoverImage)}
       >
         <img
@@ -150,7 +153,8 @@ const CONTAINER_STYLE: React.CSSProperties = {
   boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
   borderRadius: '4px',
   background: 'var(--grey-white, #FFF)',
-  overflow: 'overlay'
+  overflow: 'overlay',
+  margin: '74px 10px'
 };
 
 const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
@@ -178,6 +182,7 @@ const CONTENT_CONTAINER_STYLE: React.CSSProperties = {
 };
 
 const MOBILE_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTENT_CONTAINER_STYLE,
   width: '100%'
 };
 
@@ -218,6 +223,12 @@ const IMAGE_CONTAINER_STYLE: React.CSSProperties = {
   width: '100px',
   height: '100px',
   backgroundColor: '#969696'
+};
+
+const MOBILE_IMAGE_CONTAINER_STYLE: React.CSSProperties = {
+  ...IMAGE_CONTAINER_STYLE,
+  width: '93px',
+  height: '93px'
 };
 
 const IMAGE_STYLE: React.CSSProperties = {
