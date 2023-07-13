@@ -77,7 +77,7 @@ export class UserRoutes {
         name: user.name,
         email: user.email,
         userName: user.userName,
-        userStatus: user.userStatus,
+        userStatus: user.userStatus.toString(),
         createdAt: user.createdAt.toISOString()
       };
       response.status(200).json({ user: user.toJson() });
@@ -99,9 +99,11 @@ export class UserRoutes {
       return;
     }
     let user: User;
+    console.log('isEmail', isEmail);
     if (isEmail) {
       try {
         const userByEmail = await this.userDatabase.loadUserByEmail(email);
+        console.log('userByEmail.userStatus', userByEmail.userStatus);
         if (userByEmail.userStatus === UserStatus.ACTIVE ||
             userByEmail.userStatus === UserStatus.BANNED ||
             userByEmail.userStatus === UserStatus.DEACTIVE) {
@@ -117,6 +119,7 @@ export class UserRoutes {
         return;
       }
     }
+    console.log('user', user);
     if (!user || user.id === -1) {
       try {
         user = await this.userDatabase.addGuestUserRequest(name, email,
@@ -138,8 +141,10 @@ export class UserRoutes {
         });
     });
     let token: string;
+    console.log('after confirmation html');
     try {
       token = await this.getConfirmationToken(email, user.id);
+      console.log('token', token);
     } catch (error) {
       console.error('CONFIRMATION_TOKEN_ERROR in Database:', error);
       response.status(201).json({
@@ -161,10 +166,12 @@ export class UserRoutes {
       });
       return;
     }
+    console.log('sent confirmation email');
     request.session.cookie.maxAge = 24 * 60 * 60 * 1000;
     try {
       const sessionExpiration = new Date(
         Date.now() + request.session.cookie.maxAge);
+      console.log('before assignUserIdToSid for user id', user.id);
       await this.userDatabase.assignUserIdToSid(request.session.id, user.id,
         request.session, sessionExpiration);
     } catch (error) {
@@ -172,38 +179,47 @@ export class UserRoutes {
       response.status(500).json({ message: 'DATABASE_ERROR' });
       return;
     }
+    console.log('after assignuser to session id');
     request.session.user = {
       id: user.id,
       name: user.name,
       email: user.email,
       userName: user.userName,
-      userStatus: user.userStatus,
+      userStatus: user.userStatus.toString(),
       createdAt: user.createdAt.toISOString()
     };
+    console.log('user', user.id, user.email, user.userStatus);
     response.status(201).json({ user: user.toJson(), message: '' });
   }
 
   private signUp = async (request, response) => {
+    console.log('sign up');
     const userId = parseInt(request.params.id);
+    console.log('userid', userId);
     if (userId === -1) {
       response.redirect(303, 'http://nevereatalone.net/join');
       return;
     }
     let user = User.makeGuest();
     try {
+      console.log('before find user by id');
       user = await this.userDatabase.loadUserById(userId);
+      console.log('user', user.id, user.userStatus);
     } catch (error) {
       console.error('Failed at loadUserById', error);
       response.status(500).send();
       return;
     }
-    if (user?.id === -1 || user.userStatus !== UserStatus.ACTIVE) {
+    console.log('user.userStatus !== UserStatus.ACTIVE', user.userStatus !== UserStatus.ACTIVE);
+    if (user.id === -1 || user.userStatus !== UserStatus.ACTIVE) {
       response.redirect(303, 'http://nevereatalone.net/join');
       return;
     }
     let hasCredentials = false;
     try {
+      console.log('checking for hasCredentials');
       hasCredentials = await this.userDatabase.hasCredentials(userId);
+      console.log('hasCredentials', hasCredentials);
     } catch (error) {
       console.error('Failed at hasCredentials', error);
       response.status(500).send();
@@ -213,6 +229,7 @@ export class UserRoutes {
       response.redirect(303, 'http://nevereatalone.net/log_in');
       return;
     }
+    console.log('sign up 200 response');
     response.status(200).send();
   }
 
@@ -221,13 +238,16 @@ export class UserRoutes {
     const displayName = request.body.displayName;
     const accountProfileImage = UserProfileImage.fromJson(
       request.body.accountProfileImage);
+    console.log('setup profile', userId, displayName, accountProfileImage.src);
     if (userId === -1) {
       response.status(400).send();
       return;
     }
     try {
+      console.log('before saving');
       const result = await this.userDatabase.saveUserProfile(userId,
         accountProfileImage.src, displayName);
+      console.log('after save', result.account);
       response.status(200).json({
         account: result.account.toJson(),
         accountProfileImage: result.accountProfileImage.toJson()
@@ -239,8 +259,10 @@ export class UserRoutes {
   }
 
   private setUpPassword = async (request, response) => {
+    console.log('setup password');
     const userId = parseInt(request.params.id);
     const { password } = request.body;
+    console.log('pass', password, 'userid', userId);
     try {
       await this.userDatabase.addUserCredentials(userId, password);
     } catch (error) {
@@ -285,7 +307,7 @@ export class UserRoutes {
       name: user.name,
       email: user.email,
       userName: user.userName,
-      userStatus: user.userStatus,
+      userStatus: user.userStatus.toString(),
       createdAt: user.createdAt.toISOString()
     };
     response.status(200).json({ user: user.toJson() });
@@ -385,6 +407,7 @@ export class UserRoutes {
         'http://nevereatalone.net/confirmation_token_invalid');
       return;
     }
+    console.log('token is verified', token);
     let userIdByToken: number;
     try {
       userIdByToken = await this.userDatabase.getUserIdByToken(token);
@@ -393,6 +416,7 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
+    console.log('userIdByToken', userIdByToken);
     let user: User;
     try {
       user = await this.userDatabase.loadUserById(userIdByToken);
@@ -405,7 +429,8 @@ export class UserRoutes {
       response.redirect(303, 'http://nevereatalone.net/join');
       return;
     }
-    if (user.userStatus === UserStatus.ACTIVE) {
+    console.log('before chech status');
+    if (user.userStatus as UserStatus === UserStatus.ACTIVE) {
       let hasCredentials = false;
       try {
         hasCredentials = await this.userDatabase.hasCredentials(user.id);
@@ -421,6 +446,7 @@ export class UserRoutes {
       }
       return;
     }
+    console.log('before updateUserStatusByConfirmationToken');
     let id: number;
     try {
       id = await this.userDatabase.updateUserStatusByConfirmationToken(
@@ -446,7 +472,7 @@ export class UserRoutes {
       name: user.name,
       email: user.email,
       userName: user.userName,
-      userStatus: user.userStatus,
+      userStatus: user.userStatus.toString(),
       createdAt: user.createdAt.toISOString()
     };
     const signUpHtml = await new Promise<string>((resolve, reject) => {
@@ -459,12 +485,16 @@ export class UserRoutes {
           }
         });
     });
+    console.log('before sing up html');
     const newHtml = signUpHtml.replace('{{name}}', user.name).replace('{{id}}',
       user.id.toString());
+    console.log('after sign up html');
     try {
       await this.sendEmail(user.email, 'info@nevereatalone.net',
         'NEA Account: Sign Up', newHtml);
+      console.log('sign up email sent');
     } catch (error) {
+      console.log(error);
       const message = "Your account is verified but we weren't able to send \
         you the sign up email. Contact info@nevereatalone.net to get help.";
       console.error(error, message);
@@ -473,7 +503,8 @@ export class UserRoutes {
       });
       return;
     }
-    response.status(200).send({ message: 'Email sent.' });
+    console.log('response 200 with user', user.id, user.name, user.email, user.userStatus.toString());
+    response.status(200).json({ message: 'Email sent.', user: user.toJson() });
   }
 
   private getUserInvitationCode = async (request, response) => {
