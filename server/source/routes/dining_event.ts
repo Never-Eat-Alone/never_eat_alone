@@ -120,7 +120,7 @@ export class DiningEventRoutes {
       imageSrc = (await this.userProfileImageDatabase.loadProfileImageByUserId(
         user.id)).src;
     } catch (error) {
-      console.error('Failed at loadUserProfileImageSrc', error);
+      console.error('Failed at loadProfileImageByUserId', error);
     }
     try {
       await this.attendeeDatabase.joinEvent(user.id, eventId);
