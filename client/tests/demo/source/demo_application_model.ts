@@ -581,8 +581,8 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return this._deactivateAccountSurveyModel;
   }
 
-  public addSignUpPageModel(id: number,
-      signUpPageModel: NeverEatAlone.SignUpPageModel): void {
+  public addSignUpPageModel(id: number, signUpPageModel:
+      NeverEatAlone.SignUpPageModel): void {
     this._signUpPageModelMap.set(id, signUpPageModel);
   }
 
@@ -590,14 +590,13 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return this._signUpPageModelMap.get(id);
   }
 
-  public addEmailConfirmationPageModel(id: string,
-      emailConfirmationPageModel: NeverEatAlone.EmailConfirmationPageModel
-      ): void {
+  public addEmailConfirmationPageModel(id: string, emailConfirmationPageModel:
+      NeverEatAlone.EmailConfirmationPageModel): void {
     this._emailConfirmationPageModelMap.set(id, emailConfirmationPageModel);
   }
 
-  public getEmailConfirmationPageModel(id: string
-      ): NeverEatAlone.EmailConfirmationPageModel {
+  public getEmailConfirmationPageModel(id: string):
+      NeverEatAlone.EmailConfirmationPageModel {
     return this._emailConfirmationPageModelMap.get(id);
   }
 

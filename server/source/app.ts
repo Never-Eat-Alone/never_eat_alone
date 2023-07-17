@@ -145,7 +145,7 @@ function runExpress(pool: Pool, config: any) {
     deleteAccountSurveyDatabase, userDatabase, SGMail);
   const diningEventDatabase = new DiningEventDatabase(pool);
   const diningEventRoutes = new DiningEventRoutes(app, diningEventDatabase,
-    userDatabase, attendeeDatabase);
+    userDatabase, attendeeDatabase, userProfileImageDatabase);
   app.get('*', (request, response, next) => {
     response.sendFile(path.join(process.cwd(), 'public', 'index.html'));
   });

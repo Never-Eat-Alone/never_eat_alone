@@ -1,8 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { Pool } from 'pg';
-import { UserProfileImage
-} from '../../../../client/library/source/definitions';
+import { UserProfileImage } from
+  '../../../../client/library/source/definitions';
 
 /** UserProfileImage related database manipulations class. */
 export class UserProfileImageDatabase {

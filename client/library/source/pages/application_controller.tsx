@@ -249,16 +249,12 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private async updateAccount(newUser: User): Promise<void> {
-    console.log('updateAccount', newUser.name);
     try {
-      console.log('before await model.setAccount');
       await this.props.model.setAccount(newUser);
-      console.log('after setAccount is done. image src after account update', this.props.model.accountProfileImage.src);
       this.setState({
         account: newUser,
         accountProfileImage: this.props.model.accountProfileImage
       });
-      console.log('updated the accoutn and account profile states.');
     } catch {
       this.setState({ hasError: true });
     }
@@ -306,9 +302,7 @@ export class ApplicationController extends React.Component<Properties, State> {
     if (this.state.isLogInButtonClicked) {
       this.handleLogInModalClose();
     }
-    console.log('account', account.id, account.name, account.userStatus);
     await this.updateAccount(account);
-    console.log('handleLogInSuccess is done');
   }
 
   private handleSignUpSuccess = (account: User, accountProfileImage:

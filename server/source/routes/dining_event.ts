@@ -1,8 +1,10 @@
-import { arrayToJson, DiningEvent, EventTag, User } from
+import { arrayToJson, DiningEvent, EventTag, User, UserProfileImage } from
   '../../../client/library/source/definitions';
 import { AttendeeDatabase } from '../postgres/queries/attendee_database';
 import { DiningEventDatabase } from '../postgres/queries/dining_event_database';
 import { UserDatabase } from '../postgres/queries/user_database';
+import { UserProfileImageDatabase } from
+  '../postgres/queries/user_profile_image_database';
 
 /** DiningEvent Routes class. */
 export class DiningEventRoutes {
@@ -14,7 +16,8 @@ export class DiningEventRoutes {
    * @param attendeeDatabase
    */
   constructor(app: any, diningEventDatabase: DiningEventDatabase, userDatabase:
-      UserDatabase, attendeeDatabase: AttendeeDatabase) {
+      UserDatabase, attendeeDatabase: AttendeeDatabase,
+      userProfileImageDatabase: UserProfileImageDatabase) {
     /** Route to get the dining event card summaries on homepage. */
     app.get('/api/home_page/event_list/:userId',
       this.getHomePageDiningEventCardSummaries);
@@ -27,6 +30,7 @@ export class DiningEventRoutes {
     this.diningEventDatabase = diningEventDatabase;
     this.userDatabase = userDatabase;
     this.attendeeDatabase = attendeeDatabase;
+    this.userProfileImageDatabase = userProfileImageDatabase;
   }
 
   /** Responds with all future events that the user has not joined yet. */
@@ -111,9 +115,20 @@ export class DiningEventRoutes {
         return;
       }
     }
+    let imageSrc = UserProfileImage.default(user.id).src;
+    try {
+      imageSrc = (await this.userProfileImageDatabase.loadProfileImageByUserId(
+        user.id)).src;
+    } catch (error) {
+      console.error('Failed at loadUserProfileImageSrc', error);
+    }
     try {
       await this.attendeeDatabase.joinEvent(user.id, eventId);
-      response.status(200).send();
+      response.status(200).json({
+        accountId: user.id,
+        accountName: user.name,
+        profileImageSrc: imageSrc
+      });
     } catch (error) {
       console.error('Failed at joinEvent', error);
       response.status(500).send();
@@ -137,9 +152,20 @@ export class DiningEventRoutes {
         return;
       }
     }
+    let imageSrc = UserProfileImage.default(user.id).src;
+    try {
+      imageSrc = (await this.userProfileImageDatabase.loadProfileImageByUserId(
+        user.id)).src;
+    } catch (error) {
+      console.error('Failed at loadProfileImageByUserId', error);
+    }
     try {
       await this.attendeeDatabase.removeSeat(user.id, eventId);
-      response.status(200).send();
+      response.status(200).json({
+        accountId: user.id,
+        accountName: user.name,
+        profileImageSrc: imageSrc
+      });
     } catch (error) {
       console.error('Failed at removeSeat', error);
       response.status(500).send();
@@ -150,4 +176,5 @@ export class DiningEventRoutes {
   private diningEventDatabase: DiningEventDatabase;
   private userDatabase: UserDatabase;
   private attendeeDatabase: AttendeeDatabase;
+  private userProfileImageDatabase: UserProfileImageDatabase;
 }

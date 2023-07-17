@@ -41,7 +41,7 @@ export class HttpDiningEventPageModel extends DiningEventPageModel {
     });
     this._checkResponse(response);
     const responseObject = await response.json();
-    await this._model.joinEvent(responseObject.accountId,
+    await this._model.joinEvent(parseInt(responseObject.accountId),
       responseObject.accountName, responseObject.profileImageSrc);
   }
 
@@ -55,7 +55,7 @@ export class HttpDiningEventPageModel extends DiningEventPageModel {
     });
     this._checkResponse(response);
     const responseObject = await response.json();
-    await this._model.removeSeat(responseObject.accountId,
+    await this._model.removeSeat(parseInt(responseObject.accountId),
       responseObject.accountName, responseObject.profileImageSrc);
   }
 

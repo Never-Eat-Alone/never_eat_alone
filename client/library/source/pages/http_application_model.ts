@@ -89,7 +89,6 @@ export class HttpApplicationModel extends ApplicationModel {
     })();
     this._model.updateAccountProfileImage(newAccountImage);
     await this._model.updateHomePageModel(new HttpHomePageModel(account));
-    console.log('updated homepage model');
     await this._model.updateInviteAFoodieModel(new HttpInviteAFoodieModel(
       account));
   }
