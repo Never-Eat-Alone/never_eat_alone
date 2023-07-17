@@ -22,8 +22,8 @@ export class LocalApplicationModel extends ApplicationModel {
       logInModel: LogInModel, deletedAccountSurveyModel:
       DeletedAccountSurveyModel, deactivateAccountSurveyModel:
       DeactivateAccountSurveyModel, forgotPasswordPageModel:
-      ForgotPasswordPageModel, googleClientId: string, diningEventPageModel:
-      DiningEventPageModel, editProfilePageModelMap: Map<number,
+      ForgotPasswordPageModel, googleClientId: string, diningEventPageModelMap:
+      Map<number, DiningEventPageModel>, editProfilePageModelMap: Map<number,
       EditProfilePageModel>, signUpPageModelMap: Map<number, SignUpPageModel>,
       profilePageModelMap: Map<number, ProfilePageModel>, settingsPageModelMap:
       Map<number, SettingsPageModel>, emailConfirmationPageModelMap: Map<string,
@@ -40,7 +40,7 @@ export class LocalApplicationModel extends ApplicationModel {
     this._deactivateAccountSurveyModel = deactivateAccountSurveyModel;
     this._forgotPasswordPageModel = forgotPasswordPageModel;
     this._googleClientId = googleClientId;
-    this._diningEventPageModel = diningEventPageModel;
+    this._diningEventPageModelMap = diningEventPageModelMap;
     this._editProfilePageModelMap = editProfilePageModelMap;
     this._signUpPageModelMap = signUpPageModelMap;
     this._profilePageModelMap = profilePageModelMap;
@@ -55,8 +55,6 @@ export class LocalApplicationModel extends ApplicationModel {
 
   public async setAccount(newAccount: User): Promise<void> {
     this._account = newAccount;
-    await Promise.all([this._homePageModel.load(),
-      this._inviteAFoodieModel.load()]);
   }
 
   public updateAccountProfileImage(newImage: UserProfileImage): void {
@@ -75,12 +73,28 @@ export class LocalApplicationModel extends ApplicationModel {
     return this._homePageModel;
   }
 
-  public get diningEventPageModel(): DiningEventPageModel {
-    return this._diningEventPageModel;
+  public async updateHomePageModel(newModel: HomePageModel): Promise<void> {
+    this._homePageModel = newModel;
+    await this.homePageModel.load();
+  }
+
+  public addDiningEventPageModel(id: number, diningEventPageModel:
+      DiningEventPageModel): void {
+    this._diningEventPageModelMap.set(id, diningEventPageModel);
+  }
+
+  public getDiningEventPageModel(id: number): DiningEventPageModel {
+    return this._diningEventPageModelMap.get(id);
   }
 
   public get inviteAFoodieModel(): InviteAFoodieModel {
     return this._inviteAFoodieModel;
+  }
+
+  public async updateInviteAFoodieModel(newModel: InviteAFoodieModel): Promise<
+      void> {
+    this._inviteAFoodieModel = newModel;
+    await this._inviteAFoodieModel.load();
   }
 
   public get joinModel(): JoinModel {
@@ -167,7 +181,7 @@ export class LocalApplicationModel extends ApplicationModel {
   private _deactivateAccountSurveyModel: DeactivateAccountSurveyModel;
   private _forgotPasswordPageModel: ForgotPasswordPageModel;
   private _googleClientId: string;
-  private _diningEventPageModel: DiningEventPageModel;
+  private _diningEventPageModelMap: Map<number, DiningEventPageModel>;
   private _profilePageModelMap: Map<number, ProfilePageModel>;
   private _editProfilePageModelMap: Map<number, EditProfilePageModel>;
   private _settingsPageModelMap: Map<number, SettingsPageModel>;

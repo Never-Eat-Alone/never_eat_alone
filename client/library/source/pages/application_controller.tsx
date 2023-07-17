@@ -249,12 +249,16 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private async updateAccount(newUser: User): Promise<void> {
+    console.log('updateAccount', newUser.name);
     try {
+      console.log('before await model.setAccount');
       await this.props.model.setAccount(newUser);
+      console.log('after setAccount is done. image src after account update', this.props.model.accountProfileImage.src);
       this.setState({
         account: newUser,
         accountProfileImage: this.props.model.accountProfileImage
       });
+      console.log('updated the accoutn and account profile states.');
     } catch {
       this.setState({ hasError: true });
     }
@@ -302,7 +306,9 @@ export class ApplicationController extends React.Component<Properties, State> {
     if (this.state.isLogInButtonClicked) {
       this.handleLogInModalClose();
     }
+    console.log('account', account.id, account.name, account.userStatus);
     await this.updateAccount(account);
+    console.log('handleLogInSuccess is done');
   }
 
   private handleSignUpSuccess = (account: User, accountProfileImage:
@@ -351,9 +357,10 @@ export class ApplicationController extends React.Component<Properties, State> {
     const id = Number(match.params.id);
     return <DiningEventPageController
       displayMode={this.state.displayMode}
-      model={this.props.model.diningEventPageModel}
+      model={this.props.model.getDiningEventPageModel(id)}
       account={this.state.account}
       eventId={id}
+      profileImageSrc={this.state.accountProfileImage.src}
       onJoinEvent={this.handleJoinEvent}
     />;
   }
@@ -384,7 +391,8 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private handleJoinEvent = async () => {
-    if (this.state.account.userStatus === UserStatus.GUEST) {
+    if (!this.state.account || this.state.account.id === -1 ||
+        this.state.account.userStatus === UserStatus.GUEST) {
       this.handleLogInButton();
     }
   }

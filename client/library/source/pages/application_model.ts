@@ -21,8 +21,13 @@ export abstract class ApplicationModel {
   public abstract get accountProfileImage(): UserProfileImage;
   public abstract updateAccountProfileImage(newImage: UserProfileImage): void;
   public abstract get homePageModel(): HomePageModel;
-  public abstract get diningEventPageModel(): DiningEventPageModel;
+  public abstract updateHomePageModel(newModel: HomePageModel): Promise<void>;
+  public abstract getDiningEventPageModel(id: number): DiningEventPageModel;
+  public abstract addDiningEventPageModel(id: number, diningEventPageModel:
+    DiningEventPageModel): void;
   public abstract get inviteAFoodieModel(): InviteAFoodieModel;
+  public abstract updateInviteAFoodieModel(newModel: InviteAFoodieModel):
+    Promise<void>;
   public abstract get joinModel(): JoinModel;
   public abstract get partnerWithUsModel(): PartnerWithUsModel;
   public abstract get logInModel(): LogInModel;

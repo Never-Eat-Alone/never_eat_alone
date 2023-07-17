@@ -9,6 +9,7 @@ interface Properties {
   model: DiningEventPageModel;
   account: User;
   eventId: number;
+  profileImageSrc: string;
 
   /** Indicates the join event button is clicked. */
   onJoinEvent: () => void;
@@ -29,7 +30,7 @@ export class DiningEventPageController extends React.Component<Properties,
       isLoaded: false,
       errorCode: DiningEventPage.ErrorCode.NONE,
       attendeeList: []
-    }
+    };
   }
 
   public render(): JSX.Element {
@@ -68,7 +69,7 @@ export class DiningEventPageController extends React.Component<Properties,
 
   public async componentDidMount(): Promise<void> {
     try {
-      await this.props.model.load(this.props.eventId);
+      await this.props.model.load();
       this.setState({
         isLoaded: true,
         errorCode: DiningEventPage.ErrorCode.NONE,
@@ -82,12 +83,23 @@ export class DiningEventPageController extends React.Component<Properties,
     }
   }
 
+  public async componentDidUpdate(prevProps: Properties): Promise<void> {
+    console.log('component did update');
+    if (this.props.account.id !== prevProps.account.id || this.props.eventId !==
+        prevProps.eventId || this.props.model !== prevProps.model) {
+      console.log('loading the dining event model');
+      await this.props.model.load();
+    }
+  }
+
   private handleJoinEvent = async(): Promise<void> => {
-    if (this.props.account.userStatus === UserStatus.GUEST) {
+    if (this.props.account.id === -1 || this.props.account.userStatus ===
+        UserStatus.GUEST) {
       this.props.onJoinEvent();
     } else {
       try {
-        await this.props.model.joinEvent();
+        await this.props.model.joinEvent(this.props.account.id,
+          this.props.account.name, this.props.profileImageSrc);
         this.setState({
           attendeeList: this.props.model.diningEvent.attendeeList
         });
@@ -99,7 +111,8 @@ export class DiningEventPageController extends React.Component<Properties,
 
   private handleRemoveSeat = async(): Promise<void> => {
     try {
-      await this.props.model.removeSeat();
+      await this.props.model.removeSeat(this.props.account.id,
+        this.props.account.name, this.props.profileImageSrc);
       this.setState({
         attendeeList: this.props.model.diningEvent.attendeeList
       });
