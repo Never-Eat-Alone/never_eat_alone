@@ -1,8 +1,8 @@
 import * as Hash from 'hash.js';
 import { Pool } from 'pg';
 import { Cuisine, Language, Location, SocialAccountType, User, UserStatus,
-  UserProfileImage, UserProfileSocialAccount
-} from '../../../../client/library/source/definitions';
+  UserProfileImage, UserProfileSocialAccount } from
+  '../../../../client/library/source/definitions';
 import * as Crypto from 'crypto';
 
 /** Generates a unique invitation code. */
@@ -53,9 +53,8 @@ export class UserDatabase {
    * @param sess - Session object.
    * @param expire - Expiration date.
    */
-  public assignUserIdToSid = async (sid: string,
-      userId: number | null | undefined, sess: object, expire: Date):
-      Promise<void> => {
+  public assignUserIdToSid = async (sid: string, userId: number | null |
+      undefined, sess: object, expire: Date): Promise<void> => {
     if (!userId || userId === null || userId === undefined || Number.isNaN(
         userId) || userId === -1 || !sess || !sid || !expire) {
       return;
@@ -82,8 +81,8 @@ export class UserDatabase {
     }
     return new User(parseInt(result.rows[0].id), result.rows[0].name,
       result.rows[0].email, result.rows[0].user_name,
-      UserStatus[result.rows[0].user_status as keyof typeof UserStatus],
-      new Date(Date.parse(result.rows[0].created_at)));
+      result.rows[0].user_status as UserStatus, new Date(Date.parse(
+      result.rows[0].created_at)));
   }
 
   /**
@@ -98,8 +97,8 @@ export class UserDatabase {
     }
     return new User(parseInt(result.rows[0].id), result.rows[0].name,
       result.rows[0].email, result.rows[0].user_name,
-      UserStatus[result.rows[0].user_status as keyof typeof UserStatus],
-      new Date(Date.parse(result.rows[0].created_at)));
+      result.rows[0].user_status as UserStatus, new Date(Date.parse(
+      result.rows[0].created_at)));
   }
 
   /**
@@ -330,8 +329,8 @@ export class UserDatabase {
     const account = new User(
       parseInt(userQueryResult.rows[0].id), userQueryResult.rows[0].name,
       userQueryResult.rows[0].email, userQueryResult.rows[0].user_name,
-      UserStatus[userQueryResult.rows[0].user_status as keyof typeof
-      UserStatus], new Date(Date.parse(userQueryResult.rows[0].created_at)));
+      userQueryResult.rows[0].user_status as UserStatus, new Date(Date.parse(
+      userQueryResult.rows[0].created_at)));
     const accountProfileImage = new UserProfileImage(parseInt(
       userProfileImageQueryResult.rows[0].user_id),
       userProfileImageQueryResult.rows[0].src);
@@ -408,8 +407,7 @@ export class UserDatabase {
     const userProfilesocialAccounts: UserProfileSocialAccount[] =
       result.rows.map((row) => {
         const account = new UserProfileSocialAccount(
-          SocialAccountType[row.platform as keyof typeof SocialAccountType],
-          row.link, row.is_private);
+          row.platform as SocialAccountType, row.link, row.is_private);
         return account;
     });
     return userProfilesocialAccounts;
