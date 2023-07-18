@@ -1,6 +1,6 @@
 import { Pool } from 'pg';
-import { SocialMediaImage
-} from '../../../../client/library/source/definitions';
+import { SocialMediaImage } from
+  '../../../../client/library/source/definitions';
 
 /** SocialMediaImage related database manipulations class. */
 export class SocialMediaImageDatabase {
@@ -9,8 +9,8 @@ export class SocialMediaImageDatabase {
     this.pool = pool;
   }
 
-  public loadHomePageSocialMediaImages = async (): Promise<
-      SocialMediaImage[]> => {
+  public loadHomePageSocialMediaImages = async (): Promise<SocialMediaImage[]
+      > => {
     const result = await this.pool.query('SELECT * FROM social_media_images \
       ORDER BY created_at DESC');
     if (result.rows?.length === 0) {

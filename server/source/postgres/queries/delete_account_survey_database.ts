@@ -1,6 +1,6 @@
 import { Pool } from 'pg';
-import { AccountDeletedSurvey
-} from '../../../../client/library/source/definitions';
+import { AccountDeletedSurvey } from
+  '../../../../client/library/source/definitions';
 
 /** Delete Account Survey related database manipulations class. */
 export class DeleteAccountSurveyDatabase {
