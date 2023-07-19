@@ -127,6 +127,13 @@ export class HttpApplicationModel extends ApplicationModel {
     this._model.addDiningEventPageModel(id, newModel);
   }
 
+  public async updateDiningEventPageModel(id: number, updatedModel:
+      DiningEventPageModel): Promise<void> {
+    this._model.addDiningEventPageModel(id, updatedModel);
+    await this._model.homePageModel.load();
+    await this.getProfilePageModel(this.account.id).load();
+  }
+
   public get inviteAFoodieModel(): InviteAFoodieModel {
     return this._model.inviteAFoodieModel;
   }
@@ -160,6 +167,12 @@ export class HttpApplicationModel extends ApplicationModel {
       this._model.addProfilePageModel(id, profilePageModel);
     }
     return profilePageModel;
+  }
+
+  public async updateProfilePageModel(id: number, updatedModel:
+      ProfilePageModel): Promise<void> {
+    this._model.addProfilePageModel(id, updatedModel);
+    await this._model.homePageModel.load();
   }
 
   public addEditProfilePageModel(id: number,

@@ -13,6 +13,11 @@ interface Properties {
 
   /** Indicates the join event button is clicked. */
   onJoinEvent: () => void;
+
+  /** Indicates the remove seat button is clicked. */
+  onRemoveSeat: () => void;
+
+  onLogIn: () => void;
 }
 
 interface State {
@@ -86,7 +91,7 @@ export class DiningEventPageController extends React.Component<Properties,
   private handleJoinEvent = async(): Promise<void> => {
     if (this.props.account.id === -1 || this.props.account.userStatus ===
         UserStatus.GUEST) {
-      this.props.onJoinEvent();
+      this.props.onLogIn();
     } else {
       try {
         await this.props.model.joinEvent(this.props.account.id,
@@ -101,14 +106,19 @@ export class DiningEventPageController extends React.Component<Properties,
   }
 
   private handleRemoveSeat = async(): Promise<void> => {
-    try {
-      await this.props.model.removeSeat(this.props.account.id,
-        this.props.account.name, this.props.profileImageSrc);
-      this.setState({
-        attendeeList: this.props.model.diningEvent.attendeeList
-      });
-    } catch {
-      this.setState({ errorCode: DiningEventPage.ErrorCode.NO_CONNECTION });
+    if (this.props.account.id === -1 || this.props.account.userStatus ===
+        UserStatus.GUEST) {
+      this.props.onLogIn();
+    } else {
+      try {
+        await this.props.model.removeSeat(this.props.account.id,
+          this.props.account.name, this.props.profileImageSrc);
+        this.setState({
+          attendeeList: this.props.model.diningEvent.attendeeList
+        });
+      } catch {
+        this.setState({ errorCode: DiningEventPage.ErrorCode.NO_CONNECTION });
+      }
     }
   }
 }

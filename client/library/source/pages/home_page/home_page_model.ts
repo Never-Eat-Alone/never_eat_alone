@@ -1,5 +1,5 @@
-import { EventCardSummary, EventTag, SocialMediaImage
-} from '../../definitions';
+import { EventCardSummary, EventTag, SocialMediaImage } from
+  '../../definitions';
 
 /** Base class for the model used by the HomePage. */
 export abstract class HomePageModel {

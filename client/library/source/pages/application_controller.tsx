@@ -355,7 +355,9 @@ export class ApplicationController extends React.Component<Properties, State> {
       account={this.state.account}
       eventId={id}
       profileImageSrc={this.state.accountProfileImage.src}
-      onJoinEvent={this.handleJoinEvent}
+      onJoinEvent={() => this.handleJoinEvent(id)}
+      onRemoveSeat={() => this.handleRemoveSeat(id)}
+      onLogIn={this.handleLogInButton}
     />;
   }
 
@@ -384,10 +386,20 @@ export class ApplicationController extends React.Component<Properties, State> {
     />;
   }
 
-  private handleJoinEvent = async () => {
-    if (!this.state.account || this.state.account.id === -1 ||
-        this.state.account.userStatus === UserStatus.GUEST) {
-      this.handleLogInButton();
+  private handleJoinEvent = async (eventId: number) => {
+    const diningEventModel = this.props.model.getDiningEventPageModel(eventId);
+
+  }
+
+  private handleRemoveSeat = async (eventId: number) => {
+    const diningEventModel = this.props.model.getDiningEventPageModel(eventId);
+    try {
+      await diningEventModel.joinEvent(this.state.account.id,
+        this.state.account.name, this.state.accountProfileImage.src);
+      await this.props.model.updateDiningEventPageModel(eventId,
+        diningEventModel);
+    } catch {
+
     }
   }
 
