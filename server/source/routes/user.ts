@@ -50,6 +50,7 @@ export class UserRoutes {
 
     app.get('/api/profile_page/:profileId', this.getProfilePage);
     app.get('/api/edit_profile_page/:profileId', this.getEditProfilePage);
+    app.post('/api/save_cover_image', this.saveProfileCoverImage);
 
     app.get('/api/settings/:userId', this.getSettingsPage);
 
@@ -876,6 +877,36 @@ export class UserRoutes {
       isCuisinePrivate: isCuisinePrivate,
       userProfileSocialAccountList: arrayToJson(userProfileSocialAccountList)
     });
+  }
+
+  private saveProfileCoverImage = async (request, response) => {
+    const image = CoverImage.fromJson(request.body.image);
+    let user: User;
+    if (request.session?.user) {
+      try {
+        user = await this.userDatabase.loadUserBySessionId(
+          request.session.id);
+        if (user.id === -1 || user.id !== image.profileId) {
+          response.status(401).send();
+          return;
+        }
+      } catch (error) {
+        console.error('Failed at loadUserBySessionId', error);
+        response.status(500).send();
+        return;
+      }
+    } else {
+      response.status(401).send();
+      return;
+    }
+    try {
+      await this.userCoverImageDatabase.saveCoverImage(image);
+    } catch (error) {
+      console.error('Failed at isDuplicateEmail', error);
+      response.status(500).json({ message: 'DATABASE_ERROR' });
+      return;
+    }
+    response.status(200).send();
   }
 
   private getSettingsPage = async (request, response) => {

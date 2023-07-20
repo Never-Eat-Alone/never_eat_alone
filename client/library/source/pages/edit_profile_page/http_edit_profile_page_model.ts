@@ -193,7 +193,7 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        accountProfileImage: newImage.toJson(),
+        accountProfileImage: newImage.toJson()
       })
     });
     if (response.status !== 201) {
@@ -203,21 +203,16 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
     return UserProfileImage.fromJson(responseObject.accountProfileImage);
   }
 
-  public async saveCoverImage(newImage: CoverImage): Promise<CoverImage> {
+  public async saveCoverImage(newImage: CoverImage): Promise<void> {
     const response = await fetch('/api/save_cover_image', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        'image': newImage.toJson(),
+        'image': newImage.toJson()
       })
     });
-    if (response.status !== 201 && response.status !== 200) {
-      return CoverImage.noImage();
-    }
-    const responseObject = await response.json();
-    return CoverImage.fromJson(responseObject.coverImage);
   }
 
   public async save(coverImage: CoverImage, profileImage: UserProfileImage,

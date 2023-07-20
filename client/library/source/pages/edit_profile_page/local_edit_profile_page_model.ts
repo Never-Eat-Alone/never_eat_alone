@@ -164,10 +164,9 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
     return newImage;
   }
 
-  public async saveCoverImage(newImage: CoverImage): Promise<CoverImage> {
+  public async saveCoverImage(newImage: CoverImage): Promise<void> {
     this._coverImageList.push(newImage);
     this._coverImage = newImage;
-    return newImage;
   }
 
   public async save(coverImage: CoverImage, profileImage: UserProfileImage,

@@ -166,10 +166,9 @@ export class DemoEditProfilePageModel extends
   }
 
   public async saveCoverImage(newImage: NeverEatAlone.CoverImage): Promise<
-      NeverEatAlone.CoverImage> {
+      voide> {
     this._coverImageList.push(newImage);
     this._coverImage = newImage;
-    return newImage;
   }
 
   public async save(coverImage: NeverEatAlone.CoverImage,

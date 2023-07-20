@@ -104,7 +104,7 @@ export class EmptyEditProfilePageModel extends EditProfilePageModel {
     throw new Error('Unable to uploadProfileImage empty model.');
   }
 
-  public async saveCoverImage(newImage: CoverImage): Promise<CoverImage> {
+  public async saveCoverImage(newImage: CoverImage): Promise<void> {
     throw new Error('Unable to saveCoverImage empty model.');
   }
 

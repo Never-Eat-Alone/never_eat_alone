@@ -35,7 +35,7 @@ export abstract class EditProfilePageModel {
   public abstract get instagramLink(): string;
   public abstract uploadProfileImage(newImage: UserProfileImage): Promise<
     UserProfileImage>;
-  public abstract saveCoverImage(newImage: CoverImage): Promise<CoverImage>;
+  public abstract saveCoverImage(newImage: CoverImage): Promise<void>;
   public abstract save(coverImage: CoverImage, profileImage: UserProfileImage,
     isUpcomingEventsPrivate: boolean, isPastEventsPrivate: boolean,
     isLocationPrivate: boolean, selectedLocation: string, isLanguagePrivate:

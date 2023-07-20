@@ -1,6 +1,6 @@
-CREATE TABLE IF NOT EXISTS user_cover_images (
+CREATE TABLE IF NOT EXISTS user_cover_images (          
   user_id       INTEGER                        NOT NULL UNIQUE,
-  src           TEXT                           NOT NULL,
+  src           TEXT                           NOT NULL, 
   created_at    TIMESTAMP                      DEFAULT NOW(),
   updated_at    TIMESTAMP                      DEFAULT NOW()
 );
