@@ -12,4 +12,5 @@ export abstract class HomePageModel {
   public abstract get userEventTagList(): EventTag[];
   public abstract get userFutureEventList(): EventCardSummary[];
   public abstract get userTotalEventsThisMonth(): number;
+  public abstract updateEventLists(): Promise<void>;
 }

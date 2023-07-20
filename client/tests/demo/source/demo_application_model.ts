@@ -493,18 +493,18 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     this._accountProfileImage = newImage;
   }
 
-  public async updateHomePageModel(newModel: NeverEatAlone.HomePageModel):
-      Promise<void> {
-    this._homePageModel = newModel;
-    await this.homePageModel.load();
-  }
-
   public get accountProfileImage(): NeverEatAlone.UserProfileImage {
     return this._accountProfileImage;
   }
 
   public get homePageModel(): NeverEatAlone.HomePageModel {
     return this._homePageModel;
+  }
+
+  public async updateHomePageModel(newModel: NeverEatAlone.HomePageModel):
+      Promise<void> {
+    this._homePageModel = newModel;
+    await this.homePageModel.load();
   }
 
   public addDiningEventPageModel(id: number, diningEventPageModel:
@@ -515,6 +515,13 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
   public getDiningEventPageModel(id: number):
       NeverEatAlone.DiningEventPageModel {
     return this._diningEventPageModelMap.get(id);
+  }
+
+  public async updateDiningEventPageModel(id: number, updatedModel:
+      NeverEatAlone.DiningEventPageModel): Promise<void> {
+    this._diningEventPageModelMap.set(id, updatedModel);
+    await this._homePageModel.load();
+    await this.getProfilePageModel(this._account.id).load();
   }
 
   public get inviteAFoodieModel(): NeverEatAlone.InviteAFoodieModel {

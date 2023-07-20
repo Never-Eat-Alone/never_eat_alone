@@ -18,17 +18,14 @@ export class HttpHomePageModel extends HomePageModel {
     }
     const imageList: SocialMediaImage[] = [];
     const imageListResponse = await fetch('/api/home_page/social_media_images');
-    if (imageListResponse.status === 200) {
-      const imageListObject = await imageListResponse.json();
-      for (const image of imageListObject.socialMediaImages) {
-        imageList.push(SocialMediaImage.fromJson(image));
-      }
+    this._checkResponse(imageListResponse);
+    const imageListObject = await imageListResponse.json();
+    for (const image of imageListObject.socialMediaImages) {
+      imageList.push(SocialMediaImage.fromJson(image));
     }
     const eventListResponse = await fetch(
       `/api/home_page/event_list/${this._account.id}`);
-    if (eventListResponse.status !== 200) {
-      throw new Error('Failed to load future events.');
-    }
+    this._checkResponse(eventListResponse);
     const eventListObject = await eventListResponse.json();
     const exploreEventList: EventCardSummary[] = arrayFromJson(EventCardSummary,
       eventListObject.exploreEventList);
@@ -37,16 +34,31 @@ export class HttpHomePageModel extends HomePageModel {
     const userEventTagList: EventTag[] = [];
     const eventTagListResponse = await fetch(
       `/api/home_page/event_tag_list/${this._account.id}`);
-    if (eventTagListResponse.status === 200) {
-      const eventTagListObject = await eventTagListResponse.json();
-      for (const tag of eventTagListObject.eventTagList) {
-        userEventTagList.push(EventTag.fromJson(tag));
-      }
+    this._checkResponse(eventTagListResponse);
+    const eventTagListObject = await eventTagListResponse.json();
+    for (const tag of eventTagListObject.eventTagList) {
+      userEventTagList.push(EventTag.fromJson(tag));
     }
     this._model = new LocalHomePageModel(imageList, exploreEventList,
       userEventTagList, userUpcomingEventList, userEventTagList.length);
     await this._model.load();
     this._isLoaded = true;
+  }
+
+  public async updateEventLists(): Promise<void> {
+    const eventListResponse = await fetch(
+      `/api/home_page/event_list/${this._account.id}`);
+    this._checkResponse(eventListResponse);
+    const eventListObject = await eventListResponse.json();
+    const eventList: EventCardSummary[] = arrayFromJson(EventCardSummary,
+      eventListObject.exploreEventList);
+    const userFutureEventList: EventCardSummary[] = arrayFromJson(
+      EventCardSummary, eventListObject.userUpcomingEventList);
+    const newModel = new LocalHomePageModel(this._model.imageList, eventList,
+      this._model.userEventTagList, userFutureEventList,
+      this._model.userTotalEventsThisMonth);
+    this._model = newModel;
+    await this._model.load();
   }
 
   public get imageList(): SocialMediaImage[] {
@@ -67,6 +79,12 @@ export class HttpHomePageModel extends HomePageModel {
 
   public get userTotalEventsThisMonth(): number {
     return this._model.userTotalEventsThisMonth;
+  }
+
+  private _checkResponse(response: Response): void {
+    if (!response.ok) {
+      throw new Error(`HTTP error, status = ${response.status}`);
+    }
   }
 
   private _isLoaded: boolean;
