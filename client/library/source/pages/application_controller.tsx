@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { Modal } from '../components';
-import { DisplayMode, getDisplayMode, User, UserProfileImage, UserStatus } from
+import { DisplayMode, getDisplayMode, User, UserProfileImage } from
   '../definitions';
 import { InviteAFoodieModalController, JoinModalController,
   LogInModalController, PartnerWithUsModalController } from '../modals';
@@ -367,6 +367,8 @@ export class ApplicationController extends React.Component<Properties, State> {
         displayMode={this.state.displayMode}
         account={this.state.account}
         model={this.props.model.getEditProfilePageModel(id)}
+        onChangeBanner={() => this.handleChangeProfileBanner(id)}
+        onSave={() => this.handleSaveEditProfile(id)}
     />;
   }
 

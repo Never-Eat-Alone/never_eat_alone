@@ -213,6 +213,7 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
         'image': newImage.toJson()
       })
     });
+    this._checkResponse(response);
     await this._model.saveCoverImage(newImage);
   }
 
@@ -252,7 +253,19 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
     if (!response.ok) {
       return false;
     }
+    await this._model.save(coverImage, profileImage, isUpcomingEventsPrivate,
+      isPastEventsPrivate, isLocationPrivate, selectedLocation,
+      isLanguagePrivate, selectedLanguageList, isBiographyPrivate,
+      biographyValue, isFacebookPrivate, facebookLink, isTwitterPrivate,
+      twitterLink, isInstagramPrivate, instagramLink, isCuisinePrivate,
+      selectedCuisineList);
     return true;
+  }
+
+  private _checkResponse(response: Response): void {
+    if (!response.ok) {
+      throw new Error(`HTTP error, status = ${response.status}`);
+    }
   }
 
   private _isLoaded: boolean;

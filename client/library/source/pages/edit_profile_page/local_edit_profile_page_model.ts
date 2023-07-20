@@ -160,11 +160,13 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
 
   public async uploadProfileImage(newImage: UserProfileImage): Promise<
       UserProfileImage> {
+    this.ensureIsLoaded();
     this._profileImage = newImage;
     return newImage;
   }
 
   public async saveCoverImage(newImage: CoverImage): Promise<void> {
+    this.ensureIsLoaded();
     this._coverImageList.push(newImage);
     this._coverImage = newImage;
   }
@@ -177,6 +179,7 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
       isTwitterPrivate: boolean, twitterLink: string, isInstagramPrivate:
       boolean, instagramLink: string, isCuisinePrivate: boolean,
       selectedCuisineList: Cuisine[]): Promise<boolean> {
+    this.ensureIsLoaded();
     this._coverImage = coverImage;
     this._profileImage = profileImage;
     this._isUpcomingEventsPrivate = isUpcomingEventsPrivate;
