@@ -11,6 +11,10 @@ export class EmptyHomePageModel extends HomePageModel {
     throw new Error('Unable to load empty model.');
   }
 
+  public async updateEventLists(): Promise<void> {
+    throw new Error('Unable to update empty model.');
+  }
+
   public get imageList(): SocialMediaImage[] {
     throw new Error('HomePageModel not loaded.');
   }

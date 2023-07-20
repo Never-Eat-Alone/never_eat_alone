@@ -72,7 +72,7 @@ export class DiningEventDatabase {
               new Date(row.start_at),
               new Date(row.end_at),
               row.re_name,
-              PriceRange[row.re_price_range as keyof typeof PriceRange],
+              row.re_price_range as PriceRange,
               cuisines,
               row.cover_image_src,
               numberOfAttendees,
@@ -89,7 +89,7 @@ export class DiningEventDatabase {
               new Date(row.start_at),
               new Date(row.end_at),
               row.re_name,
-              PriceRange[row.re_price_range as keyof typeof PriceRange],
+              row.re_price_range as PriceRange,
               cuisines,
               row.cover_image_src,
               numberOfAttendees,
@@ -107,7 +107,7 @@ export class DiningEventDatabase {
             new Date(row.start_at),
             new Date(row.end_at),
             row.re_name,
-            PriceRange[row.re_price_range as keyof typeof PriceRange],
+            row.re_price_range as PriceRange,
             cuisines,
             row.cover_image_src,
             numberOfAttendees,
@@ -148,28 +148,26 @@ export class DiningEventDatabase {
     });
     const restaurant = new Restaurant(parseInt(row.restaurant_id), row.re_name,
       new Date(Date.parse(row.re_created_at)), parseInt(row.re_location_id),
-      row.re_description, row.re_how_to_find, row.re_phone_number, PriceRange[
-      row.re_price_range as keyof typeof PriceRange], cuisineList,
-      row.re_website);
+      row.re_description, row.re_how_to_find, row.re_phone_number,
+      row.re_price_range as PriceRange, cuisineList, row.re_website);
     const attendeesResult = await this.pool.query(`SELECT att.*, u.name, upi.src
       FROM attendees AS att JOIN users AS u ON att.user_id = u.id JOIN
       user_profile_images AS upi ON u.id = upi.user_id WHERE event_id = $1`,
       [id]);
     const attendees = attendeesResult.rows.map(attendeeRow => new Attendee(
       parseInt(attendeeRow.user_id), parseInt(attendeeRow.event_id),
-      attendeeRow.name, parseInt(attendeeRow.guest_count), AttendeeStatus[
-      attendeeRow.status as keyof typeof AttendeeStatus], attendeeRow.src,
+      attendeeRow.name, parseInt(attendeeRow.guest_count),
+      attendeeRow.status as AttendeeStatus, attendeeRow.src,
       new Date(Date.parse(attendeeRow.updated_at))
     ));
     return new DiningEvent(parseInt(row.id), row.color_code, parseFloat(
-      row.fee), row.cover_image_src, row.title, restaurant, DressCode[
-      row.dress_code as keyof typeof DressCode], Seating[row.seating as keyof
-      typeof Seating], location, row.reservation_name, new Date(Date.parse(
-      row.start_at)), new Date(Date.parse(row.end_at)), attendees, parseInt(
-      row.total_capacity), row.description, new Date(Date.parse(
-      row.rsvp_open_at)), new Date(Date.parse(row.rsvp_close_at)), EventStatus[
-      row.status as keyof typeof EventStatus], EventType[row.type as keyof
-      typeof EventType], new Date(Date.parse(row.created_at)), new Date(
+      row.fee), row.cover_image_src, row.title, restaurant,
+      row.dress_code as DressCode, row.seating as Seating, location,
+      row.reservation_name, new Date(Date.parse(row.start_at)), new Date(
+      Date.parse(row.end_at)), attendees, parseInt(row.total_capacity),
+      row.description, new Date(Date.parse(row.rsvp_open_at)), new Date(
+      Date.parse(row.rsvp_close_at)), row.status as EventStatus,
+      row.type as EventType, new Date(Date.parse(row.created_at)), new Date(
       Date.parse(row.updated_at)));
   }
 

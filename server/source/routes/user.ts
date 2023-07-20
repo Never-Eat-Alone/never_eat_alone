@@ -77,7 +77,7 @@ export class UserRoutes {
         name: user.name,
         email: user.email,
         userName: user.userName,
-        userStatus: user.userStatus,
+        userStatus: user.userStatus.toString(),
         createdAt: user.createdAt.toISOString()
       };
       response.status(200).json({ user: user.toJson() });
@@ -177,7 +177,7 @@ export class UserRoutes {
       name: user.name,
       email: user.email,
       userName: user.userName,
-      userStatus: user.userStatus,
+      userStatus: user.userStatus.toString(),
       createdAt: user.createdAt.toISOString()
     };
     response.status(201).json({ user: user.toJson(), message: '' });
@@ -186,7 +186,7 @@ export class UserRoutes {
   private signUp = async (request, response) => {
     const userId = parseInt(request.params.id);
     if (userId === -1) {
-      response.redirect(303, 'http://nevereatalone.net/join');
+      response.redirect(303, 'https://nevereatalone.net/join');
       return;
     }
     let user = User.makeGuest();
@@ -197,8 +197,8 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
-    if (user?.id === -1 || user.userStatus !== UserStatus.ACTIVE) {
-      response.redirect(303, 'http://nevereatalone.net/join');
+    if (user.id === -1 || user.userStatus !== UserStatus.ACTIVE) {
+      response.redirect(303, 'https://nevereatalone.net/join');
       return;
     }
     let hasCredentials = false;
@@ -210,7 +210,7 @@ export class UserRoutes {
       return;
     }
     if (hasCredentials) {
-      response.redirect(303, 'http://nevereatalone.net/log_in');
+      response.redirect(303, 'https://nevereatalone.net/log_in');
       return;
     }
     response.status(200).send();
@@ -285,7 +285,7 @@ export class UserRoutes {
       name: user.name,
       email: user.email,
       userName: user.userName,
-      userStatus: user.userStatus,
+      userStatus: user.userStatus.toString(),
       createdAt: user.createdAt.toISOString()
     };
     response.status(200).json({ user: user.toJson() });
@@ -382,7 +382,7 @@ export class UserRoutes {
     }
     if (!isTokenValid) {
       response.redirect(303,
-        'http://nevereatalone.net/confirmation_token_invalid');
+        'https://nevereatalone.net/confirmation_token_invalid');
       return;
     }
     let userIdByToken: number;
@@ -402,10 +402,10 @@ export class UserRoutes {
       return;
     }
     if (user.id === -1) {
-      response.redirect(303, 'http://nevereatalone.net/join');
+      response.redirect(303, 'https://nevereatalone.net/join');
       return;
     }
-    if (user.userStatus === UserStatus.ACTIVE) {
+    if (user.userStatus as UserStatus === UserStatus.ACTIVE) {
       let hasCredentials = false;
       try {
         hasCredentials = await this.userDatabase.hasCredentials(user.id);
@@ -415,9 +415,9 @@ export class UserRoutes {
         return;
       }
       if (hasCredentials) {
-        response.redirect(303, 'http://nevereatalone.net/log_in');
+        response.redirect(303, 'https://nevereatalone.net/log_in');
       } else {
-        response.redirect(303, `http://nevereatalone.net/sign_up/${user.id}`);
+        response.redirect(303, `https://nevereatalone.net/sign_up/${user.id}`);
       }
       return;
     }
@@ -446,7 +446,7 @@ export class UserRoutes {
       name: user.name,
       email: user.email,
       userName: user.userName,
-      userStatus: user.userStatus,
+      userStatus: user.userStatus.toString(),
       createdAt: user.createdAt.toISOString()
     };
     const signUpHtml = await new Promise<string>((resolve, reject) => {
@@ -473,7 +473,7 @@ export class UserRoutes {
       });
       return;
     }
-    response.status(200).send({ message: 'Email sent.' });
+    response.status(200).json({ message: 'Email sent.', user: user.toJson() });
   }
 
   private getUserInvitationCode = async (request, response) => {

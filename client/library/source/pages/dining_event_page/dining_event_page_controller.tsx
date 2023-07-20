@@ -9,9 +9,13 @@ interface Properties {
   model: DiningEventPageModel;
   account: User;
   eventId: number;
+  profileImageSrc: string;
 
   /** Indicates the join event button is clicked. */
   onJoinEvent: () => void;
+
+  /** Indicates the remove seat button is clicked. */
+  onRemoveSeat: () => void;
 }
 
 interface State {
@@ -29,7 +33,7 @@ export class DiningEventPageController extends React.Component<Properties,
       isLoaded: false,
       errorCode: DiningEventPage.ErrorCode.NONE,
       attendeeList: []
-    }
+    };
   }
 
   public render(): JSX.Element {
@@ -61,14 +65,14 @@ export class DiningEventPageController extends React.Component<Properties,
       account={this.props.account}
       isRSVPOpen={isRSVPOpen}
       isGoing={isGoing}
-      onJoinEvent={this.handleJoinEvent}
-      onRemoveSeat={this.handleRemoveSeat}
+      onJoinEvent={this.props.onJoinEvent}
+      onRemoveSeat={this.props.onRemoveSeat}
     />;
   }
 
   public async componentDidMount(): Promise<void> {
     try {
-      await this.props.model.load(this.props.eventId);
+      await this.props.model.load();
       this.setState({
         isLoaded: true,
         errorCode: DiningEventPage.ErrorCode.NONE,
@@ -79,32 +83,6 @@ export class DiningEventPageController extends React.Component<Properties,
         isLoaded: true,
         errorCode: DiningEventPage.ErrorCode.NO_CONNECTION
       });
-    }
-  }
-
-  private handleJoinEvent = async(): Promise<void> => {
-    if (this.props.account.userStatus === UserStatus.GUEST) {
-      this.props.onJoinEvent();
-    } else {
-      try {
-        await this.props.model.joinEvent();
-        this.setState({
-          attendeeList: this.props.model.diningEvent.attendeeList
-        });
-      } catch {
-        this.setState({ errorCode: DiningEventPage.ErrorCode.NO_CONNECTION });
-      }
-    }
-  }
-
-  private handleRemoveSeat = async(): Promise<void> => {
-    try {
-      await this.props.model.removeSeat();
-      this.setState({
-        attendeeList: this.props.model.diningEvent.attendeeList
-      });
-    } catch {
-      this.setState({ errorCode: DiningEventPage.ErrorCode.NO_CONNECTION });
     }
   }
 }

@@ -351,10 +351,12 @@ export class ApplicationController extends React.Component<Properties, State> {
     const id = Number(match.params.id);
     return <DiningEventPageController
       displayMode={this.state.displayMode}
-      model={this.props.model.diningEventPageModel}
+      model={this.props.model.getDiningEventPageModel(id)}
       account={this.state.account}
       eventId={id}
-      onJoinEvent={this.handleJoinEvent}
+      profileImageSrc={this.state.accountProfileImage.src}
+      onJoinEvent={() => this.handleJoinEvent(id)}
+      onRemoveSeat={() => this.handleRemoveSeat(id)}
     />;
   }
 
@@ -383,9 +385,37 @@ export class ApplicationController extends React.Component<Properties, State> {
     />;
   }
 
-  private handleJoinEvent = async () => {
-    if (this.state.account.userStatus === UserStatus.GUEST) {
+  private handleJoinEvent = async (eventId: number) => {
+    if (this.state.account.id === -1) {
       this.handleLogInButton();
+      return;
+    }
+    const diningEventModel = this.props.model.getDiningEventPageModel(eventId);
+    try {
+      await diningEventModel.joinEvent(this.state.account.id,
+        this.state.account.name, this.state.accountProfileImage.src);
+      await this.props.model.updateDiningEventPageModel(eventId,
+        diningEventModel);
+      this.setState({ hasJoinedEvent: true });
+    } catch {
+      this.setState({ hasError: true });
+    }
+  }
+
+  private handleRemoveSeat = async (eventId: number) => {
+    if (this.state.account.id === -1) {
+      this.handleLogInButton();
+      return;
+    }
+    const diningEventModel = this.props.model.getDiningEventPageModel(eventId);
+    try {
+      await diningEventModel.removeSeat(this.state.account.id,
+        this.state.account.name, this.state.accountProfileImage.src);
+      await this.props.model.updateDiningEventPageModel(eventId,
+        diningEventModel);
+      this.setState({ hasRemovedSeat: true });
+    } catch {
+      this.setState({ hasError: true });
     }
   }
 

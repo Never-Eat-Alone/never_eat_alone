@@ -1,5 +1,5 @@
-import { EventCardSummary, EventTag, SocialMediaImage
-} from '../../definitions';
+import { EventCardSummary, EventTag, SocialMediaImage } from
+  '../../definitions';
 
 /** Base class for the model used by the HomePage. */
 export abstract class HomePageModel {
@@ -12,4 +12,5 @@ export abstract class HomePageModel {
   public abstract get userEventTagList(): EventTag[];
   public abstract get userFutureEventList(): EventCardSummary[];
   public abstract get userTotalEventsThisMonth(): number;
+  public abstract updateEventLists(): Promise<void>;
 }

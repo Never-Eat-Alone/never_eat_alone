@@ -1,8 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { Pool } from 'pg';
-import { UserProfileImage
-} from '../../../../client/library/source/definitions';
+import { UserProfileImage } from
+  '../../../../client/library/source/definitions';
 
 /** UserProfileImage related database manipulations class. */
 export class UserProfileImageDatabase {
@@ -49,7 +49,7 @@ export class UserProfileImageDatabase {
         UPDATE user_profile_images SET src = $1, updated_at = DEFAULT WHERE
         user_id = $2 RETURNING *`, [relativeFilePath, userId]);
     } else {
-      
+
       /** User doesn't have a profile image, insert a new record. */
       result = await this.pool.query(`
         INSERT INTO user_profile_images (user_id, src, created_at, updated_at)

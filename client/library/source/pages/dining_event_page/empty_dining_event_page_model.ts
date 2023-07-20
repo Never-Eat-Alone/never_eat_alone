@@ -6,7 +6,7 @@ import { DiningEventPageModel } from './dining_event_page_model';
  * initial state of a model prior to being loaded.
  */
 export class EmptyDiningEventPageModel extends DiningEventPageModel {
-  public async load(eventId: number): Promise<void> {
+  public async load(): Promise<void> {
     throw new Error('Unable to load empty model.');
   }
 
@@ -14,11 +14,13 @@ export class EmptyDiningEventPageModel extends DiningEventPageModel {
     throw new Error('DiningEventPageModel not loaded.');
   }
 
-  public async joinEvent(): Promise<void> {
+  public async joinEvent(accountId: number, accountName: string,
+      profileImageSrc: string): Promise<void> {
     throw new Error('Unable to join event from empty model.');
   }
 
-  public async removeSeat(): Promise<void> {
+  public async removeSeat(accountId: number, accountName: string,
+      profileImageSrc: string): Promise<void> {
     throw new Error('Unable to remove seat from empty model.');
   }
 }

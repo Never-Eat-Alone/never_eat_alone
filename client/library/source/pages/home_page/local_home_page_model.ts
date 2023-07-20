@@ -20,6 +20,10 @@ export class LocalHomePageModel extends HomePageModel {
     this._isLoaded = true;
   }
 
+  public async updateEventLists(): Promise<void> {
+    await this.load();
+  }
+
   public get imageList(): SocialMediaImage[] {
     this.ensureIsLoaded();
     return this._imageList;

@@ -2,12 +2,9 @@ import * as NeverEatAlone from 'never_eat_alone';
 
 export class DemoDiningEventPageModel extends
     NeverEatAlone.DiningEventPageModel {
-  constructor(account: NeverEatAlone.User, profileImageSrc: string, diningEvent:
-      NeverEatAlone.DiningEvent) {
+  constructor(diningEvent: NeverEatAlone.DiningEvent) {
     super();
     this._isLoaded = false;
-    this._account = account;
-    this._profileImageSrc = profileImageSrc;
     this._diningEvent = diningEvent;
   }
 
@@ -20,16 +17,16 @@ export class DemoDiningEventPageModel extends
     return this._diningEvent;
   }
 
-  public async joinEvent(): Promise<void> {
+  public async joinEvent(accountId: number, accountName: string,
+      profileImageSrc: string): Promise<void> {
     this.ensureIsLoaded();
-    this.diningEvent.joinEvent(this._account.id, this._account.name,
-      this._profileImageSrc);
+    this.diningEvent.joinEvent(accountId, accountName, profileImageSrc);
   }
 
-  public async removeSeat(): Promise<void> {
+  public async removeSeat(accountId: number, accountName: string,
+      profileImageSrc: string): Promise<void> {
     this.ensureIsLoaded();
-    this._diningEvent.removeSeat(this._account.id, this._account.userName,
-      this._profileImageSrc);
+    this._diningEvent.removeSeat(accountId, accountName, profileImageSrc);
   }
 
   private ensureIsLoaded(): void {
@@ -39,7 +36,5 @@ export class DemoDiningEventPageModel extends
   }
 
   private _isLoaded: boolean;
-  private _account: NeverEatAlone.User;
-  private _profileImageSrc: string;
   private _diningEvent: NeverEatAlone.DiningEvent;
 }

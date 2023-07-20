@@ -1,25 +1,25 @@
 import { User, UserProfileImage } from '../definitions';
-import { HttpInviteAFoodieModel, InviteAFoodieModel
-} from '../modals/invite_a_foodie_modal';
+import { HttpInviteAFoodieModel, InviteAFoodieModel } from
+  '../modals/invite_a_foodie_modal';
 import { HttpJoinModel, JoinModel } from '../modals/join_modal';
 import { HttpLogInModel, LogInModel } from '../modals/log_in_modal';
 import { ApplicationModel } from './application_model';
-import { DeactivateAccountSurveyModel, HttpDeactivateAccountSurveyModel
-} from './deactivate_account_survey_page';
-import { DeletedAccountSurveyModel, HttpDeletedAccountSurveyModel
-} from './deleted_account_survey_page';
-import { DiningEventPageModel, HttpDiningEventPageModel
-} from './dining_event_page';
-import { EditProfilePageModel, HttpEditProfilePageModel
-} from './edit_profile_page';
-import { EmailConfirmationPageModel, HttpEmailConfirmationPageModel
-} from './email_confirmation_page';
-import { ForgotPasswordPageModel, HttpForgotPasswordPageModel
-} from './forgot_password_page';
+import { DeactivateAccountSurveyModel, HttpDeactivateAccountSurveyModel } from
+  './deactivate_account_survey_page';
+import { DeletedAccountSurveyModel, HttpDeletedAccountSurveyModel } from
+  './deleted_account_survey_page';
+import { DiningEventPageModel, HttpDiningEventPageModel } from
+  './dining_event_page';
+import { EditProfilePageModel, HttpEditProfilePageModel } from
+  './edit_profile_page';
+import { EmailConfirmationPageModel, HttpEmailConfirmationPageModel } from
+  './email_confirmation_page';
+import { ForgotPasswordPageModel, HttpForgotPasswordPageModel } from
+  './forgot_password_page';
 import { HomePageModel, HttpHomePageModel } from './home_page';
 import { LocalApplicationModel } from './local_application_model';
-import { HttpPartnerWithUsModel, PartnerWithUsModel
-} from './partner_with_us_page';
+import { HttpPartnerWithUsModel, PartnerWithUsModel } from
+  './partner_with_us_page';
 import { ProfilePageModel, HttpProfilePageModel } from './profile_page';
 import { HttpSettingsPageModel, SettingsPageModel } from './settings_page';
 import { HttpSignUpPageModel, SignUpPageModel } from './sign_up_page';
@@ -61,8 +61,7 @@ export class HttpApplicationModel extends ApplicationModel {
     const deletedAccountSurveyModel = new HttpDeletedAccountSurveyModel();
     const deactivateAccountSurveyModel = new HttpDeactivateAccountSurveyModel();
     const forgotPasswordPageModel = new HttpForgotPasswordPageModel();
-    const diningEventPageModel = new HttpDiningEventPageModel(account,
-      accountProfileImage.src);
+    const diningEventPageModelMap = new Map<number, DiningEventPageModel>();
     const profilePageModelMap = new Map<number, ProfilePageModel>();
     const editProfilePageModelMap = new Map<number, EditProfilePageModel>();
     const settingsPageModelMap = new Map<number, SettingsPageModel>();
@@ -72,7 +71,7 @@ export class HttpApplicationModel extends ApplicationModel {
     this._model = new LocalApplicationModel(account, accountProfileImage,
       homePageModel, inviteAFoodieModel, joinModel, partnerWithUsModel,
       logInModel, deletedAccountSurveyModel, deactivateAccountSurveyModel,
-      forgotPasswordPageModel, googleClientId, diningEventPageModel,
+      forgotPasswordPageModel, googleClientId, diningEventPageModelMap,
       editProfilePageModelMap, signUpPageModelMap, profilePageModelMap,
       settingsPageModelMap, emailConfirmationPageModelMap);
     await this._model.load();
@@ -89,6 +88,9 @@ export class HttpApplicationModel extends ApplicationModel {
       return UserProfileImage.default(account.id);
     })();
     this._model.updateAccountProfileImage(newAccountImage);
+    await this._model.updateHomePageModel(new HttpHomePageModel(account));
+    await this._model.updateInviteAFoodieModel(new HttpInviteAFoodieModel(
+      account));
   }
 
   public get account(): User {
@@ -107,12 +109,38 @@ export class HttpApplicationModel extends ApplicationModel {
     return this._model.homePageModel;
   }
 
-  public get diningEventPageModel(): DiningEventPageModel {
-    return this._model.diningEventPageModel;
+  public async updateHomePageModel(newModel: HomePageModel): Promise<void> {
+    await this._model.updateHomePageModel(newModel);
+  }
+
+  public getDiningEventPageModel(id: number): DiningEventPageModel {
+    let diningEventPageModel = this._model.getDiningEventPageModel(id);
+    if (!diningEventPageModel) {
+      diningEventPageModel = new HttpDiningEventPageModel(id);
+      this._model.addDiningEventPageModel(id, diningEventPageModel);
+    }
+    return diningEventPageModel;
+  }
+
+  public addDiningEventPageModel(id: number, newModel: DiningEventPageModel):
+      void {
+    this._model.addDiningEventPageModel(id, newModel);
+  }
+
+  public async updateDiningEventPageModel(id: number, updatedModel:
+      DiningEventPageModel): Promise<void> {
+    this._model.addDiningEventPageModel(id, updatedModel);
+    await this._model.homePageModel.updateEventLists();
+    await this.getProfilePageModel(this.account.id).load();
   }
 
   public get inviteAFoodieModel(): InviteAFoodieModel {
     return this._model.inviteAFoodieModel;
+  }
+
+  public async updateInviteAFoodieModel(newModel: InviteAFoodieModel): Promise<
+      void> {
+    await this.updateInviteAFoodieModel(newModel);
   }
 
   public get joinModel(): JoinModel {

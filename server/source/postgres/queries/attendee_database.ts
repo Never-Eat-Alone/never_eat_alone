@@ -82,9 +82,9 @@ export class AttendeeDatabase {
       const numberOfAttendees = parseInt(attendeesResult.rows[0].total);
       const eventCard = new EventCardSummary(parseInt(row.de_id), row.de_title,
         new Date(Date.parse(row.start_at)), new Date(Date.parse(row.end_at)),
-        row.re_name, PriceRange[row.re_price_range as keyof typeof PriceRange],
-        cuisines, row.cover_image_src, numberOfAttendees,
-        parseInt(row.total_capacity), true, row.de_color_code);
+        row.re_name, row.re_price_range as PriceRange, cuisines,
+        row.cover_image_src, numberOfAttendees, parseInt(row.total_capacity),
+        true, row.de_color_code);
       futureEventCards.push(eventCard);
     }
     return futureEventCards;
@@ -121,9 +121,9 @@ export class AttendeeDatabase {
       });
       const eventCard = new EventCardSummary(parseInt(row.de_id), row.de_title,
         new Date(Date.parse(row.start_at)), new Date(Date.parse(row.end_at)),
-        row.re_name, PriceRange[row.re_price_range as keyof typeof PriceRange],
-        cuisines, row.cover_image_src, parseInt(row.total),
-        parseInt(row.total_capacity), true, row.de_color_code);
+        row.re_name, row.re_price_range as PriceRange, cuisines,
+        row.cover_image_src, parseInt(row.total), parseInt(row.total_capacity),
+        true, row.de_color_code);
       pastEventCards.push(eventCard);
     }
     return pastEventCards;
@@ -145,8 +145,8 @@ export class AttendeeDatabase {
       DO UPDATE SET status = 'GOING', updated_at = NOW()`, [userId, eventId]);
   }
 
-  public removeSeat = async (userId: number, eventId: number): Promise<
-      void> => {
+  public removeSeat = async (userId: number, eventId: number): Promise<void> =>
+      {
     await this.pool.query(`UPDATE attendees SET status = 'NOT_GOING', updated_at
       = NOW() WHERE user_id = $1 AND event_id = $2`, [userId, eventId]);
   }
