@@ -521,7 +521,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       NeverEatAlone.DiningEventPageModel): Promise<void> {
     this._diningEventPageModelMap.set(id, updatedModel);
     await this._homePageModel.updateEventLists();
-    await this.getProfilePageModel(this._account.id).load();
+    await this.getProfilePageModel(this._account.id).updateUpcomingEventList();
   }
 
   public get inviteAFoodieModel(): NeverEatAlone.InviteAFoodieModel {

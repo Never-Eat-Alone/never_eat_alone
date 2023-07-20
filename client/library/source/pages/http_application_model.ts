@@ -131,7 +131,7 @@ export class HttpApplicationModel extends ApplicationModel {
       DiningEventPageModel): Promise<void> {
     this._model.addDiningEventPageModel(id, updatedModel);
     await this._model.homePageModel.updateEventLists();
-    await this.getProfilePageModel(this.account.id).load();
+    await this.getProfilePageModel(this.account.id).updateUpcomingEventList();
   }
 
   public get inviteAFoodieModel(): InviteAFoodieModel {

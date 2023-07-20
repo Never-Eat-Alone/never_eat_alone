@@ -20,10 +20,7 @@ export class HttpProfilePageModel extends ProfilePageModel {
       return;
     }
     const response = await fetch(`/api/profile_page/${this._profileId}`);
-    if (response.status !== 200) {
-      throw new Error(`Failed to load profile page. Status: ${
-        response.status}`);
-    }
+    this._checkResponse(response);
     const responseObject = await response.json();
     const coverImage = CoverImage.fromJson(responseObject.coverImage);
     const profileImageSrc = responseObject.profileImageSrc;
@@ -114,6 +111,27 @@ export class HttpProfilePageModel extends ProfilePageModel {
 
   public get pastEventList(): EventCardSummary[] {
     return this._model.pastEventList;
+  }
+
+  public async updateUpcomingEventList(): Promise<void> {
+    const response = await fetch(`/api/profile_page/${this._profileId}`);
+    this._checkResponse(response);
+    const responseObject = await response.json();
+    const newModel = new LocalProfilePageModel(this._profileId,
+      this._model.coverImage, this._model.profileImageSrc, this._model.name,
+      this._model.userName, this._model.createdAt, this._model.biography,
+      this._model.address, this._model.languageList, this._model.facebookLink,
+      this._model.twitterLink, this._model.instagramLink,
+      this._model.favoriteCuisineList, arrayFromJson(EventCardSummary,
+      responseObject.upcomingEventList), this._model.pastEventList);
+    this._model = newModel;
+    await this._model.load();
+  }
+
+  private _checkResponse(response: Response): void {
+    if (!response.ok) {
+      throw new Error(`HTTP error, status = ${response.status}`);
+    }
   }
 
   private _isLoaded: boolean;

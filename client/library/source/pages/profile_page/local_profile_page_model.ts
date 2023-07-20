@@ -107,6 +107,10 @@ export class LocalProfilePageModel extends ProfilePageModel {
     return this._pastEventList;
   }
 
+  public async updateUpcomingEventList(): Promise<void> {
+    await this.load();
+  }
+
   private ensureIsLoaded(): void {
     if (!this._isLoaded) {
       throw new Error('EditProfilePageModel not loaded.');

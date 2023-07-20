@@ -21,4 +21,5 @@ export abstract class ProfilePageModel {
   public abstract get favoriteCuisineList(): Cuisine[];
   public abstract get upcomingEventList(): EventCardSummary[];
   public abstract get pastEventList(): EventCardSummary[];
+  public abstract updateUpcomingEventList(): Promise<void>;
 }
