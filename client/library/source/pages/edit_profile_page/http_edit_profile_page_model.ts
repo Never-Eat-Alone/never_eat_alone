@@ -213,6 +213,7 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
         'image': newImage.toJson()
       })
     });
+    await this._model.saveCoverImage(newImage);
   }
 
   public async save(coverImage: CoverImage, profileImage: UserProfileImage,
