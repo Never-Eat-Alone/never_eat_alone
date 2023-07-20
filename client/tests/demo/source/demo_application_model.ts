@@ -520,7 +520,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
   public async updateDiningEventPageModel(id: number, updatedModel:
       NeverEatAlone.DiningEventPageModel): Promise<void> {
     this._diningEventPageModelMap.set(id, updatedModel);
-    await this._homePageModel.load();
+    await this._homePageModel.updateEventLists();
     await this.getProfilePageModel(this._account.id).load();
   }
 
