@@ -85,4 +85,6 @@ VALUES
 (32, '971 Ossington Ave', NULL, 'Toronto', 'Ontario', 'Canada', 'M6G 3V5',
   'Davenport'),
 (33, '501 College St', NULL, 'Toronto', 'Ontario', 'Canada', 'M6G 1A5',
-  'Little Italy');
+  'Little Italy'),
+(34, '162 Danforth Ave', NULL, 'Toronto', 'Ontario', 'Canada', 'M4K 1N1',
+  'Playter Estates');
