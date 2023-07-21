@@ -392,7 +392,6 @@ export class ApplicationController extends React.Component<Properties, State> {
     }
     const diningEventModel = this.props.model.getDiningEventPageModel(eventId);
     try {
-      //await diningEventModel.load();
       await diningEventModel.joinEvent(this.state.account.id,
         this.state.account.name, this.state.accountProfileImage.src);
       await this.props.model.updateDiningEventPageModel(eventId,
