@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Attendee, DisplayMode, User, UserStatus } from '../../definitions';
+import { DisplayMode, User } from '../../definitions';
 import { DiningEventPage } from './dining_event_page';
 import { DiningEventPageModel } from './dining_event_page_model';
 
@@ -21,7 +21,6 @@ interface Properties {
 interface State {
   isLoaded: boolean;
   errorCode: DiningEventPage.ErrorCode;
-  //attendeeList: Attendee[];
 }
 
 /** Implements the DiningEventPageController. */
@@ -31,8 +30,7 @@ export class DiningEventPageController extends React.Component<Properties,
     super(props);
     this.state = {
       isLoaded: false,
-      errorCode: DiningEventPage.ErrorCode.NONE,
-      //attendeeList: []
+      errorCode: DiningEventPage.ErrorCode.NONE
     };
   }
 
@@ -71,17 +69,13 @@ export class DiningEventPageController extends React.Component<Properties,
   }
 
   public async componentDidMount(): Promise<void> {
-    console.log('componentDidMount');
     try {
       await this.props.model.load();
-      console.log('loaded');
       this.setState({
         isLoaded: true,
-        errorCode: DiningEventPage.ErrorCode.NONE,
-        //attendeeList: this.props.model.diningEvent.attendeeList
+        errorCode: DiningEventPage.ErrorCode.NONE
       });
     } catch {
-      console.log('error while loading');
       this.setState({
         isLoaded: true,
         errorCode: DiningEventPage.ErrorCode.NO_CONNECTION

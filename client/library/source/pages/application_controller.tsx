@@ -386,26 +386,19 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private handleJoinEvent = async (eventId: number) => {
-    console.log('handleJoinEvent');
     if (this.state.account.id === -1) {
       this.handleLogInButton();
       return;
     }
-    console.log('accoutn id', this.state.account.id, 'eventId', eventId);
     const diningEventModel = this.props.model.getDiningEventPageModel(eventId);
     try {
-      console.log('loading event');
-      await diningEventModel.load();
-      console.log('joinEvent');
+      //await diningEventModel.load();
       await diningEventModel.joinEvent(this.state.account.id,
         this.state.account.name, this.state.accountProfileImage.src);
-      console.log('updating event');
       await this.props.model.updateDiningEventPageModel(eventId,
         diningEventModel);
-      console.log('update success');
       this.setState({ hasJoinedEvent: true });
     } catch {
-      console.log('error while join');
       this.setState({ hasError: true });
     }
   }
@@ -417,7 +410,6 @@ export class ApplicationController extends React.Component<Properties, State> {
     }
     const diningEventModel = this.props.model.getDiningEventPageModel(eventId);
     try {
-      await diningEventModel.load();
       await diningEventModel.removeSeat(this.state.account.id,
         this.state.account.name, this.state.accountProfileImage.src);
       await this.props.model.updateDiningEventPageModel(eventId,
