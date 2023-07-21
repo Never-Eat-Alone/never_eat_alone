@@ -71,14 +71,17 @@ export class DiningEventPageController extends React.Component<Properties,
   }
 
   public async componentDidMount(): Promise<void> {
+    console.log('componentDidMount');
     try {
       await this.props.model.load();
+      console.log('loaded');
       this.setState({
         isLoaded: true,
         errorCode: DiningEventPage.ErrorCode.NONE,
         //attendeeList: this.props.model.diningEvent.attendeeList
       });
     } catch {
+      console.log('error while loading');
       this.setState({
         isLoaded: true,
         errorCode: DiningEventPage.ErrorCode.NO_CONNECTION
