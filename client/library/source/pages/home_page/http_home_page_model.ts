@@ -58,7 +58,7 @@ export class HttpHomePageModel extends HomePageModel {
       this._model.userEventTagList, userFutureEventList,
       this._model.userTotalEventsThisMonth);
     this._model = newModel;
-    await this._model.load();
+    await this._model.updateEventLists();
   }
 
   public get imageList(): SocialMediaImage[] {
