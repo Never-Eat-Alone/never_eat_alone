@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { Modal } from '../components';
-import { DisplayMode, getDisplayMode, User, UserProfileImage, UserStatus } from
+import { DisplayMode, getDisplayMode, User, UserProfileImage } from
   '../definitions';
 import { InviteAFoodieModalController, JoinModalController,
   LogInModalController, PartnerWithUsModalController } from '../modals';
@@ -392,6 +392,7 @@ export class ApplicationController extends React.Component<Properties, State> {
     }
     const diningEventModel = this.props.model.getDiningEventPageModel(eventId);
     try {
+      await diningEventModel.load();
       await diningEventModel.joinEvent(this.state.account.id,
         this.state.account.name, this.state.accountProfileImage.src);
       await this.props.model.updateDiningEventPageModel(eventId,
@@ -409,6 +410,7 @@ export class ApplicationController extends React.Component<Properties, State> {
     }
     const diningEventModel = this.props.model.getDiningEventPageModel(eventId);
     try {
+      await diningEventModel.load();
       await diningEventModel.removeSeat(this.state.account.id,
         this.state.account.name, this.state.accountProfileImage.src);
       await this.props.model.updateDiningEventPageModel(eventId,

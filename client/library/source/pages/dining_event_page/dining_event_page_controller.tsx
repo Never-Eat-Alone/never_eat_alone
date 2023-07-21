@@ -21,7 +21,7 @@ interface Properties {
 interface State {
   isLoaded: boolean;
   errorCode: DiningEventPage.ErrorCode;
-  attendeeList: Attendee[];
+  //attendeeList: Attendee[];
 }
 
 /** Implements the DiningEventPageController. */
@@ -32,7 +32,7 @@ export class DiningEventPageController extends React.Component<Properties,
     this.state = {
       isLoaded: false,
       errorCode: DiningEventPage.ErrorCode.NONE,
-      attendeeList: []
+      //attendeeList: []
     };
   }
 
@@ -44,7 +44,7 @@ export class DiningEventPageController extends React.Component<Properties,
     const now = new Date();
     const isRSVPOpen = (this.props.model.diningEvent.rsvpOpenAt <= now &&
       this.props.model.diningEvent.rsvpCloseAt > now);
-    const isGoing = !!this.state.attendeeList.find(attendee =>
+    const isGoing = !!this.props.model.diningEvent.attendeeList.find(attendee =>
       attendee.userId === this.props.account.id && attendee.status === 'GOING');
     return <DiningEventPage
       displayMode={this.props.displayMode}
@@ -59,7 +59,7 @@ export class DiningEventPageController extends React.Component<Properties,
       reservationName={this.props.model.diningEvent.reservationName}
       startTime={this.props.model.diningEvent.startAt}
       endTime={this.props.model.diningEvent.endAt}
-      attendeeList={this.state.attendeeList}
+      attendeeList={this.props.model.diningEvent.attendeeList}
       totalCapacity={this.props.model.diningEvent.totalCapacity}
       description={this.props.model.diningEvent.description}
       account={this.props.account}
@@ -76,7 +76,7 @@ export class DiningEventPageController extends React.Component<Properties,
       this.setState({
         isLoaded: true,
         errorCode: DiningEventPage.ErrorCode.NONE,
-        attendeeList: this.props.model.diningEvent.attendeeList
+        //attendeeList: this.props.model.diningEvent.attendeeList
       });
     } catch {
       this.setState({
