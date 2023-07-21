@@ -107,9 +107,7 @@ export class LocalProfilePageModel extends ProfilePageModel {
     return this._pastEventList;
   }
 
-  public async updateUpcomingEventList(): Promise<void> {
-    this.ensureIsLoaded();
-  }
+  public async updateUpcomingEventList(): Promise<void> {}
 
   private ensureIsLoaded(): void {
     if (!this._isLoaded) {

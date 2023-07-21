@@ -136,8 +136,8 @@ export class HttpProfilePageModel extends ProfilePageModel {
       SocialAccountType.INSTAGRAM)?.link;
     const favoriteCuisineList: Cuisine[] = arrayFromJson(Cuisine,
       responseObject.favoriteCuisineList);
-    const newUpcomingEventList: EventCardSummary[] = arrayFromJson(EventCardSummary,
-      responseObject.upcomingEventList);
+    const newUpcomingEventList: EventCardSummary[] = arrayFromJson(
+      EventCardSummary, responseObject.upcomingEventList);
     const pastEventList: EventCardSummary[] = arrayFromJson(EventCardSummary,
       responseObject.pastEventList);
     const newModel = new LocalProfilePageModel(this._profileId, coverImage,
@@ -145,9 +145,9 @@ export class HttpProfilePageModel extends ProfilePageModel {
       languageList, facebookLink, twitterLink, instagramLink,
       favoriteCuisineList, newUpcomingEventList, pastEventList);
     this._model = newModel;
+    await this._model.updateUpcomingEventList();
     await this._model.load();
     this._isLoaded = true;
-    await this._model.updateUpcomingEventList();
   }
 
   private _checkResponse(response: Response): void {

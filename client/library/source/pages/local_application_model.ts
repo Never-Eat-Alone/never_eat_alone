@@ -89,10 +89,6 @@ export class LocalApplicationModel extends ApplicationModel {
 
   public async updateDiningEventPageModel(id: number, updatedModel:
       DiningEventPageModel): Promise<void> {
-    if (!updatedModel) {
-      throw new Error(`updatedModel passed to updateDiningEventPageModel is 
-        null or undefined.`);
-    }
     this._diningEventPageModelMap.set(id, updatedModel);
   }
 
