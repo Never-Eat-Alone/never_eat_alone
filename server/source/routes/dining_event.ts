@@ -101,10 +101,13 @@ export class DiningEventRoutes {
 
   private joinEvent = async (request, response) => {
     const eventId = parseInt(request.params.eventId);
+    console.log('join event id', eventId);
     let user = User.makeGuest();
     if (request.session?.user) {
+      console.log('request.session?.user', request.session?.user, request.session.id);
       try {
         user = await this.userDatabase.loadUserBySessionId(request.session.id);
+        console.log('user', user.id);
         if (user.id === -1) {
           response.status(401).send();
           return;
@@ -119,6 +122,7 @@ export class DiningEventRoutes {
     try {
       imageSrc = (await this.userProfileImageDatabase.loadProfileImageByUserId(
         user.id)).src;
+      console.log(imageSrc);
     } catch (error) {
       console.error('Failed at loadProfileImageByUserId', error);
     }

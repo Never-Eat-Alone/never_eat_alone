@@ -33,14 +33,18 @@ export class HttpDiningEventPageModel extends DiningEventPageModel {
   }
 
   public async joinEvent(): Promise<void> {
+    console.log('join event');
     const response = await fetch(`/api/dining_events/${this._eventId}/join`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       }
     });
+    console.log('response', response, response.status);
     this._checkResponse(response);
     const responseObject = await response.json();
+    console.log(parseInt(responseObject.accountId), responseObject.accountName,
+      responseObject.profileImageSrc);
     await this._model.joinEvent(parseInt(responseObject.accountId),
       responseObject.accountName, responseObject.profileImageSrc);
   }
