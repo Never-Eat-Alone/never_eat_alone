@@ -117,14 +117,36 @@ export class HttpProfilePageModel extends ProfilePageModel {
     const response = await fetch(`/api/profile_page/${this._profileId}`);
     this._checkResponse(response);
     const responseObject = await response.json();
-    const newModel = new LocalProfilePageModel(this._profileId,
-      this._model.coverImage, this._model.profileImageSrc, this._model.name,
-      this._model.userName, this._model.createdAt, this._model.biography,
-      this._model.address, this._model.languageList, this._model.facebookLink,
-      this._model.twitterLink, this._model.instagramLink,
-      this._model.favoriteCuisineList, arrayFromJson(EventCardSummary,
-      responseObject.upcomingEventList), this._model.pastEventList);
+    const coverImage = CoverImage.fromJson(responseObject.coverImage);
+    const profileImageSrc = responseObject.profileImageSrc;
+    const name: string = responseObject.name;
+    const userName: string = responseObject.userName;
+    const createdAt = new Date(Date.parse(responseObject.createdAt));
+    const biography: string = responseObject.biography;
+    const address: string = responseObject.address;
+    const languageList: Language[] = arrayFromJson(Language,
+      responseObject.languageList);
+    const socialAccounts: UserProfileSocialAccount[] = arrayFromJson(
+      UserProfileSocialAccount, responseObject.socialAccounts);
+    const facebookLink = socialAccounts.find((account) => account.platform ===
+      SocialAccountType.FACEBOOK)?.link;
+    const twitterLink = socialAccounts.find((account) => account.platform ===
+      SocialAccountType.TWITTER)?.link;
+    const instagramLink = socialAccounts.find((account) => account.platform ===
+      SocialAccountType.INSTAGRAM)?.link;
+    const favoriteCuisineList: Cuisine[] = arrayFromJson(Cuisine,
+      responseObject.favoriteCuisineList);
+    const newUpcomingEventList: EventCardSummary[] = arrayFromJson(EventCardSummary,
+      responseObject.upcomingEventList);
+    const pastEventList: EventCardSummary[] = arrayFromJson(EventCardSummary,
+      responseObject.pastEventList);
+    const newModel = new LocalProfilePageModel(this._profileId, coverImage,
+      profileImageSrc, name, userName, createdAt, biography, address,
+      languageList, facebookLink, twitterLink, instagramLink,
+      favoriteCuisineList, newUpcomingEventList, pastEventList);
     this._model = newModel;
+    await this._model.load();
+    this._isLoaded = true;
     await this._model.updateUpcomingEventList();
   }
 
