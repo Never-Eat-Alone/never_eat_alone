@@ -42,7 +42,7 @@ export class DiningEventPageController extends React.Component<Properties,
     const now = new Date();
     const isRSVPOpen = (this.props.model.diningEvent.rsvpOpenAt <= now &&
       this.props.model.diningEvent.rsvpCloseAt > now);
-    const isGoing = !!this.props.model.diningEvent.attendeeList.find(attendee =>
+    const isGoing = this.props.model.diningEvent.attendeeList.some(attendee =>
       attendee.userId === this.props.account.id && attendee.status === 'GOING');
     return <DiningEventPage
       displayMode={this.props.displayMode}
