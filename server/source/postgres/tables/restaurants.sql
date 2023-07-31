@@ -138,4 +138,10 @@ INSERT INTO restaurants (
   offers a stunning view along with an exciting blend of Mediterranean and 
   Californian cuisine. Their menu is inspired by the coast and features fresh 
   seafood.', 'Located right by the Toronto Beach.', '(123) 456-7822',
-  'MODERATELY_PRICED', 'http://www.torontobeachclub.com');
+  'MODERATELY_PRICED', 'http://www.torontobeachclub.com'),
+(34, 'Judaline', 34, 'Judaline offers a brand new dining experience located at 
+  Danforth and Broaview. A chef-inspired menu highlighting seasonal cuisine, 
+  fresh ingredients, and paying homage to the best of local and international 
+  beverages. The space features an all-season private patio, and a warm, 
+  inviting dining room.', 'On Danforth Ave with street parking.',
+  '(416) 792-8088', 'MODERATELY_PRICED', 'https://www.judaline.ca');

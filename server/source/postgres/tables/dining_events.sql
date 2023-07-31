@@ -204,4 +204,13 @@ VALUES
   'DineOut Group', '2023-12-15 20:00', '2023-12-15 22:00', 10,
   'This is the best place for Spanish and French cuisine.', '2023-03-30 20:00',
   '2023-12-15 19:30', 'ACTIVE', 'PUBLIC', '2023-11-15 19:00',
-  '2023-11-15 19:00');
+  '2023-11-15 19:00'),
+('hsla(280, 58%, 52%, 1)', 0.00, 'resources/images/cover_31.jpg',
+  'Experience the Canadian Cuisine', 34, 'BUSINESS_CASUAL', 'STANDARD', 34,
+  'Sheryl Miller', '2023-08-11 22:30', '2023-08-12 1:00', 6, 'Judaline offers a 
+  brand new dining experience located at Danforth and Broaview. A chef-inspired 
+  menu highlighting seasonal cuisine, fresh ingredients, and paying homage to 
+  the best of local and international beverages. The space features an 
+  all-season private patio, and a warm, inviting dining room.',
+  '2023-06-11 22:30', '2023-08-11 22:30', 'ACTIVE', 'PUBLIC',
+  '2023-07-20 22:30', '2023-07-21 08:30');

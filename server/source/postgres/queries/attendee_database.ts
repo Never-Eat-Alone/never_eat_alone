@@ -107,7 +107,7 @@ export class AttendeeDatabase {
       WHERE att.user_id = $1 AND att.status = 'GOING' AND
       de.end_at <= NOW() AT TIME ZONE 'UTC'
       GROUP BY de.id, re.id
-      ORDER BY de.start_at ASC`, 
+      ORDER BY de.start_at DESC`, 
       [userId]);
     if (result.rows?.length === 0) {
       return [];
