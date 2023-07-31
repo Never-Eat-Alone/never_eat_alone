@@ -287,5 +287,5 @@ INSERT INTO restaurants (
   ensuring a tantalizing dining experience.
 
   Each dish is thoughtfully enhanced with the addition of seasonal produce, 
-  while the bakery crafts artisanal breads by hand.'),
-(41, );
+  while the bakery crafts artisanal breads by hand.', '', '+14162031414',
+  'MODERATELY_PRICED', 'https://daphnetoronto.com/');
