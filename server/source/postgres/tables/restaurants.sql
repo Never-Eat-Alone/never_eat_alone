@@ -57,22 +57,32 @@ INSERT INTO restaurants (
   the main focus here is still on sushi, they now have the capacity to offer 
   hot mains and other dishes on their expanded menu in this larger space.',
   '', '+16477487288', 'VERY_EXPENSIVE', 'https://www.shunoko.ca/'),
-(7, 'Grazie', 7, 'Grazie offers traditional Italian dishes in a warm and 
-  friendly environment.', 'Just off the main square.', '(123) 456-7896',
-  'MODERATELY_PRICED', 'http://www.grazie.com'),
-(8, 'Cafe Boulud', 8, 'Cafe Boulud is a destination for French cuisine with an 
-  international twist.', 'Located in the Four Seasons Hotel.', '(123) 456-7897',
-  'VERY_EXPENSIVE', 'http://www.cafeboulud.com'),
-(9, 'Miku', 9, 'Miku is known for its Aburi sushi and contemporary Japanese 
-  cuisine.', 'Near the waterfront.', '(123) 456-7898', 'VERY_EXPENSIVE',
-  'http://www.mikutoronto.com'),
-(10, 'Bar Raval', 10, 'Bar Raval is a Spanish tapas bar with a unique 
-  architectural design.', 'Located in the hip Palmerston area.',
-  '(123) 456-7899', 'MODERATELY_PRICED', 'http://www.barraval.com'),
-(11, 'Richmond Station', 11, 'Richmond Station is a bustling, rustic-chic 
-  restaurant with a seasonally inspired menu.', 'Close to the theater 
-  district.', '(123) 456-7800', 'MODERATELY_PRICED',
-  'http://www.richmondstation.com'),
+(7, 'Grazie', 7, 'It''s all about Italian traditions at Grazie in Toronto. With 
+  over 15 years in business, the restaurant has become a measure of quality and 
+  consistency in the area. Chef Joe Brancatella has customized the Grazie menu 
+  full of Italian favorites with a few unexpected twists thrown into the mix. 
+  You can find a variety of antipasti, zuppa and pasta dishes on the menu, but 
+  you can also find pizza with unique toppings, like eggplant, zucchini and 
+  sopressata. The customer experience is extremely important at Grazie. It 
+  starts with an electric ambiance and buzzing excitement that makes visitors 
+  feel like they''re on the streets of Italy. No matter what it is you order 
+  from the menu, you can expect high-quality service that goes above and beyond 
+  to anticipate your needs.', 'Just off the main square.', '+14164880822',
+  'MODERATELY_PRICED', 'http://www.grazie.ca/'),
+(8, 'Cafe Boulud', 8, 'Daniel Boulud''s retooled French brasserie boasts a 
+  vintage feel & dishes like rotisserie chicken.', 'Located on the second floor 
+  of Four Seasons Hotel.', '(416) 963-6000', 'EXPENSIVE',
+  'https://www.cafeboulud.com/toronto/'),
+(9, 'Miku', 9, 'Flame-seared sushi is the specialty at this Japanese 
+  fine-dining destination with soaring ceilings.', 'Near the waterfront.',
+  '(647) 347-7347', 'VERY_EXPENSIVE', 'http://www.mikutoronto.com'),
+(10, 'Bar Raval', 10, 'Grant van Gameron''s Spanish pinxtos bar features 
+  Gaudi-esque wood panels & a Barcelona feel.', '', '', 'EXPENSIVE',
+  'https://www.thisisbarraval.com/'),
+(11, 'Richmond Station', 11, 'Co-owned by a "Top Chef Canada" winner, this 
+  bustling spot offers a weekly menu of seasonal cuisine.', 'Close to the theater 
+  district.', '(647) 748-1444', 'EXPENSIVE',
+  'https://richmondstation.ca/'),
 (12, 'Buca Yorkville', 12, 'Buca Yorkville is an upscale Italian restaurant 
   offering traditional dishes in a chic environment.', 'Located in the 
   Yorkville neighbourhood.', '(123) 456-7801', 'VERY_EXPENSIVE',
