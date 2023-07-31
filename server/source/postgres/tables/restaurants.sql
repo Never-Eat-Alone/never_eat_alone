@@ -138,28 +138,45 @@ INSERT INTO restaurants (
   '(123) 456-7816', 'MODERATELY_PRICED', 'http://www.gusto101.com'),
 (28, 'Scaramouche', 28, 'Scaramouche is known for its elegant dining experience 
   and panoramic city views.', 'Located on a high rise in the Midtown.',
-  '(123) 456-7817', 'VERY_EXPENSIVE', 'http://www.scaramoucherestaurant.com'),
-(29, 'La Banane', 29, 'La Banane offers an eclectic range of modern French 
-  dishes in a vibrant, sophisticated setting.', 'Located on Ossington Avenue.',
-  '(123) 456-7818', 'VERY_EXPENSIVE', 'http://www.labanane.com'),
-(30, 'Estiatorio Volos', 30, 'Estiatorio Volos offers modern twists on 
-  traditional Greek recipes and flavours.', 'In the heart of the Financial 
-  District.', '(123) 456-7819', 'MODERATELY_PRICED', 'http://www.volos.ca'),
+  '(416) 961-8011', 'VERY_EXPENSIVE', 'https://www.scaramoucherestaurant.com/'),
+(29, 'La Banane', 29, 'Stylish, brass-accented eatery with a raw bar serving 
+  inventive, French-influenced cuisine.', 'Located on Ossington Avenue.',
+  '+14165516263', 'EXPENSIVE', 'https://www.labanane.ca/'),
+(30, 'Moon Palace Cantonese Cuisine', 30, 'Moon Palace is a Chinese restaurant 
+  in The Atrium serving all the Cantonese cravings, from dim sum to stir-fried 
+  noodles. Our specialty is seafood sourced from leading suppliers for 
+  sea-to-table goodness.
+  
+  Our team of authentically trained chefs skillfully prepares each dish with 
+  passion and precision. Discover signature dishes like lobster, scallops, 
+  shrimp, and all of your favourite Cantonese dishes, from ribs to vegetarian 
+  options.
+
+  Lobsters are their specialty. Their steamed lobster dumplings are adorably 
+  pink and a definite must-try. Another wise option is the Hong-Kong Style 
+  Lobster; it''s juicy and flavoured.
+
+  Other menu goods include Singapore Noodles with stir-fried vermicelli noodles,
+  fresh prawns and hearty BBQ pork in a delicious blend of curry. The Cantonese 
+  Chow Mein is made with fried egg noodles accompanied by a mix of pork, beef, 
+  and assorted seafood. For groups, there are several combo options that make 
+  it easier to share.', 'In the heart of the Financial District.', '',
+  '(416) 551-5666', 'MODERATELY_PRICED', 'https://moon-palace.ca/'),
 (31, 'Aloette', 31, 'The neighbourhood bistro as imagined by the Alo Food 
   Group. Set along Spadina Avenue like a passenger train''s dining car, Aloette 
   is where a taste for haute cuisine meets cravings for cheeseburgers and lemon 
   meringue.', 'Located in the heart of downtown Toronto.', '+14162603444',
   'MODERATELY_PRICED', 'https://aloetterestaurant.com/'),
-(32, 'Actinolite', 32, 'Actinolite is a charming, upscale restaurant located in 
-  Toronto. It offers a seasonal menu that showcases creativity, with a strong 
-  emphasis on local and sustainable ingredients.', 'Located in a cozy 
-  neighborhood of Toronto.', '(123) 456-7821', 'VERY_EXPENSIVE',
-  'http://www.actinoliterestaurant.com'),
-(33, 'Toronto Beach Club', 33, 'Located right by the water, Toronto Beach Club 
-  offers a stunning view along with an exciting blend of Mediterranean and 
-  Californian cuisine. Their menu is inspired by the coast and features fresh 
-  seafood.', 'Located right by the Toronto Beach.', '(123) 456-7822',
-  'MODERATELY_PRICED', 'http://www.torontobeachclub.com'),
+(32, 'Actinolite', 32, 'Sleek eatery offering fixed-price & chef''s menus of 
+  thoughtfully sourced New Canadian fare & drinks.', '', '(416) 962-8943',
+  'VERY_EXPENSIVE', 'https://www.actinoliterestaurant.com/'),
+(33, 'Toronto Beach Club', 33, 'Welcome to Toronto Beach Club, where the 
+  effortless sophistication of the Mediterranean meets Toronto''s freshwater 
+  shores at Woodbine Beach. Traversing many cultural and culinary borders, our 
+  menu is a sensory journey offering a bounty of the freshest daily fish, juicy 
+  seafood, premium meats, mezze and more', 'Located right by the Toronto 
+  Woodbine Beach.', '+14166948844', 'MODERATELY_PRICED',
+  'https://thetorontobeachclub.com/'),
 (34, 'Judaline', 34, 'Judaline offers a brand new dining experience located at 
   Danforth and Broaview. A chef-inspired menu highlighting seasonal cuisine, 
   fresh ingredients, and paying homage to the best of local and international 
