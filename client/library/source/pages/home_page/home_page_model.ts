@@ -8,7 +8,8 @@ export abstract class HomePageModel {
    */
   public abstract load(): Promise<void>;
   public abstract get imageList(): SocialMediaImage[];
-  public abstract get eventList(): EventCardSummary[];
+  public abstract get upcomingEventList(): EventCardSummary[];
+  public abstract get pastEventList(): EventCardSummary[];
   public abstract get userEventTagList(): EventTag[];
   public abstract get userFutureEventList(): EventCardSummary[];
   public abstract get userTotalEventsThisMonth(): number;

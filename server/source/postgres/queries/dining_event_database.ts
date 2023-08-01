@@ -10,6 +10,15 @@ export class DiningEventDatabase {
     this.pool = pool;
   }
 
+  public loadHomePagePastEventList = async (): Promise<EventCardSummary[]> => {
+    const result = await this.pool.query('');
+    const pastEventList: EventCardSummary[] = [];
+    if (result.rows?.length === 0) {
+      return [];
+    }
+    return pastEventList;
+  }
+
   public loadHomePageDiningEventCardSummaries = async (userId: number): Promise<
       { exploreEventList: EventCardSummary[], userUpcomingEventList:
         EventCardSummary[] }> => {

@@ -4,13 +4,15 @@ import { HomePageModel } from './home_page_model';
 
 /** Implements the HomePageModel in memory. */
 export class LocalHomePageModel extends HomePageModel {
-  constructor(imageList: SocialMediaImage[], eventList: EventCardSummary[],
-      userEventTagList: EventTag[], userFutureEventList: EventCardSummary[],
+  constructor(imageList: SocialMediaImage[], upcomingEventList:
+      EventCardSummary[], pastEventList: EventCardSummary[], userEventTagList:
+      EventTag[], userFutureEventList: EventCardSummary[],
       userTotalEventsThisMonth: number) {
     super();
     this._isLoaded = false;
     this._imageList = imageList;
-    this._eventList = eventList;
+    this._upcomingEventList = upcomingEventList;
+    this._pastEventList = pastEventList;
     this._userEventTagList = userEventTagList;
     this._userFutureEventList = userFutureEventList;
     this._userTotalEventsThisMonth = userTotalEventsThisMonth;
@@ -29,9 +31,14 @@ export class LocalHomePageModel extends HomePageModel {
     return this._imageList;
   }
 
-  public get eventList(): EventCardSummary[] {
+  public get upcomingEventList(): EventCardSummary[] {
     this.ensureIsLoaded();
-    return this._eventList;
+    return this._upcomingEventList;
+  }
+
+  public get pastEventList(): EventCardSummary[] {
+    this.ensureIsLoaded();
+    return this._pastEventList;
   }
 
   public get userEventTagList(): EventTag[] {
@@ -57,7 +64,8 @@ export class LocalHomePageModel extends HomePageModel {
 
   private _isLoaded: boolean;
   private _imageList: SocialMediaImage[];
-  private _eventList: EventCardSummary[];
+  private _upcomingEventList: EventCardSummary[];
+  private _pastEventList: EventCardSummary[];
   private _userEventTagList: EventTag[];
   private _userFutureEventList: EventCardSummary[];
   private _userTotalEventsThisMonth: number;

@@ -19,7 +19,11 @@ export class EmptyHomePageModel extends HomePageModel {
     throw new Error('HomePageModel not loaded.');
   }
 
-  public get eventList(): EventCardSummary[] {
+  public get upcomingEventList(): EventCardSummary[] {
+    throw new Error('HomePageModel not loaded.');
+  }
+
+  public get pastEventList(): EventCardSummary[] {
     throw new Error('HomePageModel not loaded.');
   }
 

@@ -40,8 +40,11 @@ export class DiningEventRoutes {
       const { exploreEventList, userUpcomingEventList } =
         await this.diningEventDatabase.loadHomePageDiningEventCardSummaries(
           userId);
+      const pastEventList = 
+        await this.diningEventDatabase.loadHomePagePastEventList();
       response.status(200).json({
         exploreEventList: arrayToJson(exploreEventList),
+        pastEventList: arrayToJson(pastEventList),
         userUpcomingEventList: arrayToJson(userUpcomingEventList)
       });
     } catch (error) {
