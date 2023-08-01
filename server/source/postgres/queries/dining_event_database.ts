@@ -10,11 +10,55 @@ export class DiningEventDatabase {
     this.pool = pool;
   }
 
-  public loadHomePagePastEventList = async (): Promise<EventCardSummary[]> => {
+  public loadHomePagePastEventList = async (userId: number): Promise<
+      EventCardSummary[]> => {
     const result = await this.pool.query('');
     const pastEventList: EventCardSummary[] = [];
     if (result.rows?.length === 0) {
       return [];
+    }
+    for (const row of result.rows) {
+      const cuisinesResult = await this.pool.query(
+        `SELECT cu.*
+        FROM cuisines AS cu
+        JOIN restaurant_cuisines AS rc ON rc.cuisine_id = cu.id
+        WHERE rc.restaurant_id = $1
+        LIMIT 10`, [parseInt(row.re_id)]);
+      const cuisines = cuisinesResult.rows.map(cuisineRow => {
+        return new Cuisine(parseInt(cuisineRow.id), cuisineRow.label,
+          cuisineRow.color_code);
+      });
+      const attendeesResult = await this.pool.query(
+        `SELECT COUNT(event_id) AS total
+        FROM attendees
+        WHERE event_id = $1 AND status = 'GOING'`, [parseInt(row.de_id)]);
+      const numberOfAttendees = parseInt(attendeesResult.rows[0].total);
+      let isAttending = false;
+      if (userId !== -1) {
+        const attendingResult = await this.pool.query(
+          `SELECT * FROM attendees
+          WHERE event_id = $1 AND user_id = $2 AND status = 'GOING'`,
+          [row.de_id, userId]);
+        if (attendingResult.rows?.length !== 0) {
+          isAttending = true;
+        }
+      }
+      pastEventList.push(
+        new EventCardSummary(
+          parseInt(row.de_id),
+          row.de_title,
+          new Date(row.start_at),
+          new Date(row.end_at),
+          row.re_name,
+          row.re_price_range as PriceRange,
+          cuisines,
+          row.cover_image_src,
+          numberOfAttendees,
+          parseInt(row.total_capacity),
+          isAttending,
+          row.de_color_code
+        )
+      );
     }
     return pastEventList;
   }

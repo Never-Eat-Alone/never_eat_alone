@@ -41,7 +41,7 @@ export class DiningEventRoutes {
         await this.diningEventDatabase.loadHomePageDiningEventCardSummaries(
           userId);
       const pastEventList = 
-        await this.diningEventDatabase.loadHomePagePastEventList();
+        await this.diningEventDatabase.loadHomePagePastEventList(userId);
       response.status(200).json({
         exploreEventList: arrayToJson(exploreEventList),
         pastEventList: arrayToJson(pastEventList),
