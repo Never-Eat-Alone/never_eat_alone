@@ -146,7 +146,7 @@ INSERT INTO restaurants (
   in The Atrium serving all the Cantonese cravings, from dim sum to stir-fried 
   noodles. Our specialty is seafood sourced from leading suppliers for 
   sea-to-table goodness.
-  
+
   Our team of authentically trained chefs skillfully prepares each dish with 
   passion and precision. Discover signature dishes like lobster, scallops, 
   shrimp, and all of your favourite Cantonese dishes, from ribs to vegetarian 
@@ -160,7 +160,7 @@ INSERT INTO restaurants (
   fresh prawns and hearty BBQ pork in a delicious blend of curry. The Cantonese 
   Chow Mein is made with fried egg noodles accompanied by a mix of pork, beef, 
   and assorted seafood. For groups, there are several combo options that make 
-  it easier to share.', 'In the heart of the Financial District.', '',
+  it easier to share.', 'In the heart of the Financial District.',
   '(416) 551-5666', 'MODERATELY_PRICED', 'https://moon-palace.ca/'),
 (31, 'Aloette', 31, 'The neighbourhood bistro as imagined by the Alo Food 
   Group. Set along Spadina Avenue like a passenger train''s dining car, Aloette 
@@ -286,7 +286,7 @@ INSERT INTO restaurants (
   special varietals from Mission Hill Winery and Martin Lane Boutique.',
   'Inside the Toronto Stock Exchange building', '+16473688283',
   'VERY_EXPENSIVE', 'https://blackandbluesteakhouse.ca/'),
-(39, 'Rio 40', 39, , 'Rio 40 serves traditional Brazilian like grilled meats 
+(39, 'Rio 40', 39, 'Rio 40 serves traditional Brazilian like grilled meats 
   and caipirinhas in a high-ceilinged environment.
   Named for one of Brazil''s main cities and the degree the temperature often 
   rises to there, the restaurant has been open since 2004.', '', '+14166546363',
