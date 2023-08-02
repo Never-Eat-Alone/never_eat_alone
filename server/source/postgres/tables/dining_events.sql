@@ -44,9 +44,9 @@ INSERT INTO dining_events (
   updated_at
 )
 VALUES
-(1, 'hsva(9, 67%, 100%, 1)', 5.00, 'resources/images/cover_1.jpg', 'Let''s have 
-  dinner at Daphne! (New restaurant)', 40, 'BUSINESS_CASUAL', 'STANDARD', 40,
-  'Aurora Smith', '2023-06-28 22:45', '2023-06-29 01:15', 6,
+(1, 'hsva(9, 67%, 100%, 1)', 5.00, 'resources/images/cover_1.jpg',
+  'Let''s have dinner at Daphne! (New restaurant)', 40, 'BUSINESS_CASUAL',
+  'STANDARD', 40, 'Aurora Smith', '2023-06-28 22:45', '2023-06-29 01:15', 6,
   'About the restaurant:
   Daphne is a modern American style restaurant, lounge, and garden terrace in 
   the heart of Toronto''s Financial District. Daphne offers American cuisine 
