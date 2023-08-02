@@ -18,7 +18,6 @@ export enum PriceRange {
 
 /** Converts the Price range value to the equivalent dollar signs symbol. */
 export function toDollarSigns(value: PriceRange): string {
-  console.log('toDollarSigns value', value, typeof value);
   switch (value) {
     case PriceRange.INEXPENSIVE:
       return '$';
