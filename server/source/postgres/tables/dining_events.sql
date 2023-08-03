@@ -46,29 +46,26 @@ INSERT INTO dining_events (
 VALUES
 (1, 'hsva(9, 67%, 100%, 1)', 5.00, 'resources/images/cover_1.jpg',
   'Let''s have dinner at Daphne! (New restaurant)', 40, 'BUSINESS_CASUAL',
-  'STANDARD', 40, 'Aurora Smith', '2023-06-28 22:45', '2023-06-29 01:15', 6,
-  'About the restaurant:
-  Daphne is a modern American style restaurant, lounge, and garden terrace in 
-  the heart of Toronto''s Financial District. Daphne offers American cuisine 
-  with a contemporary twist, skillfully curated by Executive Chef John Chee. 
-  The menu showcases seasonal American classics, complemented by an array of 
-  small bites, handcrafted cocktails, and an extensive wine list, all presented 
-  within an elegant and modern ambiance.
-
+  'STANDARD', 40, 'Aurora Smith', '2023-06-28T22:45:00Z',
+  '2023-06-29T01:15:00Z', 6,
+  'About the restaurant:\nDaphne is a modern American style restaurant, lounge, 
+  and garden terrace in the heart of Toronto''s Financial District. Daphne 
+  offers American cuisine with a contemporary twist, skillfully curated by 
+  Executive Chef John Chee.\nThe menu showcases seasonal American classics, 
+  complemented by an array of small bites, handcrafted cocktails, and an 
+  extensive wine list, all presented within an elegant and modern ambiance.\n\n
   At the heart of the culinary offerings are two authentic wood-fired grills, 
   infusing a distinct flavor into each dish. Locally sourced ingredients, along 
   with local and imported seafood, are expertly grilled over live coals, 
-  ensuring a tantalizing dining experience.
-
+  ensuring a tantalizing dining experience.\n\n
   Each dish is thoughtfully enhanced with the addition of seasonal produce, 
-  while the bakery crafts artisanal breads by hand.
-
-  Website: https://daphnetoronto.com/
-
+  while the bakery crafts artisanal breads by hand.\n\nWebsite: 
+  https://daphnetoronto.com/
+  \n\n
   ## Tables are held for 10 mins max due to the high demands of the restaurant, 
   so please be on time.', '2023-06-14 18:45',
-  '2023-06-28 22:45', 'ACTIVE', 'PUBLIC', '2023-06-01 10:45',
-  '2023-06-16 11:45'),
+  '2023-06-28T22:45:00Z', 'ACTIVE', 'PUBLIC', '2023-06-01T10:45:00Z',
+  '2023-06-16T11:45:00Z'),
 (2, 'hsva(238, 67%, 100%, 1)', 6.00, 'resources/images/cover_2.jpg',
   'Let''s Go To Alobar.', 2, 'FORMAL', 'PATIO', 2, 'NEA Group',
   '2024-04-29 19:15', '2024-04-29 21:15', 8,
@@ -227,10 +224,10 @@ VALUES
   '2023-11-15 19:00'),
 (31, 'hsla(280, 58%, 52%, 1)', 0.00, 'resources/images/cover_31.jpg',
   'Experience the Canadian Cuisine', 34, 'BUSINESS_CASUAL', 'STANDARD', 34,
-  'Sheryl Miller', '2023-08-11 22:30', '2023-08-12 1:00', 6, 'Judaline offers a 
-  brand new dining experience located at Danforth and Broaview. A chef-inspired 
-  menu highlighting seasonal cuisine, fresh ingredients, and paying homage to 
-  the best of local and international beverages. The space features an 
-  all-season private patio, and a warm, inviting dining room.',
-  '2023-06-11 22:30', '2023-08-11 22:30', 'ACTIVE', 'PUBLIC',
-  '2023-07-20 22:30', '2023-07-21 08:30');
+  'Sheryl Miller', '2023-08-11T22:30:00Z', '2023-08-12T1:00:00Z', 6,
+  'Judaline offers a brand new dining experience located at Danforth and 
+  Broaview. A chef-inspired menu highlighting seasonal cuisine, fresh 
+  ingredients, and paying homage to the best of local and international 
+  beverages. The space features an all-season private patio, and a warm, 
+  inviting dining room.', '2023-06-11 22:30', '2023-08-11 22:30', 'ACTIVE',
+  'PUBLIC', '2023-07-20 22:30', '2023-07-21 08:30');

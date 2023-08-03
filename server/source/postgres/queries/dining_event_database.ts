@@ -17,8 +17,8 @@ export class DiningEventDatabase {
         re.id AS re_id,
         de.id AS de_id,
         de.title AS de_title,
-        de.start_at,
-        de.end_at,
+        de.start_at AT TIME ZONE 'UTC' as start_at,
+        de.end_at AT TIME ZONE 'UTC' as end_at,
         de.cover_image_src,
         re.name AS re_name,
         re.price_range AS re_price_range,
@@ -65,12 +65,13 @@ export class DiningEventDatabase {
           isAttending = true;
         }
       }
+      console.log(row.start_at, new Date(row.start_at).toISOString(), new Date(Date.parse(row.start_at)));
       pastEventList.push(
         new EventCardSummary(
           parseInt(row.de_id),
           row.de_title,
-          new Date(row.start_at),
-          new Date(row.end_at),
+          new Date(Date.parse(row.start_at)),
+          new Date(Date.parse(row.end_at)),
           row.re_name,
           row.re_price_range as PriceRange,
           cuisines,
@@ -144,8 +145,8 @@ export class DiningEventDatabase {
             new EventCardSummary(
               parseInt(row.de_id),
               row.de_title,
-              new Date(row.start_at),
-              new Date(row.end_at),
+              new Date(Date.parse(row.start_at)),
+              new Date(Date.parse(row.end_at)),
               row.re_name,
               row.re_price_range as PriceRange,
               cuisines,
@@ -161,8 +162,8 @@ export class DiningEventDatabase {
             new EventCardSummary(
               parseInt(row.de_id),
               row.de_title,
-              new Date(row.start_at),
-              new Date(row.end_at),
+              new Date(Date.parse(row.start_at)),
+              new Date(Date.parse(row.end_at)),
               row.re_name,
               row.re_price_range as PriceRange,
               cuisines,
@@ -179,8 +180,8 @@ export class DiningEventDatabase {
           new EventCardSummary(
             parseInt(row.de_id),
             row.de_title,
-            new Date(row.start_at),
-            new Date(row.end_at),
+            new Date(Date.parse(row.start_at)),
+            new Date(Date.parse(row.end_at)),
             row.re_name,
             row.re_price_range as PriceRange,
             cuisines,

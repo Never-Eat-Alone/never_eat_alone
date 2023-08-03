@@ -42,6 +42,7 @@ export class DiningEventRoutes {
           userId);
       const pastEventList = 
         await this.diningEventDatabase.loadHomePagePastEventList(userId);
+      console.log('past event tojson', pastEventList[2].eventStartTime);
       response.status(200).json({
         exploreEventList: arrayToJson(exploreEventList),
         pastEventList: arrayToJson(pastEventList),
