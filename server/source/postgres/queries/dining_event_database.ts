@@ -41,31 +41,40 @@ export class DiningEventDatabase {
     }
     for (const row of result.rows) {
       const cuisinesResult = await this.pool.query(
-        `SELECT cu.*
-        FROM cuisines AS cu
-        JOIN restaurant_cuisines AS rc ON rc.cuisine_id = cu.id
-        WHERE rc.restaurant_id = $1
+        `SELECT
+          cu.*
+        FROM
+          cuisines AS cu
+        JOIN
+          restaurant_cuisines AS rc ON rc.cuisine_id = cu.id
+        WHERE
+          rc.restaurant_id = $1
         LIMIT 10`, [parseInt(row.re_id)]);
       const cuisines = cuisinesResult.rows.map(cuisineRow => {
         return new Cuisine(parseInt(cuisineRow.id), cuisineRow.label,
           cuisineRow.color_code);
       });
       const attendeesResult = await this.pool.query(
-        `SELECT COUNT(event_id) AS total
-        FROM attendees
-        WHERE event_id = $1 AND status = 'GOING'`, [parseInt(row.de_id)]);
+        `SELECT
+          COUNT(event_id) AS total
+        FROM
+          attendees
+        WHERE
+          event_id = $1 AND status = 'GOING'`, [parseInt(row.de_id)]);
       const numberOfAttendees = parseInt(attendeesResult.rows[0].total);
       let isAttending = false;
       if (userId !== -1) {
         const attendingResult = await this.pool.query(
-          `SELECT * FROM attendees
-          WHERE event_id = $1 AND user_id = $2 AND status = 'GOING'`,
+          `SELECT *
+          FROM
+            attendees
+          WHERE
+            event_id = $1 AND user_id = $2 AND status = 'GOING'`,
           [row.de_id, userId]);
         if (attendingResult.rows?.length !== 0) {
           isAttending = true;
         }
       }
-      console.log(row.start_at, new Date(row.start_at).toISOString(), new Date(Date.parse(row.start_at)));
       pastEventList.push(
         new EventCardSummary(
           parseInt(row.de_id),
@@ -94,8 +103,8 @@ export class DiningEventDatabase {
         re.id AS re_id,
         de.id AS de_id,
         de.title AS de_title,
-        de.start_at,
-        de.end_at,
+        de.start_at AT TIME ZONE 'UTC' as start_at,
+        de.end_at AT TIME ZONE 'UTC' as end_at,
         de.cover_image_src,
         re.name AS re_name,
         re.price_range AS re_price_range,
@@ -119,25 +128,35 @@ export class DiningEventDatabase {
     const userUpcomingEventList: EventCardSummary[] = [];
     for (const row of result.rows) {
       const cuisinesResult = await this.pool.query(
-        `SELECT cu.*
-        FROM cuisines AS cu
-        JOIN restaurant_cuisines AS rc ON rc.cuisine_id = cu.id
-        WHERE rc.restaurant_id = $1
+        `SELECT
+          cu.*
+        FROM
+          cuisines AS cu
+        JOIN
+          restaurant_cuisines AS rc ON rc.cuisine_id = cu.id
+        WHERE
+          rc.restaurant_id = $1
         LIMIT 10`, [parseInt(row.re_id)]);
       const cuisines = cuisinesResult.rows.map(cuisineRow => {
         return new Cuisine(parseInt(cuisineRow.id), cuisineRow.label,
           cuisineRow.color_code);
       });
       const attendeesResult = await this.pool.query(
-        `SELECT COUNT(event_id) AS total
-        FROM attendees
-        WHERE event_id = $1 AND status = 'GOING'`, [parseInt(row.de_id)]);
+        `SELECT
+          COUNT(event_id) AS total
+        FROM
+          attendees
+        WHERE
+          event_id = $1 AND status = 'GOING'`, [parseInt(row.de_id)]);
       const numberOfAttendees = parseInt(attendeesResult.rows[0].total);
       let isAttending = false;
       if (userId !== -1) {
         const attendingResult = await this.pool.query(
-          `SELECT * FROM attendees
-          WHERE event_id = $1 AND user_id = $2 AND status = 'GOING'`,
+          `SELECT *
+          FROM
+            attendees
+          WHERE
+            event_id = $1 AND user_id = $2 AND status = 'GOING'`,
           [row.de_id, userId]);
         if (attendingResult.rows?.length !== 0) {
           isAttending = true;
@@ -201,13 +220,30 @@ export class DiningEventDatabase {
   }
 
   public loadDiningEventById = async (id: number): Promise<DiningEvent> => {
-    const result = await this.pool.query(`SELECT de.*, re.name AS re_name,
-      re.created_at AS re_created_at, re.location_id AS re_location_id,
-      re.description AS re_description, re.how_to_find AS re_how_to_find,
-      re.phone_number AS re_phone_number, re.price_range AS re_price_range,
-      re.website AS re_website, lo.* FROM dining_events AS de JOIN restaurants
-      AS re ON de.restaurant_id = re.id JOIN locations AS lo ON de.location_id =
-      lo.id WHERE de.id = $1`, [id]);
+    const result = await this.pool.query(`
+      SELECT
+        de.*,
+        re.name AS re_name,
+        re.created_at AT TIME ZONE 'UTC' AS re_created_at,
+        re.location_id AS re_location_id,
+        re.description AS re_description,
+        re.how_to_find AS re_how_to_find,
+        re.phone_number AS re_phone_number,
+        re.price_range AS re_price_range,
+        re.website AS re_website,
+        lo.*
+      FROM
+        dining_events AS de
+      JOIN
+        restaurants AS re
+      ON
+        de.restaurant_id = re.id
+      JOIN
+        locations AS lo
+      ON
+        de.location_id = lo.id
+      WHERE
+        de.id = $1`, [id]);
     if (result.rows?.length === 0) {
       return DiningEvent.empty();
     }
@@ -215,9 +251,17 @@ export class DiningEventDatabase {
     const location = new Location(parseInt(row.location_id),
       row.address_line_one, row.address_line_two, row.city, row.province,
       row.country, row.postal_code, row.neighbourhood);
-    const cuisineResult = await this.pool.query(`SELECT cu.* FROM cuisines AS cu
-      JOIN restaurant_cuisines AS rc ON rc.cuisine_id = cu.id WHERE
-      rc.restaurant_id = $1`, [parseInt(row.restaurant_id)]);
+    const cuisineResult = await this.pool.query(`
+      SELECT
+        cu.*
+      FROM
+        cuisines AS cu
+      JOIN
+        restaurant_cuisines AS rc
+      ON
+        rc.cuisine_id = cu.id
+      WHERE
+        rc.restaurant_id = $1`, [parseInt(row.restaurant_id)]);
     const cuisineList = cuisineResult.rows.map(cuisineRow => {
       return new Cuisine(parseInt(cuisineRow.id), cuisineRow.label,
         cuisineRow.color_code);
@@ -226,10 +270,21 @@ export class DiningEventDatabase {
       new Date(Date.parse(row.re_created_at)), parseInt(row.re_location_id),
       row.re_description, row.re_how_to_find, row.re_phone_number,
       row.re_price_range as PriceRange, cuisineList, row.re_website);
-    const attendeesResult = await this.pool.query(`SELECT att.*, u.name, upi.src
-      FROM attendees AS att JOIN users AS u ON att.user_id = u.id JOIN
-      user_profile_images AS upi ON u.id = upi.user_id WHERE event_id = $1`,
-      [id]);
+    const attendeesResult = await this.pool.query(`
+      SELECT
+        att.*, u.name, upi.src
+      FROM
+        attendees AS att
+      JOIN
+        users AS u
+      ON
+        att.user_id = u.id
+      JOIN
+        user_profile_images AS upi
+      ON
+        u.id = upi.user_id
+      WHERE
+        event_id = $1`, [id]);
     const attendees = attendeesResult.rows.map(attendeeRow => new Attendee(
       parseInt(attendeeRow.user_id), parseInt(attendeeRow.event_id),
       attendeeRow.name, parseInt(attendeeRow.guest_count),
