@@ -143,9 +143,10 @@ export class DiningEventCard extends React.Component<Properties> {
       if (restaurantNameSection && priceRangeSection) {
         return (
           <div style={PRICE_TEXT_STYLE} >
-            <span>&middot;</span>
+            <span style={BULLET_STYLE}>&middot;</span>
           </div>);
       }
+      //<span>&middot;</span>
       return null;
     })();
     const namePriceCuisineSection = (() => {
@@ -163,11 +164,9 @@ export class DiningEventCard extends React.Component<Properties> {
         <>
           <div style={{...RESTAURANT_NAME_ROW_STYLE, ...restaurantNameRowStyle}}
           >
-            <div style={RESTAURANT_NAME_STYLE} >{restaurantName}</div>
-            <div style={PRICE_TEXT_STYLE} >&nbsp;.&nbsp;</div>
-            <div style={PRICE_TEXT_STYLE} >
-              {toDollarSigns(this.props.priceRange)}
-            </div>
+            {restaurantNameSection}
+            {separator}
+            {priceRangeSection}
           </div>
           <div style={CUISINE_ROW_STYLE} >{cuisine}</div>
         </>);
@@ -464,6 +463,17 @@ const PRICE_TEXT_STYLE: React.CSSProperties = {
   lineHeight: '15px',
   height: '100%',
   color: '#000000'
+};
+
+const BULLET_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  height: '100%',
+  margin: '0px 5px',
+  fontSize: '20px'
 };
 
 const ROW_STYLE: React.CSSProperties = {
