@@ -9,16 +9,16 @@ CREATE TABLE IF NOT EXISTS dining_events (
   seating            seating_enum                  DEFAULT 'STANDARD'       ,
   location_id        INTEGER                                                ,
   reservation_name   VARCHAR(255)                                           ,
-  start_at           TIMESTAMP                                              ,
-  end_at             TIMESTAMP                                              ,
+  start_at           TIMESTAMP WITH TIME ZONE                               ,
+  end_at             TIMESTAMP WITH TIME ZONE                               ,
   total_capacity     INTEGER                       DEFAULT 6                ,
   description        VARCHAR(4000)                                          ,
-  rsvp_open_at       TIMESTAMP                                              ,
-  rsvp_close_at      TIMESTAMP                                              ,
+  rsvp_open_at       TIMESTAMP WITH TIME ZONE                               ,
+  rsvp_close_at      TIMESTAMP WITH TIME ZONE                               ,
   status             event_status_enum             DEFAULT 'DRAFT'          ,
   type               event_type_enum               DEFAULT 'PUBLIC'         ,
-  created_at         TIMESTAMP                     DEFAULT NOW()            ,
-  updated_at         TIMESTAMP                     DEFAULT NOW()
+  created_at         TIMESTAMP WITH TIME ZONE      DEFAULT CURRENT_TIMESTAMP,
+  updated_at         TIMESTAMP WITH TIME ZONE      DEFAULT CURRENT_TIMESTAMP
 );
 
 INSERT INTO dining_events (
@@ -225,7 +225,7 @@ VALUES
   '2023-11-01T18:00:00Z'),
 (30, 'hsva(295, 75%, 85%, 1)', 50.00, 'resources/images/cover_30.jpg',
   'Experience Edulis.', 16, 'BUSINESS_CASUAL', 'PRIVATE_ROOM', 16,
-  'DineOut Group', '2023-12-15T20:00:00Z', '2023-12-15T22:00:00Z', 10,
+  'DineOut Group', '2023-12-16T00:00:00Z', '2023-12-16T02:00:00Z', 10,
   'This is the best place for Spanish and French cuisine.',
   '2023-03-30T20:00:00Z', '2023-12-15T19:30:00Z', 'ACTIVE', 'PUBLIC',
   '2023-11-15T19:00:00Z', '2023-11-15T19:00:00Z'),

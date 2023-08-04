@@ -17,8 +17,8 @@ export class DiningEventDatabase {
         re.id AS re_id,
         de.id AS de_id,
         de.title AS de_title,
-        de.start_at AT TIME ZONE 'UTC' as start_at,
-        de.end_at AT TIME ZONE 'UTC' as end_at,
+        de.start_at as start_at,
+        de.end_at as end_at,
         de.cover_image_src,
         re.name AS re_name,
         re.price_range AS re_price_range,
@@ -29,7 +29,7 @@ export class DiningEventDatabase {
       JOIN
         restaurants AS re ON de.restaurant_id = re.id
       WHERE
-        de.start_at <= NOW() AT TIME ZONE 'UTC' AND de.status = 'ACTIVE' AND
+        de.start_at <= NOW() AND de.status = 'ACTIVE' AND
         de.type = 'PUBLIC'
       ORDER BY
         de.start_at DESC
@@ -103,8 +103,8 @@ export class DiningEventDatabase {
         re.id AS re_id,
         de.id AS de_id,
         de.title AS de_title,
-        de.start_at AT TIME ZONE 'UTC' as start_at,
-        de.end_at AT TIME ZONE 'UTC' as end_at,
+        de.start_at as start_at,
+        de.end_at as end_at,
         de.cover_image_src,
         re.name AS re_name,
         re.price_range AS re_price_range,
@@ -115,7 +115,7 @@ export class DiningEventDatabase {
       JOIN
         restaurants AS re ON de.restaurant_id = re.id
       WHERE
-        de.start_at > NOW() AT TIME ZONE 'UTC' AND de.status = 'ACTIVE' AND
+        de.start_at > NOW() AND de.status = 'ACTIVE' AND
         de.type = 'PUBLIC'
       ORDER BY
         de.start_at ASC
@@ -224,7 +224,7 @@ export class DiningEventDatabase {
       SELECT
         de.*,
         re.name AS re_name,
-        re.created_at AT TIME ZONE 'UTC' AS re_created_at,
+        re.created_at AS re_created_at,
         re.location_id AS re_location_id,
         re.description AS re_description,
         re.how_to_find AS re_how_to_find,

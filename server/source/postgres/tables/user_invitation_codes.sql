@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS user_invitation_codes (
-  invite_code   VARCHAR(20)   UNIQUE NOT NULL,
-  user_id       INTEGER              NOT NULL,
-  created_at    TIMESTAMP                      DEFAULT NOW(),
-  updated_at    TIMESTAMP                      DEFAULT NOW(),
+  invite_code   VARCHAR(20)                    UNIQUE NOT NULL,
+  user_id       INTEGER                        NOT NULL,
+  created_at    TIMESTAMP WITH TIME ZONE       DEFAULT CURRENT_TIMESTAMP,
+  updated_at    TIMESTAMP WITH TIME ZONE       DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (user_id)
 );
 
@@ -45,4 +45,5 @@ INSERT INTO user_invitation_codes (
 ('X16GUF8D', 20),
 ('U16FUF8Z', 21)
 ON CONFLICT (user_id)
-DO UPDATE SET invite_code = excluded.invite_code, updated_at = NOW();
+DO UPDATE SET invite_code = excluded.invite_code,
+  updated_at = CURRENT_TIMESTAMP;

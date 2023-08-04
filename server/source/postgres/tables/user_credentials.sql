@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS user_credentials (
-  user_id     INTEGER PRIMARY KEY,
-  hashed_pass TEXT    NOT NULL
+  user_id       INTEGER   PRIMARY KEY,
+  hashed_pass   TEXT      NOT NULL
 );
 
 ALTER TABLE user_credentials

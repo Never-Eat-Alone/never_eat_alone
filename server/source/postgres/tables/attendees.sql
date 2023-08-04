@@ -1,9 +1,9 @@
 CREATE TABLE IF NOT EXISTS attendees (
-  user_id           INTEGER               NOT NULL                 ,
-  event_id          INTEGER               NOT NULL                 ,
-  status            attendee_status_enum  NOT NULL                 ,
-  guest_count       INTEGER                          DEFAULT 0     ,
-  updated_at        TIMESTAMP                        DEFAULT NOW() ,
+  user_id           INTEGER                          NOT NULL                 ,
+  event_id          INTEGER                          NOT NULL                 ,
+  status            attendee_status_enum             NOT NULL                 ,
+  guest_count       INTEGER                          DEFAULT 0                ,
+  updated_at        TIMESTAMP WITH TIME ZONE         DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (user_id, event_id)
 );
 

@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS user_sessions (
-    sid         VARCHAR       NOT NULL COLLATE "default",
-    user_id     INTEGER       ,
-    sess        JSON          NOT NULL,
-    expire      TIMESTAMP(6)  NOT NULL
+    sid         VARCHAR                         NOT NULL COLLATE "default",
+    user_id     INTEGER                                                   ,
+    sess        JSON                            NOT NULL                  ,
+    expire      TIMESTAMP(6) WITH TIME ZONE     NOT NULL
 )
 WITH(OIDS=FALSE);
 

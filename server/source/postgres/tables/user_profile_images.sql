@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS user_profile_images (
   user_id       INTEGER                        NOT NULL UNIQUE,
   src           TEXT                           NOT NULL,
-  created_at    TIMESTAMP                      DEFAULT NOW(),
-  updated_at    TIMESTAMP                      DEFAULT NOW()
+  created_at    TIMESTAMP WITH TIME ZONE       DEFAULT CURRENT_TIMESTAMP,
+  updated_at    TIMESTAMP WITH TIME ZONE       DEFAULT CURRENT_TIMESTAMP
 );
 
 ALTER TABLE user_profile_images
