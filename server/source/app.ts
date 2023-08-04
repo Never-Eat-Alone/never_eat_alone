@@ -192,6 +192,14 @@ async function main() {
   const config = JSON.parse(fs.readFileSync(configPath).toString());
   SGMail.setApiKey(config.send_grid_api_key);
   const pool = new Pool(config.database);
+  /** Set postgres session timezone to UTC. */
+  pool.on('connect', (client) => {
+    client.query('SET TIME ZONE \'UTC\';', (err) => {
+      if (err) {
+        console.error('Error executing SET TIME ZONE command', err);
+      }
+    });
+  });
   runExpress(pool, config);
 }
 

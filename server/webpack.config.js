@@ -34,5 +34,8 @@ module.exports = {
     new webpack.IgnorePlugin({ resourceRegExp: /^pg-native$/ })
   ],
   target: 'node',
+  externals: {
+    express: 'commonjs express'
+  },
   ignoreWarnings: [/Failed to parse source map/]
 };

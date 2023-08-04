@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS social_media_images (
-  id            SERIAL       PRIMARY KEY,
-  src           TEXT         NOT NULL,
-  created_at    TIMESTAMP                      DEFAULT NOW(),
-  updated_at    TIMESTAMP                      DEFAULT NOW()
+  id            SERIAL                         PRIMARY KEY,
+  src           TEXT                           NOT NULL,
+  created_at    TIMESTAMP WITH TIME ZONE       DEFAULT CURRENT_TIMESTAMP,
+  updated_at    TIMESTAMP WITH TIME ZONE       DEFAULT CURRENT_TIMESTAMP
 );
 
 INSERT INTO social_media_images (

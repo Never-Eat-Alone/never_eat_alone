@@ -1,14 +1,14 @@
 CREATE TABLE IF NOT EXISTS restaurants (
-  id            SERIAL           PRIMARY KEY,
-  name          VARCHAR(100)     NOT NULL,
-  created_at    TIMESTAMP        DEFAULT NOW(),
-  location_id   INTEGER                       ,
-  description   VARCHAR(3000)                 ,
-  how_to_find   VARCHAR(3000)                 ,
-  phone_number  VARCHAR(255)                  ,
-  price_range   price_range_enum              ,
-  website       VARCHAR(2048)                 ,
-  updated_at    TIMESTAMP        DEFAULT NOW()
+  id            SERIAL                         PRIMARY KEY              ,
+  name          VARCHAR(100)                   NOT NULL                 ,
+  created_at    TIMESTAMP WITH TIME ZONE       DEFAULT CURRENT_TIMESTAMP,
+  location_id   INTEGER                                                 ,
+  description   VARCHAR(3000)                                           ,
+  how_to_find   VARCHAR(3000)                                           ,
+  phone_number  VARCHAR(255)                                            ,
+  price_range   price_range_enum                                        ,
+  website       VARCHAR(2048)                                           ,
+  updated_at    TIMESTAMP WITH TIME ZONE      DEFAULT CURRENT_TIMESTAMP
 );
 
 ALTER TABLE restaurants

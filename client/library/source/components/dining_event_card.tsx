@@ -1,8 +1,9 @@
 import { css, StyleSheet } from 'aphrodite';
+import { format } from 'date-fns';
 import * as React from 'react';
 import * as Router from 'react-router-dom';
-import { Cuisine, DisplayMode, PriceRange, toDollarSigns
-} from '../definitions';
+import { Cuisine, DisplayMode, PriceRange, toDollarSigns } from
+  '../definitions';
 
 interface Properties {
 
@@ -157,10 +158,10 @@ export class DiningEventCard extends React.Component<Properties> {
           <div style={CUISINE_ROW_STYLE} >{cuisine}</div>
         </>);
     })();
-    const dateInfo = (this.props.isLoggedIn &&
-      this.formatDate(this.props.startTime) || 'Log in to see date');
-    const timeInfo = (this.props.isLoggedIn &&
-      this.formatTime(this.props.startTime, this.props.endTime) ||
+    const dateInfo = (this.props.isLoggedIn && format(this.props.startTime,
+      'eeee, MMMM d, yyyy') || 'Log in to see date');
+    const timeInfo = (this.props.isLoggedIn && `${format(this.props.startTime,
+      'h:mm aa')} - ${format(this.props.endTime, 'h:mm aa')}` ||
       'Log in to see time');
     return (
       <Router.Link
@@ -199,7 +200,9 @@ export class DiningEventCard extends React.Component<Properties> {
                   alt='Date'
                 />
               </div>
-              <div style={TEXT_ROW_STYLE} >{dateInfo}</div>
+              <div style={TEXT_ROW_STYLE} >
+                {dateInfo}
+              </div>
             </div>
             <div style={{...ROW_STYLE, ...ROW_MARGIN_STYLE}} >
               <div style={ICON_CONTAINER_STYLE} >
@@ -209,7 +212,9 @@ export class DiningEventCard extends React.Component<Properties> {
                   alt='Time'
                 />
               </div>
-              <div style={TEXT_ROW_STYLE} >{timeInfo}</div>
+              <div style={TEXT_ROW_STYLE} >
+                {timeInfo}
+              </div>
             </div>
             <div style={ROW_STYLE} >
               <div style={ICON_CONTAINER_STYLE} >

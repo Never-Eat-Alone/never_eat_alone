@@ -8,6 +8,9 @@ interface Properties {
   /** The display mode. */
   displayMode: DisplayMode;
 
+  /** The title displayed at the top of this section. */
+  title: string;
+
   /** The event summaries. */
   eventList: EventCardSummary[];
 
@@ -187,7 +190,7 @@ export class ExploreEventsSummary extends React.Component<Properties, State> {
       <div style={{...CONTAINER_STYLE, ...containerStyle}} >
         <div style={{...CONTENT_CONTAINER_STYLE, ...contentContainerStyle}} >
           <div style={TITLE_STYLE} >
-            Explore Events
+            {this.props.title}
           </div>
           <div style={{...CARDS_CONTAINER_STYLE, ...cardsContainerStyle}} >
             {cards}

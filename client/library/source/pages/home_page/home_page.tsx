@@ -17,8 +17,11 @@ interface Properties {
   /** List of NEA images on social media. */
   imageList: SocialMediaImage[];
 
-  /** List of all upcoming events. */
-  eventList: EventCardSummary[];
+  /** List of all upcoming events that user is not attending. */
+  upcomingEventList: EventCardSummary[];
+
+  /** List of all past events. */
+  pastEventList: EventCardSummary[];
 
   /** The list of Event Tags that user has attended in the current month. */
   userEventTagList: EventTag[];
@@ -73,7 +76,14 @@ export class HomePage extends React.Component<Properties> {
         {userUpcomingEventsSection}
         <ExploreEventsSummary
           displayMode={this.props.displayMode}
-          eventList={this.props.eventList}
+          title='Explore Upcoming Events'
+          eventList={this.props.upcomingEventList}
+          isLoggedIn={this.props.account?.id !== -1}
+        />
+         <ExploreEventsSummary
+          displayMode={this.props.displayMode}
+          title='Past Events'
+          eventList={this.props.pastEventList}
           isLoggedIn={this.props.account?.id !== -1}
         />
         <AlbumSummary

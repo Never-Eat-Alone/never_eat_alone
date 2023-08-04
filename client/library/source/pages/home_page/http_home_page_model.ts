@@ -29,6 +29,8 @@ export class HttpHomePageModel extends HomePageModel {
     const eventListObject = await eventListResponse.json();
     const exploreEventList: EventCardSummary[] = arrayFromJson(EventCardSummary,
       eventListObject.exploreEventList);
+    const pastEventList: EventCardSummary[] = arrayFromJson(EventCardSummary,
+      eventListObject.pastEventList);
     const userUpcomingEventList: EventCardSummary[] = arrayFromJson(
       EventCardSummary, eventListObject.userUpcomingEventList);
     const userEventTagList: EventTag[] = [];
@@ -40,7 +42,8 @@ export class HttpHomePageModel extends HomePageModel {
       userEventTagList.push(EventTag.fromJson(tag));
     }
     this._model = new LocalHomePageModel(imageList, exploreEventList,
-      userEventTagList, userUpcomingEventList, userEventTagList.length);
+      pastEventList, userEventTagList, userUpcomingEventList,
+      userEventTagList.length);
     await this._model.load();
     this._isLoaded = true;
   }
@@ -50,13 +53,15 @@ export class HttpHomePageModel extends HomePageModel {
       `/api/home_page/event_list/${this._account.id}`);
     this._checkResponse(eventListResponse);
     const eventListObject = await eventListResponse.json();
-    const eventList: EventCardSummary[] = arrayFromJson(EventCardSummary,
-      eventListObject.exploreEventList);
+    const upcomingEventList: EventCardSummary[] = arrayFromJson(
+      EventCardSummary, eventListObject.exploreEventList);
+    const pastEventList: EventCardSummary[] = arrayFromJson(
+      EventCardSummary, eventListObject.pastEventList);
     const userFutureEventList: EventCardSummary[] = arrayFromJson(
       EventCardSummary, eventListObject.userUpcomingEventList);
-    const newModel = new LocalHomePageModel(this._model.imageList, eventList,
-      this._model.userEventTagList, userFutureEventList,
-      this._model.userTotalEventsThisMonth);
+    const newModel = new LocalHomePageModel(this._model.imageList,
+      upcomingEventList, pastEventList, this._model.userEventTagList,
+      userFutureEventList, this._model.userTotalEventsThisMonth);
     this._model = newModel;
     await this._model.updateEventLists();
   }
@@ -65,8 +70,12 @@ export class HttpHomePageModel extends HomePageModel {
     return this._model.imageList;
   }
 
-  public get eventList(): EventCardSummary[] {
-    return this._model.eventList;
+  public get upcomingEventList(): EventCardSummary[] {
+    return this._model.upcomingEventList;
+  }
+
+  public get pastEventList(): EventCardSummary[] {
+    return this._model.pastEventList;
   }
 
   public get userEventTagList(): EventTag[] {
