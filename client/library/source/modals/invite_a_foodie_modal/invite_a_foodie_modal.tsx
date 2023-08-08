@@ -1,8 +1,8 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 import { CircularCounterWithCounterOutside, CloseButton, EmailInputField,
-  FacebookButton, InstagramButton, RedditLinkButton, TwitterButton
-} from '../../components';
+  FacebookButton, InstagramButton, RedditLinkButton, TwitterButton } from
+  '../../components';
 import { DisplayMode, UserInvitationCode } from '../../definitions';
 
 interface Properties {

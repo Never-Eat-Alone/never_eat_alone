@@ -1,8 +1,8 @@
 import * as Hash from 'hash.js';
 import { Pool } from 'pg';
-import { Cuisine, Language, Location, SocialAccountType, User, UserStatus,
-  UserProfileImage, UserProfileSocialAccount } from
-  '../../../../client/library/source/definitions';
+import { Cuisine, Language, Location, SocialAccountType, User,
+  UserInvitationCode, UserStatus, UserProfileImage, UserProfileSocialAccount
+  } from '../../../../client/library/source/definitions';
 import * as Crypto from 'crypto';
 
 /** Generates a unique invitation code. */
@@ -28,21 +28,29 @@ export class UserDatabase {
       void> => {
     const inviteCode = generateInvitationCode();
     await this.pool.query(`
-      INSERT INTO user_invitation_codes (invite_code, user_id, created_at,
-      updated_at)
-      VALUES ($1, $2, NOW(), NOW())
-      ON CONFLICT (user_id) DO UPDATE SET invite_code = $1, updated_at = NOW()
-    `, [inviteCode, userId]);
+      INSERT INTO
+        user_invitation_codes (invite_code, user_id, created_at, updated_at)
+      VALUES
+        ($1, $2, NOW(), NOW())
+      ON CONFLICT
+        (user_id)
+      DO UPDATE SET
+        invite_code = $1, updated_at = NOW()`, [inviteCode, userId]);
   }
 
-  public loadUserInvitationCode = async (userId: number): Promise<string> => {
+  public loadUserInvitationCode = async (userId: number): Promise<
+      UserInvitationCode> => {
     const result = await this.pool.query(`
-      SELECT invite_code FROM user_invitation_codes WHERE user_id = $1`,
-      [userId]);
+      SELECT
+        invite_code
+      FROM
+        user_invitation_codes
+      WHERE
+        user_id = $1`, [userId]);
     if (result.rows?.length === 0) {
-      return '';
+      return UserInvitationCode.emptyUserInvitationCode();
     }
-    return result.rows[0].invite_code;
+    return new UserInvitationCode(userId, result.rows[0].invite_code);
   }
 
   /**

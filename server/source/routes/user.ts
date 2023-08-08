@@ -478,7 +478,7 @@ export class UserRoutes {
 
   private getUserInvitationCode = async (request, response) => {
     const userId = parseInt(request.params.userId);
-    let userInvitationCode: string = '';
+    let userInvitationCode: UserInvitationCode;
     try {
       userInvitationCode = await this.userDatabase.loadUserInvitationCode(
         userId);
@@ -487,7 +487,9 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
-    response.status(200).json({ userInvitationCode: userInvitationCode });
+    response.status(200).json({
+      userInvitationCode: userInvitationCode.toJson()
+    });
   }
 
   private sendInviteEmail = async (request, response) => {

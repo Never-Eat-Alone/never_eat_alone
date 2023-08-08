@@ -316,7 +316,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const demoDiningEventModel7 = new DemoDiningEventPageModel(diningEvent7);
     this._diningEventPageModelMap.set(7, demoDiningEventModel7);
     this._inviteAFoodieModel = new NeverEatAlone.LocalInviteAFoodieModel(
-      new NeverEatAlone.UserInvitationCode(1, 1, 'AcFTHD$5Dg'));
+      new NeverEatAlone.UserInvitationCode(1, 'AcFTHD$5Dg'));
     this._joinModel = new DemoJoinModel();
     this._partnerWithUsModel = new NeverEatAlone.LocalPartnerWithUsModel();
     this._logInModel = new DemoLogInModel([userEmma, userArthur], [
