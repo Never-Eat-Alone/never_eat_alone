@@ -77,7 +77,7 @@ export class DiningEventCard extends React.Component<Properties> {
       >
         {this.props.cuisines[0]?.label}
       </div>);
-    const seats = `${this.props.numberOfAttendees}/${this.props.numberOfSeats} \
+    const seats = `${this.props.numberOfAttendees}/${this.props.numberOfSeats}
       Attendees`;
     const isAttending = (() => {
       if (this.props.isAttending) {
@@ -132,16 +132,31 @@ export class DiningEventCard extends React.Component<Properties> {
         titleStyle: MOBILE_TITLE_STYLE
       };
     })();
+    const restaurantNameSection = (this.props.restaurantName.trim().length > 0
+      && <div style={RESTAURANT_NAME_STYLE} >{restaurantName}</div> || null);
+    const dollarSign = toDollarSigns(this.props.priceRange);
+    const priceRangeSection = (dollarSign &&
+      <div style={{...PRICE_TEXT_STYLE, ...MOBILE_PRICE_MARGIN}} >
+        {dollarSign}
+      </div> || null);
+    const separator = (() => {
+      if (restaurantNameSection && priceRangeSection) {
+        return (
+          <div style={PRICE_TEXT_STYLE} >
+            <span style={BULLET_STYLE}>&middot;</span>
+          </div>);
+      }
+      //<span>&middot;</span>
+      return null;
+    })();
     const namePriceCuisineSection = (() => {
       if (this.props.displayMode === DisplayMode.MOBILE) {
         return (
           <div style={{...RESTAURANT_NAME_ROW_STYLE, ...restaurantNameRowStyle}}
           >
-            <div style={RESTAURANT_NAME_STYLE} >{restaurantName}</div>
-            <div style={PRICE_TEXT_STYLE} >&nbsp;.&nbsp;</div>
-            <div style={{...PRICE_TEXT_STYLE, ...MOBILE_PRICE_MARGIN}} >
-              {toDollarSigns(this.props.priceRange)}
-            </div>
+            {restaurantNameSection}
+            {separator}
+            {priceRangeSection}
             <div style={CUISINE_ROW_STYLE} >{cuisine}</div>
           </div>);
       }
@@ -149,11 +164,9 @@ export class DiningEventCard extends React.Component<Properties> {
         <>
           <div style={{...RESTAURANT_NAME_ROW_STYLE, ...restaurantNameRowStyle}}
           >
-            <div style={RESTAURANT_NAME_STYLE} >{restaurantName}</div>
-            <div style={PRICE_TEXT_STYLE} >&nbsp;.&nbsp;</div>
-            <div style={PRICE_TEXT_STYLE} >
-              {toDollarSigns(this.props.priceRange)}
-            </div>
+            {restaurantNameSection}
+            {separator}
+            {priceRangeSection}
           </div>
           <div style={CUISINE_ROW_STYLE} >{cuisine}</div>
         </>);
@@ -230,42 +243,6 @@ export class DiningEventCard extends React.Component<Properties> {
           {isAttending}
         </div>
       </Router.Link>);
-  }
-
-  /** Converts the date to the string format displayed on an event card. */
-  private formatDate = (date: Date) => {
-    const year = date.getFullYear();
-    const month = date.toLocaleString('en-us', { month: 'long' }).slice(0, 3);
-    const day = date.getDate();
-    const weekday = date.toLocaleString('en-us',
-      { weekday: 'long' }).slice(0, 3);
-    if (day % 10 === 1) {
-      return `${weekday} ${month} ${day}st, ${year}`;
-    }
-    if (day % 10 === 2) {
-      return `${weekday} ${month} ${day}nd, ${year}`;
-    }
-    if (day % 10 === 3) {
-      return `${weekday} ${month} ${day}rd, ${year}`;
-    }
-    return `${weekday} ${month} ${day}th, ${year}`;
-  }
-
-  private formatTime = (startTime: Date, endTime: Date): string => {
-    function convert24To12HourClock(hour: number, minute: number): string {
-      if (hour === 0) {
-        return `12:${minute}am`;
-      } else if (hour === 12) {
-        return `12:${minute}pm`;
-      } else if (hour > 12) {
-        return `${hour - 12}:${minute}pm`;
-      } else {
-        return `${hour}:${minute}am`;
-      }
-    }
-    return (`${convert24To12HourClock(startTime.getHours(),
-      startTime.getMinutes())} - ${convert24To12HourClock(endTime.getHours(),
-      endTime.getMinutes())}`);
   }
 }
 
@@ -486,6 +463,17 @@ const PRICE_TEXT_STYLE: React.CSSProperties = {
   lineHeight: '15px',
   height: '100%',
   color: '#000000'
+};
+
+const BULLET_STYLE: React.CSSProperties = {
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  height: '100%',
+  margin: '0px 5px',
+  fontSize: '20px'
 };
 
 const ROW_STYLE: React.CSSProperties = {

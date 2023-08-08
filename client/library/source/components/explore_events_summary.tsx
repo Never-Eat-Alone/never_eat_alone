@@ -57,7 +57,8 @@ export class ExploreEventsSummary extends React.Component<Properties, State> {
           contentContainerStyle: DESKTOP_CONTENT_CONTAINER_STYLE,
           cardsContainerStyle: DESKTOP_CARD_CONTAINER_STYLE,
           noEventsContainerStyle: DESKTOP_NO_EVENTS_CONTAINER_STYLE,
-          noEventsContentContainerStyle: DESKTOP_NO_EVENTS_CONTENT_CONTAINER_STYLE
+          noEventsContentContainerStyle:
+            DESKTOP_NO_EVENTS_CONTENT_CONTAINER_STYLE
         };
       }
       if (this.props.displayMode === DisplayMode.TABLET) {
@@ -66,7 +67,8 @@ export class ExploreEventsSummary extends React.Component<Properties, State> {
           contentContainerStyle: TABLET_CONTENT_CONTAINER_STYLE,
           cardsContainerStyle: TABLET_CARD_CONTAINER_STYLE,
           noEventsContainerStyle: TABLET_NO_EVENTS_CONTAINER_STYLE,
-          noEventsContentContainerStyle: TABLET_NO_EVENTS_CONTENT_CONTAINER_STYLE
+          noEventsContentContainerStyle:
+            TABLET_NO_EVENTS_CONTENT_CONTAINER_STYLE
         };
       }
       return {
