@@ -496,7 +496,23 @@ export class UserRoutes {
     const userInvitationCode = UserInvitationCode.fromJson(
       request.body.userInvitationCode);
     const inviteEmail = InviteEmail.fromJson(request.body.inviteEmail);
-    const account = User.fromJson(request.body.account);
+    let user: User;
+    if (request.session?.user) {
+      try {
+        user = await this.userDatabase.loadUserBySessionId(request.session.id);
+        if (user.id === -1 || user.id !== userInvitationCode.userId) {
+          response.status(401).send();
+          return;
+        }
+      } catch (error) {
+        console.error('Failed at loadUserBySessionId', error);
+        response.status(500).send();
+        return;
+      }
+    } else {
+      response.status(401).send();
+      return;
+    }
     const invitationHtml = await new Promise<string>((resolve, reject) => {
       fs.readFile('public/resources/invitation_email/email.html', 'utf8',
         (error, html) => {
@@ -508,12 +524,11 @@ export class UserRoutes {
         });
     });
     const newHtml = invitationHtml.replace('{{user_name}}',
-      account.userName).replace('{{contest}}', inviteEmail.contest);
+      user.userName).replace('{{contest}}', inviteEmail.contest);
     for (const email of inviteEmail.emailList) {
       try {
-        await this.sendEmail(email, account.email,
-          `Your friend, ${account.name}, invited you to check out NEA`,
-          newHtml);
+        await this.sendEmail(email, 'noreply@nevereatalone.net',
+          `Your friend, ${user.name}, invited you to check out NEA`, newHtml);
       } catch (error) {
         console.error('Failed at sendEmail', error);
         response.status(500).send();
