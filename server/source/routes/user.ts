@@ -335,7 +335,7 @@ export class UserRoutes {
       subject: string, content: string) => {
     const message = {
       to: toEmail,
-      from: fromEmail,
+      from: `NeverEatAlone <${fromEmail}>`,
       subject: subject,
       html: content
     };
