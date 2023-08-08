@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { PasswordAnalyzer, PasswordInputField, PrimaryTextButton
-} from '../../components';
+import { PasswordAnalyzer, PasswordInputField, PrimaryTextButton } from
+  '../../components';
 import { DisplayMode } from '../../definitions';
 import { getPasswordChecks, getPasswordChecksScore } from '../../utilities';
 

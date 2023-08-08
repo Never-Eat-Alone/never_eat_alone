@@ -46,7 +46,6 @@ export class UserRoutes {
     app.post('/api/send_invite_email', this.sendInviteEmail);
     app.post('/api/send_partner_with_us_email', this.sendPartnerWithUsEmail);
     app.post('/api/send_recovery_email', this.sendRecoveryEmail);
-    app.post('/api/resend_recovery_email', this.resendRecoveryEmail);
 
     app.get('/api/profile_page/:profileId', this.getProfilePage);
     app.get('/api/edit_profile_page/:profileId', this.getEditProfilePage);
@@ -623,36 +622,7 @@ export class UserRoutes {
     const name = user.name || 'NeverEatAlone Member';
     const newHtml = recoveryHtml.replace('{{name}}', name);
     try {
-      await this.sendEmail(user.email, 'info@nevereatalone.net',
-        'Recovery Password Link', newHtml);
-    } catch (error) {
-      console.error('Failed at sendEmail', error);
-      response.status(500).send();
-      return;
-    }
-    response.status(200).json({ user: user.toJson() });
-  }
-
-  private resendRecoveryEmail = async (request, response) => {
-    const email = request.body.email;
-    const user = User.fromJson(request.body.user);
-    if (!user || user.id === -1) {
-      response.status(400).json({ message: 'USER_NOT_FOUND' });
-      return;
-    }
-    const recoveryHtml = await new Promise<string>((resolve, reject) => {
-      fs.readFile('public/resources/recovery_password_email/email.html', 'utf8',
-        (error, html) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(html);
-          }
-        });
-    });
-    const newHtml = recoveryHtml.replace('{{name}}', user.name);
-    try {
-      await this.sendEmail(user.email, 'info@nevereatalone.net',
+      await this.sendEmail(user.email, 'noreply@nevereatalone.net',
         'Recovery Password Link', newHtml);
     } catch (error) {
       console.error('Failed at sendEmail', error);

@@ -1,8 +1,7 @@
-import { User } from '../../definitions';
 import { ForgotPasswordPageModel } from './forgot_password_page_model';
 
 export class HttpForgotPasswordPageModel extends ForgotPasswordPageModel {
-  public async sendRecoveryEmail(email: string): Promise<User> {
+  public async sendRecoveryEmail(email: string): Promise<boolean> {
     const response = await fetch('/api/send_recovery_email', {
       method: 'POST',
       headers: {
@@ -10,25 +9,6 @@ export class HttpForgotPasswordPageModel extends ForgotPasswordPageModel {
       },
       body: JSON.stringify({
         'email': email
-      })
-    });
-    if (response.status === 200) {
-      const responseObject = await response.json();
-      return User.fromJson(responseObject.user);
-    }
-    return User.makeGuest();
-  }
-
-  public async resendRecoveryEmail(email: string, user: User): Promise<boolean
-      > {
-    const response = await fetch('/api/resend_recovery_email', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        'email': email,
-        'user': user.toJson()
       })
     });
     if (response.status === 200) {
