@@ -52,6 +52,8 @@ export class UserRoutes {
 
     app.get('/api/settings/:userId', this.getSettingsPage);
 
+    app.get('/api/reset_password', this.getResetPasswordPage)
+
     this.userDatabase = userDatabase;
     this.attendeeDatabase = attendeeDatabase;
     this.userProfileImageDatabase = userProfileImageDatabase;
@@ -908,6 +910,35 @@ export class UserRoutes {
       paymentCards: arrayToJson(paymentCards),
       paymentRecords: arrayToJson(paymentRecords)
     });
+  }
+
+  private getResetPasswordPage = async (request, response) => {
+    const token = request.query.token;
+    if (!token) {
+      response.status(400).json({ message: 'Token is required.' });
+      return;
+    }
+    let user;
+    try {
+      user = await this.userDatabase.loadUserByPasswordResetToken(token);
+    } catch (error) {
+      console.error('Failed at loadUserByResetToken', error);
+      response.status(500).send();
+      return;
+    }
+    if (!user) {
+      response.redirect('https://nevereatalone.net/link_expired');
+      return;
+    }
+    const tokenCreationDate = new Date(user.resetTokenCreatedAt);
+    const currentDate = new Date();
+    const hoursSinceTokenCreated = Math.abs(
+      currentDate.getTime() - tokenCreationDate.getTime()) / (1000 * 60 * 60);
+    if (hoursSinceTokenCreated > 24) {
+      response.redirect('https://nevereatalone.net/link_expired');
+      return;
+    }
+    response.status(200).json({ user: user.toJson() });
   }
 
   private userDatabase: UserDatabase;

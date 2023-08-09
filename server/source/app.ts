@@ -176,7 +176,8 @@ function runExpress(pool: Pool, config: any) {
         'user_profile_social_accounts',
         'languages',
         'user_languages',
-        'user_favourite_cuisines'
+        'user_favourite_cuisines',
+        'password_reset_tokens'
       ]);
       app.listen(config.port, async () => {});
     } catch (error) {
