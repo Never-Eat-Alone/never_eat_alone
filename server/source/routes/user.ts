@@ -523,7 +523,7 @@ export class UserRoutes {
         });
     });
     const newHtml = invitationHtml.replace('{{user_name}}',
-      user.userName).replace('{{contest}}', inviteEmail.contest);
+      user.name).replace('{{contest}}', inviteEmail.contest);
     for (const email of inviteEmail.emailList) {
       try {
         await this.sendEmail(email, 'noreply@nevereatalone.net',
