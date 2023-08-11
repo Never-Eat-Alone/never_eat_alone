@@ -1,9 +1,9 @@
+import * as Crypto from 'crypto';
 import * as Hash from 'hash.js';
 import { Pool } from 'pg';
 import { Cuisine, Language, Location, SocialAccountType, User,
   UserInvitationCode, UserStatus, UserProfileImage, UserProfileSocialAccount
   } from '../../../../client/library/source/definitions';
-import * as Crypto from 'crypto';
 
 /** Generates a unique invitation code. */
 function generateInvitationCode() {
@@ -20,12 +20,6 @@ function generateInvitationCode() {
 function generateResetToken() {
   const buffer = Crypto.randomBytes(32);
   return buffer.toString('hex');
-}
-
-function hashToken(token: string): string {
-  const hash = Crypto.createHash('sha256');
-  hash.update(token);
-  return hash.digest('hex');
 }
 
 /** User related database manipulations class. */
@@ -491,7 +485,8 @@ export class UserDatabase {
     return userCuisines;
   }
 
-  public loadUserByPasswordResetToken = async (token: string): Promise<User> {
+  public loadUserByPasswordResetToken = async (token: string): Promise<
+      User> => {
     if (!token) {
       throw new Error('Token must be provided.');
     }
@@ -507,6 +502,13 @@ export class UserDatabase {
     }
     const expiresAt = new Date(result.rows[0].expires_at);
     if (expiresAt <= new Date()) {
+
+      /** Delete the expired token from the database. */
+      await this.pool.query(`
+        DELETE FROM
+          password_reset_tokens
+        WHERE
+          token = $1`, [token]);
       throw new Error('Token has expired');
     }
     const user = await this.loadUserById(parseInt(result.rows[0].user_id));
