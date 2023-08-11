@@ -193,6 +193,10 @@ export class ApplicationController extends React.Component<Properties, State> {
               render={this.renderPrivacyPolicy}
             />
             <Router.Route
+              path='/reset_password'
+              render={this.renderResetPassword}
+            />
+            <Router.Route
               path='/settings/:id'
               render={this.renderSettings}
             />
@@ -510,6 +514,14 @@ export class ApplicationController extends React.Component<Properties, State> {
       displayMode={this.state.displayMode}
       model={this.props.model.logInModel}
       onLogInSuccess={this.handleLogInSuccess}
+    />;
+  }
+
+  private renderResetPassword = () => {
+    return <ResetPasswordPageController
+      displayMode={this.state.displayMode}
+      model={this.props.model.resetPasswordModel}
+      onSaveAndLogInSuccess={this.handleLogInSuccess}
     />;
   }
 

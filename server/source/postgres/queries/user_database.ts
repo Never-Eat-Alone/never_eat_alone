@@ -164,6 +164,7 @@ export class UserDatabase {
       boolean> => {
     const hashedEnteredPass =
       Hash.sha256().update(password + userId).digest('hex');
+    console.log('userid', userId, 'hashed', hashedEnteredPass);
     const result = await this.pool.query(
       'SELECT * FROM user_credentials WHERE user_id = $1', [userId]);
     if (result.rows?.length === 0 ||
