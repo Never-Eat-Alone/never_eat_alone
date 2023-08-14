@@ -52,7 +52,7 @@ export class UserRoutes {
 
     app.get('/api/settings/:userId', this.getSettingsPage);
 
-    app.get('/api/reset_password', this.getResetPasswordPage)
+    app.post('/api/reset_password', this.getResetPasswordPage);
 
     this.userDatabase = userDatabase;
     this.attendeeDatabase = attendeeDatabase;
@@ -926,19 +926,25 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
-    if (!user) {
-      response.redirect('https://nevereatalone.net/link_expired');
+    if (!user || user.id === -1) {
+      response.status(500).send();
       return;
     }
-    const tokenCreationDate = new Date(user.resetTokenCreatedAt);
-    const currentDate = new Date();
-    const hoursSinceTokenCreated = Math.abs(
-      currentDate.getTime() - tokenCreationDate.getTime()) / (1000 * 60 * 60);
-    if (hoursSinceTokenCreated > 24) {
-      response.redirect('https://nevereatalone.net/link_expired');
+    let profileImageSrc: string;
+    try {
+      profileImageSrc = (await
+        this.userProfileImageDatabase.loadProfileImageByUserId(user.id)).src;
+    } catch {
+      response.status(200).json({
+        user: user.toJson(),
+        profileImageSrc: UserProfileImage.default().src
+      });
       return;
     }
-    response.status(200).json({ user: user.toJson() });
+    response.status(200).json({
+      user: user.toJson(),
+      profileImageSrc: profileImageSrc
+    });
   }
 
   private userDatabase: UserDatabase;
