@@ -43,7 +43,7 @@ export class UserDatabase {
         invite_code = $1, updated_at = NOW()`, [inviteCode, userId]);
   }
 
-  public assingResetTokenToUserId = async (userId: number): Promise<void> => {
+  public assingResetTokenToUserId = async (userId: number): Promise<string> => {
     const token = generateResetToken();
     await this.pool.query(`
       INSERT INTO
@@ -55,6 +55,7 @@ export class UserDatabase {
       DO UPDATE SET
         token = $1, created_at = NOW(), expires_at = NOW() + INTERVAL '24 HOURS'
     `, [token, userId]);
+    return token;
   }
 
   public loadUserInvitationCode = async (userId: number): Promise<
@@ -489,7 +490,7 @@ export class UserDatabase {
   public loadUserByPasswordResetToken = async (token: string): Promise<
       User> => {
     if (!token) {
-      throw new Error('Token must be provided.');
+      throw new Error('Token not found or already used.');
     }
     const result = await this.pool.query(`
       SELECT
@@ -498,20 +499,32 @@ export class UserDatabase {
         password_reset_tokens
       WHERE
         token = $1`, [token]);
+
     if (result.rows?.length === 0) {
-      throw new Error('Token not found');;
+      throw new Error('Token not found');
     }
+
     const expiresAt = new Date(result.rows[0].expires_at);
     if (expiresAt <= new Date()) {
-
-      /** Delete the expired token from the database. */
+      /** Deleting the token even if it's expired to ensure one-time access. */
       await this.pool.query(`
         DELETE FROM
           password_reset_tokens
         WHERE
           token = $1`, [token]);
+
       throw new Error('Token has expired');
     }
+
+    /** Deleting the token after its successful validation to ensure one-time 
+     * access.
+     */
+    await this.pool.query(`
+      DELETE FROM
+        password_reset_tokens
+      WHERE
+        token = $1`, [token]);
+
     const user = await this.loadUserById(parseInt(result.rows[0].user_id));
     return user;
   }

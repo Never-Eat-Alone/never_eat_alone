@@ -45,14 +45,14 @@ export class UserRoutes {
 
     app.post('/api/send_invite_email', this.sendInviteEmail);
     app.post('/api/send_partner_with_us_email', this.sendPartnerWithUsEmail);
-    app.post('/api/send_recovery_email', this.sendRecoveryEmail);
+    app.post('/api/request-password-reset', this.handleRequestPasswordReset);
 
     app.get('/api/profile_page/:profileId', this.getProfilePage);
     app.get('/api/edit_profile_page/:profileId', this.getEditProfilePage);
 
     app.get('/api/settings/:userId', this.getSettingsPage);
 
-    app.post('/api/reset_password', this.getResetPasswordPage);
+    app.post('/api/reset-password', this.getResetPasswordPage);
 
     this.userDatabase = userDatabase;
     this.attendeeDatabase = attendeeDatabase;
@@ -597,7 +597,7 @@ export class UserRoutes {
     }
   }
 
-  private sendRecoveryEmail = async (request, response) => {
+  private handleRequestPasswordReset = async (request, response) => {
     const email = request.body.email;
     let user: User;
     try {
@@ -621,8 +621,19 @@ export class UserRoutes {
           }
         });
     });
+
+    /** Create a token for this user and add it to the database. */
+    let token = '';
+    try {
+      token = await this.userDatabase.assingResetTokenToUserId(user.id);
+    } catch (error) {
+      console.error('Failed at assingResetTokenToUserId', error);
+      response.status(500).send();
+      return;
+    }
     const name = user.name || 'NeverEatAlone Member';
-    const newHtml = recoveryHtml.replace('{{name}}', name);
+    const newHtml = recoveryHtml.replace('{{name}}', name).replace(
+      '{{token}}', token);
     try {
       await this.sendEmail(user.email, 'noreply@nevereatalone.net',
         'Recovery Password Link', newHtml);
@@ -914,6 +925,7 @@ export class UserRoutes {
 
   private getResetPasswordPage = async (request, response) => {
     const token = request.query.token;
+    console.log('token in query', token);
     if (!token) {
       response.status(400).json({ message: 'Token is required.' });
       return;

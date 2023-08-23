@@ -2,7 +2,7 @@ import { ForgotPasswordPageModel } from './forgot_password_page_model';
 
 export class HttpForgotPasswordPageModel extends ForgotPasswordPageModel {
   public async sendRecoveryEmail(email: string): Promise<boolean> {
-    const response = await fetch('/api/send_recovery_email', {
+    const response = await fetch('/api/request-password-reset', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
