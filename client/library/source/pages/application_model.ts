@@ -11,6 +11,7 @@ import { ForgotPasswordPageModel } from './forgot_password_page';
 import { HomePageModel } from './home_page';
 import { PartnerWithUsModel } from './partner_with_us_page';
 import { ProfilePageModel } from './profile_page';
+import { ResetPasswordPageModel } from './reset_password_page';
 import { SettingsPageModel } from './settings_page';
 import { SignUpPageModel } from './sign_up_page';
 
@@ -54,4 +55,5 @@ export abstract class ApplicationModel {
     emailConfirmationPageModel: EmailConfirmationPageModel): void;
   public abstract getEmailConfirmationPageModel(id: string):
     EmailConfirmationPageModel;
+  public abstract get resetPasswordPageModel(): ResetPasswordPageModel;
 }

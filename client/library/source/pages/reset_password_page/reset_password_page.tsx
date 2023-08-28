@@ -17,7 +17,7 @@ interface Properties {
   errorCode: ResetPasswordPage.ErrorCode;
 
   /** Indicates the save and login button is clicked. */
-  onSaveClick: () => void;
+  onSaveClick: (newPAssword: string) => void;
 }
 
 interface State {
@@ -102,7 +102,7 @@ export class ResetPasswordPage extends React.Component<Properties, State> {
           <PrimaryTextButton
             style={SAVE_BUTTON_STYLE}
             label='Save and Log in'
-            onClick={this.props.onSaveClick}
+            onClick={() => this.props.onSaveClick(this.state.password)}
             disabled={this.props.errorCode ===
               ResetPasswordPage.ErrorCode.NO_CONNECTION ||
               this.state.password.length < 9 ||

@@ -24,6 +24,7 @@ import { LogInPageController } from './log_in_page';
 import { PartnerWithUsController } from './partner_with_us_page';
 import { PrivacyPolicyPage } from './privacy_policy_page';
 import { ProfilePageController } from './profile_page';
+import { ResetPasswordPageController } from './reset_password_page';
 import { SettingsPageController } from './settings_page';
 import { Shell } from './shell';
 import { SignUpPageController } from './sign_up_page';
@@ -520,7 +521,7 @@ export class ApplicationController extends React.Component<Properties, State> {
   private renderResetPassword = () => {
     return <ResetPasswordPageController
       displayMode={this.state.displayMode}
-      model={this.props.model.resetPasswordModel}
+      model={this.props.model.resetPasswordPageModel}
       onSaveAndLogInSuccess={this.handleLogInSuccess}
     />;
   }
