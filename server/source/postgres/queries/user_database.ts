@@ -53,8 +53,8 @@ export class UserDatabase {
       ON CONFLICT
         (user_id)
       DO UPDATE SET
-        token = $1, created_at = NOW(), expires_at = NOW() + INTERVAL '24 HOURS'
-    `, [token, userId]);
+        token = $2, created_at = NOW(), expires_at = NOW() + INTERVAL '24 HOURS'
+    `, [userId, token]);
     return token;
   }
 
