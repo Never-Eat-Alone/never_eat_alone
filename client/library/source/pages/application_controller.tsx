@@ -194,7 +194,7 @@ export class ApplicationController extends React.Component<Properties, State> {
               render={this.renderPrivacyPolicy}
             />
             <Router.Route
-              path='/reset_password'
+              path='/reset-password'
               render={this.renderResetPassword}
             />
             <Router.Route
