@@ -506,8 +506,11 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     this._emailConfirmationPageModelMap.set(
       'e2a25428e17ec7b6e61e6ab514f64776b84e224bcde140f88718cc2d814089d9',
       demoEmailConfirmationPageModel1);
+    this._resetPasswordPageModel =
+      new NeverEatAlone.LocalResetPasswordPageModel(this._account.name,
+        this._accountProfileImage.src, this._account);
     await Promise.all([this._homePageModel.load(),
-      this._inviteAFoodieModel.load()]);
+      this._inviteAFoodieModel.load(), this._resetPasswordPageModel.load()]);
   }
 
   public get account(): NeverEatAlone.User {
@@ -641,6 +644,10 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return this._googleClientId;
   }
 
+  public get resetPasswordPageModel(): NeverEatAlone.ResetPasswordPageModel {
+    return this._resetPasswordPageModel;
+  }
+
   private _account: NeverEatAlone.User;
   private _accountProfileImage: NeverEatAlone.UserProfileImage;
   private _homePageModel: NeverEatAlone.HomePageModel;
@@ -662,4 +669,5 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
   private _googleClientId: string;
   private _emailConfirmationPageModelMap: Map<string,
     NeverEatAlone.EmailConfirmationPageModel>;
+  private _resetPasswordPageModel: NeverEatAlone.ResetPasswordPageModel;
 }
