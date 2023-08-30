@@ -38,6 +38,21 @@ export class ResetPasswordPageController extends React.Component<Properties,
     />;
   }
 
+  public async componentDidMount(): Promise<void> {
+    try {
+      await this.props.model.load();
+      this.setState({
+        isLoaded: true,
+        errorCode: ResetPasswordPage.ErrorCode.NONE
+      });
+    } catch {
+      this.setState({
+        isLoaded: true,
+        errorCode: ResetPasswordPage.ErrorCode.NO_CONNECTION
+      });
+    }
+  }
+
   private handleOnSaveClick = async (newPassword: string) => {
     try {
       const account = await this.props.model.savePassword(newPassword);

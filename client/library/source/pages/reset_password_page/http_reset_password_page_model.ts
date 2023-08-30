@@ -16,6 +16,7 @@ export class HttpResetPasswordPageModel extends ResetPasswordPageModel {
     }
 
     const account = await (async () => {
+      const resetResponse = await fetch('/api/reset-password'); // post req with token
       const response = await fetch('/api/current_user');
       if (response.status !== 200) {
         return User.makeGuest();  
@@ -23,7 +24,6 @@ export class HttpResetPasswordPageModel extends ResetPasswordPageModel {
       const responseObject = await response.json();
       return User.fromJson(responseObject.user);
     })();
-
     const accountProfileImage = await (async () => {
       if (account?.id !== -1) {
         const imageResponse = await fetch(
