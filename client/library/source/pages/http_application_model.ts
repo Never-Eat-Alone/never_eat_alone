@@ -70,7 +70,7 @@ export class HttpApplicationModel extends ApplicationModel {
     const signUpPageModelMap = new Map<number, SignUpPageModel>();
     const emailConfirmationPageModelMap = new Map<string,
       EmailConfirmationPageModel>();
-    const resetPasswordPageModel = new LocalResetPasswordPageModel(account.name,
+    const resetPasswordPageModel = new LocalResetPasswordPageModel(
       accountProfileImage.src, account);
     this._model = new LocalApplicationModel(account, accountProfileImage,
       homePageModel, inviteAFoodieModel, joinModel, partnerWithUsModel,
