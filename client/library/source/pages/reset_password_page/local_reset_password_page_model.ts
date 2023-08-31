@@ -2,21 +2,20 @@ import { User } from '../../definitions';
 import { ResetPasswordPageModel } from './reset_password_page_model';
 
 export class LocalResetPasswordPageModel extends ResetPasswordPageModel {
-  constructor(displayName: string, profileImageSrc: string, account: User) {
+  constructor(profileImageSrc: string, account: User) {
     super();
     this._isLoaded = false;
-    this._displayName = displayName;
     this._profileImageSrc = profileImageSrc;
     this._account = account;
   }
 
-  public async load(): Promise<void> {
+  public async load(token: string): Promise<void> {
     this._isLoaded = true;
   }
 
-  public get displayName(): string {
+  public get account(): User {
     this.ensureIsLoaded();
-    return this._displayName;
+    return this._account;
   }
 
   public get profileImageSrc(): string {
@@ -36,7 +35,6 @@ export class LocalResetPasswordPageModel extends ResetPasswordPageModel {
   }
 
   private _isLoaded: boolean;
-  private _displayName: string;
   private _profileImageSrc: string;
   private _account: User;
 }

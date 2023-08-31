@@ -10,42 +10,32 @@ export class HttpResetPasswordPageModel extends ResetPasswordPageModel {
     this._model = new EmptyResetPasswordPageModel();
   }
 
-  public async load(): Promise<void> {
+  public async load(token: string): Promise<void> {
     if (this._isLoaded) {
       return;
     }
 
-    const account = await (async () => {
-      const resetResponse = await fetch('/api/reset-password'); // post req with token
-      const response = await fetch('/api/current_user');
-      if (response.status !== 200) {
-        return User.makeGuest();  
-      }
-      const responseObject = await response.json();
-      return User.fromJson(responseObject.user);
-    })();
-    const accountProfileImage = await (async () => {
-      if (account?.id !== -1) {
-        const imageResponse = await fetch(
-          `/api/user_profile_image/${account.id}`);
-        if (imageResponse.status === 200) {
-          const responseObject = await imageResponse.json();
-          return UserProfileImage.fromJson(
-            responseObject.accountProfileImage);
-        }
-        return UserProfileImage.default(account.id);
-      }
-      return UserProfileImage.default();
-    })();
-
-    this._model = new LocalResetPasswordPageModel(account.name,
-      accountProfileImage.src, account);
-    await this._model.load();
+    const resetResponse = await fetch(`/api/reset-password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ token })
+    });
+    this._checkResponse(resetResponse);
+    const responseObject = await resetResponse.json();
+    if (!responseObject || !responseObject.user) {
+      throw new Error("Invalid server response. User data not found.");
+    }
+    const account = User.fromJson(responseObject.user);
+    const profileImageSrc = responseObject.profileImageSrc;
+    this._model = new LocalResetPasswordPageModel(profileImageSrc, account);
+    await this._model.load(token);
     this._isLoaded = true;
   }
 
-  public get displayName(): string {
-    return this._model.displayName;
+  public get account(): User {
+    return this._model.account;
   }
 
   public get profileImageSrc(): string {

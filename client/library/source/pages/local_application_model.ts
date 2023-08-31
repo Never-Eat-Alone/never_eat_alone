@@ -53,7 +53,7 @@ export class LocalApplicationModel extends ApplicationModel {
 
   public async load(): Promise<void> {
     await Promise.all([this._homePageModel.load(),
-      this._inviteAFoodieModel.load(), this._resetPasswordPageModel.load()]);
+      this._inviteAFoodieModel.load()]);
   }
 
   public async setAccount(newAccount: User): Promise<void> {

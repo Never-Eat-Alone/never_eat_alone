@@ -6,11 +6,11 @@ import { ResetPasswordPageModel } from './reset_password_page_model';
  * initial state of a model prior to being loaded.
  */
 export class EmptyResetPasswordPageModel extends ResetPasswordPageModel {
-  public async load(): Promise<void> {
+  public async load(token: string): Promise<void> {
     throw new Error('Unable to load empty model.');
   }
 
-  public get displayName(): string {
+  public get account(): User {
     throw new Error('ResetPasswordPageModel not loaded.');
   }
 

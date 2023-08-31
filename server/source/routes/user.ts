@@ -924,8 +924,8 @@ export class UserRoutes {
   }
 
   private getResetPasswordPage = async (request, response) => {
-    const token = request.query.token;
-    console.log('token in query', token);
+    const token = request.body.token;
+    console.log('token', token);
     if (!token) {
       response.status(400).json({ message: 'Token is required.' });
       return;
