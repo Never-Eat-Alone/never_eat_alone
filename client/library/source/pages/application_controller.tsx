@@ -316,8 +316,8 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private handleResetPasswordSuccess = async (account: User) => {
-    this.setState({ redirect: '/' })
     await this.updateAccount(account);
+    this.setState({ redirect: '/' });
   }
 
   private handleSignUpSuccess = (account: User, accountProfileImage:
