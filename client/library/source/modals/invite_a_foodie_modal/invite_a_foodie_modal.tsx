@@ -1,8 +1,8 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 import { CircularCounterWithCounterOutside, CloseButton, EmailInputField,
-  FacebookButton, InstagramButton, RedditLinkButton, TwitterButton
-} from '../../components';
+  FacebookButton, InstagramButton, RedditLinkButton, TwitterButton } from
+  '../../components';
 import { DisplayMode, UserInvitationCode } from '../../definitions';
 
 interface Properties {
@@ -106,7 +106,7 @@ export class InviteAFoodieModal extends React.Component<Properties, State> {
           <h1 style={HEADER_STYLE} >Invite a Foodie</h1>
           <p style={INVITE_LINE_STYLE} >
             Invite a friend to join NeverEatAlone! They’ll be able to see the 
-            events you’re attending and message you.
+            events you’re attending and join you.
           </p>
           <EmailInputField
             style={EMAIL_INPUT_STYLE}

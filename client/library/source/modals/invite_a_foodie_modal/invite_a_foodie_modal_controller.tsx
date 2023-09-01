@@ -29,10 +29,10 @@ export class InviteAFoodieModalController extends React.Component<Properties,
   constructor(props: Properties) {
     super(props);
     this.state = {
-      content: 'Hey foodie friend!\n\nHave you heard of this site? It’s ' +
-      'called NeverEatAlone and it lets us find amazing new places to eat! ' +
-      'You can follow the events I’m attending and message me too. I hope ' +
-      'you can join!',
+      content: 'Hey foodie friend!\n\nHave you heard of this site? It\'s ' +
+        'called NeverEatAlone and it lets us discover amazing new places to ' +
+        'eat! You can view the events I\'m attending and come along with me. ' +
+        'I hope to see you there!',
       emailListText: '',
       errorCode: InviteAFoodieModal.ErrorCode.NONE,
       emailInputFieldErrorCode: EmailInputField.ErrorCode.NONE,

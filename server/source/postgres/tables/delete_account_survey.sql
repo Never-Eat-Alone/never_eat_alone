@@ -8,5 +8,5 @@ CREATE TABLE delete_account_survey (
   question_5 BOOLEAN,
   question_6 BOOLEAN,
   message    TEXT,
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
