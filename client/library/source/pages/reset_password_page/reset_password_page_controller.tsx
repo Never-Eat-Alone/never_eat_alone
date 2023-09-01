@@ -40,7 +40,6 @@ export class ResetPasswordPageController extends React.Component<Properties,
   }
 
   public async componentDidMount(): Promise<void> {
-    console.log('mounting ResetPasswordPageController', this.props.token);
     try {
       await this.props.model.load(this.props.token);
       this.setState({
