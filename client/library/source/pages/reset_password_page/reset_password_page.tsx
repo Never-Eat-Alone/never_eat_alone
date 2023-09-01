@@ -17,7 +17,7 @@ interface Properties {
   errorCode: ResetPasswordPage.ErrorCode;
 
   /** Indicates the save and login button is clicked. */
-  onSaveClick: (newPAssword: string) => void;
+  onSaveClick: (newPAssword: string) => Promise<void>;
 }
 
 interface State {

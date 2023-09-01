@@ -7,7 +7,7 @@ interface Properties {
   displayMode: DisplayMode;
   model: ResetPasswordPageModel;
   token: string;
-  onSaveAndLogInSuccess: (account: User) => void;
+  onSaveAndLogInSuccess: (account: User) => Promise<void>;
 }
 
 interface State {
@@ -58,7 +58,7 @@ export class ResetPasswordPageController extends React.Component<Properties,
     try {
       const account = await this.props.model.savePassword(newPassword);
       if (account && account.id !== -1) {
-        this.props.onSaveAndLogInSuccess(account);
+        await this.props.onSaveAndLogInSuccess(account);
       } else {
         this.setState({
           errorCode: ResetPasswordPage.ErrorCode.NO_CONNECTION
