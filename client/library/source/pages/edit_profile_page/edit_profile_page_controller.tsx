@@ -9,7 +9,6 @@ interface Properties {
   displayMode: DisplayMode;
   account: User;
   model: EditProfilePageModel;
-  onChangeBanner: () => void;
   onSave: () => void;
 }
 
