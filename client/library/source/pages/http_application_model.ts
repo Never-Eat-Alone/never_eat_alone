@@ -21,7 +21,7 @@ import { LocalApplicationModel } from './local_application_model';
 import { HttpPartnerWithUsModel, PartnerWithUsModel } from
   './partner_with_us_page';
 import { ProfilePageModel, HttpProfilePageModel } from './profile_page';
-import { LocalResetPasswordPageModel, ResetPasswordPageModel } from
+import { HttpResetPasswordPageModel, ResetPasswordPageModel } from
   './reset_password_page';
 import { HttpSettingsPageModel, SettingsPageModel } from './settings_page';
 import { HttpSignUpPageModel, SignUpPageModel } from './sign_up_page';
@@ -70,8 +70,7 @@ export class HttpApplicationModel extends ApplicationModel {
     const signUpPageModelMap = new Map<number, SignUpPageModel>();
     const emailConfirmationPageModelMap = new Map<string,
       EmailConfirmationPageModel>();
-    const resetPasswordPageModel = new LocalResetPasswordPageModel(
-      accountProfileImage.src, account);
+    const resetPasswordPageModel = new HttpResetPasswordPageModel();
     this._model = new LocalApplicationModel(account, accountProfileImage,
       homePageModel, inviteAFoodieModel, joinModel, partnerWithUsModel,
       logInModel, deletedAccountSurveyModel, deactivateAccountSurveyModel,
