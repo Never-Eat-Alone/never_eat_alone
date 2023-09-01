@@ -507,10 +507,10 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       'e2a25428e17ec7b6e61e6ab514f64776b84e224bcde140f88718cc2d814089d9',
       demoEmailConfirmationPageModel1);
     this._resetPasswordPageModel =
-      new NeverEatAlone.LocalResetPasswordPageModel(this._account.name,
+      new NeverEatAlone.LocalResetPasswordPageModel(
         this._accountProfileImage.src, this._account);
     await Promise.all([this._homePageModel.load(),
-      this._inviteAFoodieModel.load(), this._resetPasswordPageModel.load()]);
+      this._inviteAFoodieModel.load()]);
   }
 
   public get account(): NeverEatAlone.User {
