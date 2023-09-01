@@ -1,59 +1,116 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Password Recovery Email</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f6f6f6;
-            padding: 20px;
-        }
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+  <title>Password Recovery Email</title>
+  <style>
+    body {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+      background: var(--grey-light, #F6F6F6);
+      padding: 40px 100px;
+    }
 
-        .email-container {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 5px;
-            max-width: 600px;
-            margin: auto;
-        }
+    .email-container {
+      box-sizing: border-box;
+      background-color: #ffffff;
+      padding: 22px 34px;
+      border-radius: 5px;
+      width: 600px;
+      margin: auto;
+    }
 
-        .greeting {
-            font-size: 18px;
-            font-weight: bold;
-        }
+    .header-title {
+      font-family: Oswald;
+      font-size: 18px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+    }
 
-        .message {
-            margin-top: 30px;
-            margin-bottom: 0px;
-        }
+    .greeting {
+      font-family: Source Sans Pro;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 18px;
+      margin-top: 30px;
+    }
 
-        .button {
-            background-color: #F26B55;
-            border: none;
-            color: white;
-            padding: 10px 36px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 12px;
-            line-height: 15px;
-            margin: 30px 0;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-    </style>
-  </head>
-  <body>
-    <div class="email-container">
-      <p class="greeting">Hello {{name}}&nbsp;👋</p>
-      <p class="message">
+    .message {
+      margin-top: 30px;
+      margin-bottom: 0px;
+      font-family: Source Sans Pro;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 18px;
+    }
+
+    .button {
+      background-color: #F26B55;
+      border: none;
+      color: white;
+      padding: 10px 36px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 12px;
+      line-height: 15px;
+      margin: 30px 0;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <table class="email-container" cellpadding="0" cellspacing="0" border="0"
+      align="center"
+  >
+    <tr>
+      <td>
+        <table cellpadding="0" cellspacing="0" border="0" align="center"
+            style="margin: 0px 0px 30px 0px;"
+        >
+          <tr>
+            <td>
+              <img style="width: 50px; height: 43px; margin-left: 20px;"
+                alt='NEA Logo' src='https://i.imgur.com/S95mND9.png'
+              />
+            </td>
+            <td class="header-title" >Recovery Password Link</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td class="greeting" >Hello {{name}}&nbsp;👋</td>
+    </tr>
+    <tr>
+      <td class="message" >
           You are receiving this email because you requested a password recovery from NEA. Click on the button below to proceed to reset your password.
-      </p>
-      <a href="https://nevereatalone.net/reset_password" class="button">
-        Reset My Password
-      </a>
-    </div>
-  </body>
+      </td>
+    </tr>
+    <tr>
+      <td align="center" >
+        <a href="https://nevereatalone.net/reset-password?token={{token}}"
+            class="button" style="color: #FFFFFF;
+            font-family: Source Sans Pro;
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: normal;
+            text-transform: uppercase;"
+        >
+          Reset My Password
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td class="bottom-message">
+        If you haven’t requested this, please ignore this email and access your NEA as you usually would.</td>
+    </tr>
+  </table>
+</body>
 </html>

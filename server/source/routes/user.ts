@@ -45,13 +45,15 @@ export class UserRoutes {
 
     app.post('/api/send_invite_email', this.sendInviteEmail);
     app.post('/api/send_partner_with_us_email', this.sendPartnerWithUsEmail);
-    app.post('/api/send_recovery_email', this.sendRecoveryEmail);
-    app.post('/api/resend_recovery_email', this.resendRecoveryEmail);
+    app.post('/api/request-password-reset', this.handleRequestPasswordReset);
 
     app.get('/api/profile_page/:profileId', this.getProfilePage);
     app.get('/api/edit_profile_page/:profileId', this.getEditProfilePage);
 
     app.get('/api/settings/:userId', this.getSettingsPage);
+
+    app.post('/api/reset-password', this.getResetPasswordPage);
+    app.post('/api/update-password', this.updatePassword);
 
     this.userDatabase = userDatabase;
     this.attendeeDatabase = attendeeDatabase;
@@ -524,7 +526,7 @@ export class UserRoutes {
         });
     });
     const newHtml = invitationHtml.replace('{{user_name}}',
-      user.userName).replace('{{contest}}', inviteEmail.contest);
+      user.name).replace('{{contest}}', inviteEmail.contest);
     for (const email of inviteEmail.emailList) {
       try {
         await this.sendEmail(email, 'noreply@nevereatalone.net',
@@ -596,7 +598,7 @@ export class UserRoutes {
     }
   }
 
-  private sendRecoveryEmail = async (request, response) => {
+  private handleRequestPasswordReset = async (request, response) => {
     const email = request.body.email;
     let user: User;
     try {
@@ -620,39 +622,21 @@ export class UserRoutes {
           }
         });
     });
-    const name = user.name || 'NeverEatAlone Member';
-    const newHtml = recoveryHtml.replace('{{name}}', name);
+
+    /** Create a token for this user and add it to the database. */
+    let token = '';
     try {
-      await this.sendEmail(user.email, 'info@nevereatalone.net',
-        'Recovery Password Link', newHtml);
+      token = await this.userDatabase.assingResetTokenToUserId(user.id);
     } catch (error) {
-      console.error('Failed at sendEmail', error);
+      console.error('Failed at assingResetTokenToUserId', error);
       response.status(500).send();
       return;
     }
-    response.status(200).json({ user: user.toJson() });
-  }
-
-  private resendRecoveryEmail = async (request, response) => {
-    const email = request.body.email;
-    const user = User.fromJson(request.body.user);
-    if (!user || user.id === -1) {
-      response.status(400).json({ message: 'USER_NOT_FOUND' });
-      return;
-    }
-    const recoveryHtml = await new Promise<string>((resolve, reject) => {
-      fs.readFile('public/resources/recovery_password_email/email.html', 'utf8',
-        (error, html) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(html);
-          }
-        });
-    });
-    const newHtml = recoveryHtml.replace('{{name}}', user.name);
+    const name = user.name || 'NeverEatAlone Member';
+    const newHtml = recoveryHtml.replace('{{name}}', name).replace(
+      '{{token}}', token);
     try {
-      await this.sendEmail(user.email, 'info@nevereatalone.net',
+      await this.sendEmail(user.email, 'noreply@nevereatalone.net',
         'Recovery Password Link', newHtml);
     } catch (error) {
       console.error('Failed at sendEmail', error);
@@ -938,6 +922,81 @@ export class UserRoutes {
       paymentCards: arrayToJson(paymentCards),
       paymentRecords: arrayToJson(paymentRecords)
     });
+  }
+
+  private getResetPasswordPage = async (request, response) => {
+    const token = request.body.token;
+    if (!token) {
+      response.status(400).json({ message: 'Token is required.' });
+      return;
+    }
+    let user: User;
+    try {
+      user = await this.userDatabase.loadUserByPasswordResetToken(token);
+    } catch (error) {
+      console.error('Failed at loadUserByResetToken', error);
+      response.status(500).send();
+      return;
+    }
+    if (!user || user.id === -1) {
+      response.status(500).send();
+      return;
+    }
+    let profileImageSrc: string;
+    try {
+      profileImageSrc = (await
+        this.userProfileImageDatabase.loadProfileImageByUserId(user.id)).src;
+    } catch {
+      response.status(200).json({
+        user: user.toJson(),
+        profileImageSrc: UserProfileImage.default().src
+      });
+      return;
+    }
+    response.status(200).json({
+      user: user.toJson(),
+      profileImageSrc: profileImageSrc
+    });
+  }
+
+  private updatePassword = async (request, response) => {
+    const password = request.body.password;
+    const account = User.fromJson(request.body.account);
+    if (!password) {
+      response.status(400).json({ message: 'password is required.' });
+      return;
+    }
+    if (!account || account.id === -1) {
+      response.status(400).json({ message: 'account is required.' });
+      return;
+    }
+    try {
+      await this.userDatabase.updatePassword(account.id, password);
+    } catch (error) {
+      console.error('Failed at updatePassword', error);
+      response.status(500).send();
+      return;
+    }
+    request.session.cookie.maxAge = 24 * 60 * 60 * 1000;
+    try {
+      const sessionExpiration = new Date(
+        Date.now() + request.session.cookie.maxAge);
+      await this.userDatabase.assignUserIdToSid(request.session.id, account.id,
+        request.session, sessionExpiration);
+    } catch (error) {
+      console.error('Failed at assignUserIdToSid', error);
+      response.status(500).json({ message: 'DATABASE_ERROR' });
+      return;
+    }
+    request.session.user = {
+      id: account.id,
+      name: account.name,
+      email: account.email,
+      userName: account.userName,
+      userStatus: account.userStatus.toString(),
+      createdAt: account.createdAt.toISOString()
+    };
+    response.status(200).send();
   }
 
   private userDatabase: UserDatabase;

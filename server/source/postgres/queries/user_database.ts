@@ -1,9 +1,9 @@
+import * as Crypto from 'crypto';
 import * as Hash from 'hash.js';
 import { Pool } from 'pg';
 import { Cuisine, Language, Location, SocialAccountType, User,
   UserInvitationCode, UserStatus, UserProfileImage, UserProfileSocialAccount
   } from '../../../../client/library/source/definitions';
-import * as Crypto from 'crypto';
 
 /** Generates a unique invitation code. */
 function generateInvitationCode() {
@@ -15,6 +15,11 @@ function generateInvitationCode() {
     code += chars[randomIndex];
   }
   return code;
+}
+
+function generateResetToken() {
+  const buffer = Crypto.randomBytes(32);
+  return buffer.toString('hex');
 }
 
 /** User related database manipulations class. */
@@ -36,6 +41,21 @@ export class UserDatabase {
         (user_id)
       DO UPDATE SET
         invite_code = $1, updated_at = NOW()`, [inviteCode, userId]);
+  }
+
+  public assingResetTokenToUserId = async (userId: number): Promise<string> => {
+    const token = generateResetToken();
+    await this.pool.query(`
+      INSERT INTO
+        password_reset_tokens (user_id, token, created_at, expires_at)
+      VALUES
+        ($1, $2, NOW(), NOW() + INTERVAL '24 HOURS')
+      ON CONFLICT
+        (user_id)
+      DO UPDATE SET
+        token = $2, created_at = NOW(), expires_at = NOW() + INTERVAL '24 HOURS'
+    `, [userId, token]);
+    return token;
   }
 
   public loadUserInvitationCode = async (userId: number): Promise<
@@ -68,8 +88,10 @@ export class UserDatabase {
       return;
     }
     await this.pool.query(`
-      INSERT INTO user_sessions (sid, user_id, sess, expire)
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO
+        user_sessions (sid, user_id, sess, expire)
+      VALUES
+        ($1, $2, $3, $4)
       ON CONFLICT (sid) DO UPDATE
         SET user_id = EXCLUDED.user_id,
             sess = EXCLUDED.sess,
@@ -327,13 +349,16 @@ export class UserDatabase {
     const userQueryResult = await this.pool.query(
       `UPDATE users SET name = $1 WHERE id = $2 RETURNING *`,
       [displayName, userId]);
-    const userProfileImageQueryResult = await this.pool.query(
-      `INSERT INTO user_profile_images (user_id, src)
-      VALUES ($1, $2)
-      ON CONFLICT (user_id)
-      DO UPDATE SET src = EXCLUDED.src, updated_at = NOW()
-      RETURNING *`,
-      [userId, imageSrc]);
+    const userProfileImageQueryResult = await this.pool.query(`
+      INSERT INTO
+        user_profile_images (user_id, src)
+      VALUES
+        ($1, $2)
+      ON CONFLICT
+        (user_id)
+      DO UPDATE
+        SET src = EXCLUDED.src, updated_at = NOW()
+      RETURNING *`, [userId, imageSrc]);
     const account = new User(
       parseInt(userQueryResult.rows[0].id), userQueryResult.rows[0].name,
       userQueryResult.rows[0].email, userQueryResult.rows[0].user_name,
@@ -377,8 +402,17 @@ export class UserDatabase {
 
   public loadUserLocationByUserId = async (userId: number): Promise<
       Location> => {
-    const result = await this.pool.query('SELECT lo.* FROM locations AS lo \
-      JOIN users ON users.location_id = lo.id WHERE users.id = $1', [userId]);
+    const result = await this.pool.query(`
+      SELECT
+        lo.*
+      FROM
+        locations AS lo
+      JOIN
+        users
+      ON
+        users.location_id = lo.id
+      WHERE
+        users.id = $1`, [userId]);
     if (result.rows?.length === 0) {
       return Location.empty();
     }
@@ -390,9 +424,17 @@ export class UserDatabase {
 
   public loadUserLanguagesByUserId = async (userId: number): Promise<
       Language[]> => {
-    const result = await this.pool.query(
-      `SELECT l.* FROM languages AS l INNER JOIN user_languages AS ul ON 
-      l.id = ul.language_id WHERE ul.user_id = $1`, [userId]);
+    const result = await this.pool.query(`
+      SELECT
+        l.*
+      FROM
+        languages AS l
+      INNER JOIN
+        user_languages AS ul
+      ON
+        l.id = ul.language_id
+      WHERE
+        ul.user_id = $1`, [userId]);
     if (result.rows?.length === 0) {
       return [];
     }
@@ -423,9 +465,17 @@ export class UserDatabase {
 
   public loadUserFavouriteCuisinesByUserId = async (userId: number): Promise<
       Cuisine[]> => {
-    const result = await this.pool.query(`SELECT cu.* FROM cuisines AS cu JOIN
-      user_favourite_cuisines AS u_cu ON u_cu.cuisine_id = cu.id WHERE
-      u_cu.user_id = $1`, [userId]);
+    const result = await this.pool.query(`
+      SELECT
+        cu.*
+      FROM
+        cuisines AS cu
+      JOIN
+        user_favourite_cuisines AS u_cu
+      ON
+        u_cu.cuisine_id = cu.id
+      WHERE
+        u_cu.user_id = $1`, [userId]);
     if (result.rows?.length === 0) {
       return [];
     }
@@ -434,6 +484,67 @@ export class UserDatabase {
       return cuisine;
     });
     return userCuisines;
+  }
+
+  public loadUserByPasswordResetToken = async (token: string): Promise<
+      User> => {
+    if (!token) {
+      throw new Error('Token not found or already used.');
+    }
+    const result = await this.pool.query(`
+      SELECT
+        user_id, expires_at
+      FROM
+        password_reset_tokens
+      WHERE
+        token = $1`, [token]);
+
+    if (result.rows?.length === 0) {
+      throw new Error('Token not found');
+    }
+
+    const expiresAt = new Date(result.rows[0].expires_at);
+    if (expiresAt <= new Date()) {
+      /** Deleting the token even if it's expired to ensure one-time access. */
+      await this.pool.query(`
+        DELETE FROM
+          password_reset_tokens
+        WHERE
+          token = $1`, [token]);
+
+      throw new Error('Token has expired');
+    }
+
+    /** Deleting the token after its successful validation to ensure one-time 
+     * access.
+     */
+    await this.pool.query(`
+      DELETE FROM
+        password_reset_tokens
+      WHERE
+        token = $1`, [token]);
+
+    const user = await this.loadUserById(parseInt(result.rows[0].user_id));
+    return user;
+  }
+
+  public updatePassword = async (userId: number, newPassword: string):
+      Promise<void> => {
+    const hashedEnteredPass =
+      Hash.sha256().update(newPassword + userId).digest('hex');
+    
+      /** Check if the user ID already exists in the table */
+    const result = await this.pool.query(`
+      SELECT user_id FROM user_credentials WHERE user_id = $1`, [userId]);
+    if (result.rows.length > 0) {
+
+      /** If the user ID already exists, update the password */
+      await this.pool.query(`
+        UPDATE user_credentials SET hashed_pass = $1 WHERE user_id = $2`,
+        [hashedEnteredPass, userId]);
+    } else {
+      throw new Error("User doesn't have credentials.");
+    }
   }
 
   /** The postgress pool connection. */

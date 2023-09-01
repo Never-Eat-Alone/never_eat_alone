@@ -21,6 +21,8 @@ import { LocalApplicationModel } from './local_application_model';
 import { HttpPartnerWithUsModel, PartnerWithUsModel } from
   './partner_with_us_page';
 import { ProfilePageModel, HttpProfilePageModel } from './profile_page';
+import { HttpResetPasswordPageModel, ResetPasswordPageModel } from
+  './reset_password_page';
 import { HttpSettingsPageModel, SettingsPageModel } from './settings_page';
 import { HttpSignUpPageModel, SignUpPageModel } from './sign_up_page';
 
@@ -68,12 +70,14 @@ export class HttpApplicationModel extends ApplicationModel {
     const signUpPageModelMap = new Map<number, SignUpPageModel>();
     const emailConfirmationPageModelMap = new Map<string,
       EmailConfirmationPageModel>();
+    const resetPasswordPageModel = new HttpResetPasswordPageModel();
     this._model = new LocalApplicationModel(account, accountProfileImage,
       homePageModel, inviteAFoodieModel, joinModel, partnerWithUsModel,
       logInModel, deletedAccountSurveyModel, deactivateAccountSurveyModel,
       forgotPasswordPageModel, googleClientId, diningEventPageModelMap,
       editProfilePageModelMap, signUpPageModelMap, profilePageModelMap,
-      settingsPageModelMap, emailConfirmationPageModelMap);
+      settingsPageModelMap, emailConfirmationPageModelMap,
+      resetPasswordPageModel);
     await this._model.load();
   }
 
@@ -243,6 +247,10 @@ export class HttpApplicationModel extends ApplicationModel {
         emailConfirmationPageModel);
     }
     return emailConfirmationPageModel;
+  }
+
+  public get resetPasswordPageModel(): ResetPasswordPageModel {
+    return this._model.resetPasswordPageModel;
   }
 
   private _model: ApplicationModel;

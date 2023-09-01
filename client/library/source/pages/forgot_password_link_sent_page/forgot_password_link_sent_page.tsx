@@ -1,10 +1,12 @@
 import * as React from 'react';
-import { SecondaryButtonNavLink, SecondaryTextLinkButton
-} from '../../components';
+import { SecondaryButtonNavLink, SecondaryTextLinkButton } from
+  '../../components';
 import { DisplayMode } from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
+
+  /** Indicates the resend link button is clicked. */
   onResendLinkClick: () => void;
 }
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DisplayMode, User } from '../../definitions';
+import { DisplayMode } from '../../definitions';
 import { ForgotPasswordLinkSentPage } from '../forgot_password_link_sent_page';
 import { ForgotPasswordPage } from './forgot_password_page';
 import { ForgotPasswordPageModel } from './forgot_password_page_model';
@@ -13,7 +13,6 @@ interface State {
   errorCode: ForgotPasswordPage.ErrorCode;
   hasSentEmail: boolean;
   email: string;
-  user: User;
 }
 
 export class ForgotPasswordPageController extends React.Component<Properties,
@@ -23,8 +22,7 @@ export class ForgotPasswordPageController extends React.Component<Properties,
     this.state = {
       errorCode: ForgotPasswordPage.ErrorCode.NONE,
       hasSentEmail: false,
-      email: '',
-      user: User.makeGuest()
+      email: ''
     };
   }
 
@@ -45,8 +43,8 @@ export class ForgotPasswordPageController extends React.Component<Properties,
 
   private handleResendLinkClick = async () => {
     try {
-      const isResend = await this.props.model.resendRecoveryEmail(
-        this.state.email, this.state.user);
+      const isResend = await this.props.model.sendRecoveryEmail(
+        this.state.email);
       this.setState({ errorCode: isResend && ForgotPasswordPage.ErrorCode.NONE
         || ForgotPasswordPage.ErrorCode.NO_CONNECTION });
     } catch {
@@ -58,12 +56,17 @@ export class ForgotPasswordPageController extends React.Component<Properties,
     this.setState({ email });
     try {
       const response = await this.props.model.sendRecoveryEmail(email);
-      const user = User.fromJson(response);
-      this.setState({
-        hasSentEmail: true,
-        user: user,
-        errorCode: ForgotPasswordPage.ErrorCode.NONE
-      });
+      if (response) {
+        this.setState({
+          hasSentEmail: true,
+          errorCode: ForgotPasswordPage.ErrorCode.NONE
+        });
+      } else {
+        this.setState({
+          hasSentEmail: false,
+          errorCode: ForgotPasswordPage.ErrorCode.NO_CONNECTION
+        });
+      }
     } catch {
       this.setState({ errorCode: ForgotPasswordPage.ErrorCode.NO_CONNECTION });
     }

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { PasswordAnalyzer, PasswordInputField, PrimaryTextButton
-} from '../../components';
+import { PasswordAnalyzer, PasswordInputField, PrimaryTextButton } from
+  '../../components';
 import { DisplayMode } from '../../definitions';
 import { getPasswordChecks, getPasswordChecksScore } from '../../utilities';
 
@@ -17,7 +17,7 @@ interface Properties {
   errorCode: ResetPasswordPage.ErrorCode;
 
   /** Indicates the save and login button is clicked. */
-  onSaveClick: () => void;
+  onSaveClick: (newPAssword: string) => Promise<void>;
 }
 
 interface State {
@@ -102,10 +102,10 @@ export class ResetPasswordPage extends React.Component<Properties, State> {
           <PrimaryTextButton
             style={SAVE_BUTTON_STYLE}
             label='Save and Log in'
-            onClick={this.props.onSaveClick}
+            onClick={() => this.props.onSaveClick(this.state.password)}
             disabled={this.props.errorCode ===
               ResetPasswordPage.ErrorCode.NO_CONNECTION ||
-              this.state.password.length < 9 ||
+              this.state.password.length < 8 ||
               this.state.confirmPassword.length === 0 ||
               !checks.doesConfirmationMatch}
           />
