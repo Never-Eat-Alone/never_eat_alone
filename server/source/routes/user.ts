@@ -981,6 +981,7 @@ export class UserRoutes {
     try {
       const sessionExpiration = new Date(
         Date.now() + request.session.cookie.maxAge);
+      console.log('request.session.id', request.session.id);
       await this.userDatabase.assignUserIdToSid(request.session.id, account.id,
         request.session, sessionExpiration);
     } catch (error) {
@@ -996,7 +997,7 @@ export class UserRoutes {
       userStatus: account.userStatus.toString(),
       createdAt: account.createdAt.toISOString()
     };
-    response.status(200).send();
+    response.redirect(303, 'https://nevereatalone.net/log_in');
   }
 
   private userDatabase: UserDatabase;

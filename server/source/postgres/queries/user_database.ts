@@ -87,6 +87,7 @@ export class UserDatabase {
         userId) || userId === -1 || !sess || !sid || !expire) {
       return;
     }
+    console.log('assignUserIdToSid', sid, userId);
     await this.pool.query(`
       INSERT INTO
         user_sessions (sid, user_id, sess, expire)
