@@ -78,7 +78,6 @@ export class InviteAFoodiePageController extends React.Component<Properties,
         errorCode: InviteAFoodiePage.ErrorCode.NO_CONNECTION
       });
     }
-    return;
   }
 
   private handleContentChange = (value: string) => {

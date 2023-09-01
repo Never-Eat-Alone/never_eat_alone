@@ -521,6 +521,7 @@ export class ApplicationController extends React.Component<Properties, State> {
   private renderResetPassword = () => {
     const params = new URLSearchParams(this.props.location.search);
     const token = params.get('token') || '';
+    console.log('token', token);
     return <ResetPasswordPageController
       displayMode={this.state.displayMode}
       model={this.props.model.resetPasswordPageModel}
