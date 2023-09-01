@@ -50,7 +50,6 @@ interface State {
   accountProfileImage: UserProfileImage;
   hasJoinedEvent: boolean;
   hasRemovedSeat: boolean;
-  redirect: string;
 }
 
 export class ApplicationController extends React.Component<Properties, State> {
@@ -67,15 +66,11 @@ export class ApplicationController extends React.Component<Properties, State> {
       isPartnerWithUsButtonClicked: false,
       accountProfileImage: UserProfileImage.default(),
       hasJoinedEvent: false,
-      hasRemovedSeat: false,
-      redirect: null
+      hasRemovedSeat: false
     };
   }
 
   public render(): JSX.Element {
-    if (this.state.redirect) {
-      return <Router.Redirect to={this.state.redirect} />;
-    }
     if (this.state.hasError) {
       return <ErrorPage500 displayMode={this.state.displayMode} />;
     }
@@ -259,13 +254,17 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private updateAccount = async (newUser: User): Promise<void> => {
+    console.log('updateAccount started');
     try {
       await this.props.model.setAccount(newUser);
+      console.log('setAccount done in model');
       this.setState({
         account: newUser,
         accountProfileImage: this.props.model.accountProfileImage
       });
+      console.log('set state done for account and profile image');
     } catch {
+      console.log('there was an error');
       this.setState({ hasError: true });
     }
   }
@@ -317,7 +316,7 @@ export class ApplicationController extends React.Component<Properties, State> {
 
   private handleResetPasswordSuccess = async (account: User) => {
     await this.updateAccount(account);
-    this.setState({ redirect: '/' });
+    this.props.history.push('/');
   }
 
   private handleSignUpSuccess = (account: User, accountProfileImage:
