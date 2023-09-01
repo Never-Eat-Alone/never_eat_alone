@@ -977,6 +977,25 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
+    request.session.cookie.maxAge = 24 * 60 * 60 * 1000;
+    try {
+      const sessionExpiration = new Date(
+        Date.now() + request.session.cookie.maxAge);
+      await this.userDatabase.assignUserIdToSid(request.session.id, account.id,
+        request.session, sessionExpiration);
+    } catch (error) {
+      console.error('Failed at assignUserIdToSid', error);
+      response.status(500).json({ message: 'DATABASE_ERROR' });
+      return;
+    }
+    request.session.user = {
+      id: account.id,
+      name: account.name,
+      email: account.email,
+      userName: account.userName,
+      userStatus: account.userStatus.toString(),
+      createdAt: account.createdAt.toISOString()
+    };
     response.status(200).send();
   }
 
