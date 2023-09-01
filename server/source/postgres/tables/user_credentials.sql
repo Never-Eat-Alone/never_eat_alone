@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS user_credentials (
   user_id       INTEGER   PRIMARY KEY,
-  hashed_pass   TEXT      NOT NULL
+  hashed_pass   TEXT      NOT NULL,
+  updated_at    TIMESTAMP WITH TIME ZONE       DEFAULT CURRENT_TIMESTAMP
 );
 
 ALTER TABLE user_credentials

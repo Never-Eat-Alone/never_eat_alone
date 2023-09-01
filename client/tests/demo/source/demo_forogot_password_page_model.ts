@@ -7,18 +7,13 @@ export class DemoForgotPasswordPageModel extends
     this._userList = userList;
   }
 
-  public async sendRecoveryEmail(email: string): Promise<NeverEatAlone.User> {
+  public async sendRecoveryEmail(email: string): Promise<boolean> {
     for (const user of this._userList) {
       if (user.email === email) {
-        return user;
+        return true;
       }
     }
-    return NeverEatAlone.User.makeGuest();
-  }
-
-  public async resendRecoveryEmail(email: string, user: NeverEatAlone.User
-      ): Promise<boolean> {
-    return Boolean(email && user);
+    return false;
   }
 
   private _userList: NeverEatAlone.User[];

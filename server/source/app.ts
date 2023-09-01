@@ -11,20 +11,20 @@ import * as SGMail from '@sendgrid/mail';
 import { v4 as uuidv4 } from 'uuid';
 import { AttendeeDatabase } from './postgres/queries/attendee_database';
 import { UserCoverImageDatabase } from
-'./postgres/queries/user_cover_image_database';
-import { DeactivateAccountSurveyDatabase
-} from './postgres/queries/deactivate_account_survey_database';
-import { DeleteAccountSurveyDatabase
-} from './postgres/queries/delete_account_survey_database';
+  './postgres/queries/user_cover_image_database';
+import { DeactivateAccountSurveyDatabase } from
+  './postgres/queries/deactivate_account_survey_database';
+import { DeleteAccountSurveyDatabase } from
+  './postgres/queries/delete_account_survey_database';
 import { DiningEventDatabase } from './postgres/queries/dining_event_database';
 import { LocationDatabase } from './postgres/queries/location_database';
-import { SocialMediaImageDatabase
-} from './postgres/queries/social_media_image_database';
+import { SocialMediaImageDatabase } from
+  './postgres/queries/social_media_image_database';
 import { UserDatabase } from './postgres/queries/user_database';
-import { UserProfileImageDatabase
-} from './postgres/queries/user_profile_image_database';
-import { DeactivateAccountSurveyRoutes
-} from './routes/deactivate_account_survey';
+import { UserProfileImageDatabase } from
+  './postgres/queries/user_profile_image_database';
+import { DeactivateAccountSurveyRoutes } from
+  './routes/deactivate_account_survey';
 import { DeleteAccountSurveyRoutes } from './routes/delete_account_survey';
 import { DiningEventRoutes } from './routes/dining_event';
 import { SocialMediaImageRoutes } from './routes/social_media_image';
@@ -176,7 +176,8 @@ function runExpress(pool: Pool, config: any) {
         'user_profile_social_accounts',
         'languages',
         'user_languages',
-        'user_favourite_cuisines'
+        'user_favourite_cuisines',
+        'password_reset_tokens'
       ]);
       app.listen(config.port, async () => {});
     } catch (error) {

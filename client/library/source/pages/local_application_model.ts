@@ -12,6 +12,7 @@ import { ForgotPasswordPageModel } from './forgot_password_page';
 import { HomePageModel } from './home_page';
 import { PartnerWithUsModel } from './partner_with_us_page';
 import { ProfilePageModel } from './profile_page';
+import { ResetPasswordPageModel } from './reset_password_page';
 import { SettingsPageModel } from './settings_page';
 import { SignUpPageModel } from './sign_up_page';
 
@@ -27,7 +28,8 @@ export class LocalApplicationModel extends ApplicationModel {
       EditProfilePageModel>, signUpPageModelMap: Map<number, SignUpPageModel>,
       profilePageModelMap: Map<number, ProfilePageModel>, settingsPageModelMap:
       Map<number, SettingsPageModel>, emailConfirmationPageModelMap: Map<string,
-      EmailConfirmationPageModel>) {
+      EmailConfirmationPageModel>, resetPasswordPageModel:
+      ResetPasswordPageModel) {
     super();
     this._account = account;
     this._accountProfileImage = accountProfileImage;
@@ -46,6 +48,7 @@ export class LocalApplicationModel extends ApplicationModel {
     this._profilePageModelMap = profilePageModelMap;
     this._settingsPageModelMap = settingsPageModelMap;
     this._emailConfirmationPageModelMap = emailConfirmationPageModelMap;
+    this._resetPasswordPageModel = resetPasswordPageModel;
   }
 
   public async load(): Promise<void> {
@@ -175,6 +178,10 @@ export class LocalApplicationModel extends ApplicationModel {
     return this._emailConfirmationPageModelMap.get(id);
   }
 
+  public get resetPasswordPageModel(): ResetPasswordPageModel {
+    return this._resetPasswordPageModel;
+  }
+
   private _account: User;
   private _accountProfileImage: UserProfileImage;
   private _homePageModel: HomePageModel;
@@ -193,4 +200,5 @@ export class LocalApplicationModel extends ApplicationModel {
   private _signUpPageModelMap: Map<number, SignUpPageModel>;
   private _emailConfirmationPageModelMap: Map<string,
     EmailConfirmationPageModel>;
+  private _resetPasswordPageModel: ResetPasswordPageModel;
 }

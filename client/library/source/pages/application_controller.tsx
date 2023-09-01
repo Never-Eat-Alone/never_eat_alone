@@ -24,6 +24,7 @@ import { LogInPageController } from './log_in_page';
 import { PartnerWithUsController } from './partner_with_us_page';
 import { PrivacyPolicyPage } from './privacy_policy_page';
 import { ProfilePageController } from './profile_page';
+import { ResetPasswordPageController } from './reset_password_page';
 import { SettingsPageController } from './settings_page';
 import { Shell } from './shell';
 import { SignUpPageController } from './sign_up_page';
@@ -193,6 +194,10 @@ export class ApplicationController extends React.Component<Properties, State> {
               render={this.renderPrivacyPolicy}
             />
             <Router.Route
+              path='/reset-password'
+              render={this.renderResetPassword}
+            />
+            <Router.Route
               path='/settings/:id'
               render={this.renderSettings}
             />
@@ -248,7 +253,7 @@ export class ApplicationController extends React.Component<Properties, State> {
     window.removeEventListener('resize', this.handleSize);
   }
 
-  private async updateAccount(newUser: User): Promise<void> {
+  private updateAccount = async (newUser: User): Promise<void> => {
     try {
       await this.props.model.setAccount(newUser);
       this.setState({
@@ -303,6 +308,11 @@ export class ApplicationController extends React.Component<Properties, State> {
       this.handleLogInModalClose();
     }
     await this.updateAccount(account);
+  }
+
+  private handleResetPasswordSuccess = async (account: User) => {
+    await this.updateAccount(account);
+    this.props.history.push('/');
   }
 
   private handleSignUpSuccess = (account: User, accountProfileImage:
@@ -512,6 +522,17 @@ export class ApplicationController extends React.Component<Properties, State> {
       displayMode={this.state.displayMode}
       model={this.props.model.logInModel}
       onLogInSuccess={this.handleLogInSuccess}
+    />;
+  }
+
+  private renderResetPassword = () => {
+    const params = new URLSearchParams(this.props.location.search);
+    const token = params.get('token') || '';
+    return <ResetPasswordPageController
+      displayMode={this.state.displayMode}
+      model={this.props.model.resetPasswordPageModel}
+      token={token}
+      onSaveAndLogInSuccess={this.handleResetPasswordSuccess}
     />;
   }
 
