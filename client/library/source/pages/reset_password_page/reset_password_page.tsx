@@ -105,7 +105,7 @@ export class ResetPasswordPage extends React.Component<Properties, State> {
             onClick={() => this.props.onSaveClick(this.state.password)}
             disabled={this.props.errorCode ===
               ResetPasswordPage.ErrorCode.NO_CONNECTION ||
-              this.state.password.length < 9 ||
+              this.state.password.length < 8 ||
               this.state.confirmPassword.length === 0 ||
               !checks.doesConfirmationMatch}
           />
