@@ -528,6 +528,25 @@ export class UserDatabase {
     return user;
   }
 
+  public updatePassword = async (userId: number, newPassword: string):
+      Promise<void> => {
+    const hashedEnteredPass =
+      Hash.sha256().update(newPassword + userId).digest('hex');
+    
+      /** Check if the user ID already exists in the table */
+    const result = await this.pool.query(`
+      SELECT user_id FROM user_credentials WHERE user_id = $1`, [userId]);
+    if (result.rows.length > 0) {
+
+      /** If the user ID already exists, update the password */
+      await this.pool.query(`
+        UPDATE user_credentials SET hashed_pass = $1 WHERE user_id = $2`,
+        [hashedEnteredPass, userId]);
+    } else {
+      throw new Error("User doesn't have credentials.");
+    }
+  }
+
   /** The postgress pool connection. */
   private pool: Pool;
 }

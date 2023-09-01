@@ -48,6 +48,7 @@ export class HttpResetPasswordPageModel extends ResetPasswordPageModel {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
+        'account': this._model.account.toJson(),
         'password': newPassword
       })
     });

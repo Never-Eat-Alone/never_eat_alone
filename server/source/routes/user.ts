@@ -53,6 +53,7 @@ export class UserRoutes {
     app.get('/api/settings/:userId', this.getSettingsPage);
 
     app.post('/api/reset-password', this.getResetPasswordPage);
+    app.post('/api/update-password', this.updatePassword);
 
     this.userDatabase = userDatabase;
     this.attendeeDatabase = attendeeDatabase;
@@ -956,6 +957,27 @@ export class UserRoutes {
       user: user.toJson(),
       profileImageSrc: profileImageSrc
     });
+  }
+
+  private updatePassword = async (request, response) => {
+    const password = request.body.password;
+    const account = User.fromJson(response.body.account);
+    if (!password) {
+      response.status(400).json({ message: 'password is required.' });
+      return;
+    }
+    if (!account || account.id === -1) {
+      response.status(400).json({ message: 'account is required.' });
+      return;
+    }
+    try {
+      await this.userDatabase.updatePassword(account.id, password);
+    } catch (error) {
+      console.error('Failed at updatePassword', error);
+      response.status(500).send();
+      return;
+    }
+    response.status(200).send();
   }
 
   private userDatabase: UserDatabase;
