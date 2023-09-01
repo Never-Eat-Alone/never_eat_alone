@@ -11,23 +11,26 @@ export class HttpResetPasswordPageModel extends ResetPasswordPageModel {
   }
 
   public async load(token: string): Promise<void> {
+    console.log('load HttpResetPasswordPageModel');
     if (this._isLoaded) {
       return;
     }
-
+    console.log('post respone request');
     const resetResponse = await fetch(`/api/reset-password`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ token })
+      body: JSON.stringify({ token: token })
     });
+    console.log('response status', resetResponse.status);
     this._checkResponse(resetResponse);
     const responseObject = await resetResponse.json();
     if (!responseObject || !responseObject.user) {
       throw new Error("Invalid server response. User data not found.");
     }
     const account = User.fromJson(responseObject.user);
+    console.log('account name', account.name);
     const profileImageSrc = responseObject.profileImageSrc;
     this._model = new LocalResetPasswordPageModel(profileImageSrc, account);
     await this._model.load(token);

@@ -924,13 +924,14 @@ export class UserRoutes {
   }
 
   private getResetPasswordPage = async (request, response) => {
+    console.log('getResetPasswordPage');
     const token = request.body.token;
     console.log('token', token);
     if (!token) {
       response.status(400).json({ message: 'Token is required.' });
       return;
     }
-    let user;
+    let user: User;
     try {
       user = await this.userDatabase.loadUserByPasswordResetToken(token);
     } catch (error) {
@@ -942,6 +943,7 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
+    console.log('user name', user.name);
     let profileImageSrc: string;
     try {
       profileImageSrc = (await
@@ -953,6 +955,7 @@ export class UserRoutes {
       });
       return;
     }
+    console.log('profileImageSrc', profileImageSrc);
     response.status(200).json({
       user: user.toJson(),
       profileImageSrc: profileImageSrc
