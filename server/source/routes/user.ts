@@ -981,7 +981,6 @@ export class UserRoutes {
     try {
       const sessionExpiration = new Date(
         Date.now() + request.session.cookie.maxAge);
-      console.log('request.session.id', request.session.id);
       await this.userDatabase.assignUserIdToSid(request.session.id, account.id,
         request.session, sessionExpiration);
     } catch (error) {
