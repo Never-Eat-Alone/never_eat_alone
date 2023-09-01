@@ -42,7 +42,7 @@ export class HttpResetPasswordPageModel extends ResetPasswordPageModel {
   }
 
   public async savePassword(newPassword: string): Promise<User> {
-    const response = await fetch('/api/update_password', {
+    const response = await fetch('/api/update-password', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
