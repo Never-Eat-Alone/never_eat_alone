@@ -258,7 +258,7 @@ export class ApplicationController extends React.Component<Properties, State> {
     window.removeEventListener('resize', this.handleSize);
   }
 
-  private async updateAccount(newUser: User): Promise<void> {
+  private updateAccount = async (newUser: User): Promise<void> => {
     try {
       await this.props.model.setAccount(newUser);
       this.setState({
