@@ -50,6 +50,7 @@ interface State {
   accountProfileImage: UserProfileImage;
   hasJoinedEvent: boolean;
   hasRemovedSeat: boolean;
+  redirect: string;
 }
 
 export class ApplicationController extends React.Component<Properties, State> {
@@ -66,11 +67,15 @@ export class ApplicationController extends React.Component<Properties, State> {
       isPartnerWithUsButtonClicked: false,
       accountProfileImage: UserProfileImage.default(),
       hasJoinedEvent: false,
-      hasRemovedSeat: false
+      hasRemovedSeat: false,
+      redirect: null
     };
   }
 
   public render(): JSX.Element {
+    if (this.state.redirect) {
+      return <Router.Redirect to={this.state.redirect} />;
+    }
     if (this.state.hasError) {
       return <ErrorPage500 displayMode={this.state.displayMode} />;
     }
@@ -310,6 +315,11 @@ export class ApplicationController extends React.Component<Properties, State> {
     await this.updateAccount(account);
   }
 
+  private handleResetPasswordSuccess = async (account: User) => {
+    this.setState({ redirect: '/' })
+    await this.updateAccount(account);
+  }
+
   private handleSignUpSuccess = (account: User, accountProfileImage:
       UserProfileImage) => {
     this.setState({
@@ -525,7 +535,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       displayMode={this.state.displayMode}
       model={this.props.model.resetPasswordPageModel}
       token={token}
-      onSaveAndLogInSuccess={this.handleLogInSuccess}
+      onSaveAndLogInSuccess={this.handleResetPasswordSuccess}
     />;
   }
 

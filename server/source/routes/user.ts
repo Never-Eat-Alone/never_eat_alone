@@ -996,7 +996,7 @@ export class UserRoutes {
       userStatus: account.userStatus.toString(),
       createdAt: account.createdAt.toISOString()
     };
-    response.redirect(303, 'https://nevereatalone.net/log_in');
+    response.status(200).send();
   }
 
   private userDatabase: UserDatabase;
