@@ -961,7 +961,7 @@ export class UserRoutes {
 
   private updatePassword = async (request, response) => {
     const password = request.body.password;
-    const account = User.fromJson(response.body.account);
+    const account = User.fromJson(request.body.account);
     if (!password) {
       response.status(400).json({ message: 'password is required.' });
       return;
