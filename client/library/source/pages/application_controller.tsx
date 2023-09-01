@@ -254,17 +254,13 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private updateAccount = async (newUser: User): Promise<void> => {
-    console.log('updateAccount started');
     try {
       await this.props.model.setAccount(newUser);
-      console.log('setAccount done in model');
       this.setState({
         account: newUser,
         accountProfileImage: this.props.model.accountProfileImage
       });
-      console.log('set state done for account and profile image');
     } catch {
-      console.log('there was an error');
       this.setState({ hasError: true });
     }
   }
