@@ -43,5 +43,5 @@ export abstract class EditProfilePageModel {
     biographyValue: string, isFacebookPrivate: boolean, facebookLink: string,
     isTwitterPrivate: boolean, twitterLink: string, isInstagramPrivate: boolean,
     instagramLink: string, isCuisinePrivate: boolean, selectedCuisineList:
-    Cuisine[]): Promise<boolean>;
+    Cuisine[]): Promise<void>;
 }

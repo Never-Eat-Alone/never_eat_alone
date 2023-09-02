@@ -115,7 +115,7 @@ export class EmptyEditProfilePageModel extends EditProfilePageModel {
       biographyValue: string, isFacebookPrivate: boolean, facebookLink: string,
       isTwitterPrivate: boolean, twitterLink: string, isInstagramPrivate:
       boolean, instagramLink: string, isCuisinePrivate: boolean,
-      selectedCuisineList: Cuisine[]): Promise<boolean> {
+      selectedCuisineList: Cuisine[]): Promise<void> {
     throw new Error('Unable to save empty model.');
   }
 }

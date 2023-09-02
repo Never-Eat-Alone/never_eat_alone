@@ -1,6 +1,6 @@
 import * as multer from 'multer';
-import { UserProfileImage
-} from '../../../client/library/source/definitions';
+import { UserProfileImage } from
+  '../../../client/library/source/definitions';
 import { UserProfileImageDatabase } from '../postgres/queries';
 
 /** UserProfileImage Routes class. */

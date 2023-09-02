@@ -17,7 +17,7 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
     if (this._isLoaded) {
       return;
     }
-    const response = await fetch(`/api/edit_profile_page/${this._profileId}`);
+    const response = await fetch(`/api/users/${this._profileId}/edit`);
     if (response.status !== 200) {
       throw new Error(`Load failed with response status ${response.status}`);
     }
@@ -127,7 +127,7 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
   }
 
   public async getSuggestedLocationList(value: string): Promise<string[]> {
-    const response = await fetch(`/api/suggested_location_list/${value}`);
+    const response = await fetch(`/api/locations/suggestions/${value}`);
     if (response.status !== 200) {
       return [];
     }
@@ -187,13 +187,14 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
 
   public async uploadProfileImage(newImage: UserProfileImage): Promise<
       UserProfileImage> {
-    const response = await fetch('/api/upload_profile_image', {
+    const response = await fetch(`/api/users/${this._profileId}/profile-image`,
+      {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        accountProfileImage: newImage.toJson()
+        accountProfileImage: newImage.toJson() //needs to be fixed by sending file
       })
     });
     if (response.status !== 201) {
@@ -204,7 +205,7 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
   }
 
   public async saveCoverImage(newImage: CoverImage): Promise<void> {
-    const response = await fetch('/api/save_cover_image', {
+    const response = await fetch(`/api/users/${this._profileId}/cover-image`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -224,9 +225,9 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
       biographyValue: string, isFacebookPrivate: boolean, facebookLink: string,
       isTwitterPrivate: boolean, twitterLink: string, isInstagramPrivate:
       boolean, instagramLink: string, isCuisinePrivate: boolean,
-      selectedCuisineList: Cuisine[]): Promise<boolean> {
-    const response = await fetch(`/api/edit_profile_page/${this._profileId}`, {
-      method: 'PUT',
+      selectedCuisineList: Cuisine[]): Promise<void> {
+    const response = await fetch(`/api/users/${this._profileId}`, {
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -250,16 +251,12 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
         'instagramLink': instagramLink
       })
     });
-    if (!response.ok) {
-      return false;
-    }
     await this._model.save(coverImage, profileImage, isUpcomingEventsPrivate,
       isPastEventsPrivate, isLocationPrivate, selectedLocation,
       isLanguagePrivate, selectedLanguageList, isBiographyPrivate,
       biographyValue, isFacebookPrivate, facebookLink, isTwitterPrivate,
       twitterLink, isInstagramPrivate, instagramLink, isCuisinePrivate,
       selectedCuisineList);
-    return true;
   }
 
   private _checkResponse(response: Response): void {

@@ -390,7 +390,7 @@ export class EditProfilePageController extends React.Component<Properties,
 
   private handleSave = async () => {
     try {
-      const isSaved = await this.props.model.save(this.state.coverImage,
+      await this.props.model.save(this.state.coverImage,
         this.state.profileImage, this.state.isUpcomingEventsPrivate,
         this.state.isPastEventsPrivate, this.state.isLocationPrivate,
         this.state.selectedLocation, this.state.isLanguagePrivate,
@@ -400,11 +400,7 @@ export class EditProfilePageController extends React.Component<Properties,
         this.state.twitterLink, this.state.isInstagramPrivate,
         this.state.instagramLink, this.state.isCuisinePrivate,
         this.state.selectedCuisineList);
-      if (isSaved) {
-        this.setState({ redirect: `/users/profile/${this.props.account.id}` });
-      } else {
-        this.setState({ hasError: true });
-      }
+      this.setState({ redirect: `/users/profile/${this.props.account.id}` });
     } catch {
       this.setState({ hasError: true });
     }

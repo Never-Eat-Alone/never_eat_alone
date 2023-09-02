@@ -1,7 +1,7 @@
 import * as Crypto from 'crypto';
 import * as Hash from 'hash.js';
 import { Pool } from 'pg';
-import { Cuisine, Language, Location, SocialAccountType, User,
+import { CoverImage, Cuisine, Language, Location, SocialAccountType, User,
   UserInvitationCode, UserStatus, UserProfileImage, UserProfileSocialAccount
   } from '../../../../client/library/source/definitions';
 
@@ -545,6 +545,19 @@ export class UserDatabase {
     } else {
       throw new Error("User doesn't have credentials.");
     }
+  }
+
+  public updateUserProfile = async (
+      coverImage: CoverImage, profileImage: UserProfileImage,
+      isUpcomingEventsPrivate: boolean, isPastEventsPrivate: boolean, 
+      isLocationPrivate: boolean, isLanguagePrivate: boolean,
+      biographyValue: string, isBiographyPrivate: boolean,
+      selectedLanguageList: string[], selectedCuisineList: Cuisine[],
+      isCuisinePrivate: boolean, isFacebookPrivate: boolean,
+      isTwitterPrivate: boolean, isInstagramPrivate: boolean, facebookLink:
+      string, twitterLink: string, instagramLink: string, profileId: number):
+    Promise<void> => {
+  
   }
 
   /** The postgress pool connection. */
