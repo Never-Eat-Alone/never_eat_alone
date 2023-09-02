@@ -178,7 +178,7 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
       biographyValue: string, isFacebookPrivate: boolean, facebookLink: string,
       isTwitterPrivate: boolean, twitterLink: string, isInstagramPrivate:
       boolean, instagramLink: string, isCuisinePrivate: boolean,
-      selectedCuisineList: Cuisine[]): Promise<boolean> {
+      selectedCuisineList: Cuisine[]): Promise<void> {
     this.ensureIsLoaded();
     this._coverImage = coverImage;
     this._profileImage = profileImage;
@@ -198,7 +198,6 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
     this._facebookLink = facebookLink;
     this._twitterLink = twitterLink;
     this._instagramLink = instagramLink;
-    return true;
   }
 
   private ensureIsLoaded(): void {
