@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
-import { CoverImage, Cuisine, DisplayMode, Language, User, UserProfileImage }
-  from '../../definitions';
+import { CoverImage, Cuisine, DisplayMode, Language, ProfilePageData, User,
+  UserProfileImage } from '../../definitions';
 import { EditProfilePage } from './edit_profile_page';
 import { EditProfilePageModel } from './edit_profile_page_model';
 

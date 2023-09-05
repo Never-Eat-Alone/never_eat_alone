@@ -24,6 +24,7 @@ export * from './payment_record';
 export * from './payment_status';
 export * from './payment_transaction';
 export * from './price_range';
+export * from './profile_page_data';
 export * from './restaurant';
 export * from './seating';
 export * from './social_account';

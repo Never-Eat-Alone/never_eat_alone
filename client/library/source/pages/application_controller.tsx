@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { Modal } from '../components';
-import { DisplayMode, getDisplayMode, User, UserProfileImage } from
+import { DisplayMode, getDisplayMode, ProfilePageData, User, UserProfileImage } from
   '../definitions';
 import { InviteAFoodieModalController, JoinModalController,
   LogInModalController, PartnerWithUsModalController } from '../modals';
@@ -50,6 +50,7 @@ interface State {
   accountProfileImage: UserProfileImage;
   hasJoinedEvent: boolean;
   hasRemovedSeat: boolean;
+  hasProfileChanged: boolean;
 }
 
 export class ApplicationController extends React.Component<Properties, State> {
@@ -66,7 +67,8 @@ export class ApplicationController extends React.Component<Properties, State> {
       isPartnerWithUsButtonClicked: false,
       accountProfileImage: UserProfileImage.default(),
       hasJoinedEvent: false,
-      hasRemovedSeat: false
+      hasRemovedSeat: false,
+      hasProfileChanged: false
     };
   }
 
@@ -381,8 +383,21 @@ export class ApplicationController extends React.Component<Properties, State> {
     />;
   }
 
-  private handleSaveEditProfile = async (id: number) => {
-
+  private handleSaveEditProfile = async (id: number, profilePageData:
+      ProfilePageData) => {
+    if (this.state.account.id === -1) {
+      this.handleLogInButton();
+      return;
+    }
+    const editProfilePageModel = this.props.model.getEditProfilePageModel(id);
+    try {
+      await editProfilePageModel.save(profilePageData);
+      await this.props.model.updateEditProfilePageModel(id,
+        editProfilePageModel);
+      this.setState({ hasProfileChanged: true });
+    } catch {
+      this.setState({ hasError: true });
+    }
   }
 
   private renderJoin = () => {

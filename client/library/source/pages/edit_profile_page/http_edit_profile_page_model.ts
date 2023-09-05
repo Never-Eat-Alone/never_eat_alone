@@ -185,23 +185,26 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
     return this._model.instagramLink;
   }
 
-  public async uploadProfileImage(newImage: UserProfileImage): Promise<
+  public async uploadProfileImage(userProfileImageFile: File): Promise<
       UserProfileImage> {
-    const response = await fetch(`/api/users/${this._profileId}/profile-image`,
-      {
+    const formData = new FormData();
+    formData.append('userProfileImage', userProfileImageFile);
+    const response = await fetch(
+      `/api/upload_profile_image/${this._profileId}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        accountProfileImage: newImage.toJson() //needs to be fixed by sending file
-      })
+      body: formData
     });
-    if (response.status !== 201) {
-      return UserProfileImage.default(this._profileId);
+
+    if (response.status === 201) {
+      const responseObject = await response.json();
+      const uploadedImage = UserProfileImage.fromJson(
+        responseObject.accountProfileImage);
+      await this._model.uploadProfileImage(uploadedImage);
+      return uploadedImage;
     }
-    const responseObject = await response.json();
-    return UserProfileImage.fromJson(responseObject.accountProfileImage);
+
+    /** If the upload fails, the image is set to the last image. */
+    return this._model.profileImage;
   }
 
   public async saveCoverImage(newImage: CoverImage): Promise<void> {
@@ -227,7 +230,7 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
       boolean, instagramLink: string, isCuisinePrivate: boolean,
       selectedCuisineList: Cuisine[]): Promise<void> {
     const response = await fetch(`/api/users/${this._profileId}`, {
-      method: 'PATCH',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
