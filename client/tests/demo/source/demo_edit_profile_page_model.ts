@@ -179,7 +179,7 @@ export class DemoEditProfilePageModel extends
       boolean, biographyValue: string, isFacebookPrivate: boolean,
       facebookLink: string, isTwitterPrivate: boolean, twitterLink: string,
       isInstagramPrivate: boolean, instagramLink: string, isCuisinePrivate:
-      boolean, selectedCuisineList: NeverEatAlone.Cuisine[]): Promise<boolean> {
+      boolean, selectedCuisineList: NeverEatAlone.Cuisine[]): Promise<void> {
     this._coverImage = coverImage;
     this._profileImage = profileImage;
     this._isUpcomingEventsPrivate = isUpcomingEventsPrivate;
@@ -199,7 +199,6 @@ export class DemoEditProfilePageModel extends
     this._facebookLink = facebookLink;
     this._twitterLink = twitterLink;
     this._instagramLink = instagramLink;
-    return true;
   }
 
   private ensureIsLoaded(): void {
