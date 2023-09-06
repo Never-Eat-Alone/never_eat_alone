@@ -16,35 +16,19 @@ interface State {
   isLoaded: boolean;
   hasError: boolean;
   redirect: string;
-  coverImage: CoverImage;
-  profileImage: UserProfileImage;
   locationValue: string;
-  selectedLocation: string;
   suggestedLocationList: string[];
-  isLocationPrivate: boolean;
   biographyValue: string;
-  isUpcomingEventsPrivate: boolean;
-  isPastEventsPrivate: boolean;
   languageValue: string;
-  selectedLanguageList: Language[];
   suggestedLanguageList: Language[];
-  isLanguagePrivate: boolean;
-  isBiographyPrivate: boolean;
   cuisineValue: string;
   suggestedCuisineList: Cuisine[];
-  selectedCuisineList: Cuisine[];
-  isCuisinePrivate: boolean;
-  isFacebookPrivate: boolean;
-  isTwitterPrivate: boolean;
-  isInstagramPrivate: boolean;
-  facebookLink: string;
-  twitterLink: string;
-  instagramLink: string;
   facebookInputIsValid: boolean;
   twitterInputIsValid: boolean;
   instagramInputIsValid: boolean;
   uploadProfileImageHasError: boolean;
   updateCoverImageHasError: boolean;
+  profilePageData: ProfilePageData;
 }
 
 export class EditProfilePageController extends React.Component<Properties,
@@ -55,7 +39,7 @@ export class EditProfilePageController extends React.Component<Properties,
       isLoaded: false,
       hasError: false,
       redirect: null,
-      coverImage: CoverImage.default(),
+      coverImage: ,
       profileImage: UserProfileImage.default(),
       locationValue: '',
       suggestedLocationList: [],
@@ -99,30 +83,31 @@ export class EditProfilePageController extends React.Component<Properties,
       displayName={this.props.account.name}
       userName={this.props.account.userName}
       profileId={this.props.account.id}
-      coverImage={this.state.coverImage}
+      coverImage={this.state.profilePageData.coverImage}
       coverImageList={this.props.model.coverImageList}
-      profileImage={this.state.profileImage}
-      isUpcomingEventsPrivate={this.state.isUpcomingEventsPrivate}
-      isPastEventsPrivate={this.state.isPastEventsPrivate}
-      isLocationPrivate={this.state.isLocationPrivate}
+      profileImage={this.state.profilePageData.profileImage}
+      isUpcomingEventsPrivate={
+        this.state.profilePageData.isUpcomingEventsPrivate}
+      isPastEventsPrivate={this.state.profilePageData.isPastEventsPrivate}
+      isLocationPrivate={this.state.profilePageData.isLocationPrivate}
       locationValue={this.state.locationValue}
       suggestedLocationList={this.state.suggestedLocationList}
-      isLanguagePrivate={this.state.isLanguagePrivate}
+      isLanguagePrivate={this.state.profilePageData.isLanguagePrivate}
       languageValue={this.state.languageValue}
       suggestedLanguageList={this.state.suggestedLanguageList}
-      selectedLanguageList={this.state.selectedLanguageList}
+      selectedLanguageList={this.state.profilePageData.selectedLanguageList}
       biographyValue={this.state.biographyValue}
-      isBiographyPrivate={this.state.isBiographyPrivate}
+      isBiographyPrivate={this.state.profilePageData.isBiographyPrivate}
       cuisineValue={this.state.cuisineValue}
       suggestedCuisineList={this.state.suggestedCuisineList}
-      selectedCuisineList={this.state.selectedCuisineList}
-      isCuisinePrivate={this.state.isCuisinePrivate}
-      isFacebookPrivate={this.state.isFacebookPrivate}
-      isTwitterPrivate={this.state.isTwitterPrivate}
-      isInstagramPrivate={this.state.isInstagramPrivate}
-      facebookLink={this.state.facebookLink}
-      twitterLink={this.state.twitterLink}
-      instagramLink={this.state.instagramLink}
+      selectedCuisineList={this.state.profilePageData.selectedCuisineList}
+      isCuisinePrivate={this.state.profilePageData.isCuisinePrivate}
+      isFacebookPrivate={this.state.profilePageData.isFacebookPrivate}
+      isTwitterPrivate={this.state.profilePageData.isTwitterPrivate}
+      isInstagramPrivate={this.state.profilePageData.isInstagramPrivate}
+      facebookLink={this.state.profilePageData.facebookLink}
+      twitterLink={this.state.profilePageData.twitterLink}
+      instagramLink={this.state.profilePageData.instagramLink}
       facebookInputIsValid={this.state.facebookInputIsValid}
       twitterInputIsValid={this.state.twitterInputIsValid}
       instagramInputIsValid={this.state.instagramInputIsValid}
@@ -159,24 +144,9 @@ export class EditProfilePageController extends React.Component<Properties,
       await this.props.model.load();
       this.setState({
         isLoaded: true,
-        coverImage: this.props.model.coverImage,
-        profileImage: this.props.model.profileImage,
-        locationValue: this.props.model.selectedLocation,
-        biographyValue: this.props.model.biographyValue,
-        isPastEventsPrivate: this.props.model.isPastEventsPrivate,
-        isUpcomingEventsPrivate: this.props.model.isUpcomingEventsPrivate,
-        isLocationPrivate: this.props.model.isLocationPrivate,
-        isBiographyPrivate: this.props.model.isBiographyPrivate,
-        isLanguagePrivate: this.props.model.isLanguagePrivate,
-        selectedLanguageList: this.props.model.selectedLanguageList,
-        isCuisinePrivate: this.props.model.isCuisinePrivate,
-        selectedCuisineList: this.props.model.selectedCuisineList,
-        isFacebookPrivate: this.props.model.isFacebookPrivate,
-        isTwitterPrivate: this.props.model.isTwitterPrivate,
-        isInstagramPrivate: this.props.model.isInstagramPrivate,
-        facebookLink: this.props.model.facebookLink,
-        twitterLink: this.props.model.twitterLink,
-        instagramLink: this.props.model.instagramLink,
+        profilePageData: this.props.model.profilePageData,
+        locationValue: this.props.model.profilePageData.selectedLocation,
+        biographyValue: this.props.model.profilePageData.biographyValue,
         suggestedLocationList: [],
         suggestedLanguageList: this.props.model.languageList,
         suggestedCuisineList: this.props.model.cuisineList
@@ -223,8 +193,10 @@ export class EditProfilePageController extends React.Component<Properties,
   }
 
   private handleBiographyPrivacyClick = () => {
+    this.props.model.profilePageData.updateIsBiographyPrivate(
+      !this.state.profilePageData.isBiographyPrivate);
     this.setState((prevState) => ({
-      isBiographyPrivate: !prevState.isBiographyPrivate
+      profilePageData: this.props.model.profilePageData
     }));
   }
 
@@ -233,20 +205,26 @@ export class EditProfilePageController extends React.Component<Properties,
   }
 
   private handleLanguagePrivacyClick = () => {
+    this.props.model.profilePageData.updateIsLanguagePrivate(
+      !this.state.profilePageData.isLanguagePrivate);
     this.setState((prevState) => ({
-      isLanguagePrivate: !prevState.isLanguagePrivate
+      profilePageData: this.props.model.profilePageData
     }));
   }
 
   private handlePastEventPrivacyClick = () => {
+    this.props.model.profilePageData.updateIsPastEventsPrivate(
+      !this.state.profilePageData.isPastEventsPrivate);
     this.setState((prevState) => ({
-      isPastEventsPrivate: !prevState.isPastEventsPrivate
+      profilePageData: this.props.model.profilePageData
     }));
   }
 
   private handleCuisinePrivacyClick = () => {
+    this.props.model.profilePageData.updateIsCuisinePrivate(
+      !this.state.profilePageData.isCuisinePrivate);
     this.setState((prevState) => ({
-      isCuisinePrivate: !prevState.isCuisinePrivate
+      profilePageData: this.props.model.profilePageData
     }));
   }
 
@@ -267,20 +245,25 @@ export class EditProfilePageController extends React.Component<Properties,
   }
 
   private handleLocationPrivacyClick = () => {
+    this.props.model.profilePageData.updateIsLocationPrivate(
+      !this.state.profilePageData.isLocationPrivate);
     this.setState((prevState) => ({
-      isLocationPrivate: !prevState.isLocationPrivate
+      profilePageData: this.props.model.profilePageData
     }));
   }
 
   private handleUpcomingEventPrivacyClick = () => {
+    this.props.model.profilePageData.updateIsUpcomingEventsPrivate(
+      !this.state.profilePageData.isUpcomingEventsPrivate);
     this.setState((prevState) => ({
-      isUpcomingEventsPrivate: !prevState.isUpcomingEventsPrivate
+      profilePageData: this.props.model.profilePageData
     }));
   }
 
   private handleLocationDropdownClick = (selectedLocation: string) => {
+    this.props.model.profilePageData.updateSelectedLocation(selectedLocation);
     this.setState({
-      selectedLocation: selectedLocation,
+      profilePageData: this.props.model.profilePageData,
       locationValue: selectedLocation,
       suggestedLocationList: [selectedLocation]
     });
@@ -288,14 +271,16 @@ export class EditProfilePageController extends React.Component<Properties,
 
   private handleLanguageDropdownClick = (selectedLanguage: Language) => {
     const temp = [selectedLanguage];
-    for (const language of this.state.selectedLanguageList) {
+    
+    for (const language of this.state.profilePageData.selectedLanguageList) {
       if (language.id !== selectedLanguage.id) {
         temp.push(language);
       }
     }
+    this.props.model.profilePageData.updateSelectedLanguageList(temp);
     this.setState({
       languageValue: '',
-      selectedLanguageList: temp,
+      profilePageData: this.props.model.profilePageData,
       suggestedLanguageList: this.props.model.languageList
     });
   }
@@ -390,16 +375,7 @@ export class EditProfilePageController extends React.Component<Properties,
 
   private handleSave = async () => {
     try {
-      await this.props.model.save(this.state.coverImage,
-        this.state.profileImage, this.state.isUpcomingEventsPrivate,
-        this.state.isPastEventsPrivate, this.state.isLocationPrivate,
-        this.state.selectedLocation, this.state.isLanguagePrivate,
-        this.state.selectedLanguageList, this.state.isBiographyPrivate,
-        this.state.biographyValue, this.state.isFacebookPrivate,
-        this.state.facebookLink, this.state.isTwitterPrivate,
-        this.state.twitterLink, this.state.isInstagramPrivate,
-        this.state.instagramLink, this.state.isCuisinePrivate,
-        this.state.selectedCuisineList);
+      await this.props.model.save(this.state.profilePageData);
       this.setState({ redirect: `/users/profile/${this.props.account.id}` });
     } catch {
       this.setState({ hasError: true });

@@ -4,6 +4,7 @@ import { arrayFromJson, arrayToJson, CoverImage, Cuisine, Language,
 export class ProfilePageData {
   public static fromJson(value: any): ProfilePageData {
     return new ProfilePageData(
+      value.accountId,
       CoverImage.fromJson(value.coverImage),
       UserProfileImage.fromJson(value.profileImage),
       value.isUpcomingEventsPrivate,
@@ -25,14 +26,15 @@ export class ProfilePageData {
     );
   }
 
-  constructor(coverImage: CoverImage, profileImage: UserProfileImage,
-      isUpcomingEventsPrivate: boolean, isPastEventsPrivate: boolean,
-      isLocationPrivate: boolean, selectedLocation: string, isLanguagePrivate:
-      boolean, selectedLanguageList: Language[], isBiographyPrivate: boolean,
-      biographyValue: string, isFacebookPrivate: boolean, facebookLink: string,
-      isTwitterPrivate: boolean, twitterLink: string, isInstagramPrivate:
-      boolean, instagramLink: string, isCuisinePrivate: boolean,
-      selectedCuisineList: Cuisine[]) {
+  constructor(accountId: number, coverImage: CoverImage, profileImage:
+      UserProfileImage, isUpcomingEventsPrivate: boolean, isPastEventsPrivate:
+      boolean, isLocationPrivate: boolean, selectedLocation: string,
+      isLanguagePrivate: boolean, selectedLanguageList: Language[],
+      isBiographyPrivate: boolean, biographyValue: string, isFacebookPrivate:
+      boolean, facebookLink: string, isTwitterPrivate: boolean, twitterLink:
+      string, isInstagramPrivate: boolean, instagramLink: string,
+      isCuisinePrivate: boolean, selectedCuisineList: Cuisine[]) {
+    this._accountId = accountId;
     this._coverImage = coverImage;
     this._profileImage = profileImage;
     this._isUpcomingEventsPrivate = isUpcomingEventsPrivate;
@@ -51,6 +53,10 @@ export class ProfilePageData {
     this._isInstagramPrivate = isInstagramPrivate;
     this._isCuisinePrivate = isCuisinePrivate;
     this._selectedCuisineList = selectedCuisineList;
+  }
+
+  public get accountId(): number {
+    return this._accountId;
   }
 
   public get coverImage(): CoverImage {
@@ -112,13 +118,94 @@ export class ProfilePageData {
   public get isCuisinePrivate(): boolean {
     return this._isCuisinePrivate;
   }
-  
+
   public get selectedCuisineList(): Cuisine[] {
     return this._selectedCuisineList;
   }
 
+  public get isLanguagePrivate(): boolean {
+    return this._isLanguagePrivate;
+  }
+
+  public get selectedLanguageList(): Language[] {
+    return this._selectedLanguageList;
+  }
+
+  public updateProfileImage(image: UserProfileImage): void {
+    this._profileImage = image;
+  }
+
+  public updateCoverImage(image: CoverImage): void {
+    this._coverImage = image;
+  }
+
+  public updateIsUpcomingEventsPrivate(value: boolean): void {
+    this._isUpcomingEventsPrivate = value;
+  }
+
+  public updateIsPastEventsPrivate(value: boolean): void {
+    this._isPastEventsPrivate = value;
+  }
+  
+  public updateIsLocationPrivate(value: boolean): void {
+    this._isLocationPrivate = value;
+  }
+
+  public updateSelectedLocation(value: string): void {
+    this._selectedLocation = value;
+  }
+  
+  public updateIsLanguagePrivate(isPrivate: boolean): void {
+    this._isLanguagePrivate = isPrivate;
+  }
+
+  public updateSelectedLanguageList(languages: Language[]): void {
+    this._selectedLanguageList = languages;
+  }
+
+  public updateIsBiographyPrivate(isPrivate: boolean): void {
+    this._isBiographyPrivate = isPrivate;
+  }
+
+  public updateBiographyValue(value: string): void {
+    this._biographyValue = value;
+  }
+
+  public updateIsFacebookPrivate(isPrivate: boolean): void {
+    this._isFacebookPrivate = isPrivate;
+  }
+
+  public updateFacebookLink(value: string): void {
+    this._facebookLink = value;
+  }
+
+  public updateIsTwitterPrivate(isPrivate: boolean): void {
+    this._isTwitterPrivate = isPrivate;
+  }
+
+  public updateTwitterLink(value: string): void {
+    this._twitterLink = value;
+  }
+
+  public updateIsInstagramPrivate(isPrivate: boolean): void {
+    this._isInstagramPrivate = isPrivate;
+  }
+
+  public updateInstagramLink(value: string): void {
+    this._instagramLink = value;
+  }
+
+  public updateIsCuisinePrivate(isPrivate: boolean): void {
+    this._isCuisinePrivate = isPrivate;
+  }
+
+  public updateSelectedCuisineList(cuisines: Cuisine[]): void {
+    this._selectedCuisineList = cuisines;
+  }
+
   public toJson(): any {
     return {
+      accountId: this._accountId,
       coverImage: this._coverImage.toJson(),
       profileImage: this._profileImage.toJson(),
       isUpcomingEventsPrivate: this._isUpcomingEventsPrivate,
@@ -140,6 +227,7 @@ export class ProfilePageData {
     };
   }
 
+  private _accountId: number;
   private _coverImage: CoverImage;
   private _profileImage: UserProfileImage;
   private _isUpcomingEventsPrivate: boolean;
