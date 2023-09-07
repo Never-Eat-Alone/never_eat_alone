@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
-import { CoverImage, Cuisine, DisplayMode, Language, ProfilePageData, User,
-  UserProfileImage } from '../../definitions';
+import { CoverImage, Cuisine, DisplayMode, Language, ProfilePageData, User }
+  from '../../definitions';
 import { EditProfilePage } from './edit_profile_page';
 import { EditProfilePageModel } from './edit_profile_page_model';
 
@@ -39,35 +39,19 @@ export class EditProfilePageController extends React.Component<Properties,
       isLoaded: false,
       hasError: false,
       redirect: null,
-      coverImage: ,
-      profileImage: UserProfileImage.default(),
       locationValue: '',
       suggestedLocationList: [],
-      selectedLocation: '',
-      isLocationPrivate: false,
-      languageValue: '',
-      selectedLanguageList: [],
-      suggestedLanguageList: [],
-      isLanguagePrivate: false,
       biographyValue: '',
-      isUpcomingEventsPrivate: false,
-      isPastEventsPrivate: false,
-      isBiographyPrivate: false,
+      languageValue: '',
+      suggestedLanguageList: [],
       cuisineValue: '',
       suggestedCuisineList: [],
-      selectedCuisineList: [],
-      isCuisinePrivate: false,
-      isFacebookPrivate: false,
-      isTwitterPrivate: false,
-      isInstagramPrivate: false,
-      facebookLink: '',
-      twitterLink: '',
-      instagramLink: '',
       facebookInputIsValid: true,
       twitterInputIsValid: true,
       instagramInputIsValid: true,
       uploadProfileImageHasError: false,
-      updateCoverImageHasError: false
+      updateCoverImageHasError: false,
+      profilePageData: ProfilePageData.default(this.props.account.id)
     };
   }
 
@@ -190,7 +174,7 @@ export class EditProfilePageController extends React.Component<Properties,
           l.name.toLowerCase().includes(lowerCasedNewValue))
       });
     }
-  }
+  }  
 
   private handleBiographyPrivacyClick = () => {
     this.props.model.profilePageData.updateIsBiographyPrivate(
@@ -287,83 +271,93 @@ export class EditProfilePageController extends React.Component<Properties,
 
   private handleRemoveLanguageClick = (id: number) => {
     const temp = [];
-    const selectedLanguageList = [...this.state.selectedLanguageList];
+    const selectedLanguageList = [
+      ...this.state.profilePageData.selectedLanguageList];
     for (const language of selectedLanguageList) {
       if (language.id !== id) {
         temp.push(language);
       }
     }
-    this.setState({ selectedLanguageList: temp });
+    this.props.model.profilePageData.updateSelectedLanguageList(temp);
+    this.setState({ profilePageData: this.props.model.profilePageData });
   }
 
   private handleCuisineDropdownClick = (selectedCuisine: Cuisine) => {
     const temp = [selectedCuisine];
-    for (const cuisine of this.state.selectedCuisineList) {
+    for (const cuisine of this.state.profilePageData.selectedCuisineList) {
       if (cuisine.id !== selectedCuisine.id) {
         temp.push(cuisine);
       }
     }
+    this.props.model.profilePageData.updateSelectedCuisineList(temp);
     this.setState({
       cuisineValue: '',
-      selectedCuisineList: temp,
+      profilePageData: this.props.model.profilePageData,
       suggestedCuisineList: []
     });
   }
 
   private handleRemoveCuisineClick = (id: number) => {
     const temp = [];
-    const selectedCuisineList = [...this.state.selectedCuisineList];
+    const selectedCuisineList = [
+      ...this.state.profilePageData.selectedCuisineList];
     for (const cuisine of selectedCuisineList) {
       if (cuisine.id !== id) {
         temp.push(cuisine);
       }
     }
-    this.setState({ selectedCuisineList: temp });
+    this.props.model.profilePageData.updateSelectedCuisineList(temp);
+    this.setState({ profilePageData: this.props.model.profilePageData });
   }
 
-  private handleChangeProfileImageClick = async (newImage: UserProfileImage
-      ) => {
+  private handleChangeProfileImageClick = async (newImageFile: File) => {
     try {
-      await this.props.model.uploadProfileImage(newImage);
+      await this.props.model.uploadProfileImage(newImageFile);
+      this.setState({ profilePageData: this.props.model.profilePageData });
     } catch {
       this.setState({ uploadProfileImageHasError: true });
     }
   }
 
   private handleFacebookPrivacyClick = () => {
-    this.setState((prevState) => ({
-      isFacebookPrivate: !prevState.isFacebookPrivate
-    }));
+    this.props.model.profilePageData.updateIsFacebookPrivate(
+      !this.state.profilePageData.isFacebookPrivate);
+    this.setState({ profilePageData: this.props.model.profilePageData });
   }
 
   private handleFacebookInputChange = (newValue: string) => {
-    this.setState({ facebookLink: newValue });
+    this.props.model.profilePageData.updateFacebookLink(newValue);
+    this.setState({
+      profilePageData: this.props.model.profilePageData
+    });
   }
 
   private handleInstagramPrivacyClick = () => {
-    this.setState((prevState) => ({
-      isInstagramPrivate: !prevState.isInstagramPrivate
-    }));
+    this.props.model.profilePageData.updateIsInstagramPrivate(
+      !this.state.profilePageData.isInstagramPrivate);
+    this.setState({ profilePageData: this.props.model.profilePageData });
   }
 
   private handleInstagramInputChange = (newValue: string) => {
-    this.setState({ instagramLink: newValue });
+    this.props.model.profilePageData.updateInstagramLink(newValue);
+    this.setState({ profilePageData: this.props.model.profilePageData });
   }
 
   private handleTwitterPrivacyClick = () => {
-    this.setState((prevState) => ({
-      isTwitterPrivate: !prevState.isTwitterPrivate
-    }));
+    this.props.model.profilePageData.updateIsTwitterPrivate(
+      !this.state.profilePageData.isTwitterPrivate);
+    this.setState({ profilePageData: this.props.model.profilePageData });
   }
 
   private handleTwitterInputChange = (newValue: string) => {
-    this.setState({ twitterLink: newValue });
+    this.props.model.profilePageData.updateTwitterLink(newValue);
+    this.setState({ profilePageData: this.props.model.profilePageData });
   }
 
   private handleChangeBannerDone = async (newImage: CoverImage) => {
     try {
       await this.props.model.saveCoverImage(newImage);
-      this.setState({ coverImage: newImage });
+      this.setState({ profilePageData: this.props.model.profilePageData });
     } catch {
       this.setState({ updateCoverImageHasError: true });
     }

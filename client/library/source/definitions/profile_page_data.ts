@@ -2,6 +2,12 @@ import { arrayFromJson, arrayToJson, CoverImage, Cuisine, Language,
   UserProfileImage } from '../definitions';
 
 export class ProfilePageData {
+  public static default(accountId = -1): ProfilePageData {
+    return new ProfilePageData(accountId, CoverImage.default(accountId),
+      UserProfileImage.default(accountId), false, false, false, '', false, [],
+      false, '', false, '', false, '', false, '', false, []);
+  }
+
   public static fromJson(value: any): ProfilePageData {
     return new ProfilePageData(
       value.accountId,
