@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { Modal } from '../components';
-import { DisplayMode, getDisplayMode, ProfilePageData, User, UserProfileImage } from
+import { DisplayMode, getDisplayMode, User, UserProfileImage } from
   '../definitions';
 import { InviteAFoodieModalController, JoinModalController,
   LogInModalController, PartnerWithUsModalController } from '../modals';
@@ -379,19 +379,18 @@ export class ApplicationController extends React.Component<Properties, State> {
         displayMode={this.state.displayMode}
         account={this.state.account}
         model={this.props.model.getEditProfilePageModel(id)}
-        onSave={() => this.handleSaveEditProfile(id)}
+        onSaveSuccess={() => this.handleSaveEditProfile(id)}
+        onCancel={this.handleEditProfilePageCancel}
     />;
   }
 
-  private handleSaveEditProfile = async (id: number, profilePageData:
-      ProfilePageData) => {
+  private handleSaveEditProfile = async (id: number) => {
     if (this.state.account.id === -1) {
       this.handleLogInButton();
       return;
     }
     const editProfilePageModel = this.props.model.getEditProfilePageModel(id);
     try {
-      await editProfilePageModel.save(profilePageData);
       await this.props.model.updateEditProfilePageModel(id,
         editProfilePageModel);
       this.setState({ hasProfileChanged: true });

@@ -9,7 +9,8 @@ interface Properties {
   displayMode: DisplayMode;
   account: User;
   model: EditProfilePageModel;
-  onSave: () => void;
+  onSaveSuccess: () => void;
+  onCancel: () => void;
 }
 
 interface State {
@@ -119,7 +120,7 @@ export class EditProfilePageController extends React.Component<Properties,
       onInstagramPrivacyClick={this.handleInstagramPrivacyClick}
       onInstagramInputChange={this.handleInstagramInputChange}
       onSaveClick={this.handleSave}
-      onCancelClick={this.handleCancel}
+      onCancelClick={this.props.onCancel}
     />;
   }
 
@@ -363,14 +364,10 @@ export class EditProfilePageController extends React.Component<Properties,
     }
   }
 
-  private handleCancel = () => {
-    this.setState({ redirect: `/users/profile/${this.props.account.id}` });
-  }
-
   private handleSave = async () => {
     try {
       await this.props.model.save(this.state.profilePageData);
-      this.setState({ redirect: `/users/profile/${this.props.account.id}` });
+      this.props.onSaveSuccess();
     } catch {
       this.setState({ hasError: true });
     }
