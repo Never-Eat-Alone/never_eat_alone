@@ -1,6 +1,6 @@
-import { arrayFromJson, arrayToJson, CoverImage, Cuisine, Language,
-  ProfilePageData, SocialAccountType, UserProfileImage,
-  UserProfileSocialAccount } from '../../definitions';
+import { arrayFromJson, CoverImage, Cuisine, Language, ProfilePageData,
+  SocialAccountType, UserProfileImage, UserProfileSocialAccount } from
+  '../../definitions';
 import { EditProfilePageModel } from './edit_profile_page_model';
 import { EmptyEditProfilePageModel } from './empty_edit_profile_page_model';
 import { LocalEditProfilePageModel } from './local_edit_profile_page_model';

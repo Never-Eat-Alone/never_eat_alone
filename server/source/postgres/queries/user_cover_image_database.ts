@@ -1,8 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { Pool } from 'pg';
-import { CoverImage } from
-  '../../../../client/library/source/definitions';
+import { CoverImage } from '../../../../client/library/source/definitions';
 
 /** UserCoverImage related database manipulations class. */
 export class UserCoverImageDatabase {

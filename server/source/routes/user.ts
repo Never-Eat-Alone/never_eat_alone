@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as Hash from 'hash.js';
 import * as path from 'path';
 import { arrayToJson, CoverImage, Cuisine, EventCardSummary, InviteEmail,
-  Language, NotificationSettings, PaymentCard, PaymentRecord, SocialAccount,
+  Language, NotificationSettings, PaymentCard, PaymentRecord, ProfilePageData, SocialAccount,
   User, UserInvitationCode, UserProfileImage, UserProfileSocialAccount,
   UserStatus } from '../../../client/library/source/definitions';
 import { UserCoverImageDatabase } from
@@ -52,7 +52,7 @@ export class UserRoutes {
     app.get('/api/users/:profileId/edit', this.getEditProfilePage);
     app.post('/api/users/:profileId/cover-image', this.saveProfileCoverImage);
     app.post('/api/users/:profileId/profile-image', this.uploadProfileImage);
-    app.patch('/api/users/:profileId', this.updateUserProfile);
+    app.put('/api/users/:profileId/update', this.updateUserProfile);
 
     /** Settings related routes. */
     app.get('/api/settings/:userId', this.getSettingsPage);
@@ -950,23 +950,26 @@ export class UserRoutes {
   }
 
   private updateUserProfile = async (request, response) => {
-    const {
-      coverImage, profileImage, isUpcomingEventsPrivate, isPastEventsPrivate, 
-      isLocationPrivate, isLanguagePrivate, biographyValue, isBiographyPrivate, 
-      selectedLanguageList, selectedCuisineList, isCuisinePrivate, 
-      isFacebookPrivate, isTwitterPrivate, isInstagramPrivate, 
-      facebookLink, twitterLink, instagramLink
-    } = request.body;
-    const profileId = request.params.profileId;
+    const profilePageData = ProfilePageData.fromJson(
+      request.body.profilePageData);
+    const profileId = parseInt(request.params.profileId);
+    let user: User;
+    if (request.session?.user) {
+      try {
+        user = await this.userDatabase.loadUserBySessionId(
+          request.session.id);
+        if (user.id === -1 || user.id !== profileId) {
+          response.status(401).send();
+          return;
+        }
+      } catch (error) {
+        console.error('Failed at loadUserBySessionId', error);
+        response.status(500).send();
+        return;
+      }
+    }
     try {
-      const updatedUser = await this.userDatabase.updateUserProfile(
-        coverImage, profileImage, isUpcomingEventsPrivate, isPastEventsPrivate, 
-        isLocationPrivate, isLanguagePrivate, biographyValue,
-        isBiographyPrivate, selectedLanguageList, selectedCuisineList,
-        isCuisinePrivate, isFacebookPrivate, isTwitterPrivate,
-        isInstagramPrivate, facebookLink, twitterLink, instagramLink,
-        profileId
-      );
+      await this.userDatabase.updateUserProfile(profilePageData);
       response.status(200).send();
     } catch (error) {
       console.error('Error updating user profile:', error);

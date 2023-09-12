@@ -1,9 +1,9 @@
 import * as Crypto from 'crypto';
 import * as Hash from 'hash.js';
 import { Pool } from 'pg';
-import { CoverImage, Cuisine, Language, Location, SocialAccountType, User,
-  UserInvitationCode, UserStatus, UserProfileImage, UserProfileSocialAccount
-  } from '../../../../client/library/source/definitions';
+import { Cuisine, Language, Location, SocialAccountType, User,
+  UserInvitationCode, UserStatus, UserProfileImage, UserProfileSocialAccount,
+  ProfilePageData } from '../../../../client/library/source/definitions';
 
 /** Generates a unique invitation code. */
 function generateInvitationCode() {
@@ -180,8 +180,8 @@ export class UserDatabase {
    * @param email - User email.
    * @param referralCode - User referral code.
    */
-  public addGuestUserRequest = async (name, email, referralCode
-      ): Promise<User> => {
+  public addGuestUserRequest = async (name: string, email: string,
+      referralCode: string): Promise<User> => {
     const result = await this.pool.query(`
       INSERT INTO users (name, email, user_status, created_at, referral_code)
       VALUES ($1, $2, DEFAULT, DEFAULT, $3)
@@ -498,7 +498,6 @@ export class UserDatabase {
         password_reset_tokens
       WHERE
         token = $1`, [token]);
-
     if (result.rows?.length === 0) {
       throw new Error('Token not found');
     }
@@ -511,7 +510,6 @@ export class UserDatabase {
           password_reset_tokens
         WHERE
           token = $1`, [token]);
-
       throw new Error('Token has expired');
     }
 
@@ -523,7 +521,6 @@ export class UserDatabase {
         password_reset_tokens
       WHERE
         token = $1`, [token]);
-
     const user = await this.loadUserById(parseInt(result.rows[0].user_id));
     return user;
   }
@@ -532,8 +529,8 @@ export class UserDatabase {
       Promise<void> => {
     const hashedEnteredPass =
       Hash.sha256().update(newPassword + userId).digest('hex');
-    
-      /** Check if the user ID already exists in the table */
+
+    /** Check if the user ID already exists in the table */
     const result = await this.pool.query(`
       SELECT user_id FROM user_credentials WHERE user_id = $1`, [userId]);
     if (result.rows.length > 0) {
@@ -547,17 +544,9 @@ export class UserDatabase {
     }
   }
 
-  public updateUserProfile = async (
-      coverImage: CoverImage, profileImage: UserProfileImage,
-      isUpcomingEventsPrivate: boolean, isPastEventsPrivate: boolean, 
-      isLocationPrivate: boolean, isLanguagePrivate: boolean,
-      biographyValue: string, isBiographyPrivate: boolean,
-      selectedLanguageList: string[], selectedCuisineList: Cuisine[],
-      isCuisinePrivate: boolean, isFacebookPrivate: boolean,
-      isTwitterPrivate: boolean, isInstagramPrivate: boolean, facebookLink:
-      string, twitterLink: string, instagramLink: string, profileId: number):
-    Promise<void> => {
-  
+  public updateUserProfile = async (profilePageData: ProfilePageData):
+      Promise<void> => {
+    
   }
 
   /** The postgress pool connection. */
