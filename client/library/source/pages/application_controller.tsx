@@ -384,6 +384,12 @@ export class ApplicationController extends React.Component<Properties, State> {
     />;
   }
 
+  private handleEditProfilePageCancel = () => {
+    console.log('handleEditProfilePageCancel');
+    const userId = this.state.account.id;
+    this.props.history.push(`/users/profile/${userId}`);
+  }
+
   private handleSaveEditProfile = async (id: number) => {
     if (this.state.account.id === -1) {
       this.handleLogInButton();

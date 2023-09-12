@@ -160,8 +160,8 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
   }
 
   public async save(profilePageData: ProfilePageData): Promise<void> {
-    const response = await fetch(`/api/users/${this._profileId}`, {
-      method: 'POST',
+    const response = await fetch(`/api/users/${this._profileId}/update`, {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },

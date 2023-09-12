@@ -8,10 +8,10 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
     super();
     this._isLoaded = false;
     this._profilePageData = profilePageData;
-    this._suggestedLocationList = new Map();
     this._coverImageList = coverImageList;
     this._languageList = languageList;
     this._cuisineList = cuisineList;
+    this._suggestedLocationList = new Map();
   }
 
   public async load(): Promise<void> {
@@ -52,7 +52,7 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
 
   public async updateProfileImage(newImage: UserProfileImage): Promise<void> {
     this.ensureIsLoaded();
-    this.profilePageData.updateProfileImage(newImage);
+    this._profilePageData.updateProfileImage(newImage);
   }
 
   public async saveCoverImage(newImage: CoverImage): Promise<void> {
@@ -74,8 +74,8 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
 
   private _isLoaded: boolean;
   private _profilePageData: ProfilePageData;
-  private _suggestedLocationList: Map<string, string[]>;
   private _coverImageList: CoverImage[];
   private _languageList: Language[];
   private _cuisineList: Cuisine[];
+  private _suggestedLocationList: Map<string, string[]>;
 }
