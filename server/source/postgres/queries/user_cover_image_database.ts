@@ -69,8 +69,7 @@ export class UserCoverImageDatabase {
       SET src = $2, updated_at = DEFAULT;`;
     try {
       await this.pool.query(upsertQuery, [image.profileId, image.src]);
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
       throw new Error('Error saving cover image to database.');
     }
   }

@@ -2,9 +2,10 @@ import * as fs from 'fs';
 import * as Hash from 'hash.js';
 import * as path from 'path';
 import { arrayToJson, CoverImage, Cuisine, EventCardSummary, InviteEmail,
-  Language, NotificationSettings, PaymentCard, PaymentRecord, ProfilePageData, SocialAccount,
-  User, UserInvitationCode, UserProfileImage, UserProfileSocialAccount,
-  UserStatus } from '../../../client/library/source/definitions';
+  Language, NotificationSettings, PaymentCard, PaymentRecord, ProfilePageData,
+  SocialAccount, User, UserInvitationCode, UserProfileImage,
+  UserProfileSocialAccount, UserStatus } from
+  '../../../client/library/source/definitions';
 import { UserCoverImageDatabase } from
   '../postgres/queries/user_cover_image_database';
 import { UserDatabase } from '../postgres/queries/user_database';
@@ -969,6 +970,20 @@ export class UserRoutes {
       }
     }
     try {
+      await this.userCoverImageDatabase.saveCoverImage(
+        profilePageData.coverImage);
+    } catch (error) {
+      console.error('Error saveCoverImage:', error);
+      response.status(500).send();
+    }
+    try {
+      await this.userProfileImageDatabase.saveProfileImage(
+        profilePageData.profileImage);
+    } catch (error) {
+      console.error('Error saveProfileImage:', error);
+      response.status(500).send();
+    }
+    try {
       await this.userDatabase.updateUserProfile(profilePageData);
       response.status(200).send();
     } catch (error) {
@@ -1011,7 +1026,6 @@ export class UserRoutes {
     let defaultCard = PaymentCard.noCard();
     let paymentCards: PaymentCard[] = [];
     let paymentRecords: PaymentRecord[] = [];
-
     response.status(200).json({
       linkedSocialAccounts: arrayToJson(linkedSocialAccounts),
       hashedPassword: hashedPassword,
