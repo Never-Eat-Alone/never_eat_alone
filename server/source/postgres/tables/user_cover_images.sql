@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS user_cover_images (
+CREATE TABLE IF NOT EXISTS user_cover_images (          
   user_id       INTEGER                        NOT NULL UNIQUE,
   src           TEXT                           NOT NULL,
   created_at    TIMESTAMP WITH TIME ZONE       DEFAULT CURRENT_TIMESTAMP,

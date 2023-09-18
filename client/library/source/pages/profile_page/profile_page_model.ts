@@ -1,5 +1,5 @@
-import { CoverImage, Cuisine, EventCardSummary, Language
-} from '../../definitions';
+import { CoverImage, Cuisine, EventCardSummary, Language } from
+  '../../definitions';
 
 export abstract class ProfilePageModel {
   /** Loads the data displayed on the profile page. Must be called before other 

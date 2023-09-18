@@ -63,6 +63,19 @@ export class UserProfileImageDatabase {
       result.rows[0].src);
   }
 
+  public saveProfileImage = async (image: UserProfileImage): Promise<void> => {
+    const upsertQuery = `
+      INSERT INTO user_profile_images (user_id, src, created_at, updated_at)
+      VALUES ($1, $2, DEFAULT, DEFAULT)
+      ON CONFLICT (user_id) DO UPDATE
+      SET src = $2, updated_at = DEFAULT;`;
+    try {
+      await this.pool.query(upsertQuery, [image.userId, image.src]);
+    } catch (error) {
+      throw new Error('Error saving profile image to database.');
+    }
+  }
+
   /** The postgress pool connection. */
   private pool: Pool;
 }

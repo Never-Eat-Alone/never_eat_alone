@@ -2,9 +2,10 @@ import * as fs from 'fs';
 import * as Hash from 'hash.js';
 import * as path from 'path';
 import { arrayToJson, CoverImage, Cuisine, EventCardSummary, InviteEmail,
-  Language, NotificationSettings, PaymentCard, PaymentRecord, SocialAccount,
-  User, UserInvitationCode, UserProfileImage, UserProfileSocialAccount,
-  UserStatus } from '../../../client/library/source/definitions';
+  Language, NotificationSettings, PaymentCard, PaymentRecord, ProfilePageData,
+  SocialAccount, User, UserInvitationCode, UserProfileImage,
+  UserProfileSocialAccount, UserStatus } from
+  '../../../client/library/source/definitions';
 import { UserCoverImageDatabase } from
   '../postgres/queries/user_cover_image_database';
 import { UserDatabase } from '../postgres/queries/user_database';
@@ -47,11 +48,17 @@ export class UserRoutes {
     app.post('/api/send_partner_with_us_email', this.sendPartnerWithUsEmail);
     app.post('/api/request-password-reset', this.handleRequestPasswordReset);
 
+    /** User Profile page and edit page related routes. */
     app.get('/api/profile_page/:profileId', this.getProfilePage);
-    app.get('/api/edit_profile_page/:profileId', this.getEditProfilePage);
+    app.get('/api/users/:profileId/edit', this.getEditProfilePage);
+    app.post('/api/users/:profileId/cover-image', this.saveProfileCoverImage);
+    app.post('/api/users/:profileId/profile-image', this.uploadProfileImage);
+    app.put('/api/users/:profileId/update', this.updateUserProfile);
 
+    /** Settings related routes. */
     app.get('/api/settings/:userId', this.getSettingsPage);
 
+    /** Reset Password related routes. */
     app.post('/api/reset-password', this.getResetPasswordPage);
     app.post('/api/update-password', this.updatePassword);
 
@@ -879,6 +886,112 @@ export class UserRoutes {
     });
   }
 
+  private saveProfileCoverImage = async (request, response) => {
+    const image = CoverImage.fromJson(request.body.image);
+    let user: User;
+    if (request.session?.user) {
+      try {
+        user = await this.userDatabase.loadUserBySessionId(
+          request.session.id);
+        if (user.id === -1 || user.id !== image.profileId) {
+          response.status(401).send();
+          return;
+        }
+      } catch (error) {
+        console.error('Failed at loadUserBySessionId', error);
+        response.status(500).send();
+        return;
+      }
+    } else {
+      response.status(401).send();
+      return;
+    }
+    try {
+      await this.userCoverImageDatabase.saveCoverImage(image);
+    } catch (error) {
+      console.error('Failed at isDuplicateEmail', error);
+      response.status(500).json({ message: 'DATABASE_ERROR' });
+      return;
+    }
+    response.status(200).send();
+  }
+
+  private uploadProfileImage = async (request, response) => {
+    const image = UserProfileImage.fromJson(request.body.accountProfileImage);
+    let user: User;
+    if (request.session?.user) {
+      try {
+        user = await this.userDatabase.loadUserBySessionId(
+          request.session.id);
+        if (user.id === -1 || user.id !== image.userId) {
+          response.status(401).send();
+          return;
+        }
+      } catch (error) {
+        console.error('Failed at loadUserBySessionId', error);
+        response.status(500).send();
+        return;
+      }
+    } else {
+      response.status(401).send();
+      return;
+    }
+    
+    const userProfileImageFile = request.file;
+    let uploadedImage: UserProfileImage;
+    try {
+      uploadedImage = await this.userProfileImageDatabase.uploadProfileImage(
+        user.id, userProfileImageFile);
+    } catch (error) {
+      console.error('Failed at uploadUserProfileImage.', error);
+      response.status(500).json({ message: 'DATABASE_ERROR' });
+      return;
+    }
+    response.status(201).json({ accountProfileImage: uploadedImage.toJson() });
+  }
+
+  private updateUserProfile = async (request, response) => {
+    const profilePageData = ProfilePageData.fromJson(
+      request.body.profilePageData);
+    const profileId = parseInt(request.params.profileId);
+    let user: User;
+    if (request.session?.user) {
+      try {
+        user = await this.userDatabase.loadUserBySessionId(
+          request.session.id);
+        if (user.id === -1 || user.id !== profileId) {
+          response.status(401).send();
+          return;
+        }
+      } catch (error) {
+        console.error('Failed at loadUserBySessionId', error);
+        response.status(500).send();
+        return;
+      }
+    }
+    try {
+      await this.userCoverImageDatabase.saveCoverImage(
+        profilePageData.coverImage);
+    } catch (error) {
+      console.error('Error saveCoverImage:', error);
+      response.status(500).send();
+    }
+    try {
+      await this.userProfileImageDatabase.saveProfileImage(
+        profilePageData.profileImage);
+    } catch (error) {
+      console.error('Error saveProfileImage:', error);
+      response.status(500).send();
+    }
+    try {
+      await this.userDatabase.updateUserProfile(profilePageData);
+      response.status(200).send();
+    } catch (error) {
+      console.error('Error updating user profile:', error);
+      response.status(500).send();
+    }
+  }
+
   private getSettingsPage = async (request, response) => {
     const userId = parseInt(request.params.userId);
     let user: User;
@@ -913,7 +1026,6 @@ export class UserRoutes {
     let defaultCard = PaymentCard.noCard();
     let paymentCards: PaymentCard[] = [];
     let paymentRecords: PaymentRecord[] = [];
-
     response.status(200).json({
       linkedSocialAccounts: arrayToJson(linkedSocialAccounts),
       hashedPassword: hashedPassword,

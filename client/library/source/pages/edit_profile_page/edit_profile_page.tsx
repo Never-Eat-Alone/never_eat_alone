@@ -1,4 +1,5 @@
 import { css, StyleSheet } from 'aphrodite';
+import imageCompression from 'browser-image-compression';
 import * as React from 'react';
 import { CloseButton, InputField, InputFieldWithIcon,
   InvertedSecondaryTextButton, Modal, PublicButton, PrivateButton, RedNavLink,
@@ -103,7 +104,7 @@ interface Properties {
   onLocationDropdownClick: (selectedLocation: string) => void;
 
   /** Indicates the change profile image button is clicked. */
-  onChangeProfileImageClick: (newImage: UserProfileImage) => void;
+  onChangeProfileImageClick: (newImageFile: File) => void;
 
   /** Indicates the change banner modal's Done button is clicked. */
   onChangeBannerDone: (newImage: CoverImage) => void;
@@ -770,7 +771,28 @@ export class EditProfilePage extends React.Component<Properties, State> {
   }
 
   private handleChangeProfileButton = () => {
-    this.props.onChangeProfileImageClick(this.state.newProfileImage);
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.style.display = 'none';
+    input.addEventListener('change', async (event) => {
+      const target = event.target as HTMLInputElement;
+      const file = target.files && target.files[0];
+      if (file) {
+        try {
+          const options = {
+            maxSizeMB: 1,
+            maxWidthOrHeight: 1920,
+            useWebWorker: true,
+          };
+          const compressedFile = await imageCompression(file, options);
+          this.props.onChangeProfileImageClick(compressedFile);
+        } catch (error) {
+          console.error("Image compression failed:", error);
+        }
+      }
+    });
+    input.click();
   }
 
   private _languageDropdownRef: React.RefObject<HTMLDivElement>;

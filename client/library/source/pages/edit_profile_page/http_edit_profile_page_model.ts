@@ -1,4 +1,4 @@
-import { arrayFromJson, arrayToJson, CoverImage, Cuisine, Language,
+import { arrayFromJson, CoverImage, Cuisine, Language, ProfilePageData,
   SocialAccountType, UserProfileImage, UserProfileSocialAccount } from
   '../../definitions';
 import { EditProfilePageModel } from './edit_profile_page_model';
@@ -17,7 +17,7 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
     if (this._isLoaded) {
       return;
     }
-    const response = await fetch(`/api/edit_profile_page/${this._profileId}`);
+    const response = await fetch(`/api/users/${this._profileId}/edit`);
     if (response.status !== 200) {
       throw new Error(`Load failed with response status ${response.status}`);
     }
@@ -79,15 +79,20 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
         isInstagramPrivate: isInstagramPrivate
       };
     })();
-    this._model = new LocalEditProfilePageModel(languageList,
-      favoriteCuisineList, coverImage, coverImageList, profileImage,
-      selectedLocation, isUpcomingEventsPrivate, isPastEventsPrivate,
-      isLocationPrivate, isLanguagePrivate, biographyValue, isBiographyPrivate,
-      selectedLanguageList, selectedCuisineList, isCuisinePrivate,
-      isFacebookPrivate, isTwitterPrivate, isInstagramPrivate, facebookLink,
-      twitterLink, instagramLink);
+    const profilePageData = new ProfilePageData(this._profileId, coverImage,
+      profileImage, isUpcomingEventsPrivate, isPastEventsPrivate,
+      isLocationPrivate, selectedLocation, isLanguagePrivate,
+      selectedLanguageList, isBiographyPrivate, biographyValue,
+      isFacebookPrivate, facebookLink, isTwitterPrivate, twitterLink,
+      isInstagramPrivate, instagramLink, isCuisinePrivate, selectedCuisineList);
+    this._model = new LocalEditProfilePageModel(profilePageData, coverImageList,
+      languageList, favoriteCuisineList);
     await this._model.load();
     this._isLoaded = true;
+  }
+
+  public get profilePageData(): ProfilePageData {
+    return this._model.profilePageData;
   }
 
   public get languageList(): Language[] {
@@ -98,36 +103,12 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
     return this._model.cuisineList;
   }
 
-  public get coverImage(): CoverImage {
-    return this._model.coverImage;
-  }
-
   public get coverImageList(): CoverImage[] {
     return this._model.coverImageList;
   }
 
-  public get profileImage(): UserProfileImage {
-    return this._model.profileImage;
-  }
-
-  public get selectedLocation(): string {
-    return this._model.selectedLocation;
-  }
-
-  public get isUpcomingEventsPrivate(): boolean {
-    return this._model.isUpcomingEventsPrivate;
-  }
-
-  public get isPastEventsPrivate(): boolean {
-    return this._model.isPastEventsPrivate;
-  }
-
-  public get isLocationPrivate(): boolean {
-    return this._model.isLocationPrivate;
-  }
-
   public async getSuggestedLocationList(value: string): Promise<string[]> {
-    const response = await fetch(`/api/suggested_location_list/${value}`);
+    const response = await fetch(`/api/locations/suggestions/${value}`);
     if (response.status !== 200) {
       return [];
     }
@@ -137,126 +118,65 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
     return suggestedLocationList;
   }
 
-  public get isLanguagePrivate(): boolean {
-    return this._model.isLanguagePrivate;
-  }
-
-  public get biographyValue(): string {
-    return this._model.biographyValue;
-  }
-
-  public get isBiographyPrivate(): boolean {
-    return this._model.isBiographyPrivate;
-  }
-
-  public get selectedLanguageList(): Language[] {
-    return this._model.selectedLanguageList;
-  }
-
-  public get selectedCuisineList(): Cuisine[] {
-    return this._model.selectedCuisineList;
-  }
-
-  public get isCuisinePrivate(): boolean {
-    return this._model.isCuisinePrivate;
-  }
-
-  public get isFacebookPrivate(): boolean {
-    return this._model.isFacebookPrivate;
-  }
-
-  public get isTwitterPrivate(): boolean {
-    return this._model.isTwitterPrivate;
-  }
-
-  public get isInstagramPrivate(): boolean {
-    return this._model.isInstagramPrivate;
-  }
-
-  public get facebookLink(): string {
-    return this._model.facebookLink;
-  }
-
-  public get twitterLink(): string {
-    return this._model.twitterLink;
-  }
-
-  public get instagramLink(): string {
-    return this._model.instagramLink;
-  }
-
-  public async uploadProfileImage(newImage: UserProfileImage): Promise<
+  public async uploadProfileImage(userProfileImageFile: File): Promise<
       UserProfileImage> {
-    const response = await fetch('/api/upload_profile_image', {
+    const formData = new FormData();
+    formData.append('userProfileImage', userProfileImageFile);
+    const response = await fetch(
+      `/api/upload_profile_image/${this._profileId}`, {
+      method: 'POST',
+      body: formData
+    });
+
+    if (response.status === 201) {
+      const responseObject = await response.json();
+      const uploadedImage = UserProfileImage.fromJson(
+        responseObject.accountProfileImage);
+      await this.updateProfileImage(uploadedImage);
+      return uploadedImage;
+    }
+
+    /** If the upload fails, the image is set to the last image. */
+    return this._model.profilePageData.profileImage;
+  }
+
+  public updateProfileImage = async (newImage: UserProfileImage): Promise<
+      void> => {
+    await this._model.updateProfileImage(newImage);
+  }
+
+  public async saveCoverImage(newImage: CoverImage): Promise<void> {
+    const response = await fetch(`/api/users/${this._profileId}/cover-image`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        accountProfileImage: newImage.toJson(),
+        'image': newImage.toJson()
       })
     });
-    if (response.status !== 201) {
-      return UserProfileImage.default(this._profileId);
-    }
-    const responseObject = await response.json();
-    return UserProfileImage.fromJson(responseObject.accountProfileImage);
+    this._checkResponse(response);
+    await this._model.saveCoverImage(newImage);
   }
 
-  public async saveCoverImage(newImage: CoverImage): Promise<CoverImage> {
-    const response = await fetch('/api/save_cover_image', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        'image': newImage.toJson(),
-      })
-    });
-    if (response.status !== 201 && response.status !== 200) {
-      return CoverImage.noImage();
-    }
-    const responseObject = await response.json();
-    return CoverImage.fromJson(responseObject.coverImage);
-  }
-
-  public async save(coverImage: CoverImage, profileImage: UserProfileImage,
-      isUpcomingEventsPrivate: boolean, isPastEventsPrivate: boolean,
-      isLocationPrivate: boolean, selectedLocation: string, isLanguagePrivate:
-      boolean, selectedLanguageList: Language[], isBiographyPrivate: boolean,
-      biographyValue: string, isFacebookPrivate: boolean, facebookLink: string,
-      isTwitterPrivate: boolean, twitterLink: string, isInstagramPrivate:
-      boolean, instagramLink: string, isCuisinePrivate: boolean,
-      selectedCuisineList: Cuisine[]): Promise<boolean> {
-    const response = await fetch(`/api/edit_profile_page/${this._profileId}`, {
+  public async save(profilePageData: ProfilePageData): Promise<void> {
+    const response = await fetch(`/api/users/${this._profileId}/update`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        'coverImage': coverImage.toJson(),
-        'profileImage': profileImage.toJson(),
-        'isUpcomingEventsPrivate': isUpcomingEventsPrivate,
-        'isPastEventsPrivate': isPastEventsPrivate,
-        'isLocationPrivate': isLocationPrivate,
-        'isLanguagePrivate': isLanguagePrivate,
-        'biographyValue': biographyValue,
-        'isBiographyPrivate': isBiographyPrivate,
-        'selectedLanguageList': arrayToJson(selectedLanguageList),
-        'selectedCuisineList': arrayToJson(selectedCuisineList),
-        'isCuisinePrivate': isCuisinePrivate,
-        'isFacebookPrivate': isFacebookPrivate,
-        'isTwitterPrivate': isTwitterPrivate,
-        'isInstagramPrivate': isInstagramPrivate,
-        'facebookLink': facebookLink,
-        'twitterLink': twitterLink,
-        'instagramLink': instagramLink
+        'profilePageData': profilePageData.toJson()
       })
     });
+    this._checkResponse(response);
+    await this._model.save(profilePageData);
+  }
+
+  private _checkResponse(response: Response): void {
     if (!response.ok) {
-      return false;
+      throw new Error(`HTTP error, status = ${response.status}`);
     }
-    return true;
   }
 
   private _isLoaded: boolean;

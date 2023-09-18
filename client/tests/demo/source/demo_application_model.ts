@@ -414,21 +414,25 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       italianCuisine, japaneseCuisine, middleEasternCuisine, modernCuisine,
       omakaseCuisine, persianCuisine, seafoodCuisine, steakhouseCuisine,
       traditionalCuisine];
-    
+
     /** Emma's edit profie page model. */
+    const emmaProfilePageData = new NeverEatAlone.ProfilePageData(userEmma.id,
+      emmaCoverImage, emmaProfileImage, false, false, false, emmaLocation,
+      false, emmaLanguageList, false, emmaBio, false, '', false, '', false,
+      emmaInstagramLink, false, emmaFavoriteCuisines);
+
     const demoEditProfilePageModel1 = new DemoEditProfilePageModel(
-      languageList, cuisineList, emmaCoverImage, coverImageList,
-      emmaProfileImage, emmaLocation, false, false, false, false, emmaBio,
-      false, emmaLanguageList, emmaFavoriteCuisines, false, false, false, false,
-      '', '', emmaInstagramLink);
+      emmaProfilePageData, coverImageList, languageList, cuisineList);
     this._editProfilePageModelMap.set(1, demoEditProfilePageModel1);
+
+    const arthurProfilePageData = new NeverEatAlone.ProfilePageData(
+      userArthur.id, arthurCoverImage, arthurProfileImage, false, false, false,
+      arthurLocation, false, arthurLanguageList, false, arthurBio,  false, '',
+      false, '', false, arthurInstagramLink, false, arthurFavoriteCuisines);
 
     /** Arthur's edit profie page model. */
     const demoEditProfilePageModel2 = new DemoEditProfilePageModel(
-      languageList, cuisineList, arthurCoverImage, coverImageList,
-      arthurProfileImage, arthurLocation, false, false, false, false, arthurBio,
-      false, arthurLanguageList, arthurFavoriteCuisines, false, false, false,
-      false, '', '', arthurInstagramLink);
+      arthurProfilePageData, coverImageList, languageList, cuisineList);
     this._editProfilePageModelMap.set(2, demoEditProfilePageModel2);
 
     /** Emma settings model */
@@ -600,6 +604,11 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
   public getEditProfilePageModel(id: number):
       NeverEatAlone.EditProfilePageModel {
     return this._editProfilePageModelMap.get(id);
+  }
+
+  public async updateEditProfilePageModel(id: number, newModel:
+      NeverEatAlone.EditProfilePageModel): Promise<void> {
+    this._editProfilePageModelMap.set(id, newModel);
   }
 
   public addSettingsPageModel(id: number,

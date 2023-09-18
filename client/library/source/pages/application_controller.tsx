@@ -50,6 +50,7 @@ interface State {
   accountProfileImage: UserProfileImage;
   hasJoinedEvent: boolean;
   hasRemovedSeat: boolean;
+  hasProfileChanged: boolean;
 }
 
 export class ApplicationController extends React.Component<Properties, State> {
@@ -66,7 +67,8 @@ export class ApplicationController extends React.Component<Properties, State> {
       isPartnerWithUsButtonClicked: false,
       accountProfileImage: UserProfileImage.default(),
       hasJoinedEvent: false,
-      hasRemovedSeat: false
+      hasRemovedSeat: false,
+      hasProfileChanged: false
     };
   }
 
@@ -377,7 +379,30 @@ export class ApplicationController extends React.Component<Properties, State> {
         displayMode={this.state.displayMode}
         account={this.state.account}
         model={this.props.model.getEditProfilePageModel(id)}
+        onSaveSuccess={() => this.handleSaveEditProfile(id)}
+        onCancel={this.handleEditProfilePageCancel}
     />;
+  }
+
+  private handleEditProfilePageCancel = () => {
+    console.log('handleEditProfilePageCancel');
+    const userId = this.state.account.id;
+    this.props.history.push(`/users/profile/${userId}`);
+  }
+
+  private handleSaveEditProfile = async (id: number) => {
+    if (this.state.account.id === -1) {
+      this.handleLogInButton();
+      return;
+    }
+    const editProfilePageModel = this.props.model.getEditProfilePageModel(id);
+    try {
+      await this.props.model.updateEditProfilePageModel(id,
+        editProfilePageModel);
+      this.setState({ hasProfileChanged: true });
+    } catch {
+      this.setState({ hasError: true });
+    }
   }
 
   private renderJoin = () => {

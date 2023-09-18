@@ -114,6 +114,7 @@ export class HttpProfilePageModel extends ProfilePageModel {
   }
 
   public async updateUpcomingEventList(): Promise<void> {
+    this._isLoaded = false;
     const response = await fetch(`/api/profile_page/${this._profileId}`);
     this._checkResponse(response);
     const responseObject = await response.json();
