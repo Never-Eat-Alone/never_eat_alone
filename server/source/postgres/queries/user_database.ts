@@ -546,7 +546,70 @@ export class UserDatabase {
 
   public updateUserProfile = async (profilePageData: ProfilePageData):
       Promise<void> => {
-    
+    try {
+      await this.pool.query('BEGIN');
+
+      // Update users table.
+      await this.pool.query(`
+        UPDATE users 
+        SET
+          biography = $2,
+          is_bio_public = $3,
+          is_upcoming_events_private = $4,
+          is_past_events_private = $5,
+          is_profile_address_public = $6,
+          profile_address = $7,
+          is_language_private = $8,
+          is_cuisine_private = $9
+        WHERE id = $1`,
+        [
+          profilePageData.accountId,
+          profilePageData.biographyValue,
+          profilePageData.isBiographyPrivate,
+          profilePageData.isUpcomingEventsPrivate,
+          profilePageData.isPastEventsPrivate,
+          profilePageData.isLocationPrivate,
+          profilePageData.selectedLocation,
+          profilePageData.isLanguagePrivate,
+          profilePageData.isCuisinePrivate
+        ]
+      );
+
+      // Update social links.
+      const upsertSocialLink = async (platform: SocialAccountType, link: string,
+          isPrivate: boolean) => {
+        await this.pool.query(`
+          INSERT INTO
+            user_profile_social_accounts(user_id, platform, link, is_private)
+          VALUES ($1, $2, $3, $4)
+          ON CONFLICT (user_id, platform)
+          DO UPDATE SET link = $3, is_private = $4`,
+          [
+            profilePageData.accountId,
+            platform,
+            link,
+            isPrivate
+          ]
+        );
+      };
+
+      // Update Facebook link
+      await upsertSocialLink(SocialAccountType.FACEBOOK,
+        profilePageData.facebookLink, profilePageData.isFacebookPrivate);
+
+      // Update Twitter link
+      await upsertSocialLink(SocialAccountType.TWITTER,
+        profilePageData.twitterLink, profilePageData.isTwitterPrivate);
+
+      // Update Instagram link
+      await upsertSocialLink(SocialAccountType.INSTAGRAM,
+        profilePageData.instagramLink, profilePageData.isInstagramPrivate);
+
+      await this.pool.query('COMMIT');
+    } catch (error) {
+      await this.pool.query('ROLLBACK');
+      throw error;
+    }
   }
 
   /** The postgress pool connection. */
