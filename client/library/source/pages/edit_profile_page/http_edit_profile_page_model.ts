@@ -160,6 +160,7 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
   }
 
   public async save(profilePageData: ProfilePageData): Promise<void> {
+    console.log(profilePageData);
     const response = await fetch(`/api/users/${this._profileId}/update`, {
       method: 'PUT',
       headers: {

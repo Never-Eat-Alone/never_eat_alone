@@ -548,16 +548,16 @@ export class UserDatabase {
       Promise<void> => {
     try {
       await this.pool.query('BEGIN');
-
+      console.log(profilePageData);
       // Update users table.
       await this.pool.query(`
         UPDATE users 
         SET
           biography = $2,
-          is_bio_public = $3,
+          is_bio_private = $3,
           is_upcoming_events_private = $4,
           is_past_events_private = $5,
-          is_profile_address_public = $6,
+          is_profile_address_private = $6,
           profile_address = $7,
           is_language_private = $8,
           is_cuisine_private = $9

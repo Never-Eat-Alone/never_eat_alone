@@ -17,12 +17,8 @@ interface State {
   isLoaded: boolean;
   hasError: boolean;
   redirect: string;
-  locationValue: string;
   suggestedLocationList: string[];
-  biographyValue: string;
-  languageValue: string;
   suggestedLanguageList: Language[];
-  cuisineValue: string;
   suggestedCuisineList: Cuisine[];
   facebookInputIsValid: boolean;
   twitterInputIsValid: boolean;
@@ -30,6 +26,8 @@ interface State {
   uploadProfileImageHasError: boolean;
   updateCoverImageHasError: boolean;
   profilePageData: ProfilePageData;
+  languageValue: string;
+  cuisineValue: string;
 }
 
 export class EditProfilePageController extends React.Component<Properties,
@@ -40,19 +38,17 @@ export class EditProfilePageController extends React.Component<Properties,
       isLoaded: false,
       hasError: false,
       redirect: null,
-      locationValue: '',
       suggestedLocationList: [],
-      biographyValue: '',
-      languageValue: '',
       suggestedLanguageList: [],
-      cuisineValue: '',
       suggestedCuisineList: [],
       facebookInputIsValid: true,
       twitterInputIsValid: true,
       instagramInputIsValid: true,
       uploadProfileImageHasError: false,
       updateCoverImageHasError: false,
-      profilePageData: ProfilePageData.default(this.props.account.id)
+      profilePageData: ProfilePageData.default(this.props.account.id),
+      languageValue: '',
+      cuisineValue: ''
     };
   }
 
@@ -75,13 +71,13 @@ export class EditProfilePageController extends React.Component<Properties,
         this.state.profilePageData.isUpcomingEventsPrivate}
       isPastEventsPrivate={this.state.profilePageData.isPastEventsPrivate}
       isLocationPrivate={this.state.profilePageData.isLocationPrivate}
-      locationValue={this.state.locationValue}
+      locationValue={this.state.profilePageData.selectedLocation}
       suggestedLocationList={this.state.suggestedLocationList}
       isLanguagePrivate={this.state.profilePageData.isLanguagePrivate}
       languageValue={this.state.languageValue}
       suggestedLanguageList={this.state.suggestedLanguageList}
       selectedLanguageList={this.state.profilePageData.selectedLanguageList}
-      biographyValue={this.state.biographyValue}
+      biographyValue={this.state.profilePageData.biographyValue}
       isBiographyPrivate={this.state.profilePageData.isBiographyPrivate}
       cuisineValue={this.state.cuisineValue}
       suggestedCuisineList={this.state.suggestedCuisineList}
@@ -129,12 +125,10 @@ export class EditProfilePageController extends React.Component<Properties,
       await this.props.model.load();
       this.setState({
         isLoaded: true,
-        profilePageData: this.props.model.profilePageData,
-        locationValue: this.props.model.profilePageData.selectedLocation,
-        biographyValue: this.props.model.profilePageData.biographyValue,
         suggestedLocationList: [],
         suggestedLanguageList: this.props.model.languageList,
-        suggestedCuisineList: this.props.model.cuisineList
+        suggestedCuisineList: this.props.model.cuisineList,
+        profilePageData: this.props.model.profilePageData
       });
     } catch {
       this.setState({ isLoaded: true, hasError: true });
@@ -142,9 +136,10 @@ export class EditProfilePageController extends React.Component<Properties,
   }
 
   private handleLocationInputChange = async (newValue: string) => {
+    this.props.model.profilePageData.updateSelectedLocation(newValue.trim());
     if (newValue.trim().length === 0) {
       this.setState({
-        locationValue: newValue.trim(),
+        profilePageData: this.props.model.profilePageData,
         suggestedLocationList: []
       });
       return;
@@ -153,11 +148,11 @@ export class EditProfilePageController extends React.Component<Properties,
       const response = await this.props.model.getSuggestedLocationList(
         newValue);
       this.setState({
-        locationValue: newValue,
+        profilePageData: this.props.model.profilePageData,
         suggestedLocationList: response
       });
     } catch {
-      this.setState({ locationValue: newValue, suggestedLocationList: [] });
+      this.setState({ suggestedLocationList: [] });
     }
   }
 
@@ -186,7 +181,8 @@ export class EditProfilePageController extends React.Component<Properties,
   }
 
   private handleBiographyInputChange = (newBio: string) => {
-    this.setState({ biographyValue: newBio });
+    this.props.model.profilePageData.updateBiographyValue(newBio);
+    this.setState({ profilePageData: this.props.model.profilePageData });
   }
 
   private handleLanguagePrivacyClick = () => {
@@ -249,7 +245,6 @@ export class EditProfilePageController extends React.Component<Properties,
     this.props.model.profilePageData.updateSelectedLocation(selectedLocation);
     this.setState({
       profilePageData: this.props.model.profilePageData,
-      locationValue: selectedLocation,
       suggestedLocationList: [selectedLocation]
     });
   }

@@ -4,7 +4,8 @@ CREATE TABLE IF NOT EXISTS user_profile_social_accounts (
   platform   social_account_type_enum  NOT NULL,
   link       VARCHAR(255)              NOT NULL,
   is_private BOOLEAN                   DEFAULT TRUE,
-  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+  UNIQUE(user_id, platform)
 );
 
 INSERT INTO user_profile_social_accounts (
