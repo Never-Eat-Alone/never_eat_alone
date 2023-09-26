@@ -189,6 +189,8 @@ export class HttpApplicationModel extends ApplicationModel {
 
   public async updateEditProfilePageModel(id: number, newModel:
       EditProfilePageModel): Promise<void> {
+    this._model = null;
+    await this.load();
     await this._model.updateEditProfilePageModel(id, newModel);
   }
 

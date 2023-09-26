@@ -147,7 +147,6 @@ export class HttpProfilePageModel extends ProfilePageModel {
       favoriteCuisineList, newUpcomingEventList, pastEventList);
     this._model = newModel;
     await this._model.updateUpcomingEventList();
-    await this._model.load();
     this._isLoaded = true;
   }
 

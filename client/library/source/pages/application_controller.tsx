@@ -376,30 +376,32 @@ export class ApplicationController extends React.Component<Properties, State> {
       {match}: Router.RouteComponentProps<TParams>) => {
     const id = Number(match.params.id);
     return <EditProfilePageController
-        displayMode={this.state.displayMode}
-        account={this.state.account}
-        model={this.props.model.getEditProfilePageModel(id)}
-        onSaveSuccess={() => this.handleSaveEditProfile(id)}
-        onCancel={this.handleEditProfilePageCancel}
+      displayMode={this.state.displayMode}
+      account={this.state.account}
+      model={this.props.model.getEditProfilePageModel(id)}
+      onSaveSuccess={() => this.handleSaveEditProfile(id)}
+      onCancel={this.handleEditProfilePageCancel}
     />;
   }
 
   private handleEditProfilePageCancel = () => {
     console.log('handleEditProfilePageCancel');
-    const userId = this.state.account.id;
-    this.props.history.push(`/users/profile/${userId}`);
+    this.props.history.push(`/users/profile/${this.state.account.id}`);
   }
 
   private handleSaveEditProfile = async (id: number) => {
+    console.log('handleSaveEditProfile');
     if (this.state.account.id === -1) {
       this.handleLogInButton();
       return;
     }
     const editProfilePageModel = this.props.model.getEditProfilePageModel(id);
     try {
+      console.log('before updating the app and edit profile model');
       await this.props.model.updateEditProfilePageModel(id,
         editProfilePageModel);
-      this.setState({ hasProfileChanged: true });
+      console.log('model updated');
+      this.props.history.push(`/users/profile/${this.state.account.id}`);
     } catch {
       this.setState({ hasError: true });
     }

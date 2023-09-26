@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as Router from 'react-router-dom';
 import { CoverImage, Cuisine, DisplayMode, Language, ProfilePageData, User }
   from '../../definitions';
 import { EditProfilePage } from './edit_profile_page';
@@ -16,7 +15,6 @@ interface Properties {
 interface State {
   isLoaded: boolean;
   hasError: boolean;
-  redirect: string;
   suggestedLocationList: string[];
   suggestedLanguageList: Language[];
   suggestedCuisineList: Cuisine[];
@@ -37,7 +35,6 @@ export class EditProfilePageController extends React.Component<Properties,
     this.state = {
       isLoaded: false,
       hasError: false,
-      redirect: null,
       suggestedLocationList: [],
       suggestedLanguageList: [],
       suggestedCuisineList: [],
@@ -53,9 +50,6 @@ export class EditProfilePageController extends React.Component<Properties,
   }
 
   public render(): JSX.Element {
-    if (this.state.redirect) {
-      return <Router.Redirect to={this.state.redirect} />;
-    }
     if (!this.state.isLoaded || this.state.hasError) {
       return <div />;
     }

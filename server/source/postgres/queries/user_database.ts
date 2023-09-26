@@ -548,7 +548,7 @@ export class UserDatabase {
       Promise<void> => {
     try {
       await this.pool.query('BEGIN');
-      console.log(profilePageData);
+
       // Update users table.
       await this.pool.query(`
         UPDATE users 
