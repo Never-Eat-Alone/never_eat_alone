@@ -1,5 +1,4 @@
-import { CoverImage, Cuisine, EventCardSummary, Language } from
-  '../../definitions';
+import { EventCardSummary, ProfilePageData } from '../../definitions';
 import { ProfilePageModel } from './profile_page_model';
 
 /**
@@ -11,15 +10,7 @@ export class EmptyProfilePageModel extends ProfilePageModel {
     throw new Error('Unable to load empty model.');
   }
 
-  public get profileId(): number {
-    throw new Error('ProfilePageModel not loaded.');
-  }
-
-  public get coverImage(): CoverImage {
-    throw new Error('ProfilePageModel not loaded.');
-  }
-
-  public get profileImageSrc(): string {
+  public get profilePageData(): ProfilePageData {
     throw new Error('ProfilePageModel not loaded.');
   }
 
@@ -32,34 +23,6 @@ export class EmptyProfilePageModel extends ProfilePageModel {
   }
 
   public get createdAt(): Date {
-    throw new Error('ProfilePageModel not loaded.');
-  }
-
-  public get biography(): string {
-    throw new Error('ProfilePageModel not loaded.');
-  }
-
-  public get address(): string {
-    throw new Error('ProfilePageModel not loaded.');
-  }
-
-  public get languageList(): Language[] {
-    throw new Error('ProfilePageModel not loaded.');
-  }
-
-  public get facebookLink(): string {
-    throw new Error('ProfilePageModel not loaded.');
-  }
-
-  public get twitterLink(): string {
-    throw new Error('ProfilePageModel not loaded.');
-  }
-
-  public get instagramLink(): string {
-    throw new Error('ProfilePageModel not loaded.');
-  }
-
-  public get favoriteCuisineList(): Cuisine[] {
     throw new Error('ProfilePageModel not loaded.');
   }
 

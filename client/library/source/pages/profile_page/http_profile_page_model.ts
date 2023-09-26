@@ -1,5 +1,6 @@
 import { arrayFromJson, CoverImage, Cuisine, EventCardSummary, Language,
-  SocialAccountType, UserProfileSocialAccount } from '../../definitions';
+  ProfilePageData, SocialAccountType, UserProfileImage, UserProfileSocialAccount
+  } from '../../definitions';
 import { EmptyProfilePageModel } from './empty_profile_page_model';
 import { LocalProfilePageModel } from './local_profile_page_model';
 import { ProfilePageModel } from './profile_page_model';
@@ -23,14 +24,19 @@ export class HttpProfilePageModel extends ProfilePageModel {
     this._checkResponse(response);
     const responseObject = await response.json();
     const coverImage = CoverImage.fromJson(responseObject.coverImage);
-    const profileImageSrc = responseObject.profileImageSrc;
+    const profileImage = UserProfileImage.fromJson(responseObject.profileImage);
     const name: string = responseObject.name;
     const userName: string = responseObject.userName;
     const createdAt = new Date(Date.parse(responseObject.createdAt));
     const biography: string = responseObject.biography;
+    const isBiographyPrivate = responseObject.isBiographyPrivate;
     const address: string = responseObject.address;
     const languageList: Language[] = arrayFromJson(Language,
       responseObject.languageList);
+    const isUpcomingEventsPrivate = responseObject.isUpcomingEventsPrivate;
+    const isPastEventsPrivate = responseObject.isPastEventsPrivate;
+    const isLocationPrivate = responseObject.isLocationPrivate;
+    const isLanguagePrivate = responseObject.isLanguagePrivate;
     const socialAccounts: UserProfileSocialAccount[] = arrayFromJson(
       UserProfileSocialAccount, responseObject.socialAccounts);
     const facebookLink = socialAccounts.find((account) => account.platform ===
@@ -45,64 +51,20 @@ export class HttpProfilePageModel extends ProfilePageModel {
       EventCardSummary, responseObject.upcomingEventList);
     const pastEventList: EventCardSummary[] = arrayFromJson(EventCardSummary,
       responseObject.pastEventList);
-    this._model = new LocalProfilePageModel(this._profileId, coverImage,
-      profileImageSrc, name, userName, createdAt, biography, address,
-      languageList, facebookLink, twitterLink, instagramLink,
-      favoriteCuisineList, upcomingEventList, pastEventList);
+    const profilePageData = new ProfilePageData(this._profileId, coverImage,
+      profileImage, isUpcomingEventsPrivate, isPastEventsPrivate,
+      isLocationPrivate, address, isLanguagePrivate,
+      languageList, isBiographyPrivate, biography,
+      isFacebookPrivate, facebookLink, isTwitterPrivate, twitterLink,
+      isInstagramPrivate, instagramLink, isCuisinePrivate, favoriteCuisineList);
+    this._model = new LocalProfilePageModel(profilePageData, name, userName,
+      createdAt, upcomingEventList, pastEventList);
     await this._model.load();
     this._isLoaded = true;
   }
 
-  public get profileId(): number {
-    return this._profileId;
-  }
-
-  public get coverImage(): CoverImage {
-    return this._model.coverImage;
-  }
-
-  public get profileImageSrc(): string {
-    return this._model.profileImageSrc;
-  }
-
-  public get name(): string {
-    return this._model.name;
-  }
-
-  public get userName(): string {
-    return this._model.userName;
-  }
-
-  public get createdAt(): Date {
-    return this._model.createdAt;
-  }
-
-  public get biography(): string {
-    return this._model.biography;
-  }
-
-  public get address(): string {
-    return this._model.address;
-  }
-
-  public get languageList(): Language[] {
-    return this._model.languageList;
-  }
-
-  public get facebookLink(): string {
-    return this._model.facebookLink;
-  }
-
-  public get twitterLink(): string {
-    return this._model.twitterLink;
-  }
-
-  public get instagramLink(): string {
-    return this._model.instagramLink;
-  }
-
-  public get favoriteCuisineList(): Cuisine[] {
-    return this._model.favoriteCuisineList;
+  public get profilePageData(): ProfilePageData {
+    return this._model.profilePageData;
   }
 
   public get upcomingEventList(): EventCardSummary[] {

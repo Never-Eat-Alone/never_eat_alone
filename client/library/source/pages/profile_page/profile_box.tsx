@@ -26,23 +26,37 @@ interface Properties {
   /** The biography on user's profile written by the user. */
   biography: string;
 
+  isBiographyPrivate: boolean;
+
   /** The user's location. */
   address: string;
+
+  isLocationPrivate: boolean;
 
   /** List of the languages the user can speak. */
   languageList: Language[];
 
+  isLanguagePrivate: boolean;
+
   /** The url to user's profile on Facebook social platform. */
   facebookLink: string;
+
+  isFacebookPrivate: boolean;
 
   /** The url to user's profile on Twitter social platform. */
   twitterLink: string;
 
+  isTwitterPrivate: boolean;
+
   /** The url to user's profile on Instagram social platform. */
   instagramLink: string;
 
+  isInstagramPrivate: boolean;
+
   /** The list of the user's favorite cuisines. */
   favoriteCuisineList: Cuisine[];
+
+  isCuisinePrivate: boolean;
 
   /** Indicates the report option was clicked. */
   onReportClick: () => void;
@@ -51,6 +65,8 @@ interface Properties {
 /** Displays the User Information Box on the User Profile Page. */
 export class ProfileBox extends React.Component<Properties> {
   public render(): JSX.Element {
+    const isAccountProfile = (this.props.account.id !== -1 &&
+      this.props.account.id === this.props.profileId);
     const profileActionButton = (() => {
       if (!this.props.account || this.props.account.id === -1 ||
           this.props.account.id === this.props.profileId) {
@@ -60,13 +76,15 @@ export class ProfileBox extends React.Component<Properties> {
         onReportClick={this.props.onReportClick} />;
     })();
     const biography = (() => {
-      if (this.props.biography) {
+      if (this.props.biography && (isAccountProfile ||
+          !this.props.isBiographyPrivate)) {
         return <p style={BIOGRAPHY_STYLE} >{this.props.biography}</p>;
       }
       return null;
     })();
     const locationSection = (() => {
-      if (this.props.address) {
+      if (this.props.address && (isAccountProfile ||
+          !this.props.isLocationPrivate)) {
         return (
           <div style={LOCATION_ROW_STYLE} >
             <img
@@ -80,7 +98,8 @@ export class ProfileBox extends React.Component<Properties> {
       return null;
     })();
     const languageSection = (() => {
-      if (this.props.languageList?.length !== 0) {
+      if (this.props.languageList?.length !== 0 && (isAccountProfile ||
+          !this.props.isLanguagePrivate)) {
         return (
           <div style={LANGUAGE_ROW_STYLE} >
             <img
@@ -97,7 +116,8 @@ export class ProfileBox extends React.Component<Properties> {
       return null;
     })();
     const socialMediaLinks = [];
-    if (this.props.facebookLink) {
+    if (this.props.facebookLink && (isAccountProfile ||
+        !this.props.isFacebookPrivate)) {
       socialMediaLinks.push(
         <FacebookButton
           key={this.props.facebookLink}
@@ -105,7 +125,8 @@ export class ProfileBox extends React.Component<Properties> {
           style={SOCIAL_ICON_STYLE}
         />);
     }
-    if (this.props.twitterLink) {
+    if (this.props.twitterLink && (isAccountProfile ||
+        !this.props.isTwitterPrivate)) {
       socialMediaLinks.push(
         <TwitterButton
           key={this.props.twitterLink}
@@ -113,7 +134,8 @@ export class ProfileBox extends React.Component<Properties> {
           style={SOCIAL_ICON_STYLE}
         />);
     }
-    if (this.props.instagramLink) {
+    if (this.props.instagramLink && (isAccountProfile ||
+        !this.props.isInstagramPrivate)) {
       socialMediaLinks.push(
         <InstagramButton
           key={this.props.instagramLink}
@@ -127,7 +149,8 @@ export class ProfileBox extends React.Component<Properties> {
     })();
     const cuisineList = [];
     if (this.props.favoriteCuisineList &&
-        this.props.favoriteCuisineList.length !== 0) {
+        this.props.favoriteCuisineList.length !== 0 && (isAccountProfile ||
+        !this.props.isCuisinePrivate)) {
       for (const cuisine of this.props.favoriteCuisineList) {
         cuisineList.push(
           <div
