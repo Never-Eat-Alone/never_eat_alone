@@ -385,22 +385,20 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private handleEditProfilePageCancel = () => {
-    console.log('handleEditProfilePageCancel');
     this.props.history.push(`/users/profile/${this.state.account.id}`);
   }
 
   private handleSaveEditProfile = async (id: number) => {
-    console.log('handleSaveEditProfile');
     if (this.state.account.id === -1) {
       this.handleLogInButton();
       return;
     }
     const editProfilePageModel = this.props.model.getEditProfilePageModel(id);
     try {
-      console.log('before updating the app and edit profile model');
       await this.props.model.updateEditProfilePageModel(id,
         editProfilePageModel);
-      console.log('model updated');
+      this.setState({
+        accountProfileImage: this.props.model.accountProfileImage });
       this.props.history.push(`/users/profile/${this.state.account.id}`);
     } catch {
       this.setState({ hasError: true });
