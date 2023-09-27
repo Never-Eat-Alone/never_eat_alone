@@ -24,7 +24,7 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
     const responseObject = await response.json();
     const languageList: Language[] = arrayFromJson(Language,
       responseObject.languageList);
-    const favoriteCuisineList: Cuisine[] = arrayFromJson(Cuisine,
+    const cuisineList: Cuisine[] = arrayFromJson(Cuisine,
       responseObject.favoriteCuisineList);
     const coverImage = CoverImage.fromJson(responseObject.coverImage);
     const coverImageList: CoverImage[] = arrayFromJson(CoverImage,
@@ -86,7 +86,7 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
       isFacebookPrivate, facebookLink, isTwitterPrivate, twitterLink,
       isInstagramPrivate, instagramLink, isCuisinePrivate, selectedCuisineList);
     this._model = new LocalEditProfilePageModel(profilePageData, coverImageList,
-      languageList, favoriteCuisineList);
+      languageList, cuisineList);
     await this._model.load();
     this._isLoaded = true;
   }

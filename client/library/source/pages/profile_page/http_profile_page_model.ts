@@ -39,18 +39,47 @@ export class HttpProfilePageModel extends ProfilePageModel {
     const isLanguagePrivate = responseObject.isLanguagePrivate;
     const socialAccounts: UserProfileSocialAccount[] = arrayFromJson(
       UserProfileSocialAccount, responseObject.socialAccounts);
-    const facebookLink = socialAccounts.find((account) => account.platform ===
-      SocialAccountType.FACEBOOK)?.link;
-    const twitterLink = socialAccounts.find((account) => account.platform ===
-      SocialAccountType.TWITTER)?.link;
-    const instagramLink = socialAccounts.find((account) => account.platform ===
-      SocialAccountType.INSTAGRAM)?.link;
+    const isCuisinePrivate = responseObject.isCuisinePrivate;
     const favoriteCuisineList: Cuisine[] = arrayFromJson(Cuisine,
       responseObject.favoriteCuisineList);
     const upcomingEventList: EventCardSummary[] = arrayFromJson(
       EventCardSummary, responseObject.upcomingEventList);
     const pastEventList: EventCardSummary[] = arrayFromJson(EventCardSummary,
       responseObject.pastEventList);
+    const { facebookLink, isFacebookPrivate, twitterLink, isTwitterPrivate,
+        instagramLink, isInstagramPrivate } = (() => {
+      let facebookLink = '', twitterLink = '', instagramLink = '';
+      let isFacebookPrivate = true, isTwitterPrivate = true,
+        isInstagramPrivate = true;
+      if (socialAccounts && socialAccounts.length > 0) {
+        const facebookAccount = socialAccounts.find((account) =>
+          account.platform === SocialAccountType.FACEBOOK);
+        if (facebookAccount) {
+          facebookLink = facebookAccount.link;
+          isFacebookPrivate = facebookAccount.isPrivate;
+        }
+        const twitterAccount = socialAccounts.find((account) =>
+          account.platform === SocialAccountType.TWITTER);
+        if (twitterAccount) {
+          twitterLink = twitterAccount.link;
+          isTwitterPrivate = twitterAccount.isPrivate;
+        }
+        const instagramAccount = socialAccounts.find((account) =>
+          account.platform === SocialAccountType.INSTAGRAM);
+        if (instagramAccount) {
+            instagramLink = instagramAccount.link;
+            isInstagramPrivate = instagramAccount.isPrivate;
+        }
+      }
+      return {
+        facebookLink: facebookLink,
+        isFacebookPrivate: isFacebookPrivate,
+        twitterLink: twitterLink,
+        isTwitterPrivate: isTwitterPrivate,
+        instagramLink: instagramLink,
+        isInstagramPrivate: isInstagramPrivate
+      };
+    })();
     const profilePageData = new ProfilePageData(this._profileId, coverImage,
       profileImage, isUpcomingEventsPrivate, isPastEventsPrivate,
       isLocationPrivate, address, isLanguagePrivate,
@@ -67,6 +96,18 @@ export class HttpProfilePageModel extends ProfilePageModel {
     return this._model.profilePageData;
   }
 
+  public get name(): string {
+    return this._model.name;
+  }
+
+  public get userName(): string {
+    return this._model.userName;
+  }
+
+  public get createdAt(): Date {
+    return this._model.createdAt;
+  }
+
   public get upcomingEventList(): EventCardSummary[] {
     return this._model.upcomingEventList;
   }
@@ -75,41 +116,9 @@ export class HttpProfilePageModel extends ProfilePageModel {
     return this._model.pastEventList;
   }
 
-  public async updateUpcomingEventList(): Promise<void> {
+  public async update(): Promise<void> {
     this._isLoaded = false;
-    const response = await fetch(`/api/profile_page/${this._profileId}`);
-    this._checkResponse(response);
-    const responseObject = await response.json();
-    const coverImage = CoverImage.fromJson(responseObject.coverImage);
-    const profileImageSrc = responseObject.profileImageSrc;
-    const name: string = responseObject.name;
-    const userName: string = responseObject.userName;
-    const createdAt = new Date(Date.parse(responseObject.createdAt));
-    const biography: string = responseObject.biography;
-    const address: string = responseObject.address;
-    const languageList: Language[] = arrayFromJson(Language,
-      responseObject.languageList);
-    const socialAccounts: UserProfileSocialAccount[] = arrayFromJson(
-      UserProfileSocialAccount, responseObject.socialAccounts);
-    const facebookLink = socialAccounts.find((account) => account.platform ===
-      SocialAccountType.FACEBOOK)?.link;
-    const twitterLink = socialAccounts.find((account) => account.platform ===
-      SocialAccountType.TWITTER)?.link;
-    const instagramLink = socialAccounts.find((account) => account.platform ===
-      SocialAccountType.INSTAGRAM)?.link;
-    const favoriteCuisineList: Cuisine[] = arrayFromJson(Cuisine,
-      responseObject.favoriteCuisineList);
-    const newUpcomingEventList: EventCardSummary[] = arrayFromJson(
-      EventCardSummary, responseObject.upcomingEventList);
-    const pastEventList: EventCardSummary[] = arrayFromJson(EventCardSummary,
-      responseObject.pastEventList);
-    const newModel = new LocalProfilePageModel(this._profileId, coverImage,
-      profileImageSrc, name, userName, createdAt, biography, address,
-      languageList, facebookLink, twitterLink, instagramLink,
-      favoriteCuisineList, newUpcomingEventList, pastEventList);
-    this._model = newModel;
-    await this._model.updateUpcomingEventList();
-    this._isLoaded = true;
+    await this.load();
   }
 
   private _checkResponse(response: Response): void {

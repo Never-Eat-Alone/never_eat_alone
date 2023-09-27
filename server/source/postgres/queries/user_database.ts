@@ -400,28 +400,6 @@ export class UserDatabase {
     return result.rows[0].profile_address;
   }
 
-  public loadUserLocationByUserId = async (userId: number): Promise<
-      Location> => {
-    const result = await this.pool.query(`
-      SELECT
-        lo.*
-      FROM
-        locations AS lo
-      JOIN
-        users
-      ON
-        users.location_id = lo.id
-      WHERE
-        users.id = $1`, [userId]);
-    if (result.rows?.length === 0) {
-      return Location.empty();
-    }
-    return new Location(parseInt(result.rows[0].id),
-      result.rows[0].address_line_one, result.rows[0].address_line_two,
-      result.rows[0].city, result.rows[0].province, result.rows[0].country,
-      result.rows[0].postal_code, result.rows[0].neighbourhood);
-  }
-
   public loadUserLanguagesByUserId = async (userId: number): Promise<
       Language[]> => {
     const result = await this.pool.query(`

@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
   biography       TEXT                                                    ,
   is_bio_private  BOOLEAN                        DEFAULT TRUE             ,
   profile_address TEXT                                                    ,
-  is_profile_address_private BOOLEAN              DEFAULT TRUE,
+  is_profile_address_private BOOLEAN             DEFAULT TRUE,
   is_upcoming_events_private BOOLEAN             DEFAULT TRUE,
   is_past_events_private BOOLEAN                 DEFAULT TRUE,
   is_language_private BOOLEAN                    DEFAULT TRUE,

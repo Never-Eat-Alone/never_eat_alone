@@ -30,7 +30,7 @@ export class EmptyProfilePageModel extends ProfilePageModel {
     throw new Error('ProfilePageModel not loaded.');
   }
 
-  public async updateUpcomingEventList(): Promise<void> {
+  public async update(): Promise<void> {
     throw new Error('Unable to update empty model.');
   }
 

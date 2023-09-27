@@ -46,15 +46,25 @@ export class ProfilePageController extends React.Component<Properties, State> {
       displayName={this.props.model.name}
       userName={this.props.model.userName}
       memberSince={this.props.model.createdAt}
+      isBiographyPrivate={this.props.model.profilePageData.isBiographyPrivate}
       biography={this.props.model.profilePageData.biographyValue}
       address={this.props.model.profilePageData.selectedLocation}
+      isLocationPrivate={this.props.model.profilePageData.isLocationPrivate}
       languageList={this.props.model.profilePageData.selectedLanguageList}
+      isLanguagePrivate={this.props.model.profilePageData.isLanguagePrivate}
       facebookLink={this.props.model.profilePageData.facebookLink}
+      isFacebookPrivate={this.props.model.profilePageData.isFacebookPrivate}
       twitterLink={this.props.model.profilePageData.twitterLink}
+      isTwitterPrivate={this.props.model.profilePageData.isTwitterPrivate}
       instagramLink={this.props.model.profilePageData.instagramLink}
+      isInstagramPrivate={this.props.model.profilePageData.isInstagramPrivate}
       favoriteCuisineList={this.props.model.profilePageData.selectedCuisineList}
+      isCuisinePrivate={this.props.model.profilePageData.isCuisinePrivate}
       upcomingEventList={this.props.model.upcomingEventList}
+      isUpcomingEventsPrivate={
+        this.props.model.profilePageData.isUpcomingEventsPrivate}
       pastEventList={this.props.model.pastEventList}
+      isPastEventsPrivate={this.props.model.profilePageData.isPastEventsPrivate}
       onReportClick={this.props.onReportClick}
     />;
   }
