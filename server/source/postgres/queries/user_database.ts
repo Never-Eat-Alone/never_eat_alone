@@ -1,9 +1,10 @@
 import * as Crypto from 'crypto';
 import * as Hash from 'hash.js';
 import { Pool } from 'pg';
-import { Cuisine, Language, Location, SocialAccountType, User,
-  UserInvitationCode, UserStatus, UserProfileImage, UserProfileSocialAccount,
-  ProfilePageData } from '../../../../client/library/source/definitions';
+import { Cuisine, Language, SocialAccountType, User, UserInvitationCode,
+  UserStatus, UserProfileImage, UserProfilePrivacyPreference,
+  UserProfileSocialAccount, ProfilePageData } from
+  '../../../../client/library/source/definitions';
 
 /** Generates a unique invitation code. */
 function generateInvitationCode() {
@@ -520,6 +521,24 @@ export class UserDatabase {
     } else {
       throw new Error("User doesn't have credentials.");
     }
+  }
+
+  public getUserPrivacyPreferencesByUserId = async (
+      userId: number): Promise<UserProfilePrivacyPreference> => {
+    const result = await this.pool.query('SELECT * FROM users WHERE id = $1',
+      [userId]);
+    if (result.rows?.length === 0) {
+      throw new Error("User doesn't exist.");
+    }
+    const privacyPreference: UserProfilePrivacyPreference = {
+      isBioPrivate: result.rows[0].is_bio_private,
+      isProfileAddressPrivate: result.rows[0].is_profile_address_private,
+      isUpcomingEventsPrivate: result.rows[0].is_upcoming_events_private,
+      isPastEventsPrivate: result.rows[0].is_past_events_private,
+      isLanguagePrivate: result.rows[0].is_language_private,
+      isCuisinePrivate: result.rows[0].is_cuisine_private
+    }
+    return privacyPreference;
   }
 
   public updateUserProfile = async (profilePageData: ProfilePageData):
