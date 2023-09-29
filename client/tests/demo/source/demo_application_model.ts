@@ -375,31 +375,39 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const emmaInstagramLink = 'www.instagram.com/@emma12';
     const arthurInstagramLink = 'www.instagram.com/@arthur12'
     const emmaLocation = 'Barrie';
-    const arthurLocation = 'Toronto';
-    const demoProfilePageModel1 = new NeverEatAlone.LocalProfilePageModel(1,
-      emmaCoverImage, emmaProfileImage.src, userEmma.name,
-      userEmma.userName, userEmma.createdAt, emmaBio, 'Toronto, ON',
-      emmaLanguageList, '', '', emmaInstagramLink, emmaFavoriteCuisines, [],
-      [eventCardSummary1]);
+    const emmaProfilePageData = new NeverEatAlone.ProfilePageData(userEmma.id,
+      emmaCoverImage, emmaProfileImage, false, false, false, emmaLocation,
+      false, emmaLanguageList, false, emmaBio, false, '', false, '', false,
+      emmaInstagramLink, false, emmaFavoriteCuisines);
+    const demoProfilePageModel1 = new NeverEatAlone.LocalProfilePageModel(
+      emmaProfilePageData, userEmma.name, userEmma.userName, userEmma.createdAt,
+      [], [eventCardSummary1]);
     this._profilePageModelMap.set(1, demoProfilePageModel1);
 
     /** User Profile Page Model for userArthur */
+    const arthurLocation = 'Toronto';
     const arthurCoverImage = coverImage1;
-    const demoProfilePageModel2 = new NeverEatAlone.LocalProfilePageModel(2,
-      arthurCoverImage, arthurProfileImage.src, userArthur.name,
-      userArthur.userName, userArthur.createdAt, 'Ready to explore Toronto.',
-      'Toronto', arthurLanguageList, 'www.facebook.com/arthur_van',
-      'www.twitter.com/@vanfan', '', arthurFavoriteCuisines, [eventCardSummary7
-      ], [eventCardSummary1, eventCardSummary13]);
+    const arthurProfilePageData = new NeverEatAlone.ProfilePageData(2,
+      arthurCoverImage, arthurProfileImage, false, false, false, 'Toronto',
+      false, arthurLanguageList, false, 'Ready to explore Toronto.', false,
+      'www.facebook.com/arthur_van', false, 'www.twitter.com/@vanfan', true, '',
+      false, arthurFavoriteCuisines);
+    const demoProfilePageModel2 = new NeverEatAlone.LocalProfilePageModel(
+      arthurProfilePageData, userArthur.name, userArthur.userName,
+      userArthur.createdAt, [eventCardSummary7], [eventCardSummary1,
+      eventCardSummary13]);
     this._profilePageModelMap.set(2, demoProfilePageModel2);
 
     /** User Profile Page Model for userLucy */
     const lucyCoverImage = coverImage5;
-    const demoProfilePageModel3 = new NeverEatAlone.LocalProfilePageModel(3,
-      lucyCoverImage, 'resources/images/profile2.jpeg', 'Lucy', 'lu2d3',
-      new Date(2022, 4, 2, 2, 30, 40), 'Matcha everything!', 'Toronto, CA',
-      lucyLanguageList, '', '', '', lucyFavoriteCuisines, [eventCardSummary5],
-      []);
+    const lucyProfilePageData = new NeverEatAlone.ProfilePageData(3,
+      lucyCoverImage, new NeverEatAlone.UserProfileImage(3,
+        'resources/images/profile2.jpeg'), false, true, false, 'Toronto, CA',
+        false, lucyLanguageList, true, 'Matcha everything!', true, '', false,
+        '', true, '', false, lucyFavoriteCuisines);
+    const demoProfilePageModel3 = new NeverEatAlone.LocalProfilePageModel(
+      lucyProfilePageData, 'Lucy', 'lu2d3', new Date(2022, 4, 2, 2, 30, 40),
+      [eventCardSummary5], []);
     this._profilePageModelMap.set(3, demoProfilePageModel3);
 
     /** Setting up the _editProfilePageModel map. */
@@ -416,19 +424,9 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       traditionalCuisine];
 
     /** Emma's edit profie page model. */
-    const emmaProfilePageData = new NeverEatAlone.ProfilePageData(userEmma.id,
-      emmaCoverImage, emmaProfileImage, false, false, false, emmaLocation,
-      false, emmaLanguageList, false, emmaBio, false, '', false, '', false,
-      emmaInstagramLink, false, emmaFavoriteCuisines);
-
     const demoEditProfilePageModel1 = new DemoEditProfilePageModel(
       emmaProfilePageData, coverImageList, languageList, cuisineList);
     this._editProfilePageModelMap.set(1, demoEditProfilePageModel1);
-
-    const arthurProfilePageData = new NeverEatAlone.ProfilePageData(
-      userArthur.id, arthurCoverImage, arthurProfileImage, false, false, false,
-      arthurLocation, false, arthurLanguageList, false, arthurBio,  false, '',
-      false, '', false, arthurInstagramLink, false, arthurFavoriteCuisines);
 
     /** Arthur's edit profie page model. */
     const demoEditProfilePageModel2 = new DemoEditProfilePageModel(
@@ -558,7 +556,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       NeverEatAlone.DiningEventPageModel): Promise<void> {
     this._diningEventPageModelMap.set(id, updatedModel);
     await this._homePageModel.updateEventLists();
-    await this.getProfilePageModel(this._account.id).updateUpcomingEventList();
+    await this.getProfilePageModel(this._account.id).update();
   }
 
   public get inviteAFoodieModel(): NeverEatAlone.InviteAFoodieModel {

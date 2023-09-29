@@ -22,14 +22,16 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
       throw new Error(`Load failed with response status ${response.status}`);
     }
     const responseObject = await response.json();
+    const profilePageData = ProfilePageData.fromJson(
+      responseObject.profilePageData);
     const languageList: Language[] = arrayFromJson(Language,
       responseObject.languageList);
     const cuisineList: Cuisine[] = arrayFromJson(Cuisine,
       responseObject.cuisineList);
     const coverImageList: CoverImage[] = arrayFromJson(CoverImage,
       responseObject.coverImageList);
-    const profilePageData = ProfilePageData.fromJson(
-      responseObject.profilePageData);
+    this._model = new LocalEditProfilePageModel(profilePageData, coverImageList,
+      languageList, cuisineList);
     await this._model.load();
     this._isLoaded = true;
   }
