@@ -699,6 +699,15 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
+    let userPrivacyPreference: UserProfilePrivacyPreference;
+    try {
+      userPrivacyPreference =
+        await this.userDatabase.getUserPrivacyPreferencesByUserId(profileId);
+    } catch (error) {
+      console.error('Failed at getUserPrivacyPreferencesByUserId', error);
+      response.status(500).send();
+      return;
+    }
     try {
       address = await this.userDatabase.loadAddressByUserId(profileId);
     } catch (error) {
@@ -749,14 +758,20 @@ export class UserRoutes {
     }
     response.status(200).json({
       coverImage: coverImage.toJson(),
-      profileImageSrc: profileImage.src,
+      profileImage: profileImage,
       name: profileUser.name,
       userName: profileUser.userName,
       createdAt: profileUser.createdAt.toISOString(),
       biography: biography,
+      isBiographyPrivate: userPrivacyPreference.isBioPrivate,
       address: address,
       languageList: arrayToJson(languageList),
+      isUpcomingEventsPrivate: userPrivacyPreference.isUpcomingEventsPrivate,
+      isPastEventsPrivate: userPrivacyPreference.isPastEventsPrivate,
+      isLocationPrivate: userPrivacyPreference.isProfileAddressPrivate,
+      isLanguagePrivate: userPrivacyPreference.isLanguagePrivate,
       socialAccounts: arrayToJson(socialAccounts),
+      isCuisinePrivate: userPrivacyPreference.isCuisinePrivate,
       favoriteCuisineList: arrayToJson(favoriteCuisineList),
       upcomingEventList: arrayToJson(upcomingEventList),
       pastEventList: arrayToJson(pastEventList)
