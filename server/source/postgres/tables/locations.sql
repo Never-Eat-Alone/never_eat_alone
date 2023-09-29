@@ -94,9 +94,11 @@ VALUES
   'M5J 1A6', 'Harbourfront'),
 (37, '51 Camden St', 'Lower level of the Ace Hotel', 'Toronto', 'ON', 'Canada',
   'M5V 1V2', 'Fashion District'),
-(38, '130 King St W', Null, 'Toronto', 'ON', 'Canada', 'M5X 2A2',
+(38, '130 King St W', NULL, 'Toronto', 'ON', 'Canada', 'M5X 2A2',
   'Financial District'),
-(39, '1256 St Clair Ave W', Null, 'Toronto', 'ON', 'Canada', 'M6E 1B9',
+(39, '1256 St Clair Ave W', NULL, 'Toronto', 'ON', 'Canada', 'M6E 1B9',
   'Earlscourt'),
-(40, '67 Richmond St W', Null, 'Toronto', 'ON', 'Canada', 'M5H 1Z5',
-  'Financial District');
+(40, '67 Richmond St W', NULL, 'Toronto', 'ON', 'Canada', 'M5H 1Z5',
+  'Financial District'),
+(41, '1226 St Clair Ave W', NULL, 'Toronto', 'ON', 'Canada', 'M6E 1B4',
+  'Corso Italia');
