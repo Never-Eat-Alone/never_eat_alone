@@ -3,7 +3,7 @@ import * as Hash from 'hash.js';
 import * as path from 'path';
 import { arrayToJson, CoverImage, Cuisine, EventCardSummary, InviteEmail,
   Language, NotificationSettings, PaymentCard, PaymentRecord, ProfilePageData,
-  SocialAccount, User, UserInvitationCode, UserProfileImage,
+  SocialAccount, SocialAccountType, User, UserInvitationCode, UserProfileImage,
   UserProfilePrivacyPreference, UserProfileSocialAccount, UserStatus } from
   '../../../client/library/source/definitions';
 import { UserCoverImageDatabase } from
@@ -786,16 +786,15 @@ export class UserRoutes {
     let profilePageData = ProfilePageData.default(profileId);
     let coverImage: CoverImage;
     let profileImage: UserProfileImage;
-    let isBioPrivate: boolean, isProfileAddressPrivate: boolean,
-      isUpcomingEventsPrivate: boolean, isPastEventsPrivate: boolean,
-      isLanguagePrivate: boolean, isCuisinePrivate: boolean;
+    let userPrivacyPreference: UserProfilePrivacyPreference;
     let biographyValue: string;
     let selectedLocation: string;
     let selectedLanguageList: Language[];
-    let favoriteCuisineList: Cuisine[];
+    let selectedCuisineList: Cuisine[];
     let languageList: Language[] = [];
     let cuisineList: Cuisine[] = [];
     let coverImageList: CoverImage[] = [];
+    let socialAccounts: UserProfileSocialAccount[];
     try {
       const profileUser = await this.userDatabase.loadUserById(profileId);
       if (profileUser?.id === -1) {
@@ -834,13 +833,8 @@ export class UserRoutes {
       return;
     }
     try {
-      { isBioPrivate,
-        isProfileAddressPrivate,
-        isUpcomingEventsPrivate,
-        isPastEventsPrivate,
-        isLanguagePrivate,
-        isCuisinePrivate } =
-        this.userDatabase.getUserPrivacyPreferencesByUserId(profileId);
+      userPrivacyPreference =
+        await this.userDatabase.getUserPrivacyPreferencesByUserId(profileId);
     } catch (error) {
       console.error('Failed at getUserPrivacyPreferencesByUserId', error);
       response.status(500).send();
@@ -869,19 +863,65 @@ export class UserRoutes {
       return;
     }
     try {
-      favoriteCuisineList =
+      selectedCuisineList =
         await this.userDatabase.loadUserFavouriteCuisinesByUserId(profileId);
     } catch (error) {
       console.error('Failed at loadUserSelectedCuisinesByUserId', error);
       response.status(500).send();
       return;
     }
+    try {
+      socialAccounts =
+        await this.userDatabase.loadUserProfileSocialAccountsByUserId(
+          profileId);
+    } catch (error) {
+      console.error('Failed at loadUserProfileSocialAccountsByUserId', error);
+      response.status(500).send();
+      return;
+    }
+    const { facebookLink, isFacebookPrivate, twitterLink, isTwitterPrivate,
+        instagramLink, isInstagramPrivate } = (() => {
+      let facebookLink = '', twitterLink = '', instagramLink = '';
+      let isFacebookPrivate = true, isTwitterPrivate = true,
+        isInstagramPrivate = true;
+      if (socialAccounts && socialAccounts.length > 0) {
+        const facebookAccount = socialAccounts.find((account) =>
+          account.platform === SocialAccountType.FACEBOOK);
+        if (facebookAccount) {
+          facebookLink = facebookAccount.link;
+          isFacebookPrivate = facebookAccount.isPrivate;
+        }
+        const twitterAccount = socialAccounts.find((account) =>
+          account.platform === SocialAccountType.TWITTER);
+        if (twitterAccount) {
+          twitterLink = twitterAccount.link;
+          isTwitterPrivate = twitterAccount.isPrivate;
+        }
+        const instagramAccount = socialAccounts.find((account) =>
+          account.platform === SocialAccountType.INSTAGRAM);
+        if (instagramAccount) {
+            instagramLink = instagramAccount.link;
+            isInstagramPrivate = instagramAccount.isPrivate;
+        }
+      }
+      return {
+        facebookLink: facebookLink,
+        isFacebookPrivate: isFacebookPrivate,
+        twitterLink: twitterLink,
+        isTwitterPrivate: isTwitterPrivate,
+        instagramLink: instagramLink,
+        isInstagramPrivate: isInstagramPrivate
+      };
+    })();
     profilePageData = new ProfilePageData(profileId, coverImage,
-      profileImage, isUpcomingEventsPrivate, isPastEventsPrivate,
-      isProfileAddressPrivate, selectedLocation, isLanguagePrivate,
-      selectedLanguageList, isBiographyPrivate, biographyValue,
+      profileImage, userPrivacyPreference.isUpcomingEventsPrivate,
+      userPrivacyPreference.isPastEventsPrivate,
+      userPrivacyPreference.isProfileAddressPrivate, selectedLocation,
+      userPrivacyPreference.isLanguagePrivate, selectedLanguageList,
+      userPrivacyPreference.isBioPrivate, biographyValue,
       isFacebookPrivate, facebookLink, isTwitterPrivate, twitterLink,
-      isInstagramPrivate, instagramLink, isCuisinePrivate, selectedCuisineList);
+      isInstagramPrivate, instagramLink, userPrivacyPreference.isCuisinePrivate,
+      selectedCuisineList);
     response.status(200).json({
       profilePageData: profilePageData.toJson(),
       coverImageList: arrayToJson(coverImageList),
