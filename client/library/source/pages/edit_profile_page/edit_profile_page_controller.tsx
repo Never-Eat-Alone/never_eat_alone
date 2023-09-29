@@ -10,6 +10,8 @@ interface Properties {
   account: User;
   model: EditProfilePageModel;
   onSaveSuccess: () => void;
+  
+  // Indicates the cancel button is clicked. 
   onCancel: () => void;
 }
 
