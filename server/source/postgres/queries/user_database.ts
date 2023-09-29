@@ -1,9 +1,10 @@
 import * as Crypto from 'crypto';
 import * as Hash from 'hash.js';
 import { Pool } from 'pg';
-import { Cuisine, Language, Location, SocialAccountType, User,
-  UserInvitationCode, UserStatus, UserProfileImage, UserProfileSocialAccount,
-  ProfilePageData } from '../../../../client/library/source/definitions';
+import { Cuisine, Language, SocialAccountType, User, UserInvitationCode,
+  UserStatus, UserProfileImage, UserProfilePrivacyPreference,
+  UserProfileSocialAccount, ProfilePageData } from
+  '../../../../client/library/source/definitions';
 
 /** Generates a unique invitation code. */
 function generateInvitationCode() {
@@ -400,28 +401,6 @@ export class UserDatabase {
     return result.rows[0].profile_address;
   }
 
-  public loadUserLocationByUserId = async (userId: number): Promise<
-      Location> => {
-    const result = await this.pool.query(`
-      SELECT
-        lo.*
-      FROM
-        locations AS lo
-      JOIN
-        users
-      ON
-        users.location_id = lo.id
-      WHERE
-        users.id = $1`, [userId]);
-    if (result.rows?.length === 0) {
-      return Location.empty();
-    }
-    return new Location(parseInt(result.rows[0].id),
-      result.rows[0].address_line_one, result.rows[0].address_line_two,
-      result.rows[0].city, result.rows[0].province, result.rows[0].country,
-      result.rows[0].postal_code, result.rows[0].neighbourhood);
-  }
-
   public loadUserLanguagesByUserId = async (userId: number): Promise<
       Language[]> => {
     const result = await this.pool.query(`
@@ -544,9 +523,90 @@ export class UserDatabase {
     }
   }
 
+  public getUserPrivacyPreferencesByUserId = async (
+      userId: number): Promise<UserProfilePrivacyPreference> => {
+    const result = await this.pool.query('SELECT * FROM users WHERE id = $1',
+      [userId]);
+    if (result.rows?.length === 0) {
+      throw new Error("User doesn't exist.");
+    }
+    const privacyPreference: UserProfilePrivacyPreference = {
+      isBioPrivate: result.rows[0].is_bio_private,
+      isProfileAddressPrivate: result.rows[0].is_profile_address_private,
+      isUpcomingEventsPrivate: result.rows[0].is_upcoming_events_private,
+      isPastEventsPrivate: result.rows[0].is_past_events_private,
+      isLanguagePrivate: result.rows[0].is_language_private,
+      isCuisinePrivate: result.rows[0].is_cuisine_private
+    }
+    return privacyPreference;
+  }
+
   public updateUserProfile = async (profilePageData: ProfilePageData):
       Promise<void> => {
-    
+    try {
+      await this.pool.query('BEGIN');
+
+      // Update users table.
+      await this.pool.query(`
+        UPDATE users 
+        SET
+          biography = $2,
+          is_bio_private = $3,
+          is_upcoming_events_private = $4,
+          is_past_events_private = $5,
+          is_profile_address_private = $6,
+          profile_address = $7,
+          is_language_private = $8,
+          is_cuisine_private = $9
+        WHERE id = $1`,
+        [
+          profilePageData.accountId,
+          profilePageData.biographyValue,
+          profilePageData.isBiographyPrivate,
+          profilePageData.isUpcomingEventsPrivate,
+          profilePageData.isPastEventsPrivate,
+          profilePageData.isLocationPrivate,
+          profilePageData.selectedLocation,
+          profilePageData.isLanguagePrivate,
+          profilePageData.isCuisinePrivate
+        ]
+      );
+
+      // Update social links.
+      const upsertSocialLink = async (platform: SocialAccountType, link: string,
+          isPrivate: boolean) => {
+        await this.pool.query(`
+          INSERT INTO
+            user_profile_social_accounts(user_id, platform, link, is_private)
+          VALUES ($1, $2, $3, $4)
+          ON CONFLICT (user_id, platform)
+          DO UPDATE SET link = $3, is_private = $4`,
+          [
+            profilePageData.accountId,
+            platform,
+            link,
+            isPrivate
+          ]
+        );
+      };
+
+      // Update Facebook link
+      await upsertSocialLink(SocialAccountType.FACEBOOK,
+        profilePageData.facebookLink, profilePageData.isFacebookPrivate);
+
+      // Update Twitter link
+      await upsertSocialLink(SocialAccountType.TWITTER,
+        profilePageData.twitterLink, profilePageData.isTwitterPrivate);
+
+      // Update Instagram link
+      await upsertSocialLink(SocialAccountType.INSTAGRAM,
+        profilePageData.instagramLink, profilePageData.isInstagramPrivate);
+
+      await this.pool.query('COMMIT');
+    } catch (error) {
+      await this.pool.query('ROLLBACK');
+      throw error;
+    }
   }
 
   /** The postgress pool connection. */

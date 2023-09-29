@@ -4,7 +4,7 @@ import * as path from 'path';
 import { arrayToJson, CoverImage, Cuisine, EventCardSummary, InviteEmail,
   Language, NotificationSettings, PaymentCard, PaymentRecord, ProfilePageData,
   SocialAccount, User, UserInvitationCode, UserProfileImage,
-  UserProfileSocialAccount, UserStatus } from
+  UserProfilePrivacyPreference, UserProfileSocialAccount, UserStatus } from
   '../../../client/library/source/definitions';
 import { UserCoverImageDatabase } from
   '../postgres/queries/user_cover_image_database';
@@ -783,22 +783,19 @@ export class UserRoutes {
       response.status(401).send();
       return;
     }
+    let profilePageData = ProfilePageData.default(profileId);
+    let coverImage: CoverImage;
+    let profileImage: UserProfileImage;
+    let isBioPrivate: boolean, isProfileAddressPrivate: boolean,
+      isUpcomingEventsPrivate: boolean, isPastEventsPrivate: boolean,
+      isLanguagePrivate: boolean, isCuisinePrivate: boolean;
+    let biographyValue: string;
+    let selectedLocation: string;
+    let selectedLanguageList: Language[];
+    let favoriteCuisineList: Cuisine[];
     let languageList: Language[] = [];
-    let favoriteCuisineList: Cuisine[] = [];
-    let coverImage = CoverImage.noImage();
-    let coverImageList = [];
-    let profileImage = UserProfileImage.default();
-    let selectedLocation = '';
-    let isUpcomingEventsPrivate = true;
-    let isPastEventsPrivate = true;
-    let isLocationPrivate = true;
-    let isLanguagePrivate = true;
-    let biographyValue = '';
-    let isBiographyPrivate = true;
-    let selectedLanguageList: Language[] = [];
-    let selectedCuisineList: Cuisine[] = [];
-    let isCuisinePrivate = true;
-    let userProfileSocialAccountList: UserProfileSocialAccount[] = [];
+    let cuisineList: Cuisine[] = [];
+    let coverImageList: CoverImage[] = [];
     try {
       const profileUser = await this.userDatabase.loadUserById(profileId);
       if (profileUser?.id === -1) {
@@ -837,6 +834,19 @@ export class UserRoutes {
       return;
     }
     try {
+      { isBioPrivate,
+        isProfileAddressPrivate,
+        isUpcomingEventsPrivate,
+        isPastEventsPrivate,
+        isLanguagePrivate,
+        isCuisinePrivate } =
+        this.userDatabase.getUserPrivacyPreferencesByUserId(profileId);
+    } catch (error) {
+      console.error('Failed at getUserPrivacyPreferencesByUserId', error);
+      response.status(500).send();
+      return;
+    }
+    try {
       biographyValue = await this.userDatabase.loadBiographyByUserId(profileId);
     } catch (error) {
       console.error('Failed at loadBiographyByUserId', error);
@@ -851,7 +861,7 @@ export class UserRoutes {
       return;
     }
     try {
-      languageList = await this.userDatabase.loadUserLanguagesByUserId(
+      selectedLanguageList = await this.userDatabase.loadUserLanguagesByUserId(
         profileId);
     } catch (error) {
       console.error('Failed at loadUserLanguagesByUserId', error);
@@ -866,23 +876,17 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
+    profilePageData = new ProfilePageData(profileId, coverImage,
+      profileImage, isUpcomingEventsPrivate, isPastEventsPrivate,
+      isProfileAddressPrivate, selectedLocation, isLanguagePrivate,
+      selectedLanguageList, isBiographyPrivate, biographyValue,
+      isFacebookPrivate, facebookLink, isTwitterPrivate, twitterLink,
+      isInstagramPrivate, instagramLink, isCuisinePrivate, selectedCuisineList);
     response.status(200).json({
-      languageList: arrayToJson(languageList),
-      favoriteCuisineList: arrayToJson(favoriteCuisineList),
-      coverImage: coverImage.toJson(),
+      profilePageData: profilePageData.toJson(),
       coverImageList: arrayToJson(coverImageList),
-      profileImage: profileImage.toJson(),
-      selectedLocation: selectedLocation,
-      isUpcomingEventsPrivate: isUpcomingEventsPrivate,
-      isPastEventsPrivate: isPastEventsPrivate,
-      isLocationPrivate: isLocationPrivate,
-      isLanguagePrivate: isLanguagePrivate,
-      biographyValue: biographyValue,
-      isBiographyPrivate: isBiographyPrivate,
-      selectedLanguageList: arrayToJson(selectedLanguageList),
-      selectedCuisineList: arrayToJson(selectedCuisineList),
-      isCuisinePrivate: isCuisinePrivate,
-      userProfileSocialAccountList: arrayToJson(userProfileSocialAccountList)
+      languageList: arrayToJson(languageList),
+      cuisineList: arrayToJson(cuisineList)
     });
   }
 

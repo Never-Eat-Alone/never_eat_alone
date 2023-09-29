@@ -33,29 +33,47 @@ interface Properties {
   /** The biography on user's profile written by the user. */
   biography: string;
 
+  isBiographyPrivate: boolean;
+
   /** The user's location. */
   address: string;
+
+  isLocationPrivate: boolean;
 
   /** List of the languages the user can speak. */
   languageList: Language[];
 
+  isLanguagePrivate: boolean;
+
   /** The url to user's profile on Facebook social platform. */
   facebookLink: string;
+
+  isFacebookPrivate: boolean;
 
   /** The url to user's profile on Twitter social platform. */
   twitterLink: string;
 
+  isTwitterPrivate: boolean;
+
   /** The url to user's profile on Instagram social platform. */
   instagramLink: string;
+
+  isInstagramPrivate: boolean;
 
   /** The list of the user's favorite cuisines. */
   favoriteCuisineList: Cuisine[];
 
+  isCuisinePrivate: boolean;
+
   /** List of the user upcoming events. */
   upcomingEventList: EventCardSummary[];
 
+  isUpcomingEventsPrivate: boolean;
+
   /** List of the user attended events. */
   pastEventList: EventCardSummary[];
+
+  isPastEventsPrivate: boolean;
 
   /** Indicates the report option was clicked. */
   onReportClick: () => void;
@@ -64,13 +82,22 @@ interface Properties {
 /** Displays the user's profile page. */
 export class ProfilePage extends React.Component<Properties> {
   public render(): JSX.Element {
-    const isNoEvents = (!this.props.upcomingEventList ||
-      this.props.upcomingEventList.length === 0) && (!this.props.pastEventList
-      || this.props.pastEventList.length === 0);
     const isAccountProfile = (this.props.account.id !== -1 &&
       this.props.account.id === this.props.profileId);
+    const isNoEventsToSee = (() => {
+      if ((!this.props.upcomingEventList || this.props.upcomingEventList.length
+          === 0) && (!this.props.pastEventList ||
+          this.props.pastEventList.length === 0)) {
+        return true;
+      }
+      if (!isAccountProfile && this.props.isUpcomingEventsPrivate &&
+          this.props.isPastEventsPrivate) {
+        return true;
+      }
+      return false;
+    })();
     const events = (() => {
-      if (isNoEvents) {
+      if (isNoEventsToSee) {
         if (isAccountProfile) {
           return (
             <div style={NO_EVENT_CONTAINER_STYLE} >
@@ -120,13 +147,15 @@ export class ProfilePage extends React.Component<Properties> {
       }
       return null;
     })();
-    const upcomingEvents = (!isNoEvents &&
+    const upcomingEvents = (!isNoEventsToSee && (isAccountProfile ||
+        !this.props.isUpcomingEventsPrivate) &&
       <ProfileUpcomingEvents
         displayMode={this.props.displayMode}
         eventList={this.props.upcomingEventList}
         isLoggedIn={isAccountProfile}
       /> || null);
-    const pastEvents = (!isNoEvents &&
+    const pastEvents = (!isNoEventsToSee && (isAccountProfile ||
+        !this.props.isPastEventsPrivate) &&
       <ProfilePastEvents
         displayMode={this.props.displayMode}
         eventList={this.props.pastEventList}

@@ -177,7 +177,8 @@ function runExpress(pool: Pool, config: any) {
         'languages',
         'user_languages',
         'user_favourite_cuisines',
-        'password_reset_tokens'
+        'password_reset_tokens',
+        'billing_addresses'
       ]);
       app.listen(config.port, async () => {});
     } catch (error) {
