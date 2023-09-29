@@ -19,28 +19,34 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
   }
 
   public get profilePageData(): ProfilePageData {
+    this.ensureIsLoaded();
     return this._profilePageData;
   }
 
   public get coverImageList(): CoverImage[] {
+    this.ensureIsLoaded();
     return this._coverImageList;
   }
 
   public get languageList(): Language[] {
+    this.ensureIsLoaded();
     return this._languageList;
   }
 
   public get cuisineList(): Cuisine[] {
+    this.ensureIsLoaded();
     return this._cuisineList;
   }
 
   public addSuggestedLocationList(value: string, locationList: string[]
       ): void {
+    this.ensureIsLoaded();
     this._suggestedLocationList.set(value, locationList);
   }
 
   public async getSuggestedLocationList(value: string): Promise<
       string[]> {
+    this.ensureIsLoaded();
     return this._suggestedLocationList.get(value);
   }
 

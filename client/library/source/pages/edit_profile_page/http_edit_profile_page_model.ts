@@ -22,69 +22,14 @@ export class HttpEditProfilePageModel extends EditProfilePageModel {
       throw new Error(`Load failed with response status ${response.status}`);
     }
     const responseObject = await response.json();
+    const profilePageData = ProfilePageData.fromJson(
+      responseObject.profilePageData);
     const languageList: Language[] = arrayFromJson(Language,
       responseObject.languageList);
     const cuisineList: Cuisine[] = arrayFromJson(Cuisine,
-      responseObject.favoriteCuisineList);
-    const coverImage = CoverImage.fromJson(responseObject.coverImage);
+      responseObject.cuisineList);
     const coverImageList: CoverImage[] = arrayFromJson(CoverImage,
       responseObject.coverImageList);
-    const profileImage = UserProfileImage.fromJson(responseObject.profileImage);
-    const selectedLocation = responseObject.selectedLocation;
-    const isUpcomingEventsPrivate = responseObject.isUpcomingEventsPrivate;
-    const isPastEventsPrivate = responseObject.isPastEventsPrivate;
-    const isLocationPrivate = responseObject.isLocationPrivate;
-    const isLanguagePrivate = responseObject.isLanguagePrivate;
-    const biographyValue = responseObject.biographyValue;
-    const isBiographyPrivate = responseObject.isBiographyPrivate;
-    const selectedLanguageList: Language[] = arrayFromJson(Language,
-      responseObject.selectedLanguageList);
-    const selectedCuisineList: Cuisine[] = arrayFromJson(Cuisine,
-      responseObject.selectedCuisineList);
-    const isCuisinePrivate = responseObject.isCuisinePrivate;
-    const socialAccounts: UserProfileSocialAccount[] =
-      arrayFromJson(UserProfileSocialAccount,
-        responseObject.userProfileSocialAccountList);
-    const { facebookLink, isFacebookPrivate, twitterLink, isTwitterPrivate,
-        instagramLink, isInstagramPrivate } = (() => {
-      let facebookLink = '', twitterLink = '', instagramLink = '';
-      let isFacebookPrivate = true, isTwitterPrivate = true,
-        isInstagramPrivate = true;
-      if (socialAccounts && socialAccounts.length > 0) {
-        const facebookAccount = socialAccounts.find((account) =>
-          account.platform === SocialAccountType.FACEBOOK);
-        if (facebookAccount) {
-          facebookLink = facebookAccount.link;
-          isFacebookPrivate = facebookAccount.isPrivate;
-        }
-        const twitterAccount = socialAccounts.find((account) =>
-          account.platform === SocialAccountType.TWITTER);
-        if (twitterAccount) {
-          twitterLink = twitterAccount.link;
-          isTwitterPrivate = twitterAccount.isPrivate;
-        }
-        const instagramAccount = socialAccounts.find((account) =>
-          account.platform === SocialAccountType.INSTAGRAM);
-        if (instagramAccount) {
-            instagramLink = instagramAccount.link;
-            isInstagramPrivate = instagramAccount.isPrivate;
-        }
-      }
-      return {
-        facebookLink: facebookLink,
-        isFacebookPrivate: isFacebookPrivate,
-        twitterLink: twitterLink,
-        isTwitterPrivate: isTwitterPrivate,
-        instagramLink: instagramLink,
-        isInstagramPrivate: isInstagramPrivate
-      };
-    })();
-    const profilePageData = new ProfilePageData(this._profileId, coverImage,
-      profileImage, isUpcomingEventsPrivate, isPastEventsPrivate,
-      isLocationPrivate, selectedLocation, isLanguagePrivate,
-      selectedLanguageList, isBiographyPrivate, biographyValue,
-      isFacebookPrivate, facebookLink, isTwitterPrivate, twitterLink,
-      isInstagramPrivate, instagramLink, isCuisinePrivate, selectedCuisineList);
     this._model = new LocalEditProfilePageModel(profilePageData, coverImageList,
       languageList, cuisineList);
     await this._model.load();
