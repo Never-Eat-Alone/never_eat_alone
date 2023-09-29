@@ -758,7 +758,7 @@ export class UserRoutes {
     }
     response.status(200).json({
       coverImage: coverImage.toJson(),
-      profileImage: profileImage,
+      profileImage: profileImage.toJson(),
       name: profileUser.name,
       userName: profileUser.userName,
       createdAt: profileUser.createdAt.toISOString(),
