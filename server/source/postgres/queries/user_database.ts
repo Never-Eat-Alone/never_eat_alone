@@ -602,6 +602,28 @@ export class UserDatabase {
       await upsertSocialLink(SocialAccountType.INSTAGRAM,
         profilePageData.instagramLink, profilePageData.isInstagramPrivate);
 
+      // Update user's favorite cuisines
+      const updateUserFavoriteCuisines = async (userId: number, cuisineList:
+          Cuisine[]) => {
+
+        /** delete existing favorite cuisines for the user. */
+        await this.pool.query(`
+          DELETE FROM user_favourite_cuisines
+          WHERE user_id = $1`, [userId]);
+
+        /** Insert the new favorite cuisines for the user. */
+        for (const cuisine of cuisineList) {
+          await this.pool.query(`
+            INSERT INTO user_favourite_cuisines(user_id, cuisine_id)
+            VALUES ($1, $2)`,
+            [userId, cuisine.id]
+          );
+        }
+      };
+
+      await updateUserFavoriteCuisines(profilePageData.accountId,
+        profilePageData.selectedCuisineList);
+
       await this.pool.query('COMMIT');
     } catch (error) {
       await this.pool.query('ROLLBACK');
