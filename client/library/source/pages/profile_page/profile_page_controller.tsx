@@ -40,21 +40,31 @@ export class ProfilePageController extends React.Component<Properties, State> {
     return <ProfilePage
       account={this.props.account}
       displayMode={this.props.displayMode}
-      profileId={this.props.model.profileId}
-      coverImageSrc={this.props.model.coverImage.src}
-      profileImageSrc={this.props.model.profileImageSrc}
+      profileId={this.props.model.profilePageData.accountId}
+      coverImageSrc={this.props.model.profilePageData.coverImage.src}
+      profileImageSrc={this.props.model.profilePageData.profileImage.src}
       displayName={this.props.model.name}
       userName={this.props.model.userName}
       memberSince={this.props.model.createdAt}
-      biography={this.props.model.biography}
-      address={this.props.model.address}
-      languageList={this.props.model.languageList}
-      facebookLink={this.props.model.facebookLink}
-      twitterLink={this.props.model.twitterLink}
-      instagramLink={this.props.model.instagramLink}
-      favoriteCuisineList={this.props.model.favoriteCuisineList}
+      isBiographyPrivate={this.props.model.profilePageData.isBiographyPrivate}
+      biography={this.props.model.profilePageData.biographyValue}
+      address={this.props.model.profilePageData.selectedLocation}
+      isLocationPrivate={this.props.model.profilePageData.isLocationPrivate}
+      languageList={this.props.model.profilePageData.selectedLanguageList}
+      isLanguagePrivate={this.props.model.profilePageData.isLanguagePrivate}
+      facebookLink={this.props.model.profilePageData.facebookLink}
+      isFacebookPrivate={this.props.model.profilePageData.isFacebookPrivate}
+      twitterLink={this.props.model.profilePageData.twitterLink}
+      isTwitterPrivate={this.props.model.profilePageData.isTwitterPrivate}
+      instagramLink={this.props.model.profilePageData.instagramLink}
+      isInstagramPrivate={this.props.model.profilePageData.isInstagramPrivate}
+      favoriteCuisineList={this.props.model.profilePageData.selectedCuisineList}
+      isCuisinePrivate={this.props.model.profilePageData.isCuisinePrivate}
       upcomingEventList={this.props.model.upcomingEventList}
+      isUpcomingEventsPrivate={
+        this.props.model.profilePageData.isUpcomingEventsPrivate}
       pastEventList={this.props.model.pastEventList}
+      isPastEventsPrivate={this.props.model.profilePageData.isPastEventsPrivate}
       onReportClick={this.props.onReportClick}
     />;
   }

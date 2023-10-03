@@ -3,8 +3,8 @@ import * as Hash from 'hash.js';
 import * as path from 'path';
 import { arrayToJson, CoverImage, Cuisine, EventCardSummary, InviteEmail,
   Language, NotificationSettings, PaymentCard, PaymentRecord, ProfilePageData,
-  SocialAccount, User, UserInvitationCode, UserProfileImage,
-  UserProfileSocialAccount, UserStatus } from
+  SocialAccount, SocialAccountType, User, UserInvitationCode, UserProfileImage,
+  UserProfilePrivacyPreference, UserProfileSocialAccount, UserStatus } from
   '../../../client/library/source/definitions';
 import { UserCoverImageDatabase } from
   '../postgres/queries/user_cover_image_database';
@@ -699,6 +699,15 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
+    let userPrivacyPreference: UserProfilePrivacyPreference;
+    try {
+      userPrivacyPreference =
+        await this.userDatabase.getUserPrivacyPreferencesByUserId(profileId);
+    } catch (error) {
+      console.error('Failed at getUserPrivacyPreferencesByUserId', error);
+      response.status(500).send();
+      return;
+    }
     try {
       address = await this.userDatabase.loadAddressByUserId(profileId);
     } catch (error) {
@@ -749,14 +758,20 @@ export class UserRoutes {
     }
     response.status(200).json({
       coverImage: coverImage.toJson(),
-      profileImageSrc: profileImage.src,
+      profileImage: profileImage.toJson(),
       name: profileUser.name,
       userName: profileUser.userName,
       createdAt: profileUser.createdAt.toISOString(),
       biography: biography,
+      isBiographyPrivate: userPrivacyPreference.isBioPrivate,
       address: address,
       languageList: arrayToJson(languageList),
+      isUpcomingEventsPrivate: userPrivacyPreference.isUpcomingEventsPrivate,
+      isPastEventsPrivate: userPrivacyPreference.isPastEventsPrivate,
+      isLocationPrivate: userPrivacyPreference.isProfileAddressPrivate,
+      isLanguagePrivate: userPrivacyPreference.isLanguagePrivate,
       socialAccounts: arrayToJson(socialAccounts),
+      isCuisinePrivate: userPrivacyPreference.isCuisinePrivate,
       favoriteCuisineList: arrayToJson(favoriteCuisineList),
       upcomingEventList: arrayToJson(upcomingEventList),
       pastEventList: arrayToJson(pastEventList)
@@ -783,22 +798,18 @@ export class UserRoutes {
       response.status(401).send();
       return;
     }
+    let profilePageData = ProfilePageData.default(profileId);
+    let coverImage: CoverImage;
+    let profileImage: UserProfileImage;
+    let userPrivacyPreference: UserProfilePrivacyPreference;
+    let biographyValue: string;
+    let selectedLocation: string;
+    let selectedLanguageList: Language[];
+    let selectedCuisineList: Cuisine[];
     let languageList: Language[] = [];
-    let favoriteCuisineList: Cuisine[] = [];
-    let coverImage = CoverImage.noImage();
-    let coverImageList = [];
-    let profileImage = UserProfileImage.default();
-    let selectedLocation = '';
-    let isUpcomingEventsPrivate = true;
-    let isPastEventsPrivate = true;
-    let isLocationPrivate = true;
-    let isLanguagePrivate = true;
-    let biographyValue = '';
-    let isBiographyPrivate = true;
-    let selectedLanguageList: Language[] = [];
-    let selectedCuisineList: Cuisine[] = [];
-    let isCuisinePrivate = true;
-    let userProfileSocialAccountList: UserProfileSocialAccount[] = [];
+    let cuisineList: Cuisine[] = [];
+    let coverImageList: CoverImage[] = [];
+    let socialAccounts: UserProfileSocialAccount[];
     try {
       const profileUser = await this.userDatabase.loadUserById(profileId);
       if (profileUser?.id === -1) {
@@ -837,6 +848,14 @@ export class UserRoutes {
       return;
     }
     try {
+      userPrivacyPreference =
+        await this.userDatabase.getUserPrivacyPreferencesByUserId(profileId);
+    } catch (error) {
+      console.error('Failed at getUserPrivacyPreferencesByUserId', error);
+      response.status(500).send();
+      return;
+    }
+    try {
       biographyValue = await this.userDatabase.loadBiographyByUserId(profileId);
     } catch (error) {
       console.error('Failed at loadBiographyByUserId', error);
@@ -851,7 +870,7 @@ export class UserRoutes {
       return;
     }
     try {
-      languageList = await this.userDatabase.loadUserLanguagesByUserId(
+      selectedLanguageList = await this.userDatabase.loadUserLanguagesByUserId(
         profileId);
     } catch (error) {
       console.error('Failed at loadUserLanguagesByUserId', error);
@@ -859,30 +878,70 @@ export class UserRoutes {
       return;
     }
     try {
-      favoriteCuisineList =
+      selectedCuisineList =
         await this.userDatabase.loadUserFavouriteCuisinesByUserId(profileId);
     } catch (error) {
       console.error('Failed at loadUserSelectedCuisinesByUserId', error);
       response.status(500).send();
       return;
     }
+    try {
+      socialAccounts =
+        await this.userDatabase.loadUserProfileSocialAccountsByUserId(
+          profileId);
+    } catch (error) {
+      console.error('Failed at loadUserProfileSocialAccountsByUserId', error);
+      response.status(500).send();
+      return;
+    }
+    const { facebookLink, isFacebookPrivate, twitterLink, isTwitterPrivate,
+        instagramLink, isInstagramPrivate } = (() => {
+      let facebookLink = '', twitterLink = '', instagramLink = '';
+      let isFacebookPrivate = true, isTwitterPrivate = true,
+        isInstagramPrivate = true;
+      if (socialAccounts && socialAccounts.length > 0) {
+        const facebookAccount = socialAccounts.find((account) =>
+          account.platform === SocialAccountType.FACEBOOK);
+        if (facebookAccount) {
+          facebookLink = facebookAccount.link;
+          isFacebookPrivate = facebookAccount.isPrivate;
+        }
+        const twitterAccount = socialAccounts.find((account) =>
+          account.platform === SocialAccountType.TWITTER);
+        if (twitterAccount) {
+          twitterLink = twitterAccount.link;
+          isTwitterPrivate = twitterAccount.isPrivate;
+        }
+        const instagramAccount = socialAccounts.find((account) =>
+          account.platform === SocialAccountType.INSTAGRAM);
+        if (instagramAccount) {
+            instagramLink = instagramAccount.link;
+            isInstagramPrivate = instagramAccount.isPrivate;
+        }
+      }
+      return {
+        facebookLink: facebookLink,
+        isFacebookPrivate: isFacebookPrivate,
+        twitterLink: twitterLink,
+        isTwitterPrivate: isTwitterPrivate,
+        instagramLink: instagramLink,
+        isInstagramPrivate: isInstagramPrivate
+      };
+    })();
+    profilePageData = new ProfilePageData(profileId, coverImage,
+      profileImage, userPrivacyPreference.isUpcomingEventsPrivate,
+      userPrivacyPreference.isPastEventsPrivate,
+      userPrivacyPreference.isProfileAddressPrivate, selectedLocation,
+      userPrivacyPreference.isLanguagePrivate, selectedLanguageList,
+      userPrivacyPreference.isBioPrivate, biographyValue,
+      isFacebookPrivate, facebookLink, isTwitterPrivate, twitterLink,
+      isInstagramPrivate, instagramLink, userPrivacyPreference.isCuisinePrivate,
+      selectedCuisineList);
     response.status(200).json({
-      languageList: arrayToJson(languageList),
-      favoriteCuisineList: arrayToJson(favoriteCuisineList),
-      coverImage: coverImage.toJson(),
+      profilePageData: profilePageData.toJson(),
       coverImageList: arrayToJson(coverImageList),
-      profileImage: profileImage.toJson(),
-      selectedLocation: selectedLocation,
-      isUpcomingEventsPrivate: isUpcomingEventsPrivate,
-      isPastEventsPrivate: isPastEventsPrivate,
-      isLocationPrivate: isLocationPrivate,
-      isLanguagePrivate: isLanguagePrivate,
-      biographyValue: biographyValue,
-      isBiographyPrivate: isBiographyPrivate,
-      selectedLanguageList: arrayToJson(selectedLanguageList),
-      selectedCuisineList: arrayToJson(selectedCuisineList),
-      isCuisinePrivate: isCuisinePrivate,
-      userProfileSocialAccountList: arrayToJson(userProfileSocialAccountList)
+      languageList: arrayToJson(languageList),
+      cuisineList: arrayToJson(cuisineList)
     });
   }
 

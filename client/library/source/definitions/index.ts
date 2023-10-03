@@ -33,5 +33,6 @@ export * from './social_media_image';
 export * from './user';
 export * from './user_invitation_code';
 export * from './user_profile_image';
+export * from './user_profile_privacy_preference';
 export * from './user_profile_social_account';
 export * from './user_status';

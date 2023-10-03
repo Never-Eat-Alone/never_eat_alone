@@ -135,7 +135,7 @@ export class HttpApplicationModel extends ApplicationModel {
       DiningEventPageModel): Promise<void> {
     await this._model.updateDiningEventPageModel(id, updatedModel);
     await this._model.homePageModel.updateEventLists();
-    await this.getProfilePageModel(this.account.id).updateUpcomingEventList();
+    await this.getProfilePageModel(this.account.id).update();
   }
 
   public get inviteAFoodieModel(): InviteAFoodieModel {
@@ -189,6 +189,8 @@ export class HttpApplicationModel extends ApplicationModel {
 
   public async updateEditProfilePageModel(id: number, newModel:
       EditProfilePageModel): Promise<void> {
+    this._model = null;
+    await this.load();
     await this._model.updateEditProfilePageModel(id, newModel);
   }
 

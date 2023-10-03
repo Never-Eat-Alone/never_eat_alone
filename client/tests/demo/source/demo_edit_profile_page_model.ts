@@ -19,6 +19,7 @@ export class DemoEditProfilePageModel extends
   }
 
   public get profilePageData(): NeverEatAlone.ProfilePageData {
+    this.ensureIsLoaded();
     return this._profilePageData;
   }
 
@@ -39,11 +40,13 @@ export class DemoEditProfilePageModel extends
 
   public addSuggestedLocationList(value: string, locationList: string[]
       ): void {
+    this.ensureIsLoaded();
     this._suggestedLocationList.set(value, locationList);
   }
 
   public async getSuggestedLocationList(value: string): Promise<
       string[]> {
+    this.ensureIsLoaded();
     return this._suggestedLocationList.get(value);
   }
 
