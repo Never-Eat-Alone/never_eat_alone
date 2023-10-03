@@ -90,7 +90,6 @@ export class EditProfilePageController extends React.Component<Properties,
       instagramInputIsValid={this.state.instagramInputIsValid}
       onLocationInputChange={this.handleLocationInputChange}
       onLocationPrivacyClick={this.handleLocationPrivacyClick}
-      onLocationDropdownClick={this.handleLocationDropdownClick}
       onChangeProfileImageClick={this.handleChangeProfileImageClick}
       onChangeBannerDone={this.handleChangeBannerDone}
       onUpcomingEventPrivacyClick={this.handleUpcomingEventPrivacyClick}
@@ -237,14 +236,6 @@ export class EditProfilePageController extends React.Component<Properties,
     }));
   }
 
-  private handleLocationDropdownClick = (selectedLocation: string) => {
-    this.props.model.profilePageData.updateSelectedLocation(selectedLocation);
-    this.setState({
-      profilePageData: this.props.model.profilePageData,
-      suggestedLocationList: [selectedLocation]
-    });
-  }
-
   private handleLanguageDropdownClick = (selectedLanguage: Language) => {
     const temp = [selectedLanguage];
     
@@ -356,11 +347,26 @@ export class EditProfilePageController extends React.Component<Properties,
   }
 
   private handleSave = async () => {
+    let newProfilePageData = this.state.profilePageData;
+
+    // Validate and update biographyValue
+    if (typeof newProfilePageData.biographyValue === 'string') {
+      newProfilePageData.updateBiographyValue(
+        newProfilePageData.biographyValue.trim());
+    }
+
+    // Validate and update selectedLocation
+    if (typeof newProfilePageData.selectedLocation === 'string') {
+      // Trim whitespace and replace multiple spaces with a single space
+      newProfilePageData.updateSelectedLocation(
+        newProfilePageData.selectedLocation.trim().replace(/\s\s+/g, ' '));
+    }
+
     try {
       await this.props.model.save(this.state.profilePageData);
       this.props.onSaveSuccess();
     } catch {
-      this.setState({ hasError: true });
+      this.setState({ profilePageData: newProfilePageData, hasError: true });
     }
   }
 }

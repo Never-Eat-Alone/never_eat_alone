@@ -100,9 +100,6 @@ interface Properties {
   /** Indicates the location's privacy button is clicked. */
   onLocationPrivacyClick: () => void;
 
-  /** Indicates a location from the dropdown is clicked. */
-  onLocationDropdownClick: (selectedLocation: string) => void;
-
   /** Indicates the change profile image button is clicked. */
   onChangeProfileImageClick: (newImageFile: File) => void;
 
@@ -274,28 +271,6 @@ export class EditProfilePage extends React.Component<Properties, State> {
       INPUT_WITH_DROPDOWN_STYLE || INPUT_FIELD_STYLE);
     const cuisineInputFieldStyle = (this.state.isCuisineDropdownDisplayed &&
       INPUT_WITH_DROPDOWN_STYLE || INPUT_FIELD_STYLE);
-    const locationDropdownRows = (() => {
-      if (this.state.isLocationDropdownDisplayed &&
-          this.props.suggestedLocationList &&
-          this.props.suggestedLocationList.length !== 0) {
-        const rows = this.props.suggestedLocationList.map(location => {
-          return (
-            <div
-                tabIndex={0}
-                key={location}
-                style={DROPDOWN_ROW_STYLE}
-                className={css(styles.dropdownRow)}
-                onClick={() => this.handleLocationDropdownClick(location)}
-            >
-              {location}
-            </div>);
-        });
-        return rows;
-      }
-      return null;
-    })();
-    const locationDropdownStyle = (locationDropdownRows &&
-      DROPDOWN_CONTAINER_STYLE || {});
     const languageDropdownRows = (() => {
       if (this.state.isLanguageDropdownDisplayed &&
           this.props.suggestedLanguageList &&
@@ -512,13 +487,6 @@ export class EditProfilePage extends React.Component<Properties, State> {
             onFocus={this.handleLocationInputFocus}
             onBlur={this.handleLocationInputBlur}
           />
-          <div
-              tabIndex={0}
-              ref={this._locationDropdownRef}
-              style={locationDropdownStyle}
-          >
-            {locationDropdownRows}
-          </div>
           <div style={ROW_CONTAINER_STYLE} >
             {languagesPrivacyButton}
             <div style={TITLE_STYLE} >Languages</div>
@@ -642,13 +610,6 @@ export class EditProfilePage extends React.Component<Properties, State> {
 
   private handleClickOutside: { (event: any): void } = (
       event: React.MouseEvent) => {
-    if (this.state.isLocationDropdownDisplayed &&
-        !this.state.isLocationInputFocused &&
-        !this._locationDropdownRef.current.contains(event.target as Node)) {
-      event.preventDefault();
-      event.stopPropagation();
-      this.handleHideLocationDropdown();
-    }
     if (this.state.isLanguageDropdownDisplayed &&
         !this.state.isLanguageInputFocued &&
         !this._languageDropdownRef.current.contains(event.target as Node)) {
@@ -679,15 +640,6 @@ export class EditProfilePage extends React.Component<Properties, State> {
 
   private handleLocationInputBlur = () => {
     this.setState({ isLocationInputFocused: false });
-  }
-
-  private handleHideLocationDropdown = () => {
-    this.setState({ isLocationDropdownDisplayed: false });
-  }
-
-  private handleLocationDropdownClick = (location: string) => {
-    this.props.onLocationDropdownClick(location);
-    this.handleHideLocationDropdown();
   }
 
   private handleLanguageInputChange = (event: React.ChangeEvent<
