@@ -6,12 +6,14 @@ import { arrayToJson, CoverImage, Cuisine, EventCardSummary, InviteEmail,
   SocialAccount, SocialAccountType, User, UserInvitationCode, UserProfileImage,
   UserProfilePrivacyPreference, UserProfileSocialAccount, UserStatus } from
   '../../../client/library/source/definitions';
+import { AttendeeDatabase } from '../postgres/queries/attendee_database';
 import { CuisineDatabase } from '../postgres/queries/cuisine_database';
 import { UserCoverImageDatabase } from
   '../postgres/queries/user_cover_image_database';
+import { LanguageDatabase } from '../postgres/queries/language_database';
 import { UserDatabase } from '../postgres/queries/user_database';
-import { AttendeeDatabase, UserProfileImageDatabase } from
-  '../postgres/queries';
+import { UserProfileImageDatabase } from
+  '../postgres/queries/user_profile_image_database';
 
 /** User Routes class. */
 export class UserRoutes {
@@ -20,12 +22,13 @@ export class UserRoutes {
    * @param userDatabase - The user related table manipulation class instance.
    * @param userProfileImageDatabase
    * @param cuisineDatabase
+   * @param languageDatabase
    * @param sgmail - SendGrid api.
    */
   constructor(app: any, userDatabase: UserDatabase, attendeeDatabase:
       AttendeeDatabase, userProfileImageDatabase: UserProfileImageDatabase,
       userCoverImageDatabase: UserCoverImageDatabase, cuisineDatabase:
-      CuisineDatabase, sgmail: any) {
+      CuisineDatabase, languageDatabase: LanguageDatabase, sgmail: any) {
     /** Route to get the current logged in user. */
     app.get('/api/current_user', this.getCurrentUser);
 
@@ -70,6 +73,7 @@ export class UserRoutes {
     this.userProfileImageDatabase = userProfileImageDatabase;
     this.userCoverImageDatabase = userCoverImageDatabase;
     this.cuisineDatabase = cuisineDatabase;
+    this.languageDatabase = languageDatabase;
     this.sgmail = sgmail;
   }
 
@@ -946,6 +950,11 @@ export class UserRoutes {
     } catch (error) {
       console.error('Failed at loadCuisineList', error);
     }
+    try {
+      languageList = await this.languageDatabase.loadLanguageList();
+    } catch (error) {
+      console.error('Failed at loadLanguageList', error);
+    }
 
     response.status(200).json({
       profilePageData: profilePageData.toJson(),
@@ -1185,6 +1194,7 @@ export class UserRoutes {
   private userProfileImageDatabase: UserProfileImageDatabase;
   private userCoverImageDatabase: UserCoverImageDatabase;
   private cuisineDatabase: CuisineDatabase;
+  private languageDatabase: LanguageDatabase;
 
   /** The Sendgrid mailing api. */
   private sgmail: any;

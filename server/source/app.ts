@@ -18,6 +18,7 @@ import { DeactivateAccountSurveyDatabase } from
 import { DeleteAccountSurveyDatabase } from
   './postgres/queries/delete_account_survey_database';
 import { DiningEventDatabase } from './postgres/queries/dining_event_database';
+import { LanguageDatabase } from './postgres/queries/language_database';
 import { LocationDatabase } from './postgres/queries/location_database';
 import { SocialMediaImageDatabase } from
   './postgres/queries/social_media_image_database';
@@ -132,8 +133,10 @@ function runExpress(pool: Pool, config: any) {
   const userCoverImageDatabase = new UserCoverImageDatabase(pool);
   const attendeeDatabase = new AttendeeDatabase(pool);
   const cuisineDatabase = new CuisineDatabase(pool);
+  const languageDatabase = new LanguageDatabase(pool);
   const userRoutes = new UserRoutes(app, userDatabase, attendeeDatabase,
-    userProfileImageDatabase, userCoverImageDatabase, cuisineDatabase, SGMail);
+    userProfileImageDatabase, userCoverImageDatabase, cuisineDatabase,
+    languageDatabase, SGMail);
   const locationDatabase = new LocationDatabase(pool);
   const socialMediaImageDatabase = new SocialMediaImageDatabase(pool);
   const socialMediaImageRoutes = new SocialMediaImageRoutes(app,

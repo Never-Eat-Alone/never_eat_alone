@@ -624,6 +624,28 @@ export class UserDatabase {
       await updateUserFavoriteCuisines(profilePageData.accountId,
         profilePageData.selectedCuisineList);
 
+      // Update user's languages
+      const updateUserLanguages = async (userId: number, languageList:
+          Language[]) => {
+
+        /** delete existing languages for the user. */
+        await this.pool.query(`
+          DELETE FROM user_languages
+          WHERE user_id = $1`, [userId]);
+
+        /** Insert the new languages for the user. */
+        for (const language of languageList) {
+          await this.pool.query(`
+            INSERT INTO user_languages(user_id, language_id)
+            VALUES ($1, $2)`,
+            [userId, language.id]
+          );
+        }
+      };
+
+      await updateUserLanguages(profilePageData.accountId,
+        profilePageData.selectedLanguageList);
+
       await this.pool.query('COMMIT');
     } catch (error) {
       await this.pool.query('ROLLBACK');
