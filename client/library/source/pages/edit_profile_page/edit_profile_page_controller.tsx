@@ -132,8 +132,8 @@ export class EditProfilePageController extends React.Component<Properties,
   }
 
   private handleLocationInputChange = async (newValue: string) => {
-    this.props.model.profilePageData.updateSelectedLocation(newValue.trim());
-    if (newValue.trim().length === 0) {
+    this.props.model.profilePageData.updateSelectedLocation(newValue);
+    if (newValue.length === 0) {
       this.setState({
         profilePageData: this.props.model.profilePageData,
         suggestedLocationList: []
@@ -153,7 +153,7 @@ export class EditProfilePageController extends React.Component<Properties,
   }
 
   private handleLanguageInputChange = (newValue: string) => {
-    if (newValue.trim().length === 0) {
+    if (newValue.length === 0) {
       this.setState({
         languageValue: newValue.trim(),
         suggestedLanguageList: this.props.model.languageList
@@ -206,7 +206,7 @@ export class EditProfilePageController extends React.Component<Properties,
   }
 
   private handleCuisineInputChange = (newValue: string) => {
-    if (newValue.trim().length === 0) {
+    if (newValue.length === 0) {
       this.setState({
         cuisineValue: newValue.trim(),
         suggestedCuisineList: this.props.model.cuisineList
