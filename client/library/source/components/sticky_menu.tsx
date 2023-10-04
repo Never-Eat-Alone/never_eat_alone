@@ -4,6 +4,7 @@ import { DisplayMode } from '../definitions';
 
 interface Properties extends React.HTMLAttributes<HTMLDivElement> {
   displayMode: DisplayMode;
+  isSaveDisabled: boolean;
 
   /** Indicates the save button is clicked. */
   onSaveClick: () => void;
@@ -13,8 +14,8 @@ interface Properties extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 /** Displays the sticky menu on pages with save and cancel buttons. */
-export function SaveCancelStickyMenu({ displayMode, onSaveClick, onCancelClick,
-    ...props }: Properties) {
+export function SaveCancelStickyMenu({ displayMode, isSaveDisabled, onSaveClick,
+    onCancelClick, ...props }: Properties) {
   const contentStyle = (() => {
     if (displayMode === DisplayMode.MOBILE) {
       return MOBILE_CONTENT_CONTAINER;
@@ -27,6 +28,7 @@ export function SaveCancelStickyMenu({ displayMode, onSaveClick, onCancelClick,
         <PrimaryTextButton
           label='Save'
           style={SAVE_BUTTON_STYLE}
+          disabled={isSaveDisabled}
           onClick={onSaveClick}
         />
         <SecondaryTextButton

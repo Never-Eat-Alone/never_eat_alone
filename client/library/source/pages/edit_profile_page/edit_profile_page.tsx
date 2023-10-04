@@ -4,8 +4,8 @@ import * as React from 'react';
 import { CloseButton, InputField, InputFieldWithIcon,
   InvertedSecondaryTextButton, Modal, PublicButton, PrivateButton, RedNavLink,
   SaveCancelStickyMenu, TextareaWithCounter } from '../../components';
-import { CoverImage, Cuisine, DisplayMode, Language,
-  UserProfileImage } from '../../definitions';
+import { CoverImage, Cuisine, DisplayMode, Language, UserProfileImage } from
+  '../../definitions';
 import { ChooseBannerModal } from '../../modals';
 
 interface Properties {
@@ -33,9 +33,6 @@ interface Properties {
 
   /** The value entered in the location input field. */
   locationValue: string;
-
-  /** List of locations matched the location input field. */
-  suggestedLocationList: string[];
 
   /** Whether user's language information is private or public. */
   isLanguagePrivate: boolean;
@@ -93,6 +90,8 @@ interface Properties {
 
   /** Whether the instagram url input is valid or not. */
   instagramInputIsValid: boolean;
+
+  isLocationValid: boolean;
 
   /** Indicates the location inputfield value changed. */
   onLocationInputChange: (newValue: string) => void;
@@ -168,8 +167,6 @@ interface Properties {
 }
 
 interface State {
-  isLocationInputFocused: boolean;
-  isLocationDropdownDisplayed: boolean;
   isLanguageInputFocued: boolean;
   isLanguageDropdownDisplayed: boolean;
   isCuisineInputFocued: boolean;
@@ -183,18 +180,15 @@ export class EditProfilePage extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props);
     this.state = {
-      isLocationDropdownDisplayed: false,
       isLanguageDropdownDisplayed: false,
       isCuisineDropdownDisplayed: false,
       isLanguageInputFocued: false,
       isCuisineInputFocued: false,
-      isLocationInputFocused: false,
       isChangeBanner: false,
       newProfileImage: UserProfileImage.default()
     };
     this._languageDropdownRef = React.createRef<HTMLDivElement>();
     this._cuisineDropdownRef = React.createRef<HTMLDivElement>();
-    this._locationDropdownRef = React.createRef<HTMLDivElement>();
   }
 
   public render(): JSX.Element {
@@ -265,8 +259,6 @@ export class EditProfilePage extends React.Component<Properties, State> {
     const instagramPrivacyButton = (this.props.isInstagramPrivate &&
       <PrivateButton onClick={this.props.onInstagramPrivacyClick} /> ||
       <PublicButton onClick={this.props.onInstagramPrivacyClick} />);
-    const locationInputFieldStyle = (this.state.isLocationDropdownDisplayed &&
-      INPUT_WITH_DROPDOWN_STYLE || INPUT_FIELD_STYLE);
     const languageInputFieldStyle = (this.state.isLanguageDropdownDisplayed &&
       INPUT_WITH_DROPDOWN_STYLE || INPUT_FIELD_STYLE);
     const cuisineInputFieldStyle = (this.state.isCuisineDropdownDisplayed &&
@@ -374,6 +366,11 @@ export class EditProfilePage extends React.Component<Properties, State> {
       }
       return { backgroundImage: `url(${this.props.coverImage.src})` };
     })();
+    const locationErrorMessage = (!this.props.isLocationValid &&
+      'Please enter in the following format: City, Province' || '');
+    const isSaveDisabled = (!this.props.isLocationValid ||
+      !this.props.instagramInputIsValid || !this.props.twitterInputIsValid ||
+      !this.props.facebookInputIsValid);
     return (
       <div style={{...CONTAINER_STYLE, ...containerStyle}} >
         {chooseBannerModal}
@@ -479,14 +476,16 @@ export class EditProfilePage extends React.Component<Properties, State> {
             Enter your city here.
           </div>
           <InputField
-            style={{...locationInputFieldStyle, ...MARGIN_STYLE}}
+            style={{...INPUT_FIELD_STYLE, ...MARGIN_STYLE}}
             value={this.props.locationValue || ''}
             placeholder='City, Province'
             type='text'
+            hasError={!this.props.isLocationValid}
             onChange={this.handleLocationInputChange}
-            onFocus={this.handleLocationInputFocus}
-            onBlur={this.handleLocationInputBlur}
           />
+          <div style={LOCATION_ERROR_MESSAGE_STYLE} >
+            {locationErrorMessage}
+          </div>
           <div style={ROW_CONTAINER_STYLE} >
             {languagesPrivacyButton}
             <div style={TITLE_STYLE} >Languages</div>
@@ -594,6 +593,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
         </div>
         <SaveCancelStickyMenu
           displayMode={this.props.displayMode}
+          isSaveDisabled={isSaveDisabled}
           onSaveClick={this.props.onSaveClick}
           onCancelClick={this.props.onCancelClick}
         />
@@ -629,17 +629,6 @@ export class EditProfilePage extends React.Component<Properties, State> {
   private handleLocationInputChange = (event: React.ChangeEvent<
       HTMLInputElement>) => {
     this.props.onLocationInputChange(event.target.value);
-  }
-
-  private handleLocationInputFocus = () => {
-    this.setState({
-      isLocationDropdownDisplayed: true,
-      isLocationInputFocused: true
-    });
-  }
-
-  private handleLocationInputBlur = () => {
-    this.setState({ isLocationInputFocused: false });
   }
 
   private handleLanguageInputChange = (event: React.ChangeEvent<
@@ -749,7 +738,6 @@ export class EditProfilePage extends React.Component<Properties, State> {
 
   private _languageDropdownRef: React.RefObject<HTMLDivElement>;
   private _cuisineDropdownRef: React.RefObject<HTMLDivElement>;
-  private _locationDropdownRef: React.RefObject<HTMLDivElement>;
 }
 
 const CONTAINER_STYLE: React.CSSProperties = {
@@ -1157,6 +1145,22 @@ const SELECTED_OPTION_TAG_STYLE: React.CSSProperties = {
   width: 'fit-content',
   overflow: 'hidden',
   cursor: 'default'
+};
+
+const LOCATION_ERROR_MESSAGE_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-end',
+  alignItems: 'flex-start',
+  flexWrap: 'wrap',
+  margin: '2px 0px 0px 0px',
+  width:' 100%',
+  lineHeight: '18px',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  color: '#FF2C79'
 };
 
 const styles = StyleSheet.create({
