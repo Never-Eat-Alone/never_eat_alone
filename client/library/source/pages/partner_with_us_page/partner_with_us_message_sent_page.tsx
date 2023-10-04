@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as Router from 'react-router-dom';
 import { PrimaryButtonNavLink } from '../../components';
 import { DisplayMode } from '../../definitions';
 
@@ -7,26 +6,18 @@ interface Properties {
   displayMode: DisplayMode;
 }
 
-interface State {
-  isRedirect: boolean;
-}
-
-export class PartnerWithUsMessageSentPage extends React.Component<Properties,
-    State> {
-  constructor(props: Properties) {
-    super(props);
-    this.state = {
-      isRedirect: false
-    };
-  }
-
-  public render(): JSX.Element {
-    if (this.state.isRedirect) {
-      return <Router.Redirect to='/' />;
-    }
-    const { containerStyle, headingFormStyle, textFormContainerStyle,
-        textContainerStyle, formStyle, imageContainerStyle } = (() => {
-      if (this.props.displayMode === DisplayMode.DESKTOP) {
+const PartnerWithUsMessageSentPage: React.FC<Properties> = ({
+    displayMode }) => {
+  const {
+    containerStyle, 
+    headingFormStyle, 
+    textFormContainerStyle,
+    textContainerStyle, 
+    formStyle, 
+    imageContainerStyle
+  } = (() => {
+    switch(displayMode) {
+      case DisplayMode.DESKTOP:
         return {
           containerStyle: DESKTOP_CONTAINER_STYLE,
           headingFormStyle: DESKTOP_HEADER_FORM_STYLE,
@@ -35,8 +26,7 @@ export class PartnerWithUsMessageSentPage extends React.Component<Properties,
           formStyle: {...DESKTOP_FORM_STYLE, ...DESKTOP_FORM_MARGIN_STYLE},
           imageContainerStyle: DESKTOP_IMAGE_CONTAINER_STYLE
         };
-      }
-      if (this.props.displayMode === DisplayMode.TABLET) {
+      case DisplayMode.TABLET:
         return {
           containerStyle: TABLET_CONTAINER_STYLE,
           headingFormStyle: TABLET_HEADER_FORM_STYLE,
@@ -45,58 +35,60 @@ export class PartnerWithUsMessageSentPage extends React.Component<Properties,
           formStyle: {...TABLET_FORM_STYLE, ...TABLET_FORM_MARGIN_STYLE},
           imageContainerStyle: TABLET_IMAGE_CONTAINER_STYLE
         };
-      }
-      return {
-        containerStyle: MOBILE_CONTAINER_STYLE,
-        headingFormStyle: MOBILE_HEADER_FORM_STYLE,
-        textFormContainerStyle: MOBILE_TEXT_FORM_CONTAINER_STYLE,
-        textContainerStyle: MOBILE_TEXT_CONTAINER_STYLE,
-        formStyle: {...MOBILE_FORM_STYLE, ...MOBILE_FORM_MARGIN_STYLE},
-        imageContainerStyle: MOBILE_IMAGE_CONTAINER_STYLE
-      };
-    })();
-    return (
-      <div style={containerStyle} >
-        <div style={headingFormStyle} >
-          <h1 style={H1_STYLE} >Partner With US</h1>
-        </div>
-        <div style={imageContainerStyle} >
-          <div style={textFormContainerStyle} >
-            <div style={textContainerStyle} >
-              <div style={IMAGE_TITLE_STYLE} >
-                Take control of your listing on NeverEatAlone
-              </div>
-              <div style={IMAGE_DESCRIPTION_STYLE} >
-                Take control over the information and menus posted on your 
-                restaurant page. Partner with us and stay connected on our 
-                updates, such as hosting your own events and connecting 
-                directly with customers in the future!
-              </div>
+      default:
+        return {
+          containerStyle: MOBILE_CONTAINER_STYLE,
+          headingFormStyle: MOBILE_HEADER_FORM_STYLE,
+          textFormContainerStyle: MOBILE_TEXT_FORM_CONTAINER_STYLE,
+          textContainerStyle: MOBILE_TEXT_CONTAINER_STYLE,
+          formStyle: {...MOBILE_FORM_STYLE, ...MOBILE_FORM_MARGIN_STYLE},
+          imageContainerStyle: MOBILE_IMAGE_CONTAINER_STYLE
+        };
+    }
+  })();
+  return (
+    <div style={containerStyle} >
+      <div style={headingFormStyle} >
+        <h1 style={H1_STYLE} >Partner With US</h1>
+      </div>
+      <div style={imageContainerStyle} >
+        <div style={textFormContainerStyle} >
+          <div style={textContainerStyle} >
+            <div style={IMAGE_TITLE_STYLE} >
+              Take control of your listing on NeverEatAlone
+            </div>
+            <div style={IMAGE_DESCRIPTION_STYLE} >
+              Take control over the information and menus posted on your 
+              restaurant page. Partner with us and stay connected on our 
+              updates, such as hosting your own events and connecting 
+              directly with customers in the future!
             </div>
           </div>
         </div>
-        <div style={formStyle} >
-          <div style={ROW_CONTAINER_STYLE} >
-            <img
-              style={IMAGE_STYLE}
-              src='resources/partner_with_us_page/icons/appreciation.svg'
-              alt='Appreciation Icon'
-            />
-            <h2 style={H2_STYLE} >Thanks for getting in touch!</h2>
-          </div>
-          <p style={P_STYLE} >
-            Your email has been received and a member of our team will get back 
-            to you shortly! We look forward to chatting!
-          </p>
-          <PrimaryButtonNavLink
-            style={BUTTON_STYLE}
-            to='/'
-            label='Back to homepage'
+      </div>
+      <div style={formStyle} >
+        <div style={ROW_CONTAINER_STYLE} >
+          <img
+            style={IMAGE_STYLE}
+            src='resources/partner_with_us_page/icons/appreciation.svg'
+            alt='Appreciation Icon'
           />
+          <h2 style={H2_STYLE} >Thanks for getting in touch!</h2>
         </div>
-      </div>);
-  }
-}
+        <p style={P_STYLE} >
+          Your email has been received and a member of our team will get back 
+          to you shortly! We look forward to chatting!
+        </p>
+        <PrimaryButtonNavLink
+          style={BUTTON_STYLE}
+          to='/'
+          label='Back to homepage'
+        />
+      </div>
+    </div>);
+};
+
+export default PartnerWithUsMessageSentPage;
 
 const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
