@@ -108,7 +108,7 @@ export class ProfileBox extends React.Component<Properties> {
               alt='Language Icon'
             />
             <p style={TEXT_STYLE} >
-              {this.props.languageList.map(language => language.name).join(','
+              {this.props.languageList.map(language => language.name).join(', '
               )}
             </p>
           </div>);
