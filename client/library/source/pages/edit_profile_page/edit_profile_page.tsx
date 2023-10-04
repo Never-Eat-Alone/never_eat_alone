@@ -486,7 +486,7 @@ export class EditProfilePage extends React.Component<Properties, State> {
           <div style={LOCATION_ERROR_MESSAGE_STYLE} >
             {locationErrorMessage}
           </div>
-          <div style={ROW_CONTAINER_STYLE} >
+          <div style={LANGUAGE_ROW_CONTAINER_STYLE} >
             {languagesPrivacyButton}
             <div style={TITLE_STYLE} >Languages</div>
           </div>
@@ -1035,6 +1035,16 @@ const ROW_CONTAINER_STYLE: React.CSSProperties = {
   marginTop: '30px'
 };
 
+const LANGUAGE_ROW_CONTAINER_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  width: '100%',
+  gap: '10px',
+  marginTop: '10px'
+};
+
 const DROPDOWN_CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   display: 'flex',
@@ -1160,7 +1170,8 @@ const LOCATION_ERROR_MESSAGE_STYLE: React.CSSProperties = {
   fontStyle: 'normal',
   fontWeight: 400,
   fontSize: '14px',
-  color: '#FF2C79'
+  color: '#FF2C79',
+  height: '18px'
 };
 
 const styles = StyleSheet.create({
