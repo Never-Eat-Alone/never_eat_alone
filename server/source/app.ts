@@ -10,6 +10,7 @@ import { Pool } from 'pg';
 import * as SGMail from '@sendgrid/mail';
 import { v4 as uuidv4 } from 'uuid';
 import { AttendeeDatabase } from './postgres/queries/attendee_database';
+import { CuisineDatabase } from './postgres/queries';
 import { UserCoverImageDatabase } from
   './postgres/queries/user_cover_image_database';
 import { DeactivateAccountSurveyDatabase } from
@@ -130,8 +131,9 @@ function runExpress(pool: Pool, config: any) {
     userProfileImageDatabase);
   const userCoverImageDatabase = new UserCoverImageDatabase(pool);
   const attendeeDatabase = new AttendeeDatabase(pool);
+  const cuisineDatabase = new CuisineDatabase(pool);
   const userRoutes = new UserRoutes(app, userDatabase, attendeeDatabase,
-    userProfileImageDatabase, userCoverImageDatabase, SGMail);
+    userProfileImageDatabase, userCoverImageDatabase, cuisineDatabase, SGMail);
   const locationDatabase = new LocationDatabase(pool);
   const socialMediaImageDatabase = new SocialMediaImageDatabase(pool);
   const socialMediaImageRoutes = new SocialMediaImageRoutes(app,

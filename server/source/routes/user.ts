@@ -6,6 +6,7 @@ import { arrayToJson, CoverImage, Cuisine, EventCardSummary, InviteEmail,
   SocialAccount, SocialAccountType, User, UserInvitationCode, UserProfileImage,
   UserProfilePrivacyPreference, UserProfileSocialAccount, UserStatus } from
   '../../../client/library/source/definitions';
+import { CuisineDatabase } from '../postgres/queries/cuisine_database';
 import { UserCoverImageDatabase } from
   '../postgres/queries/user_cover_image_database';
 import { UserDatabase } from '../postgres/queries/user_database';
@@ -18,11 +19,13 @@ export class UserRoutes {
    * @param app - Express app.
    * @param userDatabase - The user related table manipulation class instance.
    * @param userProfileImageDatabase
+   * @param cuisineDatabase
    * @param sgmail - SendGrid api.
    */
   constructor(app: any, userDatabase: UserDatabase, attendeeDatabase:
       AttendeeDatabase, userProfileImageDatabase: UserProfileImageDatabase,
-      userCoverImageDatabase: UserCoverImageDatabase, sgmail: any) {
+      userCoverImageDatabase: UserCoverImageDatabase, cuisineDatabase:
+      CuisineDatabase, sgmail: any) {
     /** Route to get the current logged in user. */
     app.get('/api/current_user', this.getCurrentUser);
 
@@ -66,6 +69,7 @@ export class UserRoutes {
     this.attendeeDatabase = attendeeDatabase;
     this.userProfileImageDatabase = userProfileImageDatabase;
     this.userCoverImageDatabase = userCoverImageDatabase;
+    this.cuisineDatabase = cuisineDatabase;
     this.sgmail = sgmail;
   }
 
@@ -937,6 +941,12 @@ export class UserRoutes {
       isFacebookPrivate, facebookLink, isTwitterPrivate, twitterLink,
       isInstagramPrivate, instagramLink, userPrivacyPreference.isCuisinePrivate,
       selectedCuisineList);
+    try {
+      cuisineList = await this.cuisineDatabase.loadCuisineList();
+    } catch (error) {
+      console.error('Failed at loadCuisineList', error);
+    }
+
     response.status(200).json({
       profilePageData: profilePageData.toJson(),
       coverImageList: arrayToJson(coverImageList),
@@ -1174,6 +1184,7 @@ export class UserRoutes {
   private attendeeDatabase: AttendeeDatabase;
   private userProfileImageDatabase: UserProfileImageDatabase;
   private userCoverImageDatabase: UserCoverImageDatabase;
+  private cuisineDatabase: CuisineDatabase;
 
   /** The Sendgrid mailing api. */
   private sgmail: any;

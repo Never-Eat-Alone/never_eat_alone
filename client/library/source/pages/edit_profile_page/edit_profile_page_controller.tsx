@@ -17,7 +17,7 @@ interface Properties {
 interface State {
   isLoaded: boolean;
   hasError: boolean;
-  suggestedLocationList: string[];
+  isLocationValid: boolean;
   suggestedLanguageList: Language[];
   suggestedCuisineList: Cuisine[];
   facebookInputIsValid: boolean;
@@ -37,7 +37,7 @@ export class EditProfilePageController extends React.Component<Properties,
     this.state = {
       isLoaded: false,
       hasError: false,
-      suggestedLocationList: [],
+      isLocationValid: true,
       suggestedLanguageList: [],
       suggestedCuisineList: [],
       facebookInputIsValid: true,
@@ -68,7 +68,7 @@ export class EditProfilePageController extends React.Component<Properties,
       isPastEventsPrivate={this.state.profilePageData.isPastEventsPrivate}
       isLocationPrivate={this.state.profilePageData.isLocationPrivate}
       locationValue={this.state.profilePageData.selectedLocation}
-      suggestedLocationList={this.state.suggestedLocationList}
+      isLocationValid={this.state.isLocationValid}
       isLanguagePrivate={this.state.profilePageData.isLanguagePrivate}
       languageValue={this.state.languageValue}
       suggestedLanguageList={this.state.suggestedLanguageList}
@@ -90,7 +90,6 @@ export class EditProfilePageController extends React.Component<Properties,
       instagramInputIsValid={this.state.instagramInputIsValid}
       onLocationInputChange={this.handleLocationInputChange}
       onLocationPrivacyClick={this.handleLocationPrivacyClick}
-      onLocationDropdownClick={this.handleLocationDropdownClick}
       onChangeProfileImageClick={this.handleChangeProfileImageClick}
       onChangeBannerDone={this.handleChangeBannerDone}
       onUpcomingEventPrivacyClick={this.handleUpcomingEventPrivacyClick}
@@ -121,7 +120,8 @@ export class EditProfilePageController extends React.Component<Properties,
       await this.props.model.load();
       this.setState({
         isLoaded: true,
-        suggestedLocationList: [],
+        isLocationValid: this.checkIsLocationValid(
+          this.props.model.profilePageData.selectedLocation),
         suggestedLanguageList: this.props.model.languageList,
         suggestedCuisineList: this.props.model.cuisineList,
         profilePageData: this.props.model.profilePageData
@@ -132,28 +132,19 @@ export class EditProfilePageController extends React.Component<Properties,
   }
 
   private handleLocationInputChange = async (newValue: string) => {
-    this.props.model.profilePageData.updateSelectedLocation(newValue.trim());
-    if (newValue.trim().length === 0) {
-      this.setState({
-        profilePageData: this.props.model.profilePageData,
-        suggestedLocationList: []
-      });
-      return;
-    }
-    try {
-      const response = await this.props.model.getSuggestedLocationList(
-        newValue);
-      this.setState({
-        profilePageData: this.props.model.profilePageData,
-        suggestedLocationList: response
-      });
-    } catch {
-      this.setState({ suggestedLocationList: [] });
-    }
+    this.props.model.profilePageData.updateSelectedLocation(newValue);
+    this.setState({
+      profilePageData: this.props.model.profilePageData,
+      isLocationValid: this.checkIsLocationValid(newValue)
+    });
+  }
+
+  private checkIsLocationValid = (value: string) => {
+    return !(/[^a-zA-Z\s,]/.test(value));
   }
 
   private handleLanguageInputChange = (newValue: string) => {
-    if (newValue.trim().length === 0) {
+    if (newValue.length === 0) {
       this.setState({
         languageValue: newValue.trim(),
         suggestedLanguageList: this.props.model.languageList
@@ -206,7 +197,7 @@ export class EditProfilePageController extends React.Component<Properties,
   }
 
   private handleCuisineInputChange = (newValue: string) => {
-    if (newValue.trim().length === 0) {
+    if (newValue.length === 0) {
       this.setState({
         cuisineValue: newValue.trim(),
         suggestedCuisineList: this.props.model.cuisineList
@@ -235,14 +226,6 @@ export class EditProfilePageController extends React.Component<Properties,
     this.setState((prevState) => ({
       profilePageData: this.props.model.profilePageData
     }));
-  }
-
-  private handleLocationDropdownClick = (selectedLocation: string) => {
-    this.props.model.profilePageData.updateSelectedLocation(selectedLocation);
-    this.setState({
-      profilePageData: this.props.model.profilePageData,
-      suggestedLocationList: [selectedLocation]
-    });
   }
 
   private handleLanguageDropdownClick = (selectedLanguage: Language) => {
@@ -356,11 +339,24 @@ export class EditProfilePageController extends React.Component<Properties,
   }
 
   private handleSave = async () => {
+    let newProfilePageData = this.state.profilePageData;
+    if (newProfilePageData.biographyValue.trim().length !==
+        newProfilePageData.biographyValue.length) {
+      newProfilePageData.updateBiographyValue(
+        newProfilePageData.biographyValue.trim());
+    }
+
+    if (newProfilePageData.selectedLocation.length !== 0) {
+      // Trim whitespace and replace multiple spaces with a single space
+      newProfilePageData.updateSelectedLocation(
+        newProfilePageData.selectedLocation.trim());
+    }
+
     try {
       await this.props.model.save(this.state.profilePageData);
       this.props.onSaveSuccess();
     } catch {
-      this.setState({ hasError: true });
+      this.setState({ profilePageData: newProfilePageData, hasError: true });
     }
   }
 }
