@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partnership Request</title>
+    <style>
+      body {
+        font-family: "Source Sans Pro", sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+      }
+
+      .email-container {
+        padding: 20px;
+      }
+
+      .email-content {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+      }
+
+      .email-header {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .email-text {
+        font-size: 16px;
+        line-height: 1.5;
+      }
+
+      .email-text a {
+        color: #007bff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="email-container">
+      <div class="email-content">
+        <div class="email-header">
+          New Partnership Request from {{name}}
+        </div>
+        <div class="email-text">
+          <p>Hello NeverEatAlone Team,</p>
+          <p>You have received a new partnership request from {{name}}.</p>
+          <p>Below are the details:</p>
+          <p>Name: {{name}}</p>
+          <p>Email: {{email}}</p>
+          <p>Profile Link: {{link}}</p>
+          <p>Message:</p>
+          <p>{{message}}</p>
+          <p>
+            Kindly review the information and take the necessary steps to 
+            proceed with the partnership process.
+          </p>
+          <p>Best Regards,</p>
+          <p>The NeverEatAlone Team</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

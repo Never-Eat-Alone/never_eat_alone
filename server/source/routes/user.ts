@@ -567,8 +567,11 @@ export class UserRoutes {
           }
         });
     });
-    const newHtml = partnerWithUsHtml.replace('{{name}}', name).replace(
-      '{{link}}', profileLink).replace('{{contest}}', message);
+    const newHtml = partnerWithUsHtml
+      .replace(/{{name}}/g, name)
+      .replace(/{{email}}/g, email)
+      .replace(/{{link}}/g, profileLink)
+      .replace(/{{message}}/g, message);
     try {
       await this.sendEmail('info@nevereatalone.net', email,
         `${name}, want to partner with NEA`, newHtml);
