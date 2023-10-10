@@ -34,7 +34,7 @@ export class HttpApplicationModel extends ApplicationModel {
     const account = await (async () => {
       const response = await fetch('/api/current_user');
       if (response.status !== 200) {
-        return User.makeGuest();  
+        return User.makeGuest();
       }
       const responseObject = await response.json();
       return User.fromJson(responseObject.user);

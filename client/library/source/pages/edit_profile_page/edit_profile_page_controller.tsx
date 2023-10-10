@@ -340,8 +340,9 @@ export class EditProfilePageController extends React.Component<Properties,
 
   private handleSave = async () => {
     let newProfilePageData = this.state.profilePageData;
-    if (newProfilePageData.biographyValue.trim().length !==
-        newProfilePageData.biographyValue.length) {
+    if (newProfilePageData.biographyValue &&
+        newProfilePageData.biographyValue.trim() !==
+        newProfilePageData.biographyValue) {
       newProfilePageData.updateBiographyValue(
         newProfilePageData.biographyValue.trim());
     }

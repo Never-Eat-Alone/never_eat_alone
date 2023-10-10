@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS users (
   id              SERIAL                         PRIMARY KEY              ,
   name            VARCHAR(255)                                            ,
   email           VARCHAR(255)                   UNIQUE                   ,
-  user_name       VARCHAR(255)                                            ,
+  user_name       VARCHAR(255)                   UNIQUE                   ,
   user_status     user_status_enum               DEFAULT 'PENDING'        ,
   created_at      TIMESTAMP WITH TIME ZONE       DEFAULT CURRENT_TIMESTAMP,
   updated_at      TIMESTAMP WITH TIME ZONE       DEFAULT CURRENT_TIMESTAMP,
