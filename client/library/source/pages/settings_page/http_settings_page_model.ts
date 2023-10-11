@@ -207,7 +207,7 @@ export class HttpSettingsPageModel extends SettingsPageModel {
     this._checkResponse(response);
     const responseObject = await response.json();
     const updatedUser = User.fromJson(responseObject.user);
-    this._model.saveDisplayName(name);
+    await this._model.saveDisplayName(name);
     return updatedUser;
   }
 

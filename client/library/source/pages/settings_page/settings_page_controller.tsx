@@ -320,7 +320,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
   private handleEditDisplayNameClick = async (newDisplayName: string) => {
     try {
       const newAccount = await this.props.model.saveDisplayName(newDisplayName);
-      
+      this.props.onSaveDisplayNameSuccess(newAccount);
     } catch (error) {
       console.error(error);
     }
