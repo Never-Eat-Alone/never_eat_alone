@@ -158,13 +158,13 @@ export class DiningEvent {
     return this._updatedAt;
   }
 
-  public joinEvent(userId: number, userName: string, profileImageSrc: string):
-      void {
+  public joinEvent(userId: number, displayName: string,
+      profileImageSrc: string): void {
     const attendee = this._attendeeList.find(a => a.userId === userId);
     if (attendee && attendee.status === AttendeeStatus.GOING) {
       return;
     }
-    const newAttendee = new Attendee(userId, this._id, userName, 0,
+    const newAttendee = new Attendee(userId, this._id, displayName, 0,
       AttendeeStatus.GOING, profileImageSrc, new Date(Date.now()));
     if (attendee) {
       const attendeeIndex = this._attendeeList.findIndex(a => a.userId ===
@@ -175,13 +175,13 @@ export class DiningEvent {
     }
   }
 
-  public removeSeat(userId: number, userName: string, profileImageSrc: string):
-      void {
+  public removeSeat(userId: number, displayName: string,
+      profileImageSrc: string): void {
     const attendee = this._attendeeList.find(a => a.userId === userId);
     if (attendee && attendee.status === AttendeeStatus.NOT_GOING) {
       return;
     }
-    const updatedAttendee = new Attendee(userId, this._id, userName, 0,
+    const updatedAttendee = new Attendee(userId, this._id, displayName, 0,
       AttendeeStatus.NOT_GOING, profileImageSrc, new Date(Date.now()));
     if (attendee) {
       const attendeeIndex = this._attendeeList.findIndex(a => a.userId ===

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { BackButton, CheckBox, InputField, SecondaryTextButton,
-  SecondaryTextLinkButton, 
-  PrimaryTextButton} from '../../components';
+  SecondaryTextLinkButton, PrimaryTextButton} from '../../components';
 import { DisplayMode, SocialAccount, SocialAccountType
 } from '../../definitions';
 import { LinkSocialAccountButton } from './link_social_account_button';

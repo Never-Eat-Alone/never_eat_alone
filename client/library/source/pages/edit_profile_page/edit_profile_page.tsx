@@ -11,7 +11,6 @@ import { ChooseBannerModal } from '../../modals';
 interface Properties {
   displayMode: DisplayMode;
   displayName: string;
-  userName: string;
   profileId: number;
 
   /** The source address of the user's cover image. */
@@ -412,9 +411,8 @@ export class EditProfilePage extends React.Component<Properties, State> {
               <div style={DISPLAY_NAME_TEXT_STYLE} >
                 {this.props.displayName}
               </div>
-              <div style={USERNAME_STYLE} >{this.props.userName}</div>
               <div style={ACCOUNT_GUIDE_TEXT_STYLE} >
-                To change your display name or handle, go to&nbsp;
+                To change your display name, go to&nbsp;
                 <RedNavLink
                   label='Account Information'
                   to={`/settings/${this.props.profileId}`}
@@ -981,20 +979,6 @@ const DISPLAY_NAME_TEXT_STYLE: React.CSSProperties = {
   fontSize: '23px',
   lineHeight: '34px',
   color: '#000000',
-  width: '100%'
-};
-
-const USERNAME_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'flex-start',
-  alignItems: 'flex-start',
-  fontFamily: 'Source Sans Pro',
-  fontStyle: 'normal',
-  fontWeight: 400,
-  fontSize: '12px',
-  lineHeight: '15px',
-  color: '#969696',
   width: '100%'
 };
 

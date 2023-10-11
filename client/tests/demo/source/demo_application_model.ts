@@ -380,8 +380,8 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       false, emmaLanguageList, false, emmaBio, false, '', false, '', false,
       emmaInstagramLink, false, emmaFavoriteCuisines);
     const demoProfilePageModel1 = new NeverEatAlone.LocalProfilePageModel(
-      emmaProfilePageData, userEmma.name, userEmma.userName, userEmma.createdAt,
-      [], [eventCardSummary1]);
+      emmaProfilePageData, userEmma.name, userEmma.createdAt, [],
+      [eventCardSummary1]);
     this._profilePageModelMap.set(1, demoProfilePageModel1);
 
     /** User Profile Page Model for userArthur */
@@ -393,9 +393,8 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       'www.facebook.com/arthur_van', false, 'www.twitter.com/@vanfan', true, '',
       false, arthurFavoriteCuisines);
     const demoProfilePageModel2 = new NeverEatAlone.LocalProfilePageModel(
-      arthurProfilePageData, userArthur.name, userArthur.userName,
-      userArthur.createdAt, [eventCardSummary7], [eventCardSummary1,
-      eventCardSummary13]);
+      arthurProfilePageData, userArthur.name, userArthur.createdAt,
+      [eventCardSummary7], [eventCardSummary1, eventCardSummary13]);
     this._profilePageModelMap.set(2, demoProfilePageModel2);
 
     /** User Profile Page Model for userLucy */
@@ -406,7 +405,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
         false, lucyLanguageList, true, 'Matcha everything!', true, '', false,
         '', true, '', false, lucyFavoriteCuisines);
     const demoProfilePageModel3 = new NeverEatAlone.LocalProfilePageModel(
-      lucyProfilePageData, 'Lucy', 'lu2d3', new Date(2022, 4, 2, 2, 30, 40),
+      lucyProfilePageData, 'Lucy', new Date(2022, 4, 2, 2, 30, 40),
       [eventCardSummary5], []);
     this._profilePageModelMap.set(3, demoProfilePageModel3);
 
