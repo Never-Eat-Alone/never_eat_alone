@@ -4,6 +4,7 @@ import { BackButton, CheckBox, InputField, SecondaryTextButton,
 import { DisplayMode, SocialAccount, SocialAccountType
 } from '../../definitions';
 import { LinkSocialAccountButton } from './link_social_account_button';
+import { SaveCancelButtonCombo } from './save_cancel_button_combo';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -13,9 +14,6 @@ interface Properties {
 
   /** User's displayname. */
   displayName: string;
-
-  /** User's profile id number. */
-  profileId: number;
 
   /** User's email. */
   email: string;
@@ -40,8 +38,8 @@ interface Properties {
   /** Indicates the remove social account button is clicked. */
   onRemoveLinkedAccount: (account: SocialAccount) => void;
 
-  /** Indicates the edit button regarding the displayname section is clicked. */
-  onEditDisplayNameClick: () => void;
+  /** Indicates the save button regarding edit displayname is clicked. */
+  onEditDisplayNameSaveClick: (newValue: string) => void;
 
   /** Indicates the edit button regarding the email is clicked. */
   onEditEmailClick: () => void;
@@ -78,6 +76,7 @@ interface State {
   isEditDisplayName: boolean;
   isEditEmail: boolean;
   isEditPassword: boolean;
+  displayName: string;
 }
 
 /** Dislays the account information tab content on the setting page. */
@@ -87,7 +86,8 @@ export class AccountInformationTab extends React.Component<Properties, State> {
     this.state = {
       isEditDisplayName: false,
       isEditEmail: false,
-      isEditPassword: false
+      isEditPassword: false,
+      displayName: this.props.displayName
     };
   }
 
@@ -362,6 +362,19 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           disabled={false}
         />);
     }
+    const editDisplayNameButton = (() => {
+      if (this.state.isEditDisplayName) {
+        return <SaveCancelButtonCombo
+          onSave={this.handleDisplayNameSaveClick}
+          onCancel={this.handleCancelEditDisplayName}
+        />;
+      }
+      return <SecondaryTextButton
+        style={EDIT_DISPLAYNAME_BUTTON_STYLE}
+        label='Edit'
+        onClick={this.handleEditDisplayNameClick}
+      />;
+    })();
     return (
       <>
         <h1 style={PAGE_HEADING_STYLE} >Account Information</h1>
@@ -377,22 +390,11 @@ export class AccountInformationTab extends React.Component<Properties, State> {
         <InputField
           style={inputFieldStyle}
           type='text'
-          value={this.props.displayName}
-          disabled
+          value={this.state.displayName}
+          onChange={this.handleDisplayNameChange}
+          disabled={!this.state.isEditDisplayName}
         />
-        <div style={idRowStyle} >
-          https://nevereatalone.net/users/profile/
-          <InputField
-            style={ID_INPUT_STYLE}
-            value={this.props.profileId}
-            disabled
-          />
-        </div>
-        <SecondaryTextButton
-          style={EDIT_DISPLAYNAME_BUTTON_STYLE}
-          label='Edit'
-          onClick={this.props.onEditDisplayNameClick}
-        />
+        {editDisplayNameButton}
         <h2 style={SUB_HEADING_STYLE} >Email</h2>
         <h3 style={DESCRIPTION_STYLE} >Required.</h3>
         <div style={inputEditRowStyle} >
@@ -435,6 +437,23 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           onClick={this.props.onDeactivateAccountPageClick}
         />
       </>);
+  }
+
+  private handleEditDisplayNameClick = () => {
+    this.setState({ isEditDisplayName: true });
+  }
+
+  private handleCancelEditDisplayName = () => {
+    this.setState({ isEditDisplayName: false });
+  }
+
+  private handleDisplayNameChange = (event: React.ChangeEvent<
+      HTMLInputElement>) => {
+    this.setState({ displayName: event.target.value });
+  }
+
+  private handleDisplayNameSaveClick = () => {
+    this.props.onEditDisplayNameSaveClick(this.state.displayName);
   }
 }
 
@@ -633,7 +652,8 @@ const DEACTIVE_LINK_STYLE: React.CSSProperties = {
 
 const EDIT_DISPLAYNAME_BUTTON_STYLE: React.CSSProperties = {
   ...EDIT_BUTTON_STYLE,
-  marginBottom: '30px'
+  marginBottom: '30px',
+  marginTop: '20px'
 };
 
 const DEACTIVE_ROW_CONTAINER_STYLE: React.CSSProperties = {

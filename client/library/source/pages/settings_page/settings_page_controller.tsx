@@ -82,7 +82,6 @@ export class SettingsPageController extends React.Component<Properties, State> {
       displayMode={this.props.displayMode}
       linkedSocialAccounts={this.state.linkedSocialAccounts}
       displayName={this.props.account.name}
-      profileId={this.props.account.id}
       email={this.props.account.email}
       password={this.props.model.hashedPassword}
       isNewEventsNotificationOn={this.state.isNewEventsNotificationOn}
@@ -121,7 +120,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
       onGoogleClick={this.handleGoogleClick}
       onFacebookClick={this.handleFacebookClick}
       onRemoveLinkedAccount={this.handleRemoveLinkedAccount}
-      onEditDisplayNameClick={this.handleEditDisplayNameClick}
+      onEditDisplayNameSaveClick={this.handleEditDisplayNameClick}
       onEditEmailClick={this.handleEditEmailClick}
       onEditPasswordClick={this.handleEditPasswordClick}
       onDeactivateAccountSubmit={this.handleSubmitDeactivateAccount}
@@ -317,7 +316,9 @@ export class SettingsPageController extends React.Component<Properties, State> {
     }
   }
 
-  private handleEditDisplayNameClick = () => {}
+  private handleEditDisplayNameClick = async (newDisplayName: string) => {
+    await this.props.model.saveDisplayName(newDisplayName);
+  }
 
   private handleEditEmailClick = () => {}
 

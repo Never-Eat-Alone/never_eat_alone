@@ -196,6 +196,20 @@ export class HttpSettingsPageModel extends SettingsPageModel {
     return this._model.unlinkAccount(account);
   }
 
+  public async saveDisplayName(newDisplayName: string): Promise<void> {
+    const response = await fetch('/api/update_user_display_name', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        displayName: newDisplayName
+      })
+    });
+    this._checkResponse(response);
+    this._model.saveDisplayName(newDisplayName);
+  }
+
   private _checkResponse(response: Response): void {
     if (!response.ok) {
       throw new Error(`HTTP error, status = ${response.status}`);
