@@ -1194,13 +1194,12 @@ export class UserRoutes {
   }
 
   private updateUserDisplayName = async (request, response) => {
-    const { displayName } = request.body.displayName;
+    const { name } = request.body;
     if (!request.session?.user) {
       response.status(401).send();
       return;
     }
-
-    let user;
+    let user: User;
     try {
       user = await this.userDatabase.loadUserBySessionId(request.session.id);
       if (user.id === -1) {
@@ -1214,7 +1213,7 @@ export class UserRoutes {
     }
     try {
       const updatedUser = await this.userDatabase.updateDisplayName(user.id,
-        displayName);
+        name);
       request.session.user = {
         id: updatedUser.id,
         name: updatedUser.name,
@@ -1223,7 +1222,7 @@ export class UserRoutes {
         userStatus: updatedUser.userStatus.toString(),
         createdAt: updatedUser.createdAt.toISOString()
       };
-      response.status(200).send();
+      response.status(200).send({ user: updatedUser.toJson() });
     } catch (error) {
       console.error('Failed at updateDisplayName', error);
       response.status(500).send();

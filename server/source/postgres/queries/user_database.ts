@@ -653,17 +653,22 @@ export class UserDatabase {
     }
   }
 
-  public updateDisplayName = async (userId: number, displayName: string) => {
+  public updateDisplayName = async (userId: number, name: string): Promise<
+      User> => {
     try {
-      const response = await this.pool.query(`
+      const userQueryResult = await this.pool.query(`
         UPDATE users 
-        SET name = $2
+        SET name = $2, updated_at = NOW()
         WHERE id = $1
-        RETURNING *`, [userId, displayName]);
-      if (response.rowCount === 0) {
+        RETURNING *`, [userId, name]);
+      if (userQueryResult.rowCount === 0) {
         throw new Error('No user found with the given user Id.');
       }
-      return response.rows[0];
+      return new User(
+        parseInt(userQueryResult.rows[0].id), userQueryResult.rows[0].name,
+        userQueryResult.rows[0].email, userQueryResult.rows[0].user_name,
+        userQueryResult.rows[0].user_status as UserStatus, new Date(Date.parse(
+        userQueryResult.rows[0].created_at)));
     } catch (error) {
       console.error('Error in updateDisplayName:', error);
       throw error; 
