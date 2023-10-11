@@ -111,9 +111,10 @@ export class LocalSettingsPageModel extends SettingsPageModel {
     return index !== -1;
   }
 
-  public async saveDisplayName(newDisplayName: string): Promise<void> {
+  public async saveDisplayName(newDisplayName: string): Promise<User> {
     this.ensureIsLoaded();
     // update account
+    return;
   }
 
   private ensureIsLoaded(): void {

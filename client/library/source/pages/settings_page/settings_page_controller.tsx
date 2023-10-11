@@ -14,6 +14,7 @@ interface Properties {
   displayMode: DisplayMode;
   account: User;
   model: SettingsPageModel;
+  onSaveDisplayNameSuccess: (newAccount: User) => void;
   onLogOut: () => void;
 }
 
@@ -317,7 +318,12 @@ export class SettingsPageController extends React.Component<Properties, State> {
   }
 
   private handleEditDisplayNameClick = async (newDisplayName: string) => {
-    await this.props.model.saveDisplayName(newDisplayName);
+    try {
+      const newAccount = await this.props.model.saveDisplayName(newDisplayName);
+      
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   private handleEditEmailClick = () => {}

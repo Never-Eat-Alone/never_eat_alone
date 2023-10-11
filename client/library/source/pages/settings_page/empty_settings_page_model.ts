@@ -74,7 +74,7 @@ export class EmptySettingsPageModel extends SettingsPageModel {
     throw new Error('SettingsPageModel not loaded.');
   }
 
-  public async saveDisplayName(newDisplayName: string): Promise<void> {
+  public async saveDisplayName(newDisplayName: string): Promise<User> {
     throw new Error('SettingsPageModel not loaded.');
   }
 }

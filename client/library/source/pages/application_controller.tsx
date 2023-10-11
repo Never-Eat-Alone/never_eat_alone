@@ -346,6 +346,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       displayMode={this.state.displayMode}
       model={this.props.model.getSettingsPageModel(id)}
       account={this.state.account}
+      onSaveDisplayNameSuccess={this.handleSaveDisplayName}
       onLogOut={this.handleLogOut}
     />;
   }
@@ -403,6 +404,10 @@ export class ApplicationController extends React.Component<Properties, State> {
     } catch {
       this.setState({ hasError: true });
     }
+  }
+
+  private handleSaveDisplayName = (newAccount: User) => {
+    this.setState({ account: newAccount });
   }
 
   private renderJoin = () => {
