@@ -406,8 +406,8 @@ export class ApplicationController extends React.Component<Properties, State> {
     }
   }
 
-  private handleSaveDisplayName = (newAccount: User) => {
-    this.setState({ account: newAccount });
+  private handleSaveDisplayName = async (newAccount: User) => {
+    await this.updateAccount(newAccount);
   }
 
   private renderJoin = () => {
