@@ -653,6 +653,23 @@ export class UserDatabase {
     }
   }
 
+  public updateDisplayName = async (userId: number, displayName: string) => {
+    try {
+      const response = await this.pool.query(`
+        UPDATE users 
+        SET name = $2
+        WHERE id = $1
+        RETURNING *`, [userId, displayName]);
+      if (response.rowCount === 0) {
+        throw new Error('No user found with the given user Id.');
+      }
+      return response.rows[0];
+    } catch (error) {
+      console.error('Error in updateDisplayName:', error);
+      throw error; 
+    }
+  }
+
   /** The postgress pool connection. */
   private pool: Pool;
 }

@@ -197,7 +197,7 @@ export class HttpSettingsPageModel extends SettingsPageModel {
   }
 
   public async saveDisplayName(newDisplayName: string): Promise<void> {
-    const response = await fetch('/api/update_user_display_name', {
+    const response = await fetch('/api/update-user-display-name', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

@@ -444,7 +444,10 @@ export class AccountInformationTab extends React.Component<Properties, State> {
   }
 
   private handleCancelEditDisplayName = () => {
-    this.setState({ isEditDisplayName: false });
+    this.setState({
+      isEditDisplayName: false,
+      displayName: this.props.displayName
+    });
   }
 
   private handleDisplayNameChange = (event: React.ChangeEvent<
