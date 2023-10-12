@@ -17,9 +17,6 @@ interface Properties {
   /** The user's display name. */
   displayName: string;
 
-  /** The unique username of the user. */
-  userName: string;
-
   /** The date of the user's account creation. */
   memberSince: Date;
 
@@ -188,7 +185,6 @@ export class ProfileBox extends React.Component<Properties> {
           />
         </div>
         <h1 style={DISPLAY_NAME_STYLE} >{this.props.displayName}</h1>
-        <h3 style={USER_NAME_STYLE} >{this.props.userName}</h3>
         <h3 style={MEMBER_SINCE_STYLE} >
           Member since {this.formatDate(this.props.memberSince)}
         </h3>

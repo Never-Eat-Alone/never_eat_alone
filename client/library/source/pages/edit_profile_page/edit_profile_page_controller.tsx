@@ -58,7 +58,6 @@ export class EditProfilePageController extends React.Component<Properties,
     return <EditProfilePage
       displayMode={this.props.displayMode}
       displayName={this.props.account.name}
-      userName={this.props.account.userName}
       profileId={this.props.account.id}
       coverImage={this.state.profilePageData.coverImage}
       coverImageList={this.props.model.coverImageList}

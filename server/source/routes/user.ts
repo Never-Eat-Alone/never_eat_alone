@@ -67,6 +67,7 @@ export class UserRoutes {
     /** Reset Password related routes. */
     app.post('/api/reset-password', this.getResetPasswordPage);
     app.post('/api/update-password', this.updatePassword);
+    app.post('/api/update-user-display-name', this.updateUserDisplayName);
 
     this.userDatabase = userDatabase;
     this.attendeeDatabase = attendeeDatabase;
@@ -1190,6 +1191,43 @@ export class UserRoutes {
       createdAt: account.createdAt.toISOString()
     };
     response.status(200).send();
+  }
+
+  private updateUserDisplayName = async (request, response) => {
+    const { name } = request.body;
+    if (!request.session?.user) {
+      response.status(401).send();
+      return;
+    }
+    let user: User;
+    try {
+      user = await this.userDatabase.loadUserBySessionId(request.session.id);
+      if (user.id === -1) {
+        response.status(401).send();
+        return;
+      }
+    } catch (error) {
+      console.error('Failed at loadUserBySessionId', error);
+      response.status(500).send();
+      return;
+    }
+    try {
+      const updatedUser = await this.userDatabase.updateDisplayName(user.id,
+        name);
+      request.session.user = {
+        id: updatedUser.id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        userName: updatedUser.userName,
+        userStatus: updatedUser.userStatus.toString(),
+        createdAt: updatedUser.createdAt.toISOString()
+      };
+      response.status(200).send({ user: updatedUser.toJson() });
+    } catch (error) {
+      console.error('Failed at updateDisplayName', error);
+      response.status(500).send();
+      return;
+    }
   }
 
   private userDatabase: UserDatabase;

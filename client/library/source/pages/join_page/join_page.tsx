@@ -137,7 +137,7 @@ export class JoinPage extends React.Component<Properties, State> {
           <InputField
             style={REFERRAL_INPUT_FIELD_STYLE}
             value={this.state.referralCode}
-            placeholder='Name/Username of person who invited you? (optional)'
+            placeholder='Name of the person who invited you (optional)'
             onChange={this.handleReferralCodeChange}
           />
           <PrimaryTextButton

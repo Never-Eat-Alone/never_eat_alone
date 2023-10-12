@@ -44,7 +44,6 @@ export class ProfilePageController extends React.Component<Properties, State> {
       coverImageSrc={this.props.model.profilePageData.coverImage.src}
       profileImageSrc={this.props.model.profilePageData.profileImage.src}
       displayName={this.props.model.name}
-      userName={this.props.model.userName}
       memberSince={this.props.model.createdAt}
       isBiographyPrivate={this.props.model.profilePageData.isBiographyPrivate}
       biography={this.props.model.profilePageData.biographyValue}

@@ -26,7 +26,6 @@ export class HttpProfilePageModel extends ProfilePageModel {
     const coverImage = CoverImage.fromJson(responseObject.coverImage);
     const profileImage = UserProfileImage.fromJson(responseObject.profileImage);
     const name: string = responseObject.name;
-    const userName: string = responseObject.userName;
     const createdAt = new Date(Date.parse(responseObject.createdAt));
     const biography: string = responseObject.biography;
     const isBiographyPrivate = responseObject.isBiographyPrivate;
@@ -86,8 +85,8 @@ export class HttpProfilePageModel extends ProfilePageModel {
       languageList, isBiographyPrivate, biography,
       isFacebookPrivate, facebookLink, isTwitterPrivate, twitterLink,
       isInstagramPrivate, instagramLink, isCuisinePrivate, favoriteCuisineList);
-    this._model = new LocalProfilePageModel(profilePageData, name, userName,
-      createdAt, upcomingEventList, pastEventList);
+    this._model = new LocalProfilePageModel(profilePageData, name, createdAt,
+      upcomingEventList, pastEventList);
     await this._model.load();
     this._isLoaded = true;
   }
@@ -98,10 +97,6 @@ export class HttpProfilePageModel extends ProfilePageModel {
 
   public get name(): string {
     return this._model.name;
-  }
-
-  public get userName(): string {
-    return this._model.userName;
   }
 
   public get createdAt(): Date {

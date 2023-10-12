@@ -13,7 +13,7 @@ interface Properties {
   /** Represents the email input field value. */
   email: string;
 
-  /** Represents a member's name, username or referral link. */
+  /** Represents a member's name or referral link. */
   referralCode: string;
 
   errorCode: JoinModal.ErrorCode;
@@ -155,7 +155,7 @@ export class JoinModal extends React.Component<Properties , State> {
             <InputField
               style={INPUT_STYLE}
               value={this.state.referralCode}
-              placeholder='Name/Username of person who invited you? (optional)'
+              placeholder='Name of the person who invited you (optional)'
               onChange={this.handleReferralCodeChange}
             />
             <PrimaryTextButton

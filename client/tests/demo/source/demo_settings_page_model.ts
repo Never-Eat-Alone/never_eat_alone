@@ -112,6 +112,12 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
     return index !== -1;
   }
 
+  public async saveDisplayName(newDisplayName: string): Promise<
+      NeverEatAlone.User> {
+    this.ensureIsLoaded();
+    return;
+  }
+
   private ensureIsLoaded(): void {
     if (!this._isLoaded) {
       throw new Error('SettingsPageModel not loaded.');

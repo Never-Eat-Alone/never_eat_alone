@@ -73,4 +73,8 @@ export class EmptySettingsPageModel extends SettingsPageModel {
   public async unlinkAccount(account: SocialAccount): Promise<boolean> {
     throw new Error('SettingsPageModel not loaded.');
   }
+
+  public async saveDisplayName(newDisplayName: string): Promise<User> {
+    throw new Error('SettingsPageModel not loaded.');
+  }
 }

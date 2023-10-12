@@ -18,10 +18,6 @@ export class EmptyProfilePageModel extends ProfilePageModel {
     throw new Error('ProfilePageModel not loaded.');
   }
 
-  public get userName(): string {
-    throw new Error('ProfilePageModel not loaded.');
-  }
-
   public get createdAt(): Date {
     throw new Error('ProfilePageModel not loaded.');
   }
