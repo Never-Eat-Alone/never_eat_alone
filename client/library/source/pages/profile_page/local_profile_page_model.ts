@@ -43,8 +43,9 @@ export class LocalProfilePageModel extends ProfilePageModel {
     return this._pastEventList;
   }
 
-  public async update(): Promise<void> {
+  public async updateName(newName: string): Promise<void> {
     this.ensureIsLoaded();
+    this._name = newName;
   }
 
   private ensureIsLoaded(): void {

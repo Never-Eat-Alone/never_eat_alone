@@ -593,6 +593,11 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return this._profilePageModelMap.get(id);
   }
 
+  public async updateProfilePageModel(id: number, newModel:
+      NeverEatAlone.ProfilePageModel): Promise<void>  {
+    this._profilePageModelMap.set(id, newModel);
+  }
+
   public addEditProfilePageModel(id: number, editProfilePageModel:
       NeverEatAlone.EditProfilePageModel): void {
     this._editProfilePageModelMap.set(id, editProfilePageModel);
@@ -615,6 +620,11 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
 
   public getSettingsPageModel(id: number): NeverEatAlone.SettingsPageModel {
     return this._settingsPageModelMap.get(id);
+  }
+
+  public async updateSettingsPageModel(id: number, newModel:
+      NeverEatAlone.SettingsPageModel): Promise<void> {
+    this._settingsPageModelMap.set(id, newModel);
   }
 
   public get deletedAccountSurveyModel():

@@ -23,4 +23,5 @@ export abstract class EditProfilePageModel {
   public abstract updateProfileImage(newImage: UserProfileImage): Promise<void>;
   public abstract saveCoverImage(newImage: CoverImage): Promise<void>;
   public abstract save(profilePageData: ProfilePageData): Promise<void>;
+  public abstract update(): Promise<void>;
 }

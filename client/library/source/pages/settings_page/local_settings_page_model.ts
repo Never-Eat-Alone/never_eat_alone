@@ -116,6 +116,11 @@ export class LocalSettingsPageModel extends SettingsPageModel {
     return;
   }
 
+  public async update(): Promise<void> {
+    this._isLoaded = false;
+    await this.load();
+  }
+
   private ensureIsLoaded(): void {
     if (!this._isLoaded) {
       throw new Error('SettingsPageModel not loaded.');

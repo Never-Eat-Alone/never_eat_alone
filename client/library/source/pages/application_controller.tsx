@@ -50,7 +50,6 @@ interface State {
   accountProfileImage: UserProfileImage;
   hasJoinedEvent: boolean;
   hasRemovedSeat: boolean;
-  hasProfileChanged: boolean;
 }
 
 export class ApplicationController extends React.Component<Properties, State> {
@@ -67,8 +66,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       isPartnerWithUsButtonClicked: false,
       accountProfileImage: UserProfileImage.default(),
       hasJoinedEvent: false,
-      hasRemovedSeat: false,
-      hasProfileChanged: false
+      hasRemovedSeat: false
     };
   }
 
@@ -413,9 +411,10 @@ export class ApplicationController extends React.Component<Properties, State> {
     }
     const profilePageModel = this.props.model.getProfilePageModel(
       newAccount.id);
-    //await this.updateAccount(newAccount);
+    await profilePageModel.updateName(newAccount.name);
     await this.props.model.updateProfilePageModel(newAccount.id,
       profilePageModel);
+    await this.updateAccount(newAccount);
   }
 
   private renderJoin = () => {

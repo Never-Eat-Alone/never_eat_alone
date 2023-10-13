@@ -86,8 +86,8 @@ export class HttpApplicationModel extends ApplicationModel {
     const newAccountImage = await (async () => {
       const response = await fetch(`/api/user_profile_image/${account.id}`);
       if (response.status === 200) {
-        const jasonResponse = await response.json();
-        return UserProfileImage.fromJson(jasonResponse.accountProfileImage);
+        const jsonResponse = await response.json();
+        return UserProfileImage.fromJson(jsonResponse.accountProfileImage);
       }
       return UserProfileImage.default(account.id);
     })();
@@ -135,7 +135,9 @@ export class HttpApplicationModel extends ApplicationModel {
       DiningEventPageModel): Promise<void> {
     await this._model.updateDiningEventPageModel(id, updatedModel);
     await this._model.homePageModel.updateEventLists();
-    await this.getProfilePageModel(this.account.id).update();
+    const profilePageModel = new HttpProfilePageModel(this.account.id);
+    await profilePageModel.load();
+    await this.updateProfilePageModel(this.account.id, profilePageModel);
   }
 
   public get inviteAFoodieModel(): InviteAFoodieModel {
@@ -144,7 +146,7 @@ export class HttpApplicationModel extends ApplicationModel {
 
   public async updateInviteAFoodieModel(newModel: InviteAFoodieModel): Promise<
       void> {
-    await this.updateInviteAFoodieModel(newModel);
+    await this._model.updateInviteAFoodieModel(newModel);
   }
 
   public get joinModel(): JoinModel {
@@ -175,8 +177,6 @@ export class HttpApplicationModel extends ApplicationModel {
 
   public async updateProfilePageModel(id: number, newModel: ProfilePageModel):
       Promise<void> {
-    this._model = null;
-    await this.load();
     await this._model.updateProfilePageModel(id, newModel);
   }
 
@@ -213,6 +213,13 @@ export class HttpApplicationModel extends ApplicationModel {
       this._model.addSettingsPageModel(id, settingsPageModel);
     }
     return settingsPageModel;
+  }
+
+  public async updateSettingsPageModel(id: number, newModel: SettingsPageModel):
+      Promise<void> {
+    this._model = null;
+    await this.load();
+    await this._model.updateSettingsPageModel(id, newModel);
   }
 
   public get deletedAccountSurveyModel(): DeletedAccountSurveyModel {

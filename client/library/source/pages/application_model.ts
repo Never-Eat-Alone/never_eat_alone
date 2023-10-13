@@ -47,6 +47,8 @@ export abstract class ApplicationModel {
   public abstract addSettingsPageModel(id: number,
     settingsPageModel: SettingsPageModel): void;
   public abstract getSettingsPageModel(id: number): SettingsPageModel;
+  public abstract updateSettingsPageModel(id: number, newModel:
+    SettingsPageModel): Promise<void>;
   public abstract get deletedAccountSurveyModel(): DeletedAccountSurveyModel;
   public abstract get deactivateAccountSurveyModel():
     DeactivateAccountSurveyModel;

@@ -154,6 +154,11 @@ export class LocalApplicationModel extends ApplicationModel {
     return this._settingsPageModelMap.get(id);
   }
 
+  public async updateSettingsPageModel(id: number, newModel: SettingsPageModel):
+      Promise<void> {
+    this._settingsPageModelMap.set(id, newModel);
+  }
+
   public get deletedAccountSurveyModel(): DeletedAccountSurveyModel {
     return this._deletedAccountSurveyModel;
   }

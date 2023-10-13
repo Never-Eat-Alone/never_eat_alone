@@ -45,40 +45,15 @@ export class HttpProfilePageModel extends ProfilePageModel {
       EventCardSummary, responseObject.upcomingEventList);
     const pastEventList: EventCardSummary[] = arrayFromJson(EventCardSummary,
       responseObject.pastEventList);
-    const { facebookLink, isFacebookPrivate, twitterLink, isTwitterPrivate,
-        instagramLink, isInstagramPrivate } = (() => {
-      let facebookLink = '', twitterLink = '', instagramLink = '';
-      let isFacebookPrivate = true, isTwitterPrivate = true,
-        isInstagramPrivate = true;
-      if (socialAccounts && socialAccounts.length > 0) {
-        const facebookAccount = socialAccounts.find((account) =>
-          account.platform === SocialAccountType.FACEBOOK);
-        if (facebookAccount) {
-          facebookLink = facebookAccount.link;
-          isFacebookPrivate = facebookAccount.isPrivate;
-        }
-        const twitterAccount = socialAccounts.find((account) =>
-          account.platform === SocialAccountType.TWITTER);
-        if (twitterAccount) {
-          twitterLink = twitterAccount.link;
-          isTwitterPrivate = twitterAccount.isPrivate;
-        }
-        const instagramAccount = socialAccounts.find((account) =>
-          account.platform === SocialAccountType.INSTAGRAM);
-        if (instagramAccount) {
-            instagramLink = instagramAccount.link;
-            isInstagramPrivate = instagramAccount.isPrivate;
-        }
-      }
-      return {
-        facebookLink: facebookLink,
-        isFacebookPrivate: isFacebookPrivate,
-        twitterLink: twitterLink,
-        isTwitterPrivate: isTwitterPrivate,
-        instagramLink: instagramLink,
-        isInstagramPrivate: isInstagramPrivate
-      };
-    })();
+    const {link: facebookLink, isPrivate: isFacebookPrivate} =
+      this.extractSocialAccountDetails(SocialAccountType.FACEBOOK,
+      socialAccounts);
+    const {link: twitterLink, isPrivate: isTwitterPrivate} =
+      this.extractSocialAccountDetails(SocialAccountType.TWITTER,
+      socialAccounts);
+    const {link: instagramLink, isPrivate: isInstagramPrivate} =
+      this.extractSocialAccountDetails(SocialAccountType.INSTAGRAM,
+      socialAccounts);
     const profilePageData = new ProfilePageData(this._profileId, coverImage,
       profileImage, isUpcomingEventsPrivate, isPastEventsPrivate,
       isLocationPrivate, address, isLanguagePrivate,
@@ -111,15 +86,23 @@ export class HttpProfilePageModel extends ProfilePageModel {
     return this._model.pastEventList;
   }
 
-  public async update(): Promise<void> {
-    this._isLoaded = false;
-    await this.load();
+  public async updateName(newName: string): Promise<void> {
+    await this._model.updateName(newName);
   }
 
   private _checkResponse(response: Response): void {
     if (!response.ok) {
       throw new Error(`HTTP error, status = ${response.status}`);
     }
+  }
+
+  private extractSocialAccountDetails(platform: SocialAccountType, accounts:
+      UserProfileSocialAccount[]): { link: string, isPrivate: boolean } {
+    const account = accounts.find(acc => acc.platform === platform);
+    if (account) {
+      return { link: account.link, isPrivate: account.isPrivate };
+    }
+    return { link: '', isPrivate: true };
   }
 
   private _isLoaded: boolean;
