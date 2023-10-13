@@ -37,6 +37,8 @@ export abstract class ApplicationModel {
   public abstract addProfilePageModel(id: number,
     profilePageModel: ProfilePageModel): void;
   public abstract getProfilePageModel(id: number): ProfilePageModel;
+  public abstract updateProfilePageModel(id: number, newModel: ProfilePageModel
+    ): Promise<void>;
   public abstract getEditProfilePageModel(id: number): EditProfilePageModel;
   public abstract addEditProfilePageModel(id: number,
     editProfilePageModel: EditProfilePageModel): void;

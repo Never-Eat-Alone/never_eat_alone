@@ -407,7 +407,15 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   private handleSaveDisplayName = async (newAccount: User) => {
-    await this.updateAccount(newAccount);
+    if (newAccount.id === -1) {
+      this.handleLogInButton();
+      return;
+    }
+    const profilePageModel = this.props.model.getProfilePageModel(
+      newAccount.id);
+    //await this.updateAccount(newAccount);
+    await this.props.model.updateProfilePageModel(newAccount.id,
+      profilePageModel);
   }
 
   private renderJoin = () => {

@@ -126,6 +126,11 @@ export class LocalApplicationModel extends ApplicationModel {
     return this._profilePageModelMap.get(id);
   }
 
+  public async updateProfilePageModel(id: number, newModel: ProfilePageModel):
+      Promise<void> {
+    this._profilePageModelMap.set(id, newModel);
+  }
+
   public addEditProfilePageModel(id: number, editProfilePageModel:
       EditProfilePageModel): void {
     this._editProfilePageModelMap.set(id, editProfilePageModel);

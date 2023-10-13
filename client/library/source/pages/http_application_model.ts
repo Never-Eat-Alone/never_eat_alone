@@ -173,6 +173,13 @@ export class HttpApplicationModel extends ApplicationModel {
     return profilePageModel;
   }
 
+  public async updateProfilePageModel(id: number, newModel: ProfilePageModel):
+      Promise<void> {
+    this._model = null;
+    await this.load();
+    await this._model.updateProfilePageModel(id, newModel);
+  }
+
   public addEditProfilePageModel(id: number,
       editProfilePageModel: EditProfilePageModel): void {
     this._model.addEditProfilePageModel(id, editProfilePageModel);
