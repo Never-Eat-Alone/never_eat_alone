@@ -16,6 +16,7 @@ interface Properties {
   model: SettingsPageModel;
   onSaveDisplayNameSuccess: (newAccount: User) => Promise<void>;
   onLogOut: () => void;
+  onResponseErrorCode: (errorCode: number) => void;
 }
 
 interface State {
@@ -169,7 +170,9 @@ export class SettingsPageController extends React.Component<Properties, State> {
         defaultCard: this.props.model.defaultCard,
         linkedSocialAccounts: this.props.model.linkedSocialAccounts
       });
-    } catch {
+    } catch (error) {
+      const errorCode = error.code || 500;
+      this.props.onResponseErrorCode(errorCode);
       this.setState({ isLoaded: true, hasError: true });
     }
   }
@@ -179,74 +182,70 @@ export class SettingsPageController extends React.Component<Properties, State> {
     this.setState({ paymentMethodsTabPage: page });
   }
 
-  private handleNewEventsToggle = async () => {
+  private handleWithError = async (body: () => void) => {
     try {
+      body();
+    } catch(error) {
+      const errorCode = error.code || 500;
+      this.props.onResponseErrorCode(errorCode);
+      this.setState({ hasError: true });
+    }
+  }
+
+  private handleNewEventsToggle = async () => {
+    this.handleWithError(async () => {
       const newSetting = await this.props.model.toggleNotificationSetting(
         'isNewEventsNotificationOn');
       this.setState({ isNewEventsNotificationOn: newSetting });
-    } catch {
-      this.setState({ hasError: true });
-    }
+    });
   }
 
   private handleEventJoinedToggle = async () => {
-    try {
+    this.handleWithError(async () => {
       const newSetting = await this.props.model.toggleNotificationSetting(
         'isEventJoinedNotificationOn');
       this.setState({ isEventJoinedNotificationOn: newSetting });
-    } catch {
-      this.setState({ hasError: true });
-    }
+    });
   }
-  
+
   private handleEventRemindersToggle = async () => {
-    try {
+    this.handleWithError(async () => {
       const newSetting = await this.props.model.toggleNotificationSetting(
         'isEventRemindersNotificationOn');
       this.setState({ isEventRemindersNotificationOn: newSetting });
-    } catch {
-      this.setState({ hasError: true });
-    }
+    });
   }
-  
+
   private handleChangesToggle = async () => {
-    try {
+    this.handleWithError(async () => {
       const newSetting = await this.props.model.toggleNotificationSetting(
         'isChangesNotificationOn');
       this.setState({ isChangesNotificationOn: newSetting });
-    } catch {
-      this.setState({ hasError: true });
-    }
+    });
   }
   
   private handleSomeoneJoinedToggle = async () => {
-    try {
+    this.handleWithError(async () => {
       const newSetting = await this.props.model.toggleNotificationSetting(
         'isSomeoneJoinedNotificationOn');
       this.setState({ isSomeoneJoinedNotificationOn: newSetting });
-    } catch {
-      this.setState({ hasError: true });
-    }
+    });
   }
   
   private handleFoodieAcceptedInviteToggle = async () => {
-    try {
+    this.handleWithError(async () => {
       const newSetting = await this.props.model.toggleNotificationSetting(
         'isFoodieAcceptedInviteNotificationOn');
       this.setState({ isFoodieAcceptedInviteNotificationOn: newSetting });
-    } catch {
-      this.setState({ hasError: true });
-    }
+    });
   }
 
   private handleAnnouncementToggle = async () => {
-    try {
+    this.handleWithError(async () => {
       const newSetting = await this.props.model.toggleNotificationSetting(
         'isFoodieAcceptedInviteNotificationOn');
       this.setState({ isAnnouncementNotificationOn: newSetting });
-    } catch {
-      this.setState({ hasError: true });
-    }
+    });
   }
 
   private handleAddCard = async (cardNumber: number, nameOnCard: string,

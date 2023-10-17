@@ -1,12 +1,12 @@
 import * as NeverEatAlone from 'never_eat_alone';
 import { DemoDeactivateAccountSurveyModel } from
-'./demo_deactivate_account_survey_model';
+  './demo_deactivate_account_survey_model';
 import { DemoDeletedAccountSurveyModel } from
-'./demo_deleted_account_survey_model';
+  './demo_deleted_account_survey_model';
 import { DemoDiningEventPageModel } from './demo_dining_event_page_model';
 import { DemoEditProfilePageModel } from './demo_edit_profile_page_model';
-import { DemoForgotPasswordPageModel
-} from './demo_forogot_password_page_model';
+import { DemoForgotPasswordPageModel } from
+  './demo_forogot_password_page_model';
 import { DemoJoinModel } from './demo_join_model';
 import { DemoLogInModel } from './demo_login_model';
 import { DemoSettingsPageModel } from './demo_settings_page_model';
@@ -466,9 +466,9 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     this._settingsPageModelMap = new Map();
     const emmaNotificationSettings = new NeverEatAlone.NotificationSettings(
       true, false, true, true, false, true, false);
-    const demoSettingsPageModel1 = new DemoSettingsPageModel(emmaSocialLinks,
-      emmaPassword, emmaNotificationSettings, emmaMastercard2222,
-      emmaPaymentCards, emmaPaymentRecords);
+    const demoSettingsPageModel1 = new DemoSettingsPageModel(userEmma.name,
+      emmaSocialLinks, emmaPassword, emmaNotificationSettings,
+      emmaMastercard2222, emmaPaymentCards, emmaPaymentRecords);
     this._settingsPageModelMap.set(1, demoSettingsPageModel1);
 
     /** arthur settings model */
@@ -485,9 +485,9 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const arthurPassword = '123';
     const arthurNotificationSettings = new NeverEatAlone.NotificationSettings(
       false, false, false, false, false, true, true);
-    const demoSettingsPageModel2 = new DemoSettingsPageModel(arthurSocialLinks,
-      arthurPassword, arthurNotificationSettings, arthurVisa1234,
-      arthurPaymentCards, arthurPaymentRecords);
+    const demoSettingsPageModel2 = new DemoSettingsPageModel(userArthur.name,
+      arthurSocialLinks, arthurPassword, arthurNotificationSettings,
+      arthurVisa1234, arthurPaymentCards, arthurPaymentRecords);
     this._settingsPageModelMap.set(2, demoSettingsPageModel2);
     this._deletedAccountSurveyModel = new DemoDeletedAccountSurveyModel();
     this._deactivateAccountSurveyModel = new DemoDeactivateAccountSurveyModel();

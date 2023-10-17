@@ -1076,12 +1076,12 @@ export class UserRoutes {
 
   private getSettingsPage = async (request, response) => {
     const userId = parseInt(request.params.userId);
-    let user: User;
+    let loggedUser: User;
     if (request.session?.user) {
       try {
-        user = await this.userDatabase.loadUserBySessionId(
+        loggedUser = await this.userDatabase.loadUserBySessionId(
           request.session.id);
-        if (user.id === -1 || user.id !== userId) {
+        if (loggedUser.id === -1 || loggedUser.id !== userId) {
           response.status(401).send();
           return;
         }
@@ -1090,6 +1090,14 @@ export class UserRoutes {
         response.status(500).send();
         return;
       }
+    }
+    let pageAccount: User;
+    try {
+      pageAccount = await this.userDatabase.loadUserById(userId);
+    } catch (error) {
+      console.error('Failed at loadUserById', error);
+      response.status(500).send();
+      return;
     }
     let linkedSocialAccounts: SocialAccount[] = [];
     let hashedPassword = '12';
@@ -1109,6 +1117,7 @@ export class UserRoutes {
     let paymentCards: PaymentCard[] = [];
     let paymentRecords: PaymentRecord[] = [];
     response.status(200).json({
+      displayName: pageAccount.name,
       linkedSocialAccounts: arrayToJson(linkedSocialAccounts),
       hashedPassword: hashedPassword,
       notificationSettings: notificationSettings.toJson(),

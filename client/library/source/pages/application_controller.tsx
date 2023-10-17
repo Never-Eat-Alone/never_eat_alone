@@ -50,6 +50,7 @@ interface State {
   accountProfileImage: UserProfileImage;
   hasJoinedEvent: boolean;
   hasRemovedSeat: boolean;
+  responseErrorCode: number;
 }
 
 export class ApplicationController extends React.Component<Properties, State> {
@@ -66,11 +67,26 @@ export class ApplicationController extends React.Component<Properties, State> {
       isPartnerWithUsButtonClicked: false,
       accountProfileImage: UserProfileImage.default(),
       hasJoinedEvent: false,
-      hasRemovedSeat: false
+      hasRemovedSeat: false,
+      responseErrorCode: null
     };
   }
 
   public render(): JSX.Element {
+    switch (this.state.responseErrorCode) {
+      case null:
+        break;
+
+      case 403:
+        return <ErrorPage403 displayMode={this.state.displayMode} />;
+
+      case 404:
+        return <ErrorPage404 displayMode={this.state.displayMode} />;
+    
+      default:
+        return <ErrorPage500 displayMode={this.state.displayMode} />;
+    }
+
     if (this.state.hasError) {
       return <ErrorPage500 displayMode={this.state.displayMode} />;
     }
@@ -346,7 +362,12 @@ export class ApplicationController extends React.Component<Properties, State> {
       account={this.state.account}
       onSaveDisplayNameSuccess={this.handleSaveDisplayName}
       onLogOut={this.handleLogOut}
+      onResponseErrorCode={this.handleResponseErrorCode}
     />;
+  }
+
+  private handleResponseErrorCode = (responseErrorCode: number) => {
+    this.setState({ responseErrorCode });
   }
 
   private renderDeactivateAccountSurvey = () => {
