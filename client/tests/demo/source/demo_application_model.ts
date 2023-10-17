@@ -551,12 +551,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return this._diningEventPageModelMap.get(id);
   }
 
-  public async updateDiningEventPageModel(id: number, updatedModel:
-      NeverEatAlone.DiningEventPageModel): Promise<void> {
-    this._diningEventPageModelMap.set(id, updatedModel);
-    await this._homePageModel.updateEventLists();
-    await this.getProfilePageModel(this._account.id).update();
-  }
+  public async updateOnJoinRemoveSeat(): Promise<void> {}
 
   public get inviteAFoodieModel(): NeverEatAlone.InviteAFoodieModel {
     return this._inviteAFoodieModel;

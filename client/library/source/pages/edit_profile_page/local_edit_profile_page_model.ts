@@ -72,10 +72,6 @@ export class LocalEditProfilePageModel extends EditProfilePageModel {
     this._profilePageData = newProfilePageData;
   }
 
-  public async update(): Promise<void> {
-    this.ensureIsLoaded();
-  }
-
   private ensureIsLoaded(): void {
     if (!this._isLoaded) {
       throw new Error('EditProfilePageModel not loaded.');

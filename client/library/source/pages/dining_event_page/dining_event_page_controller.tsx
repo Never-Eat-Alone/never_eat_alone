@@ -11,11 +11,13 @@ interface Properties {
   eventId: number;
   profileImageSrc: string;
 
-  /** Indicates the join event button is clicked. */
-  onJoinEvent: () => void;
+  showLoginModal: () => void;
 
-  /** Indicates the remove seat button is clicked. */
-  onRemoveSeat: () => void;
+  /** Indicates the join event was successful. */
+  onJoinEventSuccess: () => void;
+
+  /** Indicates the remove seat was successful. */
+  onRemoveSeatSuccess: () => void;
 }
 
 interface State {
@@ -63,8 +65,8 @@ export class DiningEventPageController extends React.Component<Properties,
       account={this.props.account}
       isRSVPOpen={isRSVPOpen}
       isGoing={isGoing}
-      onJoinEvent={this.props.onJoinEvent}
-      onRemoveSeat={this.props.onRemoveSeat}
+      onJoinEvent={this.handleJoinEvent}
+      onRemoveSeat={this.handleRemoveSeat}
     />;
   }
 
@@ -80,6 +82,30 @@ export class DiningEventPageController extends React.Component<Properties,
         isLoaded: true,
         errorCode: DiningEventPage.ErrorCode.NO_CONNECTION
       });
+    }
+  }
+
+  private handleJoinEvent = async (): Promise<void> => {
+    if (this.props.account?.id === -1) {
+      this.props.showLoginModal();
+      return;
+    }
+    try {
+      await this.props.model.joinEvent(this.props.account.id,
+        this.props.account.name, this.props.profileImageSrc);
+      this.props.onJoinEventSuccess();
+    } catch (error) {
+      this.setState({ errorCode: DiningEventPage.ErrorCode.NO_CONNECTION });
+    }
+  }
+
+  private handleRemoveSeat = async (): Promise<void> => {
+    try {
+      await this.props.model.removeSeat(this.props.account.id,
+        this.props.account.name, this.props.profileImageSrc);
+      this.props.onRemoveSeatSuccess();
+    } catch (error) {
+      this.setState({ errorCode: DiningEventPage.ErrorCode.NO_CONNECTION });
     }
   }
 }

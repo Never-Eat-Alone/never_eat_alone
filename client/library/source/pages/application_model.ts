@@ -26,8 +26,7 @@ export abstract class ApplicationModel {
   public abstract getDiningEventPageModel(id: number): DiningEventPageModel;
   public abstract addDiningEventPageModel(id: number, diningEventPageModel:
     DiningEventPageModel): void;
-  public abstract updateDiningEventPageModel(id: number, updatedModel:
-    DiningEventPageModel): Promise<void>;
+  public abstract updateOnJoinRemoveSeat(): Promise<void>;
   public abstract get inviteAFoodieModel(): InviteAFoodieModel;
   public abstract updateInviteAFoodieModel(newModel: InviteAFoodieModel):
     Promise<void>;
@@ -37,8 +36,6 @@ export abstract class ApplicationModel {
   public abstract addProfilePageModel(id: number,
     profilePageModel: ProfilePageModel): void;
   public abstract getProfilePageModel(id: number): ProfilePageModel;
-  public abstract updateProfilePageModel(id: number, newModel: ProfilePageModel
-    ): Promise<void>;
   public abstract getEditProfilePageModel(id: number): EditProfilePageModel;
   public abstract addEditProfilePageModel(id: number,
     editProfilePageModel: EditProfilePageModel): void;
