@@ -25,7 +25,6 @@ export class HttpSettingsPageModel extends SettingsPageModel {
     const responseObject = await response.json();
     const linkedSocialAccounts: SocialAccount[] = arrayFromJson(SocialAccount,
       responseObject.linkedSocialAccounts);
-    const hashedPassword = responseObject.hashedPassword;
     const notificationSettings = NotificationSettings.fromJson(
       responseObject.notificationSettings);
     const defaultCard = PaymentCard.fromJson(responseObject.defaultCard);
@@ -33,11 +32,15 @@ export class HttpSettingsPageModel extends SettingsPageModel {
       responseObject.paymentCards);
     const paymentRecords: PaymentRecord[] = arrayFromJson(PaymentRecord,
       responseObject.paymentRecords);
-    this._model = new LocalSettingsPageModel(linkedSocialAccounts,
-      hashedPassword, notificationSettings, defaultCard, paymentCards,
-      paymentRecords);
+    this._model = new LocalSettingsPageModel(responseObject.displayName,
+      linkedSocialAccounts, responseObject.hashedPassword, notificationSettings,
+      defaultCard, paymentCards, paymentRecords);
     await this._model.load();
     this._isLoaded = true;
+  }
+
+  public get displayName(): string {
+    return this._model.displayName;
   }
 
   public get linkedSocialAccounts(): SocialAccount[] {

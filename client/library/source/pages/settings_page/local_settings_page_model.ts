@@ -3,11 +3,13 @@ import { NotificationSettings, PaymentCard, PaymentRecord, SocialAccount, User }
 import { SettingsPageModel } from './settings_page_model';
 
 export class LocalSettingsPageModel extends SettingsPageModel {
-  constructor(linkedSocialAccounts: SocialAccount[], hashedPassword: string,
-      notificationSettings: NotificationSettings, defaultCard: PaymentCard,
-      paymentCards: PaymentCard[], paymentRecords: PaymentRecord[]) {
+  constructor(displayName: string, linkedSocialAccounts: SocialAccount[],
+      hashedPassword: string, notificationSettings: NotificationSettings,
+      defaultCard: PaymentCard, paymentCards: PaymentCard[], paymentRecords:
+      PaymentRecord[]) {
     super();
     this._isLoaded = false;
+    this._displayName = displayName;
     this._linkedSocialAccounts = linkedSocialAccounts;
     this._hashedPassword = hashedPassword;
     this._notificationSettings = notificationSettings;
@@ -18,6 +20,11 @@ export class LocalSettingsPageModel extends SettingsPageModel {
 
   public async load(): Promise<void> {
     this._isLoaded = true;
+  }
+
+  public get displayName(): string {
+    this.ensureIsLoaded();
+    return this._displayName;
   }
 
   public get linkedSocialAccounts(): SocialAccount[] {
@@ -113,6 +120,7 @@ export class LocalSettingsPageModel extends SettingsPageModel {
 
   public async saveDisplayName(newDisplayName: string): Promise<User> {
     this.ensureIsLoaded();
+    this._displayName = newDisplayName;
     return;
   }
 
@@ -123,6 +131,7 @@ export class LocalSettingsPageModel extends SettingsPageModel {
   }
 
   private _isLoaded: boolean;
+  private _displayName: string;
   private _linkedSocialAccounts: SocialAccount[];
   private _hashedPassword: string;
   private _notificationSettings: NotificationSettings;

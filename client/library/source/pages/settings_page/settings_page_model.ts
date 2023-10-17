@@ -3,6 +3,7 @@ import { PaymentCard, PaymentRecord, SocialAccount, User } from
 
 export abstract class SettingsPageModel {
   public abstract load(): Promise<void>;
+  public abstract get displayName(): string;
   public abstract get linkedSocialAccounts(): SocialAccount[];
   public abstract get hashedPassword(): string;
   public abstract getNotificationSetting(setting: string): boolean;

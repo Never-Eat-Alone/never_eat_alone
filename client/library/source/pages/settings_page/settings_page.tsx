@@ -81,6 +81,8 @@ interface Properties {
 
   deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode;
 
+  isEditDisplayName: boolean;
+
   onChangePaymentMethodsTabPage: (page: PaymentMethodsTab.Page) => void;
 
   /** Indicates the Add card button is clicked. */

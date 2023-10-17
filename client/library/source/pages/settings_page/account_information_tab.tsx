@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { BackButton, CheckBox, InputField, SecondaryTextButton,
   SecondaryTextLinkButton, PrimaryTextButton} from '../../components';
-import { DisplayMode, SocialAccount, SocialAccountType
-} from '../../definitions';
+import { DisplayMode, SocialAccount, SocialAccountType } from
+  '../../definitions';
 import { LinkSocialAccountButton } from './link_social_account_button';
 import { SaveCancelButtonCombo } from './save_cancel_button_combo';
 
@@ -28,6 +28,11 @@ interface Properties {
   deleteAccountPassword: string;
 
   deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode;
+
+  /** Whether the edit displayname action (save-cancel buttons) is activated or
+   * not.
+   */
+  isEditDisplayName: boolean;
 
   /** Indicates link Google account button is clicked. */
   onGoogleClick: () => void;
@@ -84,7 +89,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props);
     this.state = {
-      isEditDisplayName: false,
+      isEditDisplayName: this.props.isEditDisplayName,
       isEditEmail: false,
       isEditPassword: false,
       displayName: this.props.displayName
@@ -93,15 +98,14 @@ export class AccountInformationTab extends React.Component<Properties, State> {
 
   public render(): JSX.Element {
     const { linkButtonRowStyle, socialButtonsColumnStyle,
-        socialAccountButtonStyle, inputFieldStyle, idRowStyle,
-        inputEditRowStyle } = (() => {
+        socialAccountButtonStyle, inputFieldStyle, inputEditRowStyle } = (
+        () => {
       if (this.props.displayMode === DisplayMode.MOBILE) {
         return {
           linkButtonRowStyle: MOBILE_LINK_BUTTON_ROW_STYLE,
           socialButtonsColumnStyle: MOBILE_SOCIAL_BUTTONS_COLUMN_STYLE,
           socialAccountButtonStyle: MOBILE_SOCIAL_ACCOUNT_BUTTON_STYLE,
           inputFieldStyle: MOBILE_INPUT_FIELD_STYLE,
-          idRowStyle: MOBILE_ID_ROW_STYLE,
           inputEditRowStyle: MOBILE_INPUT_EDIT_ROW_STYLE
         };
       } else if (this.props.displayMode === DisplayMode.TABLET) {
@@ -110,7 +114,6 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           socialButtonsColumnStyle: SOCIAL_BUTTONS_COLUMN_STYLE,
           socialAccountButtonStyle: SOCIAL_ACCOUNT_BUTTON_STYLE,
           inputFieldStyle: INPUT_FIELD_STYLE,
-          idRowStyle: ID_ROW_STYLE,
           inputEditRowStyle: INPUT_EDIT_ROW_STYLE
         };
       }
@@ -119,7 +122,6 @@ export class AccountInformationTab extends React.Component<Properties, State> {
         socialButtonsColumnStyle: SOCIAL_BUTTONS_COLUMN_STYLE,
         socialAccountButtonStyle: SOCIAL_ACCOUNT_BUTTON_STYLE,
         inputFieldStyle: INPUT_FIELD_STYLE,
-        idRowStyle: ID_ROW_STYLE,
         inputEditRowStyle: INPUT_EDIT_ROW_STYLE
       };
     })();
@@ -597,34 +599,6 @@ const MOBILE_INPUT_FIELD_STYLE: React.CSSProperties = {
   ...INPUT_FIELD_STYLE,
   width: '100%',
   minWidth: '100%'
-};
-
-const ID_ROW_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
-  width: '335px',
-  height: '38px',
-  marginBottom: '20px',
-  fontFamily: 'Source Sans Pro',
-  fontStyle: 'normal',
-  fontWeight: 400,
-  fontSize: '14px',
-  lineHeight: '18px',
-  color: '#000000',
-  marginTop: '10px'
-};
-
-const MOBILE_ID_ROW_STYLE: React.CSSProperties = {
-  ...ID_ROW_STYLE,
-  width: '100%'
-};
-
-const ID_INPUT_STYLE: React.CSSProperties = {
-  width: '100%',
-  height: '100%',
-  marginLeft: '10px'
 };
 
 const EDIT_BUTTON_STYLE: React.CSSProperties = {

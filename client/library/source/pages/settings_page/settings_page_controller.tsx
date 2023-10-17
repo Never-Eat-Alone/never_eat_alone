@@ -14,7 +14,7 @@ interface Properties {
   displayMode: DisplayMode;
   account: User;
   model: SettingsPageModel;
-  onSaveDisplayNameSuccess: (newAccount: User) => void;
+  onSaveDisplayNameSuccess: (newAccount: User) => Promise<void>;
   onLogOut: () => void;
 }
 
@@ -41,6 +41,7 @@ interface State {
   deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode;
   redirect: string;
   linkedSocialAccounts: SocialAccount[];
+  isEditDisplayName: boolean;
 }
 
 export class SettingsPageController extends React.Component<Properties, State> {
@@ -68,7 +69,8 @@ export class SettingsPageController extends React.Component<Properties, State> {
       deleteAccountPassword: '',
       deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode.NONE,
       redirect: null,
-      linkedSocialAccounts: []
+      linkedSocialAccounts: [],
+      isEditDisplayName: false
     };
   }
 
@@ -82,7 +84,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
     return <SettingsPage
       displayMode={this.props.displayMode}
       linkedSocialAccounts={this.state.linkedSocialAccounts}
-      displayName={this.props.account.name}
+      displayName={this.props.model.displayName}
       email={this.props.account.email}
       password={this.props.model.hashedPassword}
       isNewEventsNotificationOn={this.state.isNewEventsNotificationOn}
@@ -107,6 +109,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
       isDeleteChecked={this.state.isDeleteChecked}
       deleteAccountPassword={this.state.deleteAccountPassword}
       deleteAccountErrorCode={this.state.deleteAccountErrorCode}
+      isEditDisplayName={this.state.isEditDisplayName}
       onSubmitDeleteAccount={this.handleSubmitDeleteAccount}
       onAddCard={this.handleAddCard}
       onUpdateCard={this.handleUpdateCard}
@@ -319,8 +322,10 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleEditDisplayNameClick = async (newDisplayName: string) => {
     try {
-      const newAccount = await this.props.model.saveDisplayName(newDisplayName);
-      this.props.onSaveDisplayNameSuccess(newAccount);
+      const modifiedAccount = await this.props.model.saveDisplayName(
+        newDisplayName);
+      await this.props.onSaveDisplayNameSuccess(modifiedAccount);
+      this.setState({ isEditDisplayName: false });
     } catch (error) {
       console.error(error);
     }
