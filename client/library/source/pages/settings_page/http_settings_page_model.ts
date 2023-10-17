@@ -211,11 +211,6 @@ export class HttpSettingsPageModel extends SettingsPageModel {
     return updatedUser;
   }
 
-  public async update(): Promise<void> {
-    this._isLoaded = false;
-    await this.load();
-  }
-
   private _checkResponse(response: Response): void {
     if (!response.ok) {
       throw new Error(`HTTP error, status = ${response.status}`);

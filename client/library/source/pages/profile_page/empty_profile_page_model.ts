@@ -26,8 +26,8 @@ export class EmptyProfilePageModel extends ProfilePageModel {
     throw new Error('ProfilePageModel not loaded.');
   }
 
-  public async update(): Promise<void> {
-    throw new Error('Unable to update empty model.');
+  public async updateName(name: string): Promise<void> {
+    throw new Error('Unable to updateName of empty model.');
   }
 
   public get pastEventList(): EventCardSummary[] {

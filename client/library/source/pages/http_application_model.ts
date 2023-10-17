@@ -131,13 +131,12 @@ export class HttpApplicationModel extends ApplicationModel {
     this._model.addDiningEventPageModel(id, newModel);
   }
 
-  public async updateDiningEventPageModel(id: number, updatedModel:
-      DiningEventPageModel): Promise<void> {
-    await this._model.updateDiningEventPageModel(id, updatedModel);
+  public async updateOnJoinRemoveSeat(): Promise<void> {
     await this._model.homePageModel.updateEventLists();
     const profilePageModel = new HttpProfilePageModel(this.account.id);
     await profilePageModel.load();
-    await this.updateProfilePageModel(this.account.id, profilePageModel);
+    this.addProfilePageModel(this.account.id, profilePageModel);
+    await this._model.updateOnJoinRemoveSeat();
   }
 
   public get inviteAFoodieModel(): InviteAFoodieModel {
@@ -173,11 +172,6 @@ export class HttpApplicationModel extends ApplicationModel {
       this._model.addProfilePageModel(id, profilePageModel);
     }
     return profilePageModel;
-  }
-
-  public async updateProfilePageModel(id: number, newModel: ProfilePageModel):
-      Promise<void> {
-    await this._model.updateProfilePageModel(id, newModel);
   }
 
   public addEditProfilePageModel(id: number,

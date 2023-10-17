@@ -90,10 +90,7 @@ export class LocalApplicationModel extends ApplicationModel {
     return this._diningEventPageModelMap.get(id);
   }
 
-  public async updateDiningEventPageModel(id: number, updatedModel:
-      DiningEventPageModel): Promise<void> {
-    this._diningEventPageModelMap.set(id, updatedModel);
-  }
+  public async updateOnJoinRemoveSeat(): Promise<void> {}
 
   public get inviteAFoodieModel(): InviteAFoodieModel {
     return this._inviteAFoodieModel;
@@ -124,11 +121,6 @@ export class LocalApplicationModel extends ApplicationModel {
 
   public getProfilePageModel(id: number): ProfilePageModel {
     return this._profilePageModelMap.get(id);
-  }
-
-  public async updateProfilePageModel(id: number, newModel: ProfilePageModel):
-      Promise<void> {
-    this._profilePageModelMap.set(id, newModel);
   }
 
   public addEditProfilePageModel(id: number, editProfilePageModel:
