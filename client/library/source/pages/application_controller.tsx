@@ -166,16 +166,8 @@ export class ApplicationController extends React.Component<Properties, State> {
               render={this.renderDiningEvents}
             />
             <Router.Route
-              path='/error_page_403'
-              render={this.renderErrorPage403}
-            />
-            <Router.Route
-              path='/error_page_404'
-              render={this.renderErrorPage404}
-            />
-            <Router.Route
-              path='/error_page_500'
-              render={this.renderErrorPage500}
+              path='/error/:errorCode'
+              render={this.renderErrorPage}
             />
             <Router.Route
               path='/users/edit_profile/:id'
@@ -242,7 +234,6 @@ export class ApplicationController extends React.Component<Properties, State> {
               path='/'
               render={this.renderHomePage}
             />
-            <Router.Route render={this.renderErrorPage404} />
           </Router.Switch>
         </Shell>
       </div>);
@@ -577,16 +568,10 @@ export class ApplicationController extends React.Component<Properties, State> {
     />;
   }
 
-  private renderErrorPage403 = () => {
-    return <ErrorPage403 displayMode={this.state.displayMode} />;
-  }
-
-  private renderErrorPage404 = () => {
-    return <ErrorPage404 displayMode={this.state.displayMode} />;
-  }
-
-  private renderErrorPage500 = () => {
-    return <ErrorPage500 displayMode={this.state.displayMode} />;
+  private renderErrorPage = () => { ({match}: Router.RouteComponentProps<
+      TParams>) => {
+    const id = Number(match.params.id);
+    return <ErrorPage displayMode={this.state.displayMode} errorCode={id} />;
   }
 
   private handleHeaderAndFooter = (pathname: string) => {

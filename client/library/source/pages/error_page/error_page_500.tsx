@@ -4,9 +4,10 @@ import { DisplayMode } from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
+  errorCode: number;
 }
 
-export class ErrorPage500 extends React.Component<Properties> {
+export class ErrorPage extends React.Component<Properties> {
   public render(): JSX.Element {
     const { containerStyle, imageStyle, buttonStyle, buttonLabel } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {

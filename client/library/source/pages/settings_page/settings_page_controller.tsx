@@ -323,8 +323,8 @@ export class SettingsPageController extends React.Component<Properties, State> {
     try {
       const modifiedAccount = await this.props.model.saveDisplayName(
         newDisplayName);
-      await this.props.onSaveDisplayNameSuccess(modifiedAccount);
       this.setState({ isEditDisplayName: false });
+      await this.props.onSaveDisplayNameSuccess(modifiedAccount);
     } catch (error) {
       console.error(error);
     }
