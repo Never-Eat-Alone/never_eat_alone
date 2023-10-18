@@ -14,7 +14,7 @@ import { DeletedAccountSurveyPageController } from
 import { DiningEventPageController } from './dining_event_page';
 import { EditProfilePageController } from './edit_profile_page';
 import { EmailConfirmationPageController } from './email_confirmation_page';
-import { ErrorPage403, ErrorPage404, ErrorPage500 } from './error_page';
+import { ErrorPage } from './error_page';
 import { ForgotPasswordPageController } from './forgot_password_page';
 import { HelpPage } from './help_page';
 import { HomePageController } from './home_page';
@@ -73,26 +73,15 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   public render(): JSX.Element {
-    switch (this.state.responseErrorCode) {
-      case null:
-        break;
-
-      case 403:
-        return <ErrorPage403 displayMode={this.state.displayMode} />;
-
-      case 404:
-        return <ErrorPage404 displayMode={this.state.displayMode} />;
-    
-      default:
-        return <ErrorPage500 displayMode={this.state.displayMode} />;
+    if (this.state.responseErrorCode || this.state.hasError) {
+      return <ErrorPage errorCode={this.state.responseErrorCode}
+        displayMode={this.state.displayMode} />;
     }
 
-    if (this.state.hasError) {
-      return <ErrorPage500 displayMode={this.state.displayMode} />;
-    }
     if (!this.state.isLoaded) {
       return <div />;
     }
+
     const pathname = this.props.location.pathname;
     const JoinModal = (this.state.isJoinButtonClicked &&
       <Modal>

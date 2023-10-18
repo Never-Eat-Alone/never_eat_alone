@@ -6,7 +6,7 @@ interface Properties {
   displayMode: DisplayMode;
 }
 
-export class ErrorPage500 extends React.Component<Properties> {
+export class ErrorPage401 extends React.Component<Properties> {
   public render(): JSX.Element {
     const { containerStyle, imageStyle, buttonStyle, buttonLabel } = (() => {
       if (this.props.displayMode === DisplayMode.DESKTOP) {
@@ -14,7 +14,7 @@ export class ErrorPage500 extends React.Component<Properties> {
           containerStyle: DESKTOP_CONTAINER_STYLE,
           imageStyle: IMAGE_STYLE,
           buttonStyle: DESKTOP_BUTTON_STYLE,
-          buttonLabel: 'Back to Homepage'
+          buttonLabel: 'Back to Login Page'
         };
       }
       if (this.props.displayMode === DisplayMode.TABLET) {
@@ -22,28 +22,29 @@ export class ErrorPage500 extends React.Component<Properties> {
           containerStyle: TABLET_CONTAINER_STYLE,
           imageStyle: IMAGE_STYLE,
           buttonStyle: BUTTON_STYLE,
-          buttonLabel: 'Home'
+          buttonLabel: 'Login'
         };
       }
       return {
         containerStyle: MOBILE_CONTAINER_STYLE,
         imageStyle: MOBILE_IMAGE_STYLE,
         buttonStyle: BUTTON_STYLE,
-        buttonLabel: 'Home'
+        buttonLabel: 'Login'
       };
     })();
     return (
       <div style={PAGE_CONTAINER_STYLE} >
         <div style={containerStyle} >
-          <h1 style={H1_STYLE} >500 Error</h1>
-          <h2 style={H2_STYLE} >Oops! something went wrong with this page.</h2>
+          <h1 style={H1_STYLE} >401 Unauthorized</h1>
+          <h2 style={H2_STYLE} >
+            You don't have permission to access this page
+          </h2>
           <p style={P_STYLE} >
-            It looks like there was an internal server error. We’re working 
-            hard to fix the problem.{'\n\n'}
-            Try refreshing this page or try again later.
+            Sorry, you are not authorized to view this page. You might need to 
+            log in or check your permissions. Let’s head to the login page.
           </p>
           <PrimaryButtonNavLink
-            to='/'
+            to='/log_in'
             label={buttonLabel}
             style={buttonStyle}
           />
@@ -143,8 +144,7 @@ const P_STYLE: React.CSSProperties = {
   fontWeight: 400,
   fontSize: '14px',
   lineHeight: '18px',
-  color: '#000000',
-  whiteSpace: 'pre-line'
+  color: '#000000'
 };
 
 const BUTTON_STYLE: React.CSSProperties = {
