@@ -561,6 +561,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       TParams>) => {
     const id = Number(match.params.id);
     return <ErrorPage displayMode={this.state.displayMode} errorCode={id} />;
+    }
   }
 
   private handleHeaderAndFooter = (pathname: string) => {
