@@ -81,8 +81,6 @@ interface Properties {
 
   deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode;
 
-  isEditDisplayName: boolean;
-
   onChangePaymentMethodsTabPage: (page: PaymentMethodsTab.Page) => void;
 
   /** Indicates the Add card button is clicked. */
@@ -127,7 +125,7 @@ interface Properties {
   onRemoveLinkedAccount: (account: SocialAccount) => void;
 
   /** Indicates the save button regarding edit displayname is clicked. */
-  onEditDisplayNameSaveClick: (newValue: string) => void;
+  onEditDisplayNameSaveClick: (newValue: string) => Promise<void>;
 
   /** Indicates the edit button regarding the email is clicked. */
   onEditEmailClick: () => void;

@@ -29,11 +29,6 @@ interface Properties {
 
   deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode;
 
-  /** Whether the edit displayname action (save-cancel buttons) is activated or
-   * not.
-   */
-  isEditDisplayName: boolean;
-
   /** Indicates link Google account button is clicked. */
   onGoogleClick: () => void;
 
@@ -44,7 +39,7 @@ interface Properties {
   onRemoveLinkedAccount: (account: SocialAccount) => void;
 
   /** Indicates the save button regarding edit displayname is clicked. */
-  onEditDisplayNameSaveClick: (newValue: string) => void;
+  onEditDisplayNameSaveClick: (newValue: string) => Promise<void>;
 
   /** Indicates the edit button regarding the email is clicked. */
   onEditEmailClick: () => void;
@@ -89,7 +84,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props);
     this.state = {
-      isEditDisplayName: this.props.isEditDisplayName,
+      isEditDisplayName: false,
       isEditEmail: false,
       isEditPassword: false,
       displayName: this.props.displayName
@@ -457,8 +452,9 @@ export class AccountInformationTab extends React.Component<Properties, State> {
     this.setState({ displayName: event.target.value });
   }
 
-  private handleDisplayNameSaveClick = () => {
-    this.props.onEditDisplayNameSaveClick(this.state.displayName);
+  private handleDisplayNameSaveClick = async () => {
+    this.setState({ isEditDisplayName: false });
+    await this.props.onEditDisplayNameSaveClick(this.state.displayName);
   }
 }
 
