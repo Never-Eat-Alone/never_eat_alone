@@ -14,7 +14,7 @@ import { DeletedAccountSurveyPageController } from
 import { DiningEventPageController } from './dining_event_page';
 import { EditProfilePageController } from './edit_profile_page';
 import { EmailConfirmationPageController } from './email_confirmation_page';
-import { ErrorPage403, ErrorPage404, ErrorPage500 } from './error_page';
+import { ErrorPage } from './error_page';
 import { ForgotPasswordPageController } from './forgot_password_page';
 import { HelpPage } from './help_page';
 import { HomePageController } from './home_page';
@@ -32,7 +32,7 @@ import { SitemapPage } from './sitemap_page';
 import { TermsOfUsePage } from './terms_of_use_page';
 import { WhatIsNeaPage } from './what_is_nea_page';
 
-type TParams = { id?: string, userId?: string };
+type TParams = { id?: string, userId?: string, errorCode?: string };
 
 interface Properties extends Router.RouteComponentProps<TParams> {
   model: ApplicationModel;
@@ -73,26 +73,15 @@ export class ApplicationController extends React.Component<Properties, State> {
   }
 
   public render(): JSX.Element {
-    switch (this.state.responseErrorCode) {
-      case null:
-        break;
-
-      case 403:
-        return <ErrorPage403 displayMode={this.state.displayMode} />;
-
-      case 404:
-        return <ErrorPage404 displayMode={this.state.displayMode} />;
-    
-      default:
-        return <ErrorPage500 displayMode={this.state.displayMode} />;
+    if (this.state.responseErrorCode || this.state.hasError) {
+      return <ErrorPage errorCode={this.state.responseErrorCode}
+        displayMode={this.state.displayMode} />;
     }
 
-    if (this.state.hasError) {
-      return <ErrorPage500 displayMode={this.state.displayMode} />;
-    }
     if (!this.state.isLoaded) {
       return <div />;
     }
+
     const pathname = this.props.location.pathname;
     const JoinModal = (this.state.isJoinButtonClicked &&
       <Modal>
@@ -166,16 +155,8 @@ export class ApplicationController extends React.Component<Properties, State> {
               render={this.renderDiningEvents}
             />
             <Router.Route
-              path='/error_page_403'
-              render={this.renderErrorPage403}
-            />
-            <Router.Route
-              path='/error_page_404'
-              render={this.renderErrorPage404}
-            />
-            <Router.Route
-              path='/error_page_500'
-              render={this.renderErrorPage500}
+              path='/error/:errorCode'
+              render={this.renderErrorPage}
             />
             <Router.Route
               path='/users/edit_profile/:id'
@@ -242,7 +223,6 @@ export class ApplicationController extends React.Component<Properties, State> {
               path='/'
               render={this.renderHomePage}
             />
-            <Router.Route render={this.renderErrorPage404} />
           </Router.Switch>
         </Shell>
       </div>);
@@ -362,12 +342,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       account={this.state.account}
       onSaveDisplayNameSuccess={this.handleSaveDisplayName}
       onLogOut={this.handleLogOut}
-      onResponseErrorCode={this.handleResponseErrorCode}
     />;
-  }
-
-  private handleResponseErrorCode = (responseErrorCode: number) => {
-    this.setState({ responseErrorCode });
   }
 
   private renderDeactivateAccountSurvey = () => {
@@ -577,16 +552,11 @@ export class ApplicationController extends React.Component<Properties, State> {
     />;
   }
 
-  private renderErrorPage403 = () => {
-    return <ErrorPage403 displayMode={this.state.displayMode} />;
-  }
-
-  private renderErrorPage404 = () => {
-    return <ErrorPage404 displayMode={this.state.displayMode} />;
-  }
-
-  private renderErrorPage500 = () => {
-    return <ErrorPage500 displayMode={this.state.displayMode} />;
+  private renderErrorPage = (props: Router.RouteComponentProps<{
+      errorCode: string }>): JSX.Element => {
+    const errorCode = Number(props.match.params.errorCode);
+    return <ErrorPage displayMode={this.state.displayMode}
+      errorCode={errorCode} />;
   }
 
   private handleHeaderAndFooter = (pathname: string) => {
