@@ -14,6 +14,8 @@ interface Properties {
   displayMode: DisplayMode;
   account: User;
   model: SettingsPageModel;
+
+  /** Indicates the save display name was successful on database. */
   onSaveDisplayNameSuccess: (newAccount: User) => Promise<void>;
   onLogOut: () => void;
 }
