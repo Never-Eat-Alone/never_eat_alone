@@ -42,7 +42,6 @@ interface State {
   deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode;
   redirect: string;
   linkedSocialAccounts: SocialAccount[];
-  isEditDisplayName: boolean;
   errorCode: number;
 }
 
@@ -71,7 +70,6 @@ export class SettingsPageController extends React.Component<Properties, State> {
       deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode.NONE,
       redirect: null,
       linkedSocialAccounts: [],
-      isEditDisplayName: false,
       errorCode: null
     };
   }
@@ -114,7 +112,6 @@ export class SettingsPageController extends React.Component<Properties, State> {
       isDeleteChecked={this.state.isDeleteChecked}
       deleteAccountPassword={this.state.deleteAccountPassword}
       deleteAccountErrorCode={this.state.deleteAccountErrorCode}
-      isEditDisplayName={this.state.isEditDisplayName}
       onSubmitDeleteAccount={this.handleSubmitDeleteAccount}
       onAddCard={this.handleAddCard}
       onUpdateCard={this.handleUpdateCard}
@@ -330,7 +327,6 @@ export class SettingsPageController extends React.Component<Properties, State> {
     try {
       const modifiedAccount = await this.props.model.saveDisplayName(
         newDisplayName);
-      this.setState({ isEditDisplayName: false });
       await this.props.onSaveDisplayNameSuccess(modifiedAccount);
     } catch (error) {
       this.setState({ errorCode: error.code });
