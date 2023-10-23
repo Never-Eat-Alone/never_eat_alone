@@ -82,6 +82,7 @@ interface State {
   isEditEmail: boolean;
   isEditPassword: boolean;
   displayName: string;
+  password: string;
 }
 
 /** Dislays the account information tab content on the setting page. */
@@ -92,7 +93,8 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       isEditDisplayName: this.props.isEditDisplayName,
       isEditEmail: false,
       isEditPassword: false,
-      displayName: this.props.displayName
+      displayName: this.props.displayName,
+      password: this.props.password
     };
   }
 
@@ -395,6 +397,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           value={this.state.displayName}
           onChange={this.handleDisplayNameChange}
           disabled={!this.state.isEditDisplayName}
+          hasError={this.state.displayName.trim() === ''}
         />
         {editDisplayNameButton}
         <h2 style={SUB_HEADING_STYLE} >Email</h2>
@@ -418,8 +421,9 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           <InputField
             style={inputFieldStyle}
             type='password'
-            value={this.props.password}
-            disabled
+            value={this.state.password}
+            onChange={this.handlePasswordChange}
+            disabled={!this.state.isEditPassword}
           />
           <SecondaryTextButton
             style={EDIT_BUTTON_STYLE}
@@ -458,7 +462,14 @@ export class AccountInformationTab extends React.Component<Properties, State> {
   }
 
   private handleDisplayNameSaveClick = () => {
-    this.props.onEditDisplayNameSaveClick(this.state.displayName);
+    if (this.state.displayName.trim() !== '') {
+      this.props.onEditDisplayNameSaveClick(this.state.displayName);
+    }
+  }
+
+  private handlePasswordChange = (event: React.ChangeEvent<
+      HTMLInputElement>) => {
+    this.setState({ password: event.target.value });
   }
 }
 
