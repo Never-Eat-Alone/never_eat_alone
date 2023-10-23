@@ -32,7 +32,7 @@ import { SitemapPage } from './sitemap_page';
 import { TermsOfUsePage } from './terms_of_use_page';
 import { WhatIsNeaPage } from './what_is_nea_page';
 
-type TParams = { id?: string, userId?: string };
+type TParams = { id?: string, userId?: string, errorCode?: string };
 
 interface Properties extends Router.RouteComponentProps<TParams> {
   model: ApplicationModel;
@@ -342,12 +342,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       account={this.state.account}
       onSaveDisplayNameSuccess={this.handleSaveDisplayName}
       onLogOut={this.handleLogOut}
-      onResponseErrorCode={this.handleResponseErrorCode}
     />;
-  }
-
-  private handleResponseErrorCode = (responseErrorCode: number) => {
-    this.setState({ responseErrorCode });
   }
 
   private renderDeactivateAccountSurvey = () => {
@@ -557,11 +552,11 @@ export class ApplicationController extends React.Component<Properties, State> {
     />;
   }
 
-  private renderErrorPage = () => { ({match}: Router.RouteComponentProps<
-      TParams>) => {
-    const id = Number(match.params.id);
-    return <ErrorPage displayMode={this.state.displayMode} errorCode={id} />;
-    }
+  private renderErrorPage = (props: Router.RouteComponentProps<{
+      errorCode: string }>): JSX.Element => {
+    const errorCode = Number(props.match.params.errorCode);
+    return <ErrorPage displayMode={this.state.displayMode}
+      errorCode={errorCode} />;
   }
 
   private handleHeaderAndFooter = (pathname: string) => {

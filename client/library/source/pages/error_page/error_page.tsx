@@ -4,7 +4,7 @@ import { ErrorPage401, ErrorPage403, ErrorPage404, ErrorPage500 } from './';
 
 interface Properties {
   displayMode: DisplayMode;
-  errorCode: number;
+  errorCode?: number;
 }
 
 export class ErrorPage extends React.Component<Properties> {

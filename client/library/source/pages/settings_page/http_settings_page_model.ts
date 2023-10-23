@@ -216,7 +216,9 @@ export class HttpSettingsPageModel extends SettingsPageModel {
 
   private _checkResponse(response: Response): void {
     if (!response.ok) {
-      throw new Error(`HTTP error, status = ${response.status}`);
+      const error = new Error(`HTTP error, status = ${response.status}`) as any;
+      error.code = response.status;
+      throw error;
     }
   }
 
