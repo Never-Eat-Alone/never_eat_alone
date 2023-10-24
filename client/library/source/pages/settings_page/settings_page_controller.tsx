@@ -14,12 +14,14 @@ interface Properties {
   displayMode: DisplayMode;
   account: User;
   model: SettingsPageModel;
+
+  /** Indicates the save display name was successful on database. */
+  onSaveDisplayNameSuccess: (newAccount: User) => Promise<void>;
   onLogOut: () => void;
 }
 
 interface State {
   isLoaded: boolean;
-  hasError: boolean;
   isNewEventsNotificationOn: boolean;
   isEventJoinedNotificationOn: boolean;
   isEventRemindersNotificationOn: boolean;
@@ -40,6 +42,7 @@ interface State {
   deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode;
   redirect: string;
   linkedSocialAccounts: SocialAccount[];
+  errorCode: number;
 }
 
 export class SettingsPageController extends React.Component<Properties, State> {
@@ -47,7 +50,6 @@ export class SettingsPageController extends React.Component<Properties, State> {
     super(props);
     this.state = {
       isLoaded: false,
-      hasError: false,
       isNewEventsNotificationOn: false,
       isEventJoinedNotificationOn: false,
       isEventRemindersNotificationOn: false,
@@ -67,12 +69,16 @@ export class SettingsPageController extends React.Component<Properties, State> {
       deleteAccountPassword: '',
       deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode.NONE,
       redirect: null,
-      linkedSocialAccounts: []
+      linkedSocialAccounts: [],
+      errorCode: null
     };
   }
 
   public render(): JSX.Element {
-    if (!this.state.isLoaded || this.state.hasError) {
+    if (this.state.errorCode) {
+      return <Router.Redirect to={`/error/${this.state.errorCode}`} />;
+    }
+    if (!this.state.isLoaded) {
       return <div />;
     }
     if (this.state.redirect) {
@@ -81,8 +87,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
     return <SettingsPage
       displayMode={this.props.displayMode}
       linkedSocialAccounts={this.state.linkedSocialAccounts}
-      displayName={this.props.account.name}
-      profileId={this.props.account.id}
+      displayName={this.props.model.displayName}
       email={this.props.account.email}
       password={this.props.model.hashedPassword}
       isNewEventsNotificationOn={this.state.isNewEventsNotificationOn}
@@ -121,7 +126,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
       onGoogleClick={this.handleGoogleClick}
       onFacebookClick={this.handleFacebookClick}
       onRemoveLinkedAccount={this.handleRemoveLinkedAccount}
-      onEditDisplayNameClick={this.handleEditDisplayNameClick}
+      onEditDisplayNameSaveClick={this.handleEditDisplayNameClick}
       onEditEmailClick={this.handleEditEmailClick}
       onEditPasswordClick={this.handleEditPasswordClick}
       onDeactivateAccountSubmit={this.handleSubmitDeactivateAccount}
@@ -166,8 +171,8 @@ export class SettingsPageController extends React.Component<Properties, State> {
         defaultCard: this.props.model.defaultCard,
         linkedSocialAccounts: this.props.model.linkedSocialAccounts
       });
-    } catch {
-      this.setState({ isLoaded: true, hasError: true });
+    } catch (error) {
+      this.setState({ isLoaded: true, errorCode: error.code });
     }
   }
 
@@ -181,8 +186,8 @@ export class SettingsPageController extends React.Component<Properties, State> {
       const newSetting = await this.props.model.toggleNotificationSetting(
         'isNewEventsNotificationOn');
       this.setState({ isNewEventsNotificationOn: newSetting });
-    } catch {
-      this.setState({ hasError: true });
+    } catch (error) {
+      this.setState({ errorCode: error.code });
     }
   }
 
@@ -191,48 +196,48 @@ export class SettingsPageController extends React.Component<Properties, State> {
       const newSetting = await this.props.model.toggleNotificationSetting(
         'isEventJoinedNotificationOn');
       this.setState({ isEventJoinedNotificationOn: newSetting });
-    } catch {
-      this.setState({ hasError: true });
+    } catch (error) {
+      this.setState({ errorCode: error.code });
     }
   }
-  
+
   private handleEventRemindersToggle = async () => {
     try {
       const newSetting = await this.props.model.toggleNotificationSetting(
         'isEventRemindersNotificationOn');
       this.setState({ isEventRemindersNotificationOn: newSetting });
-    } catch {
-      this.setState({ hasError: true });
+    } catch (error) {
+      this.setState({ errorCode: error.code });
     }
   }
-  
+
   private handleChangesToggle = async () => {
     try {
       const newSetting = await this.props.model.toggleNotificationSetting(
         'isChangesNotificationOn');
       this.setState({ isChangesNotificationOn: newSetting });
-    } catch {
-      this.setState({ hasError: true });
+    } catch (error) {
+      this.setState({ errorCode: error.code });
     }
   }
-  
+
   private handleSomeoneJoinedToggle = async () => {
     try {
       const newSetting = await this.props.model.toggleNotificationSetting(
         'isSomeoneJoinedNotificationOn');
       this.setState({ isSomeoneJoinedNotificationOn: newSetting });
-    } catch {
-      this.setState({ hasError: true });
+    } catch (error) {
+      this.setState({ errorCode: error.code });
     }
   }
-  
+
   private handleFoodieAcceptedInviteToggle = async () => {
     try {
       const newSetting = await this.props.model.toggleNotificationSetting(
         'isFoodieAcceptedInviteNotificationOn');
       this.setState({ isFoodieAcceptedInviteNotificationOn: newSetting });
-    } catch {
-      this.setState({ hasError: true });
+    } catch (error) {
+      this.setState({ errorCode: error.code });
     }
   }
 
@@ -241,8 +246,8 @@ export class SettingsPageController extends React.Component<Properties, State> {
       const newSetting = await this.props.model.toggleNotificationSetting(
         'isFoodieAcceptedInviteNotificationOn');
       this.setState({ isAnnouncementNotificationOn: newSetting });
-    } catch {
-      this.setState({ hasError: true });
+    } catch (error) {
+      this.setState({ errorCode: error.code });
     }
   }
 
@@ -275,7 +280,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
         updateCardErrorCode: CardDetailsForm.ErrorCode.NONE,
         paymentMethodsTabPage: PaymentMethodsTab.Page.INITIAL
       });
-    } catch {
+    } catch (error) {
       this.setState({
         updateCardErrorCode: CardDetailsForm.ErrorCode.NO_CONNECTION,
         paymentMethodsTabPage: PaymentMethodsTab.Page.CARD_DETAILS
@@ -292,10 +297,11 @@ export class SettingsPageController extends React.Component<Properties, State> {
         updateCardErrorCode: CardDetailsForm.ErrorCode.NONE,
         paymentMethodsTabPage: PaymentMethodsTab.Page.INITIAL
       });
-    } catch {
+    } catch (error) {
       this.setState({
         updateCardErrorCode: CardDetailsForm.ErrorCode.NO_CONNECTION,
-        paymentMethodsTabPage: PaymentMethodsTab.Page.CARD_DETAILS
+        paymentMethodsTabPage: PaymentMethodsTab.Page.CARD_DETAILS,
+        errorCode: error.code
       });
     }
   }
@@ -313,11 +319,19 @@ export class SettingsPageController extends React.Component<Properties, State> {
         });
       }
     } catch (error) {
-      console.error(`Error unlinking ${account.provider} account`, error);
+      this.setState({ errorCode: error.code });
     }
   }
 
-  private handleEditDisplayNameClick = () => {}
+  private handleEditDisplayNameClick = async (newDisplayName: string) => {
+    try {
+      const modifiedAccount = await this.props.model.saveDisplayName(
+        newDisplayName);
+      await this.props.onSaveDisplayNameSuccess(modifiedAccount);
+    } catch (error) {
+      this.setState({ errorCode: error.code });
+    }
+  }
 
   private handleEditEmailClick = () => {}
 
@@ -342,8 +356,9 @@ export class SettingsPageController extends React.Component<Properties, State> {
         this.setState({ redirect: '/deleted_account_survey' });
         this.props.onLogOut();
       }
-    } catch {
+    } catch (error) {
       this.setState({
+        errorCode: error.code,
         deleteAccountErrorCode:
           AccountInformationTab.DeleteAccountErrorCode.NO_CONNECTION
       });
@@ -357,8 +372,8 @@ export class SettingsPageController extends React.Component<Properties, State> {
         this.setState({ redirect: '/deactivate_account_survey' });
         this.props.onLogOut();
       }
-    } catch {
-      this.setState({ hasError: true });
+    } catch (error) {
+      this.setState({ errorCode: error.code });
     }
   }
 
@@ -409,8 +424,8 @@ export class SettingsPageController extends React.Component<Properties, State> {
           paymentReceiptModalPage: PaymentReceiptModal.Page.REQUEST_SENT
         });
       }
-    } catch {
-      this.setState({ hasError: true });
+    } catch (error) {
+      this.setState({ errorCode: error.code });
     }
   }
 

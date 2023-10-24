@@ -26,8 +26,7 @@ export abstract class ApplicationModel {
   public abstract getDiningEventPageModel(id: number): DiningEventPageModel;
   public abstract addDiningEventPageModel(id: number, diningEventPageModel:
     DiningEventPageModel): void;
-  public abstract updateDiningEventPageModel(id: number, updatedModel:
-    DiningEventPageModel): Promise<void>;
+  public abstract updateOnJoinRemoveSeat(): Promise<void>;
   public abstract get inviteAFoodieModel(): InviteAFoodieModel;
   public abstract updateInviteAFoodieModel(newModel: InviteAFoodieModel):
     Promise<void>;
@@ -45,6 +44,8 @@ export abstract class ApplicationModel {
   public abstract addSettingsPageModel(id: number,
     settingsPageModel: SettingsPageModel): void;
   public abstract getSettingsPageModel(id: number): SettingsPageModel;
+  public abstract updateSettingsPageModel(id: number, newModel:
+    SettingsPageModel): Promise<void>;
   public abstract get deletedAccountSurveyModel(): DeletedAccountSurveyModel;
   public abstract get deactivateAccountSurveyModel():
     DeactivateAccountSurveyModel;

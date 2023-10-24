@@ -19,9 +19,6 @@ interface Properties {
   /** User's displayname. */
   displayName: string;
 
-  /** User's profile id number. */
-  profileId: number;
-
   /** User's email. */
   email: string;
 
@@ -127,8 +124,8 @@ interface Properties {
   /** Indicates the remove social account button is clicked. */
   onRemoveLinkedAccount: (account: SocialAccount) => void;
 
-  /** Indicates the edit button regarding the displayname section is clicked. */
-  onEditDisplayNameClick: () => void;
+  /** Indicates the save button regarding edit displayname is clicked. */
+  onEditDisplayNameSaveClick: (newValue: string) => Promise<void>;
 
   /** Indicates the edit button regarding the email is clicked. */
   onEditEmailClick: () => void;

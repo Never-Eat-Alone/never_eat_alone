@@ -58,7 +58,6 @@ export class EditProfilePageController extends React.Component<Properties,
     return <EditProfilePage
       displayMode={this.props.displayMode}
       displayName={this.props.account.name}
-      userName={this.props.account.userName}
       profileId={this.props.account.id}
       coverImage={this.state.profilePageData.coverImage}
       coverImageList={this.props.model.coverImageList}
@@ -340,8 +339,9 @@ export class EditProfilePageController extends React.Component<Properties,
 
   private handleSave = async () => {
     let newProfilePageData = this.state.profilePageData;
-    if (newProfilePageData.biographyValue.trim().length !==
-        newProfilePageData.biographyValue.length) {
+    if (newProfilePageData.biographyValue &&
+        newProfilePageData.biographyValue.trim() !==
+        newProfilePageData.biographyValue) {
       newProfilePageData.updateBiographyValue(
         newProfilePageData.biographyValue.trim());
     }

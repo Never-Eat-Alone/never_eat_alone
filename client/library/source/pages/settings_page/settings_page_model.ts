@@ -3,6 +3,7 @@ import { PaymentCard, PaymentRecord, SocialAccount, User } from
 
 export abstract class SettingsPageModel {
   public abstract load(): Promise<void>;
+  public abstract get displayName(): string;
   public abstract get linkedSocialAccounts(): SocialAccount[];
   public abstract get hashedPassword(): string;
   public abstract getNotificationSetting(setting: string): boolean;
@@ -20,4 +21,5 @@ export abstract class SettingsPageModel {
   public abstract deleteAccount(password: string): Promise<User>;
   public abstract deactivateAccount(): Promise<boolean>;
   public abstract unlinkAccount(account: SocialAccount): Promise<boolean>;
+  public abstract saveDisplayName(newDisplayName: string): Promise<User>;
 }

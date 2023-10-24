@@ -7,9 +7,8 @@ export abstract class ProfilePageModel {
   public abstract load(): Promise<void>;
   public abstract get profilePageData(): ProfilePageData;
   public abstract get name(): string;
-  public abstract get userName(): string;
   public abstract get createdAt(): Date;
   public abstract get upcomingEventList(): EventCardSummary[];
   public abstract get pastEventList(): EventCardSummary[];
-  public abstract update(): Promise<void>;
+  public abstract updateName(name: string): Promise<void>;
 }

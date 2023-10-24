@@ -24,9 +24,6 @@ interface Properties {
   /** User's display name. */
   displayName: string;
 
-  /** The username of the user. */
-  userName: string;
-
   /** The date of the user's account creation. */
   memberSince: Date;
 

@@ -14,7 +14,7 @@ import { DeletedAccountSurveyPageController } from
 import { DiningEventPageController } from './dining_event_page';
 import { EditProfilePageController } from './edit_profile_page';
 import { EmailConfirmationPageController } from './email_confirmation_page';
-import { ErrorPage403, ErrorPage404, ErrorPage500 } from './error_page';
+import { ErrorPage } from './error_page';
 import { ForgotPasswordPageController } from './forgot_password_page';
 import { HelpPage } from './help_page';
 import { HomePageController } from './home_page';
@@ -32,7 +32,7 @@ import { SitemapPage } from './sitemap_page';
 import { TermsOfUsePage } from './terms_of_use_page';
 import { WhatIsNeaPage } from './what_is_nea_page';
 
-type TParams = { id?: string, userId?: string };
+type TParams = { id?: string, userId?: string, errorCode?: string };
 
 interface Properties extends Router.RouteComponentProps<TParams> {
   model: ApplicationModel;
@@ -50,7 +50,7 @@ interface State {
   accountProfileImage: UserProfileImage;
   hasJoinedEvent: boolean;
   hasRemovedSeat: boolean;
-  hasProfileChanged: boolean;
+  responseErrorCode: number;
 }
 
 export class ApplicationController extends React.Component<Properties, State> {
@@ -68,17 +68,20 @@ export class ApplicationController extends React.Component<Properties, State> {
       accountProfileImage: UserProfileImage.default(),
       hasJoinedEvent: false,
       hasRemovedSeat: false,
-      hasProfileChanged: false
+      responseErrorCode: null
     };
   }
 
   public render(): JSX.Element {
-    if (this.state.hasError) {
-      return <ErrorPage500 displayMode={this.state.displayMode} />;
+    if (this.state.responseErrorCode || this.state.hasError) {
+      return <ErrorPage errorCode={this.state.responseErrorCode}
+        displayMode={this.state.displayMode} />;
     }
+
     if (!this.state.isLoaded) {
       return <div />;
     }
+
     const pathname = this.props.location.pathname;
     const JoinModal = (this.state.isJoinButtonClicked &&
       <Modal>
@@ -152,16 +155,8 @@ export class ApplicationController extends React.Component<Properties, State> {
               render={this.renderDiningEvents}
             />
             <Router.Route
-              path='/error_page_403'
-              render={this.renderErrorPage403}
-            />
-            <Router.Route
-              path='/error_page_404'
-              render={this.renderErrorPage404}
-            />
-            <Router.Route
-              path='/error_page_500'
-              render={this.renderErrorPage500}
+              path='/error/:errorCode'
+              render={this.renderErrorPage}
             />
             <Router.Route
               path='/users/edit_profile/:id'
@@ -228,7 +223,6 @@ export class ApplicationController extends React.Component<Properties, State> {
               path='/'
               render={this.renderHomePage}
             />
-            <Router.Route render={this.renderErrorPage404} />
           </Router.Switch>
         </Shell>
       </div>);
@@ -346,6 +340,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       displayMode={this.state.displayMode}
       model={this.props.model.getSettingsPageModel(id)}
       account={this.state.account}
+      onSaveDisplayNameSuccess={this.handleSaveDisplayName}
       onLogOut={this.handleLogOut}
     />;
   }
@@ -367,8 +362,9 @@ export class ApplicationController extends React.Component<Properties, State> {
       account={this.state.account}
       eventId={id}
       profileImageSrc={this.state.accountProfileImage.src}
-      onJoinEvent={() => this.handleJoinEvent(id)}
-      onRemoveSeat={() => this.handleRemoveSeat(id)}
+      onJoinEventSuccess={this.handleJoinEvent}
+      onRemoveSeatSuccess={this.handleRemoveSeat}
+      showLoginModal={this.handleLogInButton}
     />;
   }
 
@@ -405,6 +401,19 @@ export class ApplicationController extends React.Component<Properties, State> {
     }
   }
 
+  private handleSaveDisplayName = async (newAccount: User) => {
+    if (newAccount.id === -1) {
+      this.handleLogInButton();
+      return;
+    }
+    const profilePageModel = this.props.model.getProfilePageModel(
+      newAccount.id);
+    await profilePageModel.updateName(newAccount.name);
+    this.props.model.addProfilePageModel(newAccount.id,
+      profilePageModel);
+    await this.updateAccount(newAccount);
+  }
+
   private renderJoin = () => {
     return <JoinPageController
       displayMode={this.state.displayMode}
@@ -420,34 +429,18 @@ export class ApplicationController extends React.Component<Properties, State> {
     />;
   }
 
-  private handleJoinEvent = async (eventId: number) => {
-    if (this.state.account.id === -1) {
-      this.handleLogInButton();
-      return;
-    }
-    const diningEventModel = this.props.model.getDiningEventPageModel(eventId);
+  private handleJoinEvent = async () => {
     try {
-      await diningEventModel.joinEvent(this.state.account.id,
-        this.state.account.name, this.state.accountProfileImage.src);
-      await this.props.model.updateDiningEventPageModel(eventId,
-        diningEventModel);
+      await this.props.model.updateOnJoinRemoveSeat();
       this.setState({ hasJoinedEvent: true });
     } catch {
       this.setState({ hasError: true });
     }
   }
 
-  private handleRemoveSeat = async (eventId: number) => {
-    if (this.state.account.id === -1) {
-      this.handleLogInButton();
-      return;
-    }
-    const diningEventModel = this.props.model.getDiningEventPageModel(eventId);
+  private handleRemoveSeat = async () => {
     try {
-      await diningEventModel.removeSeat(this.state.account.id,
-        this.state.account.name, this.state.accountProfileImage.src);
-      await this.props.model.updateDiningEventPageModel(eventId,
-        diningEventModel);
+      await this.props.model.updateOnJoinRemoveSeat();
       this.setState({ hasRemovedSeat: true });
     } catch {
       this.setState({ hasError: true });
@@ -559,16 +552,11 @@ export class ApplicationController extends React.Component<Properties, State> {
     />;
   }
 
-  private renderErrorPage403 = () => {
-    return <ErrorPage403 displayMode={this.state.displayMode} />;
-  }
-
-  private renderErrorPage404 = () => {
-    return <ErrorPage404 displayMode={this.state.displayMode} />;
-  }
-
-  private renderErrorPage500 = () => {
-    return <ErrorPage500 displayMode={this.state.displayMode} />;
+  private renderErrorPage = (props: Router.RouteComponentProps<{
+      errorCode: string }>): JSX.Element => {
+    const errorCode = Number(props.match.params.errorCode);
+    return <ErrorPage displayMode={this.state.displayMode}
+      errorCode={errorCode} />;
   }
 
   private handleHeaderAndFooter = (pathname: string) => {

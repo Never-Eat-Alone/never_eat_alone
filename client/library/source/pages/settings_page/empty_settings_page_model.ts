@@ -11,6 +11,10 @@ export class EmptySettingsPageModel extends SettingsPageModel {
     throw new Error('Unable to load empty model.');
   }
 
+  public get displayName(): string {
+    throw new Error('SettingsPageModel not loaded.');
+  }
+
   public get linkedSocialAccounts(): SocialAccount[] {
     throw new Error('SettingsPageModel not loaded.');
   }
@@ -71,6 +75,10 @@ export class EmptySettingsPageModel extends SettingsPageModel {
   }
 
   public async unlinkAccount(account: SocialAccount): Promise<boolean> {
+    throw new Error('SettingsPageModel not loaded.');
+  }
+
+  public async saveDisplayName(newDisplayName: string): Promise<User> {
     throw new Error('SettingsPageModel not loaded.');
   }
 }

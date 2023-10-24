@@ -1,12 +1,12 @@
 import * as NeverEatAlone from 'never_eat_alone';
 import { DemoDeactivateAccountSurveyModel } from
-'./demo_deactivate_account_survey_model';
+  './demo_deactivate_account_survey_model';
 import { DemoDeletedAccountSurveyModel } from
-'./demo_deleted_account_survey_model';
+  './demo_deleted_account_survey_model';
 import { DemoDiningEventPageModel } from './demo_dining_event_page_model';
 import { DemoEditProfilePageModel } from './demo_edit_profile_page_model';
-import { DemoForgotPasswordPageModel
-} from './demo_forogot_password_page_model';
+import { DemoForgotPasswordPageModel } from
+  './demo_forogot_password_page_model';
 import { DemoJoinModel } from './demo_join_model';
 import { DemoLogInModel } from './demo_login_model';
 import { DemoSettingsPageModel } from './demo_settings_page_model';
@@ -380,8 +380,8 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       false, emmaLanguageList, false, emmaBio, false, '', false, '', false,
       emmaInstagramLink, false, emmaFavoriteCuisines);
     const demoProfilePageModel1 = new NeverEatAlone.LocalProfilePageModel(
-      emmaProfilePageData, userEmma.name, userEmma.userName, userEmma.createdAt,
-      [], [eventCardSummary1]);
+      emmaProfilePageData, userEmma.name, userEmma.createdAt, [],
+      [eventCardSummary1]);
     this._profilePageModelMap.set(1, demoProfilePageModel1);
 
     /** User Profile Page Model for userArthur */
@@ -393,9 +393,8 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       'www.facebook.com/arthur_van', false, 'www.twitter.com/@vanfan', true, '',
       false, arthurFavoriteCuisines);
     const demoProfilePageModel2 = new NeverEatAlone.LocalProfilePageModel(
-      arthurProfilePageData, userArthur.name, userArthur.userName,
-      userArthur.createdAt, [eventCardSummary7], [eventCardSummary1,
-      eventCardSummary13]);
+      arthurProfilePageData, userArthur.name, userArthur.createdAt,
+      [eventCardSummary7], [eventCardSummary1, eventCardSummary13]);
     this._profilePageModelMap.set(2, demoProfilePageModel2);
 
     /** User Profile Page Model for userLucy */
@@ -406,7 +405,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
         false, lucyLanguageList, true, 'Matcha everything!', true, '', false,
         '', true, '', false, lucyFavoriteCuisines);
     const demoProfilePageModel3 = new NeverEatAlone.LocalProfilePageModel(
-      lucyProfilePageData, 'Lucy', 'lu2d3', new Date(2022, 4, 2, 2, 30, 40),
+      lucyProfilePageData, 'Lucy', new Date(2022, 4, 2, 2, 30, 40),
       [eventCardSummary5], []);
     this._profilePageModelMap.set(3, demoProfilePageModel3);
 
@@ -467,9 +466,9 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     this._settingsPageModelMap = new Map();
     const emmaNotificationSettings = new NeverEatAlone.NotificationSettings(
       true, false, true, true, false, true, false);
-    const demoSettingsPageModel1 = new DemoSettingsPageModel(emmaSocialLinks,
-      emmaPassword, emmaNotificationSettings, emmaMastercard2222,
-      emmaPaymentCards, emmaPaymentRecords);
+    const demoSettingsPageModel1 = new DemoSettingsPageModel(userEmma.name,
+      emmaSocialLinks, emmaPassword, emmaNotificationSettings,
+      emmaMastercard2222, emmaPaymentCards, emmaPaymentRecords);
     this._settingsPageModelMap.set(1, demoSettingsPageModel1);
 
     /** arthur settings model */
@@ -486,9 +485,9 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const arthurPassword = '123';
     const arthurNotificationSettings = new NeverEatAlone.NotificationSettings(
       false, false, false, false, false, true, true);
-    const demoSettingsPageModel2 = new DemoSettingsPageModel(arthurSocialLinks,
-      arthurPassword, arthurNotificationSettings, arthurVisa1234,
-      arthurPaymentCards, arthurPaymentRecords);
+    const demoSettingsPageModel2 = new DemoSettingsPageModel(userArthur.name,
+      arthurSocialLinks, arthurPassword, arthurNotificationSettings,
+      arthurVisa1234, arthurPaymentCards, arthurPaymentRecords);
     this._settingsPageModelMap.set(2, demoSettingsPageModel2);
     this._deletedAccountSurveyModel = new DemoDeletedAccountSurveyModel();
     this._deactivateAccountSurveyModel = new DemoDeactivateAccountSurveyModel();
@@ -552,12 +551,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return this._diningEventPageModelMap.get(id);
   }
 
-  public async updateDiningEventPageModel(id: number, updatedModel:
-      NeverEatAlone.DiningEventPageModel): Promise<void> {
-    this._diningEventPageModelMap.set(id, updatedModel);
-    await this._homePageModel.updateEventLists();
-    await this.getProfilePageModel(this._account.id).update();
-  }
+  public async updateOnJoinRemoveSeat(): Promise<void> {}
 
   public get inviteAFoodieModel(): NeverEatAlone.InviteAFoodieModel {
     return this._inviteAFoodieModel;
@@ -594,6 +588,11 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return this._profilePageModelMap.get(id);
   }
 
+  public async updateProfilePageModel(id: number, newModel:
+      NeverEatAlone.ProfilePageModel): Promise<void>  {
+    this._profilePageModelMap.set(id, newModel);
+  }
+
   public addEditProfilePageModel(id: number, editProfilePageModel:
       NeverEatAlone.EditProfilePageModel): void {
     this._editProfilePageModelMap.set(id, editProfilePageModel);
@@ -616,6 +615,11 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
 
   public getSettingsPageModel(id: number): NeverEatAlone.SettingsPageModel {
     return this._settingsPageModelMap.get(id);
+  }
+
+  public async updateSettingsPageModel(id: number, newModel:
+      NeverEatAlone.SettingsPageModel): Promise<void> {
+    this._settingsPageModelMap.set(id, newModel);
   }
 
   public get deletedAccountSurveyModel():

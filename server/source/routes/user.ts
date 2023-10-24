@@ -67,6 +67,7 @@ export class UserRoutes {
     /** Reset Password related routes. */
     app.post('/api/reset-password', this.getResetPasswordPage);
     app.post('/api/update-password', this.updatePassword);
+    app.post('/api/update-user-display-name', this.updateUserDisplayName);
 
     this.userDatabase = userDatabase;
     this.attendeeDatabase = attendeeDatabase;
@@ -1075,12 +1076,12 @@ export class UserRoutes {
 
   private getSettingsPage = async (request, response) => {
     const userId = parseInt(request.params.userId);
-    let user: User;
+    let loggedUser: User;
     if (request.session?.user) {
       try {
-        user = await this.userDatabase.loadUserBySessionId(
+        loggedUser = await this.userDatabase.loadUserBySessionId(
           request.session.id);
-        if (user.id === -1 || user.id !== userId) {
+        if (loggedUser.id === -1 || loggedUser.id !== userId) {
           response.status(401).send();
           return;
         }
@@ -1089,6 +1090,14 @@ export class UserRoutes {
         response.status(500).send();
         return;
       }
+    }
+    let pageAccount: User;
+    try {
+      pageAccount = await this.userDatabase.loadUserById(userId);
+    } catch (error) {
+      console.error('Failed at loadUserById', error);
+      response.status(500).send();
+      return;
     }
     let linkedSocialAccounts: SocialAccount[] = [];
     let hashedPassword = '12';
@@ -1108,6 +1117,7 @@ export class UserRoutes {
     let paymentCards: PaymentCard[] = [];
     let paymentRecords: PaymentRecord[] = [];
     response.status(200).json({
+      displayName: pageAccount.name,
       linkedSocialAccounts: arrayToJson(linkedSocialAccounts),
       hashedPassword: hashedPassword,
       notificationSettings: notificationSettings.toJson(),
@@ -1190,6 +1200,43 @@ export class UserRoutes {
       createdAt: account.createdAt.toISOString()
     };
     response.status(200).send();
+  }
+
+  private updateUserDisplayName = async (request, response) => {
+    const { name } = request.body;
+    if (!request.session?.user) {
+      response.status(401).send();
+      return;
+    }
+    let user: User;
+    try {
+      user = await this.userDatabase.loadUserBySessionId(request.session.id);
+      if (user.id === -1) {
+        response.status(401).send();
+        return;
+      }
+    } catch (error) {
+      console.error('Failed at loadUserBySessionId', error);
+      response.status(500).send();
+      return;
+    }
+    try {
+      const updatedUser = await this.userDatabase.updateDisplayName(user.id,
+        name);
+      request.session.user = {
+        id: updatedUser.id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        userName: updatedUser.userName,
+        userStatus: updatedUser.userStatus.toString(),
+        createdAt: updatedUser.createdAt.toISOString()
+      };
+      response.status(200).send({ user: updatedUser.toJson() });
+    } catch (error) {
+      console.error('Failed at updateDisplayName', error);
+      response.status(500).send();
+      return;
+    }
   }
 
   private userDatabase: UserDatabase;

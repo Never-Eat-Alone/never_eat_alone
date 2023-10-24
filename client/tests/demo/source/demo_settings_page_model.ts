@@ -1,13 +1,14 @@
 import * as NeverEatAlone from 'never_eat_alone';
 
 export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
-  constructor(linkedSocialAccounts: NeverEatAlone.SocialAccount[],
-      hashedPassword: string, notificationSettings:
-      NeverEatAlone.NotificationSettings, defaultCard:
+  constructor(displayName: string, linkedSocialAccounts:
+      NeverEatAlone.SocialAccount[], hashedPassword: string,
+      notificationSettings: NeverEatAlone.NotificationSettings, defaultCard:
       NeverEatAlone.PaymentCard, paymentCards: NeverEatAlone.PaymentCard[],
       paymentRecords: NeverEatAlone.PaymentRecord[]) {
     super();
     this._isLoaded = false;
+    this._displayName = displayName;
     this._linkedSocialAccounts = linkedSocialAccounts;
     this._hashedPassword = hashedPassword;
     this._notificationSettings = notificationSettings;
@@ -18,6 +19,10 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
 
   public async load(): Promise<void> {
     this._isLoaded = true;
+  }
+
+  public get displayName(): string {
+    return this._displayName;
   }
 
   public get linkedSocialAccounts(): NeverEatAlone.SocialAccount[] {
@@ -112,6 +117,12 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
     return index !== -1;
   }
 
+  public async saveDisplayName(newDisplayName: string): Promise<
+      NeverEatAlone.User> {
+    this.ensureIsLoaded();
+    return;
+  }
+
   private ensureIsLoaded(): void {
     if (!this._isLoaded) {
       throw new Error('SettingsPageModel not loaded.');
@@ -119,6 +130,7 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
   }
 
   private _isLoaded: boolean;
+  private _displayName: string;
   private _linkedSocialAccounts: NeverEatAlone.SocialAccount[];
   private _hashedPassword: string;
   private _notificationSettings: NeverEatAlone.NotificationSettings;
