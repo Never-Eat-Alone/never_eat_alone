@@ -123,6 +123,12 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
     return;
   }
 
+  public async savePassword(newPassword: string): Promise<void> {
+    this.ensureIsLoaded();
+    this._hashedPassword = newPassword;
+    return;
+  }
+
   private ensureIsLoaded(): void {
     if (!this._isLoaded) {
       throw new Error('SettingsPageModel not loaded.');

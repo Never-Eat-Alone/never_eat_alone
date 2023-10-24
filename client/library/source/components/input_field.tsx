@@ -28,8 +28,8 @@ interface InputFieldWithIconProperties extends InputFieldProperties {
 }
 
 export function InputFieldWithIcon(props: InputFieldWithIconProperties) {
-  const { hasError, iconSrc, iconAlt, iconContainerStyle, iconStyle, style,
-    ...inputProps } = props;
+  const { hasError, iconSrc, iconAlt, iconContainerStyle,
+    iconStyle, style, ...inputProps } = props;
   return (
     <div
         style={{...CONTAINER_STYLE, ...CONTAINER_WITH_ICON_STYLE, ...style}}
@@ -139,14 +139,18 @@ export function NameInputFieldWithCounterInside(props: InputFieldWithCounter) {
     </div>);
 }
 
+interface PasswordProperties extends InputFieldProperties {
+  passwordTypeOnly?: boolean;
+}
+
 interface PasswordState {
   isPasswordHidden: boolean;
   isCapsOn: boolean;
 }
 
-export class PasswordInputField extends React.Component<InputFieldProperties,
+export class PasswordInputField extends React.Component<PasswordProperties,
     PasswordState> {
-  public constructor(props: InputFieldProperties) {
+  public constructor(props: PasswordProperties) {
     super(props);
     this.state = {
       isPasswordHidden: true,
@@ -155,12 +159,15 @@ export class PasswordInputField extends React.Component<InputFieldProperties,
   }
 
   public render(): JSX.Element {
-    const { hasError, style, ...rest } = this.props;
+    const { hasError, passwordTypeOnly, style, ...rest } = this.props;
     const type = this.state.isPasswordHidden && 'password' || 'text';
     const eyeIconSrc = (this.state.isPasswordHidden &&
       'resources/input_field/icons/hide.svg' ||
       'resources/input_field/icons/show.svg');
     const icons = (() => {
+      if (passwordTypeOnly) {
+        return null;
+      }
       if (this.state.isCapsOn) {
         return (
           <div style={TWO_ICON_CONTAINER_STYLE} >

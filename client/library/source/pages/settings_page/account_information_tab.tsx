@@ -71,7 +71,7 @@ interface Properties {
   onDeleteCheckboxClick: () => void;
 
   /** Indicates the password value changed in the inputfield. */
-  onDeletePasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onDeletePasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 interface State {
@@ -101,7 +101,8 @@ export class AccountInformationTab extends React.Component<Properties, State> {
 
   public render(): JSX.Element {
     const { linkButtonRowStyle, socialButtonsColumnStyle,
-        socialAccountButtonStyle, inputFieldStyle, inputEditRowStyle } = (
+        socialAccountButtonStyle, inputFieldStyle, inputEditRowStyle,
+        passwordColumnStyle } = (
         () => {
       if (this.props.displayMode === DisplayMode.MOBILE) {
         return {
@@ -109,7 +110,8 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           socialButtonsColumnStyle: MOBILE_SOCIAL_BUTTONS_COLUMN_STYLE,
           socialAccountButtonStyle: MOBILE_SOCIAL_ACCOUNT_BUTTON_STYLE,
           inputFieldStyle: MOBILE_INPUT_FIELD_STYLE,
-          inputEditRowStyle: MOBILE_INPUT_EDIT_ROW_STYLE
+          inputEditRowStyle: MOBILE_INPUT_EDIT_ROW_STYLE,
+          passwordColumnStyle: MOBILE_PASSWORD_COLUMN_STYLE
         };
       } else if (this.props.displayMode === DisplayMode.TABLET) {
         return {
@@ -117,7 +119,8 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           socialButtonsColumnStyle: SOCIAL_BUTTONS_COLUMN_STYLE,
           socialAccountButtonStyle: SOCIAL_ACCOUNT_BUTTON_STYLE,
           inputFieldStyle: INPUT_FIELD_STYLE,
-          inputEditRowStyle: INPUT_EDIT_ROW_STYLE
+          inputEditRowStyle: INPUT_EDIT_ROW_STYLE,
+          passwordColumnStyle: PASSWORD_COLUMN_STYLE
         };
       }
       return {
@@ -125,7 +128,8 @@ export class AccountInformationTab extends React.Component<Properties, State> {
         socialButtonsColumnStyle: SOCIAL_BUTTONS_COLUMN_STYLE,
         socialAccountButtonStyle: SOCIAL_ACCOUNT_BUTTON_STYLE,
         inputFieldStyle: INPUT_FIELD_STYLE,
-        inputEditRowStyle: INPUT_EDIT_ROW_STYLE
+        inputEditRowStyle: INPUT_EDIT_ROW_STYLE,
+        passwordColumnStyle: PASSWORD_COLUMN_STYLE
       };
     })();
     if (this.props.page === AccountInformationTab.Page.DEACTIVATE_DELETE) {
@@ -396,25 +400,34 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       }
       return '';
     })();
-    const editPasswordButton = (!this.state.isEditPassword &&
-      <SecondaryTextButton
-        style={EDIT_BUTTON_STYLE}
-        label='Edit'
-        onClick={this.handleEditPasswordClick}
-      /> || null);
-    const newPasswordSection = (() => {
+    const editPasswordSection = (() => {
       if (!this.state.isEditPassword) {
-        return null;
+        return (
+          <div style={inputEditRowStyle} >
+            <InputField
+              style={inputFieldStyle}
+              type='password'
+              value={this.props.password}
+              readOnly
+            />
+            <SecondaryTextButton
+              style={EDIT_BUTTON_STYLE}
+              label='Edit'
+              onClick={this.handleEditPasswordClick}
+            /> 
+          </div>);
       }
       return (
-        <div style={{...PASSWORD_COLUMN_STYLE, ...inputFieldStyle}} >
-          <div style={PASSWORD_TITLE_STYLE} >
+        <div style={passwordColumnStyle} >
+          <div style={CURRENT_PASSWORD_TITLE_STYLE} >
             Current Password
           </div>
           <PasswordInputField
             style={PASSWORD_INPUT_FIELD_STYLE}
             value={this.props.password}
+            passwordTypeOnly
             readOnly
+            disabled
           />
           <div style={PASSWORD_TITLE_STYLE} >
             New Password
@@ -422,6 +435,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           <PasswordInputField
             style={PASSWORD_INPUT_FIELD_STYLE}
             placeholder='Your New Password (8 characters min.)'
+            value={this.state.newPassword}
             onChange={this.handlePasswordChange}
             hasError={this.state.newPassword.length === 0 &&
               this.state.passwordHasChanged}
@@ -491,18 +505,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
         </div>
         <h2 style={SUB_HEADING_STYLE} >Password</h2>
         <h3 style={DESCRIPTION_STYLE} >Required.</h3>
-        <div style={inputEditRowStyle} >
-          <InputField
-            style={inputFieldStyle}
-            type='password'
-            value={this.state.newPassword}
-            onChange={this.handlePasswordChange}
-            disabled={!this.state.isEditPassword}
-            hasError={this.state.newPassword.length === 0}
-          />
-          {editPasswordButton}
-        </div>
-        {newPasswordSection}
+        {editPasswordSection}
         <h2 style={DEACTIVATE_HEADING_STYLE} >
           Looking To Deactivate or Delete your account?
         </h2>
@@ -547,25 +550,37 @@ export class AccountInformationTab extends React.Component<Properties, State> {
   private handleCancelEditPassword = () => {
     this.setState({
       isEditPassword: false,
-      newPassword: this.props.password
+      newPassword: '',
+      confirmPassword: '',
+      passwordHasChanged: false
     });
   }
 
   private handlePasswordSaveClick = async () => {
-    const { newPassword: password, confirmPassword } = this.state;
-    const isPasswordValid = password.length >= 8;
+    const { newPassword, confirmPassword } = this.state;
+    const isPasswordValid = newPassword.length >= 8;
     const isConfirmationProvided = confirmPassword.length > 0;
-    const doesConfirmationMatch = getPasswordChecks(password,
+    const doesConfirmationMatch = getPasswordChecks(newPassword,
       confirmPassword).doesConfirmationMatch;
     if (isPasswordValid && isConfirmationProvided && doesConfirmationMatch) {
-      this.setState({ isEditPassword: false });
-      await this.props.onEditPasswordSaveClick(password);
+      await this.props.onEditPasswordSaveClick(newPassword);
+      this.setState({
+        isEditPassword: false,
+        newPassword: '',
+        confirmPassword: '',
+        passwordHasChanged: false
+      });
+    } else {
+      this.setState({ passwordHasChanged: true });
     }
   }
 
-  private handlePasswordChange = (event: React.ChangeEvent<
-      HTMLInputElement>) => {
-    this.setState({ newPassword: event.target.value, passwordHasChanged: true });
+  private handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>
+      ) => {
+    this.setState({
+      newPassword: event.target.value,
+      passwordHasChanged: true
+    });
   }
 
   private handleConfirmChange = (event: React.ChangeEvent<HTMLInputElement>
@@ -1005,10 +1020,19 @@ const PASSWORD_COLUMN_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
-  gap: '20px'
+  width: '335px',
+  minWidth: '335px'
 };
 
-const PASSWORD_TITLE_STYLE: React.CSSProperties = {
+const MOBILE_PASSWORD_COLUMN_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  width: '100%',
+  minWidth: '100%'
+};
+
+const CURRENT_PASSWORD_TITLE_STYLE: React.CSSProperties = {
   width: '100%',
   display: 'flex',
   flexDirection: 'column',
@@ -1019,6 +1043,10 @@ const PASSWORD_TITLE_STYLE: React.CSSProperties = {
   fontStyle: 'normal',
   fontWeight: 400,
   lineHeight: '15px',
-  marginTop: '20px',
   marginBottom: '5px'
+};
+
+const PASSWORD_TITLE_STYLE: React.CSSProperties = {
+  ...CURRENT_PASSWORD_TITLE_STYLE,
+  marginTop: '20px'
 };
