@@ -128,7 +128,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
       onRemoveLinkedAccount={this.handleRemoveLinkedAccount}
       onEditDisplayNameSaveClick={this.handleEditDisplayNameClick}
       onEditEmailClick={this.handleEditEmailClick}
-      onEditPasswordClick={this.handleEditPasswordClick}
+      onEditPasswordSaveClick={this.handleEditPasswordClick}
       onDeactivateAccountSubmit={this.handleSubmitDeactivateAccount}
       onDeleteAccountPage={this.handleDeleteAccount}
       onChangePaymentMethodsTabPage={this.handleChangePaymentMethodsTabPage}
@@ -335,7 +335,13 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleEditEmailClick = () => {}
 
-  private handleEditPasswordClick = () => {}
+  private handleEditPasswordClick = async (newPassword: string) => {
+    try {
+      await this.props.model.savePassword(newPassword);
+    } catch (error) {
+      this.setState({ errorCode: error.code });
+    }
+  }
 
   private handleDeleteAccount = () => {
     this.setState({

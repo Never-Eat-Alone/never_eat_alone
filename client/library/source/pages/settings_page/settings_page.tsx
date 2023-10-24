@@ -131,7 +131,7 @@ interface Properties {
   onEditEmailClick: () => void;
 
   /** Indicates the edit button regarding the password is clicked. */
-  onEditPasswordClick: () => void;
+  onEditPasswordSaveClick: (newPAssword: string) => Promise<void>;
 
   /** Indicates the deactivate account submit button is clicked. */
   onDeactivateAccountSubmit: () => void;
@@ -153,7 +153,7 @@ interface Properties {
 }
 
 interface State {
-  activeTab: SettingsPage.Tab
+  activeTab: SettingsPage.Tab;
   isReceiptDisplayed: boolean;
   isDeactivateDisplayed: boolean;
   paymentRecord: PaymentRecord;

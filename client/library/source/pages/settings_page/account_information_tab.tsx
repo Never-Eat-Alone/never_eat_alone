@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { BackButton, CheckBox, InputField, SecondaryTextButton,
-  SecondaryTextLinkButton, PrimaryTextButton} from '../../components';
+  SecondaryTextLinkButton, PasswordAnalyzer, PasswordInputField,
+  PrimaryTextButton } from '../../components';
 import { DisplayMode, SocialAccount, SocialAccountType } from
   '../../definitions';
+import { getPasswordChecks, getPasswordChecksScore } from '../../utilities';
 import { LinkSocialAccountButton } from './link_social_account_button';
 import { SaveCancelButtonCombo } from './save_cancel_button_combo';
 
@@ -44,8 +46,8 @@ interface Properties {
   /** Indicates the edit button regarding the email is clicked. */
   onEditEmailClick: () => void;
 
-  /** Indicates the edit button regarding the password is clicked. */
-  onEditPasswordClick: () => void;
+  /** Indicates the save password is clicked. */
+  onEditPasswordSaveClick: (newPassword: string) => Promise<void>;
 
   /** Indicates the deactivate account button is clicked. */
   onDeactivateAccountButton: () => void;
@@ -77,7 +79,9 @@ interface State {
   isEditEmail: boolean;
   isEditPassword: boolean;
   displayName: string;
-  password: string;
+  newPassword: string;
+  confirmPassword: string;
+  passwordHasChanged: boolean;
 }
 
 /** Dislays the account information tab content on the setting page. */
@@ -89,7 +93,9 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       isEditEmail: false,
       isEditPassword: false,
       displayName: this.props.displayName,
-      password: this.props.password
+      newPassword: '',
+      confirmPassword: '',
+      passwordHasChanged: false
     };
   }
 
@@ -374,6 +380,79 @@ export class AccountInformationTab extends React.Component<Properties, State> {
         onClick={this.handleEditDisplayNameClick}
       />;
     })();
+    const checks = getPasswordChecks(this.state.newPassword,
+      this.state.confirmPassword);
+    const score = getPasswordChecksScore(checks);
+    const passwordErrorMessage = (() => {
+      if (!this.state.passwordHasChanged) {
+        return '';
+      }
+      if (this.state.newPassword.length === 0 ||
+          this.state.confirmPassword.length === 0) {
+        return 'Fill the required field.';
+      }
+      if (!checks.doesConfirmationMatch) {
+        return 'Please make sure your passwords match.';
+      }
+      return '';
+    })();
+    const editPasswordButton = (!this.state.isEditPassword &&
+      <SecondaryTextButton
+        style={EDIT_BUTTON_STYLE}
+        label='Edit'
+        onClick={this.handleEditPasswordClick}
+      /> || null);
+    const newPasswordSection = (() => {
+      if (!this.state.isEditPassword) {
+        return null;
+      }
+      return (
+        <div style={{...PASSWORD_COLUMN_STYLE, ...inputFieldStyle}} >
+          <div style={PASSWORD_TITLE_STYLE} >
+            Current Password
+          </div>
+          <PasswordInputField
+            style={PASSWORD_INPUT_FIELD_STYLE}
+            value={this.props.password}
+            readOnly
+          />
+          <div style={PASSWORD_TITLE_STYLE} >
+            New Password
+          </div>
+          <PasswordInputField
+            style={PASSWORD_INPUT_FIELD_STYLE}
+            placeholder='Your New Password (8 characters min.)'
+            onChange={this.handlePasswordChange}
+            hasError={this.state.newPassword.length === 0 &&
+              this.state.passwordHasChanged}
+          />
+          <PasswordAnalyzer
+            score={score}
+            hasUpperCase={checks.isMixedCase}
+            hasLowerCase={checks.hasLowerCase}
+            hasNumber={checks.hasNumbers}
+            hasMin8Character={checks.hasMinCharacters}
+            hasSpecialCharacter={checks.hasSpecialCharacter}
+            style={PASSWORD_ANALYZER_STYLE}
+          />
+          <div style={PASSWORD_TITLE_STYLE} >
+            Confirm New Password
+          </div>
+          <PasswordInputField
+            style={PASSWORD_INPUT_FIELD_STYLE}
+            placeholder='Confirm New Password'
+            value={this.state.confirmPassword}
+            onChange={this.handleConfirmChange}
+            hasError={(this.state.confirmPassword.length === 0 ||
+              !checks.doesConfirmationMatch) && this.state.passwordHasChanged}
+          />
+          <div style={ERROR_MESSAGE_STYLE} >{passwordErrorMessage}</div>
+          <SaveCancelButtonCombo
+            onSave={this.handlePasswordSaveClick}
+            onCancel={this.handleCancelEditPassword}
+          />
+        </div>);
+    })();
     return (
       <>
         <h1 style={PAGE_HEADING_STYLE} >Account Information</h1>
@@ -416,16 +495,14 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           <InputField
             style={inputFieldStyle}
             type='password'
-            value={this.state.password}
+            value={this.state.newPassword}
             onChange={this.handlePasswordChange}
             disabled={!this.state.isEditPassword}
+            hasError={this.state.newPassword.length === 0}
           />
-          <SecondaryTextButton
-            style={EDIT_BUTTON_STYLE}
-            label='Edit'
-            onClick={this.props.onEditPasswordClick}
-          />
+          {editPasswordButton}
         </div>
+        {newPasswordSection}
         <h2 style={DEACTIVATE_HEADING_STYLE} >
           Looking To Deactivate or Delete your account?
         </h2>
@@ -463,9 +540,40 @@ export class AccountInformationTab extends React.Component<Properties, State> {
     }
   }
 
+  private handleEditPasswordClick = () => {
+    this.setState({ isEditPassword: true });
+  }
+
+  private handleCancelEditPassword = () => {
+    this.setState({
+      isEditPassword: false,
+      newPassword: this.props.password
+    });
+  }
+
+  private handlePasswordSaveClick = async () => {
+    const { newPassword: password, confirmPassword } = this.state;
+    const isPasswordValid = password.length >= 8;
+    const isConfirmationProvided = confirmPassword.length > 0;
+    const doesConfirmationMatch = getPasswordChecks(password,
+      confirmPassword).doesConfirmationMatch;
+    if (isPasswordValid && isConfirmationProvided && doesConfirmationMatch) {
+      this.setState({ isEditPassword: false });
+      await this.props.onEditPasswordSaveClick(password);
+    }
+  }
+
   private handlePasswordChange = (event: React.ChangeEvent<
       HTMLInputElement>) => {
-    this.setState({ password: event.target.value });
+    this.setState({ newPassword: event.target.value, passwordHasChanged: true });
+  }
+
+  private handleConfirmChange = (event: React.ChangeEvent<HTMLInputElement>
+      ) => {
+    this.setState({
+      confirmPassword: event.target.value,
+      passwordHasChanged: true
+    });
   }
 }
 
@@ -600,6 +708,13 @@ const INPUT_FIELD_STYLE: React.CSSProperties = {
   minWidth: '335px',
   height: '38px',
   minHeight: '38px'
+};
+
+const PASSWORD_INPUT_FIELD_STYLE: React.CSSProperties = {
+  height: '38px',
+  minHeight: '38px',
+  width: '100%',
+  minWidth: '100%',
 };
 
 const MOBILE_INPUT_FIELD_STYLE: React.CSSProperties = {
@@ -864,4 +979,46 @@ const ERROR_STYLE: React.CSSProperties = {
   fontSize: '14px',
   lineHeight: '18px',
   marginTop: '5px'
+};
+
+const ERROR_MESSAGE_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  height: '18px',
+  width: '100%',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  textAlign: 'center',
+  color: '#FF2C79'
+};
+
+const PASSWORD_ANALYZER_STYLE: React.CSSProperties = {
+  marginTop: '7px'
+};
+
+const PASSWORD_COLUMN_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  gap: '20px'
+};
+
+const PASSWORD_TITLE_STYLE: React.CSSProperties = {
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  color: 'var(--grey-500-dark, #999)',
+  fontFamily: 'Source Sans Pro',
+  fontSize: '12px',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  lineHeight: '15px',
+  marginTop: '20px',
+  marginBottom: '5px'
 };

@@ -68,6 +68,7 @@ export class UserRoutes {
     app.post('/api/reset-password', this.getResetPasswordPage);
     app.post('/api/update-password', this.updatePassword);
     app.post('/api/update-user-display-name', this.updateUserDisplayName);
+    app.post('/api/update-user-password', this.updateUserPassword);
 
     this.userDatabase = userDatabase;
     this.attendeeDatabase = attendeeDatabase;
@@ -1237,6 +1238,58 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
+  }
+
+  private updateUserPassword = async (request, response) => {
+    const password = request.body.password;
+    if (!request.session?.user) {
+      response.status(401).send();
+      return;
+    }
+    let user: User;
+    try {
+      user = await this.userDatabase.loadUserBySessionId(request.session.id);
+      if (user.id === -1) {
+        response.status(401).send();
+        return;
+      }
+    } catch (error) {
+      console.error('Failed at loadUserBySessionId', error);
+      response.status(500).send();
+      return;
+    }
+    if (!password) {
+      response.status(400).json({ message: 'password is required.' });
+      return;
+    }
+
+    try {
+      await this.userDatabase.updatePassword(user.id, password);
+    } catch (error) {
+      console.error('Failed at updatePassword', error);
+      response.status(500).send();
+      return;
+    }
+    request.session.cookie.maxAge = 24 * 60 * 60 * 1000;
+    try {
+      const sessionExpiration = new Date(
+        Date.now() + request.session.cookie.maxAge);
+      await this.userDatabase.assignUserIdToSid(request.session.id, user.id,
+        request.session, sessionExpiration);
+    } catch (error) {
+      console.error('Failed at assignUserIdToSid', error);
+      response.status(500).json({ message: 'DATABASE_ERROR' });
+      return;
+    }
+    request.session.user = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      userName: user.userName,
+      userStatus: user.userStatus.toString(),
+      createdAt: user.createdAt.toISOString()
+    };
+    response.status(200).send();
   }
 
   private userDatabase: UserDatabase;

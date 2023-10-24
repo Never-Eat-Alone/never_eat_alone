@@ -81,4 +81,8 @@ export class EmptySettingsPageModel extends SettingsPageModel {
   public async saveDisplayName(newDisplayName: string): Promise<User> {
     throw new Error('SettingsPageModel not loaded.');
   }
+
+  public async savePassword(newPassword: string): Promise<void> {
+    throw new Error('SettingsPageModel not loaded.');
+  }
 }

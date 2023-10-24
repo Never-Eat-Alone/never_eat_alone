@@ -214,6 +214,17 @@ export class HttpSettingsPageModel extends SettingsPageModel {
     return updatedUser;
   }
 
+  public async savePassword(newPassword: string): Promise<void> {
+    const response = await fetch('/api/update-user-password', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ password: newPassword })
+    });
+    this._checkResponse(response);
+  }
+
   private _checkResponse(response: Response): void {
     if (!response.ok) {
       const error = new Error(`HTTP error, status = ${response.status}`) as any;
