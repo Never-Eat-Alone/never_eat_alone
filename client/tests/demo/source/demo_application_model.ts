@@ -467,8 +467,8 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const emmaNotificationSettings = new NeverEatAlone.NotificationSettings(
       true, false, true, true, false, true, false);
     const demoSettingsPageModel1 = new DemoSettingsPageModel(userEmma.name,
-      emmaSocialLinks, emmaPassword, emmaNotificationSettings,
-      emmaMastercard2222, emmaPaymentCards, emmaPaymentRecords);
+      emmaSocialLinks, emmaNotificationSettings, emmaMastercard2222,
+      emmaPaymentCards, emmaPaymentRecords);
     this._settingsPageModelMap.set(1, demoSettingsPageModel1);
 
     /** arthur settings model */
@@ -486,8 +486,8 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const arthurNotificationSettings = new NeverEatAlone.NotificationSettings(
       false, false, false, false, false, true, true);
     const demoSettingsPageModel2 = new DemoSettingsPageModel(userArthur.name,
-      arthurSocialLinks, arthurPassword, arthurNotificationSettings,
-      arthurVisa1234, arthurPaymentCards, arthurPaymentRecords);
+      arthurSocialLinks, arthurNotificationSettings, arthurVisa1234,
+      arthurPaymentCards, arthurPaymentRecords);
     this._settingsPageModelMap.set(2, demoSettingsPageModel2);
     this._deletedAccountSurveyModel = new DemoDeletedAccountSurveyModel();
     this._deactivateAccountSurveyModel = new DemoDeactivateAccountSurveyModel();

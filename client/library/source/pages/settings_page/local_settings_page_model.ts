@@ -4,14 +4,12 @@ import { SettingsPageModel } from './settings_page_model';
 
 export class LocalSettingsPageModel extends SettingsPageModel {
   constructor(displayName: string, linkedSocialAccounts: SocialAccount[],
-      hashedPassword: string, notificationSettings: NotificationSettings,
-      defaultCard: PaymentCard, paymentCards: PaymentCard[], paymentRecords:
-      PaymentRecord[]) {
+      notificationSettings: NotificationSettings, defaultCard: PaymentCard,
+      paymentCards: PaymentCard[], paymentRecords: PaymentRecord[]) {
     super();
     this._isLoaded = false;
     this._displayName = displayName;
     this._linkedSocialAccounts = linkedSocialAccounts;
-    this._hashedPassword = hashedPassword;
     this._notificationSettings = notificationSettings;
     this._defaultCard = defaultCard;
     this._paymentCards = paymentCards;
@@ -30,11 +28,6 @@ export class LocalSettingsPageModel extends SettingsPageModel {
   public get linkedSocialAccounts(): SocialAccount[] {
     this.ensureIsLoaded();
     return this._linkedSocialAccounts;
-  }
-
-  public get hashedPassword(): string {
-    this.ensureIsLoaded();
-    return this._hashedPassword;
   }
 
   public getNotificationSetting(setting: string): boolean {
@@ -124,6 +117,12 @@ export class LocalSettingsPageModel extends SettingsPageModel {
     return;
   }
 
+  public async savePassword(currentPassword: string, newPassword: string
+      ): Promise<void> {
+    this.ensureIsLoaded();
+    return;
+  }
+
   private ensureIsLoaded(): void {
     if (!this._isLoaded) {
       throw new Error('SettingsPageModel not loaded.');
@@ -133,7 +132,6 @@ export class LocalSettingsPageModel extends SettingsPageModel {
   private _isLoaded: boolean;
   private _displayName: string;
   private _linkedSocialAccounts: SocialAccount[];
-  private _hashedPassword: string;
   private _notificationSettings: NotificationSettings;
   private _defaultCard: PaymentCard;
   private _paymentCards: PaymentCard[];

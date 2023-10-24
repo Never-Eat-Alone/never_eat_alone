@@ -2,15 +2,14 @@ import * as NeverEatAlone from 'never_eat_alone';
 
 export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
   constructor(displayName: string, linkedSocialAccounts:
-      NeverEatAlone.SocialAccount[], hashedPassword: string,
-      notificationSettings: NeverEatAlone.NotificationSettings, defaultCard:
+      NeverEatAlone.SocialAccount[], notificationSettings:
+      NeverEatAlone.NotificationSettings, defaultCard:
       NeverEatAlone.PaymentCard, paymentCards: NeverEatAlone.PaymentCard[],
       paymentRecords: NeverEatAlone.PaymentRecord[]) {
     super();
     this._isLoaded = false;
     this._displayName = displayName;
     this._linkedSocialAccounts = linkedSocialAccounts;
-    this._hashedPassword = hashedPassword;
     this._notificationSettings = notificationSettings;
     this._defaultCard = defaultCard;
     this._paymentCards = paymentCards;
@@ -28,11 +27,6 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
   public get linkedSocialAccounts(): NeverEatAlone.SocialAccount[] {
     this.ensureIsLoaded();
     return this._linkedSocialAccounts;
-  }
-
-  public get hashedPassword(): string {
-    this.ensureIsLoaded();
-    return this._hashedPassword;
   }
 
   public getNotificationSetting(setting: string): boolean {
@@ -123,6 +117,11 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
     return;
   }
 
+  public async savePassword(newPassword: string): Promise<void> {
+    this.ensureIsLoaded();
+    return;
+  }
+
   private ensureIsLoaded(): void {
     if (!this._isLoaded) {
       throw new Error('SettingsPageModel not loaded.');
@@ -132,7 +131,6 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
   private _isLoaded: boolean;
   private _displayName: string;
   private _linkedSocialAccounts: NeverEatAlone.SocialAccount[];
-  private _hashedPassword: string;
   private _notificationSettings: NeverEatAlone.NotificationSettings;
   private _defaultCard: NeverEatAlone.PaymentCard;
   private _paymentCards: NeverEatAlone.PaymentCard[];

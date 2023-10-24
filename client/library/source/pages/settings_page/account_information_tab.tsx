@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { BackButton, CheckBox, InputField, SecondaryTextButton,
-  SecondaryTextLinkButton, PrimaryTextButton} from '../../components';
+  SecondaryTextLinkButton, PasswordAnalyzer, PasswordInputField,
+  PrimaryTextButton } from '../../components';
 import { DisplayMode, SocialAccount, SocialAccountType } from
   '../../definitions';
+import { getPasswordChecks, getPasswordChecksScore } from '../../utilities';
 import { LinkSocialAccountButton } from './link_social_account_button';
 import { SaveCancelButtonCombo } from './save_cancel_button_combo';
 
@@ -17,9 +19,6 @@ interface Properties {
 
   /** User's email. */
   email: string;
-
-  /** User's password. */
-  password: string;
 
   page: AccountInformationTab.Page;
 
@@ -44,8 +43,9 @@ interface Properties {
   /** Indicates the edit button regarding the email is clicked. */
   onEditEmailClick: () => void;
 
-  /** Indicates the edit button regarding the password is clicked. */
-  onEditPasswordClick: () => void;
+  /** Indicates the save password is clicked. */
+  onEditPasswordSaveClick: (currentPassword: string, newPassword: string
+    ) => Promise<void>;
 
   /** Indicates the deactivate account button is clicked. */
   onDeactivateAccountButton: () => void;
@@ -69,7 +69,7 @@ interface Properties {
   onDeleteCheckboxClick: () => void;
 
   /** Indicates the password value changed in the inputfield. */
-  onDeletePasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onDeletePasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 interface State {
@@ -77,6 +77,21 @@ interface State {
   isEditEmail: boolean;
   isEditPassword: boolean;
   displayName: string;
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+  passwordHasChanged: boolean;
+}
+
+function generateRandomString() {
+  const characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const length = Math.floor(Math.random() * 7) + 8;
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
 }
 
 /** Dislays the account information tab content on the setting page. */
@@ -87,13 +102,18 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       isEditDisplayName: false,
       isEditEmail: false,
       isEditPassword: false,
-      displayName: this.props.displayName
+      displayName: this.props.displayName,
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: '',
+      passwordHasChanged: false
     };
   }
 
   public render(): JSX.Element {
     const { linkButtonRowStyle, socialButtonsColumnStyle,
-        socialAccountButtonStyle, inputFieldStyle, inputEditRowStyle } = (
+        socialAccountButtonStyle, inputFieldStyle, inputEditRowStyle,
+        passwordColumnStyle } = (
         () => {
       if (this.props.displayMode === DisplayMode.MOBILE) {
         return {
@@ -101,7 +121,8 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           socialButtonsColumnStyle: MOBILE_SOCIAL_BUTTONS_COLUMN_STYLE,
           socialAccountButtonStyle: MOBILE_SOCIAL_ACCOUNT_BUTTON_STYLE,
           inputFieldStyle: MOBILE_INPUT_FIELD_STYLE,
-          inputEditRowStyle: MOBILE_INPUT_EDIT_ROW_STYLE
+          inputEditRowStyle: MOBILE_INPUT_EDIT_ROW_STYLE,
+          passwordColumnStyle: MOBILE_PASSWORD_COLUMN_STYLE
         };
       } else if (this.props.displayMode === DisplayMode.TABLET) {
         return {
@@ -109,7 +130,8 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           socialButtonsColumnStyle: SOCIAL_BUTTONS_COLUMN_STYLE,
           socialAccountButtonStyle: SOCIAL_ACCOUNT_BUTTON_STYLE,
           inputFieldStyle: INPUT_FIELD_STYLE,
-          inputEditRowStyle: INPUT_EDIT_ROW_STYLE
+          inputEditRowStyle: INPUT_EDIT_ROW_STYLE,
+          passwordColumnStyle: PASSWORD_COLUMN_STYLE
         };
       }
       return {
@@ -117,7 +139,8 @@ export class AccountInformationTab extends React.Component<Properties, State> {
         socialButtonsColumnStyle: SOCIAL_BUTTONS_COLUMN_STYLE,
         socialAccountButtonStyle: SOCIAL_ACCOUNT_BUTTON_STYLE,
         inputFieldStyle: INPUT_FIELD_STYLE,
-        inputEditRowStyle: INPUT_EDIT_ROW_STYLE
+        inputEditRowStyle: INPUT_EDIT_ROW_STYLE,
+        passwordColumnStyle: PASSWORD_COLUMN_STYLE
       };
     })();
     if (this.props.page === AccountInformationTab.Page.DEACTIVATE_DELETE) {
@@ -372,6 +395,91 @@ export class AccountInformationTab extends React.Component<Properties, State> {
         onClick={this.handleEditDisplayNameClick}
       />;
     })();
+    const checks = getPasswordChecks(this.state.newPassword,
+      this.state.confirmPassword);
+    const score = getPasswordChecksScore(checks);
+    const passwordErrorMessage = (() => {
+      if (!this.state.passwordHasChanged) {
+        return '';
+      }
+      if (this.state.newPassword.length === 0 ||
+          this.state.confirmPassword.length === 0) {
+        return 'Fill the required field.';
+      }
+      if (!checks.doesConfirmationMatch) {
+        return 'Please make sure your passwords match.';
+      }
+      return '';
+    })();
+    const currenDisabledPassword = generateRandomString();
+    const editPasswordSection = (() => {
+      if (!this.state.isEditPassword) {
+        return (
+          <div style={inputEditRowStyle} >
+            <InputField
+              style={inputFieldStyle}
+              type='password'
+              value={currenDisabledPassword}
+              readOnly
+            />
+            <SecondaryTextButton
+              style={EDIT_BUTTON_STYLE}
+              label='Edit'
+              onClick={this.handleEditPasswordClick}
+            /> 
+          </div>);
+      }
+      return (
+        <div style={passwordColumnStyle} >
+          <div style={CURRENT_PASSWORD_TITLE_STYLE} >
+            Current Password
+          </div>
+          <PasswordInputField
+            style={PASSWORD_INPUT_FIELD_STYLE}
+            value={this.state.currentPassword}
+            placeholder='Your Current Password'
+            onChange={this.handleCurrentPasswordChange}
+            hasError={this.state.currentPassword.length === 0 &&
+              this.state.passwordHasChanged}
+          />
+          <div style={PASSWORD_TITLE_STYLE} >
+            New Password
+          </div>
+          <PasswordInputField
+            style={PASSWORD_INPUT_FIELD_STYLE}
+            placeholder='Your New Password (8 characters min.)'
+            value={this.state.newPassword}
+            onChange={this.handleNewPasswordChange}
+            hasError={this.state.newPassword.length === 0 &&
+              this.state.passwordHasChanged}
+          />
+          <PasswordAnalyzer
+            score={score}
+            hasUpperCase={checks.isMixedCase}
+            hasLowerCase={checks.hasLowerCase}
+            hasNumber={checks.hasNumbers}
+            hasMin8Character={checks.hasMinCharacters}
+            hasSpecialCharacter={checks.hasSpecialCharacter}
+            style={PASSWORD_ANALYZER_STYLE}
+          />
+          <div style={PASSWORD_TITLE_STYLE} >
+            Confirm New Password
+          </div>
+          <PasswordInputField
+            style={PASSWORD_INPUT_FIELD_STYLE}
+            placeholder='Confirm New Password'
+            value={this.state.confirmPassword}
+            onChange={this.handleConfirmChange}
+            hasError={(this.state.confirmPassword.length === 0 ||
+              !checks.doesConfirmationMatch) && this.state.passwordHasChanged}
+          />
+          <div style={ERROR_MESSAGE_STYLE} >{passwordErrorMessage}</div>
+          <SaveCancelButtonCombo
+            onSave={this.handlePasswordSaveClick}
+            onCancel={this.handleCancelEditPassword}
+          />
+        </div>);
+    })();
     return (
       <>
         <h1 style={PAGE_HEADING_STYLE} >Account Information</h1>
@@ -390,6 +498,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           value={this.state.displayName}
           onChange={this.handleDisplayNameChange}
           disabled={!this.state.isEditDisplayName}
+          hasError={this.state.displayName.trim() === ''}
         />
         {editDisplayNameButton}
         <h2 style={SUB_HEADING_STYLE} >Email</h2>
@@ -409,19 +518,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
         </div>
         <h2 style={SUB_HEADING_STYLE} >Password</h2>
         <h3 style={DESCRIPTION_STYLE} >Required.</h3>
-        <div style={inputEditRowStyle} >
-          <InputField
-            style={inputFieldStyle}
-            type='password'
-            value={this.props.password}
-            disabled
-          />
-          <SecondaryTextButton
-            style={EDIT_BUTTON_STYLE}
-            label='Edit'
-            onClick={this.props.onEditPasswordClick}
-          />
-        </div>
+        {editPasswordSection}
         <h2 style={DEACTIVATE_HEADING_STYLE} >
           Looking To Deactivate or Delete your account?
         </h2>
@@ -453,8 +550,70 @@ export class AccountInformationTab extends React.Component<Properties, State> {
   }
 
   private handleDisplayNameSaveClick = async () => {
-    this.setState({ isEditDisplayName: false });
+    if (this.state.displayName.trim() !== '') {
+      this.setState({ isEditDisplayName: false });
     await this.props.onEditDisplayNameSaveClick(this.state.displayName);
+    }
+  }
+
+  private handleEditPasswordClick = () => {
+    this.setState({ isEditPassword: true });
+  }
+
+  private handleCancelEditPassword = () => {
+    this.setState({
+      isEditPassword: false,
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: '',
+      passwordHasChanged: false
+    });
+  }
+
+  private handlePasswordSaveClick = async () => {
+    const { currentPassword, newPassword, confirmPassword } = this.state;
+    const isPasswordLengthValid = currentPassword.length >= 8;
+    const isNewPasswordValid = newPassword.length >= 8;
+    const isConfirmationProvided = confirmPassword.length > 0;
+    const doesConfirmationMatch = getPasswordChecks(newPassword,
+      confirmPassword).doesConfirmationMatch;
+    if (isPasswordLengthValid && isNewPasswordValid && isConfirmationProvided &&
+        doesConfirmationMatch) {
+      await this.props.onEditPasswordSaveClick(currentPassword, newPassword);
+      this.setState({
+        isEditPassword: false,
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+        passwordHasChanged: false
+      });
+    } else {
+      this.setState({ passwordHasChanged: true });
+    }
+  }
+
+  private handleCurrentPasswordChange = (event: React.ChangeEvent<
+      HTMLInputElement>) => {
+    this.setState({
+      currentPassword: event.target.value,
+      passwordHasChanged: true
+    });
+  }
+
+  private handleNewPasswordChange = (event: React.ChangeEvent<HTMLInputElement>
+      ) => {
+    this.setState({
+      newPassword: event.target.value,
+      passwordHasChanged: true
+    });
+  }
+
+  private handleConfirmChange = (event: React.ChangeEvent<HTMLInputElement>
+      ) => {
+    this.setState({
+      confirmPassword: event.target.value,
+      passwordHasChanged: true
+    });
   }
 }
 
@@ -589,6 +748,13 @@ const INPUT_FIELD_STYLE: React.CSSProperties = {
   minWidth: '335px',
   height: '38px',
   minHeight: '38px'
+};
+
+const PASSWORD_INPUT_FIELD_STYLE: React.CSSProperties = {
+  height: '38px',
+  minHeight: '38px',
+  width: '100%',
+  minWidth: '100%',
 };
 
 const MOBILE_INPUT_FIELD_STYLE: React.CSSProperties = {
@@ -853,4 +1019,59 @@ const ERROR_STYLE: React.CSSProperties = {
   fontSize: '14px',
   lineHeight: '18px',
   marginTop: '5px'
+};
+
+const ERROR_MESSAGE_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  height: '18px',
+  width: '100%',
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '14px',
+  lineHeight: '18px',
+  textAlign: 'center',
+  color: '#FF2C79'
+};
+
+const PASSWORD_ANALYZER_STYLE: React.CSSProperties = {
+  marginTop: '7px'
+};
+
+const PASSWORD_COLUMN_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  width: '335px',
+  minWidth: '335px'
+};
+
+const MOBILE_PASSWORD_COLUMN_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  width: '100%',
+  minWidth: '100%'
+};
+
+const CURRENT_PASSWORD_TITLE_STYLE: React.CSSProperties = {
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  color: 'var(--grey-500-dark, #999)',
+  fontFamily: 'Source Sans Pro',
+  fontSize: '12px',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  lineHeight: '15px',
+  marginBottom: '5px'
+};
+
+const PASSWORD_TITLE_STYLE: React.CSSProperties = {
+  ...CURRENT_PASSWORD_TITLE_STYLE,
+  marginTop: '20px'
 };

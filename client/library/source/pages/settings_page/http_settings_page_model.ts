@@ -5,10 +5,10 @@ import { LocalSettingsPageModel } from './local_settings_page_model';
 import { SettingsPageModel } from './settings_page_model';
 
 export class HttpSettingsPageModel extends SettingsPageModel {
-  constructor(userId: number) {
+  constructor(profileId: number) {
     super();
     this._isLoaded = false;
-    this._userId = userId;
+    this._profileId = profileId;
     this._model = new EmptySettingsPageModel();
   }
 
@@ -20,7 +20,7 @@ export class HttpSettingsPageModel extends SettingsPageModel {
     if (this._isLoaded) {
       return;
     }
-    const response = await fetch(`/api/settings/${this._userId}`);
+    const response = await fetch(`/api/settings/${this._profileId}`);
     this._checkResponse(response);
     const responseObject = await response.json();
     const linkedSocialAccounts: SocialAccount[] = arrayFromJson(SocialAccount,
@@ -33,7 +33,7 @@ export class HttpSettingsPageModel extends SettingsPageModel {
     const paymentRecords: PaymentRecord[] = arrayFromJson(PaymentRecord,
       responseObject.paymentRecords);
     this._model = new LocalSettingsPageModel(responseObject.displayName,
-      linkedSocialAccounts, responseObject.hashedPassword, notificationSettings,
+      linkedSocialAccounts, notificationSettings,
       defaultCard, paymentCards, paymentRecords);
     await this._model.load();
     this._isLoaded = true;
@@ -45,10 +45,6 @@ export class HttpSettingsPageModel extends SettingsPageModel {
 
   public get linkedSocialAccounts(): SocialAccount[] {
     return this._model.linkedSocialAccounts;
-  }
-
-  public get hashedPassword(): string {
-    return this._model.hashedPassword;
   }
 
   public getNotificationSetting(setting: string): boolean {
@@ -214,6 +210,22 @@ export class HttpSettingsPageModel extends SettingsPageModel {
     return updatedUser;
   }
 
+  public async savePassword(currentPassword: string, newPassword: string
+      ): Promise<void> {
+    const response = await fetch(`/api/update-user-password/${this._profileId}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          currentPassword: currentPassword,
+          newPassword: newPassword
+        })
+      });
+    this._checkResponse(response);
+  }
+
   private _checkResponse(response: Response): void {
     if (!response.ok) {
       const error = new Error(`HTTP error, status = ${response.status}`) as any;
@@ -223,6 +235,6 @@ export class HttpSettingsPageModel extends SettingsPageModel {
   }
 
   private _isLoaded: boolean;
-  private _userId: number;
+  private _profileId: number;
   private _model: SettingsPageModel;
 }
