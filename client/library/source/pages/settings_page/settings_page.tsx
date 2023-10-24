@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { AddCreditCardForm, Modal } from '../../components';
 import { CreditCardType, DisplayMode, PaymentCard, PaymentRecord, SocialAccount
-} from '../../definitions';
+  } from '../../definitions';
 import { DeactivateAccountModal, PaymentReceiptModal } from '../../modals';
 import { AccountInformationTab } from './account_information_tab';
-import { CardDetailsForm } from './card_details_form'; 
+import { CardDetailsForm } from './card_details_form';
 import { NotificationsTab } from './notifications_tab';
 import { PaymentHistoryTab } from './payment_history_tab';
 import { PaymentMethodsTab } from './payment_methods_tab';
@@ -21,9 +21,6 @@ interface Properties {
 
   /** User's email. */
   email: string;
-
-  /** User's password. */
-  password: string;
 
   /** Whether the new events notification is checked or not. */
   isNewEventsNotificationOn: boolean;
@@ -131,7 +128,8 @@ interface Properties {
   onEditEmailClick: () => void;
 
   /** Indicates the edit button regarding the password is clicked. */
-  onEditPasswordSaveClick: (newPAssword: string) => Promise<void>;
+  onEditPasswordSaveClick: (currentPassword: string, newPAssword: string
+    ) => Promise<void>;
 
   /** Indicates the deactivate account submit button is clicked. */
   onDeactivateAccountSubmit: () => void;

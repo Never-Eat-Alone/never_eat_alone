@@ -68,7 +68,7 @@ export class UserRoutes {
     app.post('/api/reset-password', this.getResetPasswordPage);
     app.post('/api/update-password', this.updatePassword);
     app.post('/api/update-user-display-name', this.updateUserDisplayName);
-    app.post('/api/update-user-password', this.updateUserPassword);
+    app.post('/api/update-user-password/:profileId', this.updateUserPassword);
 
     this.userDatabase = userDatabase;
     this.attendeeDatabase = attendeeDatabase;
@@ -1101,7 +1101,6 @@ export class UserRoutes {
       return;
     }
     let linkedSocialAccounts: SocialAccount[] = [];
-    let hashedPassword = '12';
     let isNewEventsNotificationOn = false;
     let isEventJoinedNotificationOn = false;
     let isEventRemindersNotificationOn = false;
@@ -1120,7 +1119,6 @@ export class UserRoutes {
     response.status(200).json({
       displayName: pageAccount.name,
       linkedSocialAccounts: arrayToJson(linkedSocialAccounts),
-      hashedPassword: hashedPassword,
       notificationSettings: notificationSettings.toJson(),
       defaultCard: defaultCard.toJson(),
       paymentCards: arrayToJson(paymentCards),
@@ -1241,7 +1239,8 @@ export class UserRoutes {
   }
 
   private updateUserPassword = async (request, response) => {
-    const password = request.body.password;
+    const profileId = parseInt(request.params.profileId);
+    const { currentPassword, newPassword } = request.body;
     if (!request.session?.user) {
       response.status(401).send();
       return;
@@ -1249,7 +1248,7 @@ export class UserRoutes {
     let user: User;
     try {
       user = await this.userDatabase.loadUserBySessionId(request.session.id);
-      if (user.id === -1) {
+      if (user.id === -1 || user.id !== profileId) {
         response.status(401).send();
         return;
       }
@@ -1258,13 +1257,24 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
-    if (!password) {
+    if (!currentPassword || !newPassword) {
       response.status(400).json({ message: 'password is required.' });
       return;
     }
-
     try {
-      await this.userDatabase.updatePassword(user.id, password);
+      const isValid = await this.userDatabase.validatePassword(user.id,
+        currentPassword);
+      if (!isValid) {
+        response.status(401).send();
+        return;
+      }
+    } catch (error) {
+      console.error('Failed at validatePassword', error);
+      response.status(500).send();
+      return;
+    }
+    try {
+      await this.userDatabase.updatePassword(user.id, newPassword);
     } catch (error) {
       console.error('Failed at updatePassword', error);
       response.status(500).send();

@@ -19,10 +19,6 @@ export class EmptySettingsPageModel extends SettingsPageModel {
     throw new Error('SettingsPageModel not loaded.');
   }
 
-  public get hashedPassword(): string {
-    throw new Error('SettingsPageModel not loaded.');
-  }
-
   public getNotificationSetting(setting: string): boolean {
     throw new Error('SettingsPageModel not loaded.');
   }
@@ -82,7 +78,8 @@ export class EmptySettingsPageModel extends SettingsPageModel {
     throw new Error('SettingsPageModel not loaded.');
   }
 
-  public async savePassword(newPassword: string): Promise<void> {
+  public async savePassword(currentPassword: string, newPassword: string
+      ): Promise<void> {
     throw new Error('SettingsPageModel not loaded.');
   }
 }

@@ -89,7 +89,6 @@ export class SettingsPageController extends React.Component<Properties, State> {
       linkedSocialAccounts={this.state.linkedSocialAccounts}
       displayName={this.props.model.displayName}
       email={this.props.account.email}
-      password={this.props.model.hashedPassword}
       isNewEventsNotificationOn={this.state.isNewEventsNotificationOn}
       isEventJoinedNotificationOn={this.state.isEventJoinedNotificationOn}
       isEventRemindersNotificationOn={this.state.isEventRemindersNotificationOn}
@@ -335,9 +334,10 @@ export class SettingsPageController extends React.Component<Properties, State> {
 
   private handleEditEmailClick = () => {}
 
-  private handleEditPasswordClick = async (newPassword: string) => {
+  private handleEditPasswordClick = async (currentPassword: string,
+      newPassword: string) => {
     try {
-      await this.props.model.savePassword(newPassword);
+      await this.props.model.savePassword(currentPassword, newPassword);
     } catch (error) {
       this.setState({ errorCode: error.code });
     }

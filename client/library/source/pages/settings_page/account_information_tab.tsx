@@ -20,9 +20,6 @@ interface Properties {
   /** User's email. */
   email: string;
 
-  /** User's password. */
-  password: string;
-
   page: AccountInformationTab.Page;
 
   isDeleteChecked: boolean;
@@ -47,7 +44,8 @@ interface Properties {
   onEditEmailClick: () => void;
 
   /** Indicates the save password is clicked. */
-  onEditPasswordSaveClick: (newPassword: string) => Promise<void>;
+  onEditPasswordSaveClick: (currentPassword: string, newPassword: string
+    ) => Promise<void>;
 
   /** Indicates the deactivate account button is clicked. */
   onDeactivateAccountButton: () => void;
@@ -79,9 +77,21 @@ interface State {
   isEditEmail: boolean;
   isEditPassword: boolean;
   displayName: string;
+  currentPassword: string;
   newPassword: string;
   confirmPassword: string;
   passwordHasChanged: boolean;
+}
+
+function generateRandomString() {
+  const characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const length = Math.floor(Math.random() * 7) + 8;
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
 }
 
 /** Dislays the account information tab content on the setting page. */
@@ -93,6 +103,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       isEditEmail: false,
       isEditPassword: false,
       displayName: this.props.displayName,
+      currentPassword: '',
       newPassword: '',
       confirmPassword: '',
       passwordHasChanged: false
@@ -400,6 +411,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       }
       return '';
     })();
+    const currenDisabledPassword = generateRandomString();
     const editPasswordSection = (() => {
       if (!this.state.isEditPassword) {
         return (
@@ -407,7 +419,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
             <InputField
               style={inputFieldStyle}
               type='password'
-              value={this.props.password}
+              value={currenDisabledPassword}
               readOnly
             />
             <SecondaryTextButton
@@ -424,10 +436,11 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           </div>
           <PasswordInputField
             style={PASSWORD_INPUT_FIELD_STYLE}
-            value={this.props.password}
-            passwordTypeOnly
-            readOnly
-            disabled
+            value={this.state.currentPassword}
+            placeholder='Your Current Password'
+            onChange={this.handleCurrentPasswordChange}
+            hasError={this.state.currentPassword.length === 0 &&
+              this.state.passwordHasChanged}
           />
           <div style={PASSWORD_TITLE_STYLE} >
             New Password
@@ -436,7 +449,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
             style={PASSWORD_INPUT_FIELD_STYLE}
             placeholder='Your New Password (8 characters min.)'
             value={this.state.newPassword}
-            onChange={this.handlePasswordChange}
+            onChange={this.handleNewPasswordChange}
             hasError={this.state.newPassword.length === 0 &&
               this.state.passwordHasChanged}
           />
@@ -550,6 +563,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
   private handleCancelEditPassword = () => {
     this.setState({
       isEditPassword: false,
+      currentPassword: '',
       newPassword: '',
       confirmPassword: '',
       passwordHasChanged: false
@@ -557,15 +571,18 @@ export class AccountInformationTab extends React.Component<Properties, State> {
   }
 
   private handlePasswordSaveClick = async () => {
-    const { newPassword, confirmPassword } = this.state;
-    const isPasswordValid = newPassword.length >= 8;
+    const { currentPassword, newPassword, confirmPassword } = this.state;
+    const isPasswordLengthValid = currentPassword.length >= 8;
+    const isNewPasswordValid = newPassword.length >= 8;
     const isConfirmationProvided = confirmPassword.length > 0;
     const doesConfirmationMatch = getPasswordChecks(newPassword,
       confirmPassword).doesConfirmationMatch;
-    if (isPasswordValid && isConfirmationProvided && doesConfirmationMatch) {
-      await this.props.onEditPasswordSaveClick(newPassword);
+    if (isPasswordLengthValid && isNewPasswordValid && isConfirmationProvided &&
+        doesConfirmationMatch) {
+      await this.props.onEditPasswordSaveClick(currentPassword, newPassword);
       this.setState({
         isEditPassword: false,
+        currentPassword: '',
         newPassword: '',
         confirmPassword: '',
         passwordHasChanged: false
@@ -575,7 +592,15 @@ export class AccountInformationTab extends React.Component<Properties, State> {
     }
   }
 
-  private handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>
+  private handleCurrentPasswordChange = (event: React.ChangeEvent<
+      HTMLInputElement>) => {
+    this.setState({
+      currentPassword: event.target.value,
+      passwordHasChanged: true
+    });
+  }
+
+  private handleNewPasswordChange = (event: React.ChangeEvent<HTMLInputElement>
       ) => {
     this.setState({
       newPassword: event.target.value,
