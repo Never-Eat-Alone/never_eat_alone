@@ -125,7 +125,7 @@ interface Properties {
   onEditDisplayNameSaveClick: (newValue: string) => Promise<void>;
 
   /** Indicates the edit button regarding the email is clicked. */
-  onEditEmailClick: () => void;
+  onEditEmailSaveClick: (newEmail: string, password: string) => Promise<void>;
 
   /** Indicates the edit button regarding the password is clicked. */
   onEditPasswordSaveClick: (currentPassword: string, newPAssword: string

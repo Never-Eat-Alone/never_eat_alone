@@ -41,7 +41,7 @@ interface Properties {
   onEditDisplayNameSaveClick: (newValue: string) => Promise<void>;
 
   /** Indicates the edit button regarding the email is clicked. */
-  onEditEmailClick: () => void;
+  onEditEmailSaveClick: (newEmail: string, password: string) => Promise<void>;
 
   /** Indicates the save password is clicked. */
   onEditPasswordSaveClick: (currentPassword: string, newPassword: string
@@ -81,6 +81,10 @@ interface State {
   newPassword: string;
   confirmPassword: string;
   passwordHasChanged: boolean;
+  newEmail: string;
+  editEmailPassword: string;
+  emailHasChanged: boolean;
+  emailPassword: string;
 }
 
 function generateRandomString() {
@@ -106,7 +110,10 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       currentPassword: '',
       newPassword: '',
       confirmPassword: '',
-      passwordHasChanged: false
+      passwordHasChanged: false,
+      newEmail: '',
+      editEmailPassword: '',
+      emailHasChanged: false
     };
   }
 
@@ -411,6 +418,58 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       }
       return '';
     })();
+    const editEmailSection = (() => {
+      if (!this.state.isEditEmail) {
+        return (
+          <div style={inputEditRowStyle} >
+            <InputField
+              style={inputFieldStyle}
+              type='email'
+              value={this.props.email}
+              disabled
+            />
+            <SecondaryTextButton
+              style={EDIT_BUTTON_STYLE}
+              label='Edit'
+              onClick={this.handleEditEmailClick}
+            /> 
+          </div>);
+      }
+      return (
+        <div style={passwordColumnStyle} >
+          <div style={CURRENT_PASSWORD_TITLE_STYLE} >
+            Current Email
+          </div>
+          <div style={CURRENT_EMAIL_STYLE} >{this.props.email}</div>
+          <div style={PASSWORD_TITLE_STYLE} >
+            New Email
+          </div>
+          <InputField
+            style={PASSWORD_INPUT_FIELD_STYLE}
+            value={this.state.newEmail}
+            placeholder='Your new email'
+            onChange={this.handleNewEmailChange}
+            hasError={this.state.newEmail.length === 0 &&
+              this.state.emailHasChanged}
+          />
+          <div style={PASSWORD_TITLE_STYLE} >
+            Enter Password
+          </div>
+          <PasswordInputField
+            style={PASSWORD_INPUT_FIELD_STYLE}
+            placeholder='Your Password'
+            value={this.state.editEmailPassword}
+            onChange={this.handleEmailPasswordChange}
+            hasError={this.state.editEmailPassword.length === 0 &&
+              this.state.emailPasswordHasChanged}
+          />
+          <div style={ERROR_MESSAGE_STYLE} >{emailErrorMessage}</div>
+          <SaveCancelButtonCombo
+            onSave={this.handleEmailSaveClick}
+            onCancel={this.handleCancelEditEmail}
+          />
+        </div>);
+    })();
     const currenDisabledPassword = generateRandomString();
     const editPasswordSection = (() => {
       if (!this.state.isEditPassword) {
@@ -420,7 +479,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
               style={inputFieldStyle}
               type='password'
               value={currenDisabledPassword}
-              readOnly
+              disabled
             />
             <SecondaryTextButton
               style={EDIT_BUTTON_STYLE}
@@ -503,19 +562,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
         {editDisplayNameButton}
         <h2 style={SUB_HEADING_STYLE} >Email</h2>
         <h3 style={DESCRIPTION_STYLE} >Required.</h3>
-        <div style={inputEditRowStyle} >
-          <InputField
-            style={inputFieldStyle}
-            type='email'
-            value={this.props.email}
-            disabled
-          />
-          <SecondaryTextButton
-            style={EDIT_BUTTON_STYLE}
-            label='Edit'
-            onClick={this.props.onEditEmailClick}
-          />
-        </div>
+        {editEmailSection}
         <h2 style={SUB_HEADING_STYLE} >Password</h2>
         <h3 style={DESCRIPTION_STYLE} >Required.</h3>
         {editPasswordSection}
@@ -556,6 +603,14 @@ export class AccountInformationTab extends React.Component<Properties, State> {
     }
   }
 
+  private handleEditEmailClick = () => {
+    this.setState({ isEditEmail: true });
+  }
+
+  private handleCancelEditEmail = () => {
+    this.setState({ isEditEmail: false, newEmail: '' });
+  }
+
   private handleEditPasswordClick = () => {
     this.setState({ isEditPassword: true });
   }
@@ -567,6 +622,19 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       newPassword: '',
       confirmPassword: '',
       passwordHasChanged: false
+    });
+  }
+
+  private handleNewEmailChange = (event: React.ChangeEvent<HTMLInputElement>
+      ) => {
+    this.setState({ newEmail: event.target.value, emailHasChanged: true });
+  }
+
+  private handleEmailPasswordChange = (event: React.ChangeEvent<
+      HTMLInputElement>) => {
+    this.setState({
+      emailPassword: event.target.value,
+      emailPasswordHasChanged: true
     });
   }
 
@@ -1074,4 +1142,13 @@ const CURRENT_PASSWORD_TITLE_STYLE: React.CSSProperties = {
 const PASSWORD_TITLE_STYLE: React.CSSProperties = {
   ...CURRENT_PASSWORD_TITLE_STYLE,
   marginTop: '20px'
+};
+
+const CURRENT_EMAIL_STYLE: React.CSSProperties = {
+  color: 'var(--grey-000-black, #000)',
+  fontFamily: 'Source Sans Pro',
+  fontSize: '14px',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  lineHeight: 'normal'
 };

@@ -3,12 +3,15 @@ import { NotificationSettings, PaymentCard, PaymentRecord, SocialAccount, User }
 import { SettingsPageModel } from './settings_page_model';
 
 export class LocalSettingsPageModel extends SettingsPageModel {
-  constructor(displayName: string, linkedSocialAccounts: SocialAccount[],
-      notificationSettings: NotificationSettings, defaultCard: PaymentCard,
-      paymentCards: PaymentCard[], paymentRecords: PaymentRecord[]) {
+  constructor(profileId: number, displayName: string, email: string,
+      linkedSocialAccounts: SocialAccount[], notificationSettings:
+      NotificationSettings, defaultCard: PaymentCard, paymentCards:
+      PaymentCard[], paymentRecords: PaymentRecord[]) {
     super();
     this._isLoaded = false;
+    this._profileId = profileId;
     this._displayName = displayName;
+    this._email = email;
     this._linkedSocialAccounts = linkedSocialAccounts;
     this._notificationSettings = notificationSettings;
     this._defaultCard = defaultCard;
@@ -20,9 +23,19 @@ export class LocalSettingsPageModel extends SettingsPageModel {
     this._isLoaded = true;
   }
 
+  public get profileId(): number {
+    this.ensureIsLoaded();
+    return this._profileId;
+  }
+
   public get displayName(): string {
     this.ensureIsLoaded();
     return this._displayName;
+  }
+
+  public get email(): string {
+    this.ensureIsLoaded();
+    return this._email;
   }
 
   public get linkedSocialAccounts(): SocialAccount[] {
@@ -117,6 +130,12 @@ export class LocalSettingsPageModel extends SettingsPageModel {
     return;
   }
 
+  public async saveEmail(newEmail: string, password: string): Promise<User> {
+    this.ensureIsLoaded();
+    this._email = newEmail;
+    return;
+  }
+
   public async savePassword(currentPassword: string, newPassword: string
       ): Promise<void> {
     this.ensureIsLoaded();
@@ -130,7 +149,9 @@ export class LocalSettingsPageModel extends SettingsPageModel {
   }
 
   private _isLoaded: boolean;
+  private _profileId: number;
   private _displayName: string;
+  private _email: string;
   private _linkedSocialAccounts: SocialAccount[];
   private _notificationSettings: NotificationSettings;
   private _defaultCard: PaymentCard;

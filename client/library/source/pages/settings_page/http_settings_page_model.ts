@@ -32,15 +32,23 @@ export class HttpSettingsPageModel extends SettingsPageModel {
       responseObject.paymentCards);
     const paymentRecords: PaymentRecord[] = arrayFromJson(PaymentRecord,
       responseObject.paymentRecords);
-    this._model = new LocalSettingsPageModel(responseObject.displayName,
-      linkedSocialAccounts, notificationSettings,
-      defaultCard, paymentCards, paymentRecords);
+    this._model = new LocalSettingsPageModel(this._profileId,
+      responseObject.displayName, responseObject.email, linkedSocialAccounts,
+      notificationSettings, defaultCard, paymentCards, paymentRecords);
     await this._model.load();
     this._isLoaded = true;
   }
 
+  public get profileId(): number {
+    return this._model.profileId;
+  }
+
   public get displayName(): string {
     return this._model.displayName;
+  }
+
+  public get email(): string {
+    return this._model.email;
   }
 
   public get linkedSocialAccounts(): SocialAccount[] {
@@ -207,6 +215,21 @@ export class HttpSettingsPageModel extends SettingsPageModel {
     const responseObject = await response.json();
     const updatedUser = User.fromJson(responseObject.user);
     await this._model.saveDisplayName(name);
+    return updatedUser;
+  }
+
+  public async saveEmail(newEmail: string, password: string): Promise<User> {
+    const response = await fetch(`/api/update-user-email/${this._profileId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email: newEmail, password: password })
+    });
+    this._checkResponse(response);
+    const responseObject = await response.json();
+    const updatedUser = User.fromJson(responseObject.user);
+    await this._model.saveEmail(newEmail, password);
     return updatedUser;
   }
 

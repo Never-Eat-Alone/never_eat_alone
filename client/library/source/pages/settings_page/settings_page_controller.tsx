@@ -17,6 +17,9 @@ interface Properties {
 
   /** Indicates the save display name was successful on database. */
   onSaveDisplayNameSuccess: (newAccount: User) => Promise<void>;
+
+  /** Indicates the user email address was successfully saved on database. */
+  onSaveEmailSuccess: (newAccount: User) => Promise<void>;
   onLogOut: () => void;
 }
 
@@ -88,7 +91,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
       displayMode={this.props.displayMode}
       linkedSocialAccounts={this.state.linkedSocialAccounts}
       displayName={this.props.model.displayName}
-      email={this.props.account.email}
+      email={this.props.model.email}
       isNewEventsNotificationOn={this.state.isNewEventsNotificationOn}
       isEventJoinedNotificationOn={this.state.isEventJoinedNotificationOn}
       isEventRemindersNotificationOn={this.state.isEventRemindersNotificationOn}
@@ -126,7 +129,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
       onFacebookClick={this.handleFacebookClick}
       onRemoveLinkedAccount={this.handleRemoveLinkedAccount}
       onEditDisplayNameSaveClick={this.handleEditDisplayNameClick}
-      onEditEmailClick={this.handleEditEmailClick}
+      onEditEmailSaveClick={this.handleEditEmailClick}
       onEditPasswordSaveClick={this.handleEditPasswordClick}
       onDeactivateAccountSubmit={this.handleSubmitDeactivateAccount}
       onDeleteAccountPage={this.handleDeleteAccount}
@@ -332,7 +335,15 @@ export class SettingsPageController extends React.Component<Properties, State> {
     }
   }
 
-  private handleEditEmailClick = () => {}
+  private handleEditEmailClick = async (newEmail: string, password: string) => {
+    try {
+      const modifiedAccount = await this.props.model.saveEmail(
+        newEmail, password);
+      await this.props.onSaveEmailSuccess(modifiedAccount);
+    } catch (error) {
+      this.setState({ errorCode: error.code });
+    }
+  }
 
   private handleEditPasswordClick = async (currentPassword: string,
       newPassword: string) => {
