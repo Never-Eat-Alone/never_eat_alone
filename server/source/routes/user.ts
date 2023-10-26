@@ -62,7 +62,7 @@ export class UserRoutes {
     app.put('/api/users/:profileId/update', this.updateUserProfile);
 
     /** Settings related routes. */
-    app.get('/api/settings/:userId', this.getSettingsPage);
+    app.get('/api/settings/:profileId', this.getSettingsPage);
 
     /** Reset Password related routes. */
     app.post('/api/reset-password', this.getResetPasswordPage);
@@ -1076,13 +1076,13 @@ export class UserRoutes {
   }
 
   private getSettingsPage = async (request, response) => {
-    const userId = parseInt(request.params.userId);
+    const profileId = parseInt(request.params.profileId);
     let loggedUser: User;
     if (request.session?.user) {
       try {
         loggedUser = await this.userDatabase.loadUserBySessionId(
           request.session.id);
-        if (loggedUser.id === -1 || loggedUser.id !== userId) {
+        if (loggedUser.id === -1 || loggedUser.id !== profileId) {
           response.status(401).send();
           return;
         }
@@ -1094,7 +1094,7 @@ export class UserRoutes {
     }
     let pageAccount: User;
     try {
-      pageAccount = await this.userDatabase.loadUserById(userId);
+      pageAccount = await this.userDatabase.loadUserById(profileId);
     } catch (error) {
       console.error('Failed at loadUserById', error);
       response.status(500).send();
@@ -1118,6 +1118,7 @@ export class UserRoutes {
     let paymentRecords: PaymentRecord[] = [];
     response.status(200).json({
       displayName: pageAccount.name,
+      email: pageAccount.email,
       linkedSocialAccounts: arrayToJson(linkedSocialAccounts),
       notificationSettings: notificationSettings.toJson(),
       defaultCard: defaultCard.toJson(),

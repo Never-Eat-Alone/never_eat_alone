@@ -88,17 +88,6 @@ interface State {
   isEditEmailAuthFailed: boolean;
 }
 
-function generateRandomString() {
-  const characters =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const length = Math.floor(Math.random() * 7) + 8;
-  let result = '';
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * characters.length));
-  }
-  return result;
-}
-
 /** Dislays the account information tab content on the setting page. */
 export class AccountInformationTab extends React.Component<Properties, State> {
   constructor(props: Properties) {
@@ -487,7 +476,6 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           />
         </div>);
     })();
-    const currenDisabledPassword = generateRandomString();
     const editPasswordSection = (() => {
       if (!this.state.isEditPassword) {
         return (
@@ -495,7 +483,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
             <InputField
               style={inputFieldStyle}
               type='password'
-              value={currenDisabledPassword}
+              value='displaypurposes'
               disabled
             />
             <SecondaryTextButton
