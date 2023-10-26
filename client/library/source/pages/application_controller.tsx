@@ -341,6 +341,7 @@ export class ApplicationController extends React.Component<Properties, State> {
       model={this.props.model.getSettingsPageModel(id)}
       account={this.state.account}
       onSaveDisplayNameSuccess={this.handleSaveDisplayName}
+      onSaveEmailSuccess={this.handleSaveEmail}
       onLogOut={this.handleLogOut}
     />;
   }
@@ -411,6 +412,14 @@ export class ApplicationController extends React.Component<Properties, State> {
     await profilePageModel.updateName(newAccount.name);
     this.props.model.addProfilePageModel(newAccount.id,
       profilePageModel);
+    await this.updateAccount(newAccount);
+  }
+
+  private handleSaveEmail = async (newAccount: User) => {
+    if (newAccount.id === -1) {
+      this.handleLogInButton();
+      return;
+    }
     await this.updateAccount(newAccount);
   }
 

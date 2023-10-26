@@ -11,7 +11,15 @@ export class EmptySettingsPageModel extends SettingsPageModel {
     throw new Error('Unable to load empty model.');
   }
 
+  public get profileId(): number {
+    throw new Error('SettingsPageModel not loaded.'); 
+  }
+
   public get displayName(): string {
+    throw new Error('SettingsPageModel not loaded.');
+  }
+
+  public get email(): string {
     throw new Error('SettingsPageModel not loaded.');
   }
 
@@ -75,6 +83,10 @@ export class EmptySettingsPageModel extends SettingsPageModel {
   }
 
   public async saveDisplayName(newDisplayName: string): Promise<User> {
+    throw new Error('SettingsPageModel not loaded.');
+  }
+
+  public async saveEmail(newEmail: string, password: string): Promise<User> {
     throw new Error('SettingsPageModel not loaded.');
   }
 

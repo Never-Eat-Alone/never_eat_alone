@@ -84,7 +84,8 @@ interface State {
   newEmail: string;
   editEmailPassword: string;
   emailHasChanged: boolean;
-  emailPassword: string;
+  emailPasswordHasChanged: boolean;
+  isEditEmailAuthFailed: boolean;
 }
 
 function generateRandomString() {
@@ -113,7 +114,9 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       passwordHasChanged: false,
       newEmail: '',
       editEmailPassword: '',
-      emailHasChanged: false
+      emailHasChanged: false,
+      emailPasswordHasChanged: false,
+      isEditEmailAuthFailed: false
     };
   }
 
@@ -418,6 +421,20 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       }
       return '';
     })();
+    const emailErrorMessage = (() => {
+      if (!this.state.emailPasswordHasChanged && !this.state.emailHasChanged) {
+        return '';
+      }
+      if ((this.state.emailHasChanged && this.state.newEmail.length === 0) ||
+          (this.state.emailPasswordHasChanged &&
+          this.state.editEmailPassword.length === 0)) {
+        return 'Fill the required field.';
+      }
+      if (this.state.isEditEmailAuthFailed) {
+        return 'Please make sure your passwords is correct.';
+      }
+      return '';
+    })();
     const editEmailSection = (() => {
       if (!this.state.isEditEmail) {
         return (
@@ -608,7 +625,17 @@ export class AccountInformationTab extends React.Component<Properties, State> {
   }
 
   private handleCancelEditEmail = () => {
-    this.setState({ isEditEmail: false, newEmail: '' });
+    this.setState({
+      isEditEmail: false,
+      newEmail: '',
+      emailHasChanged: false,
+      editEmailPassword: '',
+      emailPasswordHasChanged: false
+    });
+  }
+
+  private handleEmailSaveClick = () => {
+
   }
 
   private handleEditPasswordClick = () => {
@@ -633,7 +660,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
   private handleEmailPasswordChange = (event: React.ChangeEvent<
       HTMLInputElement>) => {
     this.setState({
-      emailPassword: event.target.value,
+      editEmailPassword: event.target.value,
       emailPasswordHasChanged: true
     });
   }
