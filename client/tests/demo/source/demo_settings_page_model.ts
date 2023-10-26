@@ -20,8 +20,16 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
     this._isLoaded = true;
   }
 
+  public get profileId(): number {
+    return this._profileId;
+  }
+
   public get displayName(): string {
     return this._displayName;
+  }
+
+  public get email(): string {
+    return this._email;
   }
 
   public get linkedSocialAccounts(): NeverEatAlone.SocialAccount[] {
@@ -117,6 +125,12 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
     return;
   }
 
+  public async saveEmail(newEmail: string, password: string): Promise<
+      NeverEatAlone.User> {
+    this.ensureIsLoaded();
+    return;
+  }
+
   public async savePassword(newPassword: string): Promise<void> {
     this.ensureIsLoaded();
     return;
@@ -129,7 +143,9 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
   }
 
   private _isLoaded: boolean;
+  private _profileId: number;
   private _displayName: string;
+  private _email: string;
   private _linkedSocialAccounts: NeverEatAlone.SocialAccount[];
   private _notificationSettings: NeverEatAlone.NotificationSettings;
   private _defaultCard: NeverEatAlone.PaymentCard;
