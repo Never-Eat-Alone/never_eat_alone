@@ -147,7 +147,7 @@ export class HttpSettingsPageModel extends SettingsPageModel {
     return false;
   }
 
-  public async SubmitHelpEmail(receiptId: number, message: string): Promise<
+  public async submitHelpEmail(receiptId: number, message: string): Promise<
       boolean> {
     const response = await fetch('/api/submit_help_email', {
       method: 'POST',

@@ -17,7 +17,7 @@ export abstract class SettingsPageModel {
   public abstract deleteCard(cardId: number): Promise<void>;
   public abstract toggleNotificationSetting(setting: string): Promise<boolean>;
   public abstract emailReceipt(paymentRecord: PaymentRecord): Promise<boolean>;
-  public abstract SubmitHelpEmail(receiptId: number, message: string): Promise<
+  public abstract submitHelpEmail(receiptId: number, message: string): Promise<
     boolean>;
   public abstract deleteAccount(password: string): Promise<User>;
   public abstract deactivateAccount(): Promise<boolean>;

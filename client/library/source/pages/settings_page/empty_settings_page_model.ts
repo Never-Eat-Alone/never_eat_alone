@@ -65,7 +65,7 @@ export class EmptySettingsPageModel extends SettingsPageModel {
     throw new Error('SettingsPageModel not loaded.');
   }
 
-  public async SubmitHelpEmail(receiptId: number, message: string): Promise<
+  public async submitHelpEmail(receiptId: number, message: string): Promise<
       boolean> {
     throw new Error('SettingsPageModel not loaded.');
   }

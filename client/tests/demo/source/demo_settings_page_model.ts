@@ -91,7 +91,7 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
     return Boolean(paymentRecord);
   }
 
-  public async SubmitHelpEmail(receiptId: number, message: string): Promise<
+  public async submitHelpEmail(receiptId: number, message: string): Promise<
       boolean> {
     this.ensureIsLoaded();
     return Boolean(receiptId && message);

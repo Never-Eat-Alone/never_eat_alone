@@ -435,7 +435,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
   private handleSubmitHelpEmail = async (receiptId: number,
       message: string) => {
     try {
-      const isSent = await this.props.model.SubmitHelpEmail(receiptId, message);
+      const isSent = await this.props.model.submitHelpEmail(receiptId, message);
       if (isSent) {
         this.setState({
           paymentReceiptModalPage: PaymentReceiptModal.Page.REQUEST_SENT

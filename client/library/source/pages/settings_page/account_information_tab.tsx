@@ -622,8 +622,21 @@ export class AccountInformationTab extends React.Component<Properties, State> {
     });
   }
 
-  private handleEmailSaveClick = () => {
-
+  private handleEmailSaveClick = async () => {
+    const { newEmail, editEmailPassword } = this.state;
+    const isPassword = editEmailPassword.length >= 8;
+    if (newEmail && isPassword) {
+      await this.props.onEditEmailSaveClick(newEmail, editEmailPassword);
+      this.setState({
+        isEditEmail: false,
+        newEmail: '',
+        editEmailPassword: '',
+        emailHasChanged: false,
+        emailPasswordHasChanged: false
+      });
+    } else {
+      this.setState({ emailHasChanged: true, emailPasswordHasChanged: true });
+    }
   }
 
   private handleEditPasswordClick = () => {

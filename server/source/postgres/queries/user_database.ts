@@ -671,7 +671,28 @@ export class UserDatabase {
         userQueryResult.rows[0].created_at)));
     } catch (error) {
       console.error('Error in updateDisplayName:', error);
-      throw error; 
+      throw error;
+    }
+  }
+
+  public updateEmail = async (userId: number, email: string): Promise<User> => {
+    try {
+      const userQueryResult = await this.pool.query(`
+        UPDATE users 
+        SET email = $2, updated_at = NOW()
+        WHERE id = $1
+        RETURNING *`, [userId, email]);
+      if (userQueryResult.rowCount === 0) {
+        throw new Error('No user found with the given user Id.');
+      }
+      return new User(
+        parseInt(userQueryResult.rows[0].id), userQueryResult.rows[0].name,
+        userQueryResult.rows[0].email, userQueryResult.rows[0].user_name,
+        userQueryResult.rows[0].user_status as UserStatus, new Date(Date.parse(
+        userQueryResult.rows[0].created_at)));
+    } catch (error) {
+      console.error('Error in updateEmail:', error);
+      throw error;
     }
   }
 
