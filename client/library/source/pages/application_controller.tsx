@@ -420,7 +420,6 @@ export class ApplicationController extends React.Component<Properties, State> {
       this.handleLogInButton();
       return;
     }
-    console.log('handleSaveEmail');
     await this.updateAccount(newAccount);
   }
 

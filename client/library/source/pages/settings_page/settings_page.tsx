@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { AddCreditCardForm, Modal } from '../../components';
-import { CreditCardType, DisplayMode, PaymentCard, PaymentRecord, SocialAccount
-  } from '../../definitions';
+import { CreditCardType, DisplayMode, EmailUpdateStatus, PaymentCard,
+  PaymentRecord, SocialAccount } from '../../definitions';
 import { DeactivateAccountModal, PaymentReceiptModal } from '../../modals';
 import { AccountInformationTab } from './account_information_tab';
 import { CardDetailsForm } from './card_details_form';
@@ -21,6 +21,8 @@ interface Properties {
 
   /** User's email. */
   email: string;
+
+  emailUpdateStatus?: EmailUpdateStatus;
 
   /** Whether the new events notification is checked or not. */
   isNewEventsNotificationOn: boolean;

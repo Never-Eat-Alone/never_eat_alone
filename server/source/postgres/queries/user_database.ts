@@ -210,6 +210,20 @@ export class UserDatabase {
       VALUES ($1, $2, $3)`, [tokenId, expiresAt, userId]);
   }
 
+  public addEmailUpdateRequest = async (userId: number, newEmail: string,
+      token: string): Promise<void> => {
+    await this.pool.query(`
+      INSERT INTO user_email_update_requests (user_id, new_email, token)
+      VALUES ($1, $2, $3)`, [userId, newEmail, token]);
+  }
+
+  public isEmailUpdateTokenValid = async (userId: number, token: string):
+      Promise<boolean> => {
+    await this.pool.query(`
+      DELETE FROM user_email_update_requests
+      WHERE user_id = $1 AND token_expires_at < (CURRENT_TIMESTAMP AT TIME ZONE 'UTC')`);
+  }
+
   /**
    * Add the user credentials.
    * @param userId - User id.

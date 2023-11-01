@@ -1,8 +1,9 @@
+import * as EmailValidator from 'email-validator';
 import * as React from 'react';
 import { BackButton, CheckBox, InputField, SecondaryTextButton,
   SecondaryTextLinkButton, PasswordAnalyzer, PasswordInputField,
   PrimaryTextButton } from '../../components';
-import { DisplayMode, SocialAccount, SocialAccountType } from
+import { DisplayMode, EmailUpdateStatus, SocialAccount, SocialAccountType } from
   '../../definitions';
 import { getPasswordChecks, getPasswordChecksScore } from '../../utilities';
 import { LinkSocialAccountButton } from './link_social_account_button';
@@ -27,6 +28,8 @@ interface Properties {
   deleteAccountPassword: string;
 
   deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode;
+
+  emailUpdateStatus?: EmailUpdateStatus;
 
   /** Indicates link Google account button is clicked. */
   onGoogleClick: () => void;
@@ -86,6 +89,7 @@ interface State {
   emailHasChanged: boolean;
   emailPasswordHasChanged: boolean;
   isEditEmailAuthFailed: boolean;
+  isEmailValid: boolean;
 }
 
 /** Dislays the account information tab content on the setting page. */
@@ -105,7 +109,8 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       editEmailPassword: '',
       emailHasChanged: false,
       emailPasswordHasChanged: false,
-      isEditEmailAuthFailed: false
+      isEditEmailAuthFailed: false,
+      isEmailValid: true
     };
   }
 
@@ -422,6 +427,17 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       if (this.state.isEditEmailAuthFailed) {
         return 'Please make sure your passwords is correct.';
       }
+      if (this.state.emailHasChanged && (this.state.newEmail ===
+          this.props.email)) {
+        return 'Please enter a new email.';
+      }
+      if (this.state.emailPasswordHasChanged &&
+          this.state.editEmailPassword.length < 8) {
+        return 'Please enter a valid password.';
+      }
+      if (!this.state.isEmailValid) {
+        return 'Please enter a valid email.';
+      }
       return '';
     })();
     const editEmailSection = (() => {
@@ -618,24 +634,36 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       newEmail: '',
       emailHasChanged: false,
       editEmailPassword: '',
-      emailPasswordHasChanged: false
+      emailPasswordHasChanged: false,
+      isEmailValid: true
     });
   }
 
   private handleEmailSaveClick = async () => {
     const { newEmail, editEmailPassword } = this.state;
-    const isPassword = editEmailPassword.length >= 8;
-    if (newEmail && isPassword) {
+    const isEmailValid = EmailValidator.validate(newEmail);
+    const isPasswordValid = editEmailPassword.length >= 8;
+    const isNewEmail = newEmail !== this.props.email;
+
+    if (!isEmailValid || !isPasswordValid) {
+      this.setState({
+        isEmailValid,
+        isEditPassword: !isPasswordValid
+      });
+      return;
+    }
+
+    if (isNewEmail) {
       await this.props.onEditEmailSaveClick(newEmail, editEmailPassword);
       this.setState({
         isEditEmail: false,
         newEmail: '',
         editEmailPassword: '',
         emailHasChanged: false,
-        emailPasswordHasChanged: false
+        emailPasswordHasChanged: false,
+        isEmailValid: true,
+        isEditEmailAuthFailed: false
       });
-    } else {
-      this.setState({ emailHasChanged: true, emailPasswordHasChanged: true });
     }
   }
 
