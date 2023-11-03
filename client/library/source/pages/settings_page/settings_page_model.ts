@@ -11,6 +11,7 @@ export abstract class SettingsPageModel {
   public abstract get defaultCard(): PaymentCard;
   public abstract get paymentCards(): PaymentCard[];
   public abstract get paymentRecords(): PaymentRecord[];
+  public abstract get isEmailUpdateTokenValid(): boolean;
   public abstract addCard(card: PaymentCard): Promise<void>;
   public abstract updateCard(newCard: PaymentCard, isMarkedAsDefault: boolean
     ): Promise<void>;
@@ -26,4 +27,6 @@ export abstract class SettingsPageModel {
   public abstract saveEmail(newEmail: string, password: string): Promise<User>;
   public abstract savePassword(currentPassword: string, newPassword: string
     ): Promise<void>;
+  public abstract resendEmailUpdateConfirmation(): Promise<void>;
+  public abstract discardEmailUpdateRequest(): Promise<void>;
 }

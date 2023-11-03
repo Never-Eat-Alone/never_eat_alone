@@ -3,7 +3,7 @@ import * as React from 'react';
 import { BackButton, CheckBox, InputField, SecondaryTextButton,
   SecondaryTextLinkButton, PasswordAnalyzer, PasswordInputField,
   PrimaryTextButton } from '../../components';
-import { DisplayMode, EmailUpdateStatus, SocialAccount, SocialAccountType } from
+import { DisplayMode, SocialAccount, SocialAccountType } from
   '../../definitions';
 import { getPasswordChecks, getPasswordChecksScore } from '../../utilities';
 import { LinkSocialAccountButton } from './link_social_account_button';
@@ -29,7 +29,12 @@ interface Properties {
 
   deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode;
 
-  emailUpdateStatus?: EmailUpdateStatus;
+  isEmailUpdateTokenValid: boolean;
+
+  onResendEmailUpdateConfirmation: () => void;
+
+  /** Indicates user clicked on discard email change. */
+  onDiscardEmailUpdateRequest: () => void;
 
   /** Indicates link Google account button is clicked. */
   onGoogleClick: () => void;
@@ -423,9 +428,6 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           (this.state.emailPasswordHasChanged &&
           this.state.editEmailPassword.length === 0)) {
         return 'Fill the required field.';
-      }
-      if (this.state.isEditEmailAuthFailed) {
-        return 'Please make sure your passwords is correct.';
       }
       if (this.state.emailHasChanged && (this.state.newEmail ===
           this.props.email)) {

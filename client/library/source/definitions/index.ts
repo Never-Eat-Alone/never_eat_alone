@@ -9,7 +9,6 @@ export * from './cuisine';
 export * from './dining_event';
 export * from './display_mode';
 export * from './dress_code';
-export * from './email_update_status';
 export * from './event_card_summary';
 export * from './event_status';
 export * from './event_tag';

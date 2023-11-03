@@ -63,6 +63,10 @@ export class LocalSettingsPageModel extends SettingsPageModel {
     return this._paymentRecords;
   }
 
+  public get isEmailUpdateTokenValid(): boolean {
+    return this._isEmailUpdateTokenValid;
+  }
+
   /** Payment methods tab related methods */
   public async addCard(card: PaymentCard): Promise<void> {
     this.ensureIsLoaded();
@@ -142,6 +146,16 @@ export class LocalSettingsPageModel extends SettingsPageModel {
     return;
   }
 
+  public async resendEmailUpdateConfirmation(): Promise<void> {
+    this.ensureIsLoaded();
+    return;
+  }
+
+  public async discardEmailUpdateRequest(): Promise<void> {
+    this.ensureIsLoaded();
+    return;
+  }
+
   private ensureIsLoaded(): void {
     if (!this._isLoaded) {
       throw new Error('SettingsPageModel not loaded.');
@@ -157,4 +171,5 @@ export class LocalSettingsPageModel extends SettingsPageModel {
   private _defaultCard: PaymentCard;
   private _paymentCards: PaymentCard[];
   private _paymentRecords: PaymentRecord[];
+  private _isEmailUpdateTokenValid: boolean;
 }

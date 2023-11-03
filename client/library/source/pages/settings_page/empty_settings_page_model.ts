@@ -43,6 +43,10 @@ export class EmptySettingsPageModel extends SettingsPageModel {
     throw new Error('SettingsPageModel not loaded.');
   }
 
+  public get isEmailUpdateTokenValid(): boolean {
+    throw new Error('SettingsPageModel not loaded.');
+  }
+
   /** Payment methods tab related methods */
   public async addCard(card: PaymentCard): Promise<void> {
     throw new Error('SettingsPageModel not loaded.');
@@ -92,6 +96,14 @@ export class EmptySettingsPageModel extends SettingsPageModel {
 
   public async savePassword(currentPassword: string, newPassword: string
       ): Promise<void> {
+    throw new Error('SettingsPageModel not loaded.');
+  }
+
+  public async resendEmailUpdateConfirmation(): Promise<void> {
+    throw new Error('SettingsPageModel not loaded.');
+  }
+
+  public async discardEmailUpdateRequest(): Promise<void> {
     throw new Error('SettingsPageModel not loaded.');
   }
 }

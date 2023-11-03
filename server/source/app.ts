@@ -183,7 +183,8 @@ function runExpress(pool: Pool, config: any) {
         'user_languages',
         'user_favourite_cuisines',
         'password_reset_tokens',
-        'billing_addresses'
+        'billing_addresses',
+        'user_email_update_requests'
       ]);
       app.listen(config.port, async () => {});
     } catch (error) {

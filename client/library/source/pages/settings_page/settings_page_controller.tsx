@@ -114,6 +114,9 @@ export class SettingsPageController extends React.Component<Properties, State> {
       isDeleteChecked={this.state.isDeleteChecked}
       deleteAccountPassword={this.state.deleteAccountPassword}
       deleteAccountErrorCode={this.state.deleteAccountErrorCode}
+      isEmailUpdateTokenValid={this.props.model.isEmailUpdateTokenValid}
+      onResendEmailUpdateConfirmation={this.handleResendEmailUpdateConfirmation}
+      onDiscardEmailUpdateRequest={this.handleDiscardEmailUpdateRequest}
       onSubmitDeleteAccount={this.handleSubmitDeleteAccount}
       onAddCard={this.handleAddCard}
       onUpdateCard={this.handleUpdateCard}
@@ -305,6 +308,22 @@ export class SettingsPageController extends React.Component<Properties, State> {
         paymentMethodsTabPage: PaymentMethodsTab.Page.CARD_DETAILS,
         errorCode: error.code
       });
+    }
+  }
+
+  private handleResendEmailUpdateConfirmation = async () => {
+    try {
+      await this.props.model.resendEmailUpdateConfirmation();
+    } catch (error) {
+      this.setState({ errorCode: error.code });
+    }
+  }
+
+  private handleDiscardEmailUpdateRequest = async () => {
+    try {
+      await this.props.model.discardEmailUpdateRequest();
+    } catch (error) {
+      this.setState({ errorCode: error.code });
     }
   }
 

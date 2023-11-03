@@ -71,6 +71,10 @@ export class HttpSettingsPageModel extends SettingsPageModel {
     return this._model.paymentRecords;
   }
 
+  public get isEmailUpdateTokenValid(): boolean {
+    return this._isEmailUpdateTokenValid;
+  }
+
   /** Payment methods tab related methods */
   public async addCard(card: PaymentCard): Promise<void> {
     const response = await fetch('/api/add_payment_card', {
@@ -247,6 +251,14 @@ export class HttpSettingsPageModel extends SettingsPageModel {
         })
       });
     this._checkResponse(response);
+  }
+
+  public async resendEmailUpdateConfirmation(): Promise<void> {
+    
+  }
+
+  public async discardEmailUpdateRequest(): Promise<void> {
+
   }
 
   private _checkResponse(response: Response): void {

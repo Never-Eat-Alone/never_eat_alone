@@ -1269,7 +1269,8 @@ export class UserRoutes {
       const isValid = await this.userDatabase.validatePassword(user.id,
         password);
       if (!isValid) {
-        response.status(401).send();
+        response.status(401).json({ message: 'Password authentication failed.'
+          });
         return;
       }
     } catch (error) {
@@ -1277,11 +1278,41 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
+    try {
+      await this.userDatabase.addEmailUpdateRequest(user.id, email);
+    } catch (error) {
+      console.error('Failed at addEmailUpdateRequest', error);
+      response.status(500).send();
+      return;
+    }
+    response.status(200).send();
+  }
+
+  private confirmEmailUpdateRequest = async (response, request) => {
+    const token = request.body.token;
+    if (!request.session?.user) {
+      response.status(401).send();
+      return;
+    }
+    let user: User;
+    try {
+      user = await this.userDatabase.loadUserBySessionId(request.session.id);
+      if (user.id === -1) {
+        response.status(401).send();
+        return;
+      }
+    } catch (error) {
+      console.error('Failed at loadUserBySessionId', error);
+      response.status(500).send();
+      return;
+    }
     let updatedUser: User;
     try {
-      updatedUser = await this.userDatabase.updateEmail(user.id, email);
+      const isValid = await this.userDatabase.verifyEmailUpdateRequest(user.id,
+        token);
+      
     } catch (error) {
-      console.error('Failed at updateEmail', error);
+      console.error('Failed at addEmailUpdateRequest', error);
       response.status(500).send();
       return;
     }
