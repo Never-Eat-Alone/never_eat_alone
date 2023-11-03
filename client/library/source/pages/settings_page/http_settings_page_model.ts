@@ -72,7 +72,7 @@ export class HttpSettingsPageModel extends SettingsPageModel {
   }
 
   public get isEmailUpdateTokenValid(): boolean {
-    return this._isEmailUpdateTokenValid;
+    return this._model.isEmailUpdateTokenValid;
   }
 
   /** Payment methods tab related methods */
@@ -254,11 +254,27 @@ export class HttpSettingsPageModel extends SettingsPageModel {
   }
 
   public async resendEmailUpdateConfirmation(): Promise<void> {
-    
+    const response = await fetch(
+      `/api/update-email-resend_link/${this._profileId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    this._checkResponse(response);
+    await this._model.resendEmailUpdateConfirmation();
   }
 
   public async discardEmailUpdateRequest(): Promise<void> {
-
+    const response = await fetch(
+      `/api/update-email-discard/${this._profileId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    this._checkResponse(response);
+    await this._model.discardEmailUpdateRequest();
   }
 
   private _checkResponse(response: Response): void {
