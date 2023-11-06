@@ -24,7 +24,8 @@ export abstract class SettingsPageModel {
   public abstract deactivateAccount(): Promise<boolean>;
   public abstract unlinkAccount(account: SocialAccount): Promise<boolean>;
   public abstract saveDisplayName(newDisplayName: string): Promise<User>;
-  public abstract saveEmail(newEmail: string, password: string): Promise<User>;
+  public abstract saveEmailUpdateRequest(newEmail: string, password: string):
+    Promise<void>;
   public abstract savePassword(currentPassword: string, newPassword: string
     ): Promise<void>;
   public abstract resendEmailUpdateConfirmation(): Promise<void>;

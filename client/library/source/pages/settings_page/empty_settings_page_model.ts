@@ -1,5 +1,6 @@
 import { PaymentCard, PaymentRecord, SocialAccount, User } from
   '../../definitions';
+import { AccountInformationTab } from './account_information_tab';
 import { SettingsPageModel } from './settings_page_model';
 
 /**
@@ -90,7 +91,8 @@ export class EmptySettingsPageModel extends SettingsPageModel {
     throw new Error('SettingsPageModel not loaded.');
   }
 
-  public async saveEmail(newEmail: string, password: string): Promise<User> {
+  public async saveEmailUpdateRequest(newEmail: string, password: string):
+      Promise<void> {
     throw new Error('SettingsPageModel not loaded.');
   }
 

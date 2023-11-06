@@ -1,4 +1,3 @@
-import * as EmailValidator from 'email-validator';
 import * as React from 'react';
 import { BackButton, CheckBox, InputField, SecondaryTextButton,
   SecondaryTextLinkButton, PasswordAnalyzer, PasswordInputField,
@@ -30,6 +29,8 @@ interface Properties {
   deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode;
 
   isEmailUpdateTokenValid: boolean;
+
+  saveEmailErrorCode: AccountInformationTab.SaveEmailErrorCode;
 
   onResendEmailUpdateConfirmation: () => void;
 
@@ -643,30 +644,16 @@ export class AccountInformationTab extends React.Component<Properties, State> {
 
   private handleEmailSaveClick = async () => {
     const { newEmail, editEmailPassword } = this.state;
-    const isEmailValid = EmailValidator.validate(newEmail);
-    const isPasswordValid = editEmailPassword.length >= 8;
-    const isNewEmail = newEmail !== this.props.email;
-
-    if (!isEmailValid || !isPasswordValid) {
-      this.setState({
-        isEmailValid,
-        isEditPassword: !isPasswordValid
-      });
-      return;
-    }
-
-    if (isNewEmail) {
-      await this.props.onEditEmailSaveClick(newEmail, editEmailPassword);
-      this.setState({
-        isEditEmail: false,
-        newEmail: '',
-        editEmailPassword: '',
-        emailHasChanged: false,
-        emailPasswordHasChanged: false,
-        isEmailValid: true,
-        isEditEmailAuthFailed: false
-      });
-    }
+    await this.props.onEditEmailSaveClick(newEmail, editEmailPassword);
+    this.setState({
+      isEditEmail: false,
+      newEmail: '',
+      editEmailPassword: '',
+      emailHasChanged: false,
+      emailPasswordHasChanged: false,
+      isEmailValid: true,
+      isEditEmailAuthFailed: false
+    });
   }
 
   private handleEditPasswordClick = () => {
@@ -756,6 +743,16 @@ export namespace AccountInformationTab {
     NONE,
     NO_CONNECTION,
     WRONG_PASSWORD
+  }
+
+  export enum SaveEmailErrorCode {
+    NONE,
+    NO_CONNECTION,
+    WRONG_PASSWORD,
+    EMPTY_EMAIL_FIELD,
+    EMPTY_PASSWORD_FIELD,
+    INVALID_EMAIL_ADDRESS,
+    DUPLICATE_EMAIL
   }
 }
 

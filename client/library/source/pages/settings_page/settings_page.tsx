@@ -80,6 +80,8 @@ interface Properties {
 
   isEmailUpdateTokenValid: boolean;
 
+  saveEmailErrorCode: AccountInformationTab.SaveEmailErrorCode;
+
   onResendEmailUpdateConfirmation: () => void;
 
   /** Indicates user clicked on discard email change. */

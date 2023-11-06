@@ -222,19 +222,19 @@ export class HttpSettingsPageModel extends SettingsPageModel {
     return updatedUser;
   }
 
-  public async saveEmail(newEmail: string, password: string): Promise<User> {
-    const response = await fetch(`/api/update-user-email/${this._profileId}`, {
+  public async saveEmailUpdateRequest(newEmail: string, password: string):
+      Promise<void> {
+    const response = await fetch(`/api/update-user-email/${this._profileId}`,
+      {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ email: newEmail, password: password })
     });
-    this._checkResponse(response);
     const responseObject = await response.json();
-    const updatedUser = User.fromJson(responseObject.user);
-    await this._model.saveEmail(newEmail, password);
-    return updatedUser;
+    this._checkResponse(response, responseObject.message);
+    await this._model.saveEmailUpdateRequest(newEmail, password);
   }
 
   public async savePassword(currentPassword: string, newPassword: string
@@ -277,10 +277,11 @@ export class HttpSettingsPageModel extends SettingsPageModel {
     await this._model.discardEmailUpdateRequest();
   }
 
-  private _checkResponse(response: Response): void {
+  private _checkResponse(response: Response, message: string = ''): void {
     if (!response.ok) {
       const error = new Error(`HTTP error, status = ${response.status}`) as any;
       error.code = response.status;
+      error.message = message;
       throw error;
     }
   }

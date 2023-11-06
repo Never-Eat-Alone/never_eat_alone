@@ -1308,9 +1308,11 @@ export class UserRoutes {
     }
     let updatedUser: User;
     try {
-      const isValid = await this.userDatabase.verifyEmailUpdateRequest(user.id,
-        token);
-      
+      const isValid = await this.userDatabase.verifyEmailUpdateRequestToken(
+        user.id, token);
+      if (!isValid) {
+        
+      }
     } catch (error) {
       console.error('Failed at addEmailUpdateRequest', error);
       response.status(500).send();

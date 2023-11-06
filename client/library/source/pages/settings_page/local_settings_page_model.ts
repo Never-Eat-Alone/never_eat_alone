@@ -134,7 +134,8 @@ export class LocalSettingsPageModel extends SettingsPageModel {
     return;
   }
 
-  public async saveEmail(newEmail: string, password: string): Promise<User> {
+  public async saveEmailUpdateRequest(newEmail: string, password: string):
+      Promise<void> {
     this.ensureIsLoaded();
     this._email = newEmail;
     return;

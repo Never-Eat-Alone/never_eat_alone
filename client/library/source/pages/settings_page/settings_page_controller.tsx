@@ -1,3 +1,4 @@
+import * as EmailValidator from 'email-validator';
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { AddCreditCardForm } from '../../components';
@@ -18,8 +19,6 @@ interface Properties {
   /** Indicates the save display name was successful on database. */
   onSaveDisplayNameSuccess: (newAccount: User) => Promise<void>;
 
-  /** Indicates the user email address was successfully saved on database. */
-  onSaveEmailSuccess: (newAccount: User) => Promise<void>;
   onLogOut: () => void;
 }
 
@@ -46,6 +45,7 @@ interface State {
   redirect: string;
   linkedSocialAccounts: SocialAccount[];
   errorCode: number;
+  saveEmailErrorCode: AccountInformationTab.SaveEmailErrorCode;
 }
 
 export class SettingsPageController extends React.Component<Properties, State> {
@@ -73,7 +73,8 @@ export class SettingsPageController extends React.Component<Properties, State> {
       deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode.NONE,
       redirect: null,
       linkedSocialAccounts: [],
-      errorCode: null
+      errorCode: null,
+      saveEmailErrorCode: AccountInformationTab.SaveEmailErrorCode.NONE
     };
   }
 
@@ -115,6 +116,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
       deleteAccountPassword={this.state.deleteAccountPassword}
       deleteAccountErrorCode={this.state.deleteAccountErrorCode}
       isEmailUpdateTokenValid={this.props.model.isEmailUpdateTokenValid}
+      saveEmailErrorCode={this.state.saveEmailErrorCode}
       onResendEmailUpdateConfirmation={this.handleResendEmailUpdateConfirmation}
       onDiscardEmailUpdateRequest={this.handleDiscardEmailUpdateRequest}
       onSubmitDeleteAccount={this.handleSubmitDeleteAccount}
@@ -354,13 +356,46 @@ export class SettingsPageController extends React.Component<Properties, State> {
     }
   }
 
-  private handleEditEmailClick = async (newEmail: string, password: string) => {
+  private handleEditEmailClick = async (newEmail: string, password: string):
+      Promise<void> => {
+    if (newEmail.trim() === '') {
+      this.setState({ saveEmailErrorCode:
+        AccountInformationTab.SaveEmailErrorCode.EMPTY_EMAIL_FIELD });
+      return;
+    }
+    if (password === '') {
+      this.setState({ saveEmailErrorCode:
+        AccountInformationTab.SaveEmailErrorCode.EMPTY_PASSWORD_FIELD });
+      return;
+    }
+    if (password.length < 8) {
+      this.setState({  saveEmailErrorCode:
+        AccountInformationTab.SaveEmailErrorCode.WRONG_PASSWORD });
+      return;
+    }
+    if (newEmail === this.props.model.email) {
+      this.setState({ saveEmailErrorCode:
+        AccountInformationTab.SaveEmailErrorCode.DUPLICATE_EMAIL });
+      return;
+    }
+    if (!EmailValidator.validate(newEmail)) {
+      this.setState({ saveEmailErrorCode:
+        AccountInformationTab.SaveEmailErrorCode.INVALID_EMAIL_ADDRESS });
+      return;
+    }
+
     try {
-      const modifiedAccount = await this.props.model.saveEmail(
-        newEmail, password);
-      await this.props.onSaveEmailSuccess(modifiedAccount);
+      await this.props.model.saveEmailUpdateRequest(newEmail, password);
+      this.setState({ saveEmailErrorCode:
+        AccountInformationTab.SaveEmailErrorCode.NONE });
     } catch (error) {
-      this.setState({ errorCode: error.code });
+      if (error.message && error.code === 401) {
+        this.setState({ saveEmailErrorCode:
+          AccountInformationTab.SaveEmailErrorCode.WRONG_PASSWORD });
+        return;
+      }
+      this.setState({ errorCode: error.code, saveEmailErrorCode:
+        AccountInformationTab.SaveEmailErrorCode.NO_CONNECTION });
     }
   }
 

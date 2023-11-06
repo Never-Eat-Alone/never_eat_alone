@@ -216,11 +216,10 @@ export class UserDatabase {
       INSERT INTO user_email_update_requests (user_id, new_email, token)
       VALUES ($1, $2, $3)`, [userId, newEmail, token]);
   }
-/** 
-  public isEmailUpdateTokenValid = async (userId: number, token: string):
-      Promise<number> => {
+
+  public verifyEmailUpdateRequestToken = async (userId: number, token: string):
+      Promise<boolean> => {
     try {
-      
       await this.pool.query(`
         DELETE FROM
           user_email_update_requests
@@ -232,13 +231,12 @@ export class UserDatabase {
           user_email_update_requests
         WHERE
           user_id = $1 and token = $2`, [userId, token]);
-      return (result.rows.length > 0 && parseInt(result.rows[0].id) || -1);
+      return result.rows.length > 0;
     } catch (error) {
       console.error("Error validating email update token: ", error);
       throw error;
     }
   }
-  */
 
   /**
    * Add the user credentials.
