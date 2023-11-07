@@ -23,6 +23,15 @@ function generateResetToken() {
   return buffer.toString('hex');
 }
 
+/** Generates secure token for user email update request. */
+function generateEmailUpdateToken(userId) {
+  const tokenBuffer = Crypto.randomBytes(32);
+  const token = tokenBuffer.toString('hex');
+  const hash = Crypto.createHash('sha256').update(String(userId)).digest('hex');
+  const emailUpdateToken = `${token}.${hash}`;
+  return emailUpdateToken;
+}
+
 /** User related database manipulations class. */
 export class UserDatabase {
   /** @param pool - The pool connection to the postgres database. */
@@ -210,28 +219,45 @@ export class UserDatabase {
       VALUES ($1, $2, $3)`, [tokenId, expiresAt, userId]);
   }
 
-  public addEmailUpdateRequest = async (userId: number, newEmail: string,
-      token: string): Promise<void> => {
+  public addEmailUpdateRequest = async (userId: number, newEmail: string):
+      Promise<void> => {
+    const emailUpdateToken = generateEmailUpdateToken(userId);
     await this.pool.query(`
       INSERT INTO user_email_update_requests (user_id, new_email, token)
-      VALUES ($1, $2, $3)`, [userId, newEmail, token]);
+      VALUES ($1, $2, $3)`, [userId, newEmail, emailUpdateToken]);
   }
 
   public verifyEmailUpdateRequestToken = async (userId: number, token: string):
-      Promise<boolean> => {
+      Promise<string> => {
+    let newEmail = '';
     try {
+      // Delete all expired tokens.
       await this.pool.query(`
         DELETE FROM
           user_email_update_requests
         WHERE
           token_expires_at < (CURRENT_TIMESTAMP AT TIME ZONE 'UTC')`);
-      const result = await this.pool.query(`
-        SELECT id
+
+      // Verify the token is valid and return the new email.
+      const selectResult = await this.pool.query(`
+        SELECT new_email
         FROM
           user_email_update_requests
         WHERE
-          user_id = $1 and token = $2`, [userId, token]);
-      return result.rows.length > 0;
+          user_id = $1 AND token = $2 AND
+          token_expires_at >= (CURRENT_TIMESTAMP AT TIME ZONE 'UTC')`, [userId,
+        token]);
+      if (selectResult.rows.length > 0) {
+        newEmail = selectResult.rows[0].new_email;
+
+        // Delete the verified token so it can't be used again.
+        await this.pool.query(`
+          DELETE FROM
+            user_email_update_requests
+          WHERE
+            user_id = $1 AND token = $2`, [userId, token]);
+      }
+      return newEmail;
     } catch (error) {
       console.error("Error validating email update token: ", error);
       throw error;
@@ -670,10 +696,8 @@ export class UserDatabase {
           );
         }
       };
-
       await updateUserLanguages(profilePageData.accountId,
         profilePageData.selectedLanguageList);
-
       await this.pool.query('COMMIT');
     } catch (error) {
       await this.pool.query('ROLLBACK');

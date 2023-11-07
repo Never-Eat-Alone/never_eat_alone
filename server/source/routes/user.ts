@@ -70,6 +70,8 @@ export class UserRoutes {
     app.post('/api/update-user-display-name', this.updateUserDisplayName);
     app.post('/api/update-user-email/:profileId', this.updateUserEmail);
     app.post('/api/update-user-password/:profileId', this.updateUserPassword);
+    app.post('/api/confirm-user-email-update-token/:profileId',
+      this.confirmEmailUpdateRequest);
 
     this.userDatabase = userDatabase;
     this.attendeeDatabase = attendeeDatabase;
@@ -1288,7 +1290,8 @@ export class UserRoutes {
     response.status(200).send();
   }
 
-  private confirmEmailUpdateRequest = async (response, request) => {
+  private confirmEmailUpdateRequest = async (request, response) => {
+    const profileId = parseInt(request.params.profileId);
     const token = request.body.token;
     if (!request.session?.user) {
       response.status(401).send();
@@ -1297,7 +1300,7 @@ export class UserRoutes {
     let user: User;
     try {
       user = await this.userDatabase.loadUserBySessionId(request.session.id);
-      if (user.id === -1) {
+      if (user.id === -1 || user.id !== profileId) {
         response.status(401).send();
         return;
       }
@@ -1308,13 +1311,15 @@ export class UserRoutes {
     }
     let updatedUser: User;
     try {
-      const isValid = await this.userDatabase.verifyEmailUpdateRequestToken(
+      const newEmail = await this.userDatabase.verifyEmailUpdateRequestToken(
         user.id, token);
-      if (!isValid) {
-        
+      if (!newEmail) {
+        response.status(410).json({ message: 'Invalid link.' });
+        return;
       }
+      updatedUser = await this.userDatabase.updateEmail(user.id, newEmail);
     } catch (error) {
-      console.error('Failed at addEmailUpdateRequest', error);
+      console.error('Failed at verifyEmailUpdateRequestToken', error);
       response.status(500).send();
       return;
     }
