@@ -220,11 +220,12 @@ export class UserDatabase {
   }
 
   public addEmailUpdateRequest = async (userId: number, newEmail: string):
-      Promise<void> => {
+      Promise<number> => {
     const emailUpdateToken = generateEmailUpdateToken(userId);
-    await this.pool.query(`
+    const queryResult = await this.pool.query(`
       INSERT INTO user_email_update_requests (user_id, new_email, token)
-      VALUES ($1, $2, $3)`, [userId, newEmail, emailUpdateToken]);
+      VALUES ($1, $2, $3) RETURNING id`, [userId, newEmail, emailUpdateToken]);
+    return parseInt(queryResult.rows[0].id);
   }
 
   public verifyEmailUpdateRequestToken = async (userId: number, token: string):

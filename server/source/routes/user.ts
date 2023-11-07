@@ -1280,11 +1280,39 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
+    let tokenId: number;
     try {
-      await this.userDatabase.addEmailUpdateRequest(user.id, email);
+      tokenId = await this.userDatabase.addEmailUpdateRequest(user.id, email);
+
     } catch (error) {
       console.error('Failed at addEmailUpdateRequest', error);
       response.status(500).send();
+      return;
+    }
+
+    /** Send an email to the user's current email address to let the user know 
+     * of this request.
+     */
+    const emailUpdateRequestHtml = await new Promise<string>((resolve,
+        reject) => {
+      fs.readFile('public/resources/update_email/current_email.html', 'utf8',
+        (error, html) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(html);
+          }
+        });
+    });
+    const newHtml = emailUpdateRequestHtml.replace('{{name}}', user.name)
+      .replace('{{tokenId}}', tokenId.toString());
+    try {
+      await this.sendEmail(user.email, 'info@nevereatalone.net',
+        'NEA Account: Update Email Request', newHtml);
+    } catch (error) {
+      console.error('EMAIL_NOT_SENT', error);
+      response.status(200).json({
+        message: 'Failed to send the email to current user email.' });
       return;
     }
     response.status(200).send();
