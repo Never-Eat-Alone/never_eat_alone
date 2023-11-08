@@ -33,8 +33,10 @@ export class HttpSettingsPageModel extends SettingsPageModel {
     const paymentRecords: PaymentRecord[] = arrayFromJson(PaymentRecord,
       responseObject.paymentRecords);
     this._model = new LocalSettingsPageModel(this._profileId,
-      responseObject.displayName, responseObject.email, linkedSocialAccounts,
-      notificationSettings, defaultCard, paymentCards, paymentRecords);
+      responseObject.displayName, responseObject.email,
+      responseObject.pendingNewEmail, responseObject.isEmailUpdateTokenValid,
+      linkedSocialAccounts, notificationSettings, defaultCard, paymentCards,
+      paymentRecords);
     await this._model.load();
     this._isLoaded = true;
   }
@@ -49,6 +51,10 @@ export class HttpSettingsPageModel extends SettingsPageModel {
 
   public get email(): string {
     return this._model.email;
+  }
+
+  public get pendingNewEmail(): string {
+    return this._model.pendingNewEmail;
   }
 
   public get linkedSocialAccounts(): SocialAccount[] {

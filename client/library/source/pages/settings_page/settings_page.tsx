@@ -82,10 +82,10 @@ interface Properties {
 
   saveEmailErrorCode: AccountInformationTab.SaveEmailErrorCode;
 
-  onResendEmailUpdateConfirmation: () => void;
+  onResendEmailUpdateConfirmation: () => Promise<void>;
 
   /** Indicates user clicked on discard email change. */
-  onDiscardEmailUpdateRequest: () => void;
+  onDiscardEmailUpdateRequest: () => Promise<void>;
 
   onChangePaymentMethodsTabPage: (page: PaymentMethodsTab.Page) => void;
 

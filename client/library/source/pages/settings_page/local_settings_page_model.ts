@@ -4,6 +4,7 @@ import { SettingsPageModel } from './settings_page_model';
 
 export class LocalSettingsPageModel extends SettingsPageModel {
   constructor(profileId: number, displayName: string, email: string,
+      pendingNewEmail: string, isEmailUpdateTokenValid: boolean,
       linkedSocialAccounts: SocialAccount[], notificationSettings:
       NotificationSettings, defaultCard: PaymentCard, paymentCards:
       PaymentCard[], paymentRecords: PaymentRecord[]) {
@@ -12,6 +13,8 @@ export class LocalSettingsPageModel extends SettingsPageModel {
     this._profileId = profileId;
     this._displayName = displayName;
     this._email = email;
+    this._pendingNewEmail = pendingNewEmail;
+    this._isEmailUpdateTokenValid = isEmailUpdateTokenValid;
     this._linkedSocialAccounts = linkedSocialAccounts;
     this._notificationSettings = notificationSettings;
     this._defaultCard = defaultCard;
@@ -36,6 +39,11 @@ export class LocalSettingsPageModel extends SettingsPageModel {
   public get email(): string {
     this.ensureIsLoaded();
     return this._email;
+  }
+
+  public get pendingNewEmail(): string {
+    this.ensureIsLoaded();
+    return this._pendingNewEmail;
   }
 
   public get linkedSocialAccounts(): SocialAccount[] {
@@ -137,7 +145,16 @@ export class LocalSettingsPageModel extends SettingsPageModel {
   public async saveEmailUpdateRequest(newEmail: string, password: string):
       Promise<void> {
     this.ensureIsLoaded();
-    this._email = newEmail;
+    this._pendingNewEmail = newEmail;
+    this._isEmailUpdateTokenValid = true;
+    return;
+  }
+
+  public async confirmEmailUpdate(): Promise<void> {
+    this.ensureIsLoaded();
+    this._email = this._pendingNewEmail;
+    this._pendingNewEmail = '';
+    this._isEmailUpdateTokenValid = false;
     return;
   }
 
@@ -154,6 +171,8 @@ export class LocalSettingsPageModel extends SettingsPageModel {
 
   public async discardEmailUpdateRequest(): Promise<void> {
     this.ensureIsLoaded();
+    this._pendingNewEmail = '';
+    this._isEmailUpdateTokenValid = false;
     return;
   }
 
@@ -167,6 +186,7 @@ export class LocalSettingsPageModel extends SettingsPageModel {
   private _profileId: number;
   private _displayName: string;
   private _email: string;
+  private _pendingNewEmail: string;
   private _linkedSocialAccounts: SocialAccount[];
   private _notificationSettings: NotificationSettings;
   private _defaultCard: PaymentCard;

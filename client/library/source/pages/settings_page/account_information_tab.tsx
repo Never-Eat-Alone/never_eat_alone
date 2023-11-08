@@ -32,10 +32,10 @@ interface Properties {
 
   saveEmailErrorCode: AccountInformationTab.SaveEmailErrorCode;
 
-  onResendEmailUpdateConfirmation: () => void;
+  onResendEmailUpdateConfirmation: () => Promise<void>;
 
   /** Indicates user clicked on discard email change. */
-  onDiscardEmailUpdateRequest: () => void;
+  onDiscardEmailUpdateRequest: () => Promise<void>;
 
   /** Indicates link Google account button is clicked. */
   onGoogleClick: () => void;
@@ -96,6 +96,7 @@ interface State {
   emailPasswordHasChanged: boolean;
   isEditEmailAuthFailed: boolean;
   isEmailValid: boolean;
+  counter: number;
 }
 
 /** Dislays the account information tab content on the setting page. */
@@ -116,7 +117,8 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       emailHasChanged: false,
       emailPasswordHasChanged: false,
       isEditEmailAuthFailed: false,
-      isEmailValid: true
+      isEmailValid: true,
+      counter: 0
     };
   }
 
@@ -443,8 +445,41 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       }
       return '';
     })();
+    const resendLinkSection = (() => {
+      if (this.state.counter) {
+        return (
+          <div style={COUNT_DOWN_STYLE} >
+            {`New link sent (${this.state.counter}s)`}
+          </div>);
+      }
+      return <SecondaryTextLinkButton
+        label='resend link'
+        style={RESEND_LINK_STYLE}
+        onClick={this.handleResendEmailClick}
+      />;
+    })();
     const editEmailSection = (() => {
       if (!this.state.isEditEmail) {
+        if (this.props.isEmailUpdateTokenValid) {
+          return (
+            <div style={passwordColumnStyle} >
+              <div style={CURRENT_EMAIL_STYLE} >{this.props.email}</div>
+              <div style={PASSWORD_TITLE_STYLE} >
+                New Email
+              </div>
+              <InputField
+                style={PASSWORD_INPUT_FIELD_STYLE}
+                value={this.state.newEmail}
+                readOnly
+              />
+              <div>
+                Your email is not updated until you confirm it. {'\n'}
+                {resendLinkSection} or <SecondaryTextLinkButton
+                label='Discard this change'
+                onClick={this.props.onDiscardEmailUpdateRequest} />.
+              </div>
+            </div>);
+        }
         return (
           <div style={inputEditRowStyle} >
             <InputField
@@ -604,6 +639,16 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       </>);
   }
 
+  public componentDidUpdate(): void {
+    if (this.state.counter === 0) {
+      clearInterval(this._emailTimerId);
+    }
+  }
+
+  public componentWillUnmount(): void {
+    clearInterval(this._emailTimerId);
+  }
+
   private handleEditDisplayNameClick = () => {
     this.setState({ isEditDisplayName: true });
   }
@@ -728,6 +773,16 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       passwordHasChanged: true
     });
   }
+
+  private handleResendEmailClick = async () => {
+    await this.props.onResendEmailUpdateConfirmation();
+    this.setState({ counter: 30 });
+    this._emailTimerId = setInterval(() => {
+      this.setState((prevState) => ({ counter: prevState.counter - 1 }));
+    }, 1000);
+  }
+
+  private _emailTimerId: NodeJS.Timeout;
 }
 
 export namespace AccountInformationTab {
@@ -1207,3 +1262,24 @@ const CURRENT_EMAIL_STYLE: React.CSSProperties = {
   fontWeight: 400,
   lineHeight: 'normal'
 };
+
+const COUNT_DOWN_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '12px',
+  lineHeight: '15px',
+  color: 'var(--yellow-700-dark, #C67E14)'
+};
+
+const RESEND_LINK_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '12px',
+  lineHeight: '15px',
+  color: 'var(--yellow-700-dark, #C67E14)',
+  textDecoration: 'underline'
+};
+
+
