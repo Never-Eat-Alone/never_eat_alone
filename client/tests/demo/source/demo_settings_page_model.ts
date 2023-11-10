@@ -21,14 +21,17 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
   }
 
   public get profileId(): number {
+    this.ensureIsLoaded();
     return this._profileId;
   }
 
   public get displayName(): string {
+    this.ensureIsLoaded();
     return this._displayName;
   }
 
   public get email(): string {
+    this.ensureIsLoaded();
     return this._email;
   }
 
@@ -55,6 +58,16 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
   public get paymentRecords(): NeverEatAlone.PaymentRecord[] {
     this.ensureIsLoaded();
     return this._paymentRecords;
+  }
+
+  public get isEmailUpdateTokenValid(): boolean {
+    this.ensureIsLoaded();
+    return this._isEmailUpdateTokenValid;
+  }
+
+  public get pendingNewEmail(): string {
+    this.ensureIsLoaded();
+    return this._pendingNewEmail;
   }
 
   public async addCard(card: NeverEatAlone.PaymentCard): Promise<void> {
@@ -125,13 +138,24 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
     return;
   }
 
-  public async saveEmail(newEmail: string, password: string): Promise<
-      NeverEatAlone.User> {
+  public async saveEmailUpdateRequest(newEmail: string, password: string):
+      Promise<void> {
     this.ensureIsLoaded();
     return;
   }
 
-  public async savePassword(newPassword: string): Promise<void> {
+  public async savePassword(currentPassword: string, newPassword: string):
+      Promise<void> {
+    this.ensureIsLoaded();
+    return;
+  }
+
+  public async resendEmailUpdateConfirmation(): Promise<void> {
+    this.ensureIsLoaded();
+    return;
+  }
+
+  public async discardEmailUpdateRequest(): Promise<void> {
     this.ensureIsLoaded();
     return;
   }
@@ -151,4 +175,6 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
   private _defaultCard: NeverEatAlone.PaymentCard;
   private _paymentCards: NeverEatAlone.PaymentCard[];
   private _paymentRecords: NeverEatAlone.PaymentRecord[];
+  private _isEmailUpdateTokenValid: boolean;
+  private _pendingNewEmail: string;
 }

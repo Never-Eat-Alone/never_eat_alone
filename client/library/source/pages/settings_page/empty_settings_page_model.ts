@@ -24,6 +24,10 @@ export class EmptySettingsPageModel extends SettingsPageModel {
     throw new Error('SettingsPageModel not loaded.');
   }
 
+  public get pendingNewEmail(): string {
+    throw new Error('SettingsPageModel not loaded.');
+  }
+
   public get linkedSocialAccounts(): SocialAccount[] {
     throw new Error('SettingsPageModel not loaded.');
   }
