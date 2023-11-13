@@ -94,7 +94,6 @@ interface State {
   editEmailPassword: string;
   emailHasChanged: boolean;
   emailPasswordHasChanged: boolean;
-  isEditEmailAuthFailed: boolean;
   isEmailValid: boolean;
   counter: number;
 }
@@ -116,7 +115,6 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       editEmailPassword: '',
       emailHasChanged: false,
       emailPasswordHasChanged: false,
-      isEditEmailAuthFailed: false,
       isEmailValid: true,
       counter: 0
     };
@@ -465,19 +463,20 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           return (
             <div style={passwordColumnStyle} >
               <div style={CURRENT_EMAIL_STYLE} >{this.props.email}</div>
-              <div style={PASSWORD_TITLE_STYLE} >
-                New Email
-              </div>
+              <div style={PASSWORD_TITLE_STYLE} >New Email</div>
               <InputField
                 style={PASSWORD_INPUT_FIELD_STYLE}
                 value={this.state.newEmail}
                 readOnly
               />
-              <div>
+              <div style={PENDING_EMAIL_DETAILS_STYLE} >
                 Your email is not updated until you confirm it. {'\n'}
-                {resendLinkSection} or <SecondaryTextLinkButton
-                label='Discard this change'
-                onClick={this.props.onDiscardEmailUpdateRequest} />.
+                {resendLinkSection} or
+                <SecondaryTextLinkButton
+                  label='Discard this change'
+                  style={DISCARD_LINK_STYLE}
+                  onClick={this.props.onDiscardEmailUpdateRequest}
+                />.
               </div>
             </div>);
         }
@@ -697,8 +696,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       editEmailPassword: '',
       emailHasChanged: false,
       emailPasswordHasChanged: false,
-      isEmailValid: true,
-      isEditEmailAuthFailed: false
+      isEmailValid: true
     });
   }
 
@@ -1283,4 +1281,26 @@ const RESEND_LINK_STYLE: React.CSSProperties = {
   textDecoration: 'underline'
 };
 
+const PENDING_EMAIL_DETAILS_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  color: 'var(--yellow-700-dark, #C67E14)',
+  fontFamily: 'Source Sans Pro',
+  fontSize: '12px',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  lineHeight: '15px',
+  whiteSpace: 'pre-line'
+};
 
+const DISCARD_LINK_STYLE: React.CSSProperties = {
+  color: 'var(--alert-status-error, #FF2C79)',
+  fontFamily: 'Source Sans Pro',
+  fontSize: '12px',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  lineHeight: 'normal',
+  textDecorationLine: 'underline'
+};
