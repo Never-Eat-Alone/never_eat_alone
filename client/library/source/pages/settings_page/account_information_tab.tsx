@@ -267,7 +267,8 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           </div>
           <div style={CHECKBOX_ROW_CONTAINER_STYLE} >
             <CheckBox
-              label='Yes, I want to permanently remove my account from NeverEatAlone.'
+              label='Yes, I want to permanently remove my account from 
+                NeverEatAlone.'
               checked={this.props.isDeleteChecked}
               onBoxClick={this.props.onDeleteCheckboxClick}
             />
