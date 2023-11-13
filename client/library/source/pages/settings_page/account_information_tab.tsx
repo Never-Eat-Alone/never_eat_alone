@@ -422,6 +422,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       }
       return '';
     })();
+    /** 
     const emailErrorMessage = (() => {
       if (!this.state.emailPasswordHasChanged && !this.state.emailHasChanged) {
         return '';
@@ -444,6 +445,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       }
       return '';
     })();
+    */
     const resendLinkSection = (() => {
       if (this.state.counter) {
         return (
@@ -523,7 +525,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
             hasError={this.state.editEmailPassword.length === 0 &&
               this.state.emailPasswordHasChanged}
           />
-          <div style={ERROR_MESSAGE_STYLE} >{emailErrorMessage}</div>
+          <div style={ERROR_MESSAGE_STYLE} ></div>
           <SaveCancelButtonCombo
             onSave={this.handleEmailSaveClick}
             onCancel={this.handleCancelEditEmail}
