@@ -32,6 +32,15 @@ interface Properties {
 
   saveEmailErrorCode: AccountInformationTab.SaveEmailErrorCode;
 
+  /** User new email address in */
+  newEmail: string;
+
+  /** Account password entered to submit update email request. */
+  editEmailPassword: string;
+
+  /** Whether the user entered a valid new email address or not. */
+  isNewEmailValid: boolean;
+
   onResendEmailUpdateConfirmation: () => Promise<void>;
 
   /** Indicates user clicked on discard email change. */
@@ -90,12 +99,6 @@ interface State {
   newPassword: string;
   confirmPassword: string;
   passwordHasChanged: boolean;
-  newEmail: string;
-  editEmailPassword: string;
-  emailHasChanged: boolean;
-  emailPasswordHasChanged: boolean;
-  isEmailValid: boolean;
-  counter: number;
 }
 
 /** Dislays the account information tab content on the setting page. */
@@ -110,13 +113,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       currentPassword: '',
       newPassword: '',
       confirmPassword: '',
-      passwordHasChanged: false,
-      newEmail: '',
-      editEmailPassword: '',
-      emailHasChanged: false,
-      emailPasswordHasChanged: false,
-      isEmailValid: true,
-      counter: 0
+      passwordHasChanged: false
     };
   }
 
@@ -446,18 +443,41 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       return '';
     })();
     */
-    const resendLinkSection = (() => {
-      if (this.state.counter) {
-        return (
-          <div style={COUNT_DOWN_STYLE} >
-            {`New link sent (${this.state.counter}s)`}
-          </div>);
+    const { newEmailHasError, newEmailErrorMessage, emailPasswordHasError,
+        emailPasswordErrorMessage, newEmailSaveErrorMessage } = (() => {
+      switch (this.props.saveEmailErrorCode) {
+        case AccountInformationTab.SaveEmailErrorCode.NO_CONNECTION:
+          return { newEmailSaveErrorMessage: `Something went wrong. We could't 
+            save your request. Please try again later.` };
+        case AccountInformationTab.SaveEmailErrorCode.DUPLICATE_EMAIL:
+          return { newEmailHasError: true, newEmailErrorMessage:
+            'Please enter a new email address.', emailPasswordHasError: false,
+            emailPasswordErrorMessage: '', newEmailSaveErrorMessage: '' };
+        case AccountInformationTab.SaveEmailErrorCode.EMPTY_EMAIL_FIELD:
+          return { newEmailHasError: true, newEmailErrorMessage:
+            'This field is required.', emailPasswordHasError: false,
+            emailPasswordErrorMessage: '', newEmailSaveErrorMessage: '' };
+        case AccountInformationTab.SaveEmailErrorCode.INVALID_EMAIL_ADDRESS:
+          return { newEmailHasError: true, newEmailErrorMessage:
+            'Please enter a valid email.', emailPasswordHasError: false,
+            emailPasswordErrorMessage: '', newEmailSaveErrorMessage: '' };
+        case AccountInformationTab.SaveEmailErrorCode.EMPTY_PASSWORD_FIELD:
+          return { newEmailHasError: false, newEmailErrorMessage: '',
+            emailPasswordHasError: true, emailPasswordErrorMessage:
+            'This field is required.', newEmailSaveErrorMessage: '' };
+        default:
+          return { newEmailHasError: false, newEmailErrorMessage: '',
+            emailPasswordHasError: false, emailPasswordErrorMessage: '',
+            newEmailSaveErrorMessage: '' };
       }
-      return <SecondaryTextLinkButton
-        label='resend link'
-        style={RESEND_LINK_STYLE}
-        onClick={this.handleResendEmailClick}
-      />;
+    })();
+    const {  } = (() => {
+      switch (this.props.saveEmailErrorCode) {
+        
+        default:
+          return { emailPasswordHasError: false, emailPasswordErrorMessage:
+            '' };
+      }
     })();
     const editEmailSection = (() => {
       if (!this.state.isEditEmail) {
@@ -468,12 +488,16 @@ export class AccountInformationTab extends React.Component<Properties, State> {
               <div style={PASSWORD_TITLE_STYLE} >New Email</div>
               <InputField
                 style={PASSWORD_INPUT_FIELD_STYLE}
-                value={this.state.newEmail}
+                value={this.props.newEmail}
                 readOnly
               />
               <div style={PENDING_EMAIL_DETAILS_STYLE} >
                 Your email is not updated until you confirm it. {'\n'}
-                {resendLinkSection} or
+                <SecondaryTextLinkButton
+                  label='resend link'
+                  style={RESEND_LINK_STYLE}
+                  onClick={this.handleResendEmailClick}
+                /> or
                 <SecondaryTextLinkButton
                   label='Discard this change'
                   style={DISCARD_LINK_STYLE}
@@ -508,11 +532,10 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           </div>
           <InputField
             style={PASSWORD_INPUT_FIELD_STYLE}
-            value={this.state.newEmail}
+            value={this.props.newEmail}
             placeholder='Your new email'
             onChange={this.handleNewEmailChange}
-            hasError={this.state.newEmail.length === 0 &&
-              this.state.emailHasChanged}
+            hasError={newEmailHasError}
           />
           <div style={PASSWORD_TITLE_STYLE} >
             Enter Password
@@ -520,10 +543,9 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           <PasswordInputField
             style={PASSWORD_INPUT_FIELD_STYLE}
             placeholder='Your Password'
-            value={this.state.editEmailPassword}
+            value={this.props.editEmailPassword}
             onChange={this.handleEmailPasswordChange}
-            hasError={this.state.editEmailPassword.length === 0 &&
-              this.state.emailPasswordHasChanged}
+            hasError={this.state.editEmailPassword.length === 0 }
           />
           <div style={ERROR_MESSAGE_STYLE} ></div>
           <SaveCancelButtonCombo
@@ -691,7 +713,8 @@ export class AccountInformationTab extends React.Component<Properties, State> {
 
   private handleEmailSaveClick = async () => {
     const { newEmail, editEmailPassword } = this.state;
-    await this.props.onEditEmailSaveClick(newEmail, editEmailPassword);
+    const errorCode = await this.props.onEditEmailSaveClick(newEmail,
+      editEmailPassword);
     this.setState({
       isEditEmail: false,
       newEmail: '',
@@ -777,10 +800,6 @@ export class AccountInformationTab extends React.Component<Properties, State> {
 
   private handleResendEmailClick = async () => {
     await this.props.onResendEmailUpdateConfirmation();
-    this.setState({ counter: 30 });
-    this._emailTimerId = setInterval(() => {
-      this.setState((prevState) => ({ counter: prevState.counter - 1 }));
-    }, 1000);
   }
 
   private _emailTimerId: NodeJS.Timeout;
@@ -804,7 +823,6 @@ export namespace AccountInformationTab {
   export enum SaveEmailErrorCode {
     NONE,
     NO_CONNECTION,
-    WRONG_PASSWORD,
     EMPTY_EMAIL_FIELD,
     EMPTY_PASSWORD_FIELD,
     INVALID_EMAIL_ADDRESS,
