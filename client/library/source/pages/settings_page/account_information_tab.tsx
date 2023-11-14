@@ -447,7 +447,9 @@ export class AccountInformationTab extends React.Component<Properties, State> {
         emailPasswordErrorMessage, newEmailSaveErrorMessage } = (() => {
       switch (this.props.saveEmailErrorCode) {
         case AccountInformationTab.SaveEmailErrorCode.NO_CONNECTION:
-          return { newEmailSaveErrorMessage: `Something went wrong. We could't 
+          return { newEmailHasError: false, newEmailErrorMessage: '',
+            emailPasswordHasError: false, emailPasswordErrorMessage: '',
+            newEmailSaveErrorMessage: `Something went wrong. We could't 
             save your request. Please try again later.` };
         case AccountInformationTab.SaveEmailErrorCode.DUPLICATE_EMAIL:
           return { newEmailHasError: true, newEmailErrorMessage:
