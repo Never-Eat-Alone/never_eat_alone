@@ -131,7 +131,7 @@ function runExpress(pool: Pool, config: any) {
   SGMail.setApiKey(config.send_grid_api_key);
 
   const Stripe = require('stripe');
-  const stripe = Stripe(config.stripe_test_api_key);
+  const stripe = Stripe(config.stripe.test_publishable_key);
 
   const userDatabase = new UserDatabase(pool);
   const userProfileImageDatabase = new UserProfileImageDatabase(pool);
