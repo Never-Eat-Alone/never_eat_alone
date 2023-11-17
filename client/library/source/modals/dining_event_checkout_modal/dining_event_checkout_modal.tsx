@@ -3,8 +3,8 @@ import { format } from 'date-fns';
 import * as React from 'react';
 import { AddCreditCardForm, ApplePayButton, CloseButton,
   CreditCardDropdownMenu, GooglePayButton, PayPalButton, PrimaryTextButton,
-  RedNavLinkWithArrow, SecondaryTextButtonWithArrow } from '../components';
-import { DisplayMode, PaymentCard } from '../definitions';
+  RedNavLinkWithArrow, SecondaryTextButtonWithArrow } from '../../components';
+import { DisplayMode, PaymentCard } from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -37,7 +37,7 @@ interface Properties {
   addCardErrorMessage: string;
 
   /** ErrorCode of the page. */
-  errorCode: JoinEventModal.ErrorCode;
+  errorCode: DiningEventCheckoutModal.ErrorCode;
 
   /** Errorcode regarding the add credit card form. */
   addCardErrorCode: AddCreditCardForm.ErrorCode;
@@ -75,8 +75,8 @@ interface Properties {
 }
 
 interface State {
-  page: JoinEventModal.Page;
-  errorCode: JoinEventModal.ErrorCode;
+  page: DiningEventCheckoutModal.Page;
+  errorCode: DiningEventCheckoutModal.ErrorCode;
 }
 
 function getTaxAmount(fee: number, taxRate: number) {
@@ -84,11 +84,12 @@ function getTaxAmount(fee: number, taxRate: number) {
 }
 
 /** Displays the Join Event Modal. */
-export class JoinEventModal extends React.Component<Properties, State> {
+export class DiningEventCheckoutModal extends React.Component<Properties,
+    State> {
   constructor(props: Properties) {
     super(props);
     this.state = {
-      page: JoinEventModal.Page.INITIAL,
+      page: DiningEventCheckoutModal.Page.INITIAL,
       errorCode: this.props.errorCode
     };
   }
@@ -127,10 +128,10 @@ export class JoinEventModal extends React.Component<Properties, State> {
       </div> || null);
     const totalPaymentSection = (() => {
       if (this.props.checkoutCompleted && this.state.page ===
-          JoinEventModal.Page.PROCESSING_PAYMENT) {
-        if (this.props.errorCode === JoinEventModal.ErrorCode.PAYMENT_FAILED ||
+          DiningEventCheckoutModal.Page.PROCESSING_PAYMENT) {
+        if (this.props.errorCode === DiningEventCheckoutModal.ErrorCode.PAYMENT_FAILED ||
             this.props.errorCode ===
-            JoinEventModal.ErrorCode.THIRDPARTY_PAYMENT_FAILED) {
+            DiningEventCheckoutModal.ErrorCode.THIRDPARTY_PAYMENT_FAILED) {
           return (
             <React.Fragment>
               <div
@@ -258,15 +259,15 @@ export class JoinEventModal extends React.Component<Properties, State> {
             onClick={this.props.onJoinEvent}
           />);
       }
-      if (this.state.page === JoinEventModal.Page.PROCESSING_PAYMENT &&
+      if (this.state.page === DiningEventCheckoutModal.Page.PROCESSING_PAYMENT &&
           !this.props.checkoutCompleted) {
         return null;
       }
       if (this.props.checkoutCompleted && this.state.page ===
-          JoinEventModal.Page.PROCESSING_PAYMENT) {
-        if (this.props.errorCode === JoinEventModal.ErrorCode.PAYMENT_FAILED ||
+          DiningEventCheckoutModal.Page.PROCESSING_PAYMENT) {
+        if (this.props.errorCode === DiningEventCheckoutModal.ErrorCode.PAYMENT_FAILED ||
             this.props.errorCode ===
-            JoinEventModal.ErrorCode.THIRDPARTY_PAYMENT_FAILED) {
+            DiningEventCheckoutModal.ErrorCode.THIRDPARTY_PAYMENT_FAILED) {
           return <PrimaryTextButton label='Back to Checkout'
                     style={BACK_TO_BUTTON_STYLE}
                     onClick={this.handleBackToCheckout}
@@ -280,7 +281,7 @@ export class JoinEventModal extends React.Component<Properties, State> {
       return paymentMethodSection;
     })();
     const eventNameButtonSection = (() => {
-      if (this.state.page === JoinEventModal.Page.ADD_CARD) {
+      if (this.state.page === DiningEventCheckoutModal.Page.ADD_CARD) {
         return (
           <AddCreditCardForm
             style={EVENT_NAME_BUTTON_CONTAINER_STYLE}
@@ -306,10 +307,10 @@ export class JoinEventModal extends React.Component<Properties, State> {
       })();
     const costDetailsSection = (() => {
       if (this.props.checkoutCompleted &&
-          this.state.page === JoinEventModal.Page.PROCESSING_PAYMENT) {
-        if (this.props.errorCode === JoinEventModal.ErrorCode.PAYMENT_FAILED ||
+          this.state.page === DiningEventCheckoutModal.Page.PROCESSING_PAYMENT) {
+        if (this.props.errorCode === DiningEventCheckoutModal.ErrorCode.PAYMENT_FAILED ||
             this.props.errorCode ===
-            JoinEventModal.ErrorCode.THIRDPARTY_PAYMENT_FAILED) {
+            DiningEventCheckoutModal.ErrorCode.THIRDPARTY_PAYMENT_FAILED) {
           return (
             <div style={costDetailsContainerStyle} >
               <div style={PAYMENT_COMPLETED_CONTAINER_STYLE} >
@@ -361,7 +362,7 @@ export class JoinEventModal extends React.Component<Properties, State> {
               </div>
             </div>);
         }
-      } else if (this.state.page === JoinEventModal.Page.PROCESSING_PAYMENT &&
+      } else if (this.state.page === DiningEventCheckoutModal.Page.PROCESSING_PAYMENT &&
           !this.props.checkoutCompleted) {
         return (
           <div style={costDetailsContainerStyle} >
@@ -435,26 +436,26 @@ export class JoinEventModal extends React.Component<Properties, State> {
 
   private handleBackToCheckout = () => {
     this.setState({
-      page: JoinEventModal.Page.INITIAL,
-      errorCode: JoinEventModal.ErrorCode.NONE
+      page: DiningEventCheckoutModal.Page.INITIAL,
+      errorCode: DiningEventCheckoutModal.ErrorCode.NONE
     });
   }
 
   private handleAddCard = () => {
-    this.setState({ page: JoinEventModal.Page.ADD_CARD });
+    this.setState({ page: DiningEventCheckoutModal.Page.ADD_CARD });
   }
 
   private handleBackClick = () => {
-    this.setState({ page: JoinEventModal.Page.INITIAL });
+    this.setState({ page: DiningEventCheckoutModal.Page.INITIAL });
   }
 
   private handleCheckout = () => {
-    this.setState({ page: JoinEventModal.Page.PROCESSING_PAYMENT });
+    this.setState({ page: DiningEventCheckoutModal.Page.PROCESSING_PAYMENT });
     this.props.onCheckout();
   }
 }
 
-export namespace JoinEventModal {
+export namespace DiningEventCheckoutModal {
   export enum Page {
     INITIAL,
     ADD_CARD,
