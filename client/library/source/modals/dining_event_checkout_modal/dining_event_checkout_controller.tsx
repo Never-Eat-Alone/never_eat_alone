@@ -19,8 +19,9 @@ interface Properties {
 
 interface State {
   isLoaded: boolean;
-  errorCode: DiningEventCheckoutModal.ErrorCode;
+  checkoutErrorCode: DiningEventCheckoutModal.ErrorCode;
   addCardErrorCode: AddCreditCardForm.ErrorCode;
+  errorCode: number;
 }
 
 export class DiningEventCheckoutModalController extends React.Component<
@@ -29,8 +30,9 @@ export class DiningEventCheckoutModalController extends React.Component<
     super(props);
     this.state = {
       isLoaded: false,
-      errorCode: DiningEventCheckoutModal.ErrorCode.NONE,
-      addCardErrorCode: AddCreditCardForm.ErrorCode.NONE
+      checkoutErrorCode: DiningEventCheckoutModal.ErrorCode.NONE,
+      addCardErrorCode: AddCreditCardForm.ErrorCode.NONE,
+      errorCode: null
     };
   }
 
@@ -53,7 +55,7 @@ export class DiningEventCheckoutModalController extends React.Component<
         paymentCardsOnFile={this.props.model.paymentCardList}
         defaultCard={this.props.model.defaultPaymentCard}
         addCardErrorMessage=''
-        errorCode={this.state.errorCode}
+        errorCode={this.state.checkoutErrorCode}
         addCardErrorCode={this.state.addCardErrorCode}
         cardAdded
         checkoutCompleted
@@ -70,6 +72,7 @@ export class DiningEventCheckoutModalController extends React.Component<
 
   public async componentDidMount(): Promise<void> {
     try {
+      console.log('componentDidMount');
       await this.props.model.load();
       this.setState({ isLoaded: true });
     } catch (error) {
@@ -89,7 +92,7 @@ export class DiningEventCheckoutModalController extends React.Component<
       this.props.onJoinEventSuccess();
     } catch (error) {
       this.setState({
-        errorCode: DiningEventCheckoutModal.ErrorCode.JOIN_FAILED });
+        checkoutErrorCode: DiningEventCheckoutModal.ErrorCode.JOIN_FAILED });
     }
   }
 

@@ -17,6 +17,7 @@ export class HttpDiningEventCheckoutModel extends DiningEventCheckoutModel {
     if (this._isLoaded) {
       return;
     }
+    console.log('load checkout model started');
     const response = await fetch(`/api/checkout_dining_event/${this._eventId}`);
     this._checkResponse(response);
     const responseObject = await response.json();

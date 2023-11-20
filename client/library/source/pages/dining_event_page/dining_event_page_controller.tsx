@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Modal } from '../../components';
 import { DisplayMode, User } from '../../definitions';
 import { DiningEventCheckoutModalController } from
   '../../modals/dining_event_checkout_modal';
@@ -45,44 +46,50 @@ export class DiningEventPageController extends React.Component<Properties,
         DiningEventPage.ErrorCode.NONE) {
       return <div />;
     }
-    if (this.state.isCheckoutModal) {
-      return <DiningEventCheckoutModalController
-        account={this.props.account}
-        displayMode={this.props.displayMode}
-        model={this.props.model.getCheckoutModel()}
-        profileImageSrc={this.props.profileImageSrc}
-        onClose={this.handleCloseCheckoutModal}
-        showLoginModal={this.props.showLoginModal}
-        onJoinEventSuccess={this.handleJoinEventSuccess}
-      />;
-    }
+    console.log('this.state.isCheckoutModal', this.state.isCheckoutModal);
+    const checkoutModal = (this.state.isCheckoutModal &&
+      <Modal>
+        <DiningEventCheckoutModalController
+          account={this.props.account}
+          displayMode={this.props.displayMode}
+          model={this.props.model.getCheckoutModel()}
+          profileImageSrc={this.props.profileImageSrc}
+          onClose={this.handleCloseCheckoutModal}
+          showLoginModal={this.props.showLoginModal}
+          onJoinEventSuccess={this.handleJoinEventSuccess}
+        />
+      </Modal> || null);
     const now = new Date();
     const isRSVPOpen = (this.props.model.diningEvent.rsvpOpenAt <= now &&
       this.props.model.diningEvent.rsvpCloseAt > now);
     const isGoing = this.props.model.diningEvent.attendeeList.some(attendee =>
       attendee.userId === this.props.account.id && attendee.status === 'GOING');
-    return <DiningEventPage
-      displayMode={this.props.displayMode}
-      eventColor={this.props.model.diningEvent.eventColor}
-      eventFee={this.props.model.diningEvent.eventFee}
-      coverImageSrc={this.props.model.diningEvent.coverImageSrc}
-      title={this.props.model.diningEvent.title}
-      restaurant={this.props.model.diningEvent.restaurant}
-      dressCode={this.props.model.diningEvent.dressCode}
-      seating={this.props.model.diningEvent.seating}
-      location={this.props.model.diningEvent.location}
-      reservationName={this.props.model.diningEvent.reservationName}
-      startTime={this.props.model.diningEvent.startAt}
-      endTime={this.props.model.diningEvent.endAt}
-      attendeeList={this.props.model.diningEvent.attendeeList}
-      totalCapacity={this.props.model.diningEvent.totalCapacity}
-      description={this.props.model.diningEvent.description}
-      account={this.props.account}
-      isRSVPOpen={isRSVPOpen}
-      isGoing={isGoing}
-      onJoinEvent={this.handleJoinEvent}
-      onRemoveSeat={this.handleRemoveSeat}
-    />;
+    return (
+      <>
+        {checkoutModal}
+        <DiningEventPage
+          displayMode={this.props.displayMode}
+          eventColor={this.props.model.diningEvent.eventColor}
+          eventFee={this.props.model.diningEvent.eventFee}
+          coverImageSrc={this.props.model.diningEvent.coverImageSrc}
+          title={this.props.model.diningEvent.title}
+          restaurant={this.props.model.diningEvent.restaurant}
+          dressCode={this.props.model.diningEvent.dressCode}
+          seating={this.props.model.diningEvent.seating}
+          location={this.props.model.diningEvent.location}
+          reservationName={this.props.model.diningEvent.reservationName}
+          startTime={this.props.model.diningEvent.startAt}
+          endTime={this.props.model.diningEvent.endAt}
+          attendeeList={this.props.model.diningEvent.attendeeList}
+          totalCapacity={this.props.model.diningEvent.totalCapacity}
+          description={this.props.model.diningEvent.description}
+          account={this.props.account}
+          isRSVPOpen={isRSVPOpen}
+          isGoing={isGoing}
+          onJoinEvent={this.handleJoinEvent}
+          onRemoveSeat={this.handleRemoveSeat}
+        />
+      </>);
   }
 
   public async componentDidMount(): Promise<void> {
