@@ -92,6 +92,7 @@ export class DiningEventCheckoutModal extends React.Component<Properties,
       page: DiningEventCheckoutModal.Page.INITIAL,
       errorCode: this.props.errorCode
     };
+    this._containerRef = React.createRef();
   }
 
   public render(): JSX.Element {
@@ -416,23 +417,42 @@ export class DiningEventCheckoutModal extends React.Component<Properties,
         </div>);
     }
     return (
-      <div style={containerStyle} >
-        <CloseButton
-          style={CLOSE_BUTTON_STYLE}
-          displayMode={DisplayMode.MOBILE}
-          onClick={this.props.onClose}
-        />
-        {costDetailsSection}
-        <div style={PAYMENT_METHOD_CONTAINER_STYLE} >
-          <img
-            style={{...IMAGE_STYLE,
-              height: this.props.eventFee == 0 && '150px' || '50px'}}
-            src={this.props.imageSrc}
-            alt='Event Image'
+      <div style={FORM_STYLE} >
+        <div ref={this._containerRef} style={containerStyle} >
+          <CloseButton
+            style={CLOSE_BUTTON_STYLE}
+            displayMode={DisplayMode.MOBILE}
+            onClick={this.props.onClose}
           />
-          {eventNameButtonSection}
+          {costDetailsSection}
+          <div style={PAYMENT_METHOD_CONTAINER_STYLE} >
+            <img
+              style={{...IMAGE_STYLE,
+                height: this.props.eventFee == 0 && '150px' || '50px'}}
+              src={this.props.imageSrc}
+              alt='Event Image'
+            />
+            {eventNameButtonSection}
+          </div>
         </div>
       </div>);
+  }
+
+  public componentDidMount(): void {
+    document.addEventListener('mousedown', this.handleClickOutside);
+  }
+
+  public componentWillUnmount(): void {
+    document.removeEventListener('mousedown', this.handleClickOutside);
+  }
+
+  private handleClickOutside: { (event: any): void } = (
+      event: React.MouseEvent) => {
+    if (!this._containerRef.current.contains(event.target as Node)) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.props.onClose();
+    }
   }
 
   private handleBackToCheckout = () => {
@@ -454,6 +474,8 @@ export class DiningEventCheckoutModal extends React.Component<Properties,
     this.setState({ page: DiningEventCheckoutModal.Page.PROCESSING_PAYMENT });
     this.props.onCheckout();
   }
+
+  private _containerRef: React.RefObject<HTMLDivElement>;
 }
 
 export namespace DiningEventCheckoutModal {
@@ -470,6 +492,20 @@ export namespace DiningEventCheckoutModal {
     JOIN_FAILED
   }
 }
+
+const FORM_STYLE: React.CSSProperties = {
+  position: 'fixed',
+  top: '0px',
+  left: '0px',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '100%',
+  height: '100%',
+  backgroundColor: 'rgb(150, 150, 150, 0.5)',
+  zIndex: 1000
+};
 
 const CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
