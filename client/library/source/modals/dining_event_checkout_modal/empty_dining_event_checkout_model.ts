@@ -14,6 +14,15 @@ export class EmptyDiningEventCheckoutModel extends DiningEventCheckoutModel {
     throw new Error('EmptyDiningEventCheckoutModel not loaded.');
   }
 
+  public get defaultPaymentCard(): PaymentCard {
+    throw new Error('EmptyDiningEventCheckoutModel not loaded.');
+  }
+
+  public async joinEvent(accountId: number, accountName: string,
+      profileImageSrc: string): Promise<void> {
+    throw new Error('EmptyDiningEventCheckoutModel not loaded.');
+  }
+
   public async checkout(): Promise<void> {
     throw new Error('EmptyDiningEventCheckoutModel not loaded.');
   }

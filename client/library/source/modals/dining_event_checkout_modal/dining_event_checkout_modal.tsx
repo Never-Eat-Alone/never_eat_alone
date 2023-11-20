@@ -71,7 +71,7 @@ interface Properties {
   onGooglePayClick: () => void;
 
   /** Indicates the Apple Pay button is clicked. */
-  onApplePay: () => void;
+  onApplePayClick: () => void;
 }
 
 interface State {
@@ -129,8 +129,8 @@ export class DiningEventCheckoutModal extends React.Component<Properties,
     const totalPaymentSection = (() => {
       if (this.props.checkoutCompleted && this.state.page ===
           DiningEventCheckoutModal.Page.PROCESSING_PAYMENT) {
-        if (this.props.errorCode === DiningEventCheckoutModal.ErrorCode.PAYMENT_FAILED ||
-            this.props.errorCode ===
+        if (this.props.errorCode === DiningEventCheckoutModal.ErrorCode
+            .PAYMENT_FAILED || this.props.errorCode ===
             DiningEventCheckoutModal.ErrorCode.THIRDPARTY_PAYMENT_FAILED) {
           return (
             <React.Fragment>
@@ -244,7 +244,7 @@ export class DiningEventCheckoutModal extends React.Component<Properties,
           onClick={this.props.onPaypalClick} />
         <div style={PAY_BUTTON_CONTAINER_STYLE} >
           <ApplePayButton style={PAY_BUTTON_STYLE}
-            onClick={this.props.onApplePay} />
+            onClick={this.props.onApplePayClick} />
           <GooglePayButton style={PAY_BUTTON_STYLE}
             onClick={this.props.onGooglePayClick} />
         </div>
@@ -259,14 +259,14 @@ export class DiningEventCheckoutModal extends React.Component<Properties,
             onClick={this.props.onJoinEvent}
           />);
       }
-      if (this.state.page === DiningEventCheckoutModal.Page.PROCESSING_PAYMENT &&
-          !this.props.checkoutCompleted) {
+      if (this.state.page === DiningEventCheckoutModal.Page
+          .PROCESSING_PAYMENT && !this.props.checkoutCompleted) {
         return null;
       }
       if (this.props.checkoutCompleted && this.state.page ===
           DiningEventCheckoutModal.Page.PROCESSING_PAYMENT) {
-        if (this.props.errorCode === DiningEventCheckoutModal.ErrorCode.PAYMENT_FAILED ||
-            this.props.errorCode ===
+        if (this.props.errorCode === DiningEventCheckoutModal.ErrorCode
+            .PAYMENT_FAILED || this.props.errorCode ===
             DiningEventCheckoutModal.ErrorCode.THIRDPARTY_PAYMENT_FAILED) {
           return <PrimaryTextButton label='Back to Checkout'
                     style={BACK_TO_BUTTON_STYLE}
@@ -307,9 +307,10 @@ export class DiningEventCheckoutModal extends React.Component<Properties,
       })();
     const costDetailsSection = (() => {
       if (this.props.checkoutCompleted &&
-          this.state.page === DiningEventCheckoutModal.Page.PROCESSING_PAYMENT) {
-        if (this.props.errorCode === DiningEventCheckoutModal.ErrorCode.PAYMENT_FAILED ||
-            this.props.errorCode ===
+          this.state.page === DiningEventCheckoutModal.Page.PROCESSING_PAYMENT
+          ) {
+        if (this.props.errorCode === DiningEventCheckoutModal.ErrorCode
+            .PAYMENT_FAILED || this.props.errorCode ===
             DiningEventCheckoutModal.ErrorCode.THIRDPARTY_PAYMENT_FAILED) {
           return (
             <div style={costDetailsContainerStyle} >
@@ -362,8 +363,8 @@ export class DiningEventCheckoutModal extends React.Component<Properties,
               </div>
             </div>);
         }
-      } else if (this.state.page === DiningEventCheckoutModal.Page.PROCESSING_PAYMENT &&
-          !this.props.checkoutCompleted) {
+      } else if (this.state.page === DiningEventCheckoutModal.Page
+          .PROCESSING_PAYMENT && !this.props.checkoutCompleted) {
         return (
           <div style={costDetailsContainerStyle} >
             <div style={CENTER_CONTAINER_STYLE} >
@@ -465,7 +466,8 @@ export namespace DiningEventCheckoutModal {
   export enum ErrorCode {
     NONE,
     PAYMENT_FAILED,
-    THIRDPARTY_PAYMENT_FAILED
+    THIRDPARTY_PAYMENT_FAILED,
+    JOIN_FAILED
   }
 }
 

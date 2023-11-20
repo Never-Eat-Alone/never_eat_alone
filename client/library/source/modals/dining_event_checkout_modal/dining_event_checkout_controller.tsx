@@ -9,6 +9,12 @@ interface Properties {
   account: User;
   displayMode: DisplayMode;
   model: DiningEventCheckoutModel;
+  profileImageSrc: string;
+  onClose: () => void;
+  showLoginModal: () => void;
+
+  /** Indicates the join event was successful. */
+  onJoinEventSuccess: () => void;
 }
 
 interface State {
@@ -42,23 +48,23 @@ export class DiningEventCheckoutModalController extends React.Component<
         eventFeeDescription=''
         taxRate={0.13}
         eventTitle={this.props.model.diningEvent.title}
-        imageSrc=''
+        imageSrc={this.props.model.diningEvent.coverImageSrc}
         eventStartDate={this.props.model.diningEvent.startAt}
         paymentCardsOnFile={this.props.model.paymentCardList}
-        defaultCard={}
+        defaultCard={this.props.model.defaultPaymentCard}
         addCardErrorMessage=''
         errorCode={this.state.errorCode}
         addCardErrorCode={this.state.addCardErrorCode}
         cardAdded
         checkoutCompleted
-        onJoinEvent={}
-        onCreditCardClick={}
-        onClose={}
-        onCheckout={}
-        onAddCard={}
-        onPaypalClick={}
-        onGooglePayClick={}
-        onApplePay={}
+        onJoinEvent={this.handleJoinEvent}
+        onCreditCardClick={this.handleCreditCardClick}
+        onClose={this.props.onClose}
+        onCheckout={this.handleCheckout}
+        onAddCard={this.handleAddCard}
+        onPaypalClick={this.handlePaypalClick}
+        onGooglePayClick={this.handleGooglePayClick}
+        onApplePayClick={this.handleApplePayClick}
       />);
   }
 
@@ -69,5 +75,45 @@ export class DiningEventCheckoutModalController extends React.Component<
     } catch (error) {
       this.setState({ errorCode: error.code });
     }
+  }
+
+  /** Indicates the event is free and user clicked on join button. */
+  private handleJoinEvent = async () => {
+    if (this.props.account?.id === -1) {
+      this.props.showLoginModal();
+      return;
+    }
+    try {
+      await this.props.model.joinEvent(this.props.account.id,
+        this.props.account.name, this.props.profileImageSrc);
+      this.props.onJoinEventSuccess();
+    } catch (error) {
+      this.setState({
+        errorCode: DiningEventCheckoutModal.ErrorCode.JOIN_FAILED });
+    }
+  }
+
+  private handleCreditCardClick = () => {
+
+  }
+
+  private handleCheckout = () => {
+
+  }
+
+  private handleAddCard = () => {
+
+  }
+
+  private handlePaypalClick = () => {
+
+  }
+
+  private handleGooglePayClick = () => {
+
+  }
+
+  private handleApplePayClick = () => {
+
   }
 }

@@ -1,18 +1,33 @@
 import { DiningEvent, PaymentCard, arrayFromJson } from '../../definitions';
 import { DiningEventCheckoutModel } from './dining_event_checkout_model';
+import { EmptyDiningEventCheckoutModel } from
+  './empty_dining_event_checkout_model';
 import { LocalDiningEventCheckoutModel } from
   './local_dining_event_checkout_model';
 
 export class HttpDiningEventCheckoutModel extends DiningEventCheckoutModel {
+  constructor(eventId: number) {
+    super();
+    this._isLoaded = false;
+    this._eventId = eventId;
+    this._model = new EmptyDiningEventCheckoutModel();
+  }
+
   public async load(): Promise<void> {
-    const response = await fetch('/api/checkout_dining_event/:eventId');
+    if (this._isLoaded) {
+      return;
+    }
+    const response = await fetch(`/api/checkout_dining_event/${this._eventId}`);
     this._checkResponse(response);
     const responseObject = await response.json();
     const diningEvent = DiningEvent.fromJson(responseObject.diningEvent);
     const paymentCardList: PaymentCard[] = arrayFromJson(PaymentCard,
       responseObject.paymentCardList);
+    const defaultPaymentCard = PaymentCard.fromJson(
+      responseObject.defaultPaymentCard);
     this._model = new LocalDiningEventCheckoutModel(diningEvent,
-      paymentCardList);
+      paymentCardList, defaultPaymentCard);
+    await this._model.load();
     this._isLoaded = true;
   }
 
@@ -22,6 +37,23 @@ export class HttpDiningEventCheckoutModel extends DiningEventCheckoutModel {
 
   public get paymentCardList(): PaymentCard[] {
     return this._model.paymentCardList;
+  }
+
+  public get defaultPaymentCard(): PaymentCard {
+    return this._model.defaultPaymentCard;
+  }
+
+  public async joinEvent(): Promise<void> {
+    const response = await fetch(`/api/dining_events/${this._eventId}/join`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    this._checkResponse(response);
+    const responseObject = await response.json();
+    await this._model.joinEvent(parseInt(responseObject.accountId),
+      responseObject.accountName, responseObject.profileImageSrc);
   }
 
   public async checkout(): Promise<void> {
@@ -41,5 +73,6 @@ export class HttpDiningEventCheckoutModel extends DiningEventCheckoutModel {
   }
 
   private _isLoaded: boolean;
+  private _eventId: number;
   private _model: DiningEventCheckoutModel;
 }
