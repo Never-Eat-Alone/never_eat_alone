@@ -1,4 +1,6 @@
 import { DiningEvent } from '../../definitions';
+import { DiningEventCheckoutModel } from
+  '../../modals/dining_event_checkout_modal';
 import { DiningEventPageModel } from './dining_event_page_model';
 
 /**
@@ -14,9 +16,8 @@ export class EmptyDiningEventPageModel extends DiningEventPageModel {
     throw new Error('DiningEventPageModel not loaded.');
   }
 
-  public async joinEvent(accountId: number, accountName: string,
-      profileImageSrc: string): Promise<void> {
-    throw new Error('Unable to join event from empty model.');
+  public getCheckoutModel(): DiningEventCheckoutModel {
+    throw new Error('DiningEventPageModel not loaded.');
   }
 
   public async removeSeat(accountId: number, accountName: string,

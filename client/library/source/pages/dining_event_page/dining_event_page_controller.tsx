@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { DisplayMode, User } from '../../definitions';
+import { DiningEventCheckoutModalController } from
+  '../../modals/dining_event_checkout_modal';
 import { DiningEventPage } from './dining_event_page';
 import { DiningEventPageModel } from './dining_event_page_model';
 
@@ -14,7 +16,7 @@ interface Properties {
   showLoginModal: () => void;
 
   /** Indicates the join event was successful. */
-  onJoinEventSuccess: () => void;
+  onJoinEventSuccess: () => Promise<void>;
 
   /** Indicates the remove seat was successful. */
   onRemoveSeatSuccess: () => void;
@@ -23,6 +25,7 @@ interface Properties {
 interface State {
   isLoaded: boolean;
   errorCode: DiningEventPage.ErrorCode;
+  isCheckoutModal: boolean;
 }
 
 /** Implements the DiningEventPageController. */
@@ -32,7 +35,8 @@ export class DiningEventPageController extends React.Component<Properties,
     super(props);
     this.state = {
       isLoaded: false,
-      errorCode: DiningEventPage.ErrorCode.NONE
+      errorCode: DiningEventPage.ErrorCode.NONE,
+      isCheckoutModal: false
     };
   }
 
@@ -40,6 +44,17 @@ export class DiningEventPageController extends React.Component<Properties,
     if (!this.state.isLoaded || this.state.errorCode !==
         DiningEventPage.ErrorCode.NONE) {
       return <div />;
+    }
+    if (this.state.isCheckoutModal) {
+      return <DiningEventCheckoutModalController
+        account={this.props.account}
+        displayMode={this.props.displayMode}
+        model={this.props.model.getCheckoutModel()}
+        profileImageSrc={this.props.profileImageSrc}
+        onClose={this.handleCloseCheckoutModal}
+        showLoginModal={this.props.showLoginModal}
+        onJoinEventSuccess={this.handleJoinEventSuccess}
+      />;
     }
     const now = new Date();
     const isRSVPOpen = (this.props.model.diningEvent.rsvpOpenAt <= now &&
@@ -90,13 +105,16 @@ export class DiningEventPageController extends React.Component<Properties,
       this.props.showLoginModal();
       return;
     }
-    try {
-      await this.props.model.joinEvent(this.props.account.id,
-        this.props.account.name, this.props.profileImageSrc);
-      this.props.onJoinEventSuccess();
-    } catch (error) {
-      this.setState({ errorCode: DiningEventPage.ErrorCode.NO_CONNECTION });
-    }
+    this.setState({ isCheckoutModal: true });
+  }
+
+  private handleCloseCheckoutModal = () => {
+    this.setState({ isCheckoutModal: false });
+  }
+
+  private handleJoinEventSuccess = async () => {
+    await this.props.onJoinEventSuccess();
+    this.setState({ isCheckoutModal: false });
   }
 
   private handleRemoveSeat = async (): Promise<void> => {
