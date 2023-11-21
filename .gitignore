@@ -19,6 +19,8 @@ client/resources/uploads/
 
 # Ignore files related to API keys
 .env
+client/.env
+server/.env
 *.lock
 
 **/server/application/

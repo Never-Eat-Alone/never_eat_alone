@@ -30,6 +30,7 @@ import { DeactivateAccountSurveyRoutes } from
 import { DeleteAccountSurveyRoutes } from './routes/delete_account_survey';
 import { DiningEventRoutes } from './routes/dining_event';
 import { SocialMediaImageRoutes } from './routes/social_media_image';
+import { StripePaymentRoutes } from './routes/stripe_payments';
 import { UserRoutes } from './routes/user';
 import { UserProfileImageRoutes } from './routes/user_profile_image';
 
@@ -126,6 +127,12 @@ function runExpress(pool: Pool, config: any) {
     }
     response.status(200).json({ google_client_id: id });
   });
+
+  SGMail.setApiKey(config.send_grid_api_key);
+
+  const Stripe = require('stripe');
+  const stripe = Stripe(config.stripe.test_publishable_key);
+
   const userDatabase = new UserDatabase(pool);
   const userProfileImageDatabase = new UserProfileImageDatabase(pool);
   const userProfileImageRoutes = new UserProfileImageRoutes(app,
@@ -151,6 +158,8 @@ function runExpress(pool: Pool, config: any) {
   const diningEventDatabase = new DiningEventDatabase(pool);
   const diningEventRoutes = new DiningEventRoutes(app, diningEventDatabase,
     userDatabase, attendeeDatabase, userProfileImageDatabase);
+  const stripePaymentRoutes = new StripePaymentRoutes(app, stripe);
+
   app.get('*', (request, response, next) => {
     response.sendFile(path.join(process.cwd(), 'public', 'index.html'));
   });
@@ -197,7 +206,6 @@ function runExpress(pool: Pool, config: any) {
 async function main() {
   const configPath = path.join(__dirname, 'config.json');
   const config = JSON.parse(fs.readFileSync(configPath).toString());
-  SGMail.setApiKey(config.send_grid_api_key);
   const pool = new Pool(config.database);
   /** Set postgres session timezone to UTC. */
   pool.on('connect', (client) => {

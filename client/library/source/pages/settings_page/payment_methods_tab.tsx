@@ -1,8 +1,8 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 import { AddCreditCardForm } from '../../components';
-import { CreditCardType, DisplayMode, getCreditCardTypeName, PaymentCard
-} from '../../definitions';
+import { CreditCardType, DisplayMode, getCreditCardTypeName, PaymentCard } from
+  '../../definitions';
 import { CardDetailsForm } from './card_details_form';
 
 interface Properties {

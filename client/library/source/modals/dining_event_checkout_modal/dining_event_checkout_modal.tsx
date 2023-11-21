@@ -3,8 +3,8 @@ import { format } from 'date-fns';
 import * as React from 'react';
 import { AddCreditCardForm, ApplePayButton, CloseButton,
   CreditCardDropdownMenu, GooglePayButton, PayPalButton, PrimaryTextButton,
-  RedNavLinkWithArrow, SecondaryTextButtonWithArrow } from '../components';
-import { DisplayMode, PaymentCard } from '../definitions';
+  RedNavLinkWithArrow, SecondaryTextButtonWithArrow } from '../../components';
+import { DisplayMode, PaymentCard } from '../../definitions';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -37,7 +37,7 @@ interface Properties {
   addCardErrorMessage: string;
 
   /** ErrorCode of the page. */
-  errorCode: JoinEventModal.ErrorCode;
+  errorCode: DiningEventCheckoutModal.ErrorCode;
 
   /** Errorcode regarding the add credit card form. */
   addCardErrorCode: AddCreditCardForm.ErrorCode;
@@ -71,12 +71,12 @@ interface Properties {
   onGooglePayClick: () => void;
 
   /** Indicates the Apple Pay button is clicked. */
-  onApplePay: () => void;
+  onApplePayClick: () => void;
 }
 
 interface State {
-  page: JoinEventModal.Page;
-  errorCode: JoinEventModal.ErrorCode;
+  page: DiningEventCheckoutModal.Page;
+  errorCode: DiningEventCheckoutModal.ErrorCode;
 }
 
 function getTaxAmount(fee: number, taxRate: number) {
@@ -84,13 +84,15 @@ function getTaxAmount(fee: number, taxRate: number) {
 }
 
 /** Displays the Join Event Modal. */
-export class JoinEventModal extends React.Component<Properties, State> {
+export class DiningEventCheckoutModal extends React.Component<Properties,
+    State> {
   constructor(props: Properties) {
     super(props);
     this.state = {
-      page: JoinEventModal.Page.INITIAL,
+      page: DiningEventCheckoutModal.Page.INITIAL,
       errorCode: this.props.errorCode
     };
+    this._containerRef = React.createRef();
   }
 
   public render(): JSX.Element {
@@ -127,10 +129,10 @@ export class JoinEventModal extends React.Component<Properties, State> {
       </div> || null);
     const totalPaymentSection = (() => {
       if (this.props.checkoutCompleted && this.state.page ===
-          JoinEventModal.Page.PROCESSING_PAYMENT) {
-        if (this.props.errorCode === JoinEventModal.ErrorCode.PAYMENT_FAILED ||
-            this.props.errorCode ===
-            JoinEventModal.ErrorCode.THIRDPARTY_PAYMENT_FAILED) {
+          DiningEventCheckoutModal.Page.PROCESSING_PAYMENT) {
+        if (this.props.errorCode === DiningEventCheckoutModal.ErrorCode
+            .PAYMENT_FAILED || this.props.errorCode ===
+            DiningEventCheckoutModal.ErrorCode.THIRDPARTY_PAYMENT_FAILED) {
           return (
             <React.Fragment>
               <div
@@ -243,7 +245,7 @@ export class JoinEventModal extends React.Component<Properties, State> {
           onClick={this.props.onPaypalClick} />
         <div style={PAY_BUTTON_CONTAINER_STYLE} >
           <ApplePayButton style={PAY_BUTTON_STYLE}
-            onClick={this.props.onApplePay} />
+            onClick={this.props.onApplePayClick} />
           <GooglePayButton style={PAY_BUTTON_STYLE}
             onClick={this.props.onGooglePayClick} />
         </div>
@@ -258,15 +260,15 @@ export class JoinEventModal extends React.Component<Properties, State> {
             onClick={this.props.onJoinEvent}
           />);
       }
-      if (this.state.page === JoinEventModal.Page.PROCESSING_PAYMENT &&
-          !this.props.checkoutCompleted) {
+      if (this.state.page === DiningEventCheckoutModal.Page
+          .PROCESSING_PAYMENT && !this.props.checkoutCompleted) {
         return null;
       }
       if (this.props.checkoutCompleted && this.state.page ===
-          JoinEventModal.Page.PROCESSING_PAYMENT) {
-        if (this.props.errorCode === JoinEventModal.ErrorCode.PAYMENT_FAILED ||
-            this.props.errorCode ===
-            JoinEventModal.ErrorCode.THIRDPARTY_PAYMENT_FAILED) {
+          DiningEventCheckoutModal.Page.PROCESSING_PAYMENT) {
+        if (this.props.errorCode === DiningEventCheckoutModal.ErrorCode
+            .PAYMENT_FAILED || this.props.errorCode ===
+            DiningEventCheckoutModal.ErrorCode.THIRDPARTY_PAYMENT_FAILED) {
           return <PrimaryTextButton label='Back to Checkout'
                     style={BACK_TO_BUTTON_STYLE}
                     onClick={this.handleBackToCheckout}
@@ -280,7 +282,7 @@ export class JoinEventModal extends React.Component<Properties, State> {
       return paymentMethodSection;
     })();
     const eventNameButtonSection = (() => {
-      if (this.state.page === JoinEventModal.Page.ADD_CARD) {
+      if (this.state.page === DiningEventCheckoutModal.Page.ADD_CARD) {
         return (
           <AddCreditCardForm
             style={EVENT_NAME_BUTTON_CONTAINER_STYLE}
@@ -306,10 +308,11 @@ export class JoinEventModal extends React.Component<Properties, State> {
       })();
     const costDetailsSection = (() => {
       if (this.props.checkoutCompleted &&
-          this.state.page === JoinEventModal.Page.PROCESSING_PAYMENT) {
-        if (this.props.errorCode === JoinEventModal.ErrorCode.PAYMENT_FAILED ||
-            this.props.errorCode ===
-            JoinEventModal.ErrorCode.THIRDPARTY_PAYMENT_FAILED) {
+          this.state.page === DiningEventCheckoutModal.Page.PROCESSING_PAYMENT
+          ) {
+        if (this.props.errorCode === DiningEventCheckoutModal.ErrorCode
+            .PAYMENT_FAILED || this.props.errorCode ===
+            DiningEventCheckoutModal.ErrorCode.THIRDPARTY_PAYMENT_FAILED) {
           return (
             <div style={costDetailsContainerStyle} >
               <div style={PAYMENT_COMPLETED_CONTAINER_STYLE} >
@@ -361,8 +364,8 @@ export class JoinEventModal extends React.Component<Properties, State> {
               </div>
             </div>);
         }
-      } else if (this.state.page === JoinEventModal.Page.PROCESSING_PAYMENT &&
-          !this.props.checkoutCompleted) {
+      } else if (this.state.page === DiningEventCheckoutModal.Page
+          .PROCESSING_PAYMENT && !this.props.checkoutCompleted) {
         return (
           <div style={costDetailsContainerStyle} >
             <div style={CENTER_CONTAINER_STYLE} >
@@ -414,47 +417,69 @@ export class JoinEventModal extends React.Component<Properties, State> {
         </div>);
     }
     return (
-      <div style={containerStyle} >
-        <CloseButton
-          style={CLOSE_BUTTON_STYLE}
-          displayMode={DisplayMode.MOBILE}
-          onClick={this.props.onClose}
-        />
-        {costDetailsSection}
-        <div style={PAYMENT_METHOD_CONTAINER_STYLE} >
-          <img
-            style={{...IMAGE_STYLE,
-              height: this.props.eventFee == 0 && '150px' || '50px'}}
-            src={this.props.imageSrc}
-            alt='Event Image'
+      <div style={FORM_STYLE} >
+        <div ref={this._containerRef} style={containerStyle} >
+          <CloseButton
+            style={CLOSE_BUTTON_STYLE}
+            displayMode={DisplayMode.MOBILE}
+            onClick={this.props.onClose}
           />
-          {eventNameButtonSection}
+          {costDetailsSection}
+          <div style={PAYMENT_METHOD_CONTAINER_STYLE} >
+            <img
+              style={{...IMAGE_STYLE,
+                height: this.props.eventFee == 0 && '150px' || '50px'}}
+              src={this.props.imageSrc}
+              alt='Event Image'
+            />
+            {eventNameButtonSection}
+          </div>
         </div>
       </div>);
   }
 
+  public componentDidMount(): void {
+    document.addEventListener('mousedown', this.handleClickOutside);
+  }
+
+  public componentWillUnmount(): void {
+    document.removeEventListener('mousedown', this.handleClickOutside);
+  }
+
+  private handleClickOutside: { (event: any): void } = (
+      event: React.MouseEvent) => {
+    if (this._containerRef.current && !this._containerRef.current.contains(
+        event.target as Node)) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.props.onClose();
+    }
+  }
+
   private handleBackToCheckout = () => {
     this.setState({
-      page: JoinEventModal.Page.INITIAL,
-      errorCode: JoinEventModal.ErrorCode.NONE
+      page: DiningEventCheckoutModal.Page.INITIAL,
+      errorCode: DiningEventCheckoutModal.ErrorCode.NONE
     });
   }
 
   private handleAddCard = () => {
-    this.setState({ page: JoinEventModal.Page.ADD_CARD });
+    this.setState({ page: DiningEventCheckoutModal.Page.ADD_CARD });
   }
 
   private handleBackClick = () => {
-    this.setState({ page: JoinEventModal.Page.INITIAL });
+    this.setState({ page: DiningEventCheckoutModal.Page.INITIAL });
   }
 
   private handleCheckout = () => {
-    this.setState({ page: JoinEventModal.Page.PROCESSING_PAYMENT });
+    this.setState({ page: DiningEventCheckoutModal.Page.PROCESSING_PAYMENT });
     this.props.onCheckout();
   }
+
+  private _containerRef: React.RefObject<HTMLDivElement>;
 }
 
-export namespace JoinEventModal {
+export namespace DiningEventCheckoutModal {
   export enum Page {
     INITIAL,
     ADD_CARD,
@@ -464,9 +489,24 @@ export namespace JoinEventModal {
   export enum ErrorCode {
     NONE,
     PAYMENT_FAILED,
-    THIRDPARTY_PAYMENT_FAILED
+    THIRDPARTY_PAYMENT_FAILED,
+    JOIN_FAILED
   }
 }
+
+const FORM_STYLE: React.CSSProperties = {
+  position: 'fixed',
+  top: '0px',
+  left: '0px',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '100%',
+  height: '100%',
+  backgroundColor: 'rgb(150, 150, 150, 0.5)',
+  zIndex: 1000
+};
 
 const CONTAINER_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
@@ -475,16 +515,14 @@ const CONTAINER_STYLE: React.CSSProperties = {
   borderRadius: '4px',
   boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
   backgroundColor: '#F6F6F6',
-  overflowY: 'initial'
+  overflowY: 'auto'
 };
 
 const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
   ...CONTAINER_STYLE,
   flexDirection: 'row',
   justifyContent: 'flex-start',
-  alignItems: 'flex-start',
-  width: '675px',
-  minWidth: '675px'
+  alignItems: 'flex-start'
 };
 
 const TABLET_CONTAINER_STYLE: React.CSSProperties = {
@@ -497,8 +535,9 @@ const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
   width: '100%',
-  minWidth: 'auto',
-  maxWidth: '375px'
+  minWidth: '100%',
+  maxWidth: '375px',
+  overflow: 'auto'
 };
 
 const CLOSE_BUTTON_STYLE: React.CSSProperties = {
@@ -512,7 +551,9 @@ const COST_DETAILS_CONTAINER_STYLE: React.CSSProperties = {
   backgroundColor: '#FFFFFF',
   height: '100%',
   padding: '40px 20px',
-  borderRadius: '4px 0px 0px 4px'
+  borderRadius: '4px 0px 0px 4px',
+  width: '375px',
+  minWidth: '375px'
 };
 
 const MOBILE_COST_DETAILS_CONTAINER_STYLE: React.CSSProperties = {
@@ -541,6 +582,7 @@ const COLUMN_CONTAINER_STYLE: React.CSSProperties = {
 
 const PAYMENT_METHOD_CONTAINER_STYLE: React.CSSProperties = {
   width: '300px',
+  minWidth: '300px',
   height: '100%'
 };
 
