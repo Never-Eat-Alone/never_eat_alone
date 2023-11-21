@@ -46,7 +46,6 @@ export class DiningEventPageController extends React.Component<Properties,
         DiningEventPage.ErrorCode.NONE) {
       return <div />;
     }
-    console.log('this.state.isCheckoutModal', this.state.isCheckoutModal);
     const checkoutModal = (this.state.isCheckoutModal &&
       <Modal>
         <DiningEventCheckoutModalController

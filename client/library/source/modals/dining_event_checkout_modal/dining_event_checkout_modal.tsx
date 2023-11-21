@@ -448,7 +448,8 @@ export class DiningEventCheckoutModal extends React.Component<Properties,
 
   private handleClickOutside: { (event: any): void } = (
       event: React.MouseEvent) => {
-    if (!this._containerRef.current.contains(event.target as Node)) {
+    if (this._containerRef.current && !this._containerRef.current.contains(
+        event.target as Node)) {
       event.preventDefault();
       event.stopPropagation();
       this.props.onClose();
@@ -514,16 +515,14 @@ const CONTAINER_STYLE: React.CSSProperties = {
   borderRadius: '4px',
   boxShadow: '0px 1px 4px rgba(86, 70, 40, 0.25)',
   backgroundColor: '#F6F6F6',
-  overflowY: 'initial'
+  overflowY: 'auto'
 };
 
 const DESKTOP_CONTAINER_STYLE: React.CSSProperties = {
   ...CONTAINER_STYLE,
   flexDirection: 'row',
   justifyContent: 'flex-start',
-  alignItems: 'flex-start',
-  width: '675px',
-  minWidth: '675px'
+  alignItems: 'flex-start'
 };
 
 const TABLET_CONTAINER_STYLE: React.CSSProperties = {
@@ -536,8 +535,9 @@ const MOBILE_CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
   width: '100%',
-  minWidth: 'auto',
-  maxWidth: '375px'
+  minWidth: '100%',
+  maxWidth: '375px',
+  overflow: 'auto'
 };
 
 const CLOSE_BUTTON_STYLE: React.CSSProperties = {
@@ -551,7 +551,9 @@ const COST_DETAILS_CONTAINER_STYLE: React.CSSProperties = {
   backgroundColor: '#FFFFFF',
   height: '100%',
   padding: '40px 20px',
-  borderRadius: '4px 0px 0px 4px'
+  borderRadius: '4px 0px 0px 4px',
+  width: '375px',
+  minWidth: '375px'
 };
 
 const MOBILE_COST_DETAILS_CONTAINER_STYLE: React.CSSProperties = {
@@ -580,6 +582,7 @@ const COLUMN_CONTAINER_STYLE: React.CSSProperties = {
 
 const PAYMENT_METHOD_CONTAINER_STYLE: React.CSSProperties = {
   width: '300px',
+  minWidth: '300px',
   height: '100%'
 };
 

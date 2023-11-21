@@ -72,7 +72,6 @@ export class DiningEventCheckoutModalController extends React.Component<
 
   public async componentDidMount(): Promise<void> {
     try {
-      console.log('componentDidMount');
       await this.props.model.load();
       this.setState({ isLoaded: true });
     } catch (error) {
