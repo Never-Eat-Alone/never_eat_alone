@@ -17,9 +17,6 @@ interface Properties {
   /** Error message regarding adding a new card. */
   addCardErrorMessage: string;
 
-  /** Error code regarding adding a new card. */
-  addCardErrorCode: AddCreditCardForm.ErrorCode;
-
   /** Error message regarding updating an existing card. */
   updateCardErrorMessage: string;
 
@@ -92,7 +89,6 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
             style={addCardContainerStyle}
             titleSectionStyle={ADD_FORM_TITLE_STYLE}
             onAddLabel='Save'
-            errorCode={this.props.addCardErrorCode}
             onAddCard={this.props.onAddCard}
             onCancel={this.handleBackClick}
           />

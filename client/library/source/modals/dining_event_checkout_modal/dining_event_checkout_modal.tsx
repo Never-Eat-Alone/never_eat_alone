@@ -39,9 +39,6 @@ interface Properties {
   /** ErrorCode of the page. */
   errorCode: DiningEventCheckoutModal.ErrorCode;
 
-  /** Errorcode regarding the add credit card form. */
-  addCardErrorCode: AddCreditCardForm.ErrorCode;
-
   /** Whether the credit card is added successfully or not. */
   cardAdded: boolean;
 
@@ -286,7 +283,6 @@ export class DiningEventCheckoutModal extends React.Component<Properties,
         return (
           <AddCreditCardForm
             style={EVENT_NAME_BUTTON_CONTAINER_STYLE}
-            errorCode={this.props.addCardErrorCode}
             addCardErrorMessage={this.props.addCardErrorMessage}
             onAddLabel='Continue'
             onCancel={this.handleBackClick}
