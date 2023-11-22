@@ -1,8 +1,12 @@
 {
   "name": "never_eat_alone_web_app",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Never eat alone web app.",
-  "license": "LicenseRef-LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Never-Eat-Alone/never_eat_alone"
+  },
+  "license": "MIT",
   "devDependencies": {
     "@types/node": "18.0.0",
     "@types/react": "17.0.34",
