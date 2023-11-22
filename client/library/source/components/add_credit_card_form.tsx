@@ -1,14 +1,11 @@
 import * as React from 'react';
-import { CardElement, Elements, useStripe, useElements } from '@stripe/react-stripe-js';
+import { CardElement, Elements, useStripe, useElements } from
+  '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { CreditCardType } from '../definitions';
 import { PrimaryTextButton } from './text_button';
 
-const stripePromise = loadStripe('pk_test_51OCmJEKaHeyRq5c018mgmbhTOf9Vr4c7DavGL5xEert25CgTVQAvLgsFgZig5r2A7trQ8pO56HjfiuBaLrqn24Ph00PYe0I0F7');
-
-console.log('process', process.env);
-
-console.log(stripePromise);
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
 interface Properties {
   /** Title section of the form. */
@@ -33,10 +30,6 @@ interface Properties {
   onAddCard: (cardNumber: number, cardName: string, month: number, year: number,
     securityCode: number, zipcode: string, creditCardType: CreditCardType
     ) => void;
-}
-
-interface State {
-  error: string;
 }
 
 /** Displays the Add Creditcard Form. */
@@ -91,8 +84,7 @@ export const AddCreditCardForm: React.FC<Properties> = (props: Properties) => {
           onClick={handleOnAdd}
         />
       </form>
-    </Elements>
-  );
+    </Elements>);
 };
 
 const ADD_CARD_TITLE_ROW_STYLE: React.CSSProperties = {
