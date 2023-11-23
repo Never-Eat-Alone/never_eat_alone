@@ -1,9 +1,11 @@
 import * as React from 'react';
+import { CardElement, Elements, useStripe, useElements } from
+  '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import { CreditCardType } from '../definitions';
-import { InputField, PaymentCardInputField, SecurityCodeInputField
-} from './input_field';
-import { NumberedDropdownMenu } from './numbered_dropdown_menu';
 import { PrimaryTextButton } from './text_button';
+
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
 interface Properties {
   /** Title section of the form. */
@@ -18,9 +20,6 @@ interface Properties {
   /** Error message regarding adding a new card. */
   addCardErrorMessage: string;
 
-  /** Error code regarding adding a new card. */
-  errorCode: AddCreditCardForm.ErrorCode;
-
   /** The form css style. */
   style?: React.CSSProperties;
 
@@ -33,283 +32,60 @@ interface Properties {
     ) => void;
 }
 
-interface State {
-  cardNumber: number;
-  nameOnCard: string;
-  selectedMonth: number;
-  selectedYear: number;
-  securityCode: number;
-  zipcode: string;
-  isCardNumberInvalid: boolean;
-  isNameOnCardInvalid: boolean;
-  isSecurityCodeInvalid: boolean;
-  isZipcodeInvalid: boolean;
-  addCardInputHasChanged: boolean;
-  errorCode: AddCreditCardForm.ErrorCode;
-  creditCardType: CreditCardType;
-}
-
 /** Displays the Add Creditcard Form. */
-export class AddCreditCardForm extends React.Component<Properties, State> {
-  constructor(props: Properties) {
-    super(props);
-    this.state = {
-      cardNumber: 0,
-      nameOnCard: '',
-      selectedMonth: 0,
-      selectedYear: 0,
-      securityCode: 0,
-      zipcode: '',
-      isNameOnCardInvalid: false,
-      isCardNumberInvalid: false,
-      isSecurityCodeInvalid: false,
-      isZipcodeInvalid: false,
-      addCardInputHasChanged: false,
-      errorCode: this.props.errorCode,
-      creditCardType: CreditCardType.VISA
-    };
-  }
+export const AddCreditCardForm: React.FC<Properties> = (props: Properties) => {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [error, setError] = React.useState<string | null>(null);
 
-  public render(): JSX.Element {
-    const titleSection = (this.props.titleSection ||
-      <div
-          style={{...ADD_CARD_TITLE_ROW_STYLE, ...this.props.titleSectionStyle}}
-      >
-        <img
-          style={BACK_ICON_STYLE}
-          src='resources/icons/back.svg'
-          alt='Back Icon'
-          onClick={this.props.onCancel}
-        />
-        <h1 style={ADD_CARD_HEADLINE_STYLE} >Add a card</h1>
-      </div>);
-    const currentYear = new Date().getFullYear();
-    const addCardErrorMessage = (() => {
-      if (this.props.addCardErrorMessage) {
-        return this.props.addCardErrorMessage;
-      }
-      if (this.state.isZipcodeInvalid) {
-        return 'Please enter a valid postal code.';
-      }
-      return '';
-    })();
-    const nameOnCardErrorMessage = (() => {
-      if (!this.state.addCardInputHasChanged) {
-        return '';
-      }
-      if (this.state.isNameOnCardInvalid) {
-        return 'Please enter a valid fullname.';
-      }
-      return '';
-    })();
-    const cardNumberErrorMessage = (() => {
-      if (!this.state.addCardInputHasChanged) {
-        return '';
-      }
-      if (this.state.isCardNumberInvalid) {
-        return 'Please enter a valid card number.';
-      }
-      return '';
-    })();
-    const securityCodeErrorMessage = (() => {
-      if (!this.state.addCardInputHasChanged) {
-        return '';
-      }
-      if (this.state.isSecurityCodeInvalid) {
-        return 'Please enter a valid security code.';
-      }
-      return '';
-    })();
-    const isContinueAddCardDisabled = (() => {
-      if (!this.state.cardNumber || !this.state.nameOnCard ||
-          this.state.nameOnCard.length === 0 || !this.state.securityCode ||
-          !this.state.zipcode || this.state.zipcode.length === 0) {
-        return true;
-      }
-      if (this.state.addCardInputHasChanged) {
-        return false;
-      }
-      if (this.state.errorCode !== AddCreditCardForm.ErrorCode.NONE) {
-        return true;
-      }
-      return false;
-    })();
-    return (
-      <form style={this.props.style} onSubmit={this.handleOnAdd} >
+  const handleOnAdd = async (event: React.SyntheticEvent) => {
+    event.preventDefault();
+
+    if (!stripe || !elements) {
+      return;
+    }
+
+    const result = await stripe.createPaymentMethod({
+      type: 'card',
+      card: elements.getElement(CardElement),
+    });
+
+    if (result.error) {
+      setError(result.error.message);
+    } else {
+      // Send result.paymentMethod.id to your server to save it to the user's profile
+      console.log('Payment method ID:', result.paymentMethod.id);
+    }
+  };
+
+  const titleSection = (props.titleSection ||
+    <div
+        style={{...ADD_CARD_TITLE_ROW_STYLE, ...props.titleSectionStyle}}
+    >
+      <img
+        style={BACK_ICON_STYLE}
+        src='resources/icons/back.svg'
+        alt='Back Icon'
+        onClick={props.onCancel}
+      />
+      <h1 style={ADD_CARD_HEADLINE_STYLE} >Add a card</h1>
+    </div>);
+
+  return (
+    <Elements stripe={stripePromise} >
+      <form style={props.style} onSubmit={handleOnAdd} >
         {titleSection}
-        <p style={ADD_FIELD_TEXT_STYLE} >Card number</p>
-        <PaymentCardInputField
-          style={PAYMENT_CARD_INPUT_STYLE}
-          name='card number'
-          inputMode='numeric'
-          value={this.state.cardNumber ? this.state.cardNumber : ''}
-          pattern='\d*'
-          required
-          onChange={this.handleOnCardNumberChange}
-          onInvalid={() => this.handleInvalidInput('card number')}
-          hasError={this.state.isCardNumberInvalid &&
-            this.state.addCardInputHasChanged}
-        />
-        <div style={ERROR_MESSAGE_STYLE}>{cardNumberErrorMessage}</div>
-        <p style={ADD_FIELD_TEXT_STYLE} >Name on card</p>
-        <InputField
-          style={PAYMENT_CARD_INPUT_STYLE}
-          name='name on card'
-          pattern='^[A-Za-z]([A-Za-z]*([ ]{1})+[A-Za-z]*)+[A-Za-z]$'
-          value={this.state.nameOnCard}
-          required
-          onChange={this.handleOnNameChange}
-          onInvalid={() => this.handleInvalidInput('name on card')}
-          hasError={this.state.isNameOnCardInvalid &&
-            this.state.addCardInputHasChanged}
-        />
-        <div style={ERROR_MESSAGE_STYLE}>{nameOnCardErrorMessage}</div>
-        <p style={ADD_FIELD_TEXT_STYLE} >Expiration date</p>
-        <div style={MONTH_YEAR_CONTAINER_STYLE} >
-          <NumberedDropdownMenu
-            style={NUMBER_DROPDOWN_STYLE}
-            values={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}
-            displayedValue={this.state.selectedMonth}
-            onMenuItemClick={this.handleOnMonthClick}
-          />
-          <NumberedDropdownMenu
-            values={[currentYear, currentYear + 1, currentYear + 2,
-              currentYear + 3, currentYear + 4, currentYear + 5,
-              currentYear + 6, currentYear + 7, currentYear + 8,
-              currentYear + 9, currentYear + 10]}
-            style={NUMBER_DROPDOWN_STYLE}
-            displayedValue={this.state.selectedYear}
-            onMenuItemClick={this.handleOnYearClick}
-          />
-        </div>
-        <p style={ADD_FIELD_TEXT_STYLE} >Security code</p>
-        <SecurityCodeInputField
-          style={CODE_INPUT_STYLE}
-          name='security code'
-          inputMode='numeric'
-          pattern='\d{3}\d?'
-          value={this.state.securityCode? this.state.securityCode : ''}
-          onChange={this.handleOnSecurityCodeChange}
-          required
-          onInvalid={() => this.handleInvalidInput('security code')}
-          hasError={this.state.isSecurityCodeInvalid &&
-            this.state.addCardInputHasChanged}
-        />
-        <div style={ERROR_MESSAGE_STYLE}>{securityCodeErrorMessage}</div>
-        <p style={ADD_FIELD_TEXT_STYLE} >Zip/Postal code</p>
-        <InputField
-          style={CODE_INPUT_STYLE}
-          name='zipcode'
-          pattern='^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$'
-          value={this.state.zipcode}
-          onChange={this.handleOnZipCodeChange}
-          required
-          onInvalid={() => this.handleInvalidInput('zipcode')}
-          hasError={this.state.isZipcodeInvalid &&
-            this.state.addCardInputHasChanged}
-        />
-        <p style={ERROR_MESSAGE_STYLE} >{addCardErrorMessage}</p>
+        <CardElement />
+        {error && <div style={ERROR_MESSAGE_STYLE} >{error}</div>}
         <PrimaryTextButton
           type='submit'
           style={CONTINUE_BUTTON_STYLE}
-          label={this.props.onAddLabel}
-          onClick={this.handleOnAdd}
-          disabled={isContinueAddCardDisabled}
+          label={props.onAddLabel}
+          onClick={handleOnAdd}
         />
-      </form>);
-  }
-
-  private handleOnCardNumberChange = (event: React.ChangeEvent<HTMLInputElement>
-      ) => {
-    this.setState({
-      cardNumber: Number(event.target.value.trim()),
-      addCardInputHasChanged: true
-    });
-  }
-
-  private handleOnNameChange = (event: React.ChangeEvent<HTMLInputElement>
-      ) => {
-    this.setState({
-      nameOnCard: event.target.value,
-      addCardInputHasChanged: true
-    });
-  }
-
-  private handleOnSecurityCodeChange = (event: React.ChangeEvent<
-      HTMLInputElement>) => {
-    this.setState({
-      securityCode: Number(event.target.value.trim()),
-      addCardInputHasChanged: true
-    });
-  }
-
-  private handleOnZipCodeChange = (event: React.ChangeEvent<
-      HTMLInputElement>) => {
-    this.setState({
-      zipcode: event.target.value,
-      addCardInputHasChanged: true
-    });
-  }
-
-  private handleOnMonthClick = (newValue: number) => {
-    this.setState({ selectedMonth: newValue });
-  }
-
-  private handleOnYearClick = (newValue: number) => {
-    this.setState({ selectedYear: newValue });
-  }
-
-  private handleOnAdd = (event: React.SyntheticEvent) => {
-    event.preventDefault();
-    this.setState({
-      isNameOnCardInvalid: false,
-      isSecurityCodeInvalid: false,
-      isCardNumberInvalid: false,
-      isZipcodeInvalid: false
-    });
-    this.props.onAddCard(this.state.cardNumber, this.state.nameOnCard,
-      this.state.selectedMonth, this.state.selectedYear,
-      this.state.securityCode, this.state.zipcode, this.state.creditCardType);
-  }
-
-  private handleInvalidInput = (fieldName: string) => {
-    switch (fieldName) {
-      case 'name on card':
-        this.setState({
-          errorCode: AddCreditCardForm.ErrorCode.INVALID_ADD_CARD_INPUT,
-          isNameOnCardInvalid: true
-        });
-        break;
-      case 'zipcode':
-        this.setState({
-          errorCode: AddCreditCardForm.ErrorCode.INVALID_ADD_CARD_INPUT,
-          isZipcodeInvalid: true
-        });
-        break;
-      case 'security code':
-        this.setState({
-          errorCode: AddCreditCardForm.ErrorCode.INVALID_ADD_CARD_INPUT,
-          isSecurityCodeInvalid: true
-        });
-        break;
-      case 'card number':
-        this.setState({
-          errorCode: AddCreditCardForm.ErrorCode.INVALID_ADD_CARD_INPUT,
-          isCardNumberInvalid: true
-        });
-    }
-  }
-}
-
-export namespace AddCreditCardForm {
-  export enum ErrorCode {
-    NONE,
-    INVALID_CARD_INFO,
-    EXPIRED_CARD,
-    INVALID_ADD_CARD_INPUT,
-    NO_CONNECTION
-  }
-}
+      </form>
+    </Elements>);
+};
 
 const ADD_CARD_TITLE_ROW_STYLE: React.CSSProperties = {
   display: 'flex',
@@ -342,30 +118,6 @@ const ADD_CARD_HEADLINE_STYLE: React.CSSProperties = {
   padding: '0px'
 };
 
-const PAYMENT_CARD_INPUT_STYLE: React.CSSProperties = {
-  width: '100%',
-  minWidth: '100%',
-  marginTop: '10px'
-};
-
-const ADD_FIELD_TEXT_STYLE: React.CSSProperties = {
-  fontFamily: 'Source Sans Pro',
-  fontStyle: 'normal',
-  fontWeight: 400,
-  fontSize: '14px',
-  lineHeight: '18px',
-  color: '#000000',
-  width: '100%',
-  padding: '0px',
-  margin: '7px 0px 0px 0px'
-};
-
-const CODE_INPUT_STYLE: React.CSSProperties = {
-  width: '150px',
-  minWidth: '150px',
-  marginTop: '10px'
-};
-
 const CONTINUE_BUTTON_STYLE: React.CSSProperties = {
   width: '100%',
   minWidth: '100%',
@@ -389,19 +141,4 @@ const ERROR_MESSAGE_STYLE: React.CSSProperties = {
   padding: '0px',
   margin: '5px 0px 0px 0px',
   width: '100%'
-};
-
-const MONTH_YEAR_CONTAINER_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'flex-start',
-  width: '100%',
-  gap: '10px',
-  marginTop: '10px',
-  marginBottom: '13px'
-};
-
-const NUMBER_DROPDOWN_STYLE: React.CSSProperties = {
-  width: 'calc(50% - 5px)'
 };

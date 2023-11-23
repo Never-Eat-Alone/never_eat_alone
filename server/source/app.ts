@@ -79,13 +79,20 @@ const initializePostgres = async (pool, dir, label, tableNames = []) => {
 function runExpress(pool: Pool, config: any) {
   const app = Express();
   app.use(Helmet({
-      contentSecurityPolicy: false,
+      crossOriginEmbedderPolicy: false,
+      contentSecurityPolicy: {
+        directives: {
+          scriptSrc: ["'self'", 'https://js.stripe.com', "'unsafe-inline'"],
+          scriptSrcAttr: ["'unsafe-inline'"]
+        }
+      }
   }));
   app.use(Bodyparser.json());
+  const frontendUrls = config.frontendUrls;
   app.use(Cors(
     {
       credentials: true,
-      origin: [process.env.FRONTEND_APP_URL]
+      origin: frontendUrls
     }
   ));
   app.use(Express.static('public'));
@@ -131,7 +138,7 @@ function runExpress(pool: Pool, config: any) {
   SGMail.setApiKey(config.send_grid_api_key);
 
   const Stripe = require('stripe');
-  const stripe = Stripe(config.stripe.test_publishable_key);
+  const stripe = Stripe(config.stripe.test_secret_Key);
 
   const userDatabase = new UserDatabase(pool);
   const userProfileImageDatabase = new UserProfileImageDatabase(pool);

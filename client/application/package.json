@@ -16,6 +16,9 @@
     "webpack-cli": "5.0.1"
   },
   "dependencies": {
+    "@stripe/react-stripe-js": "^2.4.0",
+    "@stripe/stripe-js": "^2.2.0",
+    "@types/stripe-v3": "^3.1.32",
     "never_eat_alone": "file:Dependencies/library",
     "react": "17.0.2",
     "react-dom": "17.0.2",

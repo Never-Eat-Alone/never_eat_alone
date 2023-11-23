@@ -1,4 +1,6 @@
 import { DiningEvent } from '../../definitions';
+import { DiningEventCheckoutModel } from
+  '../../modals/dining_event_checkout_modal';
 
 /** Base class for the model used by the DiningEventPage. */
 export abstract class DiningEventPageModel {
@@ -8,8 +10,7 @@ export abstract class DiningEventPageModel {
    */
   public abstract load(): Promise<void>;
   public abstract get diningEvent(): DiningEvent;
-  public abstract joinEvent(accountId: number, accountName: string,
-    profileImageSrc: string): Promise<void>;
+  public abstract getCheckoutModel(): DiningEventCheckoutModel;
   public abstract removeSeat(accountId: number, accountName: string,
     profileImageSrc: string): Promise<void>;
 }

@@ -29,7 +29,6 @@ interface State {
   isSomeoneJoinedNotificationOn: boolean;
   isFoodieAcceptedInviteNotificationOn: boolean;
   isAnnouncementNotificationOn: boolean;
-  addCardErrorCode: AddCreditCardForm.ErrorCode;
   updateCardErrorCode: CardDetailsForm.ErrorCode;
   paymentCards: PaymentCard[];
   defaultCard: PaymentCard;
@@ -57,7 +56,6 @@ export class SettingsPageController extends React.Component<Properties, State> {
       isSomeoneJoinedNotificationOn: false,
       isFoodieAcceptedInviteNotificationOn: false,
       isAnnouncementNotificationOn: false,
-      addCardErrorCode: AddCreditCardForm.ErrorCode.NONE,
       updateCardErrorCode: CardDetailsForm.ErrorCode.NONE,
       paymentCards: [],
       defaultCard: PaymentCard.noCard(),
@@ -101,7 +99,6 @@ export class SettingsPageController extends React.Component<Properties, State> {
       paymentCards={this.props.model.paymentCards}
       paymentRecords={this.props.model.paymentRecords}
       addCardErrorMessage=''
-      addCardErrorCode={this.state.addCardErrorCode}
       updateCardErrorMessage=''
       updateCardErrorCode={this.state.updateCardErrorCode}
       accountInformationTabPage={this.state.accountInformationTabPage}
@@ -257,13 +254,11 @@ export class SettingsPageController extends React.Component<Properties, State> {
       await this.props.model.addCard(new PaymentCard(Date.now(), cardNumber,
         nameOnCard, month, year, securityCode, zipcode, creditCardType));
       this.setState({
-        addCardErrorCode: AddCreditCardForm.ErrorCode.NONE,
         paymentCards: this.props.model.paymentCards,
         paymentMethodsTabPage: PaymentMethodsTab.Page.INITIAL
       });
     } catch {
       this.setState({
-        addCardErrorCode: AddCreditCardForm.ErrorCode.INVALID_CARD_INFO,
         paymentMethodsTabPage: PaymentMethodsTab.Page.ADD_CARD
       });
     }

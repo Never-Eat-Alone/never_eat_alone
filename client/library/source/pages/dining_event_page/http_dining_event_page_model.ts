@@ -1,4 +1,6 @@
 import { DiningEvent } from '../../definitions';
+import { DiningEventCheckoutModel, HttpDiningEventCheckoutModel } from
+  '../../modals/dining_event_checkout_modal';
 import { DiningEventPageModel } from './dining_event_page_model';
 import { EmptyDiningEventPageModel } from './empty_dining_event_page_model';
 import { LocalDiningEventPageModel } from './local_dining_event_page_model';
@@ -23,7 +25,8 @@ export class HttpDiningEventPageModel extends DiningEventPageModel {
     this._checkResponse(response);
     const responseObject = await response.json();
     const diningEvent = DiningEvent.fromJson(responseObject.diningEvent);
-    this._model = new LocalDiningEventPageModel(diningEvent);
+    const checkoutModel = new HttpDiningEventCheckoutModel(this._eventId);
+    this._model = new LocalDiningEventPageModel(diningEvent, checkoutModel);
     await this._model.load();
     this._isLoaded = true;
   }
@@ -32,17 +35,8 @@ export class HttpDiningEventPageModel extends DiningEventPageModel {
     return this._model.diningEvent;
   }
 
-  public async joinEvent(): Promise<void> {
-    const response = await fetch(`/api/dining_events/${this._eventId}/join`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    this._checkResponse(response);
-    const responseObject = await response.json();
-    await this._model.joinEvent(parseInt(responseObject.accountId),
-      responseObject.accountName, responseObject.profileImageSrc);
+  public getCheckoutModel(): DiningEventCheckoutModel {
+    return this._model.getCheckoutModel();
   }
 
   public async removeSeat(): Promise<void> {
