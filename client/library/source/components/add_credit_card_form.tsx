@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { CardElement, Elements, useStripe, useElements } from
-  '@stripe/react-stripe-js';
 import { CreditCardType } from '../definitions';
 import { PrimaryTextButton } from './text_button';
 
@@ -31,30 +29,6 @@ export interface AddCreditCardFormProperties {
 
 /** Displays the Add Creditcard Form. */
 export const AddCreditCardForm: React.FC<AddCreditCardFormProperties> = (props: AddCreditCardFormProperties) => {
-  const stripe = useStripe();
-  const elements = useElements();
-  const [error, setError] = React.useState<string | null>(null);
-
-  const handleOnAdd = async (event: React.SyntheticEvent) => {
-    event.preventDefault();
-
-    if (!stripe || !elements) {
-      return;
-    }
-
-    const result = await stripe.createPaymentMethod({
-      type: 'card',
-      card: elements.getElement(CardElement),
-    });
-
-    if (result.error) {
-      setError(result.error.message);
-    } else {
-      // Send result.paymentMethod.id to your server to save it to the user's profile
-      console.log('Payment method ID:', result.paymentMethod.id);
-    }
-  };
-
   const titleSection = (props.titleSection ||
     <div
         style={{...ADD_CARD_TITLE_ROW_STYLE, ...props.titleSectionStyle}}
@@ -69,19 +43,14 @@ export const AddCreditCardForm: React.FC<AddCreditCardFormProperties> = (props: 
     </div>);
 
   return (
-    <Elements stripe={stripePromise} >
-      <form style={props.style} onSubmit={handleOnAdd} >
-        {titleSection}
-        <CardElement />
-        {error && <div style={ERROR_MESSAGE_STYLE} >{error}</div>}
-        <PrimaryTextButton
-          type='submit'
-          style={CONTINUE_BUTTON_STYLE}
-          label={props.onAddLabel}
-          onClick={handleOnAdd}
-        />
-      </form>
-    </Elements>);
+    <form style={props.style} >
+      {titleSection}
+      <PrimaryTextButton
+        type='submit'
+        style={CONTINUE_BUTTON_STYLE}
+        label={props.onAddLabel}
+      />
+    </form>);
 };
 
 const ADD_CARD_TITLE_ROW_STYLE: React.CSSProperties = {
