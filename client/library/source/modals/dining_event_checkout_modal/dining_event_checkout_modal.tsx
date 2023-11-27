@@ -2,8 +2,11 @@ import { css, StyleSheet } from 'aphrodite';
 import { format } from 'date-fns';
 import * as React from 'react';
 import { AddCreditCardForm, ApplePayButton, CloseButton,
-  CreditCardDropdownMenu, GooglePayButton, PayPalButton, PrimaryTextButton,
-  RedNavLinkWithArrow, SecondaryTextButtonWithArrow } from '../../components';
+  CreditCardDropdownMenu, GooglePayButton,
+  PayPalButton, PrimaryTextButton, RedNavLinkWithArrow,
+  SecondaryTextButtonWithArrow } from '../../components';
+import StripeCheckoutContainer from
+  '../../components/stripe_checkout_container';
 import { DisplayMode, PaymentCard } from '../../definitions';
 
 interface Properties {
@@ -283,15 +286,7 @@ export class DiningEventCheckoutModal extends React.Component<Properties,
     })();
     const eventNameButtonSection = (() => {
       if (this.state.page === DiningEventCheckoutModal.Page.ADD_CARD) {
-        return (
-          <AddCreditCardForm
-            style={EVENT_NAME_BUTTON_CONTAINER_STYLE}
-            addCardErrorMessage={this.props.addCardErrorMessage}
-            onAddLabel='Continue'
-            errorCode={this.props.addCardErrorCode}
-            onCancel={this.handleBackClick}
-            onAddCard={this.props.onAddCard}
-          />);
+        return <StripeCheckoutContainer />;
       }
       return (
         <div style={eventNameButtonContainerStyle} >

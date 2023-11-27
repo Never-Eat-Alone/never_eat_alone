@@ -260,7 +260,7 @@ export class AddCreditCardForm extends React.Component<
     this.setState({ selectedYear: newValue });
   }
 
-  private handleOnAdd = (event: React.SyntheticEvent) => {
+  private handleOnAdd =  (event: any) => {
     event.preventDefault();
     this.setState({
       isNameOnCardInvalid: false,
