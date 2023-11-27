@@ -1,13 +1,10 @@
 import * as React from 'react';
 import { CardElement, Elements, useStripe, useElements } from
   '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
 import { CreditCardType } from '../definitions';
 import { PrimaryTextButton } from './text_button';
 
-const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
-
-interface Properties {
+export interface AddCreditCardFormProperties {
   /** Title section of the form. */
   titleSection?: JSX.Element;
 
@@ -33,7 +30,7 @@ interface Properties {
 }
 
 /** Displays the Add Creditcard Form. */
-export const AddCreditCardForm: React.FC<Properties> = (props: Properties) => {
+export const AddCreditCardForm: React.FC<AddCreditCardFormProperties> = (props: AddCreditCardFormProperties) => {
   const stripe = useStripe();
   const elements = useElements();
   const [error, setError] = React.useState<string | null>(null);
