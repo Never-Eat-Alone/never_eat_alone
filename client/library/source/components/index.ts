@@ -45,6 +45,7 @@ export * from './see_all_less_button';
 export * from './show_all_button';
 export * from './show_less_button';
 export * from './sticky_menu';
+export * from './stripe_container';
 export * from './text_button';
 export * from './textarea';
 export * from './toggle_button';

@@ -21,6 +21,7 @@ interface State {
   isLoaded: boolean;
   checkoutErrorCode: DiningEventCheckoutModal.ErrorCode;
   errorCode: number;
+  addCardErrorCode: AddCreditCardForm.ErrorCode;
 }
 
 export class DiningEventCheckoutModalController extends React.Component<
@@ -30,7 +31,8 @@ export class DiningEventCheckoutModalController extends React.Component<
     this.state = {
       isLoaded: false,
       checkoutErrorCode: DiningEventCheckoutModal.ErrorCode.NONE,
-      errorCode: null
+      errorCode: null,
+      addCardErrorCode: AddCreditCardForm.ErrorCode.NONE
     };
   }
 
@@ -56,6 +58,7 @@ export class DiningEventCheckoutModalController extends React.Component<
         errorCode={this.state.checkoutErrorCode}
         cardAdded
         checkoutCompleted
+        addCardErrorCode={this.state.addCardErrorCode}
         onJoinEvent={this.handleJoinEvent}
         onCreditCardClick={this.handleCreditCardClick}
         onClose={this.props.onClose}

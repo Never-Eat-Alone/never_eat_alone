@@ -75,6 +75,9 @@ interface Properties {
 
   deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode;
 
+  /** Error code regarding adding a new card. */
+  addCardErrorCode: AddCreditCardForm.ErrorCode;
+
   onChangePaymentMethodsTabPage: (page: PaymentMethodsTab.Page) => void;
 
   /** Indicates the Add card button is clicked. */

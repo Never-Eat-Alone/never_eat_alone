@@ -25,6 +25,9 @@ interface Properties {
 
   page: PaymentMethodsTab.Page;
 
+  /** Error code regarding adding a new card. */
+  addCardErrorCode: AddCreditCardForm.ErrorCode;
+
   /** Indicates the Add card button is clicked. */
   onAddCard: (cardNumber: number, cardName: string, month: number, year: number,
     securityCode: number, zipcode: string, creditCardType: CreditCardType
@@ -89,6 +92,7 @@ export class PaymentMethodsTab extends React.Component<Properties, State> {
             style={addCardContainerStyle}
             titleSectionStyle={ADD_FORM_TITLE_STYLE}
             onAddLabel='Save'
+            errorCode={this.props.addCardErrorCode}
             onAddCard={this.props.onAddCard}
             onCancel={this.handleBackClick}
           />

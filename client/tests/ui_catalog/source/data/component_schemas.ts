@@ -1,5 +1,5 @@
 import * as NeverEatAlone from 'never_eat_alone';
-import { ArrayInput, AttendeeInput,
+import { AddCreditCardFormErrorCodeInput, ArrayInput, AttendeeInput,
   BooleanInput, CardDetailsFormErrorCodeInput, CityProvinceInput, CSSInput,
   CuisineInput, CoverImageInput, DateInput, DateTimeInput, DisplayModeInput,
   DressCodeInput, EventCardSummaryInput, EventTagInput,
@@ -1575,6 +1575,9 @@ export function loadComponentSchemas(): ComponentSchema[] {
         PaymentRecordInput)
     )),
     new PropertySchema('addCardErrorMessage', '', TextInput),
+    new PropertySchema('addCardErrorCode',
+      NeverEatAlone.AddCreditCardForm.ErrorCode.NONE,
+      AddCreditCardFormErrorCodeInput),
     new PropertySchema('updateCardErrorMessage', '', TextInput),
     new PropertySchema('updateCardErrorCode',
       NeverEatAlone.CardDetailsForm.ErrorCode.NONE,

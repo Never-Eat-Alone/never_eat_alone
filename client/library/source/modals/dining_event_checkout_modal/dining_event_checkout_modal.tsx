@@ -45,6 +45,9 @@ interface Properties {
   /** Whether the checkout process is completed or not. */
   checkoutCompleted: boolean;
 
+  /** Errorcode regarding the add credit card form. */
+  addCardErrorCode: AddCreditCardForm.ErrorCode;
+
   /** Indicates the join button is clicked. */
   onJoinEvent: () => void;
 
@@ -285,6 +288,7 @@ export class DiningEventCheckoutModal extends React.Component<Properties,
             style={EVENT_NAME_BUTTON_CONTAINER_STYLE}
             addCardErrorMessage={this.props.addCardErrorMessage}
             onAddLabel='Continue'
+            errorCode={this.props.addCardErrorCode}
             onCancel={this.handleBackClick}
             onAddCard={this.props.onAddCard}
           />);

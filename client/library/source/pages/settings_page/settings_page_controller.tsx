@@ -42,6 +42,7 @@ interface State {
   redirect: string;
   linkedSocialAccounts: SocialAccount[];
   errorCode: number;
+  addCardErrorCode: AddCreditCardForm.ErrorCode;
 }
 
 export class SettingsPageController extends React.Component<Properties, State> {
@@ -68,7 +69,8 @@ export class SettingsPageController extends React.Component<Properties, State> {
       deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode.NONE,
       redirect: null,
       linkedSocialAccounts: [],
-      errorCode: null
+      errorCode: null,
+      addCardErrorCode: AddCreditCardForm.ErrorCode.NONE
     };
   }
 
@@ -108,6 +110,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
       isDeleteChecked={this.state.isDeleteChecked}
       deleteAccountPassword={this.state.deleteAccountPassword}
       deleteAccountErrorCode={this.state.deleteAccountErrorCode}
+      addCardErrorCode={this.state.addCardErrorCode}
       onSubmitDeleteAccount={this.handleSubmitDeleteAccount}
       onAddCard={this.handleAddCard}
       onUpdateCard={this.handleUpdateCard}
@@ -255,11 +258,13 @@ export class SettingsPageController extends React.Component<Properties, State> {
         nameOnCard, month, year, securityCode, zipcode, creditCardType));
       this.setState({
         paymentCards: this.props.model.paymentCards,
-        paymentMethodsTabPage: PaymentMethodsTab.Page.INITIAL
+        paymentMethodsTabPage: PaymentMethodsTab.Page.INITIAL,
+        addCardErrorCode: AddCreditCardForm.ErrorCode.NONE
       });
     } catch {
       this.setState({
-        paymentMethodsTabPage: PaymentMethodsTab.Page.ADD_CARD
+        paymentMethodsTabPage: PaymentMethodsTab.Page.ADD_CARD,
+        addCardErrorCode: AddCreditCardForm.ErrorCode.INVALID_CARD_INFO
       });
     }
   }
