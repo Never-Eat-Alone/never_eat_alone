@@ -4,7 +4,9 @@ import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 const StripeCheckoutForm = () => {
   const stripe = useStripe();
   const elements = useElements();
+  console.log('stripe', stripe);
 
+  console.log('elements', elements);
   const handleSubmit = async (event: any) => {
     event.preventDefault();
 
@@ -13,6 +15,7 @@ const StripeCheckoutForm = () => {
       return;
     }
 
+    const paymentElement = elements.create('payment');
     const cardElement = elements.getElement(CardElement);
     console.log('cardElement', cardElement);
 
@@ -35,8 +38,7 @@ const StripeCheckoutForm = () => {
       <button type="submit" disabled={!stripe} >
         Add Card
       </button>
-    </form>
-  );
+    </form>);
 };
 
 export default StripeCheckoutForm;
