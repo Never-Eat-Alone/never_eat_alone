@@ -1,12 +1,21 @@
+import { User } from '../../../client/library/source/definitions';
+import { UserDatabase } from '../postgres/queries/user_database';
+
 /** Routes related to stripe payments. */
 export class StripePaymentRoutes {
-  constructor(app: any, stripe: any) {
+  /**
+   * @param app - Express app.
+   * @param stripe - stripe api.
+   * @param userDatabase - The user related table manipulation class instance.
+   */
+  constructor(app: any, stripe: any, userDatabase: UserDatabase) {
     app.post('/api/create-setup-intent', this.createSetupIntent);
     app.post('/api/create-payment-intent', this.createPaymentIntent);
     app.post('/api/create-checkout-session', this.createCheckoutSession);
     app.get('/api/session-status', this.sessionStatus);
 
-    this.stripe = stripe;    
+    this.stripe = stripe;
+    this.userDatabase = userDatabase;
   }
 
   private calculateOrderAmount = (items) => {
@@ -37,8 +46,6 @@ export class StripePaymentRoutes {
           enabled: true,
         }
       });
-      console.log('paymentIntent', paymentIntent);
-      console.log('client_secret', paymentIntent.client_secret);
       response.status(200).json({ clientSecret: paymentIntent.client_secret });
     } catch (error) {
       console.error('failed at /api/create-payment-intent post request:',
@@ -49,22 +56,50 @@ export class StripePaymentRoutes {
 
   private createCheckoutSession = async (request, response) => {
     const TEST_DOMAIN = 'http://localhost:3000';
-    const session = await this.stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      mode: 'setup',
-      ui_mode: 'embedded',
-      success_url: `${TEST_DOMAIN}/return?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: 'https://nevereatalone.net'
-    });
-  
-    console.log('stripe session', session);
-    response.send({ clientSecret: session.client_secret });
+    if (!request.session?.user) {
+      response.status(401).send();
+      return;
+    }
+    let user: User;
+    try {
+      user = await this.userDatabase.loadUserBySessionId(request.session.id);
+      if (user.id === -1) {
+        response.status(401).send();
+        return;
+      }
+    } catch (error) {
+      console.error('Failed at loadUserBySessionId', error);
+      response.status(500).send();
+      return;
+    }
+    const { eventId, quantity } = request.body
+    try {
+      const session = await this.stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price: this.calculateOrderAmount(eventId),
+            quantity: parseInt(quantity),
+          },
+        ],
+        mode: 'payment',
+        consent_collection: {
+          terms_of_service: 'required',
+        },
+        success_url: `${TEST_DOMAIN}/${eventId}`,
+        cancel_url: `${TEST_DOMAIN}/${eventId}`
+      });
+      response.status(200).json({ clientSecret: session.client_secret });
+    } catch (error) {
+      console.error('Failed at stripe.checkout.sessions', error);
+      response.status(500).send();
+      return;
+    }
   }
 
   private sessionStatus = async (request, response) => {
     const session = await this.stripe.checkout.sessions.retrieve(
       request.query.session_id);
-    console.log('session.status', session.status, session.customer_details.email);
     response.send({
       status: session.status,
       customer_email: session.customer_details.email
@@ -73,4 +108,5 @@ export class StripePaymentRoutes {
 
   /** The stripe payment api. */
   private stripe: any;
+  private userDatabase: UserDatabase;
 }

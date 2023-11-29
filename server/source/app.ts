@@ -164,7 +164,8 @@ function runExpress(pool: Pool, config: any) {
   const diningEventDatabase = new DiningEventDatabase(pool);
   const diningEventRoutes = new DiningEventRoutes(app, diningEventDatabase,
     userDatabase, attendeeDatabase, userProfileImageDatabase);
-  const stripePaymentRoutes = new StripePaymentRoutes(app, stripe);
+  const stripePaymentRoutes = new StripePaymentRoutes(app, stripe,
+    userDatabase);
 
   app.get('*', (request, response, next) => {
     response.sendFile(path.join(process.cwd(), 'public', 'index.html'));

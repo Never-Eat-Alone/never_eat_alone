@@ -4,9 +4,6 @@ import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 const StripeCheckoutForm = () => {
   const stripe = useStripe();
   const elements = useElements();
-  console.log('stripe', stripe);
-
-  console.log('elements', elements);
   const handleSubmit = async (event: any) => {
     event.preventDefault();
 
@@ -15,19 +12,16 @@ const StripeCheckoutForm = () => {
       return;
     }
 
-    const paymentElement = elements.create('payment');
     const cardElement = elements.getElement(CardElement);
-    console.log('cardElement', cardElement);
-
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: 'card',
       card: cardElement,
     });
 
     if (error) {
-      console.log('[error]', error);
+      console.error('[error]', error);
     } else {
-      console.log('[PaymentMethod]', paymentMethod);
+      console.error('[PaymentMethod]', paymentMethod);
       // Here you can call your backend to save the payment method or confirm a payment intent
     }
   };
