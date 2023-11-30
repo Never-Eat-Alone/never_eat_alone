@@ -4,7 +4,7 @@
   "description": "Never eat alone web app.",
   "license": "LicenseRef-LICENSE",
   "devDependencies": {
-    "@types/node": "^18.0.0",
+    "@types/node": "18.0.0",
     "@types/react": "17.0.34",
     "@types/react-dom": "17.0.11",
     "@types/react-router-dom": "5.3.3",
@@ -16,9 +16,9 @@
     "webpack-cli": "5.0.1"
   },
   "dependencies": {
-    "@stripe/react-stripe-js": "^2.4.0",
-    "@stripe/stripe-js": "^2.2.0",
-    "@types/stripe-v3": "^3.1.32",
+    "@stripe/react-stripe-js": "2.4.0",
+    "@stripe/stripe-js": "2.2.0",
+    "@types/stripe-v3": "3.1.32",
     "never_eat_alone": "file:Dependencies/library",
     "react": "17.0.2",
     "react-dom": "17.0.2",

@@ -1,4 +1,5 @@
-import { Elements, PaymentElement } from '@stripe/react-stripe-js';
+import { Elements, PaymentElement, useElements, useStripe } from
+  '@stripe/react-stripe-js';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
 import * as React from 'react';
 
@@ -12,6 +13,8 @@ interface Properties {
 
 function StripeCheckoutContainer(props: Properties) {
 	const [clientSecret, setClientSecret] = React.useState('');
+	const stripe = useStripe();
+  const elements = useElements();
 
   React.useEffect(() => {
     fetch('/api/create-checkout-session', {

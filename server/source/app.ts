@@ -84,10 +84,19 @@ function runExpress(pool: Pool, config: any) {
         directives: {
           defaultSrc: ["'self'"],
           scriptSrc: ["'self'", 'https://www.googletagmanager.com',
-            'https://js.stripe.com', "'unsafe-inline'"],
+            'https://js.stripe.com', 'https://apis.google.com',
+            "http://localhost:3000", 'http://localhost:3000/api/create-checkout-session',
+            "'unsafe-inline'"],
           scriptSrcAttr: ["'unsafe-inline'"],
-          connectSrc: ["'self'", 'https://www.google-analytics.com'],
-          frameSrc: ["'self'", 'https://js.stripe.com']
+          connectSrc: ["'self'", "http://localhost:3000",
+            "https://api.stripe.com", "https://checkout.stripe.com",
+            "https://www.google-analytics.com"],
+          frameSrc: ["'self'", 'https://js.stripe.com'],
+          imgSrc: ["'self'", "data:"],
+          formAction: ["'self'", "http://localhost:3000",
+            'http://localhost:3000/api/create-checkout-session',
+            "https://api.stripe.com"],
+          styleSrc: ["'self'", "'unsafe-inline'"]
         }
       }
   }));
@@ -95,8 +104,10 @@ function runExpress(pool: Pool, config: any) {
   const frontendUrls = config.frontendUrls;
   app.use(Cors(
     {
+      origin: frontendUrls,
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
       credentials: true,
-      origin: frontendUrls
+      optionsSuccessStatus: 204
     }
   ));
   app.use(Express.static('public'));

@@ -55,6 +55,7 @@ export class StripePaymentRoutes {
   }
 
   private createCheckoutSession = async (request, response) => {
+    console.log('received request to createCheckoutSession');
     const TEST_DOMAIN = 'http://localhost:3000';
     if (!request.session?.user) {
       response.status(401).send();
@@ -72,21 +73,22 @@ export class StripePaymentRoutes {
       response.status(500).send();
       return;
     }
-    const { eventId, quantity } = request.body
     try {
       const session = await this.stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: [
           {
             price: 'price_1OCnRXKaHeyRq5c0CtEoQUoD',
-            quantity: parseInt(quantity),
+            quantity: 1,
           },
         ],
         mode: 'payment',
-        success_url: `${TEST_DOMAIN}/dining_events/${eventId}`,
-        cancel_url: `${TEST_DOMAIN}/dining_events/${eventId}`
+        success_url: TEST_DOMAIN,
+        cancel_url: TEST_DOMAIN
       });
-      response.status(200).json({ clientSecret: session.client_secret });
+      console.log('session id', session.id);
+      //response.status(200).json({ clientSecret: session.client_secret });
+      response.status(200).json({ sessionId: session.id })
     } catch (error) {
       console.error('Failed at stripe.checkout.sessions', error);
       response.status(500).send();

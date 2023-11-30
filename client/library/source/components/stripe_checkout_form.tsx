@@ -1,36 +1,45 @@
 import * as React from 'react';
-import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { loadStripe, Stripe  } from '@stripe/stripe-js';
 
-const StripeCheckoutForm = () => {
-  const stripe = useStripe();
-  const elements = useElements();
-  const handleSubmit = async (event: any) => {
+const STRIPE_TEST_PUBLIC_KEY = 'pk_test_51OCmJEKaHeyRq5c018mgmbhTOf9Vr4c7DavGL5xEert25CgTVQAvLgsFgZig5r2A7trQ8pO56HjfiuBaLrqn24Ph00PYe0I0F7';
+const stripeTestPromise: Promise<Stripe | null> = loadStripe(
+  STRIPE_TEST_PUBLIC_KEY);
+
+const StripeCheckoutForm : React.FC = () => {
+  const handleCheckoutSubmit = async (event: React.FormEvent<HTMLFormElement>
+      ) => {
     event.preventDefault();
+    const stripe = await stripeTestPromise;
+    try {
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
 
-    if (!stripe || !elements) {
-      // Stripe.js has not loaded yet. Make sure to disable form submission until Stripe.js has loaded.
-      return;
-    }
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
 
-    const cardElement = elements.getElement(CardElement);
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: 'card',
-      card: cardElement,
-    });
+      const session = await response.json();
+      const result = await stripe.redirectToCheckout({
+        sessionId: session.sessionId,
+      });
 
-    if (error) {
-      console.error('[error]', error);
-    } else {
-      console.error('[PaymentMethod]', paymentMethod);
-      // Here you can call your backend to save the payment method or confirm a payment intent
+      if (result.error) {
+        console.error(result.error.message);
+      }
+
+    } catch (error) {
+      console.error('Error during checkout:', error);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} >
-      <CardElement />
-      <button type="submit" disabled={!stripe} >
-        Add Card
+    <form onSubmit={handleCheckoutSubmit} >
+      <button type='submit' >
+        Checkout
       </button>
     </form>);
 };

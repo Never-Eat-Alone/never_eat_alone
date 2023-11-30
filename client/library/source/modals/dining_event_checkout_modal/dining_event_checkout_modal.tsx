@@ -5,8 +5,7 @@ import { AddCreditCardForm, ApplePayButton, CloseButton,
   CreditCardDropdownMenu, GooglePayButton,
   PayPalButton, PrimaryTextButton, RedNavLinkWithArrow,
   SecondaryTextButtonWithArrow } from '../../components';
-import StripeCheckoutContainer from
-  '../../components/stripe_checkout_container';
+import StripeCheckoutForm from '../../components/stripe_checkout_form';
 import { DisplayMode, PaymentCard } from '../../definitions';
 
 interface Properties {
@@ -288,7 +287,7 @@ export class DiningEventCheckoutModal extends React.Component<Properties,
     })();
     const eventNameButtonSection = (() => {
       if (this.state.page === DiningEventCheckoutModal.Page.ADD_CARD) {
-        return <StripeCheckoutContainer eventId={this.props.eventId} />;
+        return <StripeCheckoutForm />;
       }
       return (
         <div style={eventNameButtonContainerStyle} >
