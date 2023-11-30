@@ -12,6 +12,8 @@ import { DisplayMode, PaymentCard } from '../../definitions';
 interface Properties {
   displayMode: DisplayMode;
 
+  eventId: number;
+
   /** The fee associated with the event. */
   eventFee: number;
 
@@ -19,7 +21,7 @@ interface Properties {
   eventFeeDescription: string;
 
   /** The tax rate of the event such as 0.13 for ontario. */
-  taxRate: number;
+  taxRate?: number;
 
   /** The title of the event. */
   eventTitle: string;
@@ -286,7 +288,7 @@ export class DiningEventCheckoutModal extends React.Component<Properties,
     })();
     const eventNameButtonSection = (() => {
       if (this.state.page === DiningEventCheckoutModal.Page.ADD_CARD) {
-        return <StripeCheckoutContainer />;
+        return <StripeCheckoutContainer eventId={this.props.eventId} />;
       }
       return (
         <div style={eventNameButtonContainerStyle} >

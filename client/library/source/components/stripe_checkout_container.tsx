@@ -1,4 +1,4 @@
-import { PaymentElement } from '@stripe/react-stripe-js';
+import { Elements, PaymentElement } from '@stripe/react-stripe-js';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
 import * as React from 'react';
 
@@ -6,12 +6,23 @@ const STRIPE_TEST_PUBLIC_KEY = 'pk_test_51OCmJEKaHeyRq5c018mgmbhTOf9Vr4c7DavGL5x
 const stripeTestPromise: Promise<Stripe | null> = loadStripe(
   STRIPE_TEST_PUBLIC_KEY);
 
-function StripeCheckoutContainer() {
+interface Properties {
+	eventId: number;
+}
+
+function StripeCheckoutContainer(props: Properties) {
 	const [clientSecret, setClientSecret] = React.useState('');
 
   React.useEffect(() => {
     fetch('/api/create-checkout-session', {
-      method: 'POST'
+      method: 'POST',
+			headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        eeventId: props.eventId,
+        quantity: 1
+      })
     })
       .then((res) => res.json())
       .then((data) => setClientSecret(data.clientSecret));
@@ -24,9 +35,9 @@ function StripeCheckoutContainer() {
 	return (
     <div id='checkout' >
       { clientSecret && (
-        <Element stripe={stripeTestPromise} options={options} >
+        <Elements stripe={stripeTestPromise} options={options} >
           <PaymentElement />
-        </Element>
+        </Elements>
       )}
     </div>);
 }

@@ -46,6 +46,7 @@ export class DiningEventCheckoutModalController extends React.Component<
     return (
       <DiningEventCheckoutModal
         displayMode={this.props.displayMode}
+        eventId={this.props.model.diningEvent.id}
         eventFee={this.props.model.diningEvent.eventFee}
         eventFeeDescription=''
         taxRate={0.13}

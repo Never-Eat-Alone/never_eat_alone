@@ -78,16 +78,13 @@ export class StripePaymentRoutes {
         payment_method_types: ['card'],
         line_items: [
           {
-            price: this.calculateOrderAmount(eventId),
+            price: 'price_1OCnRXKaHeyRq5c0CtEoQUoD',
             quantity: parseInt(quantity),
           },
         ],
         mode: 'payment',
-        consent_collection: {
-          terms_of_service: 'required',
-        },
-        success_url: `${TEST_DOMAIN}/${eventId}`,
-        cancel_url: `${TEST_DOMAIN}/${eventId}`
+        success_url: `${TEST_DOMAIN}/dining_events/${eventId}`,
+        cancel_url: `${TEST_DOMAIN}/dining_events/${eventId}`
       });
       response.status(200).json({ clientSecret: session.client_secret });
     } catch (error) {
