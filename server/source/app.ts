@@ -82,8 +82,11 @@ function runExpress(pool: Pool, config: any) {
       crossOriginEmbedderPolicy: false,
       contentSecurityPolicy: {
         directives: {
-          scriptSrc: ["'self'", 'https://js.stripe.com', "'unsafe-inline'"],
-          scriptSrcAttr: ["'unsafe-inline'"]
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'", 'https://www.googletagmanager.com',
+            'https://js.stripe.com', "'unsafe-inline'"],
+          scriptSrcAttr: ["'unsafe-inline'"],
+          connectSrc: ["'self'", 'https://www.google-analytics.com']
         }
       }
   }));
