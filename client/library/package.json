@@ -1,8 +1,12 @@
 {
   "name": "never_eat_alone",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Never eat alone client library.",
-  "license": "LicenseRef-LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Never-Eat-Alone/never_eat_alone"
+  },
+  "license": "MIT",
   "main": "library/index.js",
   "types": "library/index.d.ts",
   "scripts": {
@@ -29,7 +33,7 @@
     "@stripe/stripe-js": "2.1.11",
     "@types/stripe-v3": "3.1.32",
     "aphrodite": "2.4.0",
-    "browser-image-compression": "^2.0.2",
+    "browser-image-compression": "2.0.2",
     "date-fns": "2.29.3",
     "email-validator": "2.0.4",
     "path-to-regexp": "6.2.1",
