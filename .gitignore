@@ -17,10 +17,6 @@ client/resources/uploads/
 # Ignore all text files
 *.txt
 
-# Ignore files related to API keys
-.env
-client/.env
-server/.env
 *.lock
 
 **/server/application/

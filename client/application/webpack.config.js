@@ -1,4 +1,3 @@
-const webpack = require('webpack');
 const path = require('path');
 module.paths.push(path.resolve(process.cwd(), 'node_modules'));
 const PROD = JSON.parse(process.env.PROD_ENV || '0');
@@ -23,14 +22,6 @@ module.exports = {
     path: path.resolve(process.cwd(), 'application'),
     filename: 'bundle.js'
   },
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        REACT_APP_STRIPE_PUBLIC_KEY: JSON.stringify(
-          process.env.REACT_APP_STRIPE_PUBLIC_KEY),
-      },
-    })
-  ],
   performance: {
     hints: false
   },
