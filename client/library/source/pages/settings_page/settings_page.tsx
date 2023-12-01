@@ -55,9 +55,6 @@ interface Properties {
   /** Error message regarding adding a new card. */
   addCardErrorMessage: string;
 
-  /** Error code regarding adding a new card. */
-  addCardErrorCode: AddCreditCardForm.ErrorCode;
-
   /** Error message regarding updating an existing card info. */
   updateCardErrorMessage: string;
 
@@ -77,6 +74,9 @@ interface Properties {
   deleteAccountPassword: string;
 
   deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode;
+
+  /** Error code regarding adding a new card. */
+  addCardErrorCode: AddCreditCardForm.ErrorCode;
 
   onChangePaymentMethodsTabPage: (page: PaymentMethodsTab.Page) => void;
 

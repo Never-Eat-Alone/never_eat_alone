@@ -79,13 +79,35 @@ const initializePostgres = async (pool, dir, label, tableNames = []) => {
 function runExpress(pool: Pool, config: any) {
   const app = Express();
   app.use(Helmet({
-      contentSecurityPolicy: false,
+      crossOriginEmbedderPolicy: false,
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'", 'https://www.googletagmanager.com',
+            'https://js.stripe.com', 'https://apis.google.com',
+            "http://localhost:3000", 'http://localhost:3000/api/create-checkout-session',
+            "'unsafe-inline'"],
+          scriptSrcAttr: ["'unsafe-inline'"],
+          connectSrc: ["'self'", "http://localhost:3000",
+            "https://api.stripe.com", "https://checkout.stripe.com",
+            "https://www.google-analytics.com"],
+          frameSrc: ["'self'", 'https://js.stripe.com'],
+          imgSrc: ["'self'", "data:"],
+          formAction: ["'self'", "http://localhost:3000",
+            'http://localhost:3000/api/create-checkout-session',
+            "https://api.stripe.com"],
+          styleSrc: ["'self'", "'unsafe-inline'"]
+        }
+      }
   }));
   app.use(Bodyparser.json());
+  const frontendUrls = config.frontendUrls;
   app.use(Cors(
     {
+      origin: frontendUrls,
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
       credentials: true,
-      origin: [process.env.FRONTEND_APP_URL]
+      optionsSuccessStatus: 204
     }
   ));
   app.use(Express.static('public'));
@@ -131,8 +153,7 @@ function runExpress(pool: Pool, config: any) {
   SGMail.setApiKey(config.send_grid_api_key);
 
   const Stripe = require('stripe');
-  const stripe = Stripe(config.stripe.test_publishable_key);
-
+  const stripe = Stripe(config.stripe_test_secret_Key);
   const userDatabase = new UserDatabase(pool);
   const userProfileImageDatabase = new UserProfileImageDatabase(pool);
   const userProfileImageRoutes = new UserProfileImageRoutes(app,
@@ -158,7 +179,8 @@ function runExpress(pool: Pool, config: any) {
   const diningEventDatabase = new DiningEventDatabase(pool);
   const diningEventRoutes = new DiningEventRoutes(app, diningEventDatabase,
     userDatabase, attendeeDatabase, userProfileImageDatabase);
-  const stripePaymentRoutes = new StripePaymentRoutes(app, stripe);
+  const stripePaymentRoutes = new StripePaymentRoutes(app, stripe,
+    userDatabase, diningEventDatabase);
 
   app.get('*', (request, response, next) => {
     response.sendFile(path.join(process.cwd(), 'public', 'index.html'));
@@ -192,7 +214,8 @@ function runExpress(pool: Pool, config: any) {
         'user_languages',
         'user_favourite_cuisines',
         'password_reset_tokens',
-        'billing_addresses'
+        'billing_addresses',
+        'stripe_products'
       ]);
       app.listen(config.port, async () => {});
     } catch (error) {

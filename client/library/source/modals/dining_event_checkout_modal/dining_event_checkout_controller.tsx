@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
-import { AddCreditCardForm } from '../../components';
 import { DisplayMode, User } from '../../definitions';
 import { DiningEventCheckoutModal } from './dining_event_checkout_modal';
 import { DiningEventCheckoutModel } from './dining_event_checkout_model';
@@ -19,9 +18,9 @@ interface Properties {
 
 interface State {
   isLoaded: boolean;
-  checkoutErrorCode: DiningEventCheckoutModal.ErrorCode;
-  addCardErrorCode: AddCreditCardForm.ErrorCode;
   errorCode: number;
+  checkoutCompleted: boolean;
+  checkoutErrorCode: DiningEventCheckoutModal.ErrorCode;
 }
 
 export class DiningEventCheckoutModalController extends React.Component<
@@ -30,9 +29,9 @@ export class DiningEventCheckoutModalController extends React.Component<
     super(props);
     this.state = {
       isLoaded: false,
-      checkoutErrorCode: DiningEventCheckoutModal.ErrorCode.NONE,
-      addCardErrorCode: AddCreditCardForm.ErrorCode.NONE,
-      errorCode: null
+      errorCode: null,
+      checkoutCompleted: false,
+      checkoutErrorCode: DiningEventCheckoutModal.ErrorCode.NONE
     };
   }
 
@@ -46,27 +45,17 @@ export class DiningEventCheckoutModalController extends React.Component<
     return (
       <DiningEventCheckoutModal
         displayMode={this.props.displayMode}
+        eventId={this.props.model.diningEvent.id}
         eventFee={this.props.model.diningEvent.eventFee}
         eventFeeDescription=''
-        taxRate={0.13}
         eventTitle={this.props.model.diningEvent.title}
         imageSrc={this.props.model.diningEvent.coverImageSrc}
         eventStartDate={this.props.model.diningEvent.startAt}
-        paymentCardsOnFile={this.props.model.paymentCardList}
-        defaultCard={this.props.model.defaultPaymentCard}
-        addCardErrorMessage=''
+        checkoutCompleted={this.state.checkoutCompleted}
         errorCode={this.state.checkoutErrorCode}
-        addCardErrorCode={this.state.addCardErrorCode}
-        cardAdded
-        checkoutCompleted
         onJoinEvent={this.handleJoinEvent}
-        onCreditCardClick={this.handleCreditCardClick}
         onClose={this.props.onClose}
         onCheckout={this.handleCheckout}
-        onAddCard={this.handleAddCard}
-        onPaypalClick={this.handlePaypalClick}
-        onGooglePayClick={this.handleGooglePayClick}
-        onApplePayClick={this.handleApplePayClick}
       />);
   }
 
@@ -95,27 +84,7 @@ export class DiningEventCheckoutModalController extends React.Component<
     }
   }
 
-  private handleCreditCardClick = () => {
-
-  }
-
-  private handleCheckout = () => {
-
-  }
-
-  private handleAddCard = () => {
-
-  }
-
-  private handlePaypalClick = () => {
-
-  }
-
-  private handleGooglePayClick = () => {
-
-  }
-
-  private handleApplePayClick = () => {
-
+  private handleCheckout = async () => {
+    await this.props.model.checkout();
   }
 }

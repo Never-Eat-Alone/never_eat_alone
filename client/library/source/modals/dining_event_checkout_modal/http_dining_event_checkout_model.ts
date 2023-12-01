@@ -1,3 +1,4 @@
+import { loadStripe, Stripe  } from '@stripe/stripe-js';
 import { DiningEvent, PaymentCard, arrayFromJson } from '../../definitions';
 import { DiningEventCheckoutModel } from './dining_event_checkout_model';
 import { EmptyDiningEventCheckoutModel } from
@@ -11,6 +12,7 @@ export class HttpDiningEventCheckoutModel extends DiningEventCheckoutModel {
     this._isLoaded = false;
     this._eventId = eventId;
     this._model = new EmptyDiningEventCheckoutModel();
+    this._stripe = null;
   }
 
   public async load(): Promise<void> {
@@ -27,6 +29,10 @@ export class HttpDiningEventCheckoutModel extends DiningEventCheckoutModel {
       responseObject.defaultPaymentCard);
     this._model = new LocalDiningEventCheckoutModel(diningEvent,
       paymentCardList, defaultPaymentCard);
+    const STRIPE_TEST_PUBLIC_KEY = 'pk_test_51OCmJEKaHeyRq5c018mgmbhTOf9Vr4c7DavGL5xEert25CgTVQAvLgsFgZig5r2A7trQ8pO56HjfiuBaLrqn24Ph00PYe0I0F7';
+    const stripeTestPromise: Promise<Stripe | null> = loadStripe(
+      STRIPE_TEST_PUBLIC_KEY);
+    this._stripe = await stripeTestPromise;
     await this._model.load();
     this._isLoaded = true;
   }
@@ -57,11 +63,25 @@ export class HttpDiningEventCheckoutModel extends DiningEventCheckoutModel {
   }
 
   public async checkout(): Promise<void> {
-    await this._model.checkout();
-  }
+    try {
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          quantity: 1,
+          eventId: this._eventId
+        })
+      });
+      this._checkResponse(response);
+      const data = await response.json();
+      window.location.href = data.url;
+    } catch (error) {
+      console.error('Error during checkout:', error);
+    }
 
-  public async addCard(): Promise<void> {
-    await this._model.addCard();
+    await this._model.checkout();
   }
 
   private _checkResponse(response: Response): void {
@@ -75,4 +95,5 @@ export class HttpDiningEventCheckoutModel extends DiningEventCheckoutModel {
   private _isLoaded: boolean;
   private _eventId: number;
   private _model: DiningEventCheckoutModel;
+  private _stripe: Stripe;
 }

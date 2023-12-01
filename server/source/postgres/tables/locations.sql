@@ -58,7 +58,7 @@ VALUES
   'Queen Street West'),
 (19, '555 King St W', NULL, 'Toronto', 'ON', 'Canada', 'M5V 1M1',
   'Entertainment District'),
-(20, '379 Harbord St', NULL, 'Toronto', 'ON', 'Canada', 'M6G 1H8',
+(20, '96 Harbord St', NULL, 'Toronto', 'ON', 'Canada', 'M5S 1G6',
   'Harbord Village'),
 (21, '199 Augusta Ave', NULL, 'Toronto', 'ON', 'Canada', 'M5T 2L4',
   'Kensington Market'),

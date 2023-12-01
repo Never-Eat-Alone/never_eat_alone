@@ -40,10 +40,6 @@ export class LocalDiningEventCheckoutModel extends DiningEventCheckoutModel {
     this.ensureIsLoaded();
   }
 
-  public async addCard(): Promise<void> {
-    this.ensureIsLoaded();
-  }
-
   private ensureIsLoaded(): void {
     if (!this._isLoaded) {
       throw new Error('SettingsPageModel not loaded.');
