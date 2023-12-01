@@ -136,6 +136,36 @@ export class DiningEventCheckoutModal extends React.Component<Properties,
           </div>
         </React.Fragment>);
     })();
+    const costBreakDownSection = (
+      <div style={COST_BREAKDOWN_TOTAL_CONTAINER_STYLE} >
+        <div style={COLUMN_CONTAINER_STYLE} >
+          <div style={EVENT_FEE_ROW_STYLE} >
+            <div style={EVENT_FEE_BOLD_TEXT_STYLE} >Event Fee</div>
+            <div style={EVENT_PRICE_STYLE} >
+              CAD ${this.props.eventFee.toString()}
+            </div>
+          </div>
+          {feeDescription}
+        </div>
+        <div style={COLUMN_CONTAINER_STYLE} >
+          <div style={PRICE_DIVIDER_STYLE} />
+          <div style={EVENT_FEE_ROW_STYLE} >
+            <div style={GREY_TEXT_STYLE} >Subtotal</div>
+            <div style={EVENT_PRICE_STYLE} >
+              CAD ${this.props.eventFee.toString()}
+            </div>
+          </div>
+          <div style={EVENT_FEE_ROW_STYLE} >
+            <div style={GREY_TEXT_STYLE} >Tax</div>
+            <div style={EVENT_PRICE_STYLE} >
+              CAD ${getTaxAmount(this.props.eventFee, this.props.taxRate)}
+            </div>
+          </div>
+          <div style={EVENT_FEE_ROW_STYLE} >
+            {totalPaymentSection}
+          </div>
+        </div>
+      </div>);
     const paymentMethodSection = (
       <React.Fragment>
         <StripeCheckoutForm
