@@ -26,8 +26,4 @@ export class EmptyDiningEventCheckoutModel extends DiningEventCheckoutModel {
   public async checkout(): Promise<void> {
     throw new Error('EmptyDiningEventCheckoutModel not loaded.');
   }
-
-  public async addCard(): Promise<void> {
-    throw new Error('EmptyDiningEventCheckoutModel not loaded.');
-  }
 }

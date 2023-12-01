@@ -68,31 +68,20 @@ export class HttpDiningEventCheckoutModel extends DiningEventCheckoutModel {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify({
+          quantity: 1,
+          eventId: this._eventId
+        })
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const session = await response.json();
-      const result = await this._stripe.redirectToCheckout({
-        sessionId: session.sessionId,
-      });
-
-      if (result.error) {
-        console.error(result.error.message);
-      }
-      console.log('result', result);
-
+      this._checkResponse(response);
+      const data = await response.json();
+      window.location.href = data.url;
     } catch (error) {
       console.error('Error during checkout:', error);
     }
-    await this._model.checkout();
-  }
 
-  public async addCard(): Promise<void> {
-    await this._model.addCard();
+    await this._model.checkout();
   }
 
   private _checkResponse(response: Response): void {

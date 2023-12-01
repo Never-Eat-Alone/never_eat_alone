@@ -302,6 +302,15 @@ export class DiningEventDatabase {
       Date.parse(row.updated_at)));
   }
 
+  public loadPriceIdByEventId = async (eventId: number): Promise<string> => {
+    const result = await this.pool.query(`
+      SELECT * FROM stripe_products WHERE event_id = $1`, [eventId]);
+    if (result.rows?.length === 0) {
+      return '';
+    }
+    return result.rows[0].stripe_price_id;
+  }
+
   /** The postgress pool connection. */
   private pool: Pool;
 }

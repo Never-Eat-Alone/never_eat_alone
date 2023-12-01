@@ -1,4 +1,5 @@
 import { User } from '../../../client/library/source/definitions';
+import { DiningEventDatabase } from '../postgres/queries/dining_event_database';
 import { UserDatabase } from '../postgres/queries/user_database';
 
 /** Routes related to stripe payments. */
@@ -7,8 +8,11 @@ export class StripePaymentRoutes {
    * @param app - Express app.
    * @param stripe - stripe api.
    * @param userDatabase - The user related table manipulation class instance.
+   * @param diningEventDatabase - The dining events related table manipulation 
+   * class instance.
    */
-  constructor(app: any, stripe: any, userDatabase: UserDatabase) {
+  constructor(app: any, stripe: any, userDatabase: UserDatabase,
+      diningEventDatabase: DiningEventDatabase) {
     app.post('/api/create-setup-intent', this.createSetupIntent);
     app.post('/api/create-payment-intent', this.createPaymentIntent);
     app.post('/api/create-checkout-session', this.createCheckoutSession);
@@ -16,6 +20,7 @@ export class StripePaymentRoutes {
 
     this.stripe = stripe;
     this.userDatabase = userDatabase;
+    this.diningEventDatabase = diningEventDatabase;
   }
 
   private calculateOrderAmount = (items) => {
@@ -55,7 +60,6 @@ export class StripePaymentRoutes {
   }
 
   private createCheckoutSession = async (request, response) => {
-    console.log('received request to createCheckoutSession');
     const TEST_DOMAIN = 'http://localhost:3000';
     if (!request.session?.user) {
       response.status(401).send();
@@ -73,22 +77,42 @@ export class StripePaymentRoutes {
       response.status(500).send();
       return;
     }
+    const quantity = parseInt(request.body.quantity);
+    const eventId = parseInt(request.body.eventId);
+    let priceId = '';
+    try {
+      priceId = await this.diningEventDatabase.loadPriceIdByEventId(eventId);
+      if (!priceId) {
+        response.status(404).json({
+          message: 'Price ID not found for the specified Event ID'
+        });
+        return;
+      }
+    } catch (error) {
+      console.error('Failed at loadPriceIdByEventId', error);
+      response.status(500).send();
+      return;
+    }
     try {
       const session = await this.stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: [
           {
-            price: 'price_1OCnRXKaHeyRq5c0CtEoQUoD',
-            quantity: 1,
+            price: priceId,
+            quantity: quantity,
           },
         ],
         mode: 'payment',
         success_url: TEST_DOMAIN,
         cancel_url: TEST_DOMAIN
       });
-      console.log('session id', session.id);
-      //response.status(200).json({ clientSecret: session.client_secret });
-      response.status(200).json({ sessionId: session.id })
+
+      response.status(200).json({
+        url: session.url,
+        clientSecret: session.client_secret,
+        sessionId: session.id
+      });
+
     } catch (error) {
       console.error('Failed at stripe.checkout.sessions', error);
       response.status(500).send();
@@ -108,4 +132,5 @@ export class StripePaymentRoutes {
   /** The stripe payment api. */
   private stripe: any;
   private userDatabase: UserDatabase;
+  private diningEventDatabase: DiningEventDatabase;
 }

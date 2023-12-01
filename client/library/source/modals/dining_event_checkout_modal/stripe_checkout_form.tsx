@@ -19,7 +19,8 @@ const StripeCheckoutForm : React.FC<Properties> = (props) => {
   };
 
   return (
-    <form onSubmit={handleCheckoutSubmit} style={props.style} >
+    <form onSubmit={handleCheckoutSubmit} style={{ ...FORM_STYLE,
+        ...props.style}} >
       <PrimaryTextButton label={props.label} type='submit'
         style={CHECKOUT_BUTTON_STYLE} />
     </form>);
@@ -27,9 +28,14 @@ const StripeCheckoutForm : React.FC<Properties> = (props) => {
 
 export default StripeCheckoutForm;
 
-const CHECKOUT_BUTTON_STYLE: React.CSSProperties = {
+const FORM_STYLE: React.CSSProperties = {
+  display: 'flex',
   width: '100%',
-  height: '38px',
   marginTop: '20px',
   marginBottom: '20px'
+};
+
+const CHECKOUT_BUTTON_STYLE: React.CSSProperties = {
+  width: '100%',
+  height: '38px'
 };

@@ -180,7 +180,7 @@ function runExpress(pool: Pool, config: any) {
   const diningEventRoutes = new DiningEventRoutes(app, diningEventDatabase,
     userDatabase, attendeeDatabase, userProfileImageDatabase);
   const stripePaymentRoutes = new StripePaymentRoutes(app, stripe,
-    userDatabase);
+    userDatabase, diningEventDatabase);
 
   app.get('*', (request, response, next) => {
     response.sendFile(path.join(process.cwd(), 'public', 'index.html'));
@@ -214,7 +214,8 @@ function runExpress(pool: Pool, config: any) {
         'user_languages',
         'user_favourite_cuisines',
         'password_reset_tokens',
-        'billing_addresses'
+        'billing_addresses',
+        'stripe_products'
       ]);
       app.listen(config.port, async () => {});
     } catch (error) {

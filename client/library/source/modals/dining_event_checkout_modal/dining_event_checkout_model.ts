@@ -8,5 +8,4 @@ export abstract class DiningEventCheckoutModel {
   public abstract joinEvent(accountId: number, accountName: string,
     profileImageSrc: string): Promise<void>;
   public abstract checkout(): Promise<void>;
-  public abstract addCard(): Promise<void>;
 }

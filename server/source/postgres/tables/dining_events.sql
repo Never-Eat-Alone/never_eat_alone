@@ -165,10 +165,11 @@ VALUES
   'Great food', '2022-04-20T18:45:00Z', '2022-09-01T18:45:00Z', 'ACTIVE',
   'PUBLIC', '2022-03-01T10:45:00Z', '2022-04-01T10:45:00Z'),
 (20, 'hsva(75, 67%, 92%, 1)', 10.00, 'resources/images/cover_20.jpg',
-  'Champagne Night', 20, 'BUSINESS_CASUAL', 'STANDARD', 20,
-  'Alexa', '2023-03-11T22:45:00Z', '2023-03-12T00:45:00Z', 4, 'Great food',
-  '2022-03-11T18:45:00Z', '2023-03-11T18:45:00Z', 'ACTIVE', 'PUBLIC',
-  '2022-03-01T10:45:00Z', '2023-03-01T10:45:00Z'),
+  'Bistro Night', 20, 'BUSINESS_CASUAL', 'STANDARD', 20,
+  'Alexa', '2024-03-11T22:45:00Z', '2024-03-12T00:45:00Z', 4, 'Set in a brick 
+  row house, this snug & stylish French eatery serves homey meals & natural 
+  wines.', '2023-03-11T18:45:00Z', '2024-03-11T18:45:00Z', 'ACTIVE', 'PUBLIC',
+  '2023-03-01T10:45:00Z', '2023-03-01T10:45:00Z'),
 (21, 'hsva(51, 79%, 92%, 1)', 30.00, 'resources/images/cover_21.jpg',
   'Dinner at Canis', 15, 'BUSINESS_CASUAL', 'STANDARD', 15, 'John Doe',
   '2023-08-02T23:00:00Z', '2023-08-03T02:00:00Z', 20,
@@ -220,9 +221,13 @@ VALUES
 (29, 'hsva(210, 65%, 90%, 1)', 5.00, 'resources/images/cover_33.jpg',
   'Let''s Go To J''s Steak Frites.', 18, 'CASUAL', 'STANDARD', 18,
   'DineOut Group', '2023-12-01T22:30:00Z', '2023-12-02T00:30:00Z', 12,
-  'Experience the modern cuisine with a homey feel.', '2023-01-15T18:30:00Z',
-  '2023-12-01T22:30:00Z', 'ACTIVE', 'PUBLIC', '2023-11-01T18:00:00Z',
-  '2023-11-01T18:00:00Z'),
+  'J''s SteakFrites is a tribute to the tradition of Parisian Entrecôte 
+  steakhouses. Located in the heart of West Queen West neighborhood, one of the 
+  best Toronto downtown areas, the vibrant bistro brings steak frites menu to a 
+  new level : house made bread with butter, a fresh green salad and the 
+  perfectly marbled AAA Canadian Beef NY Striploin with crispy frites, and J''s 
+  secret sauce.', '2023-01-15T18:30:00Z', '2023-12-01T22:30:00Z', 'ACTIVE', 
+  'PUBLIC', '2023-11-01T18:00:00Z', '2023-11-01T18:00:00Z'),
 (30, 'hsva(295, 75%, 85%, 1)', 50.00, 'resources/images/cover_30.jpg',
   'Experience Edulis.', 16, 'BUSINESS_CASUAL', 'PRIVATE_ROOM', 16,
   'DineOut Group', '2023-12-16T00:00:00Z', '2023-12-16T02:00:00Z', 10,

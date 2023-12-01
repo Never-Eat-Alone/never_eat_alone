@@ -116,9 +116,9 @@ INSERT INTO restaurants (
 (19, 'Alo', 19, 'Alo is a sophisticated restaurant offering a contemporary 
   French tasting menu.', 'Located in the downtown core.', '(123) 456-7808',
   'VERY_EXPENSIVE', 'http://www.alo.com'),
-(20, 'Skippa', 20, 'Skippa offers a changing menu of seasonal, sustainable 
-  sushi and small plates.', 'Situated in the Harbord Village.',
-  '(123) 456-7809', 'VERY_EXPENSIVE', 'http://www.skippa.com'),
+(20, 'Dreyfus', 20, 'Set in a brick row house, this snug & stylish French 
+  eatery serves homey meals & natural wines.', 'Situated in the Harbord 
+  Village.', '(416) 323-1385', 'VERY_EXPENSIVE', 'http://dreyfustoronto.com'),
 (21, 'Grey Gardens', 21, 'Grey Gardens is a wine bar and restaurant offering 
   diverse, eclectic dishes.', 'Located in Kensington Market.', '(123) 456-7810',
   'MODERATELY_PRICED', 'http://www.greygardens.com'),
