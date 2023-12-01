@@ -1,12 +1,10 @@
 import { css, StyleSheet } from 'aphrodite';
 import { format } from 'date-fns';
 import * as React from 'react';
-import { AddCreditCardForm, ApplePayButton, CloseButton,
-  CreditCardDropdownMenu, GooglePayButton,
-  PayPalButton, PrimaryTextButton, RedNavLinkWithArrow,
-  SecondaryTextButtonWithArrow } from '../../components';
-import StripeCheckoutForm from '../../components/stripe_checkout_form';
-import { DisplayMode, PaymentCard } from '../../definitions';
+import { CloseButton, PrimaryTextButton, RedNavLinkWithArrow } from
+  '../../components';
+import { DisplayMode } from '../../definitions';
+import StripeCheckoutForm from './stripe_checkout_form';
 
 interface Properties {
   displayMode: DisplayMode;
@@ -31,51 +29,20 @@ interface Properties {
   /** The start date of the event. */
   eventStartDate: Date;
 
-  /** The list of payment cards associated with the user profile. */
-  paymentCardsOnFile: PaymentCard[];
-
-  /** User's default payment card. */
-  defaultCard: PaymentCard;
-
-  /** Error message regarding the add credit card form. */
-  addCardErrorMessage: string;
-
   /** ErrorCode of the page. */
   errorCode: DiningEventCheckoutModal.ErrorCode;
-
-  /** Whether the credit card is added successfully or not. */
-  cardAdded: boolean;
 
   /** Whether the checkout process is completed or not. */
   checkoutCompleted: boolean;
 
-  /** Errorcode regarding the add credit card form. */
-  addCardErrorCode: AddCreditCardForm.ErrorCode;
-
   /** Indicates the join button is clicked. */
   onJoinEvent: () => void;
-
-  /** Indictes a credit card in dropdown menu is clicked. */
-  onCreditCardClick: () => void;
 
   /** Indicates the close button is clicked. */
   onClose: () => void;
 
   /** Indicates the Checkout button is clicked. */
   onCheckout: () => void;
-
-  /** Indicates the Add card button is clicked. */
-  onAddCard: (cardNumber: number, cardName: string, month: number, year: number,
-    securityCode: number, zipcode: string) => void;
-
-  /** Indicates the Paypal button is clicked. */
-  onPaypalClick: () => void;
-
-  /** Indicates the Google Pay button is clicked. */
-  onGooglePayClick: () => void;
-
-  /** Indicates the Apple Pay button is clicked. */
-  onApplePayClick: () => void;
 }
 
 interface State {
@@ -83,7 +50,7 @@ interface State {
   errorCode: DiningEventCheckoutModal.ErrorCode;
 }
 
-function getTaxAmount(fee: number, taxRate: number) {
+function getTaxAmount(fee: number, taxRate: number = 0) {
   return (Math.ceil(fee * taxRate * 100) / 100).toFixed(2);
 }
 
@@ -169,90 +136,12 @@ export class DiningEventCheckoutModal extends React.Component<Properties,
           </div>
         </React.Fragment>);
     })();
-    const costBreakDownSection = (
-      <div style={COST_BREAKDOWN_TOTAL_CONTAINER_STYLE} >
-        <div style={COLUMN_CONTAINER_STYLE} >
-          <div style={EVENT_FEE_ROW_STYLE} >
-            <div style={EVENT_FEE_BOLD_TEXT_STYLE} >Event Fee</div>
-            <div style={EVENT_PRICE_STYLE} >
-              CAD ${this.props.eventFee.toString()}
-            </div>
-          </div>
-          {feeDescription}
-        </div>
-        <div style={COLUMN_CONTAINER_STYLE} >
-          <div style={PRICE_DIVIDER_STYLE} />
-          <div style={EVENT_FEE_ROW_STYLE} >
-            <div style={GREY_TEXT_STYLE} >Subtotal</div>
-            <div style={EVENT_PRICE_STYLE} >
-              CAD ${this.props.eventFee.toString()}
-            </div>
-          </div>
-          <div style={EVENT_FEE_ROW_STYLE} >
-            <div style={GREY_TEXT_STYLE} >Tax</div>
-            <div style={EVENT_PRICE_STYLE} >
-              CAD ${getTaxAmount(this.props.eventFee, this.props.taxRate)}
-            </div>
-          </div>
-          <div style={EVENT_FEE_ROW_STYLE} >
-            {totalPaymentSection}
-          </div>
-        </div>
-      </div>);
-    const cardsOnFileSection = (() => {
-      if (!this.props.paymentCardsOnFile ||
-          this.props.paymentCardsOnFile.length === 0) {
-        return <h3 style={NO_CARD_TITLE_STYLE} >No cards on file.</h3>;
-      }
-      const cardTitle = (() => {
-        if (this.props.cardAdded) {
-          return (
-            <div style={CARD_TITLE_CONTAINER_STYLE} >
-              <img
-                style={ADDED_ICON_STYLE}
-                src='resources/icons/added.svg'
-                alt='Added Icon'
-              />
-              <div>Card added</div>
-            </div>);
-        }
-        return <h3 style={CARD_ON_FILE_TITLE_STYLE} >Cards on file:</h3>;
-      })();
-      return (
-        <React.Fragment>
-          {cardTitle}
-          <CreditCardDropdownMenu
-            cardList={this.props.paymentCardsOnFile}
-            defaultCard={this.props.defaultCard}
-            onCardClick={this.props.onCreditCardClick}
-          />
-          <PrimaryTextButton label='Checkout' style={CHECKOUT_BUTTON_STYLE}
-            onClick={this.handleCheckout}
-          />
-        </React.Fragment>);
-    })();
     const paymentMethodSection = (
       <React.Fragment>
-        {cardsOnFileSection}
-        <SecondaryTextButtonWithArrow
-          style={ADD_CARD_BUTTON_STYLE}
-          labelStyle={ADD_CARD_BUTTON_LABEL_STYLE}
-          label='Add a card'
-          onClick={this.handleAddCard}
+        <StripeCheckoutForm
+          label='Checkout'
+          onCheckout={this.props.onCheckout}
         />
-        <div style={OR_LINE_CONTAINER_STYLE} >
-          <div style={PARTIAL_LINE_STYLE} />
-          <p style={OR_CHECKOUT_TEXT_STYLE} >or checkout with</p>
-          <div style={PARTIAL_LINE_STYLE} />
-        </div>
-        <PayPalButton style={PAYPAL_BUTTON_STYLE}
-          onClick={this.props.onPaypalClick} />
-        <div style={PAY_BUTTON_CONTAINER_STYLE} >
-          <ApplePayButton style={PAY_BUTTON_STYLE}
-            onClick={this.props.onApplePayClick} />
-          <GooglePayButton style={PAY_BUTTON_STYLE}
-            onClick={this.props.onGooglePayClick} />
-        </div>
       </React.Fragment>);
     const joinButton = (() => {
       if (this.props.eventFee == 0) {
@@ -286,9 +175,6 @@ export class DiningEventCheckoutModal extends React.Component<Properties,
       return paymentMethodSection;
     })();
     const eventNameButtonSection = (() => {
-      if (this.state.page === DiningEventCheckoutModal.Page.ADD_CARD) {
-        return <StripeCheckoutForm />;
-      }
       return (
         <div style={eventNameButtonContainerStyle} >
           <div style={EVENT_NAME_DATE_CONTAINER_STYLE} >
@@ -459,10 +345,6 @@ export class DiningEventCheckoutModal extends React.Component<Properties,
     });
   }
 
-  private handleAddCard = () => {
-    this.setState({ page: DiningEventCheckoutModal.Page.ADD_CARD });
-  }
-
   private handleBackClick = () => {
     this.setState({ page: DiningEventCheckoutModal.Page.INITIAL });
   }
@@ -478,7 +360,6 @@ export class DiningEventCheckoutModal extends React.Component<Properties,
 export namespace DiningEventCheckoutModal {
   export enum Page {
     INITIAL,
-    ADD_CARD,
     PROCESSING_PAYMENT
   }
 
@@ -750,125 +631,11 @@ const JOIN_BUTTON_TEXT_STYLE: React.CSSProperties = {
   lineHeight: '15px',
 };
 
-const CARD_TITLE_CONTAINER_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
-  gap: '10px',
-  width: '100%',
-  height: '18px',
-  fontFamily: 'Source Sans Pro',
-  fontStyle: 'normal',
-  fontWeight: 600,
-  fontSize: '14px',
-  lineHeight: '18px',
-  padding: '0px',
-  margin: '30px 0px 10px 0px',
-  color: '#000000'
-};
-
-const CARD_ON_FILE_TITLE_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'flex-start',
-  alignItems: 'flex-start',
-  fontFamily: 'Source Sans Pro',
-  fontStyle: 'normal',
-  fontWeight: 600,
-  fontSize: '14px',
-  lineHeight: '18px',
-  height: '18px',
-  padding: '0px',
-  margin: '30px 0px 10px 0px',
-  color: '#000000'
-};
-
-const NO_CARD_TITLE_STYLE: React.CSSProperties = {
-  ...CARD_ON_FILE_TITLE_STYLE,
-  margin: '30px 0px 20px 0px'
-};
-
-const ADD_CARD_BUTTON_STYLE: React.CSSProperties = {
-  width: '100%',
-  height: '38px'
-};
-
-const ADD_CARD_BUTTON_LABEL_STYLE: React.CSSProperties = {
-  fontSize: '12px',
-  lineHeight: '18px',
-  height: '18px'
-};
-
-const CHECKOUT_BUTTON_STYLE: React.CSSProperties = {
-  width: '100%',
-  height: '38px',
-  marginTop: '20px',
-  marginBottom: '20px'
-};
-
 const BACK_TO_BUTTON_STYLE: React.CSSProperties = {
   width: '100%',
   height: '38px',
   margin: '30px 0px 0px 0px'
 }
-
-const OR_LINE_CONTAINER_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: 'transparent',
-  width: '100%',
-  color: '#969696',
-  gap: '10px',
-  marginTop: '30px',
-  height: '18px'
-};
-
-const PARTIAL_LINE_STYLE: React.CSSProperties = {
-  width: 'calc(50% - 59px)',
-  height: '1px',
-  backgroundColor: '#969696'
-};
-
-const OR_CHECKOUT_TEXT_STYLE: React.CSSProperties = {
-  padding: '0px',
-  margin: '0px',
-  fontFamily: 'Source Sans Pro',
-  fontStyle: 'normal',
-  fontWeight: 400,
-  fontSize: '14px',
-  lineHeight: '18px'
-};
-
-const PAYPAL_BUTTON_STYLE: React.CSSProperties = {
-  width: '100%',
-  minWidth: '100%',
-  height: '38px',
-  minHeight: '38px',
-  marginTop: '30px'
-};
-
-const PAY_BUTTON_CONTAINER_STYLE: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: 'transparent',
-  width: '100%',
-  gap: '20px',
-  marginTop: '20px',
-  height: '38px',
-  minHeight: '38px'
-};
-
-const PAY_BUTTON_STYLE: React.CSSProperties = {
-  width: 'calc(50% - 10px)',
-  minWidth: 'calc(50% - 10px)',
-  height: '100%',
-  minHeight: '100%'
-};
 
 const FEE_DESCRIPTION_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',

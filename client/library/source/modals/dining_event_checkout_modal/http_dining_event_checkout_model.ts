@@ -1,3 +1,4 @@
+import { loadStripe, Stripe  } from '@stripe/stripe-js';
 import { DiningEvent, PaymentCard, arrayFromJson } from '../../definitions';
 import { DiningEventCheckoutModel } from './dining_event_checkout_model';
 import { EmptyDiningEventCheckoutModel } from
@@ -11,6 +12,7 @@ export class HttpDiningEventCheckoutModel extends DiningEventCheckoutModel {
     this._isLoaded = false;
     this._eventId = eventId;
     this._model = new EmptyDiningEventCheckoutModel();
+    this._stripe = null;
   }
 
   public async load(): Promise<void> {
@@ -27,6 +29,10 @@ export class HttpDiningEventCheckoutModel extends DiningEventCheckoutModel {
       responseObject.defaultPaymentCard);
     this._model = new LocalDiningEventCheckoutModel(diningEvent,
       paymentCardList, defaultPaymentCard);
+    const STRIPE_TEST_PUBLIC_KEY = 'pk_test_51OCmJEKaHeyRq5c018mgmbhTOf9Vr4c7DavGL5xEert25CgTVQAvLgsFgZig5r2A7trQ8pO56HjfiuBaLrqn24Ph00PYe0I0F7';
+    const stripeTestPromise: Promise<Stripe | null> = loadStripe(
+      STRIPE_TEST_PUBLIC_KEY);
+    this._stripe = await stripeTestPromise;
     await this._model.load();
     this._isLoaded = true;
   }
@@ -57,6 +63,31 @@ export class HttpDiningEventCheckoutModel extends DiningEventCheckoutModel {
   }
 
   public async checkout(): Promise<void> {
+    try {
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const session = await response.json();
+      const result = await this._stripe.redirectToCheckout({
+        sessionId: session.sessionId,
+      });
+
+      if (result.error) {
+        console.error(result.error.message);
+      }
+      console.log('result', result);
+
+    } catch (error) {
+      console.error('Error during checkout:', error);
+    }
     await this._model.checkout();
   }
 
@@ -75,4 +106,5 @@ export class HttpDiningEventCheckoutModel extends DiningEventCheckoutModel {
   private _isLoaded: boolean;
   private _eventId: number;
   private _model: DiningEventCheckoutModel;
+  private _stripe: Stripe;
 }
