@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Modal } from '../../components';
 import { DisplayMode, User } from '../../definitions';
-import { DiningEventCheckoutModalController } from
+import { DiningEventCheckoutModal, DiningEventCheckoutModalController } from
   '../../modals/dining_event_checkout_modal';
 import { DiningEventPage } from './dining_event_page';
 import { DiningEventPageModel } from './dining_event_page_model';
@@ -27,6 +27,8 @@ interface State {
   isLoaded: boolean;
   errorCode: DiningEventPage.ErrorCode;
   isCheckoutModal: boolean;
+  checkoutCompleted: boolean;
+  checkoutErrorCode: DiningEventCheckoutModal.ErrorCode;
 }
 
 /** Implements the DiningEventPageController. */
@@ -37,7 +39,9 @@ export class DiningEventPageController extends React.Component<Properties,
     this.state = {
       isLoaded: false,
       errorCode: DiningEventPage.ErrorCode.NONE,
-      isCheckoutModal: false
+      isCheckoutModal: false,
+      checkoutCompleted: false,
+      checkoutErrorCode: DiningEventCheckoutModal.ErrorCode.NONE
     };
   }
 
@@ -53,6 +57,9 @@ export class DiningEventPageController extends React.Component<Properties,
           displayMode={this.props.displayMode}
           model={this.props.model.getCheckoutModel()}
           profileImageSrc={this.props.profileImageSrc}
+          checkoutCompleted={this.state.checkoutCompleted}
+          checkoutErrorCode={this.state.checkoutErrorCode}
+          onJoinEvent={this.handleJoinEvent}
           onClose={this.handleCloseCheckoutModal}
           showLoginModal={this.props.showLoginModal}
           onJoinEventSuccess={this.handleJoinEventSuccess}
@@ -92,6 +99,7 @@ export class DiningEventPageController extends React.Component<Properties,
   }
 
   public async componentDidMount(): Promise<void> {
+    this.checkForSuccessfulPayment();
     try {
       await this.props.model.load();
       this.setState({
@@ -102,6 +110,27 @@ export class DiningEventPageController extends React.Component<Properties,
       this.setState({
         isLoaded: true,
         errorCode: DiningEventPage.ErrorCode.NO_CONNECTION
+      });
+    }
+  }
+
+  private checkForSuccessfulPayment = async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const success = urlParams.get('Success');
+    if (success) {
+      this.setState({
+        isCheckoutModal: true,
+        checkoutCompleted: true,
+        checkoutErrorCode: DiningEventCheckoutModal.ErrorCode.NONE
+      });
+      await this.props.model.validatePaymentAndJoinEvent();
+    }
+    const cancel = urlParams.get('Cancel');
+    if (cancel) {
+      this.setState({
+        isCheckoutModal: true,
+        checkoutCompleted: false,
+        checkoutErrorCode: DiningEventCheckoutModal.ErrorCode.PAYMENT_FAILED
       });
     }
   }

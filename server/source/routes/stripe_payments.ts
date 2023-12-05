@@ -7,18 +7,20 @@ export class StripePaymentRoutes {
   /**
    * @param app - Express app.
    * @param stripe - stripe api.
+   * @param domainUrl - the absolute url address of the app.
    * @param userDatabase - The user related table manipulation class instance.
    * @param diningEventDatabase - The dining events related table manipulation 
    * class instance.
    */
-  constructor(app: any, stripe: any, userDatabase: UserDatabase,
-      diningEventDatabase: DiningEventDatabase) {
+  constructor(app: any, stripe: any, domainUrl: string, userDatabase:
+      UserDatabase, diningEventDatabase: DiningEventDatabase) {
     app.post('/api/create-setup-intent', this.createSetupIntent);
     app.post('/api/create-payment-intent', this.createPaymentIntent);
     app.post('/api/create-checkout-session', this.createCheckoutSession);
     app.get('/api/session-status', this.sessionStatus);
 
     this.stripe = stripe;
+    this.domainUrl = domainUrl;
     this.userDatabase = userDatabase;
     this.diningEventDatabase = diningEventDatabase;
   }
@@ -60,7 +62,6 @@ export class StripePaymentRoutes {
   }
 
   private createCheckoutSession = async (request, response) => {
-    const TEST_DOMAIN = 'http://localhost:3000';
     if (!request.session?.user) {
       response.status(401).send();
       return;
@@ -103,8 +104,8 @@ export class StripePaymentRoutes {
           },
         ],
         mode: 'payment',
-        success_url: TEST_DOMAIN,
-        cancel_url: TEST_DOMAIN
+        success_url: `${this.domainUrl}/dining_events/${eventId}?Success`,
+        cancel_url: `${this.domainUrl}/dining_events/${eventId}?Cancel`
       });
 
       response.status(200).json({
@@ -131,6 +132,7 @@ export class StripePaymentRoutes {
 
   /** The stripe payment api. */
   private stripe: any;
+  private domainUrl: string;
   private userDatabase: UserDatabase;
   private diningEventDatabase: DiningEventDatabase;
 }

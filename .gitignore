@@ -21,5 +21,3 @@ client/resources/uploads/
 
 **/server/application/
 **/.swp
-
-server/config.default.json

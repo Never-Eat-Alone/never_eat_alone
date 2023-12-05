@@ -1,0 +1,19 @@
+{
+  "database": {
+    "user": "",
+    "password": "",
+    "host": "",
+    "port": 0,
+    "database": ""
+  },
+  "google_client_id": "",
+  "send_grid_api_key": "",
+  "port": 0,
+  "cookie_secret": "",
+  "stripe_test_secret_Key": "",
+  "frontendUrls": [
+    "",
+    ""
+  ],
+  "domainUrl": ""
+}

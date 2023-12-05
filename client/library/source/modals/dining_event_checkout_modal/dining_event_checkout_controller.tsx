@@ -9,6 +9,10 @@ interface Properties {
   displayMode: DisplayMode;
   model: DiningEventCheckoutModel;
   profileImageSrc: string;
+  checkoutCompleted: boolean;
+  checkoutErrorCode: DiningEventCheckoutModal.ErrorCode;
+
+  onJoinEvent: () => void;
   onClose: () => void;
   showLoginModal: () => void;
 
@@ -19,8 +23,6 @@ interface Properties {
 interface State {
   isLoaded: boolean;
   errorCode: number;
-  checkoutCompleted: boolean;
-  checkoutErrorCode: DiningEventCheckoutModal.ErrorCode;
 }
 
 export class DiningEventCheckoutModalController extends React.Component<
@@ -29,9 +31,7 @@ export class DiningEventCheckoutModalController extends React.Component<
     super(props);
     this.state = {
       isLoaded: false,
-      errorCode: null,
-      checkoutCompleted: false,
-      checkoutErrorCode: DiningEventCheckoutModal.ErrorCode.NONE
+      errorCode: null
     };
   }
 
@@ -45,15 +45,16 @@ export class DiningEventCheckoutModalController extends React.Component<
     return (
       <DiningEventCheckoutModal
         displayMode={this.props.displayMode}
+        account={this.props.account}
         eventId={this.props.model.diningEvent.id}
         eventFee={this.props.model.diningEvent.eventFee}
         eventFeeDescription=''
         eventTitle={this.props.model.diningEvent.title}
         imageSrc={this.props.model.diningEvent.coverImageSrc}
         eventStartDate={this.props.model.diningEvent.startAt}
-        checkoutCompleted={this.state.checkoutCompleted}
-        errorCode={this.state.checkoutErrorCode}
-        onJoinEvent={this.handleJoinEvent}
+        checkoutCompleted={this.props.checkoutCompleted}
+        errorCode={this.props.checkoutErrorCode}
+        onJoinEvent={this.props.onJoinEvent}
         onClose={this.props.onClose}
         onCheckout={this.handleCheckout}
       />);
@@ -65,22 +66,6 @@ export class DiningEventCheckoutModalController extends React.Component<
       this.setState({ isLoaded: true });
     } catch (error) {
       this.setState({ errorCode: error.code });
-    }
-  }
-
-  /** Indicates the event is free and user clicked on join button. */
-  private handleJoinEvent = async () => {
-    if (this.props.account?.id === -1) {
-      this.props.showLoginModal();
-      return;
-    }
-    try {
-      await this.props.model.joinEvent(this.props.account.id,
-        this.props.account.name, this.props.profileImageSrc);
-      this.props.onJoinEventSuccess();
-    } catch (error) {
-      this.setState({
-        checkoutErrorCode: DiningEventCheckoutModal.ErrorCode.JOIN_FAILED });
     }
   }
 

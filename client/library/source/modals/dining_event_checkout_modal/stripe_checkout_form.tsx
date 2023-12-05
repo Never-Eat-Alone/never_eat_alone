@@ -11,7 +11,7 @@ interface Properties {
   onCheckout: () => void;
 }
 
-const StripeCheckoutForm : React.FC<Properties> = (props) => {
+const StripeCheckoutForm: React.FC<Properties> = (props) => {
   const handleCheckoutSubmit = async (event: React.FormEvent<HTMLFormElement>
       ) => {
     event.preventDefault();

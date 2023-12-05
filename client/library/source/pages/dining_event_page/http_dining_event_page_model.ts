@@ -53,6 +53,10 @@ export class HttpDiningEventPageModel extends DiningEventPageModel {
       responseObject.accountName, responseObject.profileImageSrc);
   }
 
+  public async validatePaymentAndJoinEvent(): Promise<void> {
+    
+  }
+
   private _checkResponse(response: Response): void {
     if (!response.ok) {
       throw new Error(`HTTP error, status = ${response.status}`);

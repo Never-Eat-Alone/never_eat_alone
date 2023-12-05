@@ -179,7 +179,8 @@ function runExpress(pool: Pool, config: any) {
   const diningEventDatabase = new DiningEventDatabase(pool);
   const diningEventRoutes = new DiningEventRoutes(app, diningEventDatabase,
     userDatabase, attendeeDatabase, userProfileImageDatabase);
-  const stripePaymentRoutes = new StripePaymentRoutes(app, stripe,
+  const domainUrl = config.domainUrl;
+  const stripePaymentRoutes = new StripePaymentRoutes(app, stripe, domainUrl,
     userDatabase, diningEventDatabase);
 
   app.get('*', (request, response, next) => {
