@@ -13,5 +13,5 @@ export abstract class DiningEventPageModel {
   public abstract getCheckoutModel(): DiningEventCheckoutModel;
   public abstract removeSeat(accountId: number, accountName: string,
     profileImageSrc: string): Promise<void>;
-  public abstract validatePaymentAndJoinEvent(): Promise<void>;
+  public abstract validatePaymentAndJoinEvent(eventId: number): Promise<void>;
 }

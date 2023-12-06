@@ -54,7 +54,26 @@ export class HttpDiningEventPageModel extends DiningEventPageModel {
   }
 
   public async validatePaymentAndJoinEvent(): Promise<void> {
-    
+    try {
+      const response = await fetch(`/api/validate_and_join`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          eventId: this._eventId,
+        })
+      });
+      this._checkResponse(response);
+      const data = await response.json();
+      if (data.success) {
+        await this._model.getCheckoutModel().joinEvent(data.accountId,
+          data.name, data.profileImageSrc);
+        await this._model.validatePaymentAndJoinEvent(parseInt(data.accountId));
+      }
+    } catch (error) {
+      console.error('Error during validation:', error);
+    }
   }
 
   private _checkResponse(response: Response): void {
