@@ -1,4 +1,5 @@
 import { Pool } from 'pg';
+import Stripe from 'stripe';
 import { Attendee, AttendeeStatus, Cuisine, DiningEvent, DressCode,
   EventCardSummary, EventStatus, EventType, Location, PriceRange, Restaurant,
   Seating } from '../../../../client/library/source/definitions';
@@ -309,6 +310,15 @@ export class DiningEventDatabase {
       return '';
     }
     return result.rows[0].stripe_price_id;
+  }
+
+  public savePaymentIntent = async (paymentIntentId: string |
+      Stripe.PaymentIntent, sessionId: string, userId: number, eventId: number
+      ): Promise<void> => {
+    const result = await this.pool.query(`
+      INSERT INTO stripe_payment_intents
+      (payment_intent_id, session_id, user_id, event_id)
+      VALUES ($1, $2, $3, $4)`, [paymentIntentId, sessionId, userId, eventId]);
   }
 
   /** The postgress pool connection. */

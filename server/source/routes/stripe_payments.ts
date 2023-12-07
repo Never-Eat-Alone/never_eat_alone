@@ -1,5 +1,5 @@
-import { User, UserProfileImage } from
-  '../../../client/library/source/definitions';
+import Stripe from 'stripe';
+import { User } from '../../../client/library/source/definitions';
 import { AttendeeDatabase } from '../postgres/queries/attendee_database';
 import { DiningEventDatabase } from '../postgres/queries/dining_event_database';
 import { UserDatabase } from '../postgres/queries/user_database';
@@ -99,8 +99,9 @@ export class StripePaymentRoutes {
       response.status(500).send();
       return;
     }
+    let session: Stripe.Checkout.Session;
     try {
-      const session = await this.stripe.checkout.sessions.create({
+      session = await this.stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: [
           {
@@ -112,18 +113,27 @@ export class StripePaymentRoutes {
         success_url: `${this.domainUrl}/dining_events/${eventId}?Success`,
         cancel_url: `${this.domainUrl}/dining_events/${eventId}?Cancel`
       });
-
-      response.status(200).json({
-        url: session.url,
-        clientSecret: session.client_secret,
-        sessionId: session.id
-      });
-
     } catch (error) {
       console.error('Failed at stripe.checkout.sessions', error);
       response.status(500).send();
       return;
     }
+    console.log('session.payment_intent', session.payment_intent);
+    console.log('session.id', session.id, 'event_id', eventId, 'userId', user.id
+    );
+    try {
+      await this.diningEventDatabase.savePaymentIntent(session.payment_intent,
+        session.id, user.id, eventId);
+    } catch (error) {
+      console.error('Failed at savePaymentIntent', error);
+      response.status(500).send();
+      return;
+    }
+    response.status(200).json({
+      url: session.url,
+      clientSecret: session.client_secret,
+      sessionId: session.id
+    });
   }
 
   private sessionStatus = async (request, response) => {
@@ -194,7 +204,7 @@ export class StripePaymentRoutes {
   }
 
   /** The stripe payment api. */
-  private stripe: any;
+  private stripe: Stripe;
   private domainUrl: string;
   private userDatabase: UserDatabase;
   private diningEventDatabase: DiningEventDatabase;
