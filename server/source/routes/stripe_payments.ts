@@ -1,4 +1,6 @@
-import { User } from '../../../client/library/source/definitions';
+import { User, UserProfileImage } from
+  '../../../client/library/source/definitions';
+import { AttendeeDatabase } from '../postgres/queries/attendee_database';
 import { DiningEventDatabase } from '../postgres/queries/dining_event_database';
 import { UserDatabase } from '../postgres/queries/user_database';
 
@@ -13,16 +15,19 @@ export class StripePaymentRoutes {
    * class instance.
    */
   constructor(app: any, stripe: any, domainUrl: string, userDatabase:
-      UserDatabase, diningEventDatabase: DiningEventDatabase) {
+      UserDatabase, diningEventDatabase: DiningEventDatabase, attendeeDatabase:
+      AttendeeDatabase) {
     app.post('/api/create-setup-intent', this.createSetupIntent);
     app.post('/api/create-payment-intent', this.createPaymentIntent);
     app.post('/api/create-checkout-session', this.createCheckoutSession);
     app.get('/api/session-status', this.sessionStatus);
+    app.post('/api/validate_and_join', this.validatePaymentAndJoin);
 
     this.stripe = stripe;
     this.domainUrl = domainUrl;
     this.userDatabase = userDatabase;
     this.diningEventDatabase = diningEventDatabase;
+    this.attendeeDatabase = attendeeDatabase;
   }
 
   private calculateOrderAmount = (items) => {
@@ -130,9 +135,68 @@ export class StripePaymentRoutes {
     });
   }
 
+  private validatePaymentAndJoin = async (request, response) => {
+    const eventId = parseInt(request.body.eventId);
+    let user = User.makeGuest();
+    if (request.session?.user) {
+      try {
+        user = await this.userDatabase.loadUserBySessionId(request.session.id);
+        if (user.id === -1) {
+          response.status(401).send();
+          return;
+        }
+      } catch (error) {
+        console.error('Failed at loadUserBySessionId', error);
+        response.status(500).send();
+        return;
+      }
+    }
+    // Validate with Stripe here
+    const { success, message } = await this.validatePayment('');
+    // If valid, call joinEvent
+    if (!success) {
+      if (message.indexOf('failed') === -1) {
+        response.status(402).json({ success: false, paymentStatus: 'failed' });
+      }
+      response.status(422).json({ success: false, paymentStatus: 'failed' });
+      return;
+    }
+
+    try {
+      await this.attendeeDatabase.joinEvent(user.id, eventId);
+      response.status(200).json({
+        success: true
+      });
+    } catch (error) {
+      console.error('Failed at joinEvent', error);
+      response.status(500).send();
+      return;
+    }
+  }
+
+  /** Validate the payment status with stripe api. */
+  private validatePayment = async (paymentIntentId: string) => {
+    try {
+      const paymentIntent = await this.stripe.paymentIntents.retrieve(
+        paymentIntentId);
+      if (paymentIntent.status === 'succeeded') {
+        return { success: true, message: 'Payment successful' };
+      } else if (paymentIntent.status === 'requires_action' ||
+          paymentIntent.status === 'requires_payment_method') {
+        return { success: false, message: 'Payment requires further action' };
+      } else {
+        return { success: false, message: 'Payment failed' };
+      }
+    } catch (error) {
+      console.error('Error validating payment:', error);
+      return { success: false, message: 'Error validating payment' };
+    }
+  }
+
   /** The stripe payment api. */
   private stripe: any;
   private domainUrl: string;
   private userDatabase: UserDatabase;
   private diningEventDatabase: DiningEventDatabase;
+  private attendeeDatabase: AttendeeDatabase;
 }

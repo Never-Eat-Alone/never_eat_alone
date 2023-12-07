@@ -182,7 +182,7 @@ function runExpress(pool: Pool, config: any) {
     userDatabase, attendeeDatabase, userProfileImageDatabase);
   const domainUrl = config.domainUrl;
   const stripePaymentRoutes = new StripePaymentRoutes(app, stripe, domainUrl,
-    userDatabase, diningEventDatabase);
+    userDatabase, diningEventDatabase, attendeeDatabase);
 
   app.get('*', (request, response, next) => {
     response.sendFile(path.join(process.cwd(), 'public', 'index.html'));
@@ -217,7 +217,8 @@ function runExpress(pool: Pool, config: any) {
         'user_favourite_cuisines',
         'password_reset_tokens',
         'billing_addresses',
-        'stripe_products'
+        'stripe_products',
+        'stripe_payment_intents'
       ]);
       app.listen(config.port, async () => {});
     } catch (error) {
