@@ -594,8 +594,7 @@ const TABLET_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
   padding: '40px 30px',
   width: '702px',
   marginTop: '-100px',
-  borderRadius: '4px',
-  overflow: 'hidden'
+  borderRadius: '4px'
 };
 
 const MOBILE_CONTENT_CONTAINER_STYLE: React.CSSProperties = {
