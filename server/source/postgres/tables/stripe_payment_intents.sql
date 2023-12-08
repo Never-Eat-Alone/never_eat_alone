@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS stripe_payment_intents (
     id SERIAL PRIMARY KEY,
-    payment_intent_id VARCHAR(255) NOT NULL,
+    payment_intent_id VARCHAR(255),
     session_id VARCHAR(255) NOT NULL,
     user_id INTEGER NOT NULL,
     event_id INTEGER NOT NULL,

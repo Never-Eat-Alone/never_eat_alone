@@ -123,7 +123,7 @@ export class DiningEventPageController extends React.Component<Properties,
         checkoutCompleted: true,
         checkoutErrorCode: DiningEventCheckoutModal.ErrorCode.NONE
       });
-      await this.props.model.validatePaymentAndJoinEvent();
+      await this.props.model.validatePaymentAndJoinEvent(this.props.eventId);
     }
     const cancel = urlParams.get('Cancel');
     if (cancel) {

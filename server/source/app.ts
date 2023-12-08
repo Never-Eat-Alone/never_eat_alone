@@ -183,6 +183,42 @@ function runExpress(pool: Pool, config: any) {
   const domainUrl = config.domainUrl;
   const stripePaymentRoutes = new StripePaymentRoutes(app, stripe, domainUrl,
     userDatabase, diningEventDatabase, attendeeDatabase);
+  //local webhook secret for testing
+  const endpointSecret = "whsec_ac479f60f609803b34800a5f33a619cf9d31f6a41a2ab959285ca8a1a6b93f0e";
+
+  app.post('/stripe-webhook', Bodyparser.raw({type: 'application/json'}),
+      async (request, response) => {
+    const sig = request.headers['stripe-signature'];
+  
+    let event;
+  
+    try {
+      event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+      // config.stripe_webhook_secret for live
+    } catch (err) {
+      console.error(`⚠️ Webhook signature verification failed.`, err.message);
+      return response.status(400).send(`Webhook Error: ${err.message}`);
+    }
+  
+    // Handle the event
+    switch (event.type) {
+      case 'payment_intent.succeeded':
+        const paymentIntent = event.data.object;
+        // Handle the successful payment intent.
+        // For example, update your database.
+        break;
+      case 'checkout.session.completed':
+        const session = event.data.object;
+        // Handle successful checkout session.
+        break;
+      // ... handle other event types
+      default:
+        console.log(`Unhandled event type ${event.type}`);
+    }
+  
+    // Return a 200 response to acknowledge receipt of the event
+    response.status(200).send();
+  });
 
   app.get('*', (request, response, next) => {
     response.sendFile(path.join(process.cwd(), 'public', 'index.html'));

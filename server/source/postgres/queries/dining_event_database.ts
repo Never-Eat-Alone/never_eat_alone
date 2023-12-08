@@ -321,6 +321,23 @@ export class DiningEventDatabase {
       VALUES ($1, $2, $3, $4)`, [paymentIntentId, sessionId, userId, eventId]);
   }
 
+  public loadPaymentByEventIdUserId = async (eventId: number, userId: number
+      ) => {
+    const result = await this.pool.query(`
+      SELECT *
+      FROM stripe_payment_intents
+      WHERE event_id = $1 AND user_id = $2`, [eventId, userId]);
+    if (result.rows?.length === 0) {
+      throw new Error(`No payment intent found for user id:, ${userId}`);
+    }
+    return {
+      paymentIntentId: result.rows[0].payment_intent_id,
+      eventId: parseInt(result.rows[0].event_id),
+      userId: parseInt(result.rows[0].user_id),
+      sessionId: result.rows[0].session_id
+    };
+  } 
+
   /** The postgress pool connection. */
   private pool: Pool;
 }

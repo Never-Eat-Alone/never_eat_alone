@@ -161,17 +161,31 @@ export class StripePaymentRoutes {
         return;
       }
     }
-    // Validate with Stripe here
-    const { success, message } = await this.validatePayment('');
-    // If valid, call joinEvent
-    if (!success) {
-      if (message.indexOf('failed') === -1) {
-        response.status(402).json({ success: false, paymentStatus: 'failed' });
-      }
-      response.status(422).json({ success: false, paymentStatus: 'failed' });
+    let paymentIntentId;
+    try {
+      const payment = await this.diningEventDatabase.loadPaymentByEventIdUserId(
+        eventId, user.id);
+      paymentIntentId = payment.paymentIntentId;
+    } catch (error) {
+      console.error('Failed at loadPaymentBySessionId', error);
+      response.status(500).send();
       return;
     }
-
+    try {
+      const { success, message } = await this.validatePayment(paymentIntentId);
+      if (!success) {
+        if (message.indexOf('failed') === -1) {
+          response.status(402).json({ success: false, paymentStatus: 'failed' });
+        }
+        response.status(422).json({ success: false,
+          paymentStatus: 'Action required.' });
+        return;
+      }
+    } catch (error) {
+      console.error('Failed at validatePayment with stripe', error);
+      response.status(500).send();
+      return;
+    }
     try {
       await this.attendeeDatabase.joinEvent(user.id, eventId);
       response.status(200).json({

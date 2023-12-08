@@ -61,7 +61,7 @@ export class HttpDiningEventPageModel extends DiningEventPageModel {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          eventId: this._eventId,
+          eventId: this._eventId
         })
       });
       this._checkResponse(response);
