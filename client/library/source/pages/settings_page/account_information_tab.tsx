@@ -99,6 +99,12 @@ interface State {
   newPassword: string;
   confirmPassword: string;
   passwordHasChanged: boolean;
+  editEmailPassword: string;
+  counter: number;
+  newEmail: string;
+  emailHasChanged: boolean;
+  emailPasswordHasChanged: boolean;
+  isEmailValid: boolean;
 }
 
 /** Dislays the account information tab content on the setting page. */
@@ -113,7 +119,13 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       currentPassword: '',
       newPassword: '',
       confirmPassword: '',
-      passwordHasChanged: false
+      passwordHasChanged: false,
+      editEmailPassword: '',
+      counter: 0,
+      newEmail: this.props.newEmail,
+      emailHasChanged: false,
+      emailPasswordHasChanged: false,
+      isEmailValid: true
     };
   }
 
@@ -828,7 +840,8 @@ export namespace AccountInformationTab {
     EMPTY_EMAIL_FIELD,
     EMPTY_PASSWORD_FIELD,
     INVALID_EMAIL_ADDRESS,
-    DUPLICATE_EMAIL
+    DUPLICATE_EMAIL,
+    WRONG_PASSWORD
   }
 }
 

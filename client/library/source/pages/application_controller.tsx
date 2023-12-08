@@ -362,8 +362,8 @@ export class ApplicationController extends React.Component<Properties, State> {
       account={this.state.account}
       eventId={id}
       profileImageSrc={this.state.accountProfileImage.src}
-      onJoinEventSuccess={this.handleJoinEvent}
-      onRemoveSeatSuccess={this.handleRemoveSeat}
+      onJoinEventSuccess={() => this.handleJoinEvent(id)}
+      onRemoveSeatSuccess={() => this.handleRemoveSeat(id)}
       showLoginModal={this.handleLogInButton}
     />;
   }
@@ -437,18 +437,18 @@ export class ApplicationController extends React.Component<Properties, State> {
     />;
   }
 
-  private handleJoinEvent = async () => {
+  private handleJoinEvent = async (eventId: number) => {
     try {
-      await this.props.model.updateOnJoinRemoveSeat();
+      await this.props.model.updateOnJoinRemoveSeat(eventId);
       this.setState({ hasJoinedEvent: true });
     } catch {
       this.setState({ hasError: true });
     }
   }
 
-  private handleRemoveSeat = async () => {
+  private handleRemoveSeat = async (eventId: number) => {
     try {
-      await this.props.model.updateOnJoinRemoveSeat();
+      await this.props.model.updateOnJoinRemoveSeat(eventId);
       this.setState({ hasRemovedSeat: true });
     } catch {
       this.setState({ hasError: true });

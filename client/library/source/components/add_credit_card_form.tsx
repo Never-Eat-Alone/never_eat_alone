@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { CreditCardType } from '../definitions';
-import { InputField, PaymentCardInputField, SecurityCodeInputField
-} from './input_field';
+import { InputField, PaymentCardInputField, SecurityCodeInputField } from
+  './input_field';
 import { NumberedDropdownMenu } from './numbered_dropdown_menu';
 import { PrimaryTextButton } from './text_button';
 
-interface Properties {
+export interface AddCreditCardFormProperties {
   /** Title section of the form. */
   titleSection?: JSX.Element;
 
@@ -50,8 +50,9 @@ interface State {
 }
 
 /** Displays the Add Creditcard Form. */
-export class AddCreditCardForm extends React.Component<Properties, State> {
-  constructor(props: Properties) {
+export class AddCreditCardForm extends React.Component<
+    AddCreditCardFormProperties, State> {
+  constructor(props: AddCreditCardFormProperties) {
     super(props);
     this.state = {
       cardNumber: 0,
@@ -259,7 +260,7 @@ export class AddCreditCardForm extends React.Component<Properties, State> {
     this.setState({ selectedYear: newValue });
   }
 
-  private handleOnAdd = (event: React.SyntheticEvent) => {
+  private handleOnAdd =  (event: any) => {
     event.preventDefault();
     this.setState({
       isNameOnCardInvalid: false,

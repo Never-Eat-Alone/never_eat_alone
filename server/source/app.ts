@@ -30,6 +30,7 @@ import { DeactivateAccountSurveyRoutes } from
 import { DeleteAccountSurveyRoutes } from './routes/delete_account_survey';
 import { DiningEventRoutes } from './routes/dining_event';
 import { SocialMediaImageRoutes } from './routes/social_media_image';
+import { StripePaymentRoutes } from './routes/stripe_payments';
 import { UserRoutes } from './routes/user';
 import { UserProfileImageRoutes } from './routes/user_profile_image';
 
@@ -78,13 +79,39 @@ const initializePostgres = async (pool, dir, label, tableNames = []) => {
 function runExpress(pool: Pool, config: any) {
   const app = Express();
   app.use(Helmet({
-      contentSecurityPolicy: false,
+      crossOriginEmbedderPolicy: false,
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'", 'https://www.googletagmanager.com',
+            'https://js.stripe.com', 'https://apis.google.com',
+            "http://localhost:3000",
+            'http://localhost:3000/api/create-checkout-session',
+            "'unsafe-inline'"],
+          scriptSrcAttr: ["'unsafe-inline'", 'https://js.stripe.com'],
+          connectSrc: ["'self'", "https://api.stripe.com",
+            "https://checkout.stripe.com", "https://www.google-analytics.com",
+            "https://js.stripe.com"],
+          frameSrc: ["'self'", 'https://js.stripe.com'],
+          imgSrc: ["'self'", "data:"],
+          formAction: ["'self'", "http://localhost:3000",
+            'http://localhost:3000/api/create-checkout-session',
+            "https://api.stripe.com"],
+          styleSrc: ["'self'", "'unsafe-inline'"]
+        }
+      }
   }));
+  const Stripe = require('stripe');
+  const stripe = Stripe(config.stripe_test_secret_Key);
+  
   app.use(Bodyparser.json());
+  const frontendUrls = config.frontendUrls;
   app.use(Cors(
     {
+      origin: frontendUrls,
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
       credentials: true,
-      origin: [process.env.FRONTEND_APP_URL]
+      optionsSuccessStatus: 204
     }
   ));
   app.use(Express.static('public'));
@@ -126,6 +153,9 @@ function runExpress(pool: Pool, config: any) {
     }
     response.status(200).json({ google_client_id: id });
   });
+
+  SGMail.setApiKey(config.send_grid_api_key);
+
   const userDatabase = new UserDatabase(pool);
   const userProfileImageDatabase = new UserProfileImageDatabase(pool);
   const userProfileImageRoutes = new UserProfileImageRoutes(app,
@@ -151,6 +181,11 @@ function runExpress(pool: Pool, config: any) {
   const diningEventDatabase = new DiningEventDatabase(pool);
   const diningEventRoutes = new DiningEventRoutes(app, diningEventDatabase,
     userDatabase, attendeeDatabase, userProfileImageDatabase);
+  const domainUrl = config.domainUrl;
+  const stripePaymentRoutes = new StripePaymentRoutes(app, stripe, domainUrl,
+    userDatabase, diningEventDatabase, attendeeDatabase,
+    userProfileImageDatabase);
+
   app.get('*', (request, response, next) => {
     response.sendFile(path.join(process.cwd(), 'public', 'index.html'));
   });
@@ -184,7 +219,9 @@ function runExpress(pool: Pool, config: any) {
         'user_favourite_cuisines',
         'password_reset_tokens',
         'billing_addresses',
-        'user_email_update_requests'
+        'user_email_update_requests',
+        'stripe_products',
+        'stripe_payment_intents'
       ]);
       app.listen(config.port, async () => {});
     } catch (error) {
@@ -198,7 +235,6 @@ function runExpress(pool: Pool, config: any) {
 async function main() {
   const configPath = path.join(__dirname, 'config.json');
   const config = JSON.parse(fs.readFileSync(configPath).toString());
-  SGMail.setApiKey(config.send_grid_api_key);
   const pool = new Pool(config.database);
   /** Set postgres session timezone to UTC. */
   pool.on('connect', (client) => {

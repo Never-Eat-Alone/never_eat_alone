@@ -1,5 +1,5 @@
-import { arrayToJson, DiningEvent, EventTag, User, UserProfileImage } from
-  '../../../client/library/source/definitions';
+import { arrayToJson, DiningEvent, EventTag, PaymentCard, User,
+  UserProfileImage } from '../../../client/library/source/definitions';
 import { AttendeeDatabase } from '../postgres/queries/attendee_database';
 import { DiningEventDatabase } from '../postgres/queries/dining_event_database';
 import { UserDatabase } from '../postgres/queries/user_database';
@@ -26,6 +26,8 @@ export class DiningEventRoutes {
     app.get('/api/dining_events/:eventId', this.getDiningEventPage);
     app.post('/api/dining_events/:eventId/join', this.joinEvent);
     app.post('/api/dining_events/:eventId/remove_seat', this.removeSeat);
+    app.get('/api/checkout_dining_event/:eventId',
+      this.getDiningEventCheckoutModal);
 
     this.diningEventDatabase = diningEventDatabase;
     this.userDatabase = userDatabase;
@@ -174,6 +176,41 @@ export class DiningEventRoutes {
       response.status(500).send();
       return;
     }
+  }
+
+  private getDiningEventCheckoutModal = async (request, response) => {
+    const eventId = parseInt(request.params.eventId);
+    let user = User.makeGuest();
+    if (request.session?.user) {
+      try {
+        user = await this.userDatabase.loadUserBySessionId(request.session.id);
+        if (user.id === -1) {
+          response.status(401).send();
+          return;
+        }
+      } catch (error) {
+        console.error('Failed at loadUserBySessionId', error);
+        response.status(500).send();
+        return;
+      }
+    }
+    let diningEvent: DiningEvent;
+    try {
+      diningEvent = await this.diningEventDatabase.loadDiningEventById(eventId);
+    } catch (error) {
+      console.error('Failed at loadDiningEventById', error);
+      response.status(500).send();
+      return;
+    }
+    let paymentCardList: PaymentCard[] = [];
+
+    let defaultPaymentCard: PaymentCard = PaymentCard.noCard();
+
+    response.status(200).json({
+      diningEvent: diningEvent.toJson(),
+      paymentCardList: arrayToJson(paymentCardList),
+      defaultPaymentCard: defaultPaymentCard.toJson()
+    });
   }
 
   private diningEventDatabase: DiningEventDatabase;

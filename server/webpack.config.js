@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 module.paths.push(path.resolve(process.cwd(), 'node_modules'));
 const PROD = JSON.parse(process.env.PROD_ENV || '0');
+console.log(PROD);
 module.exports = {
   devtool: PROD ? false : 'source-map',
   entry: path.resolve(process.cwd(), 'source/app.ts'),

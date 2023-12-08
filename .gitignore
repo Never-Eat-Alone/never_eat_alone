@@ -17,11 +17,7 @@ client/resources/uploads/
 # Ignore all text files
 *.txt
 
-# Ignore files related to API keys
-.env
 *.lock
 
 **/server/application/
 **/.swp
-
-server/config.default.json

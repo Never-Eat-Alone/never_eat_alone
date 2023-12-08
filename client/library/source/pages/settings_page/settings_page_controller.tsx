@@ -31,7 +31,6 @@ interface State {
   isSomeoneJoinedNotificationOn: boolean;
   isFoodieAcceptedInviteNotificationOn: boolean;
   isAnnouncementNotificationOn: boolean;
-  addCardErrorCode: AddCreditCardForm.ErrorCode;
   updateCardErrorCode: CardDetailsForm.ErrorCode;
   paymentCards: PaymentCard[];
   defaultCard: PaymentCard;
@@ -46,6 +45,10 @@ interface State {
   linkedSocialAccounts: SocialAccount[];
   errorCode: number;
   saveEmailErrorCode: AccountInformationTab.SaveEmailErrorCode;
+  addCardErrorCode: AddCreditCardForm.ErrorCode;
+  newEmail: string;
+  editEmailPassword: string;
+  isNewEmailValid: boolean;
 }
 
 export class SettingsPageController extends React.Component<Properties, State> {
@@ -60,7 +63,6 @@ export class SettingsPageController extends React.Component<Properties, State> {
       isSomeoneJoinedNotificationOn: false,
       isFoodieAcceptedInviteNotificationOn: false,
       isAnnouncementNotificationOn: false,
-      addCardErrorCode: AddCreditCardForm.ErrorCode.NONE,
       updateCardErrorCode: CardDetailsForm.ErrorCode.NONE,
       paymentCards: [],
       defaultCard: PaymentCard.noCard(),
@@ -74,7 +76,11 @@ export class SettingsPageController extends React.Component<Properties, State> {
       redirect: null,
       linkedSocialAccounts: [],
       errorCode: null,
-      saveEmailErrorCode: AccountInformationTab.SaveEmailErrorCode.NONE
+      saveEmailErrorCode: AccountInformationTab.SaveEmailErrorCode.NONE,
+      addCardErrorCode: AddCreditCardForm.ErrorCode.NONE,
+      newEmail: '',
+      editEmailPassword: '',
+      isNewEmailValid: true
     };
   }
 
@@ -105,7 +111,6 @@ export class SettingsPageController extends React.Component<Properties, State> {
       paymentCards={this.props.model.paymentCards}
       paymentRecords={this.props.model.paymentRecords}
       addCardErrorMessage=''
-      addCardErrorCode={this.state.addCardErrorCode}
       updateCardErrorMessage=''
       updateCardErrorCode={this.state.updateCardErrorCode}
       accountInformationTabPage={this.state.accountInformationTabPage}
@@ -117,8 +122,12 @@ export class SettingsPageController extends React.Component<Properties, State> {
       deleteAccountErrorCode={this.state.deleteAccountErrorCode}
       isEmailUpdateTokenValid={this.props.model.isEmailUpdateTokenValid}
       saveEmailErrorCode={this.state.saveEmailErrorCode}
+      newEmail={this.state.newEmail}
+      editEmailPassword={this.state.editEmailPassword}
+      isNewEmailValid={this.state.isNewEmailValid}
       onResendEmailUpdateConfirmation={this.handleResendEmailUpdateConfirmation}
       onDiscardEmailUpdateRequest={this.handleDiscardEmailUpdateRequest}
+      addCardErrorCode={this.state.addCardErrorCode}
       onSubmitDeleteAccount={this.handleSubmitDeleteAccount}
       onAddCard={this.handleAddCard}
       onUpdateCard={this.handleUpdateCard}
@@ -265,14 +274,14 @@ export class SettingsPageController extends React.Component<Properties, State> {
       await this.props.model.addCard(new PaymentCard(Date.now(), cardNumber,
         nameOnCard, month, year, securityCode, zipcode, creditCardType));
       this.setState({
-        addCardErrorCode: AddCreditCardForm.ErrorCode.NONE,
         paymentCards: this.props.model.paymentCards,
-        paymentMethodsTabPage: PaymentMethodsTab.Page.INITIAL
+        paymentMethodsTabPage: PaymentMethodsTab.Page.INITIAL,
+        addCardErrorCode: AddCreditCardForm.ErrorCode.NONE
       });
     } catch {
       this.setState({
-        addCardErrorCode: AddCreditCardForm.ErrorCode.INVALID_CARD_INFO,
-        paymentMethodsTabPage: PaymentMethodsTab.Page.ADD_CARD
+        paymentMethodsTabPage: PaymentMethodsTab.Page.ADD_CARD,
+        addCardErrorCode: AddCreditCardForm.ErrorCode.INVALID_CARD_INFO
       });
     }
   }

@@ -1,8 +1,8 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 import { AddCreditCardForm } from '../../components';
-import { CreditCardType, DisplayMode, getCreditCardTypeName, PaymentCard
-} from '../../definitions';
+import { CreditCardType, DisplayMode, getCreditCardTypeName, PaymentCard } from
+  '../../definitions';
 import { CardDetailsForm } from './card_details_form';
 
 interface Properties {
@@ -17,9 +17,6 @@ interface Properties {
   /** Error message regarding adding a new card. */
   addCardErrorMessage: string;
 
-  /** Error code regarding adding a new card. */
-  addCardErrorCode: AddCreditCardForm.ErrorCode;
-
   /** Error message regarding updating an existing card. */
   updateCardErrorMessage: string;
 
@@ -27,6 +24,9 @@ interface Properties {
   updateCardErrorCode: CardDetailsForm.ErrorCode;
 
   page: PaymentMethodsTab.Page;
+
+  /** Error code regarding adding a new card. */
+  addCardErrorCode: AddCreditCardForm.ErrorCode;
 
   /** Indicates the Add card button is clicked. */
   onAddCard: (cardNumber: number, cardName: string, month: number, year: number,

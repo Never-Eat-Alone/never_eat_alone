@@ -55,9 +55,6 @@ interface Properties {
   /** Error message regarding adding a new card. */
   addCardErrorMessage: string;
 
-  /** Error code regarding adding a new card. */
-  addCardErrorCode: AddCreditCardForm.ErrorCode;
-
   /** Error message regarding updating an existing card info. */
   updateCardErrorMessage: string;
 
@@ -78,9 +75,19 @@ interface Properties {
 
   deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode;
 
+
   isEmailUpdateTokenValid: boolean;
 
   saveEmailErrorCode: AccountInformationTab.SaveEmailErrorCode;
+
+  /** Error code regarding adding a new card. */
+  addCardErrorCode: AddCreditCardForm.ErrorCode;
+
+  newEmail: string;
+
+  editEmailPassword: string;
+
+  isNewEmailValid: boolean;
 
   onResendEmailUpdateConfirmation: () => Promise<void>;
 

@@ -105,15 +105,20 @@ INSERT INTO restaurants (
 (17, 'Piano Piano', 17, 'Piano Piano serves up reimagined Italian classics in a 
   fun, vibrant setting.', 'Close to the museum district.', '(123) 456-7806',
   'MODERATELY_PRICED', 'http://www.pianopiano.com'),
-(18, 'Dandylion', 18, 'Dandylion is a small, modern restaurant offering 
-  innovative, plant-focused meals.', 'Found in the heart of Queen Street West.',
-  '(123) 456-7807', 'MODERATELY_PRICED', 'http://www.dandylion.com'),
+(18, 'J''s Steak Frites', 18, 'J''s SteakFrites is a tribute to the tradition 
+  of Parisian Entrecôte steakhouses. Located in the heart of West Queen West 
+  neighborhood, one of the best Toronto downtown areas, the vibrant bistro 
+  brings steak frites menu to a new level : house made bread with butter, a 
+  fresh green salad and the perfectly marbled AAA Canadian Beef NY Striploin 
+  with crispy frites, and J''s secret sauce.', 'Found in the heart of Queen 
+  Street West.', '(437) 995-9999', 'MODERATELY_PRICED',
+  'https://www.jssteakfrites.ca'),
 (19, 'Alo', 19, 'Alo is a sophisticated restaurant offering a contemporary 
   French tasting menu.', 'Located in the downtown core.', '(123) 456-7808',
   'VERY_EXPENSIVE', 'http://www.alo.com'),
-(20, 'Skippa', 20, 'Skippa offers a changing menu of seasonal, sustainable 
-  sushi and small plates.', 'Situated in the Harbord Village.',
-  '(123) 456-7809', 'VERY_EXPENSIVE', 'http://www.skippa.com'),
+(20, 'Dreyfus', 20, 'Set in a brick row house, this snug & stylish French 
+  eatery serves homey meals & natural wines.', 'Situated in the Harbord 
+  Village.', '(416) 323-1385', 'VERY_EXPENSIVE', 'http://dreyfustoronto.com'),
 (21, 'Grey Gardens', 21, 'Grey Gardens is a wine bar and restaurant offering 
   diverse, eclectic dishes.', 'Located in Kensington Market.', '(123) 456-7810',
   'MODERATELY_PRICED', 'http://www.greygardens.com'),

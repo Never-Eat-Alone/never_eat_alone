@@ -3,12 +3,11 @@ import { AddCreditCardFormErrorCodeInput, ArrayInput, AttendeeInput,
   BooleanInput, CardDetailsFormErrorCodeInput, CityProvinceInput, CSSInput,
   CuisineInput, CoverImageInput, DateInput, DateTimeInput, DisplayModeInput,
   DressCodeInput, EventCardSummaryInput, EventTagInput,
-  ForgotPasswordPageErrorCodeInput, HomePageErrorCodeInput,
-  JoinEventModalErrorCodeInput, LanguageInput, LocationInput,
-  LogInModalErrorCodeInput, NumberInput, PaymentCardInput, PaymentRecordInput,
-  RestaurantInput, SeatingInput, SignUpPageErrorCodeInput, SocialAccountInput,
-  SocialAccountTypeInput, SocialMediaImageInput, TextInput, UserInput,
-  UserProfileImageInput } from '../viewer/propertyInput';
+  ForgotPasswordPageErrorCodeInput, HomePageErrorCodeInput, LanguageInput,
+  LocationInput, LogInModalErrorCodeInput, NumberInput, PaymentCardInput,
+  PaymentRecordInput, RestaurantInput, SeatingInput, SignUpPageErrorCodeInput,
+  SocialAccountInput, SocialAccountTypeInput, SocialMediaImageInput, TextInput,
+  UserInput, UserProfileImageInput } from '../viewer/propertyInput';
 import { ComponentSchema, PropertySchema, SignalSchema } from './schemas';
 
 /** Loads the complete list of schemas available to test. */
@@ -1412,59 +1411,7 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new SignalSchema('onClick', '', [])], NeverEatAlone.SeeAllButton);
   const seeLessButtonSchema = new ComponentSchema('SeeLessButton', [], [
     new SignalSchema('onClick', '', [])], NeverEatAlone.SeeLessButton);
-  const joinEventModalSchema = new ComponentSchema('JoinEventModal', [
-    new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
-      DisplayModeInput),
-    new PropertySchema('eventFee', 3.00 , NumberInput),
-    new PropertySchema('eventFeeDescription', 'Because this restaurant is in \
-      high demand, we charge a fee to hold your spot.', TextInput),
-    new PropertySchema('taxRate', 0.13 , NumberInput),
-    new PropertySchema('eventTitle', 'Let’s go to Mapo Korean BBQ' , TextInput),
-    new PropertySchema('imageSrc', 'resources/images/13.jpg' , TextInput),
-    new PropertySchema('eventStartDate', new Date(2022, 11, 20, 18, 30),
-      DateTimeInput),
-    new PropertySchema('paymentCardsOnFile', [
-      new NeverEatAlone.PaymentCard(11, 4567890123456789, 'Jlo Jlo', 12, 2026,
-        2345, 'M3E 5G6', NeverEatAlone.CreditCardType.VISA),
-      new NeverEatAlone.PaymentCard(151, 4567890123456789, 'Jlo Jlo', 12, 2026,
-        2345, 'M3E 5G6', NeverEatAlone.CreditCardType.AMEX),
-      new NeverEatAlone.PaymentCard(12, 4567890123456789, 'Jlo Jlo', 12, 2026,
-        2345, 'M3E 5G6',  NeverEatAlone.CreditCardType.VISA),
-      new NeverEatAlone.PaymentCard(21, 4567890123456789, 'Jlo Jlo', 12, 2026,
-      2345, 'M3E 5G6', NeverEatAlone.CreditCardType.MASTERCARD),
-    ], ArrayInput(new PropertySchema('paymentCard',
-      new NeverEatAlone.PaymentCard(3, 4567890123456789, 'Jlo Jlo', 12, 2026,
-      2345, 'M3E 5G6', NeverEatAlone.CreditCardType.VISA), PaymentCardInput))),
-    new PropertySchema('defaultCard', new NeverEatAlone.PaymentCard(1,
-      4567890123456789, 'Jlo Jlo', 12, 2026, 2345, 'M3E 5G6',
-      NeverEatAlone.CreditCardType.VISA), PaymentCardInput),
-    new PropertySchema('addCardErrorMessage', '', TextInput),
-    new PropertySchema('selectedMonth', 1, NumberInput),
-    new PropertySchema('selectedYear', 2022, NumberInput),
-    new PropertySchema('securityCode', null, NumberInput),
-    new PropertySchema('zipcode', '', TextInput),
-    new PropertySchema('cardNumber', null, NumberInput),
-    new PropertySchema('nameOnCard', '', TextInput),
-    new PropertySchema('errorCode',
-      NeverEatAlone.JoinEventModal.ErrorCode.NONE,
-      JoinEventModalErrorCodeInput),
-    new PropertySchema('addCardErrorCode',
-      NeverEatAlone.AddCreditCardForm.ErrorCode.NONE,
-      AddCreditCardFormErrorCodeInput),
-    new PropertySchema('cardAdded', false, BooleanInput),
-    new PropertySchema('checkoutCompleted', false, BooleanInput)
-  ], [
-    new SignalSchema('onJoinEvent', '', []),
-    new SignalSchema('onClose', '', []),
-    new SignalSchema('onCreditCardClick', '', []),
-    new SignalSchema('onCheckout', '', []),
-    new SignalSchema('onAddCard', '', []),
-    new SignalSchema('onPaypalClick', '', []),
-    new SignalSchema('onGooglePayClick', '', []),
-    new SignalSchema('onApplePay', '', []),
-    new SignalSchema('onMonthClick', '', []),
-    new SignalSchema('onYearClick', '', [])
-  ], NeverEatAlone.JoinEventModal);
+  
   const creditCardDropdownMenu = new ComponentSchema('CreditCardDropdownMenu',
     [new PropertySchema('cardList', [
     new NeverEatAlone.PaymentCard(2, 4567890123456789, 'Jlo Jlo', 12, 2026,
@@ -1747,7 +1694,6 @@ export function loadComponentSchemas(): ComponentSchema[] {
     homePageNotLoggedSchema,
     inputFieldSchema,
     invertedSecondaryTextButtonSchema,
-    joinEventModalSchema,
     joinModalSchema,
     JoinRequestSentModalSchema,
     linkSocialMediaButtonSchema,

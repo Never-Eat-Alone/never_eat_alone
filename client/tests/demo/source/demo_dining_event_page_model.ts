@@ -17,10 +17,9 @@ export class DemoDiningEventPageModel extends
     return this._diningEvent;
   }
 
-  public async joinEvent(accountId: number, accountName: string,
-      profileImageSrc: string): Promise<void> {
+  public getCheckoutModel(): NeverEatAlone.DiningEventCheckoutModel {
     this.ensureIsLoaded();
-    this.diningEvent.joinEvent(accountId, accountName, profileImageSrc);
+    return this._checkoutModel;
   }
 
   public async removeSeat(accountId: number, accountName: string,
@@ -28,6 +27,8 @@ export class DemoDiningEventPageModel extends
     this.ensureIsLoaded();
     this._diningEvent.removeSeat(accountId, accountName, profileImageSrc);
   }
+
+  public async validatePaymentAndJoinEvent(sessionId: string): Promise<void> {}
 
   private ensureIsLoaded(): void {
     if (!this._isLoaded) {
@@ -37,4 +38,5 @@ export class DemoDiningEventPageModel extends
 
   private _isLoaded: boolean;
   private _diningEvent: NeverEatAlone.DiningEvent;
+  private _checkoutModel: NeverEatAlone.DiningEventCheckoutModel;
 }

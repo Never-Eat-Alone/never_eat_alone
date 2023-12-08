@@ -131,12 +131,15 @@ export class HttpApplicationModel extends ApplicationModel {
     this._model.addDiningEventPageModel(id, newModel);
   }
 
-  public async updateOnJoinRemoveSeat(): Promise<void> {
+  public async updateOnJoinRemoveSeat(eventId: number): Promise<void> {
     await this._model.homePageModel.updateEventLists();
     const profilePageModel = new HttpProfilePageModel(this.account.id);
     await profilePageModel.load();
     this.addProfilePageModel(this.account.id, profilePageModel);
-    await this._model.updateOnJoinRemoveSeat();
+    const diningEventPageModel = new HttpDiningEventPageModel(eventId);
+    await diningEventPageModel.load();
+    this.addDiningEventPageModel(eventId, diningEventPageModel);
+    await this._model.updateOnJoinRemoveSeat(eventId);
   }
 
   public get inviteAFoodieModel(): InviteAFoodieModel {

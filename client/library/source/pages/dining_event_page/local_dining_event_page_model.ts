@@ -1,12 +1,16 @@
 import { DiningEvent } from '../../definitions';
+import { DiningEventCheckoutModel } from
+  '../../modals/dining_event_checkout_modal';
 import { DiningEventPageModel } from './dining_event_page_model';
 
 /** Implements the DiningEventPage in memory. */
 export class LocalDiningEventPageModel extends DiningEventPageModel {
-  constructor(diningEvent: DiningEvent) {
+  constructor(diningEvent: DiningEvent, checkoutModel:
+      DiningEventCheckoutModel) {
     super();
     this._isLoaded = false;
     this._diningEvent = diningEvent;
+    this._checkoutModel = checkoutModel;
   }
 
   /**
@@ -14,6 +18,7 @@ export class LocalDiningEventPageModel extends DiningEventPageModel {
    * calling any other method of this class.
    */
   public async load(): Promise<void> {
+    await this._checkoutModel.load();
     this._isLoaded = true;
   }
 
@@ -22,10 +27,9 @@ export class LocalDiningEventPageModel extends DiningEventPageModel {
     return this._diningEvent;
   }
 
-  public async joinEvent(accountId: number, accountName: string,
-      profileImageSrc: string): Promise<void> {
+  public getCheckoutModel(): DiningEventCheckoutModel {
     this.ensureIsLoaded();
-    this.diningEvent.joinEvent(accountId, accountName, profileImageSrc);
+    return this._checkoutModel;
   }
 
   public async removeSeat(accountId: number, accountName: string,
@@ -33,6 +37,8 @@ export class LocalDiningEventPageModel extends DiningEventPageModel {
     this.ensureIsLoaded();
     this._diningEvent.removeSeat(accountId, accountName, profileImageSrc);
   }
+
+  public async validatePaymentAndJoinEvent(sessionId: string): Promise<void> {}
 
   private ensureIsLoaded(): void {
     if (!this._isLoaded) {
@@ -42,4 +48,5 @@ export class LocalDiningEventPageModel extends DiningEventPageModel {
 
   private _isLoaded: boolean;
   private _diningEvent: DiningEvent;
+  private _checkoutModel: DiningEventCheckoutModel;
 }

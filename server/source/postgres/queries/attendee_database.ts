@@ -111,31 +111,47 @@ export class AttendeeDatabase {
       EventCardSummary[]> => {
     const result = await this.pool.query(`
       SELECT
-        de.id AS de_id, de.title AS de_title, de.start_at, de.end_at,
-        de.cover_image_src, re.id AS re_id, re.name AS re_name,
-        re.price_range AS re_price_range, de.total_capacity,
+        de.id AS de_id,
+        de.title AS de_title,
+        de.start_at,
+        de.end_at,
+        de.cover_image_src,
+        de.total_capacity,
         de.color_code AS de_color_code,
-        SUM(att.guest_count + 1) AS total,
-        ARRAY_AGG(c.id) AS cuisine_ids, ARRAY_AGG(c.label) AS cuisine_labels,
+        de.fee,
+        de.dress_code,
+        de.seating,
+        de.description,
+        de.status AS de_status,
+        de.type AS de_type,
+        re.id AS re_id,
+        re.name AS re_name,
+        re.description AS re_description,
+        re.price_range AS re_price_range,
+        re.website AS re_website,
+        re.phone_number,
+        (
+          SELECT COUNT(*)
+          FROM attendees AS a
+          WHERE a.event_id = de.id AND a.status = 'GOING'
+        ) AS total_attendees,
+        ARRAY_AGG(c.id) AS cuisine_ids,
+        ARRAY_AGG(c.label) AS cuisine_labels,
         ARRAY_AGG(c.color_code) AS cuisine_colors
       FROM
-        dining_events AS de
-      JOIN
         attendees AS att
-      ON
-        de.id = att.event_id
-      JOIN
-        restaurants AS re
-      ON
-        de.restaurant_id = re.id
-      JOIN
-        restaurant_cuisines AS r_c
-      ON
-        re.id = r_c.restaurant_id
-      JOIN
+      INNER JOIN
+        dining_events AS de ON att.event_id = de.id
+      INNER JOIN
+        restaurants AS re ON de.restaurant_id = re.id
+      LEFT JOIN
+        restaurant_cuisines AS r_c ON re.id = r_c.restaurant_id
+      LEFT JOIN
         cuisines AS c ON r_c.cuisine_id = c.id
       WHERE
-        att.user_id = $1 AND att.status = 'GOING' AND de.end_at <= NOW()
+        att.user_id = $1 AND
+        att.status = 'GOING' AND
+        de.end_at <= NOW()
       GROUP BY
         de.id, re.id
       ORDER BY
@@ -153,8 +169,8 @@ export class AttendeeDatabase {
       const eventCard = new EventCardSummary(parseInt(row.de_id), row.de_title,
         new Date(Date.parse(row.start_at)), new Date(Date.parse(row.end_at)),
         row.re_name, row.re_price_range as PriceRange, cuisines,
-        row.cover_image_src, parseInt(row.total), parseInt(row.total_capacity),
-        true, row.de_color_code);
+        row.cover_image_src, parseInt(row.total_attendees), parseInt(
+        row.total_capacity), true, row.de_color_code);
       pastEventCards.push(eventCard);
     }
     return pastEventCards;
