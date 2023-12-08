@@ -11,6 +11,7 @@ interface Properties {
   profileImageSrc: string;
   checkoutCompleted: boolean;
   checkoutErrorCode: DiningEventCheckoutModal.ErrorCode;
+  page: DiningEventCheckoutModal.Page;
 
   onJoinEvent: () => void;
   onClose: () => void;
@@ -54,6 +55,7 @@ export class DiningEventCheckoutModalController extends React.Component<
         eventStartDate={this.props.model.diningEvent.startAt}
         checkoutCompleted={this.props.checkoutCompleted}
         errorCode={this.props.checkoutErrorCode}
+        page={this.props.page}
         onJoinEvent={this.props.onJoinEvent}
         onClose={this.props.onClose}
         onCheckout={this.handleCheckout}

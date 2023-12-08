@@ -29,6 +29,7 @@ interface State {
   isCheckoutModal: boolean;
   checkoutCompleted: boolean;
   checkoutErrorCode: DiningEventCheckoutModal.ErrorCode;
+  modalPage: DiningEventCheckoutModal.Page;
 }
 
 /** Implements the DiningEventPageController. */
@@ -41,7 +42,8 @@ export class DiningEventPageController extends React.Component<Properties,
       errorCode: DiningEventPage.ErrorCode.NONE,
       isCheckoutModal: false,
       checkoutCompleted: false,
-      checkoutErrorCode: DiningEventCheckoutModal.ErrorCode.NONE
+      checkoutErrorCode: DiningEventCheckoutModal.ErrorCode.NONE,
+      modalPage: DiningEventCheckoutModal.Page.INITIAL
     };
   }
 
@@ -59,6 +61,7 @@ export class DiningEventPageController extends React.Component<Properties,
           profileImageSrc={this.props.profileImageSrc}
           checkoutCompleted={this.state.checkoutCompleted}
           checkoutErrorCode={this.state.checkoutErrorCode}
+          page={this.state.modalPage}
           onJoinEvent={this.handleJoinEvent}
           onClose={this.handleCloseCheckoutModal}
           showLoginModal={this.props.showLoginModal}
@@ -122,18 +125,19 @@ export class DiningEventPageController extends React.Component<Properties,
       await this.props.model.validatePaymentAndJoinEvent(sessionId);
       await this.props.onJoinEventSuccess();
       this.setState({
-        isCheckoutModal: false,
+        isCheckoutModal: true,
         checkoutCompleted: true,
-        checkoutErrorCode: DiningEventCheckoutModal.ErrorCode.NONE
+        checkoutErrorCode: DiningEventCheckoutModal.ErrorCode.NONE,
+        modalPage: DiningEventCheckoutModal.Page.PROCESSING_PAYMENT
       });
-
     }
     const cancel = urlParams.get('Cancel');
     if (cancel) {
       this.setState({
         isCheckoutModal: true,
-        checkoutCompleted: false,
-        checkoutErrorCode: DiningEventCheckoutModal.ErrorCode.PAYMENT_FAILED
+        checkoutCompleted: true,
+        checkoutErrorCode: DiningEventCheckoutModal.ErrorCode.PAYMENT_FAILED,
+        modalPage: DiningEventCheckoutModal.Page.PROCESSING_PAYMENT
       });
     }
   }

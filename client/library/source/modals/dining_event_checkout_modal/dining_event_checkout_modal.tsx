@@ -37,6 +37,8 @@ interface Properties {
   /** Whether the checkout process is completed or not. */
   checkoutCompleted: boolean;
 
+  page: DiningEventCheckoutModal.Page;
+
   /** Indicates the join button is clicked. */
   onJoinEvent: () => void;
 
@@ -62,7 +64,7 @@ export class DiningEventCheckoutModal extends React.Component<Properties,
   constructor(props: Properties) {
     super(props);
     this.state = {
-      page: DiningEventCheckoutModal.Page.INITIAL,
+      page: this.props.page,
       errorCode: this.props.errorCode
     };
     this._containerRef = React.createRef();
