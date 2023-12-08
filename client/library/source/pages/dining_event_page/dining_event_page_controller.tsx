@@ -117,13 +117,16 @@ export class DiningEventPageController extends React.Component<Properties,
   private checkForSuccessfulPayment = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const success = urlParams.get('Success');
+    const sessionId = urlParams.get('session_id');
     if (success) {
+      await this.props.model.validatePaymentAndJoinEvent(sessionId);
+      await this.props.onJoinEventSuccess();
       this.setState({
-        isCheckoutModal: true,
+        isCheckoutModal: false,
         checkoutCompleted: true,
         checkoutErrorCode: DiningEventCheckoutModal.ErrorCode.NONE
       });
-      await this.props.model.validatePaymentAndJoinEvent(this.props.eventId);
+
     }
     const cancel = urlParams.get('Cancel');
     if (cancel) {

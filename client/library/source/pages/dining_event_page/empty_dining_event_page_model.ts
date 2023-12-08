@@ -25,7 +25,7 @@ export class EmptyDiningEventPageModel extends DiningEventPageModel {
     throw new Error('DiningEventPageModel not loaded.');
   }
 
-  public async validatePaymentAndJoinEvent(): Promise<void> {
+  public async validatePaymentAndJoinEvent(sessionId: string): Promise<void> {
     throw new Error('DiningEventPageModel not loaded.');
   }
 }

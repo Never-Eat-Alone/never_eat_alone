@@ -19,13 +19,22 @@ export class HttpDiningEventPageModel extends DiningEventPageModel {
    */
   public async load(): Promise<void> {
     if (this._isLoaded) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const sessionId = urlParams.get('session_id');
+      if (sessionId) {
+        await this.validatePaymentAndJoinEvent(sessionId);
+      }
       return;
     }
+
+    const checkoutModel = new HttpDiningEventCheckoutModel(this._eventId);
+    await checkoutModel.load();
+
     const response = await fetch(`/api/dining_events/${this._eventId}`);
     this._checkResponse(response);
     const responseObject = await response.json();
     const diningEvent = DiningEvent.fromJson(responseObject.diningEvent);
-    const checkoutModel = new HttpDiningEventCheckoutModel(this._eventId);
+    
     this._model = new LocalDiningEventPageModel(diningEvent, checkoutModel);
     await this._model.load();
     this._isLoaded = true;
@@ -53,23 +62,20 @@ export class HttpDiningEventPageModel extends DiningEventPageModel {
       responseObject.accountName, responseObject.profileImageSrc);
   }
 
-  public async validatePaymentAndJoinEvent(): Promise<void> {
+  public async validatePaymentAndJoinEvent(sessionId: string): Promise<void> {
     try {
-      const response = await fetch(`/api/validate_and_join`, {
-        method: 'POST',
+      const response = await fetch(`/api/validate_and_join/${this._eventId}?session_id=${sessionId}`, {
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          eventId: this._eventId
-        })
+        }
       });
       this._checkResponse(response);
       const data = await response.json();
       if (data.success) {
         await this._model.getCheckoutModel().joinEvent(data.accountId,
           data.name, data.profileImageSrc);
-        await this._model.validatePaymentAndJoinEvent(parseInt(data.accountId));
+        await this._model.validatePaymentAndJoinEvent(sessionId);
       }
     } catch (error) {
       console.error('Error during validation:', error);

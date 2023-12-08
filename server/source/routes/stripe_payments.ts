@@ -1,8 +1,9 @@
 import Stripe from 'stripe';
-import { User } from '../../../client/library/source/definitions';
+import { User, UserProfileImage } from '../../../client/library/source/definitions';
 import { AttendeeDatabase } from '../postgres/queries/attendee_database';
 import { DiningEventDatabase } from '../postgres/queries/dining_event_database';
 import { UserDatabase } from '../postgres/queries/user_database';
+import { UserProfileImageDatabase } from '../postgres/queries';
 
 /** Routes related to stripe payments. */
 export class StripePaymentRoutes {
@@ -12,22 +13,24 @@ export class StripePaymentRoutes {
    * @param domainUrl - the absolute url address of the app.
    * @param userDatabase - The user related table manipulation class instance.
    * @param diningEventDatabase - The dining events related table manipulation 
+   * @param userProfileImageDatabase
    * class instance.
    */
   constructor(app: any, stripe: any, domainUrl: string, userDatabase:
       UserDatabase, diningEventDatabase: DiningEventDatabase, attendeeDatabase:
-      AttendeeDatabase) {
+      AttendeeDatabase, userProfileImageDatabase: UserProfileImageDatabase) {
     app.post('/api/create-setup-intent', this.createSetupIntent);
     app.post('/api/create-payment-intent', this.createPaymentIntent);
     app.post('/api/create-checkout-session', this.createCheckoutSession);
     app.get('/api/session-status', this.sessionStatus);
-    app.post('/api/validate_and_join', this.validatePaymentAndJoin);
+    app.get('/api/validate_and_join/:eventId', this.validatePaymentAndJoin);
 
     this.stripe = stripe;
     this.domainUrl = domainUrl;
     this.userDatabase = userDatabase;
     this.diningEventDatabase = diningEventDatabase;
     this.attendeeDatabase = attendeeDatabase;
+    this.userProfileImageDatabase = userProfileImageDatabase;
   }
 
   private calculateOrderAmount = (items) => {
@@ -99,9 +102,9 @@ export class StripePaymentRoutes {
       response.status(500).send();
       return;
     }
-    let session: Stripe.Checkout.Session;
+    let checkoutSession; // Stripe.Checkout.Session;
     try {
-      session = await this.stripe.checkout.sessions.create({
+      checkoutSession = await this.stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: [
           {
@@ -110,29 +113,27 @@ export class StripePaymentRoutes {
           },
         ],
         mode: 'payment',
-        success_url: `${this.domainUrl}/dining_events/${eventId}?Success`,
-        cancel_url: `${this.domainUrl}/dining_events/${eventId}?Cancel`
+        success_url: `${this.domainUrl}/dining_events/${eventId}?Success=true&session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${this.domainUrl}/dining_events/${eventId}?Cancel=true&session_id={CHECKOUT_SESSION_ID}`
       });
     } catch (error) {
       console.error('Failed at stripe.checkout.sessions', error);
       response.status(500).send();
       return;
     }
-    console.log('session.payment_intent', session.payment_intent);
-    console.log('session.id', session.id, 'event_id', eventId, 'userId', user.id
-    );
+
     try {
-      await this.diningEventDatabase.savePaymentIntent(session.payment_intent,
-        session.id, user.id, eventId);
+      await this.diningEventDatabase.savePaymentIntent(
+        checkoutSession.payment_intent, checkoutSession.id, user.id, eventId);
     } catch (error) {
       console.error('Failed at savePaymentIntent', error);
       response.status(500).send();
       return;
     }
     response.status(200).json({
-      url: session.url,
-      clientSecret: session.client_secret,
-      sessionId: session.id
+      url: checkoutSession.url,
+      clientSecret: checkoutSession.client_secret,
+      sessionId: checkoutSession.id
     });
   }
 
@@ -146,7 +147,11 @@ export class StripePaymentRoutes {
   }
 
   private validatePaymentAndJoin = async (request, response) => {
-    const eventId = parseInt(request.body.eventId);
+    const eventId = parseInt(request.params.eventId);
+    const sessionId = request.query.session_id;
+    if (!sessionId) {
+      return response.status(400).json({ error: 'Session ID is required.' });
+    }
     let user = User.makeGuest();
     if (request.session?.user) {
       try {
@@ -161,35 +166,32 @@ export class StripePaymentRoutes {
         return;
       }
     }
-    let paymentIntentId;
+    let session: Stripe.Checkout.Session;
     try {
-      const payment = await this.diningEventDatabase.loadPaymentByEventIdUserId(
-        eventId, user.id);
-      paymentIntentId = payment.paymentIntentId;
+      session = await this.stripe.checkout.sessions.retrieve(sessionId);
     } catch (error) {
-      console.error('Failed at loadPaymentBySessionId', error);
+      console.error('Failed at retrieving session from Stripe', error);
       response.status(500).send();
       return;
     }
-    try {
-      const { success, message } = await this.validatePayment(paymentIntentId);
-      if (!success) {
-        if (message.indexOf('failed') === -1) {
-          response.status(402).json({ success: false, paymentStatus: 'failed' });
-        }
-        response.status(422).json({ success: false,
-          paymentStatus: 'Action required.' });
-        return;
-      }
-    } catch (error) {
-      console.error('Failed at validatePayment with stripe', error);
-      response.status(500).send();
+    if (session.payment_status !== 'paid') {
+      response.status(400).json({ error: 'Payment failed.' });
       return;
+    }
+    let profileImageSrc = UserProfileImage.default(user.id).src;
+    try {
+      profileImageSrc = (await this.userProfileImageDatabase
+        .loadProfileImageByUserId(user.id)).src;
+    } catch (error) {
+      console.error('Failed at loadProfileImageByUserId', error);
     }
     try {
       await this.attendeeDatabase.joinEvent(user.id, eventId);
       response.status(200).json({
-        success: true
+        success: true,
+        accountId: user.id,
+        name: user.name,
+        profileImageSrc: profileImageSrc
       });
     } catch (error) {
       console.error('Failed at joinEvent', error);
@@ -199,7 +201,7 @@ export class StripePaymentRoutes {
   }
 
   /** Validate the payment status with stripe api. */
-  private validatePayment = async (paymentIntentId: string) => {
+  private validatePaymentByIntentId = async (paymentIntentId: string) => {
     try {
       const paymentIntent = await this.stripe.paymentIntents.retrieve(
         paymentIntentId);
@@ -223,4 +225,5 @@ export class StripePaymentRoutes {
   private userDatabase: UserDatabase;
   private diningEventDatabase: DiningEventDatabase;
   private attendeeDatabase: AttendeeDatabase;
+  private userProfileImageDatabase: UserProfileImageDatabase;
 }

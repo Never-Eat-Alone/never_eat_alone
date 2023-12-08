@@ -18,6 +18,7 @@ export class LocalDiningEventPageModel extends DiningEventPageModel {
    * calling any other method of this class.
    */
   public async load(): Promise<void> {
+    await this._checkoutModel.load();
     this._isLoaded = true;
   }
 
@@ -37,7 +38,7 @@ export class LocalDiningEventPageModel extends DiningEventPageModel {
     this._diningEvent.removeSeat(accountId, accountName, profileImageSrc);
   }
 
-  public async validatePaymentAndJoinEvent(): Promise<void> {}
+  public async validatePaymentAndJoinEvent(sessionId: string): Promise<void> {}
 
   private ensureIsLoaded(): void {
     if (!this._isLoaded) {
