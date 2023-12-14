@@ -560,7 +560,8 @@ export class AccountInformationTab extends React.Component<Properties, State> {
             value={this.state.editEmailPassword}
             onChange={this.handleEmailPasswordChange}
             hasError={this.state.editEmailPassword.length === 0 &&
-              this.state.newEmail.length !== 0}
+              this.state.newEmail.length !== 0 &&
+              this.state.emailPasswordHasChanged}
           />
           <div style={ERROR_MESSAGE_STYLE} ></div>
           <SaveCancelButtonCombo
