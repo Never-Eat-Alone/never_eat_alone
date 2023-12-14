@@ -546,7 +546,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           </div>
           <InputField
             style={PASSWORD_INPUT_FIELD_STYLE}
-            value={this.props.newEmail}
+            value={this.state.newEmail}
             placeholder='Your new email'
             onChange={this.handleNewEmailChange}
             hasError={newEmailHasError}
@@ -557,7 +557,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           <PasswordInputField
             style={PASSWORD_INPUT_FIELD_STYLE}
             placeholder='Your Password'
-            value={this.props.editEmailPassword}
+            value={this.state.editEmailPassword}
             onChange={this.handleEmailPasswordChange}
             hasError={this.state.editEmailPassword.length === 0 }
           />
