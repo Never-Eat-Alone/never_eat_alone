@@ -729,8 +729,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
 
   private handleEmailSaveClick = async () => {
     const { newEmail, editEmailPassword } = this.state;
-    const errorCode = await this.props.onEditEmailSaveClick(newEmail,
-      editEmailPassword);
+    this.props.onEditEmailSaveClick(newEmail, editEmailPassword);
     this.setState({
       isEditEmail: false,
       newEmail: '',

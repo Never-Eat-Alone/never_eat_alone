@@ -5,6 +5,7 @@ import * as Express from 'express';
 import * as Session from 'express-session';
 import * as fs from 'fs';
 import Helmet from 'helmet';
+import * as https from 'https';
 import * as path from 'path';
 import { Pool } from 'pg';
 import * as SGMail from '@sendgrid/mail';
@@ -223,7 +224,9 @@ function runExpress(pool: Pool, config: any) {
         'stripe_products',
         'stripe_payment_intents'
       ]);
-      app.listen(config.port, async () => {});
+      app.listen(config.port, async () => {
+        console.log(`Server running on port ${config.port}`);
+      });
     } catch (error) {
       console.error('Error initializing tables:', error);
     }
