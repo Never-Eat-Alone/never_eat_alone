@@ -224,9 +224,17 @@ function runExpress(pool: Pool, config: any) {
         'stripe_products',
         'stripe_payment_intents'
       ]);
-      app.listen(config.port, async () => {
-        console.log(`Server running on port ${config.port}`);
-      });
+      if (process.env.NODE_ENV === 'production') {
+        app.listen(config.port, () => {
+          console.log(`Server running on port ${config.port}`);
+        });
+      } else {
+        const key = fs.readFileSync('../localhost+2-key.pem', 'utf8');
+        const cert = fs.readFileSync('../localhost+2.pem', 'utf8');
+        https.createServer({ key, cert }, app).listen(config.httpsPort, () => {
+          console.log(`HTTPS Server running on port ${config.httpsPort}`);
+        });
+      }
     } catch (error) {
       console.error('Error initializing tables:', error);
     }

@@ -1,4 +1,4 @@
-CREATE TABLE delete_account_survey (
+CREATE TABLE IF NOT EXISTS delete_account_survey (
   id         SERIAL PRIMARY KEY,
   user_id    INTEGER NOT NULL,
   question_1 BOOLEAN,
