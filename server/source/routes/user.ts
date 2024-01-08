@@ -24,11 +24,13 @@ export class UserRoutes {
    * @param cuisineDatabase
    * @param languageDatabase
    * @param sgmail - SendGrid api.
+   * @param baseURL - The url based on the code environment
    */
   constructor(app: any, userDatabase: UserDatabase, attendeeDatabase:
       AttendeeDatabase, userProfileImageDatabase: UserProfileImageDatabase,
       userCoverImageDatabase: UserCoverImageDatabase, cuisineDatabase:
-      CuisineDatabase, languageDatabase: LanguageDatabase, sgmail: any) {
+      CuisineDatabase, languageDatabase: LanguageDatabase, sgmail: any,
+      baseURL: string) {
     /** Route to get the current logged in user. */
     app.get('/api/current_user', this.getCurrentUser);
 
@@ -80,6 +82,7 @@ export class UserRoutes {
     this.cuisineDatabase = cuisineDatabase;
     this.languageDatabase = languageDatabase;
     this.sgmail = sgmail;
+    this.baseURL = baseURL;
   }
 
   /** Returns the current logged in user. */
@@ -170,8 +173,8 @@ export class UserRoutes {
       });
       return;
     }
-    const newHtml = confirmationHtml.replace('{{name}}', name).replace(
-      '{{token}}', token);
+    const newHtml = confirmationHtml.replace('{{baseURL}}', this.baseURL)
+      .replace('{{name}}', name).replace('{{token}}', token);
     try {
       await this.sendEmail(email, 'info@nevereatalone.net',
         'NEA Account: Registration Request', newHtml);
@@ -1445,4 +1448,5 @@ export class UserRoutes {
 
   /** The Sendgrid mailing api. */
   private sgmail: any;
+  private baseURL: string;
 }

@@ -78,7 +78,8 @@ const initializePostgres = async (pool, dir, label, tableNames = []) => {
   }
 };
 
-const localBaseUrl = process.env.LOCAL_BASE_URL;
+const baseURL = process.env.NODE_ENV === 'production' ? 
+  process.env.PROD_BASE_URL : process.env.LOCAL_BASE_URL;
 
 function runExpress(pool: Pool, config: any) {
   const app = Express();
@@ -170,7 +171,7 @@ function runExpress(pool: Pool, config: any) {
   const languageDatabase = new LanguageDatabase(pool);
   const userRoutes = new UserRoutes(app, userDatabase, attendeeDatabase,
     userProfileImageDatabase, userCoverImageDatabase, cuisineDatabase,
-    languageDatabase, SGMail);
+    languageDatabase, SGMail, baseURL);
   const locationDatabase = new LocationDatabase(pool);
   const socialMediaImageDatabase = new SocialMediaImageDatabase(pool);
   const socialMediaImageRoutes = new SocialMediaImageRoutes(app,
