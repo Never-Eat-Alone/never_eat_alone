@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as Hash from 'hash.js';
 import * as path from 'path';
+import { Pool } from 'pg';
 import { arrayToJson, CoverImage, Cuisine, EventCardSummary, InviteEmail,
   Language, NotificationSettings, PaymentCard, PaymentRecord, ProfilePageData,
   SocialAccount, SocialAccountType, User, UserInvitationCode, UserProfileImage,
@@ -25,12 +26,13 @@ export class UserRoutes {
    * @param languageDatabase
    * @param sgmail - SendGrid api.
    * @param baseURL - The url based on the code environment
+   * @param pool - The pool connection to the postgres database.
    */
   constructor(app: any, userDatabase: UserDatabase, attendeeDatabase:
       AttendeeDatabase, userProfileImageDatabase: UserProfileImageDatabase,
       userCoverImageDatabase: UserCoverImageDatabase, cuisineDatabase:
       CuisineDatabase, languageDatabase: LanguageDatabase, sgmail: any,
-      baseURL: string) {
+      baseURL: string, pool: Pool) {
     /** Route to get the current logged in user. */
     app.get('/api/current_user', this.getCurrentUser);
 
@@ -83,6 +85,7 @@ export class UserRoutes {
     this.languageDatabase = languageDatabase;
     this.sgmail = sgmail;
     this.baseURL = baseURL;
+    this.pool = pool;
   }
 
   /** Returns the current logged in user. */
@@ -115,97 +118,75 @@ export class UserRoutes {
   /** Registers the user request to join the app. */
   private join = async (request, response) => {
     const { name, email, referralCode } = request.body;
-    let isEmail: boolean;
+    let userExists = false;
+    let user = User.makeGuest();
+
     try {
-      isEmail = await this.userDatabase.isDuplicateEmail(email);
-    } catch (error) {
-      console.error('Failed at isDuplicateEmail', error);
-      response.status(500).json({ message: 'DATABASE_ERROR' });
-      return;
-    }
-    let user: User;
-    if (isEmail) {
-      try {
-        const userByEmail = await this.userDatabase.loadUserByEmail(email);
-        if (userByEmail.userStatus === UserStatus.ACTIVE ||
-            userByEmail.userStatus === UserStatus.BANNED ||
-            userByEmail.userStatus === UserStatus.DEACTIVE) {
-          response.status(400).json({ message: 'DUPLICATE_EMAIL' });
-          return;
-        }
-        if (userByEmail.userStatus === UserStatus.PENDING) {
-          user = userByEmail;
-        }
-      } catch (error) {
-        console.error('Failed at loadUserByEmail', error);
-        response.status(500).send();
-        return;
+      const userByEmail = await this.userDatabase.loadUserByEmail(email);
+      if (userByEmail.userStatus === 'ACTIVE' ||
+          userByEmail.userStatus === 'BANNED' ||
+          userByEmail.userStatus === 'DEACTIVE' ||
+          userByEmail.userStatus === 'DELETED') {
+        return response.status(400).json({ message: 'DUPLICATE_EMAIL' });
+      } else if (userByEmail.userStatus === 'PENDING') {
+        userExists = true;
+        user = userByEmail;
       }
+    } catch (error) {
+      console.error('Failed at loadUserByEmail', error);
+      return response.status(500).send();
     }
-    if (!user || user.id === -1) {
-      try {
+
+    try {
+      await this.pool.query('BEGIN');
+
+      if (!userExists) {
         user = await this.userDatabase.addGuestUserRequest(name, email,
           referralCode);
-      } catch (error) {
-        response.status(500).json({ message: 'DATABASE_ERROR' });
-        console.error('Failed to addGuestUserRequest:', error);
-        return;
       }
-    }
-    const confirmationHtml = await new Promise<string>((resolve, reject) => {
-      fs.readFile('public/resources/confirmation_email/email.html', 'utf8',
-        (error, html) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(html);
-          }
-        });
-    });
-    let token: string;
-    try {
-      token = await this.getConfirmationToken(email, user.id);
-    } catch (error) {
-      console.error('CONFIRMATION_TOKEN_ERROR in Database:', error);
-      response.status(201).json({
-        user: user.toJson(),
-        message: 'CONFIRMATION_TOKEN_ERROR'
+
+      const token = await this.getConfirmationToken(email, user.id);
+
+      const confirmationHtml = await new Promise<string>((resolve, reject) => {
+        fs.readFile('public/resources/confirmation_email/email.html', 'utf8',
+          (error, html) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(html);
+            }
+          });
       });
-      return;
-    }
-    const newHtml = confirmationHtml.replace('{{baseURL}}', this.baseURL)
-      .replace('{{name}}', name).replace('{{token}}', token);
-    try {
+      const newHtml = confirmationHtml.replace('{{baseURL}}', this.baseURL)
+        .replace('{{name}}', name).replace('{{token}}', token);
       await this.sendEmail(email, 'info@nevereatalone.net',
         'NEA Account: Registration Request', newHtml);
-    } catch (error) {
-      console.error('EMAIL_NOT_SENT', error);
-      response.status(201).json({
-        user: user.toJson(),
-        message: 'EMAIL_NOT_SENT'
-      });
-      return;
-    }
-    request.session.cookie.maxAge = 24 * 60 * 60 * 1000;
-    try {
+      await this.pool.query('COMMIT');
+
+      request.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000;
       const sessionExpiration = new Date(
         Date.now() + request.session.cookie.maxAge);
       await this.userDatabase.assignUserIdToSid(request.session.id, user.id,
         request.session, sessionExpiration);
+
+      request.session.user = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        userName: user.userName,
+        userStatus: user.userStatus.toString(),
+        createdAt: user.createdAt.toISOString()
+      };
+
+      response.status(201).json({
+        user: user.toJson(),
+        message: 'Registration successful'
+      });
     } catch (error) {
-      console.error('Failed at assignUserIdToSid:', error);
-      response.status(500).json({ message: 'DATABASE_ERROR' });
-      return;
+      await this.pool.query('ROLLBACK');
+      console.error('Error during user registration:', error);
+      response.status(500).json({ message: 'REGISTRATION_ERROR' });
     }
-    request.session.user = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      userName: user.userName,
-      userStatus: user.userStatus.toString(),
-      createdAt: user.createdAt.toISOString()
-    };
-    response.status(201).json({ user: user.toJson(), message: '' });
   }
 
   private signUp = async (request, response) => {
@@ -1449,4 +1430,5 @@ export class UserRoutes {
   /** The Sendgrid mailing api. */
   private sgmail: any;
   private baseURL: string;
+  private pool: Pool;
 }
