@@ -1,11 +1,12 @@
 const path = require('path');
 const webpack = require('webpack');
+require('dotenv').config();
 module.paths.push(path.resolve(process.cwd(), 'node_modules'));
-const PROD = JSON.parse(process.env.PROD_ENV || '0');
+const isProduction = process.env.NODE_ENV === 'production';
 module.exports = {
-  devtool: PROD ? false : 'source-map',
+  devtool: isProduction ? false : 'source-map',
   entry: path.resolve(process.cwd(), 'source/app.ts'),
-  mode: PROD ? 'production' : 'development',
+  mode: isProduction ? 'production' : 'development',
   module: {
     rules: [
       {

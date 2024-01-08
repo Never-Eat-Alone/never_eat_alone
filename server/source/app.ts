@@ -1,3 +1,4 @@
+require('dotenv').config();
 import * as Bodyparser from 'body-parser';
 import * as Cors from 'cors';
 import * as CookieParser from 'cookie-parser';
@@ -77,6 +78,8 @@ const initializePostgres = async (pool, dir, label, tableNames = []) => {
   }
 };
 
+const localBaseUrl = process.env.LOCAL_BASE_URL;
+
 function runExpress(pool: Pool, config: any) {
   const app = Express();
   app.use(Helmet({
@@ -139,7 +142,7 @@ function runExpress(pool: Pool, config: any) {
   };
 
   app.set('trust proxy', 1);
-  if (app.get('env') === 'production') {
+  if (process.env.NODE_ENV === 'production') {
     session.cookie.secure = true;
   }
   app.use(CookieParser());

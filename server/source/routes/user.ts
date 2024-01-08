@@ -1283,7 +1283,6 @@ export class UserRoutes {
     let tokenId: number;
     try {
       tokenId = await this.userDatabase.addEmailUpdateRequest(user.id, email);
-
     } catch (error) {
       console.error('Failed at addEmailUpdateRequest', error);
       response.status(500).send();
