@@ -171,7 +171,7 @@ function runExpress(pool: Pool, config: any) {
   const languageDatabase = new LanguageDatabase(pool);
   const userRoutes = new UserRoutes(app, userDatabase, attendeeDatabase,
     userProfileImageDatabase, userCoverImageDatabase, cuisineDatabase,
-    languageDatabase, SGMail, baseURL);
+    languageDatabase, SGMail, baseURL, pool);
   const locationDatabase = new LocationDatabase(pool);
   const socialMediaImageDatabase = new SocialMediaImageDatabase(pool);
   const socialMediaImageRoutes = new SocialMediaImageRoutes(app,
