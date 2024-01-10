@@ -146,41 +146,17 @@ export class UserRoutes {
       }
 
       const token = await this.getConfirmationToken(email, user.id);
-
-      const confirmationHtml = await new Promise<string>((resolve, reject) => {
-        fs.readFile('public/resources/confirmation_email/email.html', 'utf8',
-          (error, html) => {
-            if (error) {
-              reject(error);
-            } else {
-              resolve(html);
-            }
-          });
-      });
+      const confirmationHtml = await fs.promises.readFile(
+        'public/resources/confirmation_email/email.html', 'utf8');
       const newHtml = confirmationHtml.replace('{{baseURL}}', this.baseURL)
         .replace('{{name}}', name).replace('{{token}}', token);
       await this.sendEmail(email, 'info@nevereatalone.net',
         'NEA Account: Registration Request', newHtml);
       await this.pool.query('COMMIT');
 
-      request.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000;
-      const sessionExpiration = new Date(
-        Date.now() + request.session.cookie.maxAge);
-      await this.userDatabase.assignUserIdToSid(request.session.id, user.id,
-        request.session, sessionExpiration);
-
-      request.session.user = {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        userName: user.userName,
-        userStatus: user.userStatus.toString(),
-        createdAt: user.createdAt.toISOString()
-      };
-
       response.status(201).json({
         user: user.toJson(),
-        message: 'Registration successful'
+        message: 'Registration successful. Please check your email to confirm.'
       });
     } catch (error) {
       await this.pool.query('ROLLBACK');
@@ -379,6 +355,7 @@ export class UserRoutes {
   private verifyConfirmationToken = async (request, response) => {
     const token = request.params.id;
     let isTokenValid = false;
+
     try {
       isTokenValid = await this.userDatabase.isTokenValid(token);
     } catch (error) {
@@ -386,12 +363,13 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
+
     if (!isTokenValid) {
-      response.redirect(303,
-        'https://nevereatalone.net/confirmation_token_invalid');
+      response.redirect(303, `${this.baseURL}/confirmation_token_invalid`);
       return;
     }
-    let userIdByToken: number;
+
+    let userIdByToken = -1;
     try {
       userIdByToken = await this.userDatabase.getUserIdByToken(token);
     } catch (error) {
@@ -399,87 +377,21 @@ export class UserRoutes {
       response.status(500).send();
       return;
     }
-    let user: User;
+
+    if (userIdByToken === -1) {
+      response.redirect(303, `${this.baseURL}/join`);
+      return;
+    }
+
     try {
-      user = await this.userDatabase.loadUserById(userIdByToken);
-    } catch (error) {
-      console.error('Failed at loadUserById', error);
-      response.status(500).send();
-      return;
-    }
-    if (user.id === -1) {
-      response.redirect(303, 'https://nevereatalone.net/join');
-      return;
-    }
-    if (user.userStatus as UserStatus === UserStatus.ACTIVE) {
-      let hasCredentials = false;
-      try {
-        hasCredentials = await this.userDatabase.hasCredentials(user.id);
-      } catch (error) {
-        console.error('Failed at hasCredentials', error);
-        response.status(500).send();
-        return;
-      }
-      if (hasCredentials) {
-        response.redirect(303, 'https://nevereatalone.net/log_in');
-      } else {
-        response.redirect(303, `https://nevereatalone.net/sign_up/${user.id}`);
-      }
-      return;
-    }
-    let id: number;
-    try {
-      id = await this.userDatabase.updateUserStatusByConfirmationToken(
+      await this.userDatabase.updateUserStatusByConfirmationToken(
         token);
+      response.redirect(303, `${this.baseURL}/set_password/${userIdByToken}`);
     } catch (error) {
       console.error('Failed at updateUserStatusByConfirmationToken', error);
       response.status(500).send();
       return;
     }
-    request.session.cookie.maxAge = 24 * 60 * 60 * 1000;
-    try {
-      const sessionExpiration = new Date(
-        Date.now() + request.session.cookie.maxAge);
-      await this.userDatabase.assignUserIdToSid(request.session.id, user.id,
-        request.session, sessionExpiration);
-    } catch (error) {
-      console.error('Failed at assignUserIdToSid', error);
-      response.status(500).json({ message: 'DATABASE_ERROR' });
-      return;
-    }
-    request.session.user = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      userName: user.userName,
-      userStatus: user.userStatus.toString(),
-      createdAt: user.createdAt.toISOString()
-    };
-    const signUpHtml = await new Promise<string>((resolve, reject) => {
-      fs.readFile('public/resources/sign_up_email/email.html', 'utf8',
-        (error, html) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(html);
-          }
-        });
-    });
-    const newHtml = signUpHtml.replace('{{name}}', user.name).replace('{{id}}',
-      user.id.toString());
-    try {
-      await this.sendEmail(user.email, 'info@nevereatalone.net',
-        'NEA Account: Sign Up', newHtml);
-    } catch (error) {
-      const message = "Your account is verified but we weren't able to send \
-        you the sign up email. Contact info@nevereatalone.net to get help.";
-      console.error(error, message);
-      response.status(200).json({
-        message: message
-      });
-      return;
-    }
-    response.status(200).json({ message: 'Email sent.', user: user.toJson() });
   }
 
   private getUserInvitationCode = async (request, response) => {
