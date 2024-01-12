@@ -168,7 +168,7 @@ export class UserRoutes {
   private signUp = async (request, response) => {
     const userId = parseInt(request.params.id);
     if (userId === -1) {
-      response.redirect(303, 'https://nevereatalone.net/join');
+      response.redirect(303, `${this.baseURL}/join`);
       return;
     }
     let user = User.makeGuest();
@@ -180,7 +180,7 @@ export class UserRoutes {
       return;
     }
     if (user.id === -1 || user.userStatus !== UserStatus.ACTIVE) {
-      response.redirect(303, 'https://nevereatalone.net/join');
+      response.redirect(303, `${this.baseURL}/join`);
       return;
     }
     let hasCredentials = false;
@@ -192,7 +192,7 @@ export class UserRoutes {
       return;
     }
     if (hasCredentials) {
-      response.redirect(303, 'https://nevereatalone.net/log_in');
+      response.redirect(303, `${this.baseURL}/log_in`);
       return;
     }
     response.status(200).send();
@@ -314,12 +314,20 @@ export class UserRoutes {
    * @param html - The html representation of the email.
    */
   private sendEmail = async (toEmail: string, fromEmail: string,
-      subject: string, content: string) => {
+      subject: string, content: string, attachments: Array<{content: string,
+      filename: string, type: string, disposition: string}>) => {
     const message = {
       to: toEmail,
       from: `NeverEatAlone <${fromEmail}>`,
       subject: subject,
-      html: content
+      html: content,
+      attachments: attachments.map(attachment => ({
+        content: attachment.content,
+        filename: attachment.filename,
+        type: attachment.type,
+        disposition: attachment.disposition,
+        content_id: attachment.filename,
+      })),
     };
     try {
       await this.sgmail.send(message);
@@ -365,7 +373,7 @@ export class UserRoutes {
     }
 
     if (!isTokenValid) {
-      response.redirect(303, `${this.baseURL}/confirmation_token_invalid`);
+      response.redirect(303, `${this.baseURL}/confirmation-token-invalid`);
       return;
     }
 
@@ -386,7 +394,8 @@ export class UserRoutes {
     try {
       await this.userDatabase.updateUserStatusByConfirmationToken(
         token);
-      response.redirect(303, `${this.baseURL}/set_password/${userIdByToken}`);
+      console.log(`${this.baseURL}/sign_up/${userIdByToken}`);
+      response.redirect(303, `${this.baseURL}/sign_up/${userIdByToken}`);
     } catch (error) {
       console.error('Failed at updateUserStatusByConfirmationToken', error);
       response.status(500).send();
