@@ -131,11 +131,11 @@ export class UserRoutes {
           case 'PENDING':
             const token = await this.getConfirmationToken(email,
               userByEmail.id);
-            const confirmationHtml = await fs.promises.readFile(
-              'public/resources/confirmation_email/email.html', 'utf8');
-            const newHtml = confirmationHtml.replace('{{baseURL}}',
-              this.baseURL).replace('{{name}}', name).replace('{{token}}',
-              token);
+            const signUpHtml = await fs.promises.readFile(
+              'public/resources/sign_up_email/email.html', 'utf8');
+            const newHtml = signUpHtml.replace('{{baseURL}}',
+              this.baseURL).replace('{{name}}', name).replace('{{id}}',
+              userByEmail.id.toString()).replace('{{token}}', token);
             await this.sendEmail(email, 'info@nevereatalone.net',
               'NEA Account: Registration Request', newHtml);
             return response.status(200).send();
@@ -150,10 +150,11 @@ export class UserRoutes {
         const newUser = await this.userDatabase.addGuestUserRequest(name, email,
           referralCode);
         const token = await this.getConfirmationToken(email, newUser.id);
-        const confirmationHtml = await fs.promises.readFile(
-          'public/resources/confirmation_email/email.html', 'utf8');
-        const newHtml = confirmationHtml.replace('{{baseURL}}', this.baseURL)
-          .replace('{{name}}', name).replace('{{token}}', token);
+        const signUpHtml = await fs.promises.readFile(
+          'public/resources/sign_up_email/email.html', 'utf8');
+        const newHtml = signUpHtml.replace('{{baseURL}}', this.baseURL)
+          .replace('{{name}}', name).replace('{{id}}', newUser.id.toString())
+          .replace('{{token}}', token);
         await this.sendEmail(email, 'info@nevereatalone.net',
           'NEA Account: Registration Request', newHtml);
         await this.pool.query('COMMIT');
