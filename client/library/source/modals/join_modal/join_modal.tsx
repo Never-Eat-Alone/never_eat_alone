@@ -242,6 +242,11 @@ export class JoinModal extends React.Component<Properties , State> {
 export namespace JoinModal {
   export enum ErrorCode {
     NO_CONNECTION,
+    VALIDATION_ERROR,
+    ACCOUNT_EXISTS,
+    ACCOUNT_PENDING,
+    ACCOUNT_LOCKED,
+    GENERAL_ERROR,
     NONE
   }
 

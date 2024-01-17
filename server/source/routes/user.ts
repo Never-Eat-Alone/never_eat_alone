@@ -118,50 +118,52 @@ export class UserRoutes {
   /** Registers the user request to join the app. */
   private join = async (request, response) => {
     const { name, email, referralCode } = request.body;
-    let userExists = false;
-    let user = User.makeGuest();
-
     try {
       const userByEmail = await this.userDatabase.loadUserByEmail(email);
-      if (userByEmail.userStatus === 'ACTIVE' ||
-          userByEmail.userStatus === 'BANNED' ||
-          userByEmail.userStatus === 'DEACTIVE' ||
-          userByEmail.userStatus === 'DELETED') {
-        return response.status(400).json({ message: 'DUPLICATE_EMAIL' });
-      } else if (userByEmail.userStatus === 'PENDING') {
-        userExists = true;
-        user = userByEmail;
-      }
-    } catch (error) {
-      console.error('Failed at loadUserByEmail', error);
-      return response.status(500).send();
-    }
-
-    try {
-      await this.pool.query('BEGIN');
-
-      if (!userExists) {
-        user = await this.userDatabase.addGuestUserRequest(name, email,
+      
+      // user already exists
+      if (userByEmail && userByEmail.userStatus !== 'GUEST' ||
+          userByEmail.userStatus !== 'DELETED') {
+        switch (userByEmail.userStatus) {
+          case 'ACTIVE':
+          case 'DEACTIVE':
+            return response.status(409).send();
+          case 'PENDING':
+            const token = await this.getConfirmationToken(email,
+              userByEmail.id);
+            const confirmationHtml = await fs.promises.readFile(
+              'public/resources/confirmation_email/email.html', 'utf8');
+            const newHtml = confirmationHtml.replace('{{baseURL}}',
+              this.baseURL).replace('{{name}}', name).replace('{{token}}',
+              token);
+            await this.sendEmail(email, 'info@nevereatalone.net',
+              'NEA Account: Registration Request', newHtml);
+            return response.status(200).send();
+          case 'BANNED':
+            return response.status(423).send();
+          default:
+            break;
+        }
+      } else {
+        // New user registration
+        await this.pool.query('BEGIN');
+        const newUser = await this.userDatabase.addGuestUserRequest(name, email,
           referralCode);
+        const token = await this.getConfirmationToken(email, newUser.id);
+        const confirmationHtml = await fs.promises.readFile(
+          'public/resources/confirmation_email/email.html', 'utf8');
+        const newHtml = confirmationHtml.replace('{{baseURL}}', this.baseURL)
+          .replace('{{name}}', name).replace('{{token}}', token);
+        await this.sendEmail(email, 'info@nevereatalone.net',
+          'NEA Account: Registration Request', newHtml);
+        await this.pool.query('COMMIT');
+
+        return response.status(201).send();
       }
-
-      const token = await this.getConfirmationToken(email, user.id);
-      const confirmationHtml = await fs.promises.readFile(
-        'public/resources/confirmation_email/email.html', 'utf8');
-      const newHtml = confirmationHtml.replace('{{baseURL}}', this.baseURL)
-        .replace('{{name}}', name).replace('{{token}}', token);
-      await this.sendEmail(email, 'info@nevereatalone.net',
-        'NEA Account: Registration Request', newHtml);
-      await this.pool.query('COMMIT');
-
-      response.status(201).json({
-        user: user.toJson(),
-        message: 'Registration successful. Please check your email to confirm.'
-      });
     } catch (error) {
-      await this.pool.query('ROLLBACK');
       console.error('Error during user registration:', error);
-      response.status(500).json({ message: 'REGISTRATION_ERROR' });
+      await this.pool.query('ROLLBACK');
+      response.status(500).send();
     }
   }
 
@@ -315,7 +317,7 @@ export class UserRoutes {
    */
   private sendEmail = async (toEmail: string, fromEmail: string,
       subject: string, content: string, attachments: Array<{content: string,
-      filename: string, type: string, disposition: string}>) => {
+      filename: string, type: string, disposition: string}> = []) => {
     const message = {
       to: toEmail,
       from: `NeverEatAlone <${fromEmail}>`,
