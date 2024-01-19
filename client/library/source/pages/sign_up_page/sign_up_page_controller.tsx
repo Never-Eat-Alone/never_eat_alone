@@ -7,7 +7,7 @@ import { SignUpPageModel } from './sign_up_page_model';
 
 interface Properties extends Router.RouteComponentProps {
   displayMode: DisplayMode;
-  account: User;
+  userId: number;
   model: SignUpPageModel;
   onSignUpSuccess: (account: User, accountProfileImage: UserProfileImage
     ) => void;
@@ -21,6 +21,7 @@ interface State {
   password: string;
   accountProfileImage: UserProfileImage;
   displayName: string;
+  email: string;
 }
 
 export class SignUpPageController extends React.Component<Properties, State> {
@@ -32,8 +33,9 @@ export class SignUpPageController extends React.Component<Properties, State> {
       profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NONE,
       isSetUpPage: false,
       password: '',
-      accountProfileImage: UserProfileImage.default(this.props.account.id),
-      displayName: this.props.account.name
+      accountProfileImage: UserProfileImage.default(this.props.userId),
+      displayName: '',
+      email: ''
     };
   }
 
@@ -47,7 +49,7 @@ export class SignUpPageController extends React.Component<Properties, State> {
       return <ProfileSetUpPage
         displayMode={this.props.displayMode}
         displayName={this.state.displayName}
-        userId={this.props.account.id}
+        userId={this.props.userId}
         selectedImage={this.state.accountProfileImage}
         errorCode={this.state.profileSetUpPageErrorCode}
         onUploadImageClick={this.handleUploadImageClick}
@@ -58,7 +60,7 @@ export class SignUpPageController extends React.Component<Properties, State> {
     }
     return <SignUpPage
       displayMode={this.props.displayMode}
-      email={this.props.account.email}
+      email={this.state.email}
       password={this.state.password}
       errorCode={this.state.signUpPageErrorCode}
       onSignUp={this.handleSignUp}
@@ -67,9 +69,14 @@ export class SignUpPageController extends React.Component<Properties, State> {
 
   public async componentDidMount(): Promise<void> {
     try {
-      const response = await fetch(`/api/sign-up/${this.props.account.id}`);
+      const response = await fetch(`/api/sign-up/${this.props.userId}`);
       if (response.status === 200) {
-        this.setState({ isLoaded: true });
+        const responseObject = await response.json();
+        this.setState({
+          isLoaded: true,
+          displayName: responseObject.displayName,
+          email: responseObject.email
+        });
       }
     } catch {
       this.setState({
@@ -101,14 +108,14 @@ export class SignUpPageController extends React.Component<Properties, State> {
     } catch {
       this.setState({
         profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NO_CONNECTION,
-        accountProfileImage: UserProfileImage.default(this.props.account.id)
+        accountProfileImage: UserProfileImage.default(this.props.userId)
       });
     }
   }
 
   private handleAvatarClick = (src: string) => {
     this.setState({
-      accountProfileImage: new UserProfileImage(this.props.account.id, src)
+      accountProfileImage: new UserProfileImage(this.props.userId, src)
     });
   }
 

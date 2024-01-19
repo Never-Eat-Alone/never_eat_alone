@@ -160,7 +160,10 @@ function runExpress(pool: Pool, config: any) {
   });
 
   SGMail.setApiKey(config.send_grid_api_key);
-
+  app.get('/test/:id', (req, res) => {
+    console.log(req.params, req.query);
+    res.send('Test route');
+  });
   const userDatabase = new UserDatabase(pool);
   const userProfileImageDatabase = new UserProfileImageDatabase(pool);
   const userProfileImageRoutes = new UserProfileImageRoutes(app,

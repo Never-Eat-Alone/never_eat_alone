@@ -51,7 +51,6 @@ export class UserRoutes {
     app.get('/api/log_out', this.logOut);
 
     /** Route to the confirmation token page. */
-    app.get('/api/confirmation_tokens/:id', this.verifyConfirmationToken);
     app.get('/api/user_invitation_code/:userId', this.getUserInvitationCode);
 
     app.post('/api/send_invite_email', this.sendInviteEmail);
@@ -162,29 +161,36 @@ export class UserRoutes {
   }
 
   private signUp = async (request, response) => {
+    console.log('Type of userId before parsing:', typeof request.params.id);
+    console.log('Value of userId before parsing:', request.params.id);
+    console.log('Token:', request.query.token);
     const userId = parseInt(request.params.id);
     const token = request.query.token;
-
+    console.log('signUp', userId, 'token=', token);
     if (!userId || userId === -1) {
       return response.redirect(303, `${this.baseURL}/join`);
     }
 
     try {
       const user = await this.userDatabase.loadUserById(userId);
+      console.log(user.userStatus);
       if (user.id === -1 || user.userStatus !== UserStatus.PENDING) {
         return response.redirect(303, `${this.baseURL}/join`);
       }
       const isTokenValid = await this.userDatabase.isTokenValid(token);
+      console.log('istokenvalid', isTokenValid);
       if (!isTokenValid) {
-        return response.redirect(303, `${this.baseURL}/invalid-token`);
+        return response.redirect(303,
+          `${this.baseURL}/invalid-confirmation-token`);
       }
       await this.userDatabase.updateUserStatusByConfirmationToken(
         token);
+      console.log('user sign up', userId);
+      response.status(200).json({ displayName: user.name, email: user.email });
     } catch (error) {
       console.error('Failed at loadUserById', error);
       return response.status(500).send();
     }
-    response.status(200).send();
   }
 
   private setUpProfile = async (request, response) => {
@@ -211,13 +217,13 @@ export class UserRoutes {
 
   private setUpPassword = async (request, response) => {
     const userId = parseInt(request.params.id);
+    console.log('userId', userId);
     const { password } = request.body;
     try {
       await this.userDatabase.addUserCredentials(userId, password);
     } catch (error) {
       console.error('Failed at addUserCredentials', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     response.status(200).send();
   }
@@ -341,53 +347,6 @@ export class UserRoutes {
       response.clearCookie('connect.sid');
       response.status(200).send('Session data cleared');
     });
-  }
-
-  /**
-   * Identifies if the token is valid or not and displays the confirmation
-   * page accordingly.
-   */
-  private verifyConfirmationToken = async (request, response) => {
-    const token = request.params.token;
-    let isTokenValid = false;
-
-    try {
-      isTokenValid = await this.userDatabase.isTokenValid(token);
-    } catch (error) {
-      console.error('Failed at isTokenValid', error);
-      response.status(500).send();
-      return;
-    }
-
-    if (!isTokenValid) {
-      response.redirect(303, `${this.baseURL}/confirmation-token-invalid`);
-      return;
-    }
-
-    let userIdByToken = -1;
-    try {
-      userIdByToken = await this.userDatabase.getUserIdByToken(token);
-    } catch (error) {
-      console.error('Failed at getUserIdByToken', error);
-      response.status(500).send();
-      return;
-    }
-
-    if (userIdByToken === -1) {
-      response.redirect(303, `${this.baseURL}/join`);
-      return;
-    }
-
-    try {
-      await this.userDatabase.updateUserStatusByConfirmationToken(
-        token);
-      console.log(`${this.baseURL}/sign-up/${userIdByToken}`);
-      response.redirect(303, `${this.baseURL}/sign-up/${userIdByToken}`);
-    } catch (error) {
-      console.error('Failed at updateUserStatusByConfirmationToken', error);
-      response.status(500).send();
-      return;
-    }
   }
 
   private getUserInvitationCode = async (request, response) => {
