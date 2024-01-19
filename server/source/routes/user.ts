@@ -40,7 +40,7 @@ export class UserRoutes {
     app.post('/api/join', this.join);
 
     /** Route for the guest user to set up an account. */
-    app.get('/api/sign_up/:id', this.signUp);
+    app.get('/api/sign-up/:id', this.signUp);
     app.post('/api/set_up_password/:id', this.setUpPassword);
     app.post('/api/set_up_profile/:id', this.setUpProfile);
 
@@ -122,44 +122,23 @@ export class UserRoutes {
       const userByEmail = await this.userDatabase.loadUserByEmail(email);
       
       // user already exists
-      if (userByEmail && userByEmail.userStatus !== 'GUEST' ||
+      if (userByEmail && userByEmail.userStatus !== 'GUEST' &&
           userByEmail.userStatus !== 'DELETED') {
-        switch (userByEmail.userStatus) {
-          case 'ACTIVE':
-          case 'DEACTIVE':
-            return response.status(409).send();
-          case 'PENDING':
-            const token = await this.getConfirmationToken(email,
-              userByEmail.id);
-            const signUpHtml = await fs.promises.readFile(
-              'public/resources/sign_up_email/email.html', 'utf8');
-            const newHtml = signUpHtml.replace('{{baseURL}}',
-              this.baseURL).replace('{{name}}', name).replace('{{id}}',
-              userByEmail.id.toString()).replace('{{token}}', token);
-            await this.sendEmail(email, 'info@nevereatalone.net',
-              'NEA Account: Registration Request', newHtml);
-            return response.status(200).send();
-          case 'BANNED':
-            return response.status(423).send();
-          default:
-            break;
+        if (userByEmail.userStatus === 'ACTIVE' || userByEmail.userStatus ===
+            'DEACTIVE') {
+          return response.status(409).send();
+        } else if (userByEmail.userStatus === 'PENDING') {
+          return this.sendAccountSetupEmail(name, email, userByEmail.id,
+            response);
+        } else if (userByEmail.userStatus === 'BANNED') {
+          return response.status(423).send();
         }
       } else {
         // New user registration
         await this.pool.query('BEGIN');
         const newUser = await this.userDatabase.addGuestUserRequest(name, email,
           referralCode);
-        const token = await this.getConfirmationToken(email, newUser.id);
-        const signUpHtml = await fs.promises.readFile(
-          'public/resources/sign_up_email/email.html', 'utf8');
-        const newHtml = signUpHtml.replace('{{baseURL}}', this.baseURL)
-          .replace('{{name}}', name).replace('{{id}}', newUser.id.toString())
-          .replace('{{token}}', token);
-        await this.sendEmail(email, 'info@nevereatalone.net',
-          'NEA Account: Registration Request', newHtml);
-        await this.pool.query('COMMIT');
-
-        return response.status(201).send();
+        return this.sendAccountSetupEmail(name, email, newUser.id, response);
       }
     } catch (error) {
       console.error('Error during user registration:', error);
@@ -168,35 +147,42 @@ export class UserRoutes {
     }
   }
 
+  private sendAccountSetupEmail = async (name: string, email: string, userId:
+      number, response) => {
+    const token = await this.getConfirmationToken(email, userId);
+    const signUpHtml = await fs.promises.readFile(
+      'public/resources/sign_up_email/email.html', 'utf8');
+    const newHtml = signUpHtml.replace('{{baseURL}}', this.baseURL)
+                              .replace('{{name}}', name)
+                              .replace('{{id}}', userId.toString())
+                              .replace('{{token}}', token);
+    await this.sendEmail(email, 'info@nevereatalone.net',
+      'NEA Account: Registration Request', newHtml);
+    response.status(201).send();
+  }
+
   private signUp = async (request, response) => {
     const userId = parseInt(request.params.id);
-    if (userId === -1) {
-      response.redirect(303, `${this.baseURL}/join`);
-      return;
+    const token = request.query.token;
+
+    if (!userId || userId === -1) {
+      return response.redirect(303, `${this.baseURL}/join`);
     }
-    let user = User.makeGuest();
+
     try {
-      user = await this.userDatabase.loadUserById(userId);
+      const user = await this.userDatabase.loadUserById(userId);
+      if (user.id === -1 || user.userStatus !== UserStatus.PENDING) {
+        return response.redirect(303, `${this.baseURL}/join`);
+      }
+      const isTokenValid = await this.userDatabase.isTokenValid(token);
+      if (!isTokenValid) {
+        return response.redirect(303, `${this.baseURL}/invalid-token`);
+      }
+      await this.userDatabase.updateUserStatusByConfirmationToken(
+        token);
     } catch (error) {
       console.error('Failed at loadUserById', error);
-      response.status(500).send();
-      return;
-    }
-    if (user.id === -1 || user.userStatus !== UserStatus.ACTIVE) {
-      response.redirect(303, `${this.baseURL}/join`);
-      return;
-    }
-    let hasCredentials = false;
-    try {
-      hasCredentials = await this.userDatabase.hasCredentials(userId);
-    } catch (error) {
-      console.error('Failed at hasCredentials', error);
-      response.status(500).send();
-      return;
-    }
-    if (hasCredentials) {
-      response.redirect(303, `${this.baseURL}/log_in`);
-      return;
+      return response.status(500).send();
     }
     response.status(200).send();
   }
@@ -345,14 +331,12 @@ export class UserRoutes {
   /** Logs out the user. */
   private logOut = async (request, response) => {
     if (!request.session) {
-      response.status(400).json({ message: 'NO_SESSION_FOUND' });
-      return;
+      return response.status(400).json({ message: 'NO_SESSION_FOUND' });
     }
     request.session.destroy((err) => {
       if (err) {
         console.error('Failed at request.session.destroy', err);
-        response.status(500).json({ message: 'SESSION_DESTROY_FAILED' });
-        return;
+        return response.status(500).json({ message: 'SESSION_DESTROY_FAILED' });
       }
       response.clearCookie('connect.sid');
       response.status(200).send('Session data cleared');
@@ -364,7 +348,7 @@ export class UserRoutes {
    * page accordingly.
    */
   private verifyConfirmationToken = async (request, response) => {
-    const token = request.params.id;
+    const token = request.params.token;
     let isTokenValid = false;
 
     try {
@@ -397,8 +381,8 @@ export class UserRoutes {
     try {
       await this.userDatabase.updateUserStatusByConfirmationToken(
         token);
-      console.log(`${this.baseURL}/sign_up/${userIdByToken}`);
-      response.redirect(303, `${this.baseURL}/sign_up/${userIdByToken}`);
+      console.log(`${this.baseURL}/sign-up/${userIdByToken}`);
+      response.redirect(303, `${this.baseURL}/sign-up/${userIdByToken}`);
     } catch (error) {
       console.error('Failed at updateUserStatusByConfirmationToken', error);
       response.status(500).send();

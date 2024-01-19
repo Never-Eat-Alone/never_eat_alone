@@ -67,7 +67,7 @@ export class SignUpPageController extends React.Component<Properties, State> {
 
   public async componentDidMount(): Promise<void> {
     try {
-      const response = await fetch(`/api/sign_up/${this.props.account.id}`);
+      const response = await fetch(`/api/sign-up/${this.props.account.id}`);
       if (response.status === 200) {
         this.setState({ isLoaded: true });
       }
