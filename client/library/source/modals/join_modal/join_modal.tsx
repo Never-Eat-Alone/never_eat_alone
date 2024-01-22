@@ -118,6 +118,22 @@ export class JoinModal extends React.Component<Properties , State> {
         requestButtonStyle: REQUEST_BUTTON_STYLE
       };
     })();
+    const errorMessage = (() => {
+      switch (this.props.errorCode) {
+        case JoinModal.ErrorCode.VALIDATION_ERROR:
+          return 'Please check your input. Ensure all fields are filled correctly.';
+        case JoinModal.ErrorCode.ACCOUNT_EXISTS:
+          return 'An account with this email already exists. Please use a different email or log in.';
+        case JoinModal.ErrorCode.ACCOUNT_LOCKED:
+          return 'Your account is currently locked. Please contact support for assistance.';
+        case JoinModal.ErrorCode.GENERAL_ERROR:
+          return 'Something went wrong. Please try again later.';
+        case JoinModal.ErrorCode.NO_CONNECTION:
+          return 'Unable to connect. Please check your internet connection and try again.';
+        default:
+          return '';
+      }
+    })();
     return (
       <div style={FORM_STYLE} >
         <div ref={this._containerRef} style={containerStyle} >
@@ -158,6 +174,7 @@ export class JoinModal extends React.Component<Properties , State> {
               placeholder='Name of the person who invited you (optional)'
               onChange={this.handleReferralCodeChange}
             />
+            <div style={JOIN_ERROR_MESSAGE_STYLE} >{errorMessage}</div>
             <PrimaryTextButton
               style={requestButtonStyle}
               label='Request to join!'
@@ -241,13 +258,13 @@ export class JoinModal extends React.Component<Properties , State> {
 
 export namespace JoinModal {
   export enum ErrorCode {
-    NO_CONNECTION,
-    VALIDATION_ERROR,
-    ACCOUNT_EXISTS,
-    ACCOUNT_PENDING,
-    ACCOUNT_LOCKED,
-    GENERAL_ERROR,
-    NONE
+    NO_CONNECTION = 'NO_CONNECTION',
+    VALIDATION_ERROR = 'VALIDATION_ERROR',
+    ACCOUNT_EXISTS = 'ACCOUNT_EXISTS',
+    ACCOUNT_PENDING = 'ACCOUNT_PENDING',
+    ACCOUNT_LOCKED = 'ACCOUNT_LOCKED',
+    GENERAL_ERROR = 'GENERAL_ERROR',
+    NONE = 'NONE'
   }
 
   export enum EmailErrorCode {
@@ -485,3 +502,8 @@ const INPUT_STYLE: React.CSSProperties = {
   width: '100%',
   minWidth: '100%'
 };
+
+const JOIN_ERROR_MESSAGE_STYLE: React.CSSProperties = {
+  ...ERROR_CONTAINER_STYLE,
+  ...ERROR_MESSAGE_STYLE
+}
