@@ -477,10 +477,13 @@ export class ApplicationController extends React.Component<Properties, State> {
 
   private renderSignUp = ({match}: Router.RouteComponentProps<TParams>) => {
     const id = Number(match.params.id);
+    const params = new URLSearchParams(this.props.location.search);
+    const token = params.get('token') || '';
     return <SignUpPageController
       {...this.props}
       displayMode={this.state.displayMode}
       userId={id}
+      token={token}
       model={this.props.model.getSignUpPageModel(id)}
       onSignUpSuccess={this.handleSignUpSuccess}
     />;

@@ -9,6 +9,7 @@ interface Properties extends Router.RouteComponentProps {
   displayMode: DisplayMode;
   userId: number;
   model: SignUpPageModel;
+  token: string;
   onSignUpSuccess: (account: User, accountProfileImage: UserProfileImage
     ) => void;
 }
@@ -69,7 +70,8 @@ export class SignUpPageController extends React.Component<Properties, State> {
 
   public async componentDidMount(): Promise<void> {
     try {
-      const response = await fetch(`/api/sign-up/${this.props.userId}`);
+      const response = await fetch(
+        `/api/sign-up/${this.props.userId}?token=${this.props.token}`);
       if (response.status === 200) {
         const responseObject = await response.json();
         this.setState({

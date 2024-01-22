@@ -137,6 +137,7 @@ export class UserRoutes {
         await this.pool.query('BEGIN');
         const newUser = await this.userDatabase.addGuestUserRequest(name, email,
           referralCode);
+        await this.pool.query('COMMIT');
         return this.sendAccountSetupEmail(name, email, newUser.id, response);
       }
     } catch (error) {
