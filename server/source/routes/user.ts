@@ -161,12 +161,12 @@ export class UserRoutes {
   }
 
   private signUp = async (request, response) => {
-    console.log('Type of userId before parsing:', typeof request.params.id);
-    console.log('Value of userId before parsing:', request.params.id);
-    console.log('Token:', request.query.token);
+    console.log('Full URL:', request.url);
+
+    console.log('Query parameters:', request.query);
     const userId = parseInt(request.params.id);
     const token = request.query.token;
-    console.log('signUp', userId, 'token=', token);
+    console.log('signUp userid=', userId, 'token=', token);
     if (!userId || userId === -1) {
       return response.redirect(303, `${this.baseURL}/join`);
     }
