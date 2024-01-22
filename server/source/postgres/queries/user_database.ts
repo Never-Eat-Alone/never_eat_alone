@@ -564,17 +564,19 @@ export class UserDatabase {
     const hashedEnteredPass =
       Hash.sha256().update(newPassword + userId).digest('hex');
 
-    /** Check if the user ID already exists in the table */
-    const result = await this.pool.query(`
-      SELECT user_id FROM user_credentials WHERE user_id = $1`, [userId]);
-    if (result.rows.length > 0) {
+    const userResult = await this.pool.query(`
+      SELECT id, user_status FROM users
+      WHERE id = $1 AND user_status IN ('ACTIVE', 'DEACTIVE')`, [userId]);
 
-      /** If the user ID already exists, update the password */
+    if (userResult.rows.length > 0) {
       await this.pool.query(`
-        UPDATE user_credentials SET hashed_pass = $1 WHERE user_id = $2`,
-        [hashedEnteredPass, userId]);
+        INSERT INTO user_credentials (user_id, hashed_pass)
+        VALUES ($1, $2)
+        ON CONFLICT (user_id)
+        DO UPDATE SET hashed_pass = EXCLUDED.hashed_pass`,
+        [userId, hashedEnteredPass]);
     } else {
-      throw new Error("User doesn't have credentials.");
+      throw new Error("User not found or not eligible for password update.");
     }
   }
 

@@ -90,7 +90,8 @@ export class SignUpPageController extends React.Component<Properties, State> {
 
   private handleSignUp = async (password: string) => {
     try {
-      const isSignedUp = await this.props.model.signUp(password);
+      const isSignedUp = await this.props.model.signUp(this.props.userId,
+        password);
       this.setState({ isSetUpPage: isSignedUp });
     } catch {
       this.setState({
@@ -103,7 +104,8 @@ export class SignUpPageController extends React.Component<Properties, State> {
 
   private handleUploadImageClick = async (uploadedImageFile: File) => {
     try {
-      const image = await this.props.model.uploadImageFile(uploadedImageFile);
+      const image = await this.props.model.uploadImageFile(this.props.userId,
+        uploadedImageFile);
       this.setState({
         accountProfileImage: image
       });
@@ -127,8 +129,8 @@ export class SignUpPageController extends React.Component<Properties, State> {
 
   private handleLetsGoClick = async () => {
     try {
-      const result = await this.props.model.setUpProfile(this.state.displayName,
-        this.state.accountProfileImage);
+      const result = await this.props.model.setUpProfile(this.props.userId,
+        this.state.displayName, this.state.accountProfileImage);
       this.props.onSignUpSuccess(result.account, result.accountProfileImage);
       this.props.history.push('/');
     } catch {

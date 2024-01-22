@@ -239,8 +239,7 @@ export class HttpApplicationModel extends ApplicationModel {
   public getSignUpPageModel(id: number): SignUpPageModel {
     let signUpPageModel = this._model.getSignUpPageModel(id);
     if (!signUpPageModel) {
-      signUpPageModel = new HttpSignUpPageModel(this._model.account,
-        this._model.accountProfileImage);
+      signUpPageModel = new HttpSignUpPageModel();
       this.addSignUpPageModel(id, signUpPageModel);
     }
     return signUpPageModel;

@@ -41,7 +41,7 @@ export class UserRoutes {
 
     /** Route for the guest user to set up an account. */
     app.get('/api/sign-up/:id', this.signUp);
-    app.post('/api/set_up_password/:id', this.setUpPassword);
+    app.post('/api/set-up-password/:id', this.setUpPassword);
     app.post('/api/set_up_profile/:id', this.setUpProfile);
 
     /** Route for the user log in. */
