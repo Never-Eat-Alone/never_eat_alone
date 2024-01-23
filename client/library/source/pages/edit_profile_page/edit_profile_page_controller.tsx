@@ -338,25 +338,22 @@ export class EditProfilePageController extends React.Component<Properties,
   }
 
   private handleSave = async () => {
-    let newProfilePageData = this.state.profilePageData;
-    if (newProfilePageData.biographyValue &&
-        newProfilePageData.biographyValue.trim() !==
-        newProfilePageData.biographyValue) {
-      newProfilePageData.updateBiographyValue(
-        newProfilePageData.biographyValue.trim());
+    const { profilePageData } = this.state;
+    if (profilePageData?.biographyValue) {
+      profilePageData.updateBiographyValue(profilePageData.biographyValue
+        .trim());
     }
 
-    if (newProfilePageData.selectedLocation.length !== 0) {
-      // Trim whitespace and replace multiple spaces with a single space
-      newProfilePageData.updateSelectedLocation(
-        newProfilePageData.selectedLocation.trim());
+    if (profilePageData?.selectedLocation) {
+      profilePageData.updateSelectedLocation(profilePageData.selectedLocation
+        .trim());
     }
 
     try {
       await this.props.model.save(this.state.profilePageData);
       this.props.onSaveSuccess();
     } catch {
-      this.setState({ profilePageData: newProfilePageData, hasError: true });
+      this.setState({ profilePageData, hasError: true });
     }
   }
 }

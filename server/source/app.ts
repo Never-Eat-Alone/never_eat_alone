@@ -83,29 +83,48 @@ const baseURL = process.env.NODE_ENV === 'production' ?
 
 function runExpress(pool: Pool, config: any) {
   const app = Express();
+  const scriptSrcUrls = [
+    "'self'",
+    'https://www.googletagmanager.com',
+    'https://js.stripe.com',
+    'https://apis.google.com',
+  ];
+
+  const connectSrcUrls = [
+    "'self'",
+    "https://api.stripe.com",
+    "https://checkout.stripe.com",
+    "https://www.google-analytics.com",
+    "https://js.stripe.com",
+  ];
+
+  const formActionUrls = [
+    "'self'",
+    "https://api.stripe.com"
+  ];
+
+  if (process.env.NODE_ENV !== 'production') {
+    scriptSrcUrls.push(baseURL);
+    connectSrcUrls.push(baseURL);
+    formActionUrls.push(baseURL);
+  }
+
   app.use(Helmet({
       crossOriginEmbedderPolicy: false,
       contentSecurityPolicy: {
         directives: {
           defaultSrc: ["'self'"],
-          scriptSrc: ["'self'", 'https://www.googletagmanager.com',
-            'https://js.stripe.com', 'https://apis.google.com',
-            "http://localhost:3000",
-            'http://localhost:3000/api/create-checkout-session',
-            "'unsafe-inline'"],
+          scriptSrc: scriptSrcUrls,
+          connectSrc: connectSrcUrls,
           scriptSrcAttr: ["'unsafe-inline'", 'https://js.stripe.com'],
-          connectSrc: ["'self'", "https://api.stripe.com",
-            "https://checkout.stripe.com", "https://www.google-analytics.com",
-            "https://js.stripe.com"],
           frameSrc: ["'self'", 'https://js.stripe.com'],
-          imgSrc: ["'self'", "data:"],
-          formAction: ["'self'", "http://localhost:3000",
-            'http://localhost:3000/api/create-checkout-session',
-            "https://api.stripe.com"],
+          imgSrc: ["'self'", "data:", "https://www.googletagmanager.com"],
+          formAction: formActionUrls,
           styleSrc: ["'self'", "'unsafe-inline'"]
         }
       }
   }));
+
   const Stripe = require('stripe');
   const stripe = Stripe(config.stripe_test_secret_Key);
   
@@ -125,7 +144,7 @@ function runExpress(pool: Pool, config: any) {
       extended: true
     })
   );
-  const session = {
+  const sessionConfig = {
     genid: () => {
       return uuidv4();
     },
@@ -138,16 +157,17 @@ function runExpress(pool: Pool, config: any) {
     saveUninitialized: true,
     cookie: {
       maxAge: 10 * 365 * 24 * 60 * 60 * 1000,
-      secure: false
+      secure: true,
+      sameSite: 'lax' as 'lax'
     }
   };
 
   app.set('trust proxy', 1);
   if (process.env.NODE_ENV === 'production') {
-    session.cookie.secure = true;
+    sessionConfig.cookie.secure = true;
   }
   app.use(CookieParser());
-  app.use(Session(session));
+  app.use(Session(sessionConfig));
   app.get('/api/google_client_id', (request, response) => {
     let id = '';
     try {
@@ -160,10 +180,7 @@ function runExpress(pool: Pool, config: any) {
   });
 
   SGMail.setApiKey(config.send_grid_api_key);
-  app.get('/test/:id', (req, res) => {
-    console.log(req.params, req.query);
-    res.send('Test route');
-  });
+
   const userDatabase = new UserDatabase(pool);
   const userProfileImageDatabase = new UserProfileImageDatabase(pool);
   const userProfileImageRoutes = new UserProfileImageRoutes(app,
