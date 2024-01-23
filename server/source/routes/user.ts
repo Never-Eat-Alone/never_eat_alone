@@ -508,8 +508,8 @@ export class UserRoutes {
       return;
     }
     const name = user.name || 'NeverEatAlone Member';
-    const newHtml = recoveryHtml.replaceAll('{{name}}', name).replace(
-      '{{token}}', token);
+    const newHtml = recoveryHtml.replaceAll('{{baseURL}}', this.baseURL)
+      .replaceAll('{{name}}', name).replace('{{token}}', token);
     try {
       await this.sendEmail(user.email, 'noreply@nevereatalone.net',
         'Recovery Password Link', newHtml);
