@@ -96,8 +96,7 @@ export class UserRoutes {
           request.session.id);
       } catch (error) {
         console.error('Failed at loadUserBySessionId', error);
-        response.status(500).send();
-        return;
+        return response.status(500).send();
       }
       request.session.user = {
         id: user.id,
@@ -162,9 +161,6 @@ export class UserRoutes {
   }
 
   private signUp = async (request, response) => {
-    console.log('Full URL:', request.url);
-
-    console.log('Query parameters:', request.query);
     const userId = parseInt(request.params.id);
     const token = request.query.token;
     console.log('signUp userid=', userId, 'token=', token);
