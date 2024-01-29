@@ -1,5 +1,8 @@
+import * as BodyParser from 'body-parser';
+import * as Express from 'express';
 import Stripe from 'stripe';
-import { User, UserProfileImage } from '../../../client/library/source/definitions';
+import { User, UserProfileImage } from
+  '../../../client/library/source/definitions';
 import { AttendeeDatabase } from '../postgres/queries/attendee_database';
 import { DiningEventDatabase } from '../postgres/queries/dining_event_database';
 import { UserDatabase } from '../postgres/queries/user_database';
@@ -10,23 +13,26 @@ export class StripePaymentRoutes {
   /**
    * @param app - Express app.
    * @param stripe - stripe api.
-   * @param domainUrl - the absolute url address of the app.
+   * @param baseURL - the absolute url address of the app.
    * @param userDatabase - The user related table manipulation class instance.
    * @param diningEventDatabase - The dining events related table manipulation 
    * @param userProfileImageDatabase
    * class instance.
    */
-  constructor(app: any, stripe: any, domainUrl: string, userDatabase:
-      UserDatabase, diningEventDatabase: DiningEventDatabase, attendeeDatabase:
-      AttendeeDatabase, userProfileImageDatabase: UserProfileImageDatabase) {
+  constructor(app: Express.Application, stripe: Stripe, baseURL: string,
+      userDatabase: UserDatabase, diningEventDatabase: DiningEventDatabase,
+      attendeeDatabase: AttendeeDatabase, userProfileImageDatabase:
+      UserProfileImageDatabase) {
     app.post('/api/create-setup-intent', this.createSetupIntent);
     app.post('/api/create-payment-intent', this.createPaymentIntent);
     app.post('/api/create-checkout-session', this.createCheckoutSession);
     app.get('/api/session-status', this.sessionStatus);
     app.get('/api/validate_and_join/:eventId', this.validatePaymentAndJoin);
+    app.post('/api/stripe-webhook', BodyParser.raw({ type: 'application/json'
+      }), this.stripeWebhook);
 
     this.stripe = stripe;
-    this.domainUrl = domainUrl;
+    this.baseURL = baseURL;
     this.userDatabase = userDatabase;
     this.diningEventDatabase = diningEventDatabase;
     this.attendeeDatabase = attendeeDatabase;
@@ -40,7 +46,8 @@ export class StripePaymentRoutes {
     return 500;
   };
 
-  private createSetupIntent = async (request, response) => {
+  private createSetupIntent = async (request: Express.Request, response:
+      Express.Response) => {
     try {
       const setupIntent = await this.stripe.setupIntents.create({
         customer: 'stripe_customer_id',
@@ -51,7 +58,8 @@ export class StripePaymentRoutes {
     }
   }
 
-  private createPaymentIntent = async (request, response) => {
+  private createPaymentIntent = async (request: Express.Request, response:
+      Express.Response) => {
     const { items } = request.body;
     try {
       const paymentIntent = await this.stripe.paymentIntents.create({
@@ -69,7 +77,8 @@ export class StripePaymentRoutes {
     }
   }
 
-  private createCheckoutSession = async (request, response) => {
+  private createCheckoutSession = async (request: any, response:
+      Express.Response) => {
     if (!request.session?.user) {
       response.status(401).send();
       return;
@@ -113,8 +122,8 @@ export class StripePaymentRoutes {
           },
         ],
         mode: 'payment',
-        success_url: `${this.domainUrl}/dining_events/${eventId}?Success=true&session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${this.domainUrl}/dining_events/${eventId}?Cancel=true&session_id={CHECKOUT_SESSION_ID}`
+        success_url: `${this.baseURL}/dining_events/${eventId}?Success=true&session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${this.baseURL}/dining_events/${eventId}?Cancel=true&session_id={CHECKOUT_SESSION_ID}`
       });
     } catch (error) {
       console.error('Failed at stripe.checkout.sessions', error);
@@ -200,6 +209,46 @@ export class StripePaymentRoutes {
     }
   }
 
+  private stripeWebhook = async (request, response) => {
+    let event;
+    console.log(process.env.STRIPE_WEBHOOK_SECRET);
+    if (process.env.STRIPE_WEBHOOK_SECRET) {
+      const sig = request.headers['stripe-signature'];
+      console.log('Received Stripe Webhook with signature:', sig);
+      try {
+        console.log(typeof request.body);
+        console.log(request.body);
+        event = this.stripe.webhooks.constructEvent(request.body, sig,
+          process.env.STRIPE_WEBHOOK_SECRET);
+        console.log(event);
+      } catch (err) {
+        console.error(`Webhook Error: ${err.message}`);
+        return response.status(400).send(`Webhook Error: ${err.message}`);
+      }
+    }
+
+    // Handle the event
+    switch (event.type) {
+      case 'payment_intent.succeeded':
+        const paymentIntent = event.data.object;
+        console.log(`PaymentIntent for ${paymentIntent.amount} was successful!`);
+        // Then define and call a method to handle the successful payment intent.
+        // handlePaymentIntentSucceeded(paymentIntent);
+        break;
+      case 'payment_method.attached':
+        const paymentMethod = event.data.object;
+        // Then define and call a method to handle the successful attachment of a PaymentMethod.
+        // handlePaymentMethodAttached(paymentMethod);
+        break;
+      default:
+        // Unexpected event type
+        console.log(`Unhandled event type ${event.type}.`);
+    }
+
+    // Return a response to acknowledge receipt of the event
+    response.status(200).json({ received: true });
+  }
+
   /** Validate the payment status with stripe api. */
   private validatePaymentByIntentId = async (paymentIntentId: string) => {
     try {
@@ -221,7 +270,7 @@ export class StripePaymentRoutes {
 
   /** The stripe payment api. */
   private stripe: Stripe;
-  private domainUrl: string;
+  private baseURL: string;
   private userDatabase: UserDatabase;
   private diningEventDatabase: DiningEventDatabase;
   private attendeeDatabase: AttendeeDatabase;

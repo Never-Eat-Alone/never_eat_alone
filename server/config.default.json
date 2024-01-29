@@ -9,11 +9,13 @@
   "google_client_id": "",
   "send_grid_api_key": "",
   "port": 0,
+  "httpsPort": 0,
   "cookie_secret": "",
   "stripe_test_secret_Key": "",
+  "stripe_live_secret_Key": "",
+  "stripe_webhook_secret": "",
   "frontendUrls": [
     "",
     ""
-  ],
-  "domainUrl": ""
+  ]
 }

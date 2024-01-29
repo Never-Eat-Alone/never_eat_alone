@@ -1,5 +1,5 @@
 require('dotenv').config();
-import * as Bodyparser from 'body-parser';
+import * as BodyParser from 'body-parser';
 import * as Cors from 'cors';
 import * as CookieParser from 'cookie-parser';
 import * as Express from 'express';
@@ -109,26 +109,30 @@ function runExpress(pool: Pool, config: any) {
     formActionUrls.push(baseURL);
   }
 
+  app.use('/api/stripe-webhook', BodyParser.raw({ type: 'application/json' }));
+
   app.use(Helmet({
-      crossOriginEmbedderPolicy: false,
-      contentSecurityPolicy: {
-        directives: {
-          defaultSrc: ["'self'"],
-          scriptSrc: scriptSrcUrls,
-          connectSrc: connectSrcUrls,
-          scriptSrcAttr: ["'unsafe-inline'", 'https://js.stripe.com'],
-          frameSrc: ["'self'", 'https://js.stripe.com'],
-          imgSrc: ["'self'", "data:", "https://www.googletagmanager.com"],
-          formAction: formActionUrls,
-          styleSrc: ["'self'", "'unsafe-inline'"]
-        }
+    crossOriginEmbedderPolicy: false,
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: scriptSrcUrls,
+        connectSrc: connectSrcUrls,
+        scriptSrcAttr: ["'unsafe-inline'", 'https://js.stripe.com'],
+        frameSrc: ["'self'", 'https://js.stripe.com'],
+        imgSrc: ["'self'", "data:", "https://www.googletagmanager.com"],
+        formAction: formActionUrls,
+        styleSrc: ["'self'", "'unsafe-inline'"]
       }
+    }
   }));
 
   const Stripe = require('stripe');
-  const stripe = Stripe(config.stripe_test_secret_Key);
-  
-  app.use(Bodyparser.json());
+
+  const stripe = process.env.NODE_ENV === 'production' ? Stripe(
+    config.stripe_live_secret_key) : Stripe(config.stripe_test_secret_Key);
+
+  app.use(BodyParser.json());
   const frontendUrls = config.frontendUrls;
   app.use(Cors(
     {
@@ -140,7 +144,7 @@ function runExpress(pool: Pool, config: any) {
   ));
   app.use(Express.static('public'));
   app.use(
-    Bodyparser.urlencoded({
+    BodyParser.urlencoded({
       extended: true
     })
   );
@@ -206,8 +210,7 @@ function runExpress(pool: Pool, config: any) {
   const diningEventDatabase = new DiningEventDatabase(pool);
   const diningEventRoutes = new DiningEventRoutes(app, diningEventDatabase,
     userDatabase, attendeeDatabase, userProfileImageDatabase);
-  const domainUrl = config.domainUrl;
-  const stripePaymentRoutes = new StripePaymentRoutes(app, stripe, domainUrl,
+  const stripePaymentRoutes = new StripePaymentRoutes(app, stripe, baseURL,
     userDatabase, diningEventDatabase, attendeeDatabase,
     userProfileImageDatabase);
 
