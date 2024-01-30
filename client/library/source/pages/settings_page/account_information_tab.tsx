@@ -28,18 +28,18 @@ interface Properties {
 
   deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode;
 
-  isEmailUpdateTokenValid: boolean;
-
-  saveEmailErrorCode: AccountInformationTab.SaveEmailErrorCode;
-
-  /** User new email address in */
+  /** Edit Email Section Props */
+  /** User new email inputfield value. */
   newEmail: string;
 
-  /** Account password entered to submit update email request. */
+  /** Password inputfield value. */
   editEmailPassword: string;
 
-  /** Whether the user entered a valid new email address or not. */
-  isNewEmailValid: boolean;
+  /** Edit Email ErrorCode */
+  saveEmailErrorCode: AccountInformationTab.SaveEmailErrorCode;
+
+  /** Whether the new email is pending confirmation or not. */
+  isNewEmailPending: boolean;
 
   onResendEmailUpdateConfirmation: () => Promise<void>;
 
@@ -99,12 +99,10 @@ interface State {
   newPassword: string;
   confirmPassword: string;
   passwordHasChanged: boolean;
-  editEmailPassword: string;
   counter: number;
+  /** Edit email section */
   newEmail: string;
-  emailHasChanged: boolean;
-  emailPasswordHasChanged: boolean;
-  isEmailValid: boolean;
+  editEmailPassword: string;
 }
 
 /** Dislays the account information tab content on the setting page. */
@@ -120,12 +118,9 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       newPassword: '',
       confirmPassword: '',
       passwordHasChanged: false,
-      editEmailPassword: '',
       counter: 0,
       newEmail: this.props.newEmail,
-      emailHasChanged: false,
-      emailPasswordHasChanged: false,
-      isEmailValid: true
+      editEmailPassword: this.props.editEmailPassword
     };
   }
 
@@ -485,41 +480,33 @@ export class AccountInformationTab extends React.Component<Properties, State> {
             newEmailSaveErrorMessage: '' };
       }
     })();
-    const {  } = (() => {
-      switch (this.props.saveEmailErrorCode) {
-        
-        default:
-          return { emailPasswordHasError: false, emailPasswordErrorMessage:
-            '' };
-      }
-    })();
     const editEmailSection = (() => {
+      if (this.props.isNewEmailPending) {
+        return (
+          <div style={passwordColumnStyle} >
+            <div style={CURRENT_EMAIL_STYLE} >{this.props.email}</div>
+            <div style={PASSWORD_TITLE_STYLE} >New Email</div>
+            <InputField
+              style={inputFieldStyle}
+              value={this.props.newEmail}
+              readOnly
+            />
+            <div style={PENDING_EMAIL_DETAILS_STYLE} >
+              Your email is not updated until you confirm it. {'\n'}
+              <SecondaryTextLinkButton
+                label='resend link'
+                style={RESEND_LINK_STYLE}
+                onClick={this.handleResendEmailClick}
+              /> or
+              <SecondaryTextLinkButton
+                label='Discard this change'
+                style={DISCARD_LINK_STYLE}
+                onClick={this.props.onDiscardEmailUpdateRequest}
+              />.
+            </div>
+          </div>);
+      }
       if (!this.state.isEditEmail) {
-        if (this.props.isEmailUpdateTokenValid) {
-          return (
-            <div style={passwordColumnStyle} >
-              <div style={CURRENT_EMAIL_STYLE} >{this.props.email}</div>
-              <div style={PASSWORD_TITLE_STYLE} >New Email</div>
-              <InputField
-                style={PASSWORD_INPUT_FIELD_STYLE}
-                value={this.props.newEmail}
-                readOnly
-              />
-              <div style={PENDING_EMAIL_DETAILS_STYLE} >
-                Your email is not updated until you confirm it. {'\n'}
-                <SecondaryTextLinkButton
-                  label='resend link'
-                  style={RESEND_LINK_STYLE}
-                  onClick={this.handleResendEmailClick}
-                /> or
-                <SecondaryTextLinkButton
-                  label='Discard this change'
-                  style={DISCARD_LINK_STYLE}
-                  onClick={this.props.onDiscardEmailUpdateRequest}
-                />.
-              </div>
-            </div>);
-        }
         return (
           <div style={inputEditRowStyle} >
             <InputField
@@ -560,8 +547,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
             value={this.state.editEmailPassword}
             onChange={this.handleEmailPasswordChange}
             hasError={this.state.editEmailPassword.length === 0 &&
-              this.state.newEmail.length !== 0 &&
-              this.state.emailPasswordHasChanged}
+              this.state.newEmail.length !== 0}
           />
           <div style={ERROR_MESSAGE_STYLE} ></div>
           <SaveCancelButtonCombo
@@ -720,10 +706,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
     this.setState({
       isEditEmail: false,
       newEmail: '',
-      emailHasChanged: false,
-      editEmailPassword: '',
-      emailPasswordHasChanged: false,
-      isEmailValid: true
+      editEmailPassword: ''
     });
   }
 
@@ -733,10 +716,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
     this.setState({
       isEditEmail: false,
       newEmail: '',
-      editEmailPassword: '',
-      emailHasChanged: false,
-      emailPasswordHasChanged: false,
-      isEmailValid: true
+      editEmailPassword: ''
     });
   }
 
@@ -757,15 +737,14 @@ export class AccountInformationTab extends React.Component<Properties, State> {
   private handleNewEmailChange = (event: React.ChangeEvent<HTMLInputElement>
       ) => {
     console.log('handleNewEmailChange event.target.value', event.target.value);
-    this.setState({ newEmail: event.target.value, emailHasChanged: true });
+    this.setState({ newEmail: event.target.value });
   }
 
   private handleEmailPasswordChange = (event: React.ChangeEvent<
       HTMLInputElement>) => {
     console.log('handleEmailPasswordChange event.target.value', event.target.value);
     this.setState({
-      editEmailPassword: event.target.value,
-      emailPasswordHasChanged: true
+      editEmailPassword: event.target.value
     });
   }
 
@@ -970,6 +949,12 @@ const PASSWORD_INPUT_FIELD_STYLE: React.CSSProperties = {
   minHeight: '38px',
   width: '100%',
   minWidth: '100%',
+};
+
+const PENDING_EMAIL_INPUT_STYLE: React.CSSProperties = {
+  border: '1px solid var(--Yellow-700-Dark, #C67E14)',
+  background: 'var(--Grey-200-Medium-Light, #EFEFEF)',
+  color: 'var(--Grey-000-Black, #000)'
 };
 
 const MOBILE_INPUT_FIELD_STYLE: React.CSSProperties = {

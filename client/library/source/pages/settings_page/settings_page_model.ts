@@ -11,7 +11,7 @@ export abstract class SettingsPageModel {
   public abstract get defaultCard(): PaymentCard;
   public abstract get paymentCards(): PaymentCard[];
   public abstract get paymentRecords(): PaymentRecord[];
-  public abstract get isEmailUpdateTokenValid(): boolean;
+  public abstract get isNewEmailPending(): boolean;
   public abstract get pendingNewEmail(): string;
   public abstract addCard(card: PaymentCard): Promise<void>;
   public abstract updateCard(newCard: PaymentCard, isMarkedAsDefault: boolean

@@ -71,7 +71,7 @@ export class LocalSettingsPageModel extends SettingsPageModel {
     return this._paymentRecords;
   }
 
-  public get isEmailUpdateTokenValid(): boolean {
+  public get isNewEmailPending(): boolean {
     return this._isEmailUpdateTokenValid;
   }
 

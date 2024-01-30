@@ -12,9 +12,13 @@ import { CuisineDatabase } from '../postgres/queries/cuisine_database';
 import { UserCoverImageDatabase } from
   '../postgres/queries/user_cover_image_database';
 import { LanguageDatabase } from '../postgres/queries/language_database';
+import { UserEmailUpdateRequestsDatabase } from
+  '../postgres/queries/user_email_update_requests_database';
 import { UserDatabase } from '../postgres/queries/user_database';
 import { UserProfileImageDatabase } from
   '../postgres/queries/user_profile_image_database';
+import { UserSocialCredentialsDatabase } from
+  '../postgres/queries/user_social_credentials_database';
 
 /** User Routes class. */
 export class UserRoutes {
@@ -31,8 +35,10 @@ export class UserRoutes {
   constructor(app: any, userDatabase: UserDatabase, attendeeDatabase:
       AttendeeDatabase, userProfileImageDatabase: UserProfileImageDatabase,
       userCoverImageDatabase: UserCoverImageDatabase, cuisineDatabase:
-      CuisineDatabase, languageDatabase: LanguageDatabase, sgmail: any,
-      baseURL: string, pool: Pool) {
+      CuisineDatabase, languageDatabase: LanguageDatabase,
+      userSocialCredentialsDatabase: UserSocialCredentialsDatabase,
+      userEmailUpdateRequestsDatabase: UserEmailUpdateRequestsDatabase, sgmail:
+      any, baseURL: string, pool: Pool) {
     /** Route to get the current logged in user. */
     app.get('/api/current_user', this.getCurrentUser);
 
@@ -82,6 +88,8 @@ export class UserRoutes {
     this.userCoverImageDatabase = userCoverImageDatabase;
     this.cuisineDatabase = cuisineDatabase;
     this.languageDatabase = languageDatabase;
+    this.userSocialCredentialsDatabase = userSocialCredentialsDatabase;
+    this.userEmailUpdateRequestsDatabase = userEmailUpdateRequestsDatabase;
     this.sgmail = sgmail;
     this.baseURL = baseURL;
     this.pool = pool;
@@ -928,30 +936,43 @@ export class UserRoutes {
 
   private getSettingsPage = async (request, response) => {
     const profileId = parseInt(request.params.profileId);
-    let loggedUser: User;
-    if (request.session?.user) {
+    let user: User;
+    if (request.session?.user && profileId) {
       try {
-        loggedUser = await this.userDatabase.loadUserBySessionId(
+        user = await this.userDatabase.loadUserBySessionId(
           request.session.id);
-        if (loggedUser.id === -1 || loggedUser.id !== profileId) {
-          response.status(401).send();
-          return;
+        if (user.id === -1 || user.id !== profileId) {
+          return response.status(401).send();
         }
       } catch (error) {
         console.error('Failed at loadUserBySessionId', error);
-        response.status(500).send();
-        return;
+        return response.status(500).send();
       }
     }
-    let pageAccount: User;
-    try {
-      pageAccount = await this.userDatabase.loadUserById(profileId);
-    } catch (error) {
-      console.error('Failed at loadUserById', error);
-      response.status(500).send();
-      return;
-    }
     let linkedSocialAccounts: SocialAccount[] = [];
+    try {
+      linkedSocialAccounts = await this.userSocialCredentialsDatabase
+        .loadUserSocialCredentialsByUserId(user.id);
+    } catch (error) {
+      console.error('Failed at loadLinkedSocialAccounts', error);
+      return response.status(500).send();
+    }
+    let pendingNewEmail: string;
+    let pendingEmailToken: string;
+    let pendingEmailTokenExpiresAt: Date;
+    try {
+      const result = await this.userEmailUpdateRequestsDatabase
+        .loadPendingNewEmailByUserId(user.id);
+      pendingNewEmail = result.pendingNewEmail;
+      pendingEmailToken = result.pendingEmailToken;
+      pendingEmailTokenExpiresAt = result.pendingEmailTokenExpiresAt;
+    } catch (error) {
+      console.error('Failed at isNewEmailPending', error);
+      return response.status(500).send();
+    }
+    const nowUtc = new Date(new Date().toUTCString());
+    const isNewEmailPending = pendingNewEmail && nowUtc <
+      pendingEmailTokenExpiresAt;
     let isNewEventsNotificationOn = false;
     let isEventJoinedNotificationOn = false;
     let isEventRemindersNotificationOn = false;
@@ -968,13 +989,15 @@ export class UserRoutes {
     let paymentCards: PaymentCard[] = [];
     let paymentRecords: PaymentRecord[] = [];
     response.status(200).json({
-      displayName: pageAccount.name,
-      email: pageAccount.email,
+      displayName: user.name,
+      email: user.email,
       linkedSocialAccounts: arrayToJson(linkedSocialAccounts),
       notificationSettings: notificationSettings.toJson(),
       defaultCard: defaultCard.toJson(),
       paymentCards: arrayToJson(paymentCards),
-      paymentRecords: arrayToJson(paymentRecords)
+      paymentRecords: arrayToJson(paymentRecords),
+      pendingNewEmail: pendingNewEmail,
+      isNewEmailPending: isNewEmailPending
     });
   }
 
@@ -1290,6 +1313,8 @@ export class UserRoutes {
   private userCoverImageDatabase: UserCoverImageDatabase;
   private cuisineDatabase: CuisineDatabase;
   private languageDatabase: LanguageDatabase;
+  private userSocialCredentialsDatabase: UserSocialCredentialsDatabase;
+  private userEmailUpdateRequestsDatabase: UserEmailUpdateRequestsDatabase;
 
   /** The Sendgrid mailing api. */
   private sgmail: any;

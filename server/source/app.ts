@@ -12,7 +12,8 @@ import { Pool } from 'pg';
 import * as SGMail from '@sendgrid/mail';
 import { v4 as uuidv4 } from 'uuid';
 import { AttendeeDatabase } from './postgres/queries/attendee_database';
-import { CuisineDatabase } from './postgres/queries';
+import { CuisineDatabase, UserSocialCredentialsDatabase } from
+  './postgres/queries';
 import { UserCoverImageDatabase } from
   './postgres/queries/user_cover_image_database';
 import { DeactivateAccountSurveyDatabase } from
@@ -128,7 +129,6 @@ function runExpress(pool: Pool, config: any) {
   }));
 
   const Stripe = require('stripe');
-
   const stripe = process.env.NODE_ENV === 'production' ? Stripe(
     config.stripe_live_secret_key) : Stripe(config.stripe_test_secret_Key);
 
@@ -193,9 +193,10 @@ function runExpress(pool: Pool, config: any) {
   const attendeeDatabase = new AttendeeDatabase(pool);
   const cuisineDatabase = new CuisineDatabase(pool);
   const languageDatabase = new LanguageDatabase(pool);
+  const userSocialCredentialsDatabase = new UserSocialCredentialsDatabase(pool);
   const userRoutes = new UserRoutes(app, userDatabase, attendeeDatabase,
     userProfileImageDatabase, userCoverImageDatabase, cuisineDatabase,
-    languageDatabase, SGMail, baseURL, pool);
+    languageDatabase, userSocialCredentialsDatabase, SGMail, baseURL, pool);
   const locationDatabase = new LocationDatabase(pool);
   const socialMediaImageDatabase = new SocialMediaImageDatabase(pool);
   const socialMediaImageRoutes = new SocialMediaImageRoutes(app,

@@ -34,7 +34,7 @@ export class HttpSettingsPageModel extends SettingsPageModel {
       responseObject.paymentRecords);
     this._model = new LocalSettingsPageModel(this._profileId,
       responseObject.displayName, responseObject.email,
-      responseObject.pendingNewEmail, responseObject.isEmailUpdateTokenValid,
+      responseObject.pendingNewEmail, responseObject.isNewEmailPending,
       linkedSocialAccounts, notificationSettings, defaultCard, paymentCards,
       paymentRecords);
     await this._model.load();
@@ -77,8 +77,8 @@ export class HttpSettingsPageModel extends SettingsPageModel {
     return this._model.paymentRecords;
   }
 
-  public get isEmailUpdateTokenValid(): boolean {
-    return this._model.isEmailUpdateTokenValid;
+  public get isNewEmailPending(): boolean {
+    return this._model.isNewEmailPending;
   }
 
   /** Payment methods tab related methods */

@@ -75,19 +75,15 @@ interface Properties {
 
   deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode;
 
-
-  isEmailUpdateTokenValid: boolean;
-
-  saveEmailErrorCode: AccountInformationTab.SaveEmailErrorCode;
-
   /** Error code regarding adding a new card. */
   addCardErrorCode: AddCreditCardForm.ErrorCode;
 
+  /** Edit email section */
   newEmail: string;
 
   editEmailPassword: string;
-
-  isNewEmailValid: boolean;
+  saveEmailErrorCode: AccountInformationTab.SaveEmailErrorCode;
+  isNewEmailPending: boolean;
 
   onResendEmailUpdateConfirmation: () => Promise<void>;
 

@@ -44,11 +44,12 @@ interface State {
   redirect: string;
   linkedSocialAccounts: SocialAccount[];
   errorCode: number;
-  saveEmailErrorCode: AccountInformationTab.SaveEmailErrorCode;
   addCardErrorCode: AddCreditCardForm.ErrorCode;
+  /** Edit Email Section */
   newEmail: string;
   editEmailPassword: string;
-  isNewEmailValid: boolean;
+  saveEmailErrorCode: AccountInformationTab.SaveEmailErrorCode;
+  isNewEmailPending: boolean;
 }
 
 export class SettingsPageController extends React.Component<Properties, State> {
@@ -76,11 +77,11 @@ export class SettingsPageController extends React.Component<Properties, State> {
       redirect: null,
       linkedSocialAccounts: [],
       errorCode: null,
-      saveEmailErrorCode: AccountInformationTab.SaveEmailErrorCode.NONE,
       addCardErrorCode: AddCreditCardForm.ErrorCode.NONE,
       newEmail: '',
       editEmailPassword: '',
-      isNewEmailValid: true
+      saveEmailErrorCode: AccountInformationTab.SaveEmailErrorCode.NONE,
+      isNewEmailPending: false
     };
   }
 
@@ -120,11 +121,10 @@ export class SettingsPageController extends React.Component<Properties, State> {
       isDeleteChecked={this.state.isDeleteChecked}
       deleteAccountPassword={this.state.deleteAccountPassword}
       deleteAccountErrorCode={this.state.deleteAccountErrorCode}
-      isEmailUpdateTokenValid={this.props.model.isEmailUpdateTokenValid}
-      saveEmailErrorCode={this.state.saveEmailErrorCode}
       newEmail={this.state.newEmail}
       editEmailPassword={this.state.editEmailPassword}
-      isNewEmailValid={this.state.isNewEmailValid}
+      saveEmailErrorCode={this.state.saveEmailErrorCode}
+      isNewEmailPending={this.props.model.isNewEmailPending}
       onResendEmailUpdateConfirmation={this.handleResendEmailUpdateConfirmation}
       onDiscardEmailUpdateRequest={this.handleDiscardEmailUpdateRequest}
       addCardErrorCode={this.state.addCardErrorCode}
