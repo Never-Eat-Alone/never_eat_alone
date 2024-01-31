@@ -9,5 +9,6 @@ export * from './social_media_image_database';
 export * from './user_cover_image_database';
 export * from './user_database';
 export * from './user_email_update_requests_database';
+export * from './user_notification_settings_database';
 export * from './user_profile_image_database';
 export * from './user_social_credentials_database';

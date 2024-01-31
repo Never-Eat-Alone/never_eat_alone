@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as Hash from 'hash.js';
 import * as path from 'path';
 import { Pool } from 'pg';
+import * as SGMail from '@sendgrid/mail';
 import { arrayToJson, CoverImage, Cuisine, EventCardSummary, InviteEmail,
   Language, NotificationSettings, PaymentCard, PaymentRecord, ProfilePageData,
   SocialAccount, SocialAccountType, User, UserInvitationCode, UserProfileImage,
@@ -15,6 +16,8 @@ import { LanguageDatabase } from '../postgres/queries/language_database';
 import { UserEmailUpdateRequestsDatabase } from
   '../postgres/queries/user_email_update_requests_database';
 import { UserDatabase } from '../postgres/queries/user_database';
+import { UserNotificationSettingsDatabase } from
+  '../postgres/queries/user_notification_settings_database';
 import { UserProfileImageDatabase } from
   '../postgres/queries/user_profile_image_database';
 import { UserSocialCredentialsDatabase } from
@@ -37,8 +40,9 @@ export class UserRoutes {
       userCoverImageDatabase: UserCoverImageDatabase, cuisineDatabase:
       CuisineDatabase, languageDatabase: LanguageDatabase,
       userSocialCredentialsDatabase: UserSocialCredentialsDatabase,
-      userEmailUpdateRequestsDatabase: UserEmailUpdateRequestsDatabase, sgmail:
-      any, baseURL: string, pool: Pool) {
+      userEmailUpdateRequestsDatabase: UserEmailUpdateRequestsDatabase,
+      userNotificationSettingsDatabase: UserNotificationSettingsDatabase,
+      sgmail: any, baseURL: string, pool: Pool) {
     /** Route to get the current logged in user. */
     app.get('/api/current_user', this.getCurrentUser);
 
@@ -973,18 +977,15 @@ export class UserRoutes {
     const nowUtc = new Date(new Date().toUTCString());
     const isNewEmailPending = pendingNewEmail && nowUtc <
       pendingEmailTokenExpiresAt;
-    let isNewEventsNotificationOn = false;
-    let isEventJoinedNotificationOn = false;
-    let isEventRemindersNotificationOn = false;
-    let isChangesNotificationOn = false;
-    let isSomeoneJoinedNotificationOn = false;
-    let isFoodieAcceptedInviteNotificationOn = false;
-    let isAnnouncementNotificationOn = false;
-    let notificationSettings: NotificationSettings = new NotificationSettings(
-      isNewEventsNotificationOn, isEventJoinedNotificationOn,
-      isEventRemindersNotificationOn, isChangesNotificationOn,
-      isSomeoneJoinedNotificationOn, isFoodieAcceptedInviteNotificationOn,
-      isAnnouncementNotificationOn);
+    let notificationSettings: NotificationSettings;
+    try {
+      notificationSettings = await this.userNotificationSettingsDatabase
+        .loadUserNotificationSettingsByUserId(user.id);
+    } catch (error) {
+      console.error('Failed at isNewEmailPending', error);
+      return response.status(500).send();
+    }
+
     let defaultCard = PaymentCard.noCard();
     let paymentCards: PaymentCard[] = [];
     let paymentRecords: PaymentRecord[] = [];
@@ -1315,7 +1316,7 @@ export class UserRoutes {
   private languageDatabase: LanguageDatabase;
   private userSocialCredentialsDatabase: UserSocialCredentialsDatabase;
   private userEmailUpdateRequestsDatabase: UserEmailUpdateRequestsDatabase;
-
+  private userNotificationSettingsDatabase: UserNotificationSettingsDatabase;
   /** The Sendgrid mailing api. */
   private sgmail: any;
   private baseURL: string;
