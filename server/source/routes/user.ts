@@ -85,6 +85,10 @@ export class UserRoutes {
     app.post('/api/confirm-user-email-update-token/:profileId',
       this.confirmEmailUpdateRequest);
 
+    /** Routes related to the notification settings. */
+    app.post('/api/toggle_notification_setting',
+      this.updateUserNotificationSettings);
+
     this.userDatabase = userDatabase;
     this.attendeeDatabase = attendeeDatabase;
     this.userProfileImageDatabase = userProfileImageDatabase;
@@ -1222,6 +1226,46 @@ export class UserRoutes {
       createdAt: user.createdAt.toISOString()
     };
     response.status(200).send();
+  }
+
+  private updateUserNotificationSettings = async (request, response) => {
+    const setting: string = request.body.setting;
+    if (!request.session?.user) {
+      return response.status(401).send();
+    }
+    let user: User;
+    try {
+      user = await this.userDatabase.loadUserBySessionId(request.session.id);
+      if (user.id === -1) {
+        return response.status(401).send();
+      }
+    } catch (error) {
+      console.error('Failed at loadUserBySessionId', error);
+      return response.status(500).send();
+    }
+
+    if (!setting) {
+      return response.status(400).send('Setting not specified');
+    }
+
+    try {
+      const settingColumn = setting.replace(/([A-Z])/g, '_$1').toLowerCase(); // Convert camelCase to snake_case
+
+      // Query to toggle the specified setting
+      const query = `
+        UPDATE user_notification_settings
+        SET ${settingColumn} = NOT ${settingColumn}
+        WHERE user_id = $1
+        RETURNING *;`;
+      const result = await this.pool.query(query, [userId]);
+      if (result.rows.length === 0) {
+        return response.status(404).send('User not found or invalid setting');
+      }
+      return response.json(result.rows[0]);
+    } catch (error) {
+      console.error(error);
+      return response.status(500).send('Internal Server Error');
+    }
   }
 
   private userDatabase: UserDatabase;
