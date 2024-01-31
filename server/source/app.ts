@@ -12,10 +12,15 @@ import { Pool } from 'pg';
 import * as SGMail from '@sendgrid/mail';
 import { v4 as uuidv4 } from 'uuid';
 import { AttendeeDatabase } from './postgres/queries/attendee_database';
-import { CuisineDatabase, UserSocialCredentialsDatabase } from
-  './postgres/queries';
+import { CuisineDatabase } from './postgres/queries/cuisine_database';
 import { UserCoverImageDatabase } from
   './postgres/queries/user_cover_image_database';
+import { UserEmailUpdateRequestsDatabase } from
+  './postgres/queries/user_email_update_requests_database';
+import { UserNotificationSettingsDatabase } from
+  './postgres/queries/user_notification_settings_database';
+import { UserSocialCredentialsDatabase } from
+  './postgres/queries/user_social_credentials_database';
 import { DeactivateAccountSurveyDatabase } from
   './postgres/queries/deactivate_account_survey_database';
 import { DeleteAccountSurveyDatabase } from
@@ -194,9 +199,15 @@ function runExpress(pool: Pool, config: any) {
   const cuisineDatabase = new CuisineDatabase(pool);
   const languageDatabase = new LanguageDatabase(pool);
   const userSocialCredentialsDatabase = new UserSocialCredentialsDatabase(pool);
+  const userEmailUpdateRequestsDatabase = new UserEmailUpdateRequestsDatabase(
+    pool);
+  const userNotificationSettingsDatabase = new UserNotificationSettingsDatabase(
+    pool);
   const userRoutes = new UserRoutes(app, userDatabase, attendeeDatabase,
     userProfileImageDatabase, userCoverImageDatabase, cuisineDatabase,
-    languageDatabase, userSocialCredentialsDatabase, SGMail, baseURL, pool);
+    languageDatabase, userSocialCredentialsDatabase,
+    userEmailUpdateRequestsDatabase, userNotificationSettingsDatabase, SGMail,
+    baseURL, pool);
   const locationDatabase = new LocationDatabase(pool);
   const socialMediaImageDatabase = new SocialMediaImageDatabase(pool);
   const socialMediaImageRoutes = new SocialMediaImageRoutes(app,
@@ -250,7 +261,8 @@ function runExpress(pool: Pool, config: any) {
         'billing_addresses',
         'user_email_update_requests',
         'stripe_products',
-        'stripe_payment_intents'
+        'stripe_payment_intents',
+        'user_notification_settings'
       ]);
       if (process.env.NODE_ENV === 'production') {
         app.listen(config.port, () => {

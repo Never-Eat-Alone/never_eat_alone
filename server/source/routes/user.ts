@@ -2,7 +2,6 @@ import * as fs from 'fs';
 import * as Hash from 'hash.js';
 import * as path from 'path';
 import { Pool } from 'pg';
-import * as SGMail from '@sendgrid/mail';
 import { arrayToJson, CoverImage, Cuisine, EventCardSummary, InviteEmail,
   Language, NotificationSettings, PaymentCard, PaymentRecord, ProfilePageData,
   SocialAccount, SocialAccountType, User, UserInvitationCode, UserProfileImage,
@@ -94,6 +93,7 @@ export class UserRoutes {
     this.languageDatabase = languageDatabase;
     this.userSocialCredentialsDatabase = userSocialCredentialsDatabase;
     this.userEmailUpdateRequestsDatabase = userEmailUpdateRequestsDatabase;
+    this.userNotificationSettingsDatabase = userNotificationSettingsDatabase;
     this.sgmail = sgmail;
     this.baseURL = baseURL;
     this.pool = pool;
@@ -208,8 +208,7 @@ export class UserRoutes {
     const accountProfileImage = UserProfileImage.fromJson(
       request.body.accountProfileImage);
     if (userId === -1) {
-      response.status(400).send();
-      return;
+      return response.status(400).send();
     }
     try {
       const result = await this.userDatabase.saveUserProfile(userId,
@@ -242,14 +241,12 @@ export class UserRoutes {
     const { email, password, rememberMe } = request.body;
     const user = await this.userDatabase.loadUserByEmail(email);
     if (!email || user.id === -1) {
-      response.status(401).json({ message: 'INVALID_CREDENTIALS' });
-      return;
+      return response.status(401).json({ message: 'INVALID_CREDENTIALS' });
     }
     const isValidPassword =
       await this.userDatabase.validatePassword(user.id, password);
     if (!isValidPassword) {
-      response.status(401).json({ message: 'INVALID_CREDENTIALS' });
-      return;
+      return response.status(401).json({ message: 'INVALID_CREDENTIALS' });
     }
     if (rememberMe) {
       request.session.cookie.maxAge = 30 * 365 * 24 * 60 * 60 * 1000;
@@ -263,8 +260,7 @@ export class UserRoutes {
         request.session, sessionExpiration);
     } catch (error) {
       console.error('Failed at assignUserIdToSid', error);
-      response.status(500).json({ message: 'DATABASE_ERROR' });
-      return;
+      return response.status(500).json({ message: 'DATABASE_ERROR' });
     }
     request.session.user = {
       id: user.id,
@@ -366,8 +362,7 @@ export class UserRoutes {
         userId);
     } catch (error) {
       console.error('Failed at loadUserInvitationCode', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     response.status(200).json({
       userInvitationCode: userInvitationCode.toJson()
@@ -383,17 +378,14 @@ export class UserRoutes {
       try {
         user = await this.userDatabase.loadUserBySessionId(request.session.id);
         if (user.id === -1 || user.id !== userInvitationCode.userId) {
-          response.status(401).send();
-          return;
+          return response.status(401).send();
         }
       } catch (error) {
         console.error('Failed at loadUserBySessionId', error);
-        response.status(500).send();
-        return;
+        return response.status(500).send();
       }
     } else {
-      response.status(401).send();
-      return;
+      return response.status(401).send();
     }
     const invitationHtml = await new Promise<string>((resolve, reject) => {
       fs.readFile('public/resources/invitation_email/email.html', 'utf8',
@@ -415,8 +407,7 @@ export class UserRoutes {
           `Your friend, ${user.name}, invited you to check out NEA`, newHtml);
       } catch (error) {
         console.error('Failed at sendEmail', error);
-        response.status(500).send();
-        return;
+        return response.status(500).send();
       }
     }
     response.status(200).send();
@@ -442,16 +433,14 @@ export class UserRoutes {
         `${name}, want to partner with NEA`, newHtml);
     } catch (error) {
       console.error('Failed at sendEmail to info@nevereatalone.net', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     try {
       await this.sendPartnerWithUsRecievedConfirmationEmail(email, name);
     } catch (error) {
       console.error('Failed at sendPartnerWithUsRecievedConfirmationEmail',
         error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     response.status(200).send();
   }
@@ -488,12 +477,10 @@ export class UserRoutes {
       user = await this.userDatabase.loadUserByEmail(email);
     } catch (error) {
       console.error('Failed at loadUserByEmail', error);
-      response.status(500).json({ message: 'DATABASE_ERROR' });
-      return;
+      return response.status(500).json({ message: 'DATABASE_ERROR' });
     }
     if (!user || user.id === -1 || user.email == '') {
-      response.status(400).json({ message: 'EMAIL_NOT_FOUND' });
-      return;
+      return response.status(400).json({ message: 'EMAIL_NOT_FOUND' });
     }
     const recoveryHtml = await new Promise<string>((resolve, reject) => {
       fs.readFile('public/resources/recovery_password_email/email.html', 'utf8',
@@ -512,8 +499,7 @@ export class UserRoutes {
       token = await this.userDatabase.assingResetTokenToUserId(user.id);
     } catch (error) {
       console.error('Failed at assingResetTokenToUserId', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     const name = user.name || 'NeverEatAlone Member';
     const newHtml = recoveryHtml.replaceAll('{{baseURL}}', this.baseURL)
@@ -523,8 +509,7 @@ export class UserRoutes {
         'Recovery Password Link', newHtml);
     } catch (error) {
       console.error('Failed at sendEmail', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     response.status(200).send();
   }
@@ -545,35 +530,30 @@ export class UserRoutes {
       profileUser = await this.userDatabase.loadUserById(profileId);
     } catch (error) {
       console.error('Failed at loadUserById', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     if (profileUser?.id === -1) {
-      response.status(400).send();
-      return;
+      return response.status(400).send();
     }
     try {
       coverImage = await this.userCoverImageDatabase.loadCoverImageByUserId(
         profileId);
     } catch (error) {
       console.error('Failed at loadUserById', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     try {
       profileImage =
         await this.userProfileImageDatabase.loadProfileImageByUserId(profileId);
     } catch (error) {
       console.error('Failed at loadProfileImageByUserId', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     try {
       biography = await this.userDatabase.loadBiographyByUserId(profileId);
     } catch (error) {
       console.error('Failed at loadBiographyByUserId', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     let userPrivacyPreference: UserProfilePrivacyPreference;
     try {
@@ -581,23 +561,20 @@ export class UserRoutes {
         await this.userDatabase.getUserPrivacyPreferencesByUserId(profileId);
     } catch (error) {
       console.error('Failed at getUserPrivacyPreferencesByUserId', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     try {
       address = await this.userDatabase.loadAddressByUserId(profileId);
     } catch (error) {
       console.error('Failed at loadAddressByUserId', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     try {
       languageList = await this.userDatabase.loadUserLanguagesByUserId(
         profileId);
     } catch (error) {
       console.error('Failed at loadUserLanguagesByUserId', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     try {
       socialAccounts =
@@ -605,32 +582,28 @@ export class UserRoutes {
           profileId);
     } catch (error) {
       console.error('Failed at loadUserProfileSocialAccountsByUserId', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     try {
       favoriteCuisineList =
         await this.userDatabase.loadUserFavouriteCuisinesByUserId(profileId);
     } catch (error) {
       console.error('Failed at loadUserSelectedCuisinesByUserId', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     try {
       upcomingEventList =
         await this.attendeeDatabase.loadUserUpcomingEventsByUserId(profileId);
     } catch (error) {
       console.error('Failed at loadUserUpcomingEventsByUserId', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     try {
       pastEventList =
         await this.attendeeDatabase.loadUserPastEventsByUserId(profileId);
     } catch (error) {
       console.error('Failed at loadUserPastEventsByUserId', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     response.status(200).json({
       coverImage: coverImage.toJson(),
@@ -662,17 +635,14 @@ export class UserRoutes {
         user = await this.userDatabase.loadUserBySessionId(
           request.session.id);
         if (user.id === -1 || user.id !== profileId) {
-          response.status(401).send();
-          return;
+          return response.status(401).send();
         }
       } catch (error) {
         console.error('Failed at loadUserBySessionId', error);
-        response.status(500).send();
-        return;
+        return response.status(500).send();
       }
     } else {
-      response.status(401).send();
-      return;
+      return response.status(401).send();
     }
     let profilePageData = ProfilePageData.default(profileId);
     let coverImage: CoverImage;
@@ -689,21 +659,18 @@ export class UserRoutes {
     try {
       const profileUser = await this.userDatabase.loadUserById(profileId);
       if (profileUser?.id === -1) {
-        response.status(400).send();
-        return;
+        return response.status(400).send();
       }
     } catch (error) {
       console.error('Failed at loadUserById', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     try {
       coverImage = await this.userCoverImageDatabase.loadCoverImageByUserId(
         profileId);
     } catch (error) {
       console.error('Failed at loadUserById', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     const dirPath = path.join(__dirname, 'public/resources/profile_page/images'
       );
@@ -720,46 +687,40 @@ export class UserRoutes {
         await this.userProfileImageDatabase.loadProfileImageByUserId(profileId);
     } catch (error) {
       console.error('Failed at loadProfileImageByUserId', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     try {
       userPrivacyPreference =
         await this.userDatabase.getUserPrivacyPreferencesByUserId(profileId);
     } catch (error) {
       console.error('Failed at getUserPrivacyPreferencesByUserId', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     try {
       biographyValue = await this.userDatabase.loadBiographyByUserId(profileId);
     } catch (error) {
       console.error('Failed at loadBiographyByUserId', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     try {
       selectedLocation = await this.userDatabase.loadAddressByUserId(profileId);
     } catch (error) {
       console.error('Failed at loadAddressByUserId', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     try {
       selectedLanguageList = await this.userDatabase.loadUserLanguagesByUserId(
         profileId);
     } catch (error) {
       console.error('Failed at loadUserLanguagesByUserId', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     try {
       selectedCuisineList =
         await this.userDatabase.loadUserFavouriteCuisinesByUserId(profileId);
     } catch (error) {
       console.error('Failed at loadUserSelectedCuisinesByUserId', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     try {
       socialAccounts =
@@ -767,8 +728,7 @@ export class UserRoutes {
           profileId);
     } catch (error) {
       console.error('Failed at loadUserProfileSocialAccountsByUserId', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     const { facebookLink, isFacebookPrivate, twitterLink, isTwitterPrivate,
         instagramLink, isInstagramPrivate } = (() => {
@@ -840,24 +800,20 @@ export class UserRoutes {
         user = await this.userDatabase.loadUserBySessionId(
           request.session.id);
         if (user.id === -1 || user.id !== image.profileId) {
-          response.status(401).send();
-          return;
+          return response.status(401).send();
         }
       } catch (error) {
         console.error('Failed at loadUserBySessionId', error);
-        response.status(500).send();
-        return;
+        return response.status(500).send();
       }
     } else {
-      response.status(401).send();
-      return;
+      return response.status(401).send();
     }
     try {
       await this.userCoverImageDatabase.saveCoverImage(image);
     } catch (error) {
       console.error('Failed at isDuplicateEmail', error);
-      response.status(500).json({ message: 'DATABASE_ERROR' });
-      return;
+      return response.status(500).json({ message: 'DATABASE_ERROR' });
     }
     response.status(200).send();
   }
@@ -870,19 +826,15 @@ export class UserRoutes {
         user = await this.userDatabase.loadUserBySessionId(
           request.session.id);
         if (user.id === -1 || user.id !== image.userId) {
-          response.status(401).send();
-          return;
+          return response.status(401).send();
         }
       } catch (error) {
         console.error('Failed at loadUserBySessionId', error);
-        response.status(500).send();
-        return;
+        return response.status(500).send();
       }
     } else {
-      response.status(401).send();
-      return;
+      return response.status(401).send();
     }
-    
     const userProfileImageFile = request.file;
     let uploadedImage: UserProfileImage;
     try {
@@ -890,8 +842,7 @@ export class UserRoutes {
         user.id, userProfileImageFile);
     } catch (error) {
       console.error('Failed at uploadUserProfileImage.', error);
-      response.status(500).json({ message: 'DATABASE_ERROR' });
-      return;
+      return response.status(500).json({ message: 'DATABASE_ERROR' });
     }
     response.status(201).json({ accountProfileImage: uploadedImage.toJson() });
   }
@@ -906,13 +857,11 @@ export class UserRoutes {
         user = await this.userDatabase.loadUserBySessionId(
           request.session.id);
         if (user.id === -1 || user.id !== profileId) {
-          response.status(401).send();
-          return;
+          return response.status(401).send();
         }
       } catch (error) {
         console.error('Failed at loadUserBySessionId', error);
-        response.status(500).send();
-        return;
+        return response.status(500).send();
       }
     }
     try {
@@ -1005,31 +954,27 @@ export class UserRoutes {
   private getResetPasswordPage = async (request, response) => {
     const token = request.body.token;
     if (!token) {
-      response.status(400).json({ message: 'Token is required.' });
-      return;
+      return response.status(400).json({ message: 'Token is required.' });
     }
     let user: User;
     try {
       user = await this.userDatabase.loadUserByPasswordResetToken(token);
     } catch (error) {
       console.error('Failed at loadUserByResetToken', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     if (!user || user.id === -1) {
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     let profileImageSrc: string;
     try {
       profileImageSrc = (await
         this.userProfileImageDatabase.loadProfileImageByUserId(user.id)).src;
     } catch {
-      response.status(200).json({
+      return response.status(200).json({
         user: user.toJson(),
         profileImageSrc: UserProfileImage.default().src
       });
-      return;
     }
     response.status(200).json({
       user: user.toJson(),
@@ -1041,19 +986,16 @@ export class UserRoutes {
     const password = request.body.password;
     const account = User.fromJson(request.body.account);
     if (!password) {
-      response.status(400).json({ message: 'password is required.' });
-      return;
+      return response.status(400).json({ message: 'password is required.' });
     }
     if (!account || account.id === -1) {
-      response.status(400).json({ message: 'account is required.' });
-      return;
+      return response.status(400).json({ message: 'account is required.' });
     }
     try {
       await this.userDatabase.updatePassword(account.id, password);
     } catch (error) {
       console.error('Failed at updatePassword', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     request.session.cookie.maxAge = 24 * 60 * 60 * 1000;
     try {
@@ -1063,8 +1005,7 @@ export class UserRoutes {
         request.session, sessionExpiration);
     } catch (error) {
       console.error('Failed at assignUserIdToSid', error);
-      response.status(500).json({ message: 'DATABASE_ERROR' });
-      return;
+      return response.status(500).json({ message: 'DATABASE_ERROR' });
     }
     request.session.user = {
       id: account.id,
@@ -1080,20 +1021,17 @@ export class UserRoutes {
   private updateUserDisplayName = async (request, response) => {
     const { name } = request.body;
     if (!request.session?.user) {
-      response.status(401).send();
-      return;
+      return response.status(401).send();
     }
     let user: User;
     try {
       user = await this.userDatabase.loadUserBySessionId(request.session.id);
       if (user.id === -1) {
-        response.status(401).send();
-        return;
+        return response.status(401).send();
       }
     } catch (error) {
       console.error('Failed at loadUserBySessionId', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     try {
       const updatedUser = await this.userDatabase.updateDisplayName(user.id,
@@ -1109,8 +1047,7 @@ export class UserRoutes {
       response.status(200).send({ user: updatedUser.toJson() });
     } catch (error) {
       console.error('Failed at updateDisplayName', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
   }
 
@@ -1118,47 +1055,41 @@ export class UserRoutes {
     const profileId = parseInt(request.params.profileId);
     const { email, password } = request.body;
     if (!request.session?.user) {
-      response.status(401).send();
-      return;
+      return response.status(401).send();
     }
     let user: User;
     try {
       user = await this.userDatabase.loadUserBySessionId(request.session.id);
       if (user.id === -1 || user.id !== profileId) {
-        response.status(401).send();
-        return;
+        return response.status(401).send();
       }
     } catch (error) {
       console.error('Failed at loadUserBySessionId', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     if (!email || !password) {
-      response.status(400).json({
+      return response.status(400).json({
         message: 'Email and password are required.'
       });
-      return;
     }
     try {
       const isValid = await this.userDatabase.validatePassword(user.id,
         password);
       if (!isValid) {
-        response.status(401).json({ message: 'Password authentication failed.'
-          });
-        return;
+        return response.status(401).json({
+          message: 'Password authentication failed.'
+        });
       }
     } catch (error) {
       console.error('Failed at validatePassword', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     let tokenId: number;
     try {
       tokenId = await this.userDatabase.addEmailUpdateRequest(user.id, email);
     } catch (error) {
       console.error('Failed at addEmailUpdateRequest', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
 
     /** Send an email to the user's current email address to let the user know 
@@ -1182,9 +1113,8 @@ export class UserRoutes {
         'NEA Account: Update Email Request', newHtml);
     } catch (error) {
       console.error('EMAIL_NOT_SENT', error);
-      response.status(200).json({
+      return response.status(200).json({
         message: 'Failed to send the email to current user email.' });
-      return;
     }
     response.status(200).send();
   }
@@ -1193,34 +1123,29 @@ export class UserRoutes {
     const profileId = parseInt(request.params.profileId);
     const token = request.body.token;
     if (!request.session?.user) {
-      response.status(401).send();
-      return;
+      return response.status(401).send();
     }
     let user: User;
     try {
       user = await this.userDatabase.loadUserBySessionId(request.session.id);
       if (user.id === -1 || user.id !== profileId) {
-        response.status(401).send();
-        return;
+        return response.status(401).send();
       }
     } catch (error) {
       console.error('Failed at loadUserBySessionId', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     let updatedUser: User;
     try {
       const newEmail = await this.userDatabase.verifyEmailUpdateRequestToken(
         user.id, token);
       if (!newEmail) {
-        response.status(410).json({ message: 'Invalid link.' });
-        return;
+        return response.status(410).json({ message: 'Invalid link.' });
       }
       updatedUser = await this.userDatabase.updateEmail(user.id, newEmail);
     } catch (error) {
       console.error('Failed at verifyEmailUpdateRequestToken', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     request.session.cookie.maxAge = 24 * 60 * 60 * 1000;
     try {
@@ -1230,8 +1155,7 @@ export class UserRoutes {
         request.session, sessionExpiration);
     } catch (error) {
       console.error('Failed at assignUserIdToSid', error);
-      response.status(500).json({ message: 'DATABASE_ERROR' });
-      return;
+      return response.status(500).json({ message: 'DATABASE_ERROR' });
     }
     request.session.user = {
       id: user.id,
@@ -1248,43 +1172,36 @@ export class UserRoutes {
     const profileId = parseInt(request.params.profileId);
     const { currentPassword, newPassword } = request.body;
     if (!request.session?.user) {
-      response.status(401).send();
-      return;
+      return response.status(401).send();
     }
     let user: User;
     try {
       user = await this.userDatabase.loadUserBySessionId(request.session.id);
       if (user.id === -1 || user.id !== profileId) {
-        response.status(401).send();
-        return;
+        return response.status(401).send();
       }
     } catch (error) {
       console.error('Failed at loadUserBySessionId', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     if (!currentPassword || !newPassword) {
-      response.status(400).json({ message: 'password is required.' });
-      return;
+      return response.status(400).json({ message: 'password is required.' });
     }
     try {
       const isValid = await this.userDatabase.validatePassword(user.id,
         currentPassword);
       if (!isValid) {
-        response.status(401).send();
-        return;
+        return response.status(401).send();
       }
     } catch (error) {
       console.error('Failed at validatePassword', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     try {
       await this.userDatabase.updatePassword(user.id, newPassword);
     } catch (error) {
       console.error('Failed at updatePassword', error);
-      response.status(500).send();
-      return;
+      return response.status(500).send();
     }
     request.session.cookie.maxAge = 24 * 60 * 60 * 1000;
     try {
@@ -1294,8 +1211,7 @@ export class UserRoutes {
         request.session, sessionExpiration);
     } catch (error) {
       console.error('Failed at assignUserIdToSid', error);
-      response.status(500).json({ message: 'DATABASE_ERROR' });
-      return;
+      return response.status(500).json({ message: 'DATABASE_ERROR' });
     }
     request.session.user = {
       id: user.id,

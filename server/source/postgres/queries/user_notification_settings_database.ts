@@ -18,20 +18,28 @@ export class UserNotificationSettingsDatabase {
       SELECT *
       FROM user_notification_settings
       WHERE user_id = $1`, [userId]);
-    if (result.rows.length > 0) {
-      const row = result.rows[0];
-      return new NotificationSettings(
-        row.user_id,
-        row.new_events,
-        row.event_joined,
-        row.event_reminders,
-        row.change_to_events_attending,
-        row.someone_joins_events_attending,
-        row.foodie_accepts_your_invite,
-        row.announcement
-      );
+
+    if (!result.rows.length) {
+      await this.pool.query(`
+        INSERT INTO user_notification_settings 
+        (user_id, new_events, event_joined, event_reminders,
+        change_to_events_attending, someone_joins_events_attending,
+        foodie_accepts_your_invite, announcement)
+        VALUES ($1, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE)`, [userId]);
+      return new NotificationSettings(userId, true, true, true, true, true,
+        true, true);
     }
-    return null;
+    const row = result.rows[0];
+    return new NotificationSettings(
+      row.user_id,
+      row.new_events,
+      row.event_joined,
+      row.event_reminders,
+      row.change_to_events_attending,
+      row.someone_joins_events_attending,
+      row.foodie_accepts_your_invite,
+      row.announcement
+    );
   }
 
   /** The postgress pool connection. */
