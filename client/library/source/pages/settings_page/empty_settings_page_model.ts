@@ -48,7 +48,7 @@ export class EmptySettingsPageModel extends SettingsPageModel {
     throw new Error('SettingsPageModel not loaded.');
   }
 
-  public get isNewEmailPending(): boolean {
+  public get isEmailUpdateTokenValid(): boolean {
     throw new Error('SettingsPageModel not loaded.');
   }
 

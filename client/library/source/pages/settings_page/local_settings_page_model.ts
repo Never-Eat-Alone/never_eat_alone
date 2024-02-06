@@ -46,6 +46,11 @@ export class LocalSettingsPageModel extends SettingsPageModel {
     return this._pendingNewEmail;
   }
 
+  public get isEmailUpdateTokenValid(): boolean {
+    this.ensureIsLoaded();
+    return this._isEmailUpdateTokenValid;
+  }
+
   public get linkedSocialAccounts(): SocialAccount[] {
     this.ensureIsLoaded();
     return this._linkedSocialAccounts;
@@ -69,10 +74,6 @@ export class LocalSettingsPageModel extends SettingsPageModel {
   public get paymentRecords(): PaymentRecord[] {
     this.ensureIsLoaded();
     return this._paymentRecords;
-  }
-
-  public get isNewEmailPending(): boolean {
-    return this._isEmailUpdateTokenValid;
   }
 
   /** Payment methods tab related methods */
@@ -187,10 +188,10 @@ export class LocalSettingsPageModel extends SettingsPageModel {
   private _displayName: string;
   private _email: string;
   private _pendingNewEmail: string;
+  private _isEmailUpdateTokenValid: boolean;
   private _linkedSocialAccounts: SocialAccount[];
   private _notificationSettings: NotificationSettings;
   private _defaultCard: PaymentCard;
   private _paymentCards: PaymentCard[];
   private _paymentRecords: PaymentRecord[];
-  private _isEmailUpdateTokenValid: boolean;
 }

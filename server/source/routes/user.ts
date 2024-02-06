@@ -87,7 +87,7 @@ export class UserRoutes {
 
     /** Routes related to the notification settings. */
     app.post('/api/toggle_notification_setting',
-      this.updateUserNotificationSettings);
+      this.toggleUserNotificationSettings);
 
     this.userDatabase = userDatabase;
     this.attendeeDatabase = attendeeDatabase;
@@ -945,13 +945,13 @@ export class UserRoutes {
     response.status(200).json({
       displayName: user.name,
       email: user.email,
+      pendingNewEmail: pendingNewEmail,
+      isNewEmailPending: isNewEmailPending,
       linkedSocialAccounts: arrayToJson(linkedSocialAccounts),
       notificationSettings: notificationSettings.toJson(),
       defaultCard: defaultCard.toJson(),
       paymentCards: arrayToJson(paymentCards),
-      paymentRecords: arrayToJson(paymentRecords),
-      pendingNewEmail: pendingNewEmail,
-      isNewEmailPending: isNewEmailPending
+      paymentRecords: arrayToJson(paymentRecords)
     });
   }
 
@@ -1228,7 +1228,7 @@ export class UserRoutes {
     response.status(200).send();
   }
 
-  private updateUserNotificationSettings = async (request, response) => {
+  private toggleUserNotificationSettings = async (request, response) => {
     const setting: string = request.body.setting;
     if (!request.session?.user) {
       return response.status(401).send();
@@ -1249,19 +1249,17 @@ export class UserRoutes {
     }
 
     try {
-      const settingColumn = setting.replace(/([A-Z])/g, '_$1').toLowerCase(); // Convert camelCase to snake_case
-
-      // Query to toggle the specified setting
+      const settingColumn = setting.replace(/([A-Z])/g, '_$1').toLowerCase();
       const query = `
         UPDATE user_notification_settings
         SET ${settingColumn} = NOT ${settingColumn}
         WHERE user_id = $1
         RETURNING *;`;
-      const result = await this.pool.query(query, [userId]);
+      const result = await this.pool.query(query, [user.id]);
       if (result.rows.length === 0) {
         return response.status(404).send('User not found or invalid setting');
       }
-      return response.json(result.rows[0]);
+      return response.status(200).send();
     } catch (error) {
       console.error(error);
       return response.status(500).send('Internal Server Error');

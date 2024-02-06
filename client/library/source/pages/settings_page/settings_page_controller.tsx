@@ -124,7 +124,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
       newEmail={this.state.newEmail}
       editEmailPassword={this.state.editEmailPassword}
       saveEmailErrorCode={this.state.saveEmailErrorCode}
-      isNewEmailPending={this.props.model.isNewEmailPending}
+      isNewEmailPending={this.props.model.isEmailUpdateTokenValid}
       onResendEmailUpdateConfirmation={this.handleResendEmailUpdateConfirmation}
       onDiscardEmailUpdateRequest={this.handleDiscardEmailUpdateRequest}
       addCardErrorCode={this.state.addCardErrorCode}
@@ -260,7 +260,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
   private handleAnnouncementToggle = async () => {
     try {
       const newSetting = await this.props.model.toggleNotificationSetting(
-        'isFoodieAcceptedInviteNotificationOn');
+        'isAnnouncementNotificationOn');
       this.setState({ isAnnouncementNotificationOn: newSetting });
     } catch (error) {
       this.setState({ errorCode: error.code });

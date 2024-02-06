@@ -1,14 +1,19 @@
 import * as NeverEatAlone from 'never_eat_alone';
 
 export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
-  constructor(displayName: string, linkedSocialAccounts:
-      NeverEatAlone.SocialAccount[], notificationSettings:
+  constructor(profileId: number, displayName: string, email: string,
+      pendingNewEmail: string, isEmailUpdateTokenValid: boolean,
+      linkedSocialAccounts: NeverEatAlone.SocialAccount[], notificationSettings:
       NeverEatAlone.NotificationSettings, defaultCard:
       NeverEatAlone.PaymentCard, paymentCards: NeverEatAlone.PaymentCard[],
       paymentRecords: NeverEatAlone.PaymentRecord[]) {
     super();
     this._isLoaded = false;
+    this._profileId = profileId;
     this._displayName = displayName;
+    this._email = email;
+    this._pendingNewEmail = pendingNewEmail;
+    this._isEmailUpdateTokenValid = isEmailUpdateTokenValid;
     this._linkedSocialAccounts = linkedSocialAccounts;
     this._notificationSettings = notificationSettings;
     this._defaultCard = defaultCard;
@@ -35,6 +40,16 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
     return this._email;
   }
 
+  public get pendingNewEmail(): string {
+    this.ensureIsLoaded();
+    return this._pendingNewEmail;
+  }
+
+  public get isEmailUpdateTokenValid(): boolean {
+    this.ensureIsLoaded();
+    return this._isEmailUpdateTokenValid;
+  }
+
   public get linkedSocialAccounts(): NeverEatAlone.SocialAccount[] {
     this.ensureIsLoaded();
     return this._linkedSocialAccounts;
@@ -58,16 +73,6 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
   public get paymentRecords(): NeverEatAlone.PaymentRecord[] {
     this.ensureIsLoaded();
     return this._paymentRecords;
-  }
-
-  public get isEmailUpdateTokenValid(): boolean {
-    this.ensureIsLoaded();
-    return this._isEmailUpdateTokenValid;
-  }
-
-  public get pendingNewEmail(): string {
-    this.ensureIsLoaded();
-    return this._pendingNewEmail;
   }
 
   public async addCard(card: NeverEatAlone.PaymentCard): Promise<void> {
@@ -170,11 +175,11 @@ export class DemoSettingsPageModel extends NeverEatAlone.SettingsPageModel {
   private _profileId: number;
   private _displayName: string;
   private _email: string;
+  private _pendingNewEmail: string;
+  private _isEmailUpdateTokenValid: boolean;
   private _linkedSocialAccounts: NeverEatAlone.SocialAccount[];
   private _notificationSettings: NeverEatAlone.NotificationSettings;
   private _defaultCard: NeverEatAlone.PaymentCard;
   private _paymentCards: NeverEatAlone.PaymentCard[];
   private _paymentRecords: NeverEatAlone.PaymentRecord[];
-  private _isEmailUpdateTokenValid: boolean;
-  private _pendingNewEmail: string;
 }

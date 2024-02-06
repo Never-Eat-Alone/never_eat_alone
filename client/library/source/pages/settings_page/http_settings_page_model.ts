@@ -77,8 +77,8 @@ export class HttpSettingsPageModel extends SettingsPageModel {
     return this._model.paymentRecords;
   }
 
-  public get isNewEmailPending(): boolean {
-    return this._model.isNewEmailPending;
+  public get isEmailUpdateTokenValid(): boolean {
+    return this._model.isEmailUpdateTokenValid;
   }
 
   /** Payment methods tab related methods */
