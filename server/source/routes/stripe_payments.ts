@@ -211,16 +211,11 @@ export class StripePaymentRoutes {
 
   private stripeWebhook = async (request, response) => {
     let event;
-    console.log(process.env.STRIPE_WEBHOOK_SECRET);
     if (process.env.STRIPE_WEBHOOK_SECRET) {
       const sig = request.headers['stripe-signature'];
-      console.log('Received Stripe Webhook with signature:', sig);
       try {
-        console.log(typeof request.body);
-        console.log(request.body);
         event = this.stripe.webhooks.constructEvent(request.body, sig,
           process.env.STRIPE_WEBHOOK_SECRET);
-        console.log(event);
       } catch (err) {
         console.error(`Webhook Error: ${err.message}`);
         return response.status(400).send(`Webhook Error: ${err.message}`);
@@ -231,7 +226,6 @@ export class StripePaymentRoutes {
     switch (event.type) {
       case 'payment_intent.succeeded':
         const paymentIntent = event.data.object;
-        console.log(`PaymentIntent for ${paymentIntent.amount} was successful!`);
         // Then define and call a method to handle the successful payment intent.
         // handlePaymentIntentSucceeded(paymentIntent);
         break;
@@ -242,7 +236,6 @@ export class StripePaymentRoutes {
         break;
       default:
         // Unexpected event type
-        console.log(`Unhandled event type ${event.type}.`);
     }
 
     // Return a response to acknowledge receipt of the event

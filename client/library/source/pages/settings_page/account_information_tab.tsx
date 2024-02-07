@@ -736,13 +736,11 @@ export class AccountInformationTab extends React.Component<Properties, State> {
 
   private handleNewEmailChange = (event: React.ChangeEvent<HTMLInputElement>
       ) => {
-    console.log('handleNewEmailChange event.target.value', event.target.value);
     this.setState({ newEmail: event.target.value });
   }
 
   private handleEmailPasswordChange = (event: React.ChangeEvent<
       HTMLInputElement>) => {
-    console.log('handleEmailPasswordChange event.target.value', event.target.value);
     this.setState({
       editEmailPassword: event.target.value
     });

@@ -179,26 +179,22 @@ export class UserRoutes {
   private signUp = async (request, response) => {
     const userId = parseInt(request.params.id);
     const token = request.query.token;
-    console.log('signUp userid=', userId, 'token=', token);
     if (!userId || userId === -1) {
       return response.redirect(303, `${this.baseURL}/join`);
     }
 
     try {
       const user = await this.userDatabase.loadUserById(userId);
-      console.log(user.userStatus);
       if (user.id === -1 || user.userStatus !== UserStatus.PENDING) {
         return response.redirect(303, `${this.baseURL}/join`);
       }
       const isTokenValid = await this.userDatabase.isTokenValid(token);
-      console.log('istokenvalid', isTokenValid);
       if (!isTokenValid) {
         return response.redirect(303,
           `${this.baseURL}/invalid-confirmation-token`);
       }
       await this.userDatabase.updateUserStatusByConfirmationToken(
         token);
-      console.log('user sign up', userId);
       response.status(200).json({ displayName: user.name, email: user.email });
     } catch (error) {
       console.error('Failed at loadUserById', error);
@@ -229,7 +225,6 @@ export class UserRoutes {
 
   private setUpPassword = async (request, response) => {
     const userId = parseInt(request.params.id);
-    console.log('userId', userId);
     const { password } = request.body;
     try {
       await this.userDatabase.addUserCredentials(userId, password);
