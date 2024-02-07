@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: './.env' });
 import * as BodyParser from 'body-parser';
 import * as Cors from 'cors';
 import * as CookieParser from 'cookie-parser';
@@ -134,8 +134,8 @@ function runExpress(pool: Pool, config: any) {
   }));
 
   const Stripe = require('stripe');
-  const stripe = process.env.NODE_ENV === 'production' ? Stripe(
-    config.stripe_live_secret_key) : Stripe(config.stripe_test_secret_Key);
+  console.log(process.env.STRIPE_SECRET_KEY);
+  const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
   app.use(BodyParser.json());
   const frontendUrls = config.frontendUrls;
@@ -232,9 +232,12 @@ function runExpress(pool: Pool, config: any) {
 
   /** Start the server after initializing the tables */
   const startServer = async () => {
+    const path = require('path');
+    const typesDir = path.join(__dirname, '../source/postgres/types/');
+    const tablesDir = path.join(__dirname, '../source/postgres/tables/');
     try {
-      await initializePostgres(pool, '../source/postgres/types/', 'type');
-      await initializePostgres(pool, '../source/postgres/tables/', 'table', [
+      await initializePostgres(pool, typesDir, 'type');
+      await initializePostgres(pool, tablesDir, 'table', [
         'users',
         'user_sessions',
         'avatars',
@@ -264,13 +267,16 @@ function runExpress(pool: Pool, config: any) {
         'stripe_payment_intents',
         'user_notification_settings'
       ]);
+      console.log(process.env.LOCAL_BASE_URL);
       if (process.env.NODE_ENV === 'production') {
         app.listen(config.port, () => {
           console.log(`Server running on port ${config.port}`);
         });
       } else {
-        const key = fs.readFileSync('../localhost+2-key.pem', 'utf8');
-        const cert = fs.readFileSync('../localhost+2.pem', 'utf8');
+        const keyDir = path.join(__dirname, '../localhost+2-key.pem');
+        const certDir = path.join(__dirname, '../localhost+2.pem');
+        const key = fs.readFileSync(keyDir, 'utf8');
+        const cert = fs.readFileSync(certDir, 'utf8');
         https.createServer({ key, cert }, app).listen(config.httpsPort, () => {
           console.log(`HTTPS Server running on port ${config.httpsPort}`);
         });
