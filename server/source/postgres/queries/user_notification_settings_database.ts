@@ -22,9 +22,11 @@ export class UserNotificationSettingsDatabase {
     if (!result.rows.length) {
       await this.pool.query(`
         INSERT INTO user_notification_settings 
-        (user_id, new_events, event_joined, event_reminders,
-        change_to_events_attending, someone_joins_events_attending,
-        foodie_accepts_your_invite, announcement)
+          (user_id, is_new_events_notification_on,
+          is_event_joined_notification_on, is_event_reminders_notification_on,
+          is_changes_notification_on, is_someone_joined_notification_on,
+          is_foodie_accepted_invite_notification_on,
+          is_announcement_notification_on)
         VALUES ($1, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE)`, [userId]);
       return new NotificationSettings(userId, true, true, true, true, true,
         true, true);
@@ -32,13 +34,13 @@ export class UserNotificationSettingsDatabase {
     const row = result.rows[0];
     return new NotificationSettings(
       row.user_id,
-      row.new_events,
-      row.event_joined,
-      row.event_reminders,
-      row.change_to_events_attending,
-      row.someone_joins_events_attending,
-      row.foodie_accepts_your_invite,
-      row.announcement
+      row.is_new_events_notification_on,
+      row.is_event_joined_notification_on,
+      row.is_event_reminders_notification_on,
+      row.is_changes_notification_on,
+      row.is_someone_joined_notification_on,
+      row.is_foodie_accepted_invite_notification_on,
+      row.is_announcement_notification_on
     );
   }
 

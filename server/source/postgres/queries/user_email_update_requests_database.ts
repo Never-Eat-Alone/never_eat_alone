@@ -23,7 +23,7 @@ export class UserEmailUpdateRequestsDatabase {
       WHERE user_id = $1`, [userId]);
     if (!result.rows?.length) {
       return { pendingNewEmail: '', pendingEmailToken: '',
-        pendingEmailTokenExpiresAt: null
+        pendingEmailTokenExpiresAt: new Date()
       };
     }
     const { new_email, token, token_expires_at } = result.rows[0];
