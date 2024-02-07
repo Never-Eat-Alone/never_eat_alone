@@ -26,7 +26,7 @@ export abstract class ApplicationModel {
   public abstract getDiningEventPageModel(id: number): DiningEventPageModel;
   public abstract addDiningEventPageModel(id: number, diningEventPageModel:
     DiningEventPageModel): void;
-  public abstract updateOnJoinRemoveSeat(): Promise<void>;
+  public abstract updateOnJoinRemoveSeat(eventId: number): Promise<void>;
   public abstract get inviteAFoodieModel(): InviteAFoodieModel;
   public abstract updateInviteAFoodieModel(newModel: InviteAFoodieModel):
     Promise<void>;

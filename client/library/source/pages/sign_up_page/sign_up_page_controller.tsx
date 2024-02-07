@@ -7,8 +7,9 @@ import { SignUpPageModel } from './sign_up_page_model';
 
 interface Properties extends Router.RouteComponentProps {
   displayMode: DisplayMode;
-  account: User;
+  userId: number;
   model: SignUpPageModel;
+  token: string;
   onSignUpSuccess: (account: User, accountProfileImage: UserProfileImage
     ) => void;
 }
@@ -21,6 +22,7 @@ interface State {
   password: string;
   accountProfileImage: UserProfileImage;
   displayName: string;
+  email: string;
 }
 
 export class SignUpPageController extends React.Component<Properties, State> {
@@ -32,8 +34,9 @@ export class SignUpPageController extends React.Component<Properties, State> {
       profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NONE,
       isSetUpPage: false,
       password: '',
-      accountProfileImage: UserProfileImage.default(this.props.account.id),
-      displayName: this.props.account.name
+      accountProfileImage: UserProfileImage.default(this.props.userId),
+      displayName: '',
+      email: ''
     };
   }
 
@@ -47,7 +50,7 @@ export class SignUpPageController extends React.Component<Properties, State> {
       return <ProfileSetUpPage
         displayMode={this.props.displayMode}
         displayName={this.state.displayName}
-        userId={this.props.account.id}
+        userId={this.props.userId}
         selectedImage={this.state.accountProfileImage}
         errorCode={this.state.profileSetUpPageErrorCode}
         onUploadImageClick={this.handleUploadImageClick}
@@ -58,7 +61,7 @@ export class SignUpPageController extends React.Component<Properties, State> {
     }
     return <SignUpPage
       displayMode={this.props.displayMode}
-      email={this.props.account.email}
+      email={this.state.email}
       password={this.state.password}
       errorCode={this.state.signUpPageErrorCode}
       onSignUp={this.handleSignUp}
@@ -67,9 +70,15 @@ export class SignUpPageController extends React.Component<Properties, State> {
 
   public async componentDidMount(): Promise<void> {
     try {
-      const response = await fetch(`/api/sign_up/${this.props.account.id}`);
+      const response = await fetch(
+        `/api/sign-up/${this.props.userId}?token=${this.props.token}`);
       if (response.status === 200) {
-        this.setState({ isLoaded: true });
+        const responseObject = await response.json();
+        this.setState({
+          isLoaded: true,
+          displayName: responseObject.displayName,
+          email: responseObject.email
+        });
       }
     } catch {
       this.setState({
@@ -81,7 +90,8 @@ export class SignUpPageController extends React.Component<Properties, State> {
 
   private handleSignUp = async (password: string) => {
     try {
-      const isSignedUp = await this.props.model.signUp(password);
+      const isSignedUp = await this.props.model.signUp(this.props.userId,
+        password);
       this.setState({ isSetUpPage: isSignedUp });
     } catch {
       this.setState({
@@ -94,21 +104,22 @@ export class SignUpPageController extends React.Component<Properties, State> {
 
   private handleUploadImageClick = async (uploadedImageFile: File) => {
     try {
-      const image = await this.props.model.uploadImageFile(uploadedImageFile);
+      const image = await this.props.model.uploadImageFile(this.props.userId,
+        uploadedImageFile);
       this.setState({
         accountProfileImage: image
       });
     } catch {
       this.setState({
         profileSetUpPageErrorCode: ProfileSetUpPage.ErrorCode.NO_CONNECTION,
-        accountProfileImage: UserProfileImage.default(this.props.account.id)
+        accountProfileImage: UserProfileImage.default(this.props.userId)
       });
     }
   }
 
   private handleAvatarClick = (src: string) => {
     this.setState({
-      accountProfileImage: new UserProfileImage(this.props.account.id, src)
+      accountProfileImage: new UserProfileImage(this.props.userId, src)
     });
   }
 
@@ -118,8 +129,8 @@ export class SignUpPageController extends React.Component<Properties, State> {
 
   private handleLetsGoClick = async () => {
     try {
-      const result = await this.props.model.setUpProfile(this.state.displayName,
-        this.state.accountProfileImage);
+      const result = await this.props.model.setUpProfile(this.props.userId,
+        this.state.displayName, this.state.accountProfileImage);
       this.props.onSignUpSuccess(result.account, result.accountProfileImage);
       this.props.history.push('/');
     } catch {

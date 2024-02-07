@@ -1,4 +1,5 @@
 import { Pool } from 'pg';
+import Stripe from 'stripe';
 import { Attendee, AttendeeStatus, Cuisine, DiningEvent, DressCode,
   EventCardSummary, EventStatus, EventType, Location, PriceRange, Restaurant,
   Seating } from '../../../../client/library/source/definitions';
@@ -310,6 +311,32 @@ export class DiningEventDatabase {
     }
     return result.rows[0].stripe_price_id;
   }
+
+  public savePaymentIntent = async (paymentIntentId: string |
+      Stripe.PaymentIntent, sessionId: string, userId: number, eventId: number
+      ): Promise<void> => {
+    const result = await this.pool.query(`
+      INSERT INTO stripe_payment_intents
+      (payment_intent_id, session_id, user_id, event_id)
+      VALUES ($1, $2, $3, $4)`, [paymentIntentId, sessionId, userId, eventId]);
+  }
+
+  public loadPaymentByEventIdUserId = async (eventId: number, userId: number
+      ) => {
+    const result = await this.pool.query(`
+      SELECT *
+      FROM stripe_payment_intents
+      WHERE event_id = $1 AND user_id = $2`, [eventId, userId]);
+    if (result.rows?.length === 0) {
+      throw new Error(`No payment intent found for user id:, ${userId}`);
+    }
+    return {
+      paymentIntentId: result.rows[0].payment_intent_id,
+      eventId: parseInt(result.rows[0].event_id),
+      userId: parseInt(result.rows[0].user_id),
+      sessionId: result.rows[0].session_id
+    };
+  } 
 
   /** The postgress pool connection. */
   private pool: Pool;

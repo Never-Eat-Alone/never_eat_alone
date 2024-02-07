@@ -32,15 +32,29 @@ export class HttpSettingsPageModel extends SettingsPageModel {
       responseObject.paymentCards);
     const paymentRecords: PaymentRecord[] = arrayFromJson(PaymentRecord,
       responseObject.paymentRecords);
-    this._model = new LocalSettingsPageModel(responseObject.displayName,
-      linkedSocialAccounts, notificationSettings,
-      defaultCard, paymentCards, paymentRecords);
+    this._model = new LocalSettingsPageModel(this._profileId,
+      responseObject.displayName, responseObject.email,
+      responseObject.pendingNewEmail, responseObject.isNewEmailPending,
+      linkedSocialAccounts, notificationSettings, defaultCard, paymentCards,
+      paymentRecords);
     await this._model.load();
     this._isLoaded = true;
   }
 
+  public get profileId(): number {
+    return this._model.profileId;
+  }
+
   public get displayName(): string {
     return this._model.displayName;
+  }
+
+  public get email(): string {
+    return this._model.email;
+  }
+
+  public get pendingNewEmail(): string {
+    return this._model.pendingNewEmail;
   }
 
   public get linkedSocialAccounts(): SocialAccount[] {
@@ -61,6 +75,10 @@ export class HttpSettingsPageModel extends SettingsPageModel {
 
   public get paymentRecords(): PaymentRecord[] {
     return this._model.paymentRecords;
+  }
+
+  public get isEmailUpdateTokenValid(): boolean {
+    return this._model.isEmailUpdateTokenValid;
   }
 
   /** Payment methods tab related methods */
@@ -139,7 +157,7 @@ export class HttpSettingsPageModel extends SettingsPageModel {
     return false;
   }
 
-  public async SubmitHelpEmail(receiptId: number, message: string): Promise<
+  public async submitHelpEmail(receiptId: number, message: string): Promise<
       boolean> {
     const response = await fetch('/api/submit_help_email', {
       method: 'POST',
@@ -210,6 +228,21 @@ export class HttpSettingsPageModel extends SettingsPageModel {
     return updatedUser;
   }
 
+  public async saveEmailUpdateRequest(newEmail: string, password: string):
+      Promise<void> {
+    const response = await fetch(`/api/update-user-email/${this._profileId}`,
+      {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email: newEmail, password: password })
+    });
+    const responseObject = await response.json();
+    this._checkResponse(response, responseObject.message);
+    await this._model.saveEmailUpdateRequest(newEmail, password);
+  }
+
   public async savePassword(currentPassword: string, newPassword: string
       ): Promise<void> {
     const response = await fetch(`/api/update-user-password/${this._profileId}`,
@@ -226,10 +259,35 @@ export class HttpSettingsPageModel extends SettingsPageModel {
     this._checkResponse(response);
   }
 
-  private _checkResponse(response: Response): void {
+  public async resendEmailUpdateConfirmation(): Promise<void> {
+    const response = await fetch(
+      `/api/update-email-resend_link/${this._profileId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    this._checkResponse(response);
+    await this._model.resendEmailUpdateConfirmation();
+  }
+
+  public async discardEmailUpdateRequest(): Promise<void> {
+    const response = await fetch(
+      `/api/update-email-discard/${this._profileId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    this._checkResponse(response);
+    await this._model.discardEmailUpdateRequest();
+  }
+
+  private _checkResponse(response: Response, message: string = ''): void {
     if (!response.ok) {
       const error = new Error(`HTTP error, status = ${response.status}`) as any;
       error.code = response.status;
+      error.message = message;
       throw error;
     }
   }

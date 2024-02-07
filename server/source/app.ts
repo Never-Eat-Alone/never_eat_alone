@@ -1,18 +1,26 @@
-import * as Bodyparser from 'body-parser';
+require('dotenv').config();
+import * as BodyParser from 'body-parser';
 import * as Cors from 'cors';
 import * as CookieParser from 'cookie-parser';
 import * as Express from 'express';
 import * as Session from 'express-session';
 import * as fs from 'fs';
 import Helmet from 'helmet';
+import * as https from 'https';
 import * as path from 'path';
 import { Pool } from 'pg';
 import * as SGMail from '@sendgrid/mail';
 import { v4 as uuidv4 } from 'uuid';
 import { AttendeeDatabase } from './postgres/queries/attendee_database';
-import { CuisineDatabase } from './postgres/queries';
+import { CuisineDatabase } from './postgres/queries/cuisine_database';
 import { UserCoverImageDatabase } from
   './postgres/queries/user_cover_image_database';
+import { UserEmailUpdateRequestsDatabase } from
+  './postgres/queries/user_email_update_requests_database';
+import { UserNotificationSettingsDatabase } from
+  './postgres/queries/user_notification_settings_database';
+import { UserSocialCredentialsDatabase } from
+  './postgres/queries/user_social_credentials_database';
 import { DeactivateAccountSurveyDatabase } from
   './postgres/queries/deactivate_account_survey_database';
 import { DeleteAccountSurveyDatabase } from
@@ -76,31 +84,60 @@ const initializePostgres = async (pool, dir, label, tableNames = []) => {
   }
 };
 
+const baseURL = process.env.NODE_ENV === 'production' ? 
+  process.env.PROD_BASE_URL : process.env.LOCAL_BASE_URL;
+
 function runExpress(pool: Pool, config: any) {
   const app = Express();
+  const scriptSrcUrls = [
+    "'self'",
+    'https://www.googletagmanager.com',
+    'https://js.stripe.com',
+    'https://apis.google.com',
+  ];
+
+  const connectSrcUrls = [
+    "'self'",
+    "https://api.stripe.com",
+    "https://checkout.stripe.com",
+    "https://www.google-analytics.com",
+    "https://js.stripe.com",
+  ];
+
+  const formActionUrls = [
+    "'self'",
+    "https://api.stripe.com"
+  ];
+
+  if (process.env.NODE_ENV !== 'production') {
+    scriptSrcUrls.push(baseURL);
+    connectSrcUrls.push(baseURL);
+    formActionUrls.push(baseURL);
+  }
+
+  app.use('/api/stripe-webhook', BodyParser.raw({ type: 'application/json' }));
+
   app.use(Helmet({
-      crossOriginEmbedderPolicy: false,
-      contentSecurityPolicy: {
-        directives: {
-          defaultSrc: ["'self'"],
-          scriptSrc: ["'self'", 'https://www.googletagmanager.com',
-            'https://js.stripe.com', 'https://apis.google.com',
-            "http://localhost:3000", 'http://localhost:3000/api/create-checkout-session',
-            "'unsafe-inline'"],
-          scriptSrcAttr: ["'unsafe-inline'"],
-          connectSrc: ["'self'", "http://localhost:3000",
-            "https://api.stripe.com", "https://checkout.stripe.com",
-            "https://www.google-analytics.com"],
-          frameSrc: ["'self'", 'https://js.stripe.com'],
-          imgSrc: ["'self'", "data:"],
-          formAction: ["'self'", "http://localhost:3000",
-            'http://localhost:3000/api/create-checkout-session',
-            "https://api.stripe.com"],
-          styleSrc: ["'self'", "'unsafe-inline'"]
-        }
+    crossOriginEmbedderPolicy: false,
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: scriptSrcUrls,
+        connectSrc: connectSrcUrls,
+        scriptSrcAttr: ["'unsafe-inline'", 'https://js.stripe.com'],
+        frameSrc: ["'self'", 'https://js.stripe.com'],
+        imgSrc: ["'self'", "data:", "https://www.googletagmanager.com"],
+        formAction: formActionUrls,
+        styleSrc: ["'self'", "'unsafe-inline'"]
       }
+    }
   }));
-  app.use(Bodyparser.json());
+
+  const Stripe = require('stripe');
+  const stripe = process.env.NODE_ENV === 'production' ? Stripe(
+    config.stripe_live_secret_key) : Stripe(config.stripe_test_secret_Key);
+
+  app.use(BodyParser.json());
   const frontendUrls = config.frontendUrls;
   app.use(Cors(
     {
@@ -112,11 +149,11 @@ function runExpress(pool: Pool, config: any) {
   ));
   app.use(Express.static('public'));
   app.use(
-    Bodyparser.urlencoded({
+    BodyParser.urlencoded({
       extended: true
     })
   );
-  const session = {
+  const sessionConfig = {
     genid: () => {
       return uuidv4();
     },
@@ -129,16 +166,17 @@ function runExpress(pool: Pool, config: any) {
     saveUninitialized: true,
     cookie: {
       maxAge: 10 * 365 * 24 * 60 * 60 * 1000,
-      secure: false
+      secure: true,
+      sameSite: 'lax' as 'lax'
     }
   };
 
   app.set('trust proxy', 1);
-  if (app.get('env') === 'production') {
-    session.cookie.secure = true;
+  if (process.env.NODE_ENV === 'production') {
+    sessionConfig.cookie.secure = true;
   }
   app.use(CookieParser());
-  app.use(Session(session));
+  app.use(Session(sessionConfig));
   app.get('/api/google_client_id', (request, response) => {
     let id = '';
     try {
@@ -152,8 +190,6 @@ function runExpress(pool: Pool, config: any) {
 
   SGMail.setApiKey(config.send_grid_api_key);
 
-  const Stripe = require('stripe');
-  const stripe = Stripe(config.stripe_test_secret_Key);
   const userDatabase = new UserDatabase(pool);
   const userProfileImageDatabase = new UserProfileImageDatabase(pool);
   const userProfileImageRoutes = new UserProfileImageRoutes(app,
@@ -162,9 +198,16 @@ function runExpress(pool: Pool, config: any) {
   const attendeeDatabase = new AttendeeDatabase(pool);
   const cuisineDatabase = new CuisineDatabase(pool);
   const languageDatabase = new LanguageDatabase(pool);
+  const userSocialCredentialsDatabase = new UserSocialCredentialsDatabase(pool);
+  const userEmailUpdateRequestsDatabase = new UserEmailUpdateRequestsDatabase(
+    pool);
+  const userNotificationSettingsDatabase = new UserNotificationSettingsDatabase(
+    pool);
   const userRoutes = new UserRoutes(app, userDatabase, attendeeDatabase,
     userProfileImageDatabase, userCoverImageDatabase, cuisineDatabase,
-    languageDatabase, SGMail);
+    languageDatabase, userSocialCredentialsDatabase,
+    userEmailUpdateRequestsDatabase, userNotificationSettingsDatabase, SGMail,
+    baseURL, pool);
   const locationDatabase = new LocationDatabase(pool);
   const socialMediaImageDatabase = new SocialMediaImageDatabase(pool);
   const socialMediaImageRoutes = new SocialMediaImageRoutes(app,
@@ -179,8 +222,9 @@ function runExpress(pool: Pool, config: any) {
   const diningEventDatabase = new DiningEventDatabase(pool);
   const diningEventRoutes = new DiningEventRoutes(app, diningEventDatabase,
     userDatabase, attendeeDatabase, userProfileImageDatabase);
-  const stripePaymentRoutes = new StripePaymentRoutes(app, stripe,
-    userDatabase, diningEventDatabase);
+  const stripePaymentRoutes = new StripePaymentRoutes(app, stripe, baseURL,
+    userDatabase, diningEventDatabase, attendeeDatabase,
+    userProfileImageDatabase);
 
   app.get('*', (request, response, next) => {
     response.sendFile(path.join(process.cwd(), 'public', 'index.html'));
@@ -215,9 +259,22 @@ function runExpress(pool: Pool, config: any) {
         'user_favourite_cuisines',
         'password_reset_tokens',
         'billing_addresses',
-        'stripe_products'
+        'user_email_update_requests',
+        'stripe_products',
+        'stripe_payment_intents',
+        'user_notification_settings'
       ]);
-      app.listen(config.port, async () => {});
+      if (process.env.NODE_ENV === 'production') {
+        app.listen(config.port, () => {
+          console.log(`Server running on port ${config.port}`);
+        });
+      } else {
+        const key = fs.readFileSync('../localhost+2-key.pem', 'utf8');
+        const cert = fs.readFileSync('../localhost+2.pem', 'utf8');
+        https.createServer({ key, cert }, app).listen(config.httpsPort, () => {
+          console.log(`HTTPS Server running on port ${config.httpsPort}`);
+        });
+      }
     } catch (error) {
       console.error('Error initializing tables:', error);
     }

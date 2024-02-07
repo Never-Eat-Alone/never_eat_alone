@@ -13,7 +13,6 @@ import { DeletedAccountSurveyPageController } from
   './deleted_account_survey_page';
 import { DiningEventPageController } from './dining_event_page';
 import { EditProfilePageController } from './edit_profile_page';
-import { EmailConfirmationPageController } from './email_confirmation_page';
 import { ErrorPage } from './error_page';
 import { ForgotPasswordPageController } from './forgot_password_page';
 import { HelpPage } from './help_page';
@@ -27,7 +26,8 @@ import { ProfilePageController } from './profile_page';
 import { ResetPasswordPageController } from './reset_password_page';
 import { SettingsPageController } from './settings_page';
 import { Shell } from './shell';
-import { SignUpPageController } from './sign_up_page';
+import { ConfirmationTokenExpiredPage, SignUpPageController } from
+  './sign_up_page';
 import { SitemapPage } from './sitemap_page';
 import { TermsOfUsePage } from './terms_of_use_page';
 import { WhatIsNeaPage } from './what_is_nea_page';
@@ -135,10 +135,6 @@ export class ApplicationController extends React.Component<Properties, State> {
           {partnerWithUsModal}
           <Router.Switch>
             <Router.Route
-              path='/confirmation_tokens/:id'
-              render={this.renderEmailConfirmationPage}
-            />
-            <Router.Route
               path='/cookies_policy'
               render={this.renderCookiesPolicy}
             />
@@ -157,6 +153,10 @@ export class ApplicationController extends React.Component<Properties, State> {
             <Router.Route
               path='/error/:errorCode'
               render={this.renderErrorPage}
+            />
+            <Router.Route
+              path='/invalid-confirmation-token'
+              render={this.renderInvalidConfirmationPage}
             />
             <Router.Route
               path='/users/edit_profile/:id'
@@ -199,7 +199,7 @@ export class ApplicationController extends React.Component<Properties, State> {
               render={this.renderSettings}
             />
             <Router.Route
-              path='/sign_up/:id'
+              path='/sign-up/:id'
               render={this.renderSignUp}
             />
             <Router.Route
@@ -326,12 +326,10 @@ export class ApplicationController extends React.Component<Properties, State> {
     }
   }
 
-  private renderEmailConfirmationPage = (
+  private renderInvalidConfirmationPage = (
       {match}: Router.RouteComponentProps<TParams>) => {
-    return <EmailConfirmationPageController
-      displayMode={this.state.displayMode}
-      model={this.props.model.getEmailConfirmationPageModel(match.params.id)}
-    />;
+    return <ConfirmationTokenExpiredPage
+      displayMode={this.state.displayMode} />;
   }
 
   private renderSettings = ({match}: Router.RouteComponentProps<TParams>) => {
@@ -362,8 +360,8 @@ export class ApplicationController extends React.Component<Properties, State> {
       account={this.state.account}
       eventId={id}
       profileImageSrc={this.state.accountProfileImage.src}
-      onJoinEventSuccess={this.handleJoinEvent}
-      onRemoveSeatSuccess={this.handleRemoveSeat}
+      onJoinEventSuccess={() => this.handleJoinEvent(id)}
+      onRemoveSeatSuccess={() => this.handleRemoveSeat(id)}
       showLoginModal={this.handleLogInButton}
     />;
   }
@@ -414,6 +412,14 @@ export class ApplicationController extends React.Component<Properties, State> {
     await this.updateAccount(newAccount);
   }
 
+  private handleSaveEmail = async (newAccount: User) => {
+    if (newAccount.id === -1) {
+      this.handleLogInButton();
+      return;
+    }
+    await this.updateAccount(newAccount);
+  }
+
   private renderJoin = () => {
     return <JoinPageController
       displayMode={this.state.displayMode}
@@ -429,18 +435,18 @@ export class ApplicationController extends React.Component<Properties, State> {
     />;
   }
 
-  private handleJoinEvent = async () => {
+  private handleJoinEvent = async (eventId: number) => {
     try {
-      await this.props.model.updateOnJoinRemoveSeat();
+      await this.props.model.updateOnJoinRemoveSeat(eventId);
       this.setState({ hasJoinedEvent: true });
     } catch {
       this.setState({ hasError: true });
     }
   }
 
-  private handleRemoveSeat = async () => {
+  private handleRemoveSeat = async (eventId: number) => {
     try {
-      await this.props.model.updateOnJoinRemoveSeat();
+      await this.props.model.updateOnJoinRemoveSeat(eventId);
       this.setState({ hasRemovedSeat: true });
     } catch {
       this.setState({ hasError: true });
@@ -471,10 +477,13 @@ export class ApplicationController extends React.Component<Properties, State> {
 
   private renderSignUp = ({match}: Router.RouteComponentProps<TParams>) => {
     const id = Number(match.params.id);
+    const params = new URLSearchParams(this.props.location.search);
+    const token = params.get('token') || '';
     return <SignUpPageController
       {...this.props}
       displayMode={this.state.displayMode}
-      account={this.state.account}
+      userId={id}
+      token={token}
       model={this.props.model.getSignUpPageModel(id)}
       onSignUpSuccess={this.handleSignUpSuccess}
     />;

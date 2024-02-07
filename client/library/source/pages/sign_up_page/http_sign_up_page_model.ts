@@ -2,18 +2,12 @@ import { User, UserProfileImage } from '../../definitions';
 import { SignUpPageModel } from './sign_up_page_model';
 
 export class HttpSignUpPageModel extends SignUpPageModel {
-  constructor(account: User, accountProfileImage: UserProfileImage) {
-    super();
-    this._account = account;
-    this._accountProfileImage = accountProfileImage;
-  }
-
-  public async uploadImageFile(userProfileImageFile: File):
+  public async uploadImageFile(userId: number, userProfileImageFile: File):
       Promise<UserProfileImage> {
     const formData = new FormData();
     formData.append('userProfileImage', userProfileImageFile);
     const response = await fetch(
-      `/api/upload_profile_image/${this._account.id}`, {
+      `/api/upload_profile_image/${userId}`, {
       method: 'POST',
       body: formData
     });
@@ -23,13 +17,10 @@ export class HttpSignUpPageModel extends SignUpPageModel {
         responseObject.accountProfileImage);
       return uploadedImage;
     }
-
-    /** If the upload fails, the image is set to the last image. */
-    return this._accountProfileImage;
   }
 
-  public async signUp(password: string): Promise<boolean> {
-    const response = await fetch(`/api/set_up_password/${this._account.id}`, {
+  public async signUp(userId: number, password: string): Promise<boolean> {
+    const response = await fetch(`/api/set-up-password/${userId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -44,9 +35,10 @@ export class HttpSignUpPageModel extends SignUpPageModel {
     return false;
   }
 
-  public async setUpProfile(displayName: string, image: UserProfileImage):
-      Promise<{ account: User, accountProfileImage: UserProfileImage }> {
-    const response = await fetch(`/api/set_up_profile/${this._account.id}`, {
+  public async setUpProfile(userId: number, displayName: string, image:
+      UserProfileImage): Promise<{ account: User, accountProfileImage:
+      UserProfileImage }> {
+    const response = await fetch(`/api/set_up_profile/${userId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -56,10 +48,11 @@ export class HttpSignUpPageModel extends SignUpPageModel {
         'accountProfileImage': image.toJson()
       })
     });
+
     if (response.status !== 200) {
       return {
-        account: this._account,
-        accountProfileImage: this._accountProfileImage
+        account: User.makeGuest(),
+        accountProfileImage: UserProfileImage.default()
       };
     } else {
       const responseObject = await response.json();
@@ -70,7 +63,4 @@ export class HttpSignUpPageModel extends SignUpPageModel {
       };
     }
   }
-
-  private _account: User;
-  private _accountProfileImage: UserProfileImage;
 }

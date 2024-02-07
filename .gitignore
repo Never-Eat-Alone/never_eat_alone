@@ -22,4 +22,7 @@ client/resources/uploads/
 **/server/application/
 **/.swp
 
-server/config.default.json
+localhost+2-key.pem
+localhost+2.pem
+
+**/.env

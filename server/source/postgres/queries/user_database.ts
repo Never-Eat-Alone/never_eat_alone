@@ -23,6 +23,15 @@ function generateResetToken() {
   return buffer.toString('hex');
 }
 
+/** Generates secure token for user email update request. */
+function generateEmailUpdateToken(userId) {
+  const tokenBuffer = Crypto.randomBytes(32);
+  const token = tokenBuffer.toString('hex');
+  const hash = Crypto.createHash('sha256').update(String(userId)).digest('hex');
+  const emailUpdateToken = `${token}.${hash}`;
+  return emailUpdateToken;
+}
+
 /** User related database manipulations class. */
 export class UserDatabase {
   /** @param pool - The pool connection to the postgres database. */
@@ -208,6 +217,52 @@ export class UserDatabase {
     await this.pool.query(`
       INSERT INTO user_confirmation_tokens (token_id, expires_at, user_id)
       VALUES ($1, $2, $3)`, [tokenId, expiresAt, userId]);
+  }
+
+  public addEmailUpdateRequest = async (userId: number, newEmail: string):
+      Promise<number> => {
+    const emailUpdateToken = generateEmailUpdateToken(userId);
+    const queryResult = await this.pool.query(`
+      INSERT INTO user_email_update_requests (user_id, new_email, token)
+      VALUES ($1, $2, $3) RETURNING id`, [userId, newEmail, emailUpdateToken]);
+    return parseInt(queryResult.rows[0].id);
+  }
+
+  public verifyEmailUpdateRequestToken = async (userId: number, token: string):
+      Promise<string> => {
+    let newEmail = '';
+    try {
+      // Delete all expired tokens.
+      await this.pool.query(`
+        DELETE FROM
+          user_email_update_requests
+        WHERE
+          token_expires_at < (CURRENT_TIMESTAMP AT TIME ZONE 'UTC')`);
+
+      // Verify the token is valid and return the new email.
+      const selectResult = await this.pool.query(`
+        SELECT new_email
+        FROM
+          user_email_update_requests
+        WHERE
+          user_id = $1 AND token = $2 AND
+          token_expires_at >= (CURRENT_TIMESTAMP AT TIME ZONE 'UTC')`, [userId,
+        token]);
+      if (selectResult.rows.length > 0) {
+        newEmail = selectResult.rows[0].new_email;
+
+        // Delete the verified token so it can't be used again.
+        await this.pool.query(`
+          DELETE FROM
+            user_email_update_requests
+          WHERE
+            user_id = $1 AND token = $2`, [userId, token]);
+      }
+      return newEmail;
+    } catch (error) {
+      console.error("Error validating email update token: ", error);
+      throw error;
+    }
   }
 
   /**
@@ -509,17 +564,19 @@ export class UserDatabase {
     const hashedEnteredPass =
       Hash.sha256().update(newPassword + userId).digest('hex');
 
-    /** Check if the user ID already exists in the table */
-    const result = await this.pool.query(`
-      SELECT user_id FROM user_credentials WHERE user_id = $1`, [userId]);
-    if (result.rows.length > 0) {
+    const userResult = await this.pool.query(`
+      SELECT id, user_status FROM users
+      WHERE id = $1 AND user_status IN ('ACTIVE', 'DEACTIVE')`, [userId]);
 
-      /** If the user ID already exists, update the password */
+    if (userResult.rows.length > 0) {
       await this.pool.query(`
-        UPDATE user_credentials SET hashed_pass = $1 WHERE user_id = $2`,
-        [hashedEnteredPass, userId]);
+        INSERT INTO user_credentials (user_id, hashed_pass)
+        VALUES ($1, $2)
+        ON CONFLICT (user_id)
+        DO UPDATE SET hashed_pass = EXCLUDED.hashed_pass`,
+        [userId, hashedEnteredPass]);
     } else {
-      throw new Error("User doesn't have credentials.");
+      throw new Error("User not found or not eligible for password update.");
     }
   }
 
@@ -642,10 +699,8 @@ export class UserDatabase {
           );
         }
       };
-
       await updateUserLanguages(profilePageData.accountId,
         profilePageData.selectedLanguageList);
-
       await this.pool.query('COMMIT');
     } catch (error) {
       await this.pool.query('ROLLBACK');
@@ -671,7 +726,28 @@ export class UserDatabase {
         userQueryResult.rows[0].created_at)));
     } catch (error) {
       console.error('Error in updateDisplayName:', error);
-      throw error; 
+      throw error;
+    }
+  }
+
+  public updateEmail = async (userId: number, email: string): Promise<User> => {
+    try {
+      const userQueryResult = await this.pool.query(`
+        UPDATE users 
+        SET email = $2, updated_at = NOW()
+        WHERE id = $1
+        RETURNING *`, [userId, email]);
+      if (userQueryResult.rowCount === 0) {
+        throw new Error('No user found with the given user Id.');
+      }
+      return new User(
+        parseInt(userQueryResult.rows[0].id), userQueryResult.rows[0].name,
+        userQueryResult.rows[0].email, userQueryResult.rows[0].user_name,
+        userQueryResult.rows[0].user_status as UserStatus, new Date(Date.parse(
+        userQueryResult.rows[0].created_at)));
+    } catch (error) {
+      console.error('Error in updateEmail:', error);
+      throw error;
     }
   }
 

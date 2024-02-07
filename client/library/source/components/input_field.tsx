@@ -1,7 +1,7 @@
 import { css, StyleSheet } from 'aphrodite';
 import * as React from 'react';
 import { CircularCounterWithCounterInside } from
-'./circular_counter_with_counter_inside';
+  './circular_counter_with_counter_inside';
 
 interface InputFieldProperties extends React.InputHTMLAttributes<
     HTMLInputElement> {
@@ -45,6 +45,28 @@ export function InputFieldWithIcon(props: InputFieldWithIconProperties) {
       </div>
       <input {...inputProps} style={INPUT_STYLE} className={css(styles.input)}
       />
+    </div>);
+}
+
+export function InputFieldWithWarningIcon(props: InputFieldWithIconProperties) {
+  const { hasError, iconSrc, iconAlt, iconContainerStyle, iconStyle, style,
+    ...inputProps } = props;
+  return (
+    <div
+        style={{...YELLOW_CONTAINER_STYLE, ...CONTAINER_WITH_ICON_STYLE,
+          ...style}}
+        className={inputProps.disabled && css(styles.disabled) ||
+          hasError && css(styles.hasError) || css(styles.container)}
+    >
+      <input {...inputProps} style={INPUT_STYLE} className={css(styles.input)}
+      />
+      <div style={{...ICON_CONTAINER_STYLE, ...iconContainerStyle}} >
+        <img
+          style={{...ICON_STYLE, ...iconStyle}}
+          src='/resources/icons/restrictions.svg'
+          alt='Pending Icon'
+        />
+      </div>
     </div>);
 }
 
@@ -247,6 +269,12 @@ const CONTAINER_STYLE: React.CSSProperties = {
   height: '38px',
   minHeight: '38px',
   color: '#969696'
+};
+
+const YELLOW_CONTAINER_STYLE: React.CSSProperties = {
+  ...CONTAINER_STYLE,
+  border: '1px solid var(--yellow-700-dark, #C67E14)',
+  color: 'var(--grey-000-black, #000)'
 };
 
 const CONTAINER_NO_ICON_STYLE: React.CSSProperties = {

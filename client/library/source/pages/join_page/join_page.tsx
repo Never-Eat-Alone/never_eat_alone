@@ -1,7 +1,7 @@
 import * as EmailValidator from 'email-validator';
 import * as React from 'react';
-import { EmailInputField, InputField, NameInputField, PrimaryTextButton
-} from '../../components';
+import { EmailInputField, InputField, NameInputField, PrimaryTextButton } from
+  '../../components';
 import { DisplayMode } from '../../definitions';
 
 interface Properties {
@@ -80,6 +80,22 @@ export class JoinPage extends React.Component<Properties, State> {
       }
       return null;
     })();
+    const errorMessage = (() => {
+      switch (this.props.errorCode) {
+        case JoinPage.ErrorCode.VALIDATION_ERROR:
+          return 'Please check your input. Ensure all fields are filled correctly.';
+        case JoinPage.ErrorCode.ACCOUNT_EXISTS:
+          return 'An account with this email already exists. Please use a different email or log in.';
+        case JoinPage.ErrorCode.ACCOUNT_LOCKED:
+          return 'Your account is currently locked. Please contact support for assistance.';
+        case JoinPage.ErrorCode.GENERAL_ERROR:
+          return 'Something went wrong. Please try again later.';
+        case JoinPage.ErrorCode.NO_CONNECTION:
+          return 'Unable to connect. Please check your internet connection and try again.';
+        default:
+          return '';
+      }
+    })();
     const pageContent = (() => {
       if (this.props.page === JoinPage.Page.REQUEST_SENT) {
         return (
@@ -140,6 +156,7 @@ export class JoinPage extends React.Component<Properties, State> {
             placeholder='Name of the person who invited you (optional)'
             onChange={this.handleReferralCodeChange}
           />
+          <div style={JOIN_ERROR_MESSAGE_STYLE} >{errorMessage}</div>
           <PrimaryTextButton
             style={REQUEST_BUTTON_STYLE}
             label='Request to join!'
@@ -214,8 +231,13 @@ export class JoinPage extends React.Component<Properties, State> {
 
 export namespace JoinPage {
   export enum ErrorCode {
-    NO_CONNECTION,
-    NONE
+    NO_CONNECTION = 'NO_CONNECTION',
+    VALIDATION_ERROR = 'VALIDATION_ERROR',
+    ACCOUNT_EXISTS = 'ACCOUNT_EXISTS',
+    ACCOUNT_PENDING = 'ACCOUNT_PENDING',
+    ACCOUNT_LOCKED = 'ACCOUNT_LOCKED',
+    GENERAL_ERROR = 'GENERAL_ERROR',
+    NONE = 'NONE'
   }
 
   export enum EmailErrorCode {
@@ -423,3 +445,8 @@ const LAST_LINE_TEXT_STYLE: React.CSSProperties = {
   textAlign: 'center',
   color: '#000000'
 };
+
+const JOIN_ERROR_MESSAGE_STYLE: React.CSSProperties = {
+  ...ERROR_CONTAINER_STYLE,
+  ...ERROR_MESSAGE_STYLE
+}

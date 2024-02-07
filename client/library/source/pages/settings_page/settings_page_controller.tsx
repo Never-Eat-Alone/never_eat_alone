@@ -1,3 +1,4 @@
+import * as EmailValidator from 'email-validator';
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 import { AddCreditCardForm } from '../../components';
@@ -17,6 +18,7 @@ interface Properties {
 
   /** Indicates the save display name was successful on database. */
   onSaveDisplayNameSuccess: (newAccount: User) => Promise<void>;
+
   onLogOut: () => void;
 }
 
@@ -43,6 +45,11 @@ interface State {
   linkedSocialAccounts: SocialAccount[];
   errorCode: number;
   addCardErrorCode: AddCreditCardForm.ErrorCode;
+  /** Edit Email Section */
+  newEmail: string;
+  editEmailPassword: string;
+  saveEmailErrorCode: AccountInformationTab.SaveEmailErrorCode;
+  isNewEmailPending: boolean;
 }
 
 export class SettingsPageController extends React.Component<Properties, State> {
@@ -70,7 +77,11 @@ export class SettingsPageController extends React.Component<Properties, State> {
       redirect: null,
       linkedSocialAccounts: [],
       errorCode: null,
-      addCardErrorCode: AddCreditCardForm.ErrorCode.NONE
+      addCardErrorCode: AddCreditCardForm.ErrorCode.NONE,
+      newEmail: '',
+      editEmailPassword: '',
+      saveEmailErrorCode: AccountInformationTab.SaveEmailErrorCode.NONE,
+      isNewEmailPending: false
     };
   }
 
@@ -88,7 +99,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
       displayMode={this.props.displayMode}
       linkedSocialAccounts={this.state.linkedSocialAccounts}
       displayName={this.props.model.displayName}
-      email={this.props.account.email}
+      email={this.props.model.email}
       isNewEventsNotificationOn={this.state.isNewEventsNotificationOn}
       isEventJoinedNotificationOn={this.state.isEventJoinedNotificationOn}
       isEventRemindersNotificationOn={this.state.isEventRemindersNotificationOn}
@@ -110,6 +121,12 @@ export class SettingsPageController extends React.Component<Properties, State> {
       isDeleteChecked={this.state.isDeleteChecked}
       deleteAccountPassword={this.state.deleteAccountPassword}
       deleteAccountErrorCode={this.state.deleteAccountErrorCode}
+      newEmail={this.state.newEmail}
+      editEmailPassword={this.state.editEmailPassword}
+      saveEmailErrorCode={this.state.saveEmailErrorCode}
+      isNewEmailPending={this.props.model.isEmailUpdateTokenValid}
+      onResendEmailUpdateConfirmation={this.handleResendEmailUpdateConfirmation}
+      onDiscardEmailUpdateRequest={this.handleDiscardEmailUpdateRequest}
       addCardErrorCode={this.state.addCardErrorCode}
       onSubmitDeleteAccount={this.handleSubmitDeleteAccount}
       onAddCard={this.handleAddCard}
@@ -126,7 +143,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
       onFacebookClick={this.handleFacebookClick}
       onRemoveLinkedAccount={this.handleRemoveLinkedAccount}
       onEditDisplayNameSaveClick={this.handleEditDisplayNameClick}
-      onEditEmailClick={this.handleEditEmailClick}
+      onEditEmailSaveClick={this.handleEditEmailClick}
       onEditPasswordSaveClick={this.handleEditPasswordClick}
       onDeactivateAccountSubmit={this.handleSubmitDeactivateAccount}
       onDeleteAccountPage={this.handleDeleteAccount}
@@ -243,7 +260,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
   private handleAnnouncementToggle = async () => {
     try {
       const newSetting = await this.props.model.toggleNotificationSetting(
-        'isFoodieAcceptedInviteNotificationOn');
+        'isAnnouncementNotificationOn');
       this.setState({ isAnnouncementNotificationOn: newSetting });
     } catch (error) {
       this.setState({ errorCode: error.code });
@@ -305,6 +322,22 @@ export class SettingsPageController extends React.Component<Properties, State> {
     }
   }
 
+  private handleResendEmailUpdateConfirmation = async () => {
+    try {
+      await this.props.model.resendEmailUpdateConfirmation();
+    } catch (error) {
+      this.setState({ errorCode: error.code });
+    }
+  }
+
+  private handleDiscardEmailUpdateRequest = async () => {
+    try {
+      await this.props.model.discardEmailUpdateRequest();
+    } catch (error) {
+      this.setState({ errorCode: error.code });
+    }
+  }
+
   private handleGoogleClick = () => {}
 
   private handleFacebookClick = () => {}
@@ -332,7 +365,48 @@ export class SettingsPageController extends React.Component<Properties, State> {
     }
   }
 
-  private handleEditEmailClick = () => {}
+  private handleEditEmailClick = async (newEmail: string, password: string):
+      Promise<void> => {
+    if (newEmail.trim() === '') {
+      this.setState({ saveEmailErrorCode:
+        AccountInformationTab.SaveEmailErrorCode.EMPTY_EMAIL_FIELD });
+      return;
+    }
+    if (password === '') {
+      this.setState({ saveEmailErrorCode:
+        AccountInformationTab.SaveEmailErrorCode.EMPTY_PASSWORD_FIELD });
+      return;
+    }
+    if (password.length < 8) {
+      this.setState({  saveEmailErrorCode:
+        AccountInformationTab.SaveEmailErrorCode.WRONG_PASSWORD });
+      return;
+    }
+    if (newEmail === this.props.model.email) {
+      this.setState({ saveEmailErrorCode:
+        AccountInformationTab.SaveEmailErrorCode.DUPLICATE_EMAIL });
+      return;
+    }
+    if (!EmailValidator.validate(newEmail)) {
+      this.setState({ saveEmailErrorCode:
+        AccountInformationTab.SaveEmailErrorCode.INVALID_EMAIL_ADDRESS });
+      return;
+    }
+
+    try {
+      await this.props.model.saveEmailUpdateRequest(newEmail, password);
+      this.setState({ saveEmailErrorCode:
+        AccountInformationTab.SaveEmailErrorCode.NONE });
+    } catch (error) {
+      if (error.message && error.code === 401) {
+        this.setState({ saveEmailErrorCode:
+          AccountInformationTab.SaveEmailErrorCode.WRONG_PASSWORD });
+        return;
+      }
+      this.setState({ errorCode: error.code, saveEmailErrorCode:
+        AccountInformationTab.SaveEmailErrorCode.NO_CONNECTION });
+    }
+  }
 
   private handleEditPasswordClick = async (currentPassword: string,
       newPassword: string) => {
@@ -424,7 +498,7 @@ export class SettingsPageController extends React.Component<Properties, State> {
   private handleSubmitHelpEmail = async (receiptId: number,
       message: string) => {
     try {
-      const isSent = await this.props.model.SubmitHelpEmail(receiptId, message);
+      const isSent = await this.props.model.submitHelpEmail(receiptId, message);
       if (isSent) {
         this.setState({
           paymentReceiptModalPage: PaymentReceiptModal.Page.REQUEST_SENT

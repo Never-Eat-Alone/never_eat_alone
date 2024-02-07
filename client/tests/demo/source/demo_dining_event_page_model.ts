@@ -28,6 +28,8 @@ export class DemoDiningEventPageModel extends
     this._diningEvent.removeSeat(accountId, accountName, profileImageSrc);
   }
 
+  public async validatePaymentAndJoinEvent(sessionId: string): Promise<void> {}
+
   private ensureIsLoaded(): void {
     if (!this._isLoaded) {
       throw new Error('DiningEventPageModel not loaded.');

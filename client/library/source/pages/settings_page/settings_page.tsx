@@ -78,6 +78,18 @@ interface Properties {
   /** Error code regarding adding a new card. */
   addCardErrorCode: AddCreditCardForm.ErrorCode;
 
+  /** Edit email section */
+  newEmail: string;
+
+  editEmailPassword: string;
+  saveEmailErrorCode: AccountInformationTab.SaveEmailErrorCode;
+  isNewEmailPending: boolean;
+
+  onResendEmailUpdateConfirmation: () => Promise<void>;
+
+  /** Indicates user clicked on discard email change. */
+  onDiscardEmailUpdateRequest: () => Promise<void>;
+
   onChangePaymentMethodsTabPage: (page: PaymentMethodsTab.Page) => void;
 
   /** Indicates the Add card button is clicked. */
@@ -125,7 +137,7 @@ interface Properties {
   onEditDisplayNameSaveClick: (newValue: string) => Promise<void>;
 
   /** Indicates the edit button regarding the email is clicked. */
-  onEditEmailClick: () => void;
+  onEditEmailSaveClick: (newEmail: string, password: string) => Promise<void>;
 
   /** Indicates the edit button regarding the password is clicked. */
   onEditPasswordSaveClick: (currentPassword: string, newPAssword: string

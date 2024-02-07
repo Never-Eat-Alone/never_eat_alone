@@ -28,6 +28,24 @@ interface Properties {
 
   deleteAccountErrorCode: AccountInformationTab.DeleteAccountErrorCode;
 
+  /** Edit Email Section Props */
+  /** User new email inputfield value. */
+  newEmail: string;
+
+  /** Password inputfield value. */
+  editEmailPassword: string;
+
+  /** Edit Email ErrorCode */
+  saveEmailErrorCode: AccountInformationTab.SaveEmailErrorCode;
+
+  /** Whether the new email is pending confirmation or not. */
+  isNewEmailPending: boolean;
+
+  onResendEmailUpdateConfirmation: () => Promise<void>;
+
+  /** Indicates user clicked on discard email change. */
+  onDiscardEmailUpdateRequest: () => Promise<void>;
+
   /** Indicates link Google account button is clicked. */
   onGoogleClick: () => void;
 
@@ -41,7 +59,7 @@ interface Properties {
   onEditDisplayNameSaveClick: (newValue: string) => Promise<void>;
 
   /** Indicates the edit button regarding the email is clicked. */
-  onEditEmailClick: () => void;
+  onEditEmailSaveClick: (newEmail: string, password: string) => Promise<void>;
 
   /** Indicates the save password is clicked. */
   onEditPasswordSaveClick: (currentPassword: string, newPassword: string
@@ -81,17 +99,10 @@ interface State {
   newPassword: string;
   confirmPassword: string;
   passwordHasChanged: boolean;
-}
-
-function generateRandomString() {
-  const characters =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const length = Math.floor(Math.random() * 7) + 8;
-  let result = '';
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * characters.length));
-  }
-  return result;
+  counter: number;
+  /** Edit email section */
+  newEmail: string;
+  editEmailPassword: string;
 }
 
 /** Dislays the account information tab content on the setting page. */
@@ -106,7 +117,10 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       currentPassword: '',
       newPassword: '',
       confirmPassword: '',
-      passwordHasChanged: false
+      passwordHasChanged: false,
+      counter: 0,
+      newEmail: this.props.newEmail,
+      editEmailPassword: this.props.editEmailPassword
     };
   }
 
@@ -255,7 +269,8 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           </div>
           <div style={CHECKBOX_ROW_CONTAINER_STYLE} >
             <CheckBox
-              label='Yes, I want to permanently remove my account from NeverEatAlone.'
+              label='Yes, I want to permanently remove my account from 
+                NeverEatAlone.'
               checked={this.props.isDeleteChecked}
               onBoxClick={this.props.onDeleteCheckboxClick}
             />
@@ -411,7 +426,136 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       }
       return '';
     })();
-    const currenDisabledPassword = generateRandomString();
+    /** 
+    const emailErrorMessage = (() => {
+      if (!this.state.emailPasswordHasChanged && !this.state.emailHasChanged) {
+        return '';
+      }
+      if ((this.state.emailHasChanged && this.state.newEmail.length === 0) ||
+          (this.state.emailPasswordHasChanged &&
+          this.state.editEmailPassword.length === 0)) {
+        return 'Fill the required field.';
+      }
+      if (this.state.emailHasChanged && (this.state.newEmail ===
+          this.props.email)) {
+        return 'Please enter a new email.';
+      }
+      if (this.state.emailPasswordHasChanged &&
+          this.state.editEmailPassword.length < 8) {
+        return 'Please enter a valid password.';
+      }
+      if (!this.state.isEmailValid) {
+        return 'Please enter a valid email.';
+      }
+      return '';
+    })();
+    */
+    const { newEmailHasError, newEmailErrorMessage, emailPasswordHasError,
+        emailPasswordErrorMessage, newEmailSaveErrorMessage } = (() => {
+      switch (this.props.saveEmailErrorCode) {
+        case AccountInformationTab.SaveEmailErrorCode.NO_CONNECTION:
+          return { newEmailHasError: false, newEmailErrorMessage: '',
+            emailPasswordHasError: false, emailPasswordErrorMessage: '',
+            newEmailSaveErrorMessage: `Something went wrong. We could't 
+            save your request. Please try again later.` };
+        case AccountInformationTab.SaveEmailErrorCode.DUPLICATE_EMAIL:
+          return { newEmailHasError: true, newEmailErrorMessage:
+            'Please enter a new email address.', emailPasswordHasError: false,
+            emailPasswordErrorMessage: '', newEmailSaveErrorMessage: '' };
+        case AccountInformationTab.SaveEmailErrorCode.EMPTY_EMAIL_FIELD:
+          return { newEmailHasError: true, newEmailErrorMessage:
+            'This field is required.', emailPasswordHasError: false,
+            emailPasswordErrorMessage: '', newEmailSaveErrorMessage: '' };
+        case AccountInformationTab.SaveEmailErrorCode.INVALID_EMAIL_ADDRESS:
+          return { newEmailHasError: true, newEmailErrorMessage:
+            'Please enter a valid email.', emailPasswordHasError: false,
+            emailPasswordErrorMessage: '', newEmailSaveErrorMessage: '' };
+        case AccountInformationTab.SaveEmailErrorCode.EMPTY_PASSWORD_FIELD:
+          return { newEmailHasError: false, newEmailErrorMessage: '',
+            emailPasswordHasError: true, emailPasswordErrorMessage:
+            'This field is required.', newEmailSaveErrorMessage: '' };
+        default:
+          return { newEmailHasError: false, newEmailErrorMessage: '',
+            emailPasswordHasError: false, emailPasswordErrorMessage: '',
+            newEmailSaveErrorMessage: '' };
+      }
+    })();
+    const editEmailSection = (() => {
+      if (this.props.isNewEmailPending) {
+        return (
+          <div style={passwordColumnStyle} >
+            <div style={CURRENT_EMAIL_STYLE} >{this.props.email}</div>
+            <div style={PASSWORD_TITLE_STYLE} >New Email</div>
+            <InputField
+              style={inputFieldStyle}
+              value={this.props.newEmail}
+              readOnly
+            />
+            <div style={PENDING_EMAIL_DETAILS_STYLE} >
+              Your email is not updated until you confirm it. {'\n'}
+              <SecondaryTextLinkButton
+                label='resend link'
+                style={RESEND_LINK_STYLE}
+                onClick={this.handleResendEmailClick}
+              /> or
+              <SecondaryTextLinkButton
+                label='Discard this change'
+                style={DISCARD_LINK_STYLE}
+                onClick={this.props.onDiscardEmailUpdateRequest}
+              />.
+            </div>
+          </div>);
+      }
+      if (!this.state.isEditEmail) {
+        return (
+          <div style={inputEditRowStyle} >
+            <InputField
+              style={inputFieldStyle}
+              type='email'
+              value={this.props.email}
+              disabled
+            />
+            <SecondaryTextButton
+              style={EDIT_BUTTON_STYLE}
+              label='Edit'
+              onClick={this.handleEditEmailClick}
+            /> 
+          </div>);
+      }
+      return (
+        <div style={passwordColumnStyle} >
+          <div style={CURRENT_PASSWORD_TITLE_STYLE} >
+            Current Email
+          </div>
+          <div style={CURRENT_EMAIL_STYLE} >{this.props.email}</div>
+          <div style={PASSWORD_TITLE_STYLE} >
+            New Email
+          </div>
+          <InputField
+            style={PASSWORD_INPUT_FIELD_STYLE}
+            value={this.state.newEmail}
+            placeholder='Your new email'
+            onChange={this.handleNewEmailChange}
+            hasError={newEmailHasError}
+          />
+          <div style={PASSWORD_TITLE_STYLE} >
+            Enter Password
+          </div>
+          <PasswordInputField
+            style={PASSWORD_INPUT_FIELD_STYLE}
+            placeholder='Your Password'
+            value={this.state.editEmailPassword}
+            onChange={this.handleEmailPasswordChange}
+            hasError={this.state.editEmailPassword.length === 0 &&
+              this.state.newEmail.length !== 0}
+          />
+          <div style={ERROR_MESSAGE_STYLE} ></div>
+          <SaveCancelButtonCombo
+            onSave={this.handleEmailSaveClick}
+            onCancel={this.handleCancelEditEmail}
+          />
+        </div>);
+    })();
     const editPasswordSection = (() => {
       if (!this.state.isEditPassword) {
         return (
@@ -419,8 +563,8 @@ export class AccountInformationTab extends React.Component<Properties, State> {
             <InputField
               style={inputFieldStyle}
               type='password'
-              value={currenDisabledPassword}
-              readOnly
+              value='displaypurposes'
+              disabled
             />
             <SecondaryTextButton
               style={EDIT_BUTTON_STYLE}
@@ -503,19 +647,7 @@ export class AccountInformationTab extends React.Component<Properties, State> {
         {editDisplayNameButton}
         <h2 style={SUB_HEADING_STYLE} >Email</h2>
         <h3 style={DESCRIPTION_STYLE} >Required.</h3>
-        <div style={inputEditRowStyle} >
-          <InputField
-            style={inputFieldStyle}
-            type='email'
-            value={this.props.email}
-            disabled
-          />
-          <SecondaryTextButton
-            style={EDIT_BUTTON_STYLE}
-            label='Edit'
-            onClick={this.props.onEditEmailClick}
-          />
-        </div>
+        {editEmailSection}
         <h2 style={SUB_HEADING_STYLE} >Password</h2>
         <h3 style={DESCRIPTION_STYLE} >Required.</h3>
         {editPasswordSection}
@@ -531,6 +663,16 @@ export class AccountInformationTab extends React.Component<Properties, State> {
           onClick={this.props.onDeactivateAccountPageClick}
         />
       </>);
+  }
+
+  public componentDidUpdate(): void {
+    if (this.state.counter === 0) {
+      clearInterval(this._emailTimerId);
+    }
+  }
+
+  public componentWillUnmount(): void {
+    clearInterval(this._emailTimerId);
   }
 
   private handleEditDisplayNameClick = () => {
@@ -556,6 +698,28 @@ export class AccountInformationTab extends React.Component<Properties, State> {
     }
   }
 
+  private handleEditEmailClick = () => {
+    this.setState({ isEditEmail: true });
+  }
+
+  private handleCancelEditEmail = () => {
+    this.setState({
+      isEditEmail: false,
+      newEmail: '',
+      editEmailPassword: ''
+    });
+  }
+
+  private handleEmailSaveClick = async () => {
+    const { newEmail, editEmailPassword } = this.state;
+    this.props.onEditEmailSaveClick(newEmail, editEmailPassword);
+    this.setState({
+      isEditEmail: false,
+      newEmail: '',
+      editEmailPassword: ''
+    });
+  }
+
   private handleEditPasswordClick = () => {
     this.setState({ isEditPassword: true });
   }
@@ -567,6 +731,20 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       newPassword: '',
       confirmPassword: '',
       passwordHasChanged: false
+    });
+  }
+
+  private handleNewEmailChange = (event: React.ChangeEvent<HTMLInputElement>
+      ) => {
+    console.log('handleNewEmailChange event.target.value', event.target.value);
+    this.setState({ newEmail: event.target.value });
+  }
+
+  private handleEmailPasswordChange = (event: React.ChangeEvent<
+      HTMLInputElement>) => {
+    console.log('handleEmailPasswordChange event.target.value', event.target.value);
+    this.setState({
+      editEmailPassword: event.target.value
     });
   }
 
@@ -615,6 +793,12 @@ export class AccountInformationTab extends React.Component<Properties, State> {
       passwordHasChanged: true
     });
   }
+
+  private handleResendEmailClick = async () => {
+    await this.props.onResendEmailUpdateConfirmation();
+  }
+
+  private _emailTimerId: NodeJS.Timeout;
 }
 
 export namespace AccountInformationTab {
@@ -629,6 +813,16 @@ export namespace AccountInformationTab {
   export enum DeleteAccountErrorCode {
     NONE,
     NO_CONNECTION,
+    WRONG_PASSWORD
+  }
+
+  export enum SaveEmailErrorCode {
+    NONE,
+    NO_CONNECTION,
+    EMPTY_EMAIL_FIELD,
+    EMPTY_PASSWORD_FIELD,
+    INVALID_EMAIL_ADDRESS,
+    DUPLICATE_EMAIL,
     WRONG_PASSWORD
   }
 }
@@ -755,6 +949,12 @@ const PASSWORD_INPUT_FIELD_STYLE: React.CSSProperties = {
   minHeight: '38px',
   width: '100%',
   minWidth: '100%',
+};
+
+const PENDING_EMAIL_INPUT_STYLE: React.CSSProperties = {
+  border: '1px solid var(--Yellow-700-Dark, #C67E14)',
+  background: 'var(--Grey-200-Medium-Light, #EFEFEF)',
+  color: 'var(--Grey-000-Black, #000)'
 };
 
 const MOBILE_INPUT_FIELD_STYLE: React.CSSProperties = {
@@ -1074,4 +1274,56 @@ const CURRENT_PASSWORD_TITLE_STYLE: React.CSSProperties = {
 const PASSWORD_TITLE_STYLE: React.CSSProperties = {
   ...CURRENT_PASSWORD_TITLE_STYLE,
   marginTop: '20px'
+};
+
+const CURRENT_EMAIL_STYLE: React.CSSProperties = {
+  color: 'var(--grey-000-black, #000)',
+  fontFamily: 'Source Sans Pro',
+  fontSize: '14px',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  lineHeight: 'normal'
+};
+
+const COUNT_DOWN_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '12px',
+  lineHeight: '15px',
+  color: 'var(--yellow-700-dark, #C67E14)'
+};
+
+const RESEND_LINK_STYLE: React.CSSProperties = {
+  fontFamily: 'Source Sans Pro',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  fontSize: '12px',
+  lineHeight: '15px',
+  color: 'var(--yellow-700-dark, #C67E14)',
+  textDecoration: 'underline'
+};
+
+const PENDING_EMAIL_DETAILS_STYLE: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  color: 'var(--yellow-700-dark, #C67E14)',
+  fontFamily: 'Source Sans Pro',
+  fontSize: '12px',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  lineHeight: '15px',
+  whiteSpace: 'pre-line'
+};
+
+const DISCARD_LINK_STYLE: React.CSSProperties = {
+  color: 'var(--alert-status-error, #FF2C79)',
+  fontFamily: 'Source Sans Pro',
+  fontSize: '12px',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  lineHeight: 'normal',
+  textDecorationLine: 'underline'
 };

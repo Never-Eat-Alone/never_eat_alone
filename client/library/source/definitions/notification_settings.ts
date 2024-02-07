@@ -1,6 +1,7 @@
 export class NotificationSettings {
   public static fromJson(value: any): NotificationSettings {
     return new NotificationSettings(
+      value.userId,
       value.isNewEventsNotificationOn,
       value.isEventJoinedNotificationOn,
       value.isEventRemindersNotificationOn,
@@ -10,11 +11,12 @@ export class NotificationSettings {
       value.isAnnouncementNotificationOn);
   }
 
-  constructor(isNewEventsNotificationOn: boolean, isEventJoinedNotificationOn:
-      boolean, isEventRemindersNotificationOn: boolean, isChangesNotificationOn:
-      boolean, isSomeoneJoinedNotificationOn: boolean,
-      isFoodieAcceptedInviteNotificationOn: boolean,
+  constructor(userId: number, isNewEventsNotificationOn: boolean,
+      isEventJoinedNotificationOn: boolean, isEventRemindersNotificationOn:
+      boolean, isChangesNotificationOn: boolean, isSomeoneJoinedNotificationOn:
+      boolean, isFoodieAcceptedInviteNotificationOn: boolean,
       isAnnouncementNotificationOn: boolean) {
+    this._userId = userId;
     this._settings = {
       isNewEventsNotificationOn,
       isEventJoinedNotificationOn,
@@ -24,6 +26,10 @@ export class NotificationSettings {
       isFoodieAcceptedInviteNotificationOn,
       isAnnouncementNotificationOn
     };
+  }
+
+  public get userId(): number {
+    return this._userId;
   }
 
   public getSetting(setting: string): boolean {
@@ -39,8 +45,9 @@ export class NotificationSettings {
   }
 
   public toJson(): any {
-    return this._settings;
+    return { ...this._settings, userId: this.userId };
   }
 
+  private _userId: number;
   private _settings: { [key: string]: boolean };
 }

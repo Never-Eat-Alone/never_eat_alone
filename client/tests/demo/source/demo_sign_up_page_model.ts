@@ -12,16 +12,16 @@ export class DemoSignUpPageModel extends NeverEatAlone.SignUpPageModel {
     this._accountProfileImage = newImage;
   }
 
-  public async uploadImageFile(imageFile: File):
+  public async uploadImageFile(userId: number, imageFile: File):
       Promise<NeverEatAlone.UserProfileImage> {
     return this._accountProfileImage;
   }
 
-  public async signUp(password: string): Promise<boolean> {
+  public async signUp(userId: number, password: string): Promise<boolean> {
     return Boolean(password);
   }
 
-  public async setUpProfile(displayName: string, image:
+  public async setUpProfile(userId: number, displayName: string, image:
       NeverEatAlone.UserProfileImage): Promise<{ account: NeverEatAlone.User,
       accountProfileImage: NeverEatAlone.UserProfileImage }> {
     return {

@@ -1481,12 +1481,12 @@ export function loadComponentSchemas(): ComponentSchema[] {
     new PropertySchema('displayMode', NeverEatAlone.DisplayMode.MOBILE,
       DisplayModeInput),
     new PropertySchema('linkedSocialAccounts', [
-      new NeverEatAlone.SocialAccount(NeverEatAlone.SocialAccountType.GOOGLE,
+      new NeverEatAlone.SocialAccount(1, NeverEatAlone.SocialAccountType.GOOGLE,
         'token', 'lucy@gmail.com'),
-      new NeverEatAlone.SocialAccount(NeverEatAlone.SocialAccountType.FACEBOOK,
-        'token', 'lucy@gmail.com')
+      new NeverEatAlone.SocialAccount(1,
+        NeverEatAlone.SocialAccountType.FACEBOOK, 'token', 'lucy@gmail.com')
     ], ArrayInput(
-      new PropertySchema('SocialAccount', new NeverEatAlone.SocialAccount(
+      new PropertySchema('SocialAccount', new NeverEatAlone.SocialAccount(1,
         NeverEatAlone.SocialAccountType.GOOGLE, 'token', 'lucy@gmail.com'),
       SocialAccountInput))),
     new PropertySchema('displayName', 'Arthur', TextInput),

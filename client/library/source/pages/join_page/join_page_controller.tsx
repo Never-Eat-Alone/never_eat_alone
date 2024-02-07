@@ -37,11 +37,19 @@ export class JoinPageController extends React.Component<Properties, State> {
   private handleJoin = async (name: string, email: string,
       referralCode: string) => {
     try {
-      await this.props.model.join(name, email, referralCode);
-      this.setState({
-        page: JoinPage.Page.REQUEST_SENT,
-        errorCode: JoinPage.ErrorCode.NONE
-      });
+      const joinErrorCode = await this.props.model.join(name, email,
+        referralCode);
+      if (joinErrorCode !== JoinPage.ErrorCode.NONE) {
+        this.setState({
+          errorCode: joinErrorCode,
+          page: JoinPage.Page.INITIAL
+        });
+      } else {
+        this.setState({
+          errorCode: JoinPage.ErrorCode.NONE,
+          page: JoinPage.Page.REQUEST_SENT
+        });
+      }
     } catch {
       this.setState({
         errorCode: JoinPage.ErrorCode.NO_CONNECTION,

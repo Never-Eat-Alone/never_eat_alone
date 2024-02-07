@@ -1,5 +1,6 @@
 import { PaymentCard, PaymentRecord, SocialAccount, User } from
   '../../definitions';
+import { AccountInformationTab } from './account_information_tab';
 import { SettingsPageModel } from './settings_page_model';
 
 /**
@@ -11,7 +12,19 @@ export class EmptySettingsPageModel extends SettingsPageModel {
     throw new Error('Unable to load empty model.');
   }
 
+  public get profileId(): number {
+    throw new Error('SettingsPageModel not loaded.'); 
+  }
+
   public get displayName(): string {
+    throw new Error('SettingsPageModel not loaded.');
+  }
+
+  public get email(): string {
+    throw new Error('SettingsPageModel not loaded.');
+  }
+
+  public get pendingNewEmail(): string {
     throw new Error('SettingsPageModel not loaded.');
   }
 
@@ -32,6 +45,10 @@ export class EmptySettingsPageModel extends SettingsPageModel {
   }
 
   public get paymentRecords(): PaymentRecord[] {
+    throw new Error('SettingsPageModel not loaded.');
+  }
+
+  public get isEmailUpdateTokenValid(): boolean {
     throw new Error('SettingsPageModel not loaded.');
   }
 
@@ -57,7 +74,7 @@ export class EmptySettingsPageModel extends SettingsPageModel {
     throw new Error('SettingsPageModel not loaded.');
   }
 
-  public async SubmitHelpEmail(receiptId: number, message: string): Promise<
+  public async submitHelpEmail(receiptId: number, message: string): Promise<
       boolean> {
     throw new Error('SettingsPageModel not loaded.');
   }
@@ -78,8 +95,21 @@ export class EmptySettingsPageModel extends SettingsPageModel {
     throw new Error('SettingsPageModel not loaded.');
   }
 
+  public async saveEmailUpdateRequest(newEmail: string, password: string):
+      Promise<void> {
+    throw new Error('SettingsPageModel not loaded.');
+  }
+
   public async savePassword(currentPassword: string, newPassword: string
       ): Promise<void> {
+    throw new Error('SettingsPageModel not loaded.');
+  }
+
+  public async resendEmailUpdateConfirmation(): Promise<void> {
+    throw new Error('SettingsPageModel not loaded.');
+  }
+
+  public async discardEmailUpdateRequest(): Promise<void> {
     throw new Error('SettingsPageModel not loaded.');
   }
 }

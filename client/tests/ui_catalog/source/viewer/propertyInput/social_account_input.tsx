@@ -20,10 +20,10 @@ export class SocialAccountInput extends React.Component<Properties> {
   private onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = (() => {
       if (!event.target.value.trim()) {
-        return new NeverEatAlone.SocialAccount(
+        return new NeverEatAlone.SocialAccount(1,
           NeverEatAlone.SocialAccountType.FACEBOOK, 'token', 'fb@gmail.com');
       }
-      return new NeverEatAlone.SocialAccount(
+      return new NeverEatAlone.SocialAccount(1,
         NeverEatAlone.SocialAccountType.GOOGLE, Date.now().toString(),
         event.target.value);
     })();

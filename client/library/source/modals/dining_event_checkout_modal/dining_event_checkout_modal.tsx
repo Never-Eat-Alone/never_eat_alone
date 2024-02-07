@@ -3,11 +3,13 @@ import { format } from 'date-fns';
 import * as React from 'react';
 import { CloseButton, PrimaryTextButton, RedNavLinkWithArrow } from
   '../../components';
-import { DisplayMode } from '../../definitions';
+import { DisplayMode, User } from '../../definitions';
 import StripeCheckoutForm from './stripe_checkout_form';
 
 interface Properties {
   displayMode: DisplayMode;
+
+  account: User;
 
   eventId: number;
 
@@ -35,6 +37,8 @@ interface Properties {
   /** Whether the checkout process is completed or not. */
   checkoutCompleted: boolean;
 
+  page: DiningEventCheckoutModal.Page;
+
   /** Indicates the join button is clicked. */
   onJoinEvent: () => void;
 
@@ -60,7 +64,7 @@ export class DiningEventCheckoutModal extends React.Component<Properties,
   constructor(props: Properties) {
     super(props);
     this.state = {
-      page: DiningEventCheckoutModal.Page.INITIAL,
+      page: this.props.page,
       errorCode: this.props.errorCode
     };
     this._containerRef = React.createRef();
@@ -170,7 +174,7 @@ export class DiningEventCheckoutModal extends React.Component<Properties,
       <React.Fragment>
         <StripeCheckoutForm
           label='Checkout'
-          onCheckout={this.props.onCheckout}
+          onCheckout={this.handleCheckout}
         />
       </React.Fragment>);
     const joinButton = (() => {
@@ -269,7 +273,7 @@ export class DiningEventCheckoutModal extends React.Component<Properties,
                   <div style={PAYMENT_HISTORY_LINK_STYLE} >
                     <RedNavLinkWithArrow
                       label='Payment History'
-                      to='/payment_history/:user_id'
+                      to={`/payment_history/${this.props.account.id}`}
                     />
                   </div>
                 </div>
@@ -368,6 +372,11 @@ export class DiningEventCheckoutModal extends React.Component<Properties,
     }
   }
 
+  private handleCheckout = () => {
+    this.setState({ page: DiningEventCheckoutModal.Page.PROCESSING_PAYMENT });
+    this.props.onCheckout();
+  }
+
   private handleBackToCheckout = () => {
     this.setState({
       page: DiningEventCheckoutModal.Page.INITIAL,
@@ -377,11 +386,6 @@ export class DiningEventCheckoutModal extends React.Component<Properties,
 
   private handleBackClick = () => {
     this.setState({ page: DiningEventCheckoutModal.Page.INITIAL });
-  }
-
-  private handleCheckout = () => {
-    this.setState({ page: DiningEventCheckoutModal.Page.PROCESSING_PAYMENT });
-    this.props.onCheckout();
   }
 
   private _containerRef: React.RefObject<HTMLDivElement>;

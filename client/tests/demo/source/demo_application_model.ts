@@ -436,10 +436,11 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     const emmaAccessTokenGoogle = '';
     const emmaAccessTokenFacebook = '';
     const emmaSocialLinks = [
-      new NeverEatAlone.SocialAccount(NeverEatAlone.SocialAccountType.GOOGLE,
+      new NeverEatAlone.SocialAccount(1, NeverEatAlone.SocialAccountType.GOOGLE,
         emmaAccessTokenGoogle, 'emma@gmail.com'),
-      new NeverEatAlone.SocialAccount(NeverEatAlone.SocialAccountType.FACEBOOK,
-        emmaAccessTokenFacebook, 'emma@yahoo.com')];
+      new NeverEatAlone.SocialAccount(1,
+        NeverEatAlone.SocialAccountType.FACEBOOK, emmaAccessTokenFacebook,
+        'emma@yahoo.com')];
     const emmaPassword = '123';
     const emmaVisaCard3333 = new NeverEatAlone.PaymentCard(1, 4520888855553333,
       'Emma McM', 12, 2027, 123, 'm4y 0v0', NeverEatAlone.CreditCardType.VISA);
@@ -464,11 +465,11 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
 
     /** Setting up the settings page model. */
     this._settingsPageModelMap = new Map();
-    const emmaNotificationSettings = new NeverEatAlone.NotificationSettings(
+    const emmaNotificationSettings = new NeverEatAlone.NotificationSettings(1,
       true, false, true, true, false, true, false);
-    const demoSettingsPageModel1 = new DemoSettingsPageModel(userEmma.name,
-      emmaSocialLinks, emmaNotificationSettings, emmaMastercard2222,
-      emmaPaymentCards, emmaPaymentRecords);
+    const demoSettingsPageModel1 = new DemoSettingsPageModel(1, userEmma.name,
+      userEmma.email, '', false, emmaSocialLinks, emmaNotificationSettings,
+      emmaMastercard2222, emmaPaymentCards, emmaPaymentRecords);
     this._settingsPageModelMap.set(1, demoSettingsPageModel1);
 
     /** arthur settings model */
@@ -483,11 +484,12 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
       'Emma McM', 12, 2027, 123, 'm4y 0v0', NeverEatAlone.CreditCardType.VISA);
     const arthurPaymentCards:NeverEatAlone.PaymentCard[] = [arthurVisa1234];
     const arthurPassword = '123';
-    const arthurNotificationSettings = new NeverEatAlone.NotificationSettings(
+    const arthurNotificationSettings = new NeverEatAlone.NotificationSettings(2,
       false, false, false, false, false, true, true);
-    const demoSettingsPageModel2 = new DemoSettingsPageModel(userArthur.name,
-      arthurSocialLinks, arthurNotificationSettings, arthurVisa1234,
-      arthurPaymentCards, arthurPaymentRecords);
+    const demoSettingsPageModel2 = new DemoSettingsPageModel(2, userArthur.name,
+      userArthur.email, '', false, arthurSocialLinks,
+      arthurNotificationSettings, arthurVisa1234, arthurPaymentCards,
+      arthurPaymentRecords);
     this._settingsPageModelMap.set(2, demoSettingsPageModel2);
     this._deletedAccountSurveyModel = new DemoDeletedAccountSurveyModel();
     this._deactivateAccountSurveyModel = new DemoDeactivateAccountSurveyModel();
@@ -551,7 +553,7 @@ export class DemoApplicationModel extends NeverEatAlone.ApplicationModel {
     return this._diningEventPageModelMap.get(id);
   }
 
-  public async updateOnJoinRemoveSeat(): Promise<void> {}
+  public async updateOnJoinRemoveSeat(eventId: number): Promise<void> {}
 
   public get inviteAFoodieModel(): NeverEatAlone.InviteAFoodieModel {
     return this._inviteAFoodieModel;

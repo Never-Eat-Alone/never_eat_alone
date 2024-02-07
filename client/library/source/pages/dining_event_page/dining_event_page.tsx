@@ -541,6 +541,7 @@ const CONTAINER_STYLE: React.CSSProperties = {
   justifyContent: 'flex-start',
   alignItems: 'center',
   width: '100%',
+  height: '100%',
   backgroundColor: '#E5E5E5'
 };
 

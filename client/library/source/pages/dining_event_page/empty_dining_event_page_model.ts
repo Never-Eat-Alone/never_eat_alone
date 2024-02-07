@@ -22,6 +22,10 @@ export class EmptyDiningEventPageModel extends DiningEventPageModel {
 
   public async removeSeat(accountId: number, accountName: string,
       profileImageSrc: string): Promise<void> {
-    throw new Error('Unable to remove seat from empty model.');
+    throw new Error('DiningEventPageModel not loaded.');
+  }
+
+  public async validatePaymentAndJoinEvent(sessionId: string): Promise<void> {
+    throw new Error('DiningEventPageModel not loaded.');
   }
 }

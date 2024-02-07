@@ -90,7 +90,7 @@ export class LocalApplicationModel extends ApplicationModel {
     return this._diningEventPageModelMap.get(id);
   }
 
-  public async updateOnJoinRemoveSeat(): Promise<void> {}
+  public async updateOnJoinRemoveSeat(eventId: number): Promise<void> {}
 
   public get inviteAFoodieModel(): InviteAFoodieModel {
     return this._inviteAFoodieModel;
