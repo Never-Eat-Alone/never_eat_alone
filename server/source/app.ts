@@ -267,18 +267,18 @@ function runExpress(pool: Pool, config: any) {
         'stripe_payment_intents',
         'user_notification_settings'
       ]);
-      console.log(process.env.LOCAL_BASE_URL);
-      if (process.env.NODE_ENV === 'production') {
-        app.listen(config.port, () => {
-          console.log(`Server running on port ${config.port}`);
-        });
-      } else {
+
+      if (process.env.NODE_ENV === 'development') {
         const keyDir = path.join(__dirname, '../localhost+2-key.pem');
         const certDir = path.join(__dirname, '../localhost+2.pem');
         const key = fs.readFileSync(keyDir, 'utf8');
         const cert = fs.readFileSync(certDir, 'utf8');
         https.createServer({ key, cert }, app).listen(config.httpsPort, () => {
           console.log(`HTTPS Server running on port ${config.httpsPort}`);
+        });
+      } else {
+        app.listen(config.port, () => {
+          console.log(`Server running on port ${config.port}`);
         });
       }
     } catch (error) {
