@@ -1,7 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
 const fs = require('fs');
-require('dotenv').config();
 module.paths.push(path.resolve(process.cwd(), 'node_modules'));
 const configPath = path.join(__dirname, '/application/config.json');
 const config = JSON.parse(fs.readFileSync(configPath).toString());

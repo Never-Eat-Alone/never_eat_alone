@@ -1,4 +1,3 @@
-require('dotenv').config();
 import * as BodyParser from 'body-parser';
 import * as Cors from 'cors';
 import * as CookieParser from 'cookie-parser';
