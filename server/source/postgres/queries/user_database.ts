@@ -97,7 +97,7 @@ export class UserDatabase {
       console.error('Invalid parameters provided to assignUserIdToSid');
       return;
     }
-  
+    console.log('start insert assignUserIdToSid', sid, userId, sess, expire);
     try {
       await this.pool.query(`
         INSERT INTO user_sessions (sid, user_id, sess, expire)
