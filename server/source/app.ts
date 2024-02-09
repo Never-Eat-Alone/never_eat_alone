@@ -41,6 +41,12 @@ import { StripePaymentRoutes } from './routes/stripe_payments';
 import { UserRoutes } from './routes/user';
 import { UserProfileImageRoutes } from './routes/user_profile_image';
 
+declare module 'express-session' {
+  interface SessionData {
+    views?: number;
+  }
+}
+
 const pgSession = require('connect-pg-simple')(Session);
 const initializePostgres = async (pool, dir, label, tableNames = []) => {
   if (tableNames.length === 0) {
@@ -165,11 +171,13 @@ function runExpress(pool: Pool, config: any) {
     cookie: {
       maxAge: 10 * 365 * 24 * 60 * 60 * 1000,
       secure: true,
+      httpOnly: true,
       sameSite: 'lax' as 'lax'
     }
   };
 
   app.set('trust proxy', 1);
+
   if (config.node_env === 'production') {
     sessionConfig.cookie.secure = true;
   }
@@ -187,6 +195,20 @@ function runExpress(pool: Pool, config: any) {
   });
 
   SGMail.setApiKey(config.send_grid_api_key);
+
+  
+  app.get('/test-session', (req, res) => {
+    if (req.session.views) {
+      req.session.views++;
+      res.setHeader('Content-Type', 'text/html');
+      res.write('<p>views: ' + req.session.views + '</p>');
+      res.write('<p>expires in: ' + (req.session.cookie.maxAge / 1000) + 's</p>');
+      res.end();
+    } else {
+      req.session.views = 1;
+      res.end('welcome to the session demo. refresh!');
+    }
+  });
 
   const userDatabase = new UserDatabase(pool);
   const userProfileImageDatabase = new UserProfileImageDatabase(pool);

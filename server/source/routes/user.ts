@@ -105,30 +105,30 @@ export class UserRoutes {
 
   /** Returns the current logged in user. */
   private getCurrentUser = async (request, response) => {
-    if (request.session?.user) {
-      let user: User;
+    console.log('getCurrentUser', request.session?.user_id);
+    if (request.session?.user_id) {
       try {
-        user = await this.userDatabase.loadUserBySessionId(
-          request.session.id);
+        const user = await this.userDatabase.loadUserById(
+          request.session.user_id);
+        console.log('user', user);
+        if (!user || user.id === -1 || user.userStatus === 'DELETED' ||
+            user.userStatus === 'BANNED' || user.userStatus === 'PENDING') {
+          request.session.destroy((err) => {
+            if (err) {
+              console.error('Failed at request.session.destroy', err);
+            }
+            response.clearCookie('connect.sid');
+          });
+          response.status(200).json({ user: User.makeGuest().toJson() });
+        } else {
+          response.status(200).json({ user: user.toJson() });
+        }
       } catch (error) {
-        console.error('Failed at loadUserBySessionId', error);
+        console.error(`Error fetching user from database: ${error}`);
         return response.status(500).send();
       }
-      /**
-        request.session.user = {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        userName: user.userName,
-        userStatus: user.userStatus.toString(),
-        createdAt: user.createdAt.toISOString()
-      };
-       */
-      
-      response.status(200).json({ user: user.toJson() });
     } else {
-      const guestUser = User.makeGuest();
-      response.status(200).json({ user: guestUser.toJson() });
+      response.status(200).json({ user: User.makeGuest().toJson() });
     }
   }
 
@@ -240,41 +240,41 @@ export class UserRoutes {
 
   /** Checks user credentials for login. */
   private logIn = async (request, response) => {
+    console.log('start log in');
     const { email, password, rememberMe } = request.body;
-    const user = await this.userDatabase.loadUserByEmail(email);
-    if (!email || user.id === -1) {
-      return response.status(401).json({ message: 'INVALID_CREDENTIALS' });
-    }
-    const isValidPassword =
-      await this.userDatabase.validatePassword(user.id, password);
-    if (!isValidPassword) {
-      return response.status(401).json({ message: 'INVALID_CREDENTIALS' });
-    }
-    if (rememberMe) {
-      request.session.cookie.maxAge = 30 * 365 * 24 * 60 * 60 * 1000;
-    } else {
-      request.session.cookie.maxAge = 365 * 24 * 60 * 60 * 1000;
+
+    if (!email || !password) {
+      return response.status(400).json({ message: 'MISSING_CREDENTIALS' });
     }
     try {
-      const sessionExpiration = new Date(
-        Date.now() + request.session.cookie.maxAge);
-      request.session.user = {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        userName: user.userName,
-        userStatus: user.userStatus.toString(),
-        createdAt: user.createdAt.toISOString()
-      };
-      await this.userDatabase.assignUserIdToSid(request.session.id, user.id,
-        request.session, sessionExpiration);
+      const user = await this.userDatabase.loadUserByEmail(email);
+      
+      if (!user || user.id === -1 || ['DELETED', 'BANNED', 'PENDING'].includes(
+          user.userStatus)) {
+        return response.status(401).json({ message: 'INVALID_USER' });
+      }
+
+      const isValidPassword =
+        await this.userDatabase.validatePassword(user.id, password);
+      if (!isValidPassword) {
+        return response.status(401).json({ message: 'INVALID_CREDENTIALS' });
+      }
+      console.log('password valid');
+      this.setUpSession(request, user.id, rememberMe);
+      response.status(200).json({ user: user.toJson() });
     } catch (error) {
-      console.error('Failed at assignUserIdToSid', error);
-      request.session.user = null;
+      console.error('Error during login:', error);
       return response.status(500).json({ message: 'DATABASE_ERROR' });
     }
-    response.status(200).json({ user: user.toJson() });
   }
+
+  private setUpSession = (request, userId, rememberMe) => {
+    const maxAge = rememberMe ? 30 * 365 * 24 * 60 * 60 * 1000 :
+      365 * 24 * 60 * 60 * 1000;
+    request.session.cookie.maxAge = maxAge;
+    request.session.user_id = userId;
+    console.log('set up session done');
+  };
 
   /**
    * Creates a confirmation token and store it in the
@@ -377,9 +377,9 @@ export class UserRoutes {
       request.body.userInvitationCode);
     const inviteEmail = InviteEmail.fromJson(request.body.inviteEmail);
     let user: User;
-    if (request.session?.user) {
+    if (request.session?.user_id) {
       try {
-        user = await this.userDatabase.loadUserBySessionId(request.session.id);
+        user = await this.userDatabase.loadUserById(request.session.user_id);
         if (user.id === -1 || user.id !== userInvitationCode.userId) {
           return response.status(401).send();
         }
@@ -632,11 +632,10 @@ export class UserRoutes {
 
   private getEditProfilePage = async (request, response) => {
     const profileId = parseInt(request.params.profileId);
-    if (request.session?.user) {
+    if (request.session?.user_id) {
       let user: User;
       try {
-        user = await this.userDatabase.loadUserBySessionId(
-          request.session.id);
+        user = await this.userDatabase.loadUserById(request.session.user_id);
         if (user.id === -1 || user.id !== profileId) {
           return response.status(401).send();
         }
@@ -798,10 +797,9 @@ export class UserRoutes {
   private saveProfileCoverImage = async (request, response) => {
     const image = CoverImage.fromJson(request.body.image);
     let user: User;
-    if (request.session?.user) {
+    if (request.session?.user_id) {
       try {
-        user = await this.userDatabase.loadUserBySessionId(
-          request.session.id);
+        user = await this.userDatabase.loadUserById(request.session.user_id);
         if (user.id === -1 || user.id !== image.profileId) {
           return response.status(401).send();
         }
@@ -824,10 +822,9 @@ export class UserRoutes {
   private uploadProfileImage = async (request, response) => {
     const image = UserProfileImage.fromJson(request.body.accountProfileImage);
     let user: User;
-    if (request.session?.user) {
+    if (request.session?.user_id) {
       try {
-        user = await this.userDatabase.loadUserBySessionId(
-          request.session.id);
+        user = await this.userDatabase.loadUserById(request.session.user_id);
         if (user.id === -1 || user.id !== image.userId) {
           return response.status(401).send();
         }
@@ -855,10 +852,9 @@ export class UserRoutes {
       request.body.profilePageData);
     const profileId = parseInt(request.params.profileId);
     let user: User;
-    if (request.session?.user) {
+    if (request.session?.user_id) {
       try {
-        user = await this.userDatabase.loadUserBySessionId(
-          request.session.id);
+        user = await this.userDatabase.loadUserById(request.session.user_id);
         if (user.id === -1 || user.id !== profileId) {
           return response.status(401).send();
         }
@@ -894,11 +890,10 @@ export class UserRoutes {
     const profileId = parseInt(request.params.profileId);
     let user: User;
     console.log('profile id', profileId);
-    if (request.session?.user && profileId) {
+    if (request.session?.user_id && profileId) {
       try {
-        console.log('session user', request.session.user);
-        user = await this.userDatabase.loadUserBySessionId(
-          request.session.id);
+        console.log('session user', request.session.user_id);
+        user = await this.userDatabase.loadUserById(request.session.user_id);
         console.log('user', user);
         if (user.id === -1 || user.id !== profileId) {
           return response.status(401).send();
@@ -1010,30 +1005,23 @@ export class UserRoutes {
       const sessionExpiration = new Date(
         Date.now() + request.session.cookie.maxAge);
       await this.userDatabase.assignUserIdToSid(request.session.id, account.id,
-        request.session, sessionExpiration);
+        JSON.stringify(request.session), sessionExpiration);
     } catch (error) {
       console.error('Failed at assignUserIdToSid', error);
       return response.status(500).json({ message: 'DATABASE_ERROR' });
     }
-    request.session.user = {
-      id: account.id,
-      name: account.name,
-      email: account.email,
-      userName: account.userName,
-      userStatus: account.userStatus.toString(),
-      createdAt: account.createdAt.toISOString()
-    };
+    request.session.user_id = account.id;
     response.status(200).send();
   }
 
   private updateUserDisplayName = async (request, response) => {
     const { name } = request.body;
-    if (!request.session?.user) {
+    if (!request.session?.user_id) {
       return response.status(401).send();
     }
     let user: User;
     try {
-      user = await this.userDatabase.loadUserBySessionId(request.session.id);
+      user = await this.userDatabase.loadUserById(request.session.user_id);
       if (user.id === -1) {
         return response.status(401).send();
       }
@@ -1044,14 +1032,7 @@ export class UserRoutes {
     try {
       const updatedUser = await this.userDatabase.updateDisplayName(user.id,
         name);
-      request.session.user = {
-        id: updatedUser.id,
-        name: updatedUser.name,
-        email: updatedUser.email,
-        userName: updatedUser.userName,
-        userStatus: updatedUser.userStatus.toString(),
-        createdAt: updatedUser.createdAt.toISOString()
-      };
+      request.session.user_id = updatedUser.id;
       // check if the sessions tables has been updated with new users object.
       response.status(200).send({ user: updatedUser.toJson() });
     } catch (error) {
@@ -1063,12 +1044,12 @@ export class UserRoutes {
   private updateUserEmail = async (request, response) => {
     const profileId = parseInt(request.params.profileId);
     const { email, password } = request.body;
-    if (!request.session?.user) {
+    if (!request.session?.user_id) {
       return response.status(401).send();
     }
     let user: User;
     try {
-      user = await this.userDatabase.loadUserBySessionId(request.session.id);
+      user = await this.userDatabase.loadUserById(request.session.user_id);
       if (user.id === -1 || user.id !== profileId) {
         return response.status(401).send();
       }
@@ -1131,12 +1112,12 @@ export class UserRoutes {
   private confirmEmailUpdateRequest = async (request, response) => {
     const profileId = parseInt(request.params.profileId);
     const token = request.body.token;
-    if (!request.session?.user) {
+    if (!request.session?.user_id) {
       return response.status(401).send();
     }
     let user: User;
     try {
-      user = await this.userDatabase.loadUserBySessionId(request.session.id);
+      user = await this.userDatabase.loadUserById(request.session.user_id);
       if (user.id === -1 || user.id !== profileId) {
         return response.status(401).send();
       }
@@ -1161,19 +1142,12 @@ export class UserRoutes {
       const sessionExpiration = new Date(
         Date.now() + request.session.cookie.maxAge);
       await this.userDatabase.assignUserIdToSid(request.session.id, user.id,
-        request.session, sessionExpiration);
+        JSON.stringify(request.session), sessionExpiration);
     } catch (error) {
       console.error('Failed at assignUserIdToSid', error);
       return response.status(500).json({ message: 'DATABASE_ERROR' });
     }
-    request.session.user = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      userName: user.userName,
-      userStatus: user.userStatus.toString(),
-      createdAt: user.createdAt.toISOString()
-    };
+    request.session.user_id = updatedUser.id;
     // make sure the user_sessions is updated the user object.
     response.status(200).json({ user: updatedUser.toJson() });
   }
@@ -1181,12 +1155,12 @@ export class UserRoutes {
   private updateUserPassword = async (request, response) => {
     const profileId = parseInt(request.params.profileId);
     const { currentPassword, newPassword } = request.body;
-    if (!request.session?.user) {
+    if (!request.session?.user_id) {
       return response.status(401).send();
     }
     let user: User;
     try {
-      user = await this.userDatabase.loadUserBySessionId(request.session.id);
+      user = await this.userDatabase.loadUserById(request.session.user_id);
       if (user.id === -1 || user.id !== profileId) {
         return response.status(401).send();
       }
@@ -1218,30 +1192,23 @@ export class UserRoutes {
       const sessionExpiration = new Date(
         Date.now() + request.session.cookie.maxAge);
       await this.userDatabase.assignUserIdToSid(request.session.id, user.id,
-        request.session, sessionExpiration);
+        JSON.stringify(request.session), sessionExpiration);
     } catch (error) {
       console.error('Failed at assignUserIdToSid', error);
       return response.status(500).json({ message: 'DATABASE_ERROR' });
     }
-    request.session.user = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      userName: user.userName,
-      userStatus: user.userStatus.toString(),
-      createdAt: user.createdAt.toISOString()
-    };
+    request.session.user_id = user.id;
     response.status(200).send();
   }
 
   private toggleUserNotificationSettings = async (request, response) => {
     const setting: string = request.body.setting;
-    if (!request.session?.user) {
+    if (!request.session?.user_id) {
       return response.status(401).send();
     }
     let user: User;
     try {
-      user = await this.userDatabase.loadUserBySessionId(request.session.id);
+      user = await this.userDatabase.loadUserById(request.session.user_id);
       if (user.id === -1) {
         return response.status(401).send();
       }

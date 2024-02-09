@@ -80,16 +80,14 @@ export class StripePaymentRoutes {
 
   private createCheckoutSession = async (request: any, response:
       Express.Response) => {
-    if (!request.session?.user) {
-      response.status(401).send();
-      return;
+    if (!request.session?.user_id) {
+      return response.status(401).send();
     }
     let user: User;
     try {
-      user = await this.userDatabase.loadUserBySessionId(request.session.id);
+      user = await this.userDatabase.loadUserById(request.session.user_id);
       if (user.id === -1) {
-        response.status(401).send();
-        return;
+        return response.status(401).send();
       }
     } catch (error) {
       console.error('Failed at loadUserBySessionId', error);
@@ -163,9 +161,9 @@ export class StripePaymentRoutes {
       return response.status(400).json({ error: 'Session ID is required.' });
     }
     let user = User.makeGuest();
-    if (request.session?.user) {
+    if (request.session?.user_id) {
       try {
-        user = await this.userDatabase.loadUserBySessionId(request.session.id);
+        user = await this.userDatabase.loadUserById(request.session.user_id);
         if (user.id === -1) {
           response.status(401).send();
           return;

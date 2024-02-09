@@ -91,7 +91,7 @@ export class UserDatabase {
    * @param sess - Session object.
    * @param expire - Expiration date.
    */
-  public assignUserIdToSid = async (sid: string, userId: number, sess: object,
+  public assignUserIdToSid = async (sid: string, userId: number, sess: string,
       expire: Date): Promise<void> => {
     if (!sid || !sess || !expire) {
       console.error('Invalid parameters provided to assignUserIdToSid');
