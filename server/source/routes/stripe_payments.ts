@@ -22,7 +22,7 @@ export class StripePaymentRoutes {
   constructor(app: Express.Application, stripe: Stripe, baseURL: string,
       userDatabase: UserDatabase, diningEventDatabase: DiningEventDatabase,
       attendeeDatabase: AttendeeDatabase, userProfileImageDatabase:
-      UserProfileImageDatabase) {
+      UserProfileImageDatabase, config: any) {
     app.post('/api/create-setup-intent', this.createSetupIntent);
     app.post('/api/create-payment-intent', this.createPaymentIntent);
     app.post('/api/create-checkout-session', this.createCheckoutSession);
@@ -37,6 +37,7 @@ export class StripePaymentRoutes {
     this.diningEventDatabase = diningEventDatabase;
     this.attendeeDatabase = attendeeDatabase;
     this.userProfileImageDatabase = userProfileImageDatabase;
+    this.config = config;
   }
 
   private calculateOrderAmount = (items) => {
@@ -211,11 +212,14 @@ export class StripePaymentRoutes {
 
   private stripeWebhook = async (request, response) => {
     let event;
-    if (process.env.STRIPE_WEBHOOK_SECRET) {
+    const webhookSecret = (this.config.node_env === 'production'
+      && this.config.stripe_web_webhook_secret ||
+      this.config.stripe_local_webhook_secret);
+    if (webhookSecret) {
       const sig = request.headers['stripe-signature'];
       try {
         event = this.stripe.webhooks.constructEvent(request.body, sig,
-          process.env.STRIPE_WEBHOOK_SECRET);
+          webhookSecret);
       } catch (err) {
         console.error(`Webhook Error: ${err.message}`);
         return response.status(400).send(`Webhook Error: ${err.message}`);
@@ -268,4 +272,5 @@ export class StripePaymentRoutes {
   private diningEventDatabase: DiningEventDatabase;
   private attendeeDatabase: AttendeeDatabase;
   private userProfileImageDatabase: UserProfileImageDatabase;
+  private config: any;
 }

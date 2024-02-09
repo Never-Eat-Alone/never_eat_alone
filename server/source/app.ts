@@ -1,4 +1,4 @@
-require('dotenv').config({ path: './.env' });
+require('dotenv').config();
 import * as BodyParser from 'body-parser';
 import * as Cors from 'cors';
 import * as CookieParser from 'cookie-parser';
@@ -84,10 +84,6 @@ const initializePostgres = async (pool, dir, label, tableNames = []) => {
   }
 };
 
-console.log(process.env.NODE_ENV);
-const baseURL = process.env.NODE_ENV === 'production' ? 
-  process.env.PROD_BASE_URL : process.env.LOCAL_BASE_URL;
-
 function runExpress(pool: Pool, config: any) {
   const app = Express();
   const scriptSrcUrls = [
@@ -110,7 +106,10 @@ function runExpress(pool: Pool, config: any) {
     "https://api.stripe.com"
   ];
 
-  if (process.env.NODE_ENV !== 'production') {
+  const baseURL = config.node_env === 'production' ? 
+    config.prod_base_url : config.local_base_url;
+
+  if (config.node_env !== 'production') {
     scriptSrcUrls.push(baseURL);
     connectSrcUrls.push(baseURL);
     formActionUrls.push(baseURL);
@@ -135,11 +134,10 @@ function runExpress(pool: Pool, config: any) {
   }));
 
   const Stripe = require('stripe');
-  console.log(process.env.STRIPE_SECRET_KEY);
-  const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+  const stripe = Stripe(config.stripe_test_secret_Key);
 
   app.use(BodyParser.json());
-  const frontendUrls = config.frontendUrls;
+  const frontendUrls = config.frontend_urls;
   app.use(Cors(
     {
       origin: frontendUrls,
@@ -173,7 +171,7 @@ function runExpress(pool: Pool, config: any) {
   };
 
   app.set('trust proxy', 1);
-  if (process.env.NODE_ENV === 'production') {
+  if (config.node_env === 'production') {
     sessionConfig.cookie.secure = true;
   }
   app.use(CookieParser());
@@ -225,7 +223,7 @@ function runExpress(pool: Pool, config: any) {
     userDatabase, attendeeDatabase, userProfileImageDatabase);
   const stripePaymentRoutes = new StripePaymentRoutes(app, stripe, baseURL,
     userDatabase, diningEventDatabase, attendeeDatabase,
-    userProfileImageDatabase);
+    userProfileImageDatabase, config);
 
   app.get('*', (request, response, next) => {
     response.sendFile(path.join(process.cwd(), 'public', 'index.html'));
@@ -269,13 +267,13 @@ function runExpress(pool: Pool, config: any) {
         'user_notification_settings'
       ]);
 
-      if (process.env.NODE_ENV === 'development') {
+      if (config.node_env === 'development') {
         const keyDir = path.join(__dirname, '../localhost+2-key.pem');
         const certDir = path.join(__dirname, '../localhost+2.pem');
         const key = fs.readFileSync(keyDir, 'utf8');
         const cert = fs.readFileSync(certDir, 'utf8');
-        https.createServer({ key, cert }, app).listen(config.httpsPort, () => {
-          console.log(`HTTPS Server running on port ${config.httpsPort}`);
+        https.createServer({ key, cert }, app).listen(config.https_port, () => {
+          console.log(`HTTPS Server running on port ${config.https_port}`);
         });
       } else {
         app.listen(config.port, () => {

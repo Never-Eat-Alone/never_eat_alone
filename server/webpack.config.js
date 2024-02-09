@@ -1,8 +1,11 @@
 const path = require('path');
 const webpack = require('webpack');
+const fs = require('fs');
 require('dotenv').config();
 module.paths.push(path.resolve(process.cwd(), 'node_modules'));
-const isProduction = process.env.NODE_ENV === 'production';
+const configPath = path.join(__dirname, '/application/config.json');
+const config = JSON.parse(fs.readFileSync(configPath).toString());
+const isProduction = config.node_env === 'production';
 module.exports = {
   devtool: isProduction ? false : 'source-map',
   entry: path.resolve(process.cwd(), 'source/app.ts'),
