@@ -84,6 +84,7 @@ const initializePostgres = async (pool, dir, label, tableNames = []) => {
   }
 };
 
+console.log(process.env.NODE_ENV);
 const baseURL = process.env.NODE_ENV === 'production' ? 
   process.env.PROD_BASE_URL : process.env.LOCAL_BASE_URL;
 
