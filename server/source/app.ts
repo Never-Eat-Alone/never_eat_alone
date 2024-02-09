@@ -161,7 +161,7 @@ function runExpress(pool: Pool, config: any) {
     }),
     secret: config.cookie_secret,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
       maxAge: 10 * 365 * 24 * 60 * 60 * 1000,
       secure: true,

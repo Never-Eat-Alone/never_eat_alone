@@ -114,7 +114,8 @@ export class UserRoutes {
         console.error('Failed at loadUserBySessionId', error);
         return response.status(500).send();
       }
-      request.session.user = {
+      /**
+        request.session.user = {
         id: user.id,
         name: user.name,
         email: user.email,
@@ -122,6 +123,8 @@ export class UserRoutes {
         userStatus: user.userStatus.toString(),
         createdAt: user.createdAt.toISOString()
       };
+       */
+      
       response.status(200).json({ user: user.toJson() });
     } else {
       const guestUser = User.makeGuest();
@@ -250,25 +253,26 @@ export class UserRoutes {
     if (rememberMe) {
       request.session.cookie.maxAge = 30 * 365 * 24 * 60 * 60 * 1000;
     } else {
-      request.session.cookie.maxAge = 24 * 60 * 60 * 1000;
+      request.session.cookie.maxAge = 365 * 24 * 60 * 60 * 1000;
     }
     try {
       const sessionExpiration = new Date(
         Date.now() + request.session.cookie.maxAge);
+      request.session.user = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        userName: user.userName,
+        userStatus: user.userStatus.toString(),
+        createdAt: user.createdAt.toISOString()
+      };
       await this.userDatabase.assignUserIdToSid(request.session.id, user.id,
         request.session, sessionExpiration);
     } catch (error) {
       console.error('Failed at assignUserIdToSid', error);
+      request.session.user = null;
       return response.status(500).json({ message: 'DATABASE_ERROR' });
     }
-    request.session.user = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      userName: user.userName,
-      userStatus: user.userStatus.toString(),
-      createdAt: user.createdAt.toISOString()
-    };
     response.status(200).json({ user: user.toJson() });
   }
 
@@ -999,7 +1003,7 @@ export class UserRoutes {
       console.error('Failed at updatePassword', error);
       return response.status(500).send();
     }
-    request.session.cookie.maxAge = 24 * 60 * 60 * 1000;
+    request.session.cookie.maxAge = 365 * 24 * 60 * 60 * 1000;
     try {
       const sessionExpiration = new Date(
         Date.now() + request.session.cookie.maxAge);
@@ -1046,6 +1050,7 @@ export class UserRoutes {
         userStatus: updatedUser.userStatus.toString(),
         createdAt: updatedUser.createdAt.toISOString()
       };
+      // check if the sessions tables has been updated with new users object.
       response.status(200).send({ user: updatedUser.toJson() });
     } catch (error) {
       console.error('Failed at updateDisplayName', error);
@@ -1167,6 +1172,7 @@ export class UserRoutes {
       userStatus: user.userStatus.toString(),
       createdAt: user.createdAt.toISOString()
     };
+    // make sure the user_sessions is updated the user object.
     response.status(200).json({ user: updatedUser.toJson() });
   }
 
