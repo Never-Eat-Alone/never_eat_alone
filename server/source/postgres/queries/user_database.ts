@@ -91,22 +91,25 @@ export class UserDatabase {
    * @param sess - Session object.
    * @param expire - Expiration date.
    */
-  public assignUserIdToSid = async (sid: string, userId: number | null |
-      undefined, sess: object, expire: Date): Promise<void> => {
-    if (!userId || userId === null || userId === undefined || Number.isNaN(
-        userId) || userId === -1 || !sess || !sid || !expire) {
+  public assignUserIdToSid = async (sid: string, userId: number, sess: object,
+      expire: Date): Promise<void> => {
+    if (!sid || !sess || !expire) {
+      console.error('Invalid parameters provided to assignUserIdToSid');
       return;
     }
-    await this.pool.query(`
-      INSERT INTO
-        user_sessions (sid, user_id, sess, expire)
-      VALUES
-        ($1, $2, $3, $4)
-      ON CONFLICT (sid) DO UPDATE
-        SET user_id = EXCLUDED.user_id,
-            sess = EXCLUDED.sess,
-            expire = EXCLUDED.expire
-    `, [sid, userId, sess, expire.toISOString()]);
+  
+    try {
+      await this.pool.query(`
+        INSERT INTO user_sessions (sid, user_id, sess, expire)
+        VALUES ($1, $2, $3, $4)
+        ON CONFLICT (sid) DO UPDATE
+          SET user_id = EXCLUDED.user_id,
+              sess = EXCLUDED.sess,
+              expire = EXCLUDED.expire
+      `, [sid, userId, sess, expire.toISOString()]);
+    } catch (error) {
+      console.error('Error updating or inserting user session', error);
+    }
   }
 
   /**

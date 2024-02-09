@@ -892,7 +892,6 @@ export class UserRoutes {
 
   private getSettingsPage = async (request, response) => {
     const profileId = parseInt(request.params.profileId);
-    console.log('profileid', profileId);
     let user: User;
     console.log('profile id', profileId);
     if (request.session?.user && profileId) {
