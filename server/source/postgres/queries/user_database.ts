@@ -149,27 +149,38 @@ export class UserDatabase {
    * @param id - Session id.
    */
   public loadUserBySessionId = async (id: string): Promise<User> => {
-    console.log('session id', id);
-    const guest = User.makeGuest();
-    const result = await this.pool.query(
-      'SELECT * FROM user_sessions WHERE sid = $1', [id]);
-    if (result.rows?.length === 0 || !result.rows[0].user_id) {
-      return guest;
+    console.log('loadUserBySessionId', id);
+    try {
+      const sessionResult = await this.pool.query(
+        'SELECT user_id FROM user_sessions WHERE sid = $1', [id]);
+      if (sessionResult.rows.length === 0 || !sessionResult.rows[0].user_id) {
+        console.log('No user linked to session:', id);
+        return User.makeGuest();
+      }
+      const userId = parseInt(sessionResult.rows[0].user_id);
+      console.log('user id found for this session is', userId);
+      const userResult = await this.pool.query(
+        'SELECT * FROM users WHERE id = $1', [userId]);
+      if (userResult.rows.length === 0) {
+        console.log('User not found for ID:', userId);
+        return User.makeGuest();
+      }
+      const userRow = userResult.rows[0];
+      const user = new User(
+        userId,
+        userRow.name,
+        userRow.email,
+        userRow.user_name,
+        userRow.user_status as UserStatus,
+        new Date(userRow.created_at)
+      );
+  
+      console.log('User loaded by session ID:', user);
+      return user;
+    } catch (error) {
+      console.error('Error loading user by session ID', id, error);
+      return User.makeGuest();
     }
-    console.log('user id', parseInt(result.rows[0].user_id));
-    const userResult = await this.pool.query(
-      'SELECT * FROM users WHERE id = $1', [parseInt(result.rows[0].user_id)]);
-    if (userResult.rows?.length === 0) {
-      return guest;
-    }
-    const user = new User(
-      parseInt(userResult.rows[0].id),
-      userResult.rows[0].name, userResult.rows[0].email,
-      userResult.rows[0].user_name,
-      userResult.rows[0].user_status as UserStatus,
-      new Date(Date.parse(userResult.rows[0].created_at)));
-    console.log('user reslt of load by session id', user, user.id);
-    return user;
   }
 
   /**
