@@ -167,9 +167,9 @@ export class UserRoutes {
     const token = await this.getConfirmationToken(email, userId);
     const signUpHtml = await fs.promises.readFile(
       'public/resources/sign_up_email/email.html', 'utf8');
-    const newHtml = signUpHtml.replaceAll('{{baseURL}}', this.baseURL)
-                              .replaceAll('{{name}}', name)
-                              .replaceAll('{{id}}', userId.toString())
+    const newHtml = signUpHtml.replace(/{{baseURL}}/g, this.baseURL)
+                              .replace(/{{name}}/g, name)
+                              .replace(/{{id}}/g, userId.toString())
                               .replace('{{token}}', token);
     await this.sendEmail(email, 'info@nevereatalone.net',
       'NEA Account: Registration Request', newHtml);
@@ -396,9 +396,9 @@ export class UserRoutes {
           }
         });
     });
-    const newHtml = invitationHtml.replaceAll('{{baseURL}}', this.baseURL)
+    const newHtml = invitationHtml.replace(/{{baseURL}}/g, this.baseURL)
       .replace('{{invitationCode}}', userInvitationCode.invitationCode)
-      .replaceAll('{{user_name}}', user.name).replace('{{contest}}',
+      .replace(/{{user_name}}/g, user.name).replace('{{contest}}',
       inviteEmail.contest);
     for (const email of inviteEmail.emailList) {
       try {
@@ -424,8 +424,8 @@ export class UserRoutes {
           }
         });
     });
-    const newHtml = partnerWithUsHtml.replaceAll('{{name}}', name)
-      .replaceAll('{{email}}', email).replaceAll('{{link}}', profileLink)
+    const newHtml = partnerWithUsHtml.replace(/{{name}}/g, name)
+      .replace(/{{email}}/g, email).replace(/{{link}}/g, profileLink)
       .replace('{{message}}', message);
     try {
       await this.sendEmail('info@nevereatalone.net', email,
@@ -458,7 +458,7 @@ export class UserRoutes {
           }
         });
     });
-    const newHtml = partnerWithUsRecievedConfirmationHtml.replaceAll('{{name}}',
+    const newHtml = partnerWithUsRecievedConfirmationHtml.replace(/{{name}}/g,
       name);
     try {
       await this.sendEmail(email, 'info@nevereatalone.net',
@@ -501,8 +501,8 @@ export class UserRoutes {
       return response.status(500).send();
     }
     const name = user.name || 'NeverEatAlone Member';
-    const newHtml = recoveryHtml.replaceAll('{{baseURL}}', this.baseURL)
-      .replaceAll('{{name}}', name).replace('{{token}}', token);
+    const newHtml = recoveryHtml.replace(/{{baseURL}}/g, this.baseURL)
+      .replace(/{{name}}/g, name).replace(/{{token}}/g, token);
     try {
       await this.sendEmail(user.email, 'noreply@nevereatalone.net',
         'Recovery Password Link', newHtml);
@@ -1105,7 +1105,7 @@ export class UserRoutes {
           }
         });
     });
-    const newHtml = emailUpdateRequestHtml.replaceAll('{{name}}', user.name)
+    const newHtml = emailUpdateRequestHtml.replace(/{{name}}/g, user.name)
       .replace('{{tokenId}}', tokenId.toString());
     try {
       await this.sendEmail(user.email, 'info@nevereatalone.net',
