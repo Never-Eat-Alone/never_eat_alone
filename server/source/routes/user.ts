@@ -889,8 +889,10 @@ export class UserRoutes {
   private getSettingsPage = async (request, response) => {
     const profileId = parseInt(request.params.profileId);
     let user: User;
+    console.log('profile id', profileId);
     if (request.session?.user && profileId) {
       try {
+        console.log('session user', request.session.user);
         user = await this.userDatabase.loadUserBySessionId(
           request.session.id);
         if (user.id === -1 || user.id !== profileId) {
@@ -901,6 +903,7 @@ export class UserRoutes {
         return response.status(500).send();
       }
     }
+    console.log('user id', user.id, user);
     let linkedSocialAccounts: SocialAccount[] = [];
     try {
       linkedSocialAccounts = await this.userSocialCredentialsDatabase

@@ -146,12 +146,14 @@ export class UserDatabase {
    * @param id - Session id.
    */
   public loadUserBySessionId = async (id: string): Promise<User> => {
+    console.log('session id', id);
     const guest = User.makeGuest();
     const result = await this.pool.query(
       'SELECT * FROM user_sessions WHERE sid = $1', [id]);
     if (result.rows?.length === 0 || !result.rows[0].user_id) {
       return guest;
     }
+    console.log('user id', parseInt(result.rows[0].user_id));
     const userResult = await this.pool.query(
       'SELECT * FROM users WHERE id = $1', [parseInt(result.rows[0].user_id)]);
     if (userResult.rows?.length === 0) {
@@ -163,6 +165,7 @@ export class UserDatabase {
       userResult.rows[0].user_name,
       userResult.rows[0].user_status as UserStatus,
       new Date(Date.parse(userResult.rows[0].created_at)));
+    console.log('user reslt of load by session id', user, user.id);
     return user;
   }
 
